@@ -156,6 +156,146 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = ChangeCurrencySumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_A
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_P
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_D
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = IncomeSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnOutSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleSumm_10300_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_Currency_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInSumm_10300_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_Currency_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = PriceCorrectiveSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TransferDebtSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SendDebtSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangeCurrencySumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = OtherSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = DebetSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = KreditSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_A
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_P
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_D
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_K
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -287,6 +427,146 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Format = ',0.00##'
               Kind = skSum
               Column = ChangeCurrencySumm
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_A
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_P
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_D
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = StartAmount_Currency_K
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = IncomeSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnOutSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleSumm_10300_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleRealSumm_Currency_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SaleSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInSumm_10300_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInRealSumm_Currency_total
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ReturnInSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = MoneySumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceRealSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ServiceSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = PriceCorrectiveSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = TransferDebtSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = SendDebtSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = ChangeCurrencySumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = OtherSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = DebetSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = KreditSumm_Currency
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_A
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_P
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_D
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = EndAmount_Currency_K
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -987,6 +1267,375 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object EndAmount_K: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' ('#1050#1088#1077#1076#1080#1090')'
             DataBinding.FieldName = 'EndAmount_K'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object CurrencyName: TcxGridDBColumn
+            Caption = #1042#1072#1083#1102#1090#1072
+            DataBinding.FieldName = 'CurrencyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmount_Currency_A: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
+            DataBinding.FieldName = 'StartAmount_Currency_A'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmount_Currency_P: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1055#1072#1089#1089#1080#1074')'
+            DataBinding.FieldName = 'StartAmount_Currency_P'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmount_Currency_D: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'StartAmount_Currency_D'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object StartAmount_Currency_K: TcxGridDBColumn
+            Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'StartAmount_Currency_K'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object IncomeSumm_Currency: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'IncomeSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ReturnOutSumm_Currency: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090'-'#1082#1091'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'ReturnOutSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SaleRealSumm_Currency: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074' '#1074#1072#1083'. ('#1092#1072#1082#1090' '#1089' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'SaleRealSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SaleSumm_10300_Currency: TcxGridDBColumn
+            Caption = 'C'#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'SaleSumm_10300_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object SaleRealSumm_Currency_total: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074' '#1074#1072#1083'. ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'SaleRealSumm_Currency_total'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object SaleSumm_Currency: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' '#1074' '#1074#1072#1083'. ('#1073#1091#1093#1075'.)'
+            DataBinding.FieldName = 'SaleSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ReturnInRealSumm_Currency: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.  '#1074' '#1074#1072#1083'. ('#1092#1072#1082#1090' '#1089' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'ReturnInRealSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ReturnInSumm_10300_Currency: TcxGridDBColumn
+            Caption = 'C'#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'. ('#1074#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'.)'
+            DataBinding.FieldName = 'ReturnInSumm_10300_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ReturnInRealSumm_Currency_total: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. '#1074' '#1074#1072#1083'. ('#1092#1072#1082#1090' '#1073#1077#1079' '#1091#1095'. '#1089#1082#1080#1076#1082#1080')'
+            DataBinding.FieldName = 'ReturnInRealSumm_Currency_total'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object ReturnInSumm_Currency: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082'. '#1074' '#1074#1072#1083'. ('#1073#1091#1093#1075'.)'
+            DataBinding.FieldName = 'ReturnInSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object MoneySumm_Currency: TcxGridDBColumn
+            Caption = #1054#1087#1083#1072#1090#1072' (+)'#1087#1088#1080#1093' (-)'#1088#1072#1089#1093'.  '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'MoneySumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ServiceRealSumm_Currency: TcxGridDBColumn
+            Caption = #1059#1089#1083#1091#1075#1080' '#1092#1072#1082#1090' (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'ServiceRealSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ServiceSumm_Currency: TcxGridDBColumn
+            Caption = #1059#1089#1083#1091#1075#1080' '#1073#1091#1093#1075'. (+)'#1087#1086#1083#1091#1095'. (-)'#1086#1082#1072#1079#1072#1085'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'ServiceSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object PriceCorrectiveSumm_Currency: TcxGridDBColumn
+            Caption = #1050#1086#1088#1088'. '#1094#1077#1085#1099' (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'PriceCorrectiveSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TransferDebtSumm_Currency: TcxGridDBColumn
+            Caption = #1055'.'#1076#1086#1083#1075#1072' (+)'#1087#1088#1086#1076'. (-)'#1074#1086#1079#1074#1088'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'TransferDebtSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object SendDebtSumm_Currency: TcxGridDBColumn
+            Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'SendDebtSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object ChangeCurrencySumm_Currency: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' '#1088#1072#1079#1085'.  (+)'#1076#1086#1093#1086#1076' (-)'#1088#1072#1089#1093'. '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'ChangeCurrencySumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object OtherSumm_Currency: TcxGridDBColumn
+            Caption = '*** ('#1074' '#1074#1072#1083'.)'
+            DataBinding.FieldName = 'OtherSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object DebetSumm_Currency: TcxGridDBColumn
+            Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'DebetSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object KreditSumm_Currency: TcxGridDBColumn
+            Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'.'
+            DataBinding.FieldName = 'KreditSumm_Currency'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmount_Currency_A: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1040#1082#1090#1080#1074')'
+            DataBinding.FieldName = 'EndAmount_Currency_A'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmount_Currency_P: TcxGridDBColumn
+            Caption = #1050#1086#1085'.  '#1076#1086#1083#1075' '#1074' '#1074#1072#1083'. ('#1055#1072#1089#1089#1080#1074')'
+            DataBinding.FieldName = 'EndAmount_Currency_P'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmount_Currency_D: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1044#1077#1073#1077#1090')'
+            DataBinding.FieldName = 'EndAmount_Currency_D'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object EndAmount_Currency_K: TcxGridDBColumn
+            Caption = #1050#1086#1085'. '#1089#1072#1083#1100#1076#1086' '#1074' '#1074#1072#1083'. ('#1050#1088#1077#1076#1080#1090')'
+            DataBinding.FieldName = 'EndAmount_Currency_K'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDate
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Invoice(Integer, TVarChar, TDateTime, TVarChar, Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -19,8 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Invoice(
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
-   OUT outCurrencyValue      TFloat    , -- курс валюты
-   OUT outParValue           TFloat    , -- Номинал для перевода в валюту баланса
+ INOUT ioCurrencyValue       TFloat    , -- курс валюты
+ INOUT ioParValue            TFloat    , -- Номинал для перевода в валюту баланса
 
  INOUT ioTotalSumm_f1        TFloat    , --
  INOUT ioTotalSumm_f2        TFloat    , --
@@ -66,17 +66,19 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
      -- рассчет курса для баланса
-     IF inCurrencyDocumentId <> zc_Enum_Currency_Basis()
-     THEN SELECT Amount, ParValue INTO outCurrencyValue, outParValue
-          FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
-     ELSE outCurrencyValue:= 0;
-          outParValue:=0;
+     IF (inCurrencyDocumentId <> zc_Enum_Currency_Basis()) AND COALESCE (ioId, 0) = 0 AND COALESCE (ioCurrencyValue,0) = 0
+     THEN 
+         SELECT Amount, ParValue 
+      INTO ioCurrencyValue, ioParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate:= inOperDate, inCurrencyFromId:= zc_Enum_Currency_Basis(), inCurrencyToId:= inCurrencyDocumentId, inPaidKindId:= CASE WHEN inPaidKindId <> 0 THEN inPaidKindId ELSE zc_Enum_PaidKind_FirstForm() END);
+   --  ELSE outCurrencyValue:= 0;
+   --       outParValue:=0;
      END IF;
   
      -- сохранили свойство <Курс для перевода в валюту баланса>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, outCurrencyValue);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, ioCurrencyValue);
      -- сохранили свойство <Номинал для перевода в валюту баланса>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, outParValue);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ParValue(), ioId, ioParValue);
 
 
      -- Примечание

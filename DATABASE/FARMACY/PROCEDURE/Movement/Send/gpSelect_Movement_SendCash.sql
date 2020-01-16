@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -121,7 +121,8 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
-           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean AS isSent
+           , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2 
+           , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean  AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                    AND Movement.OperDate < CURRENT_DATE
@@ -259,16 +260,17 @@ BEGIN
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
-         AND (inisSUN = FALSE OR inisSUN = TRUE AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE)
+         AND (inisSUN = FALSE OR inisSUN = TRUE AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR 
+                                                     COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE)) 
          AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased()
            OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased()
              )
-         AND (vbIsSUN_over = TRUE
+/*         AND (vbIsSUN_over = TRUE
            OR COALESCE (MovementBoolean_SUN.ValueData,    FALSE) = FALSE
            OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
            OR Movement.StatusId <> zc_Enum_Status_Erased()
              )
-
+*/
 
        ;
 

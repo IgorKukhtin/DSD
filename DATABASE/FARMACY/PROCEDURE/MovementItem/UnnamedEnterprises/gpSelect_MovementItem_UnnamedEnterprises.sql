@@ -243,9 +243,9 @@ BEGIN
 
                 FULL OUTER JOIN MovementItem_UnnamedEnterprises ON tmpGoods.GoodsId = MovementItem_UnnamedEnterprises.GoodsId
 
-                LEFT JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
+                FULL OUTER JOIN tmpRemains ON tmpRemains.GoodsId = tmpGoods.GoodsId
 
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(tmpGoods.GoodsId, MovementItem_UnnamedEnterprises.GoodsId, tmpRemains.GoodsId)
 
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                      ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id

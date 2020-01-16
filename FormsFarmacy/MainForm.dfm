@@ -3268,6 +3268,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_StockTiming_RemainderForm: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
+      Hint = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
+      FormName = 'TReport_StockTiming_RemainderForm'
+      FormNameParam.Value = 'TReport_StockTiming_RemainderForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3990,6 +4002,9 @@ inherited MainForm: TMainForm
       end
       object N193: TMenuItem
         Action = actReport_DiscountExternal
+      end
+      object N214: TMenuItem
+        Action = actReport_StockTiming_RemainderForm
       end
       object miReport_Check_GoodsPriceChange: TMenuItem
         Action = actReport_Check_GoodsPriceChange

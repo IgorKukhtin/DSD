@@ -21,16 +21,30 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+    
+    IF COALESCE (inMovementId, 0) = 0
+    THEN
+      RAISE EXCEPTION 'Ошибка. Не звыбрана акция.';
+    END IF;
+    
+    IF EXISTS(SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.ObjectId = vbUserId)
+    THEN 
+      SELECT MovementItem.ID 
+      INTO ioId
+      FROM MovementItem 
+      WHERE MovementItem.MovementId = inMovementId 
+        AND MovementItem.ObjectId = vbUserId;
+    ELSE
 
-
-    -- сохранили
-    ioId := lpInsertUpdate_MovementItem_LoyaltySaveMoney  (ioId                 := ioId
-                                                         , inMovementId         := inMovementId
-                                                         , inBuyerID            := inBuyerID
-                                                         , inComment            := ''
-                                                         , inUnitID             := vbUnitId
-                                                         , inUserId             := vbUserId
-                                                         );
+      -- сохранили
+      ioId := lpInsertUpdate_MovementItem_LoyaltySaveMoney  (ioId                 := ioId
+                                                           , inMovementId         := inMovementId
+                                                           , inBuyerID            := inBuyerID
+                                                           , inComment            := ''
+                                                           , inUnitID             := vbUnitId
+                                                           , inUserId             := vbUserId
+                                                           );
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

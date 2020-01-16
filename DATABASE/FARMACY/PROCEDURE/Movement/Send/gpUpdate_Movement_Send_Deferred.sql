@@ -17,6 +17,10 @@ $BODY$
    DECLARE vbisDefSUN Boolean;
    DECLARE vbSumma TFloat;
    DECLARE vbLimitSUN TFloat;
+   DECLARE vbGoodsName TVarChar;
+   DECLARE vbAmount TFloat;
+   DECLARE vbSaldo TFloat;
+   DECLARE vbUnit_From Integer;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -32,14 +36,16 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementFloat_TotalSummFrom.ValueData, 0),
-        COALESCE (ObjectFloat_LimitSUN.ValueData, 0)
+        COALESCE (ObjectFloat_LimitSUN.ValueData, 0),
+        MovementLinkObject_From.ObjectId
     INTO
         vbStatusId,
         vbisDeferred,
         vbisSUN,
         vbisDefSUN,
         vbSumma,
-        vbLimitSUN
+        vbLimitSUN,
+        vbUnit_From
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -95,6 +101,44 @@ BEGIN
            IF vbisDeferred = TRUE
            THEN
              RAISE EXCEPTION 'Ошибка.Документ уже отложен!';
+           END IF;
+
+           -- Проверка на то что бы не списали больше чем есть на остатке
+           SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountRemains
+                  INTO vbGoodsName, vbAmount, vbSaldo
+           FROM (WITH tmpMI AS (SELECT MovementItem.ObjectId     AS GoodsId
+                                     , SUM (MovementItem.Amount) AS Amount
+                                FROM MovementItem
+                                WHERE MovementItem.MovementId = inMovementId
+                                  AND MovementItem.DescId = zc_MI_Master()
+                                  AND MovementItem.isErased = FALSE
+                                  AND MovementItem.Amount <> 0
+                                GROUP BY MovementItem.ObjectId
+                               )
+             , tmpContainer AS (SELECT Container.ObjectId     AS GoodsId
+                                     , SUM (Container.Amount) AS Amount
+                                FROM tmpMI
+                                     INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
+                                                         AND Container.DescId = zc_Container_Count()
+                                                         AND Container.Amount <> 0
+                                     INNER JOIN ContainerLinkObject AS CLO_From
+                                                                    ON CLO_From.ContainerId = Container.Id
+                                                                   AND CLO_From.ObjectId    = vbUnit_From
+                                                                   AND CLO_From.DescId      = zc_ContainerLinkObject_Unit()
+                                GROUP BY Container.ObjectId
+                               )
+                 SELECT tmpMI.GoodsId, tmpMI.Amount
+                      , COALESCE (tmpContainer.Amount, 0) AS AmountRemains
+                 FROM tmpMI
+                      LEFT JOIN tmpContainer ON tmpContainer.GoodsId = tmpMI.GoodsId
+                 WHERE tmpMI.Amount > COALESCE (tmpContainer.Amount, 0)
+                ) AS tmp
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+           LIMIT 1;
+           
+           IF (COALESCE(vbGoodsName,'') <> '') 
+           THEN
+               RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во перемещения <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
            END IF;
 
            -- собст	венно проводки

@@ -19,6 +19,57 @@ BEGIN
     vbUserId:= inSession;
 
     OPEN Cursor1 FOR
+    WITH 
+    tmpBankAccount AS (SELECT tmp.JuridicalId
+                                , MAX (tmp.Id) AS Id
+                                , tmp.BankAccount
+                                , tmp.BankName
+                                , tmp.MFO
+                           FROM (SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                      , Object_BankAccount.Id
+                                      , Object_BankAccount.ValueData AS BankAccount
+                                      , Object_Bank.ValueData AS BankName
+                                      , ObjectString_MFO.ValueData AS MFO
+                                 FROM Object AS Object_BankAccount
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                         ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                        AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                         ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                        AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                                    LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                                    LEFT JOIN ObjectString AS ObjectString_MFO
+                                                           ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                                          AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                                 WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                                 UNION
+                                 SELECT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                      , Object_BankAccount.Id
+                                      , OS_BankAccount_CBAccount.ValueData AS BankAccount
+                                      , Object_Bank.ValueData AS BankName
+                                      , ObjectString_MFO.ValueData AS MFO
+                                 FROM Object AS Object_BankAccount
+                                    LEFT JOIN ObjectLink AS ObjectLink_Juridical
+                                                         ON ObjectLink_Juridical.ObjectId = Object_BankAccount.Id
+                                                        AND ObjectLink_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                                    LEFT JOIN ObjectLink AS ObjectLink_Bank
+                                                         ON ObjectLink_Bank.ObjectId = Object_BankAccount.Id
+                                                        AND ObjectLink_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+                                    LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Bank.ChildObjectId
+                                    LEFT JOIN ObjectString AS ObjectString_MFO
+                                                           ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                                          AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+                                    LEFT JOIN ObjectString AS OS_BankAccount_CBAccount
+                                                           ON OS_BankAccount_CBAccount.ObjectId = Object_BankAccount.Id
+                                                          AND OS_BankAccount_CBAccount.DescId = zc_ObjectString_BankAccount_CBAccount()
+                                 WHERE Object_BankAccount.DescId = zc_object_BankAccount()
+                                 ) AS tmp
+                           GROUP BY tmp.JuridicalId
+                                  , tmp.BankAccount
+                                  , tmp.BankName
+                                  , tmp.MFO
+                           )
+
         SELECT
             Movement_ReturnOut.Id
           , Movement_ReturnOut.InvNumber
@@ -38,14 +89,37 @@ BEGIN
 
           , ObjectHistory_JuridicalDetails.FullName           AS JuridicalFullName
           , ObjectHistory_JuridicalDetails.JuridicalAddress   AS JuridicalAddress
+          , ObjectHistory_JuridicalDetails.OKPO
+          , ObjectHistory_JuridicalDetails.AccounterName
+          , ObjectHistory_JuridicalDetails.BankAccount
+          , tmpBankAccount.BankName  ::TVarChar
+          , tmpBankAccount.MFO       ::TVarChar
+         
+          , ObjectHistory_ToDetails.OKPO               AS OKPO_To
+          , ObjectHistory_ToDetails.JuridicalAddress   AS JuridicalAddress_to
+          , ObjectHistory_ToDetails.AccounterName      AS AccounterName_To
+          , ObjectHistory_ToDetails.INN                AS INN_To
+          , ObjectHistory_ToDetails.NumberVAT          AS NumberVAT_To
+          , ObjectHistory_ToDetails.BankAccount        AS BankAccount_To
+          , ObjectHistory_ToDetails.Phone              AS Phone_To
+          , tmpBankAccount_To.BankName  ::TVarChar AS BankName_To
+          , tmpBankAccount_To.MFO       ::TVarChar AS MFO_To
+
           , ObjectString_Unit_Address.ValueData               AS Address_From
-          , ObjectHistory_ToDetails..FullName                 AS JuridicalFullName_To
+          , ObjectHistory_ToDetails.FullName                  AS JuridicalFullName_To
         FROM Movement_ReturnOut_View AS Movement_ReturnOut
             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(inJuridicalid := Movement_ReturnOut.JuridicalId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_JuridicalDetails ON 1=1
             LEFT JOIN gpSelect_ObjectHistory_JuridicalDetails(inJuridicalid := Movement_ReturnOut.ToId, inFullName := '', inOKPO := '', inSession := inSession) AS ObjectHistory_ToDetails ON 1=1
             LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                    ON ObjectString_Unit_Address.ObjectId = Movement_ReturnOut.FromId
                                   AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
+
+           LEFT JOIN tmpBankAccount ON tmpBankAccount.JuridicalId = Movement_ReturnOut.JuridicalId
+                                   AND tmpBankAccount.BankAccount = ObjectHistory_JuridicalDetails.BankAccount
+
+           LEFT JOIN tmpBankAccount AS tmpBankAccount_To
+                                    ON tmpBankAccount_To.JuridicalId = Movement_ReturnOut.JuridicalId
+                                   AND tmpBankAccount_To.BankAccount = ObjectHistory_ToDetails.BankAccount
         WHERE Movement_ReturnOut.Id = inMovementId;
     RETURN NEXT Cursor1;
 
@@ -124,6 +198,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut_Print (Integer,TVarChar) OWNER TO pos
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.   ¬ÓÓ·Í‡ÎÓ ¿.¿
+ 13.01.20         *
  06.02.19         *
  14.04.16         *
  25.12.15                                                                       *

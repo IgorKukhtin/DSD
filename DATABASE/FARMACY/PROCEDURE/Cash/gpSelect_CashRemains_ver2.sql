@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
-               NotSold boolean,
+               NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat
                
@@ -59,6 +59,7 @@ $BODY$
    DECLARE vbDividePartionDate   boolean;
 
    DECLARE vbAreaId   Integer;
+   DECLARE vbIlliquidUnitId Integer;   
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -162,6 +163,34 @@ BEGIN
     ELSE
       vbDividePartionDate := False;
     END IF;
+    
+    IF EXISTS(SELECT 1
+              FROM Movement
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+
+              WHERE Movement.OperDate = date_trunc('month',CURRENT_DATE)
+                AND Movement.DescId = zc_Movement_IlliquidUnit()
+                AND Movement.StatusId = zc_Enum_Status_Complete())
+    THEN
+       SELECT Movement.ID
+       INTO vbIlliquidUnitId
+       FROM Movement
+
+            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
+
+       WHERE Movement.OperDate = date_trunc('month',CURRENT_DATE)
+         AND Movement.DescId = zc_Movement_IlliquidUnit()
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+       LIMIT 1;
+    END IF;
+    
 
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
@@ -543,6 +572,12 @@ BEGIN
 
                                      GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
                                       )
+                   -- Без Продажи за последнии 60 дней
+                 , tmpIlliquidUnit AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsID 
+                                       FROM MovementItem
+                                       WHERE MovementItem.MovementId = vbIlliquidUnitId
+                                         AND MovementItem.DescId     = zc_MI_Master()
+                                         AND MovementItem.isErased   = FALSE)
 
 
         -- Результат
@@ -792,6 +827,7 @@ BEGIN
             END                                          :: TFloat AS PricePartionDate
           , CashSessionSnapShot.PartionDateDiscount                AS PartionDateDiscount
           , COALESCE(tmpNotSold.GoodsID, 0) <> 0                   AS NotSold
+          , COALESCE(tmpIlliquidUnit.GoodsID, 0) <> 0              AS NotSold60
           , CashSessionSnapShot.DeferredSend::TFloat               AS DeferredSend
           , tmpRenainsSUN.Amount::TFloat                           AS RemainsSUN
 
@@ -867,8 +903,11 @@ BEGIN
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)
 
-           -- Продажи за последнии 100 дней
+           -- Без Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
+           
+           -- Без Продажи за последнии 60 дней
+           LEFT JOIN tmpIlliquidUnit ON tmpIlliquidUnit.GoodsID = Goods.Id
            
            -- Остаток товара по СУН
            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId

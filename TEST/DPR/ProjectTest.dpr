@@ -1123,7 +1123,8 @@ uses
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
   OrderInternalBasisPackJournal in '..\..\Forms\Document\OrderInternalBasisPackJournal.pas' {OrderInternalBasisPackJournalForm: TParentForm},
-  OrderInternalBasisPack in '..\..\Forms\Document\OrderInternalBasisPack.pas' {OrderInternalBasisPackForm: TParentForm};
+  OrderInternalBasisPack in '..\..\Forms\Document\OrderInternalBasisPack.pas' {OrderInternalBasisPackForm: TParentForm},
+  ProductionSeparateJournalChoice in '..\..\Forms\Document\ProductionSeparateJournalChoice.pas' {ProductionSeparateJournalChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

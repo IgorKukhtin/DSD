@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_MovementCheck_PromoDoctorsItog(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Doctors TVarChar
+             , GUID TVarChar
 
              , CheckCount Integer
              , GoodsCount TFloat
@@ -28,6 +29,7 @@ BEGIN
          tmpMovement AS (SELECT Movement.*
                               , MI_PromoCode.Id                          AS BayerID 
                               , MIString_Bayer.ValueData      ::TVarChar AS Doctors
+                              , MIString_GUID.ValueData       ::TVarChar AS GUID
                          FROM Movement
 
                                -- инфа из документа промо код
@@ -41,6 +43,9 @@ BEGIN
                               LEFT JOIN MovementItemString AS MIString_Bayer
                                                            ON MIString_Bayer.MovementItemId = MI_PromoCode.Id
                                                           AND MIString_Bayer.DescId = zc_MIString_Bayer()
+                              LEFT JOIN MovementItemString AS MIString_GUID
+                                                           ON MIString_GUID.MovementItemId = MI_PromoCode.Id
+                                                          AND MIString_GUID.DescId = zc_MIString_GUID()
 
                          WHERE Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                            AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
@@ -51,20 +56,22 @@ BEGIN
                          FROM tmpMovement AS Movement
                          GROUP BY Movement.BayerID),
          tmpItog AS (SELECT Movement_Check.Doctors                     AS Doctors
+                          , Movement_Check.GUID                        AS GUID
                           , Movement_Check.BayerID
                           , SUM(MovementItem.Amount) :: TFloat                            AS GoodsCount
                           , SUM(MovementItem.AmountSumm) :: TFloat                        AS SummSale
-                          , SUM(MovementItem.SummChangePercent) :: TFloat                 AS SummChangePercent
+                          , SUM(Round(MovementItem.AmountSumm * 2.5 / 100, 2)) :: TFloat  AS SummChangePercent
 
                        FROM tmpMovement AS Movement_Check
 
                             LEFT JOIN MovementItem_Check_View AS MovementItem
                                                               ON MovementItem.MovementId = Movement_Check.Id
-                       GROUP BY Movement_Check.Doctors, Movement_Check.BayerID
+                       GROUP BY Movement_Check.Doctors, Movement_Check.GUID, Movement_Check.BayerID
                        )
                          
          SELECT
              tmpItog.Doctors                             AS Doctors
+           , tmpItog.GUID                                AS GUID 
              
            , tmpMovementCount.CheckCount  
            , tmpItog.GoodsCount
@@ -87,5 +94,4 @@ $BODY$
 */
 
 -- тест
--- 
-select * from gpReport_MovementCheck_PromoDoctorsItog(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpReport_MovementCheck_PromoDoctorsItog(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime ,  inSession := '3');

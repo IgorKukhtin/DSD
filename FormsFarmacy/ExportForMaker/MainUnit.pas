@@ -61,6 +61,8 @@ type
     isQuarter: TcxGridDBColumn;
     is4Month: TcxGridDBColumn;
     N5: TMenuItem;
+    isReport6: TcxGridDBColumn;
+    N6: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -111,6 +113,7 @@ type
     procedure ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
     procedure ReportAnalysisRemainsSelling(ADateStart, ADateEnd : TDateTime);
     procedure ReportGoodsPartionDate;
+    procedure ReportStockTimingRemainder;
 
     procedure ExportAnalysisRemainsSelling;
   end;
@@ -160,167 +163,175 @@ begin
     Add_Log('-------------------');
     Add_Log('Поставщик: ' + qryMaker.FieldByName('Name').AsString);
 
-    if qryMaker.FieldByName('isReport1').AsBoolean then
+//    if qryMaker.FieldByName('isReport1').AsBoolean then
+//    begin
+//      RepType := 0;
+//      ReportIncome(DateStart, DateEnd);
+//      btnExportClick(Nil);
+//      btnSendMailClick(Nil);
+//    end;
+//
+//    if qryMaker.FieldByName('isReport2').AsBoolean then
+//    begin
+//      RepType := 1;
+//      ReportCheck(DateStart, DateEnd);
+//      btnExportClick(Nil);
+//      btnSendMailClick(Nil);
+//    end;
+//
+//    if qryMaker.FieldByName('isReport3').AsBoolean then
+//    begin
+//      RepType := 2;
+//      ReportAnalysisRemainsSelling(DateStart, DateEnd);
+//      btnExportClick(Nil);
+//      btnSendMailClick(Nil);
+//    end;
+//
+//    if qryMaker.FieldByName('isReport4').AsBoolean then
+//    begin
+//      RepType := 3;
+//      ReportIncomeConsumptionBalance(DateStart, DateEnd);
+//      btnExportClick(Nil);
+//      btnSendMailClick(Nil);
+//    end;
+//
+//    if qryMaker.FieldByName('isReport5').AsBoolean then
+//    begin
+//      RepType := 4;
+//      ReportGoodsPartionDate;
+//      btnExportClick(Nil);
+//      btnSendMailClick(Nil);
+//    end;
+
+    if qryMaker.FieldByName('isReport6').AsBoolean then
     begin
-      RepType := 0;
-      ReportIncome(DateStart, DateEnd);
+      RepType := 5;
+      ReportStockTimingRemainder;
       btnExportClick(Nil);
       btnSendMailClick(Nil);
     end;
 
-    if qryMaker.FieldByName('isReport2').AsBoolean then
-    begin
-      RepType := 1;
-      ReportCheck(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport3').AsBoolean then
-    begin
-      RepType := 2;
-      ReportAnalysisRemainsSelling(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport4').AsBoolean then
-    begin
-      RepType := 3;
-      ReportIncomeConsumptionBalance(DateStart, DateEnd);
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if qryMaker.FieldByName('isReport5').AsBoolean then
-    begin
-      RepType := 4;
-      ReportGoodsPartionDate;
-      btnExportClick(Nil);
-      btnSendMailClick(Nil);
-    end;
-
-    if FormAddFile then
-    begin
-      if qryMaker.FieldByName('isReport1').AsBoolean then
-      begin
-        RepType := 0;
-        ReportIncome(DateStartAdd, DateEndAdd);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport2').AsBoolean then
-      begin
-        RepType := 1;
-        ReportCheck(DateStartAdd, DateEndAdd);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport3').AsBoolean then
-      begin
-        RepType := 2;
-        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport4').AsBoolean then
-      begin
-        RepType := 3;
-        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-    end;
-
-      // квартальные отчеты
-    if FormQuarterFile then
-    begin
-      if qryMaker.FieldByName('isReport1').AsBoolean then
-      begin
-        RepType := 0;
-        ReportIncome(DateStartQuarter, DateEndQuarter);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport2').AsBoolean then
-      begin
-        RepType := 1;
-        ReportCheck(DateStartQuarter, DateEndQuarter);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport3').AsBoolean then
-      begin
-        RepType := 2;
-        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport4').AsBoolean then
-      begin
-        RepType := 3;
-        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-    end;
-
-      // дополнительно отчеты за 4 месяца
-    if Form4MonthFile then
-    begin
-      if qryMaker.FieldByName('isReport1').AsBoolean then
-      begin
-        RepType := 0;
-        ReportIncome(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport2').AsBoolean then
-      begin
-        RepType := 1;
-        ReportCheck(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport3').AsBoolean then
-      begin
-        RepType := 2;
-        ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-
-      if qryMaker.FieldByName('isReport4').AsBoolean then
-      begin
-        RepType := 3;
-        ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
-        btnExportClick(Nil);
-        btnSendMailClick(Nil);
-      end;
-    end;
-
-    if not FProcError then
-    begin
-      try
-        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
-        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
-        qrySetDateSend.ExecSQL;
-      except
-        on E: Exception do
-        begin
-          Add_Log(E.Message);
-        end;
-      end;
-    end;
+//    if FormAddFile then
+//    begin
+//      if qryMaker.FieldByName('isReport1').AsBoolean then
+//      begin
+//        RepType := 0;
+//        ReportIncome(DateStartAdd, DateEndAdd);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport2').AsBoolean then
+//      begin
+//        RepType := 1;
+//        ReportCheck(DateStartAdd, DateEndAdd);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport3').AsBoolean then
+//      begin
+//        RepType := 2;
+//        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport4').AsBoolean then
+//      begin
+//        RepType := 3;
+//        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//    end;
+//
+//      // квартальные отчеты
+//    if FormQuarterFile then
+//    begin
+//      if qryMaker.FieldByName('isReport1').AsBoolean then
+//      begin
+//        RepType := 0;
+//        ReportIncome(DateStartQuarter, DateEndQuarter);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport2').AsBoolean then
+//      begin
+//        RepType := 1;
+//        ReportCheck(DateStartQuarter, DateEndQuarter);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport3').AsBoolean then
+//      begin
+//        RepType := 2;
+//        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport4').AsBoolean then
+//      begin
+//        RepType := 3;
+//        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//    end;
+//
+//      // дополнительно отчеты за 4 месяца
+//    if Form4MonthFile then
+//    begin
+//      if qryMaker.FieldByName('isReport1').AsBoolean then
+//      begin
+//        RepType := 0;
+//        ReportIncome(DateStart4Month, DateEnd4Month);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport2').AsBoolean then
+//      begin
+//        RepType := 1;
+//        ReportCheck(DateStart4Month, DateEnd4Month);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport3').AsBoolean then
+//      begin
+//        RepType := 2;
+//        ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//
+//      if qryMaker.FieldByName('isReport4').AsBoolean then
+//      begin
+//        RepType := 3;
+//        ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
+//        btnExportClick(Nil);
+//        btnSendMailClick(Nil);
+//      end;
+//    end;
+//
+//    if not FProcError then
+//    begin
+//      try
+//        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+//        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
+//        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
+//        qrySetDateSend.ExecSQL;
+//      except
+//        on E: Exception do
+//        begin
+//          Add_Log(E.Message);
+//        end;
+//      end;
+//    end;
 
   except
     on E: Exception do
@@ -601,6 +612,47 @@ begin
   end;
 end;
 
+procedure TMainForm.ReportStockTimingRemainder;
+  var I : integer;
+begin
+  Add_Log('Начало Формирования отчета Истекший срок годности');
+  FileName := 'Истекший срок годности';
+  Subject := FileName;
+
+  if qryReport_Upload.Active then qryReport_Upload.Close;
+  if grtvMaker.ColumnCount > 0 then grtvMaker.ClearItems;
+  if grtvMaker.DataController.Summary.FooterSummaryItems.Count > 0 then
+    grtvMaker.DataController.Summary.FooterSummaryItems.Clear;
+  qryReport_Upload.SQL.Text :=
+    'select '#13#10 +
+    '  UnitName AS "Подразделение", '#13#10 +
+    '  GoodsCode AS "Код", '#13#10 +
+    '  GoodsName AS "Название", '#13#10 +
+    '  Price AS "Цена с НДС", '#13#10 +
+    '  AmountDeferred AS "Отложено количество", '#13#10 +
+    '  SummaDeferred AS "Отложено сумма", '#13#10 +
+    '  AmountComplete AS "Перемещено количество", '#13#10 +
+    '  SummaComplete AS "Перемещено сумма", '#13#10 +
+    '  Amount AS "Остаток количество", '#13#10 +
+    '  Summa AS "Остаток сумма", '#13#10 +
+    '  ExpirationDate AS "Срок годности остатка" '#13#10 +
+    'from gpReport_StockTiming_Remainder(CURRENT_DATE, 0, :inMaker, ''3'')';
+
+  qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+
+  OpenAndFormatSQL;
+
+  if grtvMaker.ColumnCount = 0 then Exit;
+
+  for I := 4 to 9 do
+  with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
+  begin
+    Column := grtvMaker.Columns[I];
+    Format := '0.###';
+    Kind := skSum;
+  end;
+end;
+
 procedure TMainForm.ReportIncomeConsumptionBalance(ADateStart, ADateEnd : TDateTime);
   var I : integer;
 begin
@@ -728,6 +780,7 @@ begin
     2 : ReportAnalysisRemainsSelling(DateStart, DateEnd);
     3 : ReportIncomeConsumptionBalance(DateStart, DateEnd);
     4 : ReportGoodsPartionDate;
+    5 : ReportStockTimingRemainder;
   end;
 end;
 

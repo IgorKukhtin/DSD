@@ -271,12 +271,12 @@ BEGIN
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
-         AND (vbIsSUN_over = TRUE
+/*         AND (vbIsSUN_over = TRUE
            OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE
            OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
            OR Movement.StatusId <> zc_Enum_Status_Erased()
              )
-        
+*/        
        ;
 
 END;

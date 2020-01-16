@@ -42,7 +42,7 @@ BEGIN
       -- Ограничение на просмотр товарного справочника
       vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
     
-    IF vbUserId <> 948223      
+    IF vbUserId <> 948223 AND inSession <> '3'     
     THEN
         RAISE EXCEPTION 'Ошибка. Запуск отчета разрешен только директору.';
     END IF;
@@ -156,24 +156,33 @@ BEGIN
                                 GROUP BY AnalysisContainerItem.UnitID)
              -- Зврплата за период
            , tmpWages AS (SELECT Object_Unit.ID                     AS UnitID
-                               , SUM(CASE Movement.OperDate
-                                          WHEN vbDateWStart THEN vbWStart
-                                          WHEN vbDateWEnd THEN vbWEnd ELSE 1.0 END *
-                                     (MovementItem.Amount +
-                                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
-                                     COALESCE (MIFloat_Marketing.ValueData, 0) +
-                                     COALESCE (MIFloat_Director.ValueData, 0))) AS Amount
+                               , SUM(MI_Child.Amount) AS Amount
 
                           FROM  Movement
-                                LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                      AND MovementItem.DescId = zc_MI_Master()
+
+                                INNER JOIN MovementItem AS MI_Master
+                                                        ON MI_Master.MovementId = Movement.Id
+                                                       AND MI_Master.DescId = zc_MI_Master()
+                                                       AND MI_Master.isErased = FALSE
+
+                                INNER JOIN MovementItem AS MI_Child
+                                                        ON MI_Child.MovementId = Movement.Id
+                                                       AND MI_Child.ParentId = MI_Master.Id
+                                                       AND MI_Child.DescId = zc_MI_Child()
+                                                       AND MI_Child.isErased = FALSE
+
+                                INNER JOIN MovementItemDate AS MIDate_Calculation
+                                                            ON MIDate_Calculation.MovementItemId = MI_Child.Id
+                                                           AND MIDate_Calculation.DescId = zc_MIDate_Calculation()
+                                                           AND MIDate_Calculation.ValueData >= inDateStart
+                                                           AND MIDate_Calculation.ValueData < inDateFinal
 
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                                 ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                 ON MILinkObject_Unit.MovementItemId = MI_Master.Id
                                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
                                 LEFT JOIN ObjectLink AS ObjectLink_User_Member
-                                                     ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                     ON ObjectLink_User_Member.ObjectId = MI_Master.ObjectId
                                                     AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                                 LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
 
@@ -181,27 +190,62 @@ BEGIN
                                                      ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
                                                     AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
 
-                                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
+                                LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MI_Child.ObjectId, MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
 
-                                LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
-                                                            ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
-
-                                LEFT JOIN MovementItemFloat AS MIFloat_Marketing
-                                                            ON MIFloat_Marketing.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
-
-                                LEFT JOIN MovementItemFloat AS MIFloat_Director
-                                                            ON MIFloat_Director.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
                           WHERE Movement.DescId = zc_Movement_Wages()
                             AND Movement.ID <> 15774527
                             AND Movement.OperDate >= vbDateWStart
                             AND Movement.OperDate <= vbDateWEnd
-                            AND MovementItem.isErased = FALSE
                           GROUP BY Object_Unit.ID
                           )
+             -- Зврплата за период остальная
+           , tmpWagesRest AS (SELECT Object_Unit.ID                     AS UnitID
+                                   , SUM(CASE Movement.OperDate
+                                              WHEN vbDateWStart THEN vbWStart
+                                              WHEN vbDateWEnd THEN vbWEnd ELSE 1.0 END *
+                                         (COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
+                                          COALESCE (MIFloat_Marketing.ValueData, 0) +
+                                          COALESCE (MIFloat_Director.ValueData, 0))) AS Amount
+
+                              FROM  Movement
+                                    LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                          AND MovementItem.DescId = zc_MI_Master()
+
+                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                                                     ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                                                    AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                                                         ON ObjectLink_User_Member.ObjectId = MovementItem.ObjectId
+                                                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                    LEFT JOIN Object AS Object_Member ON Object_Member.Id =ObjectLink_User_Member.ChildObjectId
+
+                                    LEFT JOIN ObjectLink AS ObjectLink_Member_Unit
+                                                         ON ObjectLink_Member_Unit.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                        AND ObjectLink_Member_Unit.DescId = zc_ObjectLink_Member_Unit()
+
+                                    LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MILinkObject_Unit.ObjectId, ObjectLink_Member_Unit.ChildObjectId)
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_HolidaysHospital
+                                                                ON MIFloat_HolidaysHospital.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_HolidaysHospital.DescId = zc_MIFloat_HolidaysHospital()
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_Marketing
+                                                                ON MIFloat_Marketing.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_Marketing.DescId = zc_MIFloat_Marketing()
+
+                                    LEFT JOIN MovementItemFloat AS MIFloat_Director
+                                                                ON MIFloat_Director.MovementItemId = MovementItem.Id
+                                                               AND MIFloat_Director.DescId = zc_MIFloat_Director()
+
+                              WHERE Movement.DescId = zc_Movement_Wages()
+                                AND Movement.ID <> 15774527
+                                AND Movement.OperDate >= vbDateWStart
+                                AND Movement.OperDate <= vbDateWEnd
+                                AND MovementItem.isErased = FALSE
+                              GROUP BY Object_Unit.ID
+                              )
              -- Дополнительные расходы
            , tmpAdditionalExpenses AS (SELECT MovementItem.ObjectId              AS UnitID
                                             , SUM(CASE Movement.OperDate
@@ -262,7 +306,7 @@ BEGIN
              , tmpRemains.SaldoSum::TFloat
 
              , tmpWages.Amount::TFloat
-             , tmpAdditionalExpenses.Amount::TFloat
+             , (COALESCE(tmpAdditionalExpenses.Amount, 0) + COALESCE(tmpWagesRest.Amount, 0))::TFloat
              
              , (COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0) - 
                 COALESCE(tmpWages.Amount, 0) - COALESCE(tmpAdditionalExpenses.Amount, 0)) ::TFloat
@@ -275,6 +319,7 @@ BEGIN
              LEFT JOIN tmpRemains ON tmpRemains.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpWages ON tmpWages.UnitID = Object_Unit.Id
+             LEFT JOIN tmpWagesRest ON tmpWagesRest.UnitID = Object_Unit.Id
 
              LEFT JOIN tmpAdditionalExpenses ON tmpAdditionalExpenses.UnitID = Object_Unit.Id
              
@@ -297,4 +342,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Profitability (inDateStart:= '01.10.2019'::TDateTime, inDateFinal:= '31.10.2019'::TDateTime, inUnitID := 0/*377606*/, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_Profitability (inDateStart:= '01.08.2019'::TDateTime, inDateFinal:= '31.08.2019'::TDateTime, inUnitID := 11300059, inSession:= zfCalc_UserAdmin())

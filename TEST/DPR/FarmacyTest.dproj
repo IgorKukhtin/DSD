@@ -2756,6 +2756,14 @@
 				<Form>LoyaltySaveMoneyJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_StockTiming_RemainderDialog.pas">
+				<Form>Report_StockTiming_RemainderDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_StockTiming_Remainder.pas">
+				<Form>Report_StockTiming_RemainderForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

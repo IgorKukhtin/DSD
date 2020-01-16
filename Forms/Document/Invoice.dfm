@@ -25,7 +25,6 @@ object InvoiceForm: TInvoiceForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 967
     object edInvNumber: TcxTextEdit
       Left = 9
       Top = 23
@@ -180,7 +179,7 @@ object InvoiceForm: TInvoiceForm
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 18
       Width = 58
     end
@@ -224,7 +223,7 @@ object InvoiceForm: TInvoiceForm
       EditValue = 1.000000000000000000
       Properties.DecimalPlaces = 4
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 24
       Width = 44
     end
@@ -258,14 +257,12 @@ object InvoiceForm: TInvoiceForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 967
     ClientRectBottom = 242
     ClientRectRight = 1051
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 967
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -273,7 +270,6 @@ object InvoiceForm: TInvoiceForm
         Height = 218
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 967
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -602,7 +598,6 @@ object InvoiceForm: TInvoiceForm
     Height = 3
     AlignSplitter = salBottom
     Control = cxGrid
-    ExplicitWidth = 967
   end
   object cxGrid1: TcxGrid
     Left = 0
@@ -611,8 +606,7 @@ object InvoiceForm: TInvoiceForm
     Height = 109
     Align = alBottom
     PopupMenu = PopupMenu
-    TabOrder = 9
-    ExplicitWidth = 967
+    TabOrder = 7
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
@@ -776,7 +770,7 @@ object InvoiceForm: TInvoiceForm
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####;-,0.####; ;'
-    TabOrder = 11
+    TabOrder = 10
     Width = 58
   end
   object cxLabel6: TcxLabel
@@ -2204,17 +2198,19 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outCurrencyValue'
+        Name = 'ioCurrencyValue'
         Value = 0.000000000000000000
         Component = edCurrencyValue
         DataType = ftFloat
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outParValue'
+        Name = 'ioParValue'
         Value = Null
         Component = edParValue
         DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2242,7 +2238,7 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 42
+    Left = 58
     Top = 160
   end
   object HeaderSaver: THeaderSaver
@@ -2494,8 +2490,8 @@ object InvoiceForm: TInvoiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 96
-    Top = 216
+    Left = 392
+    Top = 192
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'

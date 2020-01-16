@@ -98,6 +98,15 @@ type
     actUpdate_PartionGoods: TdsdExecStoredProc;
     macUpdate_PartionGoods: TMultiAction;
     bbUpdate_PartionGoods: TdxBarButton;
+    actInsert_bySeparate: TdsdExecStoredProc;
+    spInsert_MI_Inventory_bySeparate: TdsdStoredProc;
+    macInsert_bySeparate: TMultiAction;
+    actSeparateOpenForm: TOpenChoiceForm;
+    spDelete_MI_Inventory_bySeparate: TdsdStoredProc;
+    actDelete_bySeparate: TdsdExecStoredProc;
+    macDelete_bySeparate: TMultiAction;
+    bbInsert_bySeparate: TdxBarButton;
+    bbDelete_bySeparate: TdxBarButton;
   private
     { Private declarations }
   public
