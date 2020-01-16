@@ -14,7 +14,8 @@ BEGIN
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Receipt());
 
    -- изменили
-   PERFORM lpDelete_Object (inObjectId, inSession) ;
+   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
+   -- !!!!!! PERFORM lpDelete_Object (inObjectId, inSession) ;
 
 END;
 $BODY$

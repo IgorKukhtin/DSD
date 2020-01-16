@@ -388,6 +388,8 @@ BEGIN
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
 
+           , CASE WHEN EXISTS (SELECT 1 FROM tmpListDocSale WHERE tmpListDocSale.PaidKindId = zc_Enum_PaidKind_FirstForm()) THEN TRUE ELSE FALSE END :: Boolean AS isFirstForm
+
            , 'м.Дніпро' :: TVarChar AS CityOf                             -- Мiсце складання
 
        FROM (SELECT Max(tmpListDocSale.MovementId) AS MovementId
@@ -859,14 +861,40 @@ BEGIN
                   ELSE ''
              END AS Article_order
 
-             -- сумма по ценам док-та
-           , tmpMI.AmountSumm
+             -- сумма без НДС - по ценам док-та
+           , CASE WHEN 1 = (SELECT COUNT(*) FROM (SELECT 1
+                                                  FROM tmpMI                
+                                                  GROUP BY tmpMI.GoodsId
+                                                         , tmpMI.GoodsKindId
+                                                         , tmpMI.Price
+                                                         , tmpMI.CountForPrice
+                                                         , tmpMI.GoodsPropertyId
+                                                         , tmpMI.PriceWithVAT 
+                                                         , tmpmi.vatpercent
+                                                 ) AS tmpMI)
+                  THEN (SELECT SUM (MF.ValueData) FROM tmpListDocSale JOIN MovementFloat AS MF ON MF.MovementId = tmpListDocSale.MovementId AND MF.DescId = zc_MovementFloat_TotalSummMVAT())
+                  ELSE tmpMI.AmountSumm
+             END :: TFloat AS AmountSumm
 
              -- расчет цены без НДС, до 4 знаков
            , tmpMI.PriceNoVAT
 
              -- расчет цены с НДС и скидкой, до 4 знаков
            , tmpMI.PriceWVAT
+             -- расчет суммы с НДС и скидкой, до 2 знаков
+           , CASE WHEN 1 = (SELECT COUNT(*) FROM (SELECT 1
+                                                  FROM tmpMI                
+                                                  GROUP BY tmpMI.GoodsId
+                                                         , tmpMI.GoodsKindId
+                                                         , tmpMI.Price
+                                                         , tmpMI.CountForPrice
+                                                         , tmpMI.GoodsPropertyId
+                                                         , tmpMI.PriceWithVAT 
+                                                         , tmpmi.vatpercent
+                                                 ) AS tmpMI)
+                  THEN (SELECT SUM (MF.ValueData) FROM tmpListDocSale JOIN MovementFloat AS MF ON MF.MovementId = tmpListDocSale.MovementId AND MF.DescId = zc_MovementFloat_TotalSummPVAT())
+                  ELSE tmpMI.SummWVAT
+             END :: TFloat AS SummWVAT
              -- расчет цены с НДС БЕЗ скидки, до 4 знаков
            , tmpMI.PriceWVAT_original
 
@@ -919,6 +947,26 @@ BEGIN
                              AS NUMERIC (16, 4))
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
+             -- расчет суммы с НДС и скидкой, до 4 знаков
+           , SUM (CAST (CASE WHEN tmpMI.PriceWithVAT <> TRUE
+                             THEN CAST ((tmpMI.Price + tmpMI.Price * (tmpMI.VATPercent / 100))
+                                                    * CASE WHEN tmpMI.DiscountPercent <> 0 AND tmpMI.IsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                THEN (1 - tmpMI.DiscountPercent / 100)
+                                                           WHEN tmpMI.ExtraChargesPercent <> 0 AND tmpMI.IsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                THEN (1 + tmpMI.ExtraChargesPercent / 100)
+                                                           ELSE 1
+                                                      END
+                                        AS NUMERIC (16, 4))
+                             ELSE CAST (tmpMI.Price * CASE WHEN tmpMI.DiscountPercent <> 0 AND tmpMI.IsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                THEN (1 - tmpMI.DiscountPercent / 100)
+                                                           WHEN tmpMI.ExtraChargesPercent <> 0 AND tmpMI.IsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                THEN (1 + tmpMI.ExtraChargesPercent / 100)
+                                                           ELSE 1
+                                                      END
+                                        AS NUMERIC (16, 4))
+                        END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                      * tmpMI.AmountPartner
+                  AS NUMERIC (16, 4))) :: TFloat AS SummWVAT
              -- расчет цены с НДС БЕЗ скидки, до 4 знаков
            , CASE WHEN tmpMI.PriceWithVAT <> TRUE
                   THEN CAST ((tmpMI.Price + tmpMI.Price * (tmpMI.VATPercent / 100))

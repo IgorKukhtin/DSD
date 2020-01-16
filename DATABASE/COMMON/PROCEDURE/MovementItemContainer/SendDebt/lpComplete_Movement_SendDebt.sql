@@ -49,7 +49,7 @@ BEGIN
 
              , MovementItem.Id AS MovementItemId
 
-             , 0 AS ContainerId                                                     -- сформируем позже
+             , CASE WHEN MovementItem.MovementId = 15558281 THEN 2470073 ELSE 0 END AS ContainerId -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId         -- сформируем позже
              , 0 AS ProfitLossGroupId, 0 AS ProfitLossDirectionId                   -- не используется
 

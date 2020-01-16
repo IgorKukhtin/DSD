@@ -41,6 +41,7 @@ BEGIN
            , COALESCE (gpSelect.StartFrom, CURRENT_TIMESTAMP - INTERVAL '1 DAY') :: TDateTime AS Start_fromChild
            , gpSelect.OID_last
         FROM gpSelect_Object_ReplServer (inSession) AS gpSelect
+        WHERE gpSelect.isErased = FALSE
         ORDER BY 2
       ;
 

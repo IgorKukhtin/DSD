@@ -73,104 +73,20 @@ end if;
      END IF;
 
 
-/*
-    CREATE TEMP TABLE tmpMovement  ON COMMIT DROP AS
-    (WITH tmpStatus AS (SELECT Object_Status.*
-                             , Object_Status.Id  AS StatusId
-                        FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
-                           UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                           UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                              ) AS tmp
-                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
-                        )
-        , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
-        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = inUserId GROUP BY AccessKeyId)
-        , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId
-                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
-                                        )
-        , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                         UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
-                         UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
-                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
-                              )
-        , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
-                                 FROM ObjectLink AS ObjectLink_Juridical
-                                      INNER JOIN ObjectLink AS ObjectLink_Branch
-                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
-                                                           AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchJuridical_Branch()
-                                 WHERE ObjectLink_Juridical.ChildObjectId > 0
-                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
-                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
-                                )
-        , tmpMovement_all AS (SELECT Movement.Id
-                               , Movement.OperDate
-                               , Movement.InvNumber
-                               , Movement.StatusId
-                               , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
-                       -- FROM tmpStatus
-                       --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
-                          FROM Movement
+     -- –езультат 1
+     CREATE TEMP TABLE tmpStatus ON COMMIT DROP AS
+       SELECT Object_Status.*
+            , Object_Status.Id  AS StatusId
+       FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
+          UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+          UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+             ) AS tmp
+           LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
+       ;
 
-                          WHERE inIsPartnerDate = FALSE
-                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                            AND Movement.DescId = zc_Movement_Sale()
-                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
-                         UNION ALL
-                          SELECT MovementDate_OperDatePartner.MovementId  AS Id
-                               , Movement.OperDate
-                               , Movement.InvNumber
-                               , Movement.StatusId
-                               , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
-                          FROM MovementDate AS MovementDate_OperDatePartner
-                               JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
-                                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
-                            -- JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
-                          WHERE inIsPartnerDate = TRUE
-                            AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
-                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-                         )
-        , tmpMovementLinkObject_To AS (SELECT MovementLinkObject.*
-                                       FROM MovementLinkObject
-                                       WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
-                                         AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
-                                       )
-
-       , tmpJuridicalTo AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS ToId
-                                 , Object_JuridicalTo.*
-                            FROM ObjectLink AS ObjectLink_Partner_Juridical
-                                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
-                            WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpMovementLinkObject_To.ObjectId FROM tmpMovementLinkObject_To)
-                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                            )
-        --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
-        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo))
-         SELECT Movement.Id
-                               , Movement.OperDate
-                               , Movement.InvNumber
-                               , Movement.StatusId
-                               , tmpRoleAccessKey.AccessKeyId
-                          FROM tmpMovement_all AS Movement
-                               LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
-                               LEFT JOIN tmpMovementLinkObject_To ON tmpMovementLinkObject_To.MovementId = Movement.Id
-                               LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
-                               LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
-                          WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
-                         );
-analyze tmpMovement;
--- RAISE EXCEPTION '<%>', (select count(*) from tmpMovement);
-*/
-
-     -- –езультат
-     RETURN QUERY
-     WITH tmpStatus AS (SELECT Object_Status.*
-                             , Object_Status.Id  AS StatusId
-                        FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
-                           UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                           UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                              ) AS tmp
-                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
-                        )
-/**/    , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+     -- –езультат 2
+     CREATE TEMP TABLE tmpMovement  ON COMMIT DROP AS
+     WITH tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
         , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = inUserId GROUP BY AccessKeyId)
         , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId
                                    UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
@@ -232,7 +148,99 @@ analyze tmpMovement;
                             )
         --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
         , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo))
-/**/    , tmpMovement AS (SELECT Movement.Id
+
+        -- –езультат
+        SELECT Movement.Id
+             , Movement.OperDate
+             , Movement.InvNumber
+             , Movement.StatusId
+             , tmpRoleAccessKey.AccessKeyId
+        FROM tmpMovement_all AS Movement
+             LEFT JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             LEFT JOIN tmpMovementLinkObject_To ON tmpMovementLinkObject_To.MovementId = Movement.Id
+             LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
+             LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
+        WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0);
+                         
+-- analyze tmpMovement;
+-- RAISE EXCEPTION '<%>', (select count(*) from tmpMovement);
+
+
+     -- –езультат
+     RETURN QUERY
+     WITH /*tmpStatus AS (SELECT Object_Status.*
+                             , Object_Status.Id  AS StatusId
+                        FROM (SELECT zc_Enum_Status_Complete()   AS StatusId
+                           UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                           UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                              ) AS tmp
+                            LEFT JOIN Object AS Object_Status ON Object_Status.Id = tmp.StatusId
+                        )
+        , tmpRoleAccessKey_all AS (SELECT AccessKeyId, UserId FROM Object_RoleAccessKey_View)
+        , tmpRoleAccessKey_user AS (SELECT AccessKeyId FROM tmpRoleAccessKey_all WHERE UserId = inUserId GROUP BY AccessKeyId)
+        , tmpAccessKey_IsDocumentAll AS (SELECT 1 AS Id FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId
+                                   UNION SELECT 1 AS Id FROM tmpRoleAccessKey_user WHERE AccessKeyId = zc_Enum_Process_AccessKey_DocumentAll()
+                                        )
+        , tmpRoleAccessKey AS (SELECT tmpRoleAccessKey_user.AccessKeyId FROM tmpRoleAccessKey_user WHERE NOT EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         UNION SELECT tmpRoleAccessKey_all.AccessKeyId FROM tmpRoleAccessKey_all WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll) GROUP BY tmpRoleAccessKey_all.AccessKeyId
+                         UNION SELECT 0 AS AccessKeyId WHERE EXISTS (SELECT tmpAccessKey_IsDocumentAll.Id FROM tmpAccessKey_IsDocumentAll)
+                         UNION SELECT zc_Enum_Process_AccessKey_DocumentDnepr() AS AccessKeyId WHERE vbIsXleb = TRUE
+                              )
+        , tmpBranchJuridical AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
+                                 FROM ObjectLink AS ObjectLink_Juridical
+                                      INNER JOIN ObjectLink AS ObjectLink_Branch
+                                                            ON ObjectLink_Branch.ObjectId = ObjectLink_Juridical.ObjectId
+                                                           AND ObjectLink_Branch.DescId = zc_ObjectLink_BranchJuridical_Branch()
+                                 WHERE ObjectLink_Juridical.ChildObjectId > 0
+                                   AND ObjectLink_Juridical.DescId = zc_ObjectLink_BranchJuridical_Juridical()
+                                   AND ObjectLink_Branch.ChildObjectId IN (SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 GROUP BY Object_RoleAccessKeyGuide_View.BranchId)
+                                )*/
+          tmpMovement_all AS 
+                         (SELECT tmpMovement.Id, tmpMovement.OperDate, tmpMovement.InvNumber, tmpMovement.StatusId, tmpMovement.AccessKeyId FROM tmpMovement
+                        /*SELECT Movement.Id
+                               , Movement.OperDate
+                               , Movement.InvNumber
+                               , Movement.StatusId
+                               , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
+                       -- FROM tmpStatus
+                       --      JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
+                          FROM Movement
+
+                          WHERE inIsPartnerDate = FALSE
+                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            AND Movement.DescId = zc_Movement_Sale()
+                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
+                         UNION ALL
+                          SELECT MovementDate_OperDatePartner.MovementId  AS Id
+                               , Movement.OperDate
+                               , Movement.InvNumber
+                               , Movement.StatusId
+                               , COALESCE (Movement.AccessKeyId, 0) AS AccessKeyId
+                          FROM MovementDate AS MovementDate_OperDatePartner
+                               JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_Sale()
+                                            AND (Movement.StatusId <> zc_Enum_Status_Erased() OR inIsErased = TRUE)
+                            -- JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                          WHERE inIsPartnerDate = TRUE
+                            AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()*/
+                         )
+        , tmpMovementLinkObject_To AS (SELECT MovementLinkObject.*
+                                       FROM MovementLinkObject
+                                       WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement_all.Id FROM tmpMovement_all)
+                                     --WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id     FROM tmpMovement)
+                                         AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+                                       )
+
+       , tmpJuridicalTo AS (SELECT ObjectLink_Partner_Juridical.ObjectId AS ToId
+                                 , Object_JuridicalTo.*
+                            FROM ObjectLink AS ObjectLink_Partner_Juridical
+                                 LEFT JOIN Object AS Object_JuridicalTo ON Object_JuridicalTo.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                            WHERE ObjectLink_Partner_Juridical.ObjectId IN (SELECT DISTINCT tmpMovementLinkObject_To.ObjectId FROM tmpMovementLinkObject_To)
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                            )
+        --, tmpContract_InvNumber AS (SELECT * FROM Object_Contract_InvNumber_Sale_View)
+        , tmpJuridicalDetails AS (SELECT * FROM ObjectHistory_JuridicalDetails_View WHERE ObjectHistory_JuridicalDetails_View.JuridicalId IN (SELECT DISTINCT tmpJuridicalTo.Id FROM tmpJuridicalTo))
+/*      , tmpMovement AS (SELECT Movement.Id
                                , Movement.OperDate
                                , Movement.InvNumber
                                , Movement.StatusId
@@ -243,7 +251,7 @@ analyze tmpMovement;
                                LEFT JOIN tmpJuridicalTo ON tmpJuridicalTo.ToId = tmpMovementLinkObject_To.ObjectId
                                LEFT JOIN tmpBranchJuridical ON tmpBranchJuridical.JuridicalId = tmpJuridicalTo.Id
                           WHERE (tmpBranchJuridical.JuridicalId > 0 OR tmpRoleAccessKey.AccessKeyId > 0)
-                         )/**/
+                         )*/
         , tmpMovementLinkObject_From AS (SELECT MovementLinkObject.*
                                          FROM MovementLinkObject
                                          WHERE MovementLinkObject.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -1044,6 +1052,6 @@ $BODY$
 
 -- тест
 --
--- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '01.05.2019', inEndDate:= '14.05.2019', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_Movement_Sale_DATA (inStartDate:= '05.01.2020', inEndDate:= '10.01.2020', inIsPartnerDate:= FALSE, inIsErased:= FALSE, inJuridicalBasisId:= 0, inUserId:= zfCalc_UserAdmin() :: Integer)
 --Ѕыло 1 мес€ц - 3 мин 21 сек
 --сейчас 1 мес€ц - 28 сек

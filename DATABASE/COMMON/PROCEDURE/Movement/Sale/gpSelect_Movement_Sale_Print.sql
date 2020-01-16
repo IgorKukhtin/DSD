@@ -1288,6 +1288,29 @@ BEGIN
                              AS NUMERIC (16, 4))
              END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
              AS PriceWVAT
+             -- расчет суммы с НДС и скидкой, до 2 знаков
+           , CASE WHEN 1 = (SELECT COUNT(*) FROM tmpMI)
+                  THEN CASE WHEN vbIsProcess_BranchIn = FALSE AND vbDescId = zc_Movement_SendOnPrice() THEN vbOperSumm_PVAT ELSE (SELECT MF.ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_TotalSummPVAT()) END
+                  ELSE CAST (CASE WHEN vbPriceWithVAT <> TRUE
+                                  THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))
+                                                         * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                     THEN (1 - vbDiscountPercent / 100)
+                                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                     THEN (1 + vbExtraChargesPercent / 100)
+                                                                ELSE 1
+                                                           END
+                                             AS NUMERIC (16, 4))
+                                  ELSE CAST (tmpMI.Price * CASE WHEN vbDiscountPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                     THEN (1 - vbDiscountPercent / 100)
+                                                                WHEN vbExtraChargesPercent <> 0 AND vbIsChangePrice = FALSE -- !!!учитываем для НАЛ, но НЕ всегда!!!
+                                                                     THEN (1 + vbExtraChargesPercent / 100)
+                                                                ELSE 1
+                                                           END
+                                             AS NUMERIC (16, 4))
+                             END / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
+                           * tmpMI.AmountPartner
+                             AS NUMERIC (16, 2))
+             END :: TFloat AS SummWVAT
              -- расчет цены с НДС БЕЗ скидки, до 4 знаков
            , CASE WHEN vbPriceWithVAT <> TRUE
                   THEN CAST ((tmpMI.Price + tmpMI.Price * (vbVATPercent / 100))

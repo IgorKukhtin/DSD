@@ -10,12 +10,30 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_BankAccount_Contract(
 )                              
 RETURNS TVarChar AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId         Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbInfoMoneyId    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_BankAccount_Contract());
 
+
+     -- проверка
+     vbInfoMoneyId:= (SELECT MILinkObject_InfoMoney.ObjectId
+                      FROM MovementItem
+                           JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                       ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                      AND MILinkObject_InfoMoney.DescId        = zc_MILinkObject_InfoMoney()
+                      WHERE MovementItem.MovementId = inId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                     );
+
+     -- проверка
+     IF COALESCE ((SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inId AND MLM.DescId = zc_MovementLinkMovement_Invoice()), 0) = 0
+        AND EXISTS (SELECT 1 FROM Object_InfoMoney_View AS View_InfoMoney WHERE View_InfoMoney.InfoMoneyId = vbInfoMoneyId AND View_InfoMoney.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000()) -- Инвестиции
+     THEN
+        RAISE EXCEPTION 'Ошибка.Для УП статьи <%> необходимо заполнить значение <№ док. Счет>.', lfGet_Object_ValueData (vbInfoMoneyId);
+     END IF;
 
      -- проверка
      IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inId AND Movement.DescId = zc_Movement_BankAccount() AND Movement.StatusId = zc_Enum_Status_Complete())

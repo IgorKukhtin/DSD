@@ -74,6 +74,12 @@ BEGIN
 
          -- сохранили <Товар>
          vbGoodsId:= zfCalc_PartionGoods_GoodsCode (inValue);
+         -- Проверка
+         IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.ObjectCode = vbGoodsId AND Object.DescId = zc_Object_Goods())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Неправильный формат в партии. <%> %', vbGoodsId, inValue;
+         END IF;
+         --
          vbGoodsId:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = vbGoodsId AND Object.DescId = zc_Object_Goods());
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, vbGoodsId);
  
