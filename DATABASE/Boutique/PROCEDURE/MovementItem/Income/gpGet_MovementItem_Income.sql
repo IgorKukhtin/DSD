@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_MovementItem_Income (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_MovementItem_Income(
     IN inId             Integer  , -- ключ
+    IN inGoodsGroupId   Integer  , -- ключ
     IN inisMask         Boolean  , -- по маске
     IN inSession        TVarChar   -- сессия пользователя
 )
@@ -37,8 +39,8 @@ BEGIN
                ,  0 :: Integer              AS GoodsId
                , lfGet_ObjectCode(0, zc_Object_Goods())  AS GoodsCode
                , '' :: TVarChar             AS GoodsName
-               ,  0 :: Integer              AS GoodsGroupId
-               , '' :: TVarChar             AS GoodsGroupName
+               , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN 0  ELSE inGoodsGroupId                                                                END :: Integer  AS GoodsGroupId
+               , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN '' ELSE lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent()) END :: TVarChar AS GoodsGroupName
                , Object_Measure.Id          AS MeasureId
                , Object_Measure.ValueData   AS MeasureName
                ,  0 :: Integer              AS JuridicalId
@@ -93,7 +95,7 @@ BEGIN
                  CASE WHEN inisMask = FALSE THEN tmpMI.Id ELSE 0 END Id
                , Object_Goods.Id                AS GoodsId
                -- , Object_Goods.ObjectCode        AS GoodsCode
-               , CASE WHEN inisMask = TRUE THEN lfGet_ObjectCode (0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END :: Integer AS GoodsCode
+               , CASE WHEN inisMask = TRUE AND zc_Enum_GlobalConst_isTerry() = TRUE THEN lfGet_ObjectCode (0, zc_Object_Goods()) ELSE Object_Goods.ObjectCode END :: Integer AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
                , Object_GoodsGroup.Id           AS GoodsGroupId
                -- , Object_GoodsGroup.ValueData    AS GoodsGroupName

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , GoodsGroupNameFull TVarChar, MeasureName TVarChar
+             , GoodsGroupId Integer, GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , JuridicalName TVarChar
              , CompositionGroupName TVarChar
              , CompositionName TVarChar
@@ -131,6 +131,7 @@ BEGIN
            , Object_Goods.Id                     AS GoodsId
            , Object_Goods.ObjectCode             AS GoodsCode
            , Object_Goods.ValueData              AS GoodsName
+           , OL_Goods_GoodsGroup.ChildObjectId   AS GoodsGroupId
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData            AS MeasureName
            , Object_Juridical.ValueData          AS JuridicalName
@@ -155,14 +156,20 @@ BEGIN
            
            -- % наценки
            , CAST (CASE WHEN tmpMI.TotalSummBalance <> 0
-                        THEN (100 * tmpMI.TotalSummPriceList
+                        THEN (100 * tmpMI.TotalSummPriceList * CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE OR vbCurrencyId_Doc = zc_Currency_Basis()
+                                                                         THEN 1
+                                                                    ELSE CASE WHEN vbParValue > 0 THEN vbCurrencyValue / vbParValue ELSE vbCurrencyValue END
+                                                               END
                             / tmpMI.TotalSummBalance
                               - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
 
            , CASE WHEN CAST (CASE WHEN tmpMI.TotalSummBalance <> 0
-                                  THEN (100 * tmpMI.TotalSummPriceList
+                                  THEN (100 * tmpMI.TotalSummPriceList * CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE OR vbCurrencyId_Doc = zc_Currency_Basis()
+                                                                                   THEN 1
+                                                                              ELSE CASE WHEN vbParValue > 0 THEN vbCurrencyValue / vbParValue ELSE vbCurrencyValue END
+                                                                         END
                                       / tmpMI.TotalSummBalance
                                         - 100)
                                   ELSE 0
@@ -192,6 +199,10 @@ BEGIN
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id       = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
             LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id   = Object_PartionGoods.JuridicalId
+
+            LEFT JOIN ObjectLink AS OL_Goods_GoodsGroup
+                                 ON OL_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
+                                AND OL_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
 
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId

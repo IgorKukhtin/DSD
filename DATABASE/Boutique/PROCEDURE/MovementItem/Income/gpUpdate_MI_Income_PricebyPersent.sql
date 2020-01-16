@@ -1,21 +1,26 @@
--- Function: gpUpdate_MI_Income_PricebyPersent (tfloat, tfloat, tvarchar)
+-- Function: gpUpdate_MI_Income_PricebyPersent (TFloat, TFloat, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUpdate_MI_Income_PricebyPersent (tfloat, tfloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_Income_PricebyPersent (TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_Income_PricebyPersent(
-    IN inPersent      tfloat,
-    IN inPriceJur     tfloat,
-   OUT outOperPrice   tfloat,
-    IN insession      tvarchar
+    IN inPersent      TFloat,
+    IN inPriceJur     TFloat,
+   OUT outOperPrice   TFloat,
+    IN insession      TVarChar
 )
-  RETURNS tfloat AS
+RETURNS TFloat
+AS
 $BODY$
-   DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_MI_Income_Price());
 
-     outOperPrice := inPriceJur + (inPriceJur / 100 * inPersent);
+     -- Результат
+     outOperPrice := CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE
+                               THEN inPriceJur + (inPriceJur / 100 * inPersent)
+                          ELSE inPriceJur
+                     END;
 
 END;
 $BODY$

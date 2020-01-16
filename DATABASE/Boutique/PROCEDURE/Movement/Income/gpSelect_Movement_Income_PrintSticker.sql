@@ -54,7 +54,7 @@ BEGIN
                , Object_Goods.Id                AS GoodsId
                , Object_Goods.ObjectCode        AS GoodsCode
                , Object_Goods.ValueData         AS GoodsName
-               , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
+               , (CASE WHEN Object_Composition.ValueData NOT IN ('-', '') THEN CASE WHEN LENGTH (Object_Composition.ValueData) <= 25 AND zc_Enum_GlobalConst_isTerry() = TRUE THEN 'сост: ' ELSE '' END || Object_Composition.ValueData ELSE '' END) :: TVarChar AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName

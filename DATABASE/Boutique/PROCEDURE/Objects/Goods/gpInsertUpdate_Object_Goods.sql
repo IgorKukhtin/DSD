@@ -43,7 +43,14 @@ BEGIN
        IF COALESCE (ioCode, 0) <= 0 THEN RAISE EXCEPTION 'Ошибка.Ошибочно передано "предварительное" значение кода : <%>', ioCode; END IF;
 
        -- Определили
-       ioCode:= NEXTVAL ('Object_Goods_seq'); 
+       IF zc_Enum_GlobalConst_isTerry() = TRUE
+       THEN
+           -- !!!для магазина PODIUM!!!
+           ioCode:= lfGet_ObjectCode(0, zc_Object_Goods())
+       ELSE
+           ioCode:= NEXTVAL ('Object_Goods_seq');
+       END IF;
+       
 
    END IF; 
    
