@@ -143,7 +143,7 @@ BEGIN
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
-            OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
+          --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
               )
           AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2()
           -- если указан день недели - проверим его
