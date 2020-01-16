@@ -1750,6 +1750,14 @@ object IncomeForm: TIncomeForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'MovementId'
           Value = Null
           Component = FormParams
@@ -1792,6 +1800,14 @@ object IncomeForm: TIncomeForm
           Value = '0'
           Component = MasterCDS
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
@@ -1849,6 +1865,14 @@ object IncomeForm: TIncomeForm
           Value = '0'
           Component = MasterCDS
           ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end

@@ -84,6 +84,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object edGoodsName: TcxButtonEdit
     Left = 8
     Top = 113
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -171,7 +172,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Left = 289
     Top = 246
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.####; -,0.####; '
+    Properties.EditFormat = ',0.####; -,0.####; '
     TabOrder = 9
     Width = 91
   end
@@ -184,7 +186,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Left = 289
     Top = 293
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.####; -,0.####; '
+    Properties.EditFormat = ',0.####; -,0.####; '
     TabOrder = 10
     Width = 91
   end
@@ -228,6 +231,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object edJuridicalBasis: TcxButtonEdit
     Left = 10
     Top = 293
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -458,6 +462,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsGroupId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId'
         Value = Null
         ParamType = ptInputOutput
@@ -483,6 +493,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsGroupId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

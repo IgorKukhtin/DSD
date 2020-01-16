@@ -399,6 +399,23 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.btnStopClick(Sender: TObject);
 begin
+ {    with childZConnection do begin
+        Connected:=false;
+        HostName:= EditCountLinkObject.Text;  // integer-srv.alan.dp.ua
+        User    := EditCountDateObject.Text;  //'admin';
+        Password:= EditCountFloatObject.Text; //'vas6ok';
+        Port    := StrToInt(EditCountStringObject.Text); //5432;
+        DataBase:= EditCountBooleanObject.Text; // 'project';
+        //
+        try Connected:=true;
+        except on E:Exception do
+              ShowMessage(E.Message);
+        end;
+     end;
+           ShowMessage('end');
+     exit;}
+
+//
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
 

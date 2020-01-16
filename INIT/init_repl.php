@@ -1,1 +1,1 @@
-http://project-vds.vds.colocall.com/project/index.php
+http://integer-srv2.alan.dp.ua

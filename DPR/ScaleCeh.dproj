@@ -78,7 +78,7 @@
 			<VerInfo_Build>40</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_SORT.ini ves=1.2345</Debugger_RunParams>
+			<Debugger_RunParams>Scale_SORT.ini </Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>

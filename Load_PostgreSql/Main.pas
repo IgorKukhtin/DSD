@@ -224,6 +224,8 @@ type
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
 
+    GroupId_branch : Integer;
+
     procedure AddToLog(num, lMovementId : Integer; S: string);
 
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -252,6 +254,7 @@ type
     function fExecSqToQuery (mySql:String):Boolean;
     function fOpenSqToQuery_two (mySql:String):Boolean;
     function fExecSqToQuery_two (mySql:String):Boolean;
+    function fExecSqToQuery_noErr_two (mySql:String):Boolean;
 
     function fFind_ContractId_pg(PartnerId,IMCode,IMCode_two,PaidKindId:Integer;myContractNumber:String):Integer;
     function fFindIncome_ContractId_pg(JuridicalId,IMCode,InfoMoneyId,PaidKindId:Integer;OperDate:TdateTime):Integer;
@@ -1300,6 +1303,16 @@ begin
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fExecSqToQuery_noErr_two(mySql:String):Boolean;
+begin
+     with toSqlQuery_two,Sql do begin
+        Clear;
+        Add(mySql);
+        try ExecSql except Result:=false;exit;end;
+     end;
+     Result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.MyDelay(mySec:Integer);
 var
   Present: TDateTime;
@@ -1531,12 +1544,12 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbCompleteClick(Sender: TObject);
 begin
-      //cbUnComplete.Checked:=not cbComplete.Checked;
+      cbUnComplete.Checked:=cbComplete.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbUnCompleteClick(Sender: TObject);
 begin
-      //cbComplete.Checked:=not cbUnComplete.Checked;
+      //cbComplete.Checked:=cbUnComplete.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbCompleteIncomeBNClick(Sender: TObject);
@@ -1554,6 +1567,12 @@ var
   Present: TDateTime;
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
 begin
+     try if Pos('br-', ParamStr(4)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(4), 4, 2));
+         OKPOEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
+     except GroupId_branch:= -1;
+            OKPOEdit.Text:= '!!!ERROR!!! BranchId : ???';
+     end;
+     //
      Gauge.Visible:=false;
      Gauge.Progress:=0;
      //
@@ -2334,7 +2353,7 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
      //
      // сам расчет с/с - 2-ой - производство + ‘»Ћ»јЋџ
-     if not fStop then pInsertHistoryCost(FALSE);
+     if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(FALSE);
      //
      // ¬—≈√ƒј - –асчет акций
      if (not fStop) then pCompleteDocument_Promo;
@@ -20652,6 +20671,7 @@ var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
     MSec_complete:Integer;
     isSale_str:String;
     strErr:String;
+    strExec:String;
 begin
      if (isPartion = FALSE) and (isDiff = FALSE) then if (not cbComplete_List.Checked)or(not cbComplete_List.Enabled) then exit;
      //
@@ -20681,8 +20701,8 @@ begin
               then fOpenSqToQuery ('select * from gpComplete_SelectHistoryCost_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)')
               else
                   if isBefoHistoryCost = TRUE
-                  then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE)')
-                  else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE)');
+                  then fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',TRUE, -1)')
+                  else fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+isSale_str+',FALSE,' + IntToStr(GroupId_branch) + ')');
 
      // delete Data on Sybase
      fromADOConnection.Connected:=false;
@@ -20774,7 +20794,7 @@ begin
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
 
-                       // перва€ попытка
+                       // 1-а€ попытка
                        try
                           strErr:= '';
                           if not myExecToStoredProc_two then ;//exit;
@@ -20785,7 +20805,7 @@ begin
                        if strErr <> '' then begin AddToLog(1, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
 
                        //
-                       // втора€ попытка
+                       // 2-а€ попытка
                        if strErr <> ''
                        then
                        try
@@ -20797,7 +20817,7 @@ begin
                        // обработка
                        if strErr <> '' then begin AddToLog(2, FieldByName('MovementId').AsInteger, strErr); MyDelay(3 * 1000); end;
                        //
-                       // ѕќ—Ћ≈ƒЌяя попытка
+                       // 3-ь€ попытка
                        if strErr <> ''
                        then
                        try
@@ -20808,6 +20828,41 @@ begin
                        end;
                        // обработка
                        if strErr <> '' then AddToLog(3, FieldByName('MovementId').AsInteger, strErr);
+                       //
+                       // 4-а€ попытка
+                       if strErr <> ''
+                       then
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then AddToLog(4, FieldByName('MovementId').AsInteger, strErr);
+                       //
+                       // ѕќ—Ћ≈ƒЌяя попытка
+                       if strErr <> ''
+                       then
+                       try
+                          strErr:= '';
+                          if not myExecToStoredProc_two then ;//exit;
+                       except on E:Exception do
+                              strErr:= E.Message;
+                       end;
+                       // обработка
+                       if strErr <> '' then
+                       begin
+                            AddToLog(5, FieldByName('MovementId').AsInteger, strErr);
+                            //
+                            // сохранили айди, потом проведем руками
+                            strExec:= 'insert into HistoryCost_err(InsertDate,MovementId)'
+                                     +'  select CURRENT_TIMESTAMP, ' + IntToStr(FieldByName('MovementId').AsInteger);
+                            if not fExecSqToQuery_noErr_two(strExec)
+                            then
+                                AddToLog(55, FieldByName('MovementId').AsInteger, strExec);
+
+                       end;
                   end;
              end;
              //

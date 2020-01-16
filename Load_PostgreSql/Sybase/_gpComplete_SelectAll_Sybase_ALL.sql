@@ -1,27 +1,40 @@
 -- Function: gpComplete_SelectAll_Sybase_ALL()
 
-DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
+ DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
+-- DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
-    IN inStartDate          TDateTime , -- 
+    IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
-    IN inIsSale             Boolean   , -- 
-    IN inIsBefoHistoryCost  Boolean
-)                              
+    IN inIsSale             Boolean   , --
+    IN inIsBefoHistoryCost  Boolean     --
+--    IN inGroupId            Integer     -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+)
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar
               )
 AS
 $BODY$
+DECLARE inGroupId Integer;
 BEGIN
+
+IF inIsBefoHistoryCost = TRUE
+THEN
+    inGroupId:= -1;
+ELSE
+--    inGroupId:= -1; -- Все
+    inGroupId:=  0; -- ф.Днепр
+--  inGroupId:=  1; -- ф.Киев
+--  inGroupId:=  2; -- остальные филиалы
+END IF;
 
 -- inIsBefoHistoryCost:= TRUE;
 
      -- !!!ВРЕМЕННО!!!
-     /*IF inStartDate >= '01.02.2018' THEN 
+     /*IF inStartDate >= '01.02.2018' THEN
           return;
      END IF;*/
 
-     /*IF inIsBefoHistoryCost = TRUE THEN 
+     /*IF inIsBefoHistoryCost = TRUE THEN
           return;
      END IF;*/
 
@@ -29,13 +42,13 @@ BEGIN
      -- inIsBefoHistoryCost:= FALSE;
      -- !!!Замена!!!
      /*IF inIsSale = TRUE
-     THEN 
+     THEN
          inIsBefoHistoryCost:= FALSE;
      END IF;*/
 
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpUnit AS (/*SELECT 8411 AS UnitId, NULL AS isMain -- Склад гп ф.Киев
                 UNION SELECT 8413 AS UnitId, NULL AS isMain  -- ф. Кр.Рог
                 UNION SELECT 8415 AS UnitId, NULL AS isMain  -- ф. Черкассы ( Кировоград)
@@ -63,10 +76,19 @@ BEGIN
      , tmpUnit_branch AS (SELECT ObjectLink.ObjectId AS UnitId, NULL AS isMain
                           FROM ObjectLink
                           WHERE  ObjectLink.DescId = zc_ObjectLink_Unit_Branch()
-                             AND ObjectLink.ChildObjectId > 0 
+                             AND ObjectLink.ChildObjectId > 0
                              AND ObjectLink.ChildObjectId <> zc_Branch_Basis()
-                             -- AND ObjectLink.ChildObjectId = 8379    -- филиал Киев
-                             -- AND ObjectLink.ChildObjectId = 3080683 -- филиал Львов
+                             AND (inGroupId < 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+                               OR inGroupId = 0
+                               OR (inGroupId = 1 AND ObjectLink.ChildObjectId IN (8379     -- филиал Киев
+                                                                                , 3080683) -- филиал Львов
+                                  )
+                               OR (inGroupId = 2 AND ObjectLink.ChildObjectId NOT IN (8379     -- филиал Киев
+                                                                                    , 3080683) -- филиал Львов
+                                  ))
+                             -- AND ObjectLink.ChildObjectId = 8379       -- филиал Киев
+                             -- AND ObjectLink.ChildObjectId = 3080683    -- филиал Львов
+                             -- AND ObjectLink.ChildObjectId = 8374       -- филиал Одесса
                         /*SELECT 301309 AS UnitId, NULL AS isMain  -- Склад ГП ф.Запорожье
                     UNION SELECT 309599 AS UnitId, NULL AS isMain  -- Склад возвратов ф.Запорожье
                     UNION SELECT 346093  AS UnitId, NULL AS isMain  -- Склад ГП ф.Одесса
@@ -133,6 +155,7 @@ BEGIN
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_IncomeCost())
        AND Movement.StatusId = zc_Enum_Status_Complete()
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 1.1. From: Sale + !!!NOT SendOnPrice!!!
@@ -158,7 +181,10 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        --*** AND inIsSale            = TRUE
-       AND (tmpUnit_from.UnitId > 0/* OR tmpUnit_To.UnitId > 0*/)
+       AND (tmpUnit_from.UnitId > 0
+       --OR tmpUnit_To.UnitId > 0
+           )
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 1.2. From: Loss
@@ -176,12 +202,16 @@ BEGIN
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
-          LEFT JOIN tmpUnit AS tmpUnit_from ON tmpUnit_from.UnitId = MLO_From.ObjectId
+          LEFT JOIN tmpUnit        AS tmpUnit_from        ON tmpUnit_from.UnitId        = MLO_From.ObjectId
+          LEFT JOIN tmpUnit_branch AS tmpUnit_branch_from ON tmpUnit_branch_from.UnitId = MLO_From.ObjectId
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        -- AND (tmpUnit_from.UnitId > 0)
+       AND tmpUnit_branch_from.UnitId IS NULL
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 1.3. To: ReturnIn
@@ -205,6 +235,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_To.UnitId > 0)
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 1.4. From: ReturnOut
@@ -228,6 +259,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_from.UnitId > 0)
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
      -- !!!Internal - PACK!!!
     UNION
@@ -254,9 +286,9 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
        AND inIsBefoHistoryCost = FALSE
        AND (tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL)
-       /*AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
-         OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion())
-           )*/
+     --AND ((tmpUnit_from.UnitId > 0 AND tmpUnit_To.UnitId IS NULL AND Movement.DescId = zc_Movement_Send())
+     --  OR (tmpUnit_from.UnitId > 0 AND Movement.DescId = zc_Movement_ProductionUnion()))
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
      -- !!!Internal!!!
     UNION
@@ -285,6 +317,7 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        -- AND tmpUnit_pack_from.UnitId IS NULL AND tmpUnit_pack_To.UnitId IS NULL -- !!!***
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 2.2. !!!Internal - SendOnPrice!!!
@@ -309,6 +342,7 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- !!!***
        --***** AND (tmpUnit_from.UnitId > 0 OR tmpUnit_To.UnitId > 0)
+       AND inGroupId <= 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 
     UNION
      -- 3. !!!Inventory!!!
@@ -326,10 +360,17 @@ BEGIN
           LEFT JOIN Object AS Object_To ON Object_To.Id = MLO_To.ObjectId
 
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+
+          LEFT  JOIN tmpUnit_branch ON tmpUnit_branch.UnitId = MLO_From.ObjectId
+
      WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND Movement.DescId IN (zc_Movement_Inventory())
-       -- AND inIsBefoHistoryCost = FALSE
+    -- AND inIsBefoHistoryCost = FALSE
+       AND (inGroupId < 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+         OR (inGroupId = 0 AND tmpUnit_branch.UnitId IS NULL)
+         OR (inGroupId > 0 AND tmpUnit_branch.UnitId IS NOT NULL)
+           )
 
 
      -- !!!BRANCH!!!
@@ -354,6 +395,8 @@ BEGIN
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
        --*** AND (inIsSale           = TRUE OR Movement.DescId = zc_Movement_SendOnPrice())
+       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+
     UNION
      -- 4.2. From: Loss
      SELECT Movement.Id AS MovementId
@@ -374,6 +417,8 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_Loss())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE
+       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+
     UNION
      -- 4.3. To: ReturnIn
      SELECT Movement.Id AS MovementId
@@ -394,6 +439,8 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_ReturnIn())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        AND inIsBefoHistoryCost = FALSE -- *****?????
+       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+
     UNION
      -- 4.4. To: Peresort
      SELECT Movement.Id AS MovementId
@@ -415,9 +462,11 @@ BEGIN
        AND Movement.DescId IN (zc_Movement_ProductionUnion())
        AND Movement.StatusId = zc_Enum_Status_Complete()
        -- AND inIsBefoHistoryCost = TRUE -- *****
+       AND inGroupId <> 0 -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+
     ) AS tmp
     -- INNER JOIN tmpMovContainer ON tmpMovContainer.MovementId = tmp.MovementId
-    
+
     -- WHERE tmp.MovementId >= 2212722 OR tmp.Code = 'zc_Movement_Inventory'
     ;
 
@@ -463,4 +512,4 @@ create table dba._pgMovementReComlete
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
 -- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)

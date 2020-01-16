@@ -245,6 +245,7 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
+          Text = '5432'
         end
       end
     end
@@ -293,6 +294,7 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
+          Text = 'vas6ok'
         end
       end
     end
@@ -341,6 +343,7 @@ object MainForm: TMainForm
           Height = 21
           Align = alBottom
           TabOrder = 0
+          Text = 'admin'
         end
       end
     end
@@ -389,6 +392,7 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
+          Text = 'project'
         end
       end
     end
@@ -437,6 +441,7 @@ object MainForm: TMainForm
           Height = 21
           Align = alTop
           TabOrder = 0
+          Text = 'integer-srv.alan.dp.ua'
         end
       end
     end
@@ -647,14 +652,12 @@ object MainForm: TMainForm
   object childZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
-    Catalog = 'public'
-    DesignConnection = True
-    HostName = 'localhost'
+    HostName = '192.168.0.194'
     Port = 5432
     Database = 'project'
     User = 'postgres'
-    Password = 'postgres'
-    Protocol = 'postgresql-9'
+    Password = 'vas6ok'
+    Protocol = 'postgresql'
     Left = 24
     Top = 256
   end
@@ -908,7 +911,7 @@ object MainForm: TMainForm
     Database = 'project'
     User = 'postgres'
     Password = 'postgres'
-    Protocol = 'postgresql-9'
+    Protocol = 'postgresql'
     Left = 29
     Top = 140
   end
