@@ -1047,7 +1047,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -6214,8 +6213,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 232
+    Left = 304
+    Top = 280
   end
   object FormParams: TdsdFormParams
     Params = <

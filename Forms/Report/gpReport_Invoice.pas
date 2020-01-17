@@ -42,6 +42,11 @@ type
     actOpenReportForm: TdsdOpenForm;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     bbOpenReportForm: TdxBarButton;
+    actOpenForm: TdsdOpenForm;
+    actGetForm: TdsdExecStoredProc;
+    getMovementForm: TdsdStoredProc;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

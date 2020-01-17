@@ -13,17 +13,17 @@ inherited Report_InvoiceDetailForm: TReport_InvoiceDetailForm
     Height = 343
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 951
+    ExplicitWidth = 846
     ExplicitHeight = 343
     ClientRectBottom = 343
     ClientRectRight = 846
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 951
+      ExplicitWidth = 846
       ExplicitHeight = 343
       inherited cxGrid: TcxGrid
         Width = 846
         Height = 343
-        ExplicitWidth = 951
+        ExplicitWidth = 846
         ExplicitHeight = 343
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -154,7 +154,7 @@ inherited Report_InvoiceDetailForm: TReport_InvoiceDetailForm
   inherited Panel: TPanel
     Width = 846
     Height = 54
-    ExplicitWidth = 951
+    ExplicitWidth = 846
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -273,7 +273,6 @@ inherited Report_InvoiceDetailForm: TReport_InvoiceDetailForm
       MoveParams = <>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       FormName = 'NULL'
-      FormNameParam.Value = Null
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
@@ -554,7 +553,6 @@ inherited Report_InvoiceDetailForm: TReport_InvoiceDetailForm
     Params = <
       item
         Name = 'FormName'
-        Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
       end
