@@ -39,6 +39,9 @@ type
     actPrint2: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     bbPrint2: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    bbOpenReportForm: TdxBarButton;
   private
     { Private declarations }
   public

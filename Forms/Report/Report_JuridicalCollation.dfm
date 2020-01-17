@@ -2194,7 +2194,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     PackSize = 1
     Left = 296
-    Top = 120
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <
