@@ -61,6 +61,9 @@ type
     edLabelPenalty: TcxTextEdit;
     HeaderCDS: TClientDataSet;
     CrossDBViewAddOn: TCrossDBViewAddOn;
+    Summa: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

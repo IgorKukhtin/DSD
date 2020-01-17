@@ -966,10 +966,10 @@ inherited MainCashForm2: TMainCashForm2
           Width = 93
         end
         object MainNotSold60: TcxGridDBColumn
-          Caption = #1053#1077' '#1087#1088#1086#1076#1072#1074#1072#1083#1089#1103' 60 '#1076#1085#1077#1081
+          Caption = #1058#1077#1082#1091#1097#1080#1077' '#1053#1077#1083#1080#1082#1074#1080#1076#1099' ('#1073#1077#1079' '#1087#1088#1086#1076#1072#1078') '
           DataBinding.FieldName = 'NotSold60'
           HeaderAlignmentHorz = taCenter
-          Width = 78
+          Width = 100
         end
       end
       object MainGridLevel: TcxGridLevel
@@ -5274,7 +5274,7 @@ inherited MainCashForm2: TMainCashForm2
     Params = <>
     PackSize = 1
     Left = 352
-    Top = 379
+    Top = 411
   end
   object ExpirationDateCDS: TClientDataSet
     Aggregates = <>
@@ -5315,8 +5315,8 @@ inherited MainCashForm2: TMainCashForm2
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 752
-    Top = 400
+    Left = 688
+    Top = 448
   end
   object spGet_Movement_InvNumberSP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_InvNumberSP'
@@ -5610,5 +5610,40 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 785
     Top = 349
+  end
+  object spLoyaltySaveMoneyChekInfo: TdsdStoredProc
+    StoredProcName = 'gpSelect_LoyaltySaveMoney_ChekInfo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaCheck'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumma'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 785
+    Top = 389
   end
 end

@@ -39,11 +39,27 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             item
               Format = ',0.####'
               Kind = skSum
+              Column = AmountStart
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountSale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsOut
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Summa
             end>
           OptionsData.Editing = False
           Styles.Content = nil
@@ -74,6 +90,13 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 291
+          end
+          object GoodsGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsGroupName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 106
           end
           object AmountStart: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088#1086#1074' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
@@ -117,6 +140,15 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             Options.Editing = False
             Width = 58
           end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
           object RemainsOut: TcxGridDBColumn
             Caption = #1048#1089#1093#1086#1076#1103#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'RemainsOut'
@@ -136,6 +168,13 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
             Options.Editing = False
             Width = 72
           end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
@@ -147,6 +186,7 @@ inherited Report_IlliquidReductionPlanListForm: TReport_IlliquidReductionPlanLis
           end
           object Check_Filter: TcxGridDBColumn
             DataBinding.FieldName = 'Check_Filter'
+            Visible = False
           end
         end
       end
