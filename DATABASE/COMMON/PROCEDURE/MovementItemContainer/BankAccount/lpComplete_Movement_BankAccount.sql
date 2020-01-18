@@ -127,6 +127,42 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.У расчетного счета не установлено главное юр лицо.Проведение невозможно.';
      END IF;
 
+     -- проверка
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     JOIN ObjectLink AS Contract_InfoMoney
+                                     ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                    AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе статья <%> не соответствует статьи <%> в договоре № <%>.Проведение невозможно.'
+                       , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId
+                                                     FROM _tmpItem
+                                                          JOIN ObjectLink AS Contract_InfoMoney
+                                                                          ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                         AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                     WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                     LIMIT 1
+                                                   ))
+                       , lfGet_Object_ValueData_sh ((SELECT Contract_InfoMoney.ChildObjectId
+                                                     FROM _tmpItem
+                                                          JOIN ObjectLink AS Contract_InfoMoney
+                                                                          ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                         AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                     WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                     LIMIT 1
+                                                   ))
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.ContractId
+                                                  FROM _tmpItem
+                                                       JOIN ObjectLink AS Contract_InfoMoney
+                                                                       ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                      AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                  WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                  LIMIT 1
+                                                ))
+                         ;
+     END IF;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpPersonal AS (SELECT tmp.Id AS MemberId

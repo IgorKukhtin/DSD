@@ -3,7 +3,7 @@
 			<ProjectGuid>{6E50D37C-FBA5-484D-8DBA-F69505ABFF96}</ProjectGuid>
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
-			<MainSource>Boutique.dpr</MainSource>
+			<MainSource>Podium.dpr</MainSource>
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -154,6 +154,9 @@
 			<DCCReference Include="..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
+			<DCCReference Include="..\FormsBoutique\MainPodiumForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\SOURCE\LoginForm.pas">
@@ -200,9 +203,6 @@
 			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-			<DCCReference Include="..\FormsBoutique\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -221,7 +221,7 @@
 			<BorlandProject>
 				<Delphi.Personality>
 					<Source>
-						<Source Name="MainSource">Boutique.dpr</Source>
+						<Source Name="MainSource">Podium.dpr</Source>
 					</Source>
 					<VersionInfo>
 						<VersionInfo Name="IncludeVerInfo">False</VersionInfo>

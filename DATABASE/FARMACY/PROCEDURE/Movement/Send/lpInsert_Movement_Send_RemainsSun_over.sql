@@ -93,11 +93,10 @@ BEGIN
 
 
      -- !!!
-     vbSumm_limit:= 0;
-                  /*CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
+     vbSumm_limit:= CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
                               THEN (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
                          ELSE 1500
-                    END;*/
+                    END;
 
 
      -- все ѕодразделени€ дл€ схемы SUN-v2
@@ -916,7 +915,7 @@ BEGIN
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
                          -- !!!больше лимита
-                         -- WHERE _tmpSumm_limit.Summ >= vbSumm_limit
+                         WHERE _tmpSumm_limit.Summ >= vbSumm_limit
                          GROUP BY _tmpSumm_limit.UnitId_from
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
@@ -940,7 +939,7 @@ BEGIN
                  INNER JOIN (SELECT _tmpSumm_limit.UnitId_to, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
                              WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from
                                -- !!!больше лимита
-                               -- AND _tmpSumm_limit.Summ >= vbSumm_limit
+                               AND _tmpSumm_limit.Summ >= vbSumm_limit
                              GROUP BY _tmpSumm_limit.UnitId_to
                             ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
@@ -1033,6 +1032,16 @@ BEGIN
      CLOSE curPartion; -- закрыли курсор1
 
 
+     -- 6.1.2. !!!важно, дл€ vbSumm_limit - оставл€ем только по условию!!!
+     DELETE FROM _tmpResult_Partion
+     WHERE _tmpResult_Partion.UnitId_from :: TVarChar || ' - ' || _tmpResult_Partion.UnitId_to :: TVarChar
+       IN -- собрали в 1 перемещение
+          (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || ' - ' || _tmpResult_Partion.UnitId_to :: TVarChar
+           FROM _tmpResult_Partion
+           GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to
+           HAVING SUM (_tmpResult_Partion.Summ + _tmpResult_Partion.Summ_next) < vbSumm_limit
+          )
+    ;
 
     
      -- –езультат

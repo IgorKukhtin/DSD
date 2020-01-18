@@ -371,276 +371,289 @@ BEGIN
     RETURN QUERY
     WITH -- ВСЕ документы для расчета по Расценкам грн./кг. - по MovementId
          tmpMovement_all AS
-       (SELECT
-            MovementItemContainer.OperDate
-           ,MovementItemContainer.MovementId
-           ,DATE_PART ('ISODOW', MovementItemContainer.OperDate)  AS OperDate_num
-           ,MovementItemContainer.MovementDescId
-           ,MovementItemContainer.IsActive
+                (SELECT
+                     MovementItemContainer.OperDate
+                    ,MovementItemContainer.MovementId
+                    ,DATE_PART ('ISODOW', MovementItemContainer.OperDate)  AS OperDate_num
+                    ,MovementItemContainer.MovementDescId
+                    ,MovementItemContainer.IsActive
 
-           ,COALESCE (MLO_DocumentKind.ObjectId, 0) AS DocumentKindId
+                    ,COALESCE (MLO_DocumentKind.ObjectId, 0) AS DocumentKindId
 
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectExtId_Analyzer
-                 ELSE MovementItemContainer.WhereObjectId_Analyzer
-            END AS FromId
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.WhereObjectId_Analyzer
-                 ELSE MovementItemContainer.ObjectExtId_Analyzer
-            END AS ToId
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectExtId_Analyzer
+                          ELSE MovementItemContainer.WhereObjectId_Analyzer
+                     END AS FromId
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.WhereObjectId_Analyzer
+                          ELSE MovementItemContainer.ObjectExtId_Analyzer
+                     END AS ToId
 
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
-                 ELSE MovementItemContainer.ObjectId_Analyzer
-            END AS GoodsId_from
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectId_Analyzer
-                 ELSE Container.ObjectId
-            END AS GoodsId_to
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                          ELSE MovementItemContainer.ObjectId_Analyzer
+                     END AS GoodsId_from
+                    ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                               THEN MovementItemContainer.ObjectId_Analyzer
+                          ELSE Container.ObjectId
+                     END AS GoodsId_to
 
-           ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
-                            THEN MovementItemContainer.Amount
-                       ELSE -1 * MovementItemContainer.Amount
-                 END)::TFloat as Amount
+                    ,SUM (CASE  WHEN MovementItemContainer.IsActive = TRUE
+                                     THEN MovementItemContainer.Amount
+                                ELSE -1 * MovementItemContainer.Amount
+                          END)::TFloat as Amount
 
-           , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+                    , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
 
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
-                  ELSE MovementItemContainer.ObjectIntId_Analyzer
-             END AS GoodsKind_FromId
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
-                  ELSE OL_GoodsKindComplete_master.ChildObjectId
-             END AS GoodsKindComplete_FromId
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MovementItemContainer.ObjectIntId_Analyzer
-                  ELSE CLO_GoodsKind.ObjectId
-             END AS GoodsKind_ToId
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN OL_GoodsKindComplete_master.ChildObjectId
-                  ELSE OL_GoodsKindComplete.ChildObjectId
-             END AS GoodsKindComplete_ToId
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                           ELSE MovementItemContainer.ObjectIntId_Analyzer
+                      END AS GoodsKind_FromId
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                           ELSE OL_GoodsKindComplete_master.ChildObjectId
+                      END AS GoodsKindComplete_FromId
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer
+                           ELSE CLO_GoodsKind.ObjectId
+                      END AS GoodsKind_ToId
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId
+                           ELSE OL_GoodsKindComplete.ChildObjectId
+                      END AS GoodsKindComplete_ToId
 
-           , CASE WHEN MovementItemContainer.IsActive = FALSE
-                       THEN MILO_StorageLine.ObjectId
-                  ELSE 0
-             END AS StorageLineId_From
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MILO_StorageLine.ObjectId
-                  ELSE 0
-             END AS StorageLineId_To
+                    , CASE WHEN MovementItemContainer.IsActive = FALSE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END AS StorageLineId_From
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END AS StorageLineId_To
 
-        FROM (SELECT DISTINCT
-                     Setting.MovementDescId
-              FROM Setting_Wage_1 as Setting
-              WHERE Setting.MovementDescId IS NOT NULL
-                AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
-                                                 zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
-                                                 -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
-                                               , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
-                                                )
-             ) AS SettingDesc
-             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
-                                             AND MovementItemContainer.DescId         = zc_MIContainer_Count()
-                                             AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
-             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
-                                                                           AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
-             LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
-                                                                      AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                 FROM (SELECT DISTINCT
+                              Setting.MovementDescId
+                       FROM Setting_Wage_1 as Setting
+                       WHERE Setting.MovementDescId IS NOT NULL
+                         AND Setting.SelectKindId NOT IN (-- Кол-во вес по документам компл.  + Кол-во строк по документам компл. + Кол-во документов компл.
+                                                          zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount()
+                                                          -- Транспорт - Рабочее время из путевого листа + Транспорт - Кол-во вес (реестр) + Транспорт - Кол-во документов (реестр)
+                                                        , zc_Enum_SelectKind_MovementTransportHours(), zc_Enum_SelectKind_MovementReestrWeight(), zc_Enum_SelectKind_MovementReestrDoc()
+                                                         )
+                      ) AS SettingDesc
+                      INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
+                                                      AND MovementItemContainer.DescId         = zc_MIContainer_Count()
+                                                      AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
+                                                                                    AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
+                      LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
+                                                                               AND OL_GoodsKindComplete_master.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
 
-             LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
-             LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
-                                                                 AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
-             LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
-                                                                    AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
-             LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete ON OL_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
-                                                               AND OL_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
-             LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
-                                                                   AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
-             LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
-                                                                       AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
-             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                       ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
-                                      AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
-                                      AND MovementBoolean_Peresort.ValueData  = TRUE
-        WHERE MovementBoolean_Peresort.MovementId IS NULL
-        GROUP BY
-            MovementItemContainer.OperDate
-           ,MovementItemContainer.MovementId
-           ,MovementItemContainer.MovementDescId
-           ,MovementItemContainer.IsActive
-           ,MLO_DocumentKind.ObjectId
-           ,MovementItemContainer.ObjectIntId_Analyzer
-           ,CASE
-                WHEN MovementItemContainer.IsActive = TRUE
-                    THEN MovementItemContainer.ObjectExtId_Analyzer
-            ELSE MovementItemContainer.WhereObjectId_Analyzer
-            END
-           ,CASE
-                WHEN MovementItemContainer.IsActive = TRUE
-                    THEN MovementItemContainer.WhereObjectId_Analyzer
-            ELSE MovementItemContainer.ObjectExtId_Analyzer
-            END
-           ,CASE
-                WHEN MovementItemContainer.IsActive = TRUE
-                    THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
-            ELSE MovementItemContainer.ObjectId_Analyzer
-            END
-           ,CASE
-                WHEN MovementItemContainer.IsActive = TRUE
-                    THEN MovementItemContainer.ObjectId_Analyzer
-            ELSE Container.ObjectId
-            END
+                      LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
+                                                                          AND CLO_GoodsKind.DescId      = zc_ContainerLinkObject_GoodsKind()
+                      LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods ON CLO_PartionGoods.ContainerId = Container.Id
+                                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                      LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete ON OL_GoodsKindComplete.ObjectId = CLO_PartionGoods.ObjectId
+                                                                        AND OL_GoodsKindComplete.DescId   = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                      LEFT OUTER JOIN MovementLinkObject AS MLO_DocumentKind ON MLO_DocumentKind.MovementId = MovementItemContainer.MovementId
+                                                                            AND MLO_DocumentKind.DescId     = zc_MovementLinkObject_DocumentKind()
+                      LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
+                                                                                AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
+                      LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
+                                               AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                               AND MovementBoolean_Peresort.ValueData  = TRUE
+                 WHERE MovementBoolean_Peresort.MovementId IS NULL
+                 GROUP BY
+                     MovementItemContainer.OperDate
+                    ,MovementItemContainer.MovementId
+                    ,MovementItemContainer.MovementDescId
+                    ,MovementItemContainer.IsActive
+                    ,MLO_DocumentKind.ObjectId
+                    ,MovementItemContainer.ObjectIntId_Analyzer
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectExtId_Analyzer
+                     ELSE MovementItemContainer.WhereObjectId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.WhereObjectId_Analyzer
+                     ELSE MovementItemContainer.ObjectExtId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                     ELSE MovementItemContainer.ObjectId_Analyzer
+                     END
+                    ,CASE
+                         WHEN MovementItemContainer.IsActive = TRUE
+                             THEN MovementItemContainer.ObjectId_Analyzer
+                     ELSE Container.ObjectId
+                     END
 
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
-                  ELSE MovementItemContainer.ObjectIntId_Analyzer
-             END
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
-                  ELSE OL_GoodsKindComplete_master.ChildObjectId
-             END
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MovementItemContainer.ObjectIntId_Analyzer
-                  ELSE CLO_GoodsKind.ObjectId
-             END
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN OL_GoodsKindComplete_master.ChildObjectId
-                  ELSE OL_GoodsKindComplete.ChildObjectId
-             END
-           , CASE WHEN MovementItemContainer.IsActive = FALSE
-                       THEN MILO_StorageLine.ObjectId
-                  ELSE 0
-             END
-           , CASE WHEN MovementItemContainer.IsActive = TRUE
-                       THEN MILO_StorageLine.ObjectId
-                  ELSE 0
-             END
-       )
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer -- NULL::Integer
+                           ELSE MovementItemContainer.ObjectIntId_Analyzer
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId -- NULL::Integer
+                           ELSE OL_GoodsKindComplete_master.ChildObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MovementItemContainer.ObjectIntId_Analyzer
+                           ELSE CLO_GoodsKind.ObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN OL_GoodsKindComplete_master.ChildObjectId
+                           ELSE OL_GoodsKindComplete.ChildObjectId
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = FALSE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END
+                    , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                THEN MILO_StorageLine.ObjectId
+                           ELSE 0
+                      END
+                )
          -- Документы разделения - поиск мастера
-       , tmpGoodsMaster_out AS
-       (SELECT tmpMovementList.MovementId, MAX (MovementItem.ObjectId) AS GoodsId
-        FROM (SELECT DISTINCT
-                     tmpMovement_all.MovementId
-              FROM tmpMovement_all
-              WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
-             ) AS tmpMovementList
-             INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
-                                    AND MovementItem.DescId     = zc_MI_Master()
-                                    AND MovementItem.isErased   = FALSE
-        GROUP BY tmpMovementList.MovementId
-       )
+       , tmpGoodsMaster_out AS (SELECT tmpMovementList.MovementId, MAX (MovementItem.ObjectId) AS GoodsId
+                                FROM (SELECT DISTINCT
+                                             tmpMovement_all.MovementId
+                                      FROM tmpMovement_all
+                                      WHERE tmpMovement_all.MovementDescId = zc_Movement_ProductionSeparate()
+                                     ) AS tmpMovementList
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovementList.MovementId
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                GROUP BY tmpMovementList.MovementId
+                               )
          -- ВСЕ документы для расчета по Расценкам грн./кг. - без MovementId, но с найденным GoodsId_from
-       , tmpMovement AS
-       (SELECT
-             tmpMovement_all.OperDate
-           , tmpMovement_all.OperDate_num
-           , tmpMovement_all.MovementDescId
-           , tmpMovement_all.IsActive
-           , tmpMovement_all.DocumentKindId
-           , tmpMovement_all.FromId
-           , tmpMovement_all.ToId
-           , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from) AS GoodsId_from
-           , tmpMovement_all.GoodsId_to
-           , SUM (tmpMovement_all.Amount) :: TFloat AS Amount
-           , tmpMovement_all.GoodsKindId
-           , tmpMovement_all.GoodsKind_FromId
-           , tmpMovement_all.GoodsKindComplete_FromId
-           , tmpMovement_all.GoodsKind_ToId
-           , tmpMovement_all.GoodsKindComplete_ToId
-           , tmpMovement_all.StorageLineId_From
-           , tmpMovement_all.StorageLineId_To
-           , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
-        FROM tmpMovement_all
-             LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
-                                         AND tmpMovement_all.IsActive      = TRUE
-        GROUP BY
-             tmpMovement_all.OperDate
-           , tmpMovement_all.OperDate_num
-           , tmpMovement_all.MovementDescId
-           , tmpMovement_all.IsActive
-           , tmpMovement_all.DocumentKindId
-           , tmpMovement_all.FromId
-           , tmpMovement_all.ToId
-           , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from)
-           , tmpMovement_all.GoodsId_to
-           , tmpMovement_all.GoodsKindId
-           , tmpMovement_all.GoodsKind_FromId
-           , tmpMovement_all.GoodsKindComplete_FromId
-           , tmpMovement_all.GoodsKind_ToId
-           , tmpMovement_all.GoodsKindComplete_ToId
-           , tmpMovement_all.StorageLineId_From
-           , tmpMovement_all.StorageLineId_To
-           , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END
-       )
+       , tmpMovement AS (SELECT
+                              tmpMovement_all.OperDate
+                            , tmpMovement_all.OperDate_num
+                            , tmpMovement_all.MovementDescId
+                            , tmpMovement_all.IsActive
+                            , tmpMovement_all.DocumentKindId
+                            , tmpMovement_all.FromId
+                            , tmpMovement_all.ToId
+                            , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from) AS GoodsId_from
+                            , tmpMovement_all.GoodsId_to
+                            , SUM (tmpMovement_all.Amount) :: TFloat AS Amount
+                            , tmpMovement_all.GoodsKindId
+                            , tmpMovement_all.GoodsKind_FromId
+                            , tmpMovement_all.GoodsKindComplete_FromId
+                            , tmpMovement_all.GoodsKind_ToId
+                            , tmpMovement_all.GoodsKindComplete_ToId
+                            , tmpMovement_all.StorageLineId_From
+                            , tmpMovement_all.StorageLineId_To
+                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END AS MovementId
+                         FROM tmpMovement_all
+                              LEFT JOIN tmpGoodsMaster_out ON tmpGoodsMaster_out.MovementId = tmpMovement_all.MovementId
+                                                          AND tmpMovement_all.IsActive      = TRUE
+                         GROUP BY
+                              tmpMovement_all.OperDate
+                            , tmpMovement_all.OperDate_num
+                            , tmpMovement_all.MovementDescId
+                            , tmpMovement_all.IsActive
+                            , tmpMovement_all.DocumentKindId
+                            , tmpMovement_all.FromId
+                            , tmpMovement_all.ToId
+                            , COALESCE (tmpGoodsMaster_out.GoodsId, tmpMovement_all.GoodsId_from)
+                            , tmpMovement_all.GoodsId_to
+                            , tmpMovement_all.GoodsKindId
+                            , tmpMovement_all.GoodsKind_FromId
+                            , tmpMovement_all.GoodsKindComplete_FromId
+                            , tmpMovement_all.GoodsKind_ToId
+                            , tmpMovement_all.GoodsKindComplete_ToId
+                            , tmpMovement_all.StorageLineId_From
+                            , tmpMovement_all.StorageLineId_To
+                            , CASE WHEN inSession = '5' THEN tmpMovement_all.MovementId ELSE 0 END
+                        )
          -- Модели начисления + необходимые документы для расчета по Кол-во голов
        , tmpMovement_HeadCount AS
-       (SELECT tmpMI.OperDate
-             , tmpMI.MovementDescId
-             , tmpMI.IsActive
-             , tmpMI.FromId
-             , tmpMI.ToId
-             , tmpMI.GoodsId_from
-             , tmpMI.GoodsId_to
-             , tmpMI.GoodsKindId
-             , SUM (MIFloat_HeadCount.ValueData) AS Amount
-        FROM
-        (SELECT DISTINCT MovementItemContainer.MovementItemId
-           ,MovementItemContainer.OperDate
-           ,MovementItemContainer.MovementDescId
-           ,MovementItemContainer.IsActive
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectExtId_Analyzer
-                 ELSE MovementItemContainer.WhereObjectId_Analyzer
-            END AS FromId
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.WhereObjectId_Analyzer
-                 ELSE MovementItemContainer.ObjectExtId_Analyzer
-            END AS ToId
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
-                 ELSE MovementItemContainer.ObjectId_Analyzer
-            END AS GoodsId_from
-           ,CASE WHEN MovementItemContainer.IsActive = TRUE
-                      THEN MovementItemContainer.ObjectId_Analyzer
-                 ELSE Container.ObjectId
-            END AS GoodsId_to
-           ,MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
-
-        FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
-             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
-                                             AND MovementItemContainer.DescId         = zc_MIContainer_Count()
-                                             AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
-             LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
-             LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
-                                       ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
-                                      AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
-                                      AND MovementBoolean_Peresort.ValueData  = TRUE
-        WHERE MovementBoolean_Peresort.MovementId IS NULL
-       ) AS tmpMI
-             /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
-                                    AND MovementItem.isErased = FALSE
-                                    AND MovementItem.Amount <> 0*/
-             INNER JOIN MovementItemFloat AS MIFloat_HeadCount
-                                          ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
-                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
-        GROUP BY tmpMI.OperDate
-               , tmpMI.MovementDescId
-               , tmpMI.IsActive
-               , tmpMI.FromId
-               , tmpMI.ToId
-               , tmpMI.GoodsId_from
-               , tmpMI.GoodsId_to
-               , tmpMI.GoodsKindId
-       )
+                        (SELECT tmpMI.OperDate
+                              , tmpMI.MovementDescId
+                              , tmpMI.IsActive
+                              , tmpMI.FromId
+                              , tmpMI.ToId
+                              , tmpMI.GoodsId_from
+                              , tmpMI.GoodsId_to
+                              , tmpMI.GoodsKindId
+                              , tmpMI.StorageLineId_From
+                              , tmpMI.StorageLineId_To
+                              , SUM (MIFloat_HeadCount.ValueData) AS Amount
+                 
+                         FROM (SELECT DISTINCT MovementItemContainer.MovementItemId
+                                 ,MovementItemContainer.OperDate
+                                 ,MovementItemContainer.MovementDescId
+                                 ,MovementItemContainer.IsActive
+                                 ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                                            THEN MovementItemContainer.ObjectExtId_Analyzer
+                                       ELSE MovementItemContainer.WhereObjectId_Analyzer
+                                  END AS FromId
+                                 ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                                            THEN MovementItemContainer.WhereObjectId_Analyzer
+                                       ELSE MovementItemContainer.ObjectExtId_Analyzer
+                                  END AS ToId
+                                 ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                                            THEN MovementItemContainer.ObjectId_Analyzer -- NULL::Integer
+                                       ELSE MovementItemContainer.ObjectId_Analyzer
+                                  END AS GoodsId_from
+                                 ,CASE WHEN MovementItemContainer.IsActive = TRUE
+                                            THEN MovementItemContainer.ObjectId_Analyzer
+                                       ELSE Container.ObjectId
+                                  END AS GoodsId_to
+                                 , MovementItemContainer.ObjectIntId_Analyzer AS GoodsKindId
+                 
+                                 , CASE WHEN MovementItemContainer.IsActive = FALSE
+                                             THEN MILO_StorageLine.ObjectId
+                                        ELSE 0
+                                   END AS StorageLineId_From
+                                 , CASE WHEN MovementItemContainer.IsActive = TRUE
+                                             THEN MILO_StorageLine.ObjectId
+                                        ELSE 0
+                                   END AS StorageLineId_To
+                 
+                              FROM (SELECT DISTINCT Setting.MovementDescId FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_InHead(), zc_Enum_SelectKind_OutHead())) AS tmp  -- Кол-во голов приход + Кол-во голов расход
+                                   INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = tmp.MovementDescId
+                                                                   AND MovementItemContainer.DescId         = zc_MIContainer_Count()
+                                                                   AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                   LEFT OUTER JOIN Container ON Container.Id = COALESCE (MovementItemContainer.ContainerIntId_Analyzer, MovementItemContainer.ContainerId_Analyzer)
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                                             ON MovementBoolean_Peresort.MovementId = MovementItemContainer.MovementId
+                                                            AND MovementBoolean_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                            AND MovementBoolean_Peresort.ValueData  = TRUE
+                                   LEFT OUTER JOIN MovementItemLinkObject AS MILO_StorageLine ON MILO_StorageLine.MovementItemId = MovementItemContainer.MovementItemId
+                                                                                             AND MILO_StorageLine.DescId     = zc_MILinkObject_StorageLine()
+                              WHERE MovementBoolean_Peresort.MovementId IS NULL
+                             ) AS tmpMI
+                             /*INNER JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
+                                                    AND MovementItem.isErased = FALSE
+                                                    AND MovementItem.Amount <> 0*/
+                             INNER JOIN MovementItemFloat AS MIFloat_HeadCount
+                                                          ON MIFloat_HeadCount.MovementItemId = tmpMI.MovementItemId
+                                                         AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+                         GROUP BY tmpMI.OperDate
+                                , tmpMI.MovementDescId
+                                , tmpMI.IsActive
+                                , tmpMI.FromId
+                                , tmpMI.ToId
+                                , tmpMI.GoodsId_from
+                                , tmpMI.GoodsId_to
+                                , tmpMI.GoodsKindId
+                                , tmpMI.StorageLineId_From
+                                , tmpMI.StorageLineId_To
+                        )
 
          -- Модели начисления + необходимые документы для расчета по Расценкам грн./кг.
        , tmpGoodsByGoodsKind AS
-       (SELECT Object_GoodsByGoodsKind_View.Id, Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId
-        FROM (SELECT 0 AS X FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId = zc_Enum_SelectKind_InPack() LIMIT 1) AS tmp  -- Кол-во упаковок приход (расчет)
-             INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsKindId > tmp.X
-       )
+                        (SELECT Object_GoodsByGoodsKind_View.Id, Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId
+                         FROM (SELECT 0 AS X FROM Setting_Wage_1 AS Setting WHERE Setting.SelectKindId = zc_Enum_SelectKind_InPack() LIMIT 1) AS tmp  -- Кол-во упаковок приход (расчет)
+                              INNER JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsKindId > tmp.X
+                        )
          -- Модели начисления + необходимые документы для расчета по Расценкам грн./кг.
        , ServiceModelMovement AS
        (SELECT
@@ -657,8 +670,8 @@ BEGIN
            ,Setting.SelectKindId
            ,Setting.ModelServiceItemChild_FromId
            ,Setting.ModelServiceItemChild_ToId
-           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From) AS StorageLineId_From
-           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)   AS StorageLineId_To
+           , COALESCE (tmpMovement.StorageLineId_From, COALESCE (tmpMovement_HeadCount.StorageLineId_From, Setting.StorageLineId_From)) AS StorageLineId_From
+           , COALESCE (tmpMovement.StorageLineId_To,   COALESCE (tmpMovement_HeadCount.StorageLineId_To,   Setting.StorageLineId_To))   AS StorageLineId_To
            ,Setting.GoodsKind_FromId
            ,Setting.GoodsKindComplete_FromId
            ,Setting.GoodsKind_ToId
@@ -748,8 +761,8 @@ BEGIN
           AND (Setting.GoodsKindComplete_FromId IS NULL OR tmpMovement.GoodsKindComplete_FromId = Setting.GoodsKindComplete_FromId)
           AND (Setting.GoodsKind_ToId           IS NULL OR tmpMovement.GoodsKind_ToId           = Setting.GoodsKind_ToId)
           AND (Setting.GoodsKindComplete_ToId   IS NULL OR tmpMovement.GoodsKindComplete_ToId   = Setting.GoodsKindComplete_ToId)
-          AND (Setting.StorageLineId_From       IS NULL OR tmpMovement.StorageLineId_From       = Setting.StorageLineId_From)
-          AND (Setting.StorageLineId_To         IS NULL OR tmpMovement.StorageLineId_To         = Setting.StorageLineId_To)
+          AND (Setting.StorageLineId_From       IS NULL OR COALESCE (tmpMovement.StorageLineId_From, tmpMovement_HeadCount.StorageLineId_From) = Setting.StorageLineId_From)
+          AND (Setting.StorageLineId_To         IS NULL OR COALESCE (tmpMovement.StorageLineId_To,   tmpMovement_HeadCount.StorageLineId_To)   = Setting.StorageLineId_To)
 
         GROUP BY
              Setting.StaffListId
@@ -766,8 +779,8 @@ BEGIN
            , Setting.SelectKindCode
            , Setting.ModelServiceItemChild_FromId
            , Setting.ModelServiceItemChild_ToId
-           , COALESCE (tmpMovement.StorageLineId_From, Setting.StorageLineId_From)
-           , COALESCE (tmpMovement.StorageLineId_To,   Setting.StorageLineId_To)
+           , COALESCE (tmpMovement.StorageLineId_From, COALESCE (tmpMovement_HeadCount.StorageLineId_From, Setting.StorageLineId_From))
+           , COALESCE (tmpMovement.StorageLineId_To,   COALESCE (tmpMovement_HeadCount.StorageLineId_To,   Setting.StorageLineId_To))
            , Setting.GoodsKind_FromId
            , Setting.GoodsKindComplete_FromId
            , Setting.GoodsKind_ToId
@@ -1205,7 +1218,7 @@ BEGIN
        )
          -- Модели, для стажеров
        , tmpList_ModelService_Trainee AS (SELECT OB.ObjectId AS ModelServiceId FROM ObjectBoolean AS OB WHERE OB.DescId = zc_ObjectBoolean_ModelService_Trainee() AND OB.ValueData = TRUE)
-                     
+
          -- Данные - для стажеров
        , Movement_Sheet_Trainee AS
        (SELECT Movement_Sheet.PositionId
@@ -1238,7 +1251,7 @@ BEGIN
           AND Setting.ServiceModelKindId = zc_Enum_ModelServiceKind_DayHoursSheetWorkTime()
           -- НЕ ДОПОЛНИТЕЛЬНО для стажеров
           AND tmpList_ModelService_Trainee.ModelServiceId IS NULL -- AND Setting.ServiceModelId <> 12387 -- деликатесы
-          
+
        )
 
     -- Результат

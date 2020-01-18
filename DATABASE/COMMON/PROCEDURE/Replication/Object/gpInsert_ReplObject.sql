@@ -227,7 +227,7 @@ BEGIN
         , MIN (ReplObject.Id) AS outMinId
         , MAX (ReplObject.Id) AS outMaxId
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
-        , 100000              AS CountIteration
+        , 50000               AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
         , 400                 AS CountPack
           --

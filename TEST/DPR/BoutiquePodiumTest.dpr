@@ -1,4 +1,4 @@
-program BoutiqueTest;
+program BoutiquePodiumTest;
 
 uses
   Forms,
@@ -8,11 +8,13 @@ uses
   dbMetadataTest in '..\SOURCEBoutique\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCEBoutique\zLibUtil.pas',
   CommonFunctionTest in '..\SOURCEBoutique\Function\CommonFunctionTest.pas',
+  dbBoutiqueProcedureTest in '..\SOURCEBoutique\dbBoutiqueProcedureTest.pas',
   UtilConst in '..\SOURCEBoutique\UtilConst.pas',
   dbEnumTest in '..\SOURCEBoutique\dbEnumTest.pas',
   ProcessTest in '..\SOURCEBoutique\Process\ProcessTest.pas',
   dbCreateViewTest in '..\SOURCEBoutique\View\dbCreateViewTest.pas',
   DefaultsTest in '..\SOURCEBoutique\Defaults\DefaultsTest.pas',
+  LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
@@ -126,6 +128,7 @@ uses
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UpdaterTest in '..\SOURCEBoutique\Component\UpdaterTest.pas',
   dbObjectTest in '..\SOURCEBoutique\dbObjectTest.pas',
+  MainForm in '..\..\FormsBoutique\MainForm.pas' {MainForm},
   User in '..\..\FormsBoutique\Guides\User.pas' {UserForm: TParentForm},
   UserEdit in '..\..\FormsBoutique\Guides\UserEdit.pas' {UserEditForm: TParentForm},
   RoleTest in '..\SOURCEBoutique\Objects\All\RoleTest.pas',
@@ -171,6 +174,7 @@ uses
   ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   SendJournal in '..\..\FormsBoutique\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   Send in '..\..\FormsBoutique\Document\Send.pas' {SendForm: TParentForm},
+  LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
   PartionGoodsChoice in '..\..\FormsBoutique\Guides\PartionGoodsChoice.pas' {PartionGoodsChoiceForm: TParentForm},
   LossJournal in '..\..\FormsBoutique\Document\LossJournal.pas' {LossJournalForm: TParentForm},
   Loss in '..\..\FormsBoutique\Document\Loss.pas' {LossForm: TParentForm},
@@ -317,11 +321,7 @@ uses
   PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
-  MainForm in '..\..\FormsBoutique\MainForm.pas' {MainForm},
-  dbProcedureBoutiqueTest in '..\SOURCEBoutique\dbProcedureBoutiqueTest.pas',
-  LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
-  LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas';
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -192,6 +192,43 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Введите сумму.';
      END IF;
 
+     -- проверка
+     IF EXISTS (SELECT 1
+                FROM _tmpItem
+                     JOIN ObjectLink AS Contract_InfoMoney
+                                     ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                    AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе статья <%> не соответствует статьи <%> в договоре № <%>.Проведение невозможно.'
+                       , lfGet_Object_ValueData_sh ((SELECT _tmpItem.InfoMoneyId
+                                                     FROM _tmpItem
+                                                          JOIN ObjectLink AS Contract_InfoMoney
+                                                                          ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                         AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                     WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                     LIMIT 1
+                                                   ))
+                       , lfGet_Object_ValueData_sh ((SELECT Contract_InfoMoney.ChildObjectId
+                                                     FROM _tmpItem
+                                                          JOIN ObjectLink AS Contract_InfoMoney
+                                                                          ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                         AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                     WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                     LIMIT 1
+                                                   ))
+                       , lfGet_Object_ValueData ((SELECT _tmpItem.ContractId
+                                                  FROM _tmpItem
+                                                       JOIN ObjectLink AS Contract_InfoMoney
+                                                                       ON Contract_InfoMoney.ObjectId = _tmpItem.ContractId
+                                                                      AND Contract_InfoMoney.DescId   = zc_ObjectLink_Contract_InfoMoney()
+                                                  WHERE _tmpItem.InfoMoneyId <> Contract_InfoMoney.ChildObjectId
+                                                  LIMIT 1
+                                                ))
+                         ;
+     END IF;
+
      -- 1.2. заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      WITH tmpMI_Child AS (SELECT MI.*, COALESCE (MIB.ValueData, FALSE) AS isCalculated FROM MovementItem AS MI LEFT JOIN MovementItemBoolean AS MIB ON MIB.MovementItemId = MI.Id AND MIB.DescId = zc_MIBoolean_Calculated() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Child() AND MI.isErased = FALSE)
      INSERT INTO _tmpItem (MovementDescId, OperDate, ObjectId, ObjectDescId, OperSumm, OperSumm_Currency

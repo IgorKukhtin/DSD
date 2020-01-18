@@ -1,1 +1,1 @@
-copy /Y boutiquePodiumLocal.php boutique_init.php
+copy /Y boutiquePodiumLocal.php podium_init.php

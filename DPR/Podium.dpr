@@ -1,4 +1,4 @@
-program Boutique;
+program Podium;
 
 uses
   Vcl.Forms,
@@ -49,6 +49,7 @@ uses
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  MainPodiumForm in '..\FormsBoutique\MainPodiumForm.pas' {MainForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
@@ -80,14 +81,13 @@ uses
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  MainForm in '..\FormsBoutique\MainForm.pas' {MainForm};
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  ConnectionPath := '..\INIT\boutique_init.php';
+  ConnectionPath := '..\INIT\podium_init.php';
   Logger.Enabled := FindCmdLineSwitch('log');
   gc_ProgramName := 'Boutique.exe';
   // !!! DEMO

@@ -3,7 +3,7 @@
 			<ProjectGuid>{D8BAD5CF-CB27-4E81-AEC7-ABFCB1B2B50C}</ProjectGuid>
 			<ProjectVersion>13.4</ProjectVersion>
 			<FrameworkType>VCL</FrameworkType>
-			<MainSource>BoutiqueTest.dpr</MainSource>
+			<MainSource>BoutiquePodiumTest.dpr</MainSource>
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -100,11 +100,13 @@
 			<DCCReference Include="..\SOURCEBoutique\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\zLibUtil.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\dbBoutiqueProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Process\ProcessTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueFormTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
 			<DCCReference Include="..\..\SOURCE\FormStorage.pas"/>
@@ -444,6 +446,9 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCEBoutique\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\dbObjectTest.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\User.pas">
 				<Form>UserForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -561,6 +566,7 @@
 				<Form>SendForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
 			<DCCReference Include="..\..\FormsBoutique\Guides\PartionGoodsChoice.pas">
 				<Form>PartionGoodsChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1112,12 +1118,6 @@
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-			<DCCReference Include="..\..\FormsBoutique\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCEBoutique\dbProcedureBoutiqueTest.pas"/>
-			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueFormTest.pas"/>
-			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -1168,7 +1168,7 @@
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
-						<Source Name="MainSource">BoutiqueTest.dpr</Source>
+						<Source Name="MainSource">BoutiquePodiumTest.dpr</Source>
 					</Source>
 				</Delphi.Personality>
 				<Deployment/>
