@@ -833,7 +833,7 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
+{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderDialogForm');
@@ -844,7 +844,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MovementCheck_PromoEntrancesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_MovementCheck_PromoEntrancesForm');
     exit;
-{
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
     exit;}

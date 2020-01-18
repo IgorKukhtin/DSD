@@ -440,6 +440,7 @@ type
     LoyaltySPCDS: TClientDataSet;
     spInsertMovementItem: TdsdStoredProc;
     MainNotSold60: TcxGridDBColumn;
+    spLoyaltySaveMoneyChekInfo: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -690,6 +691,7 @@ type
     // Проверка и генерация промокода по Программе лояльности
     procedure Check_Loyalty(ASumma : Currency);
     procedure Check_LoyaltySumma(ASumma : Currency);
+    procedure Check_LoyaltySM(ASumma : Currency);
     function CheckShareFromPrice(Amount, Price : Currency; GoodsCode : Integer; GoodsName : string) : boolean;
 
   public
@@ -5980,6 +5982,8 @@ begin
 
       if isFiscal and not actSpec.Checked and not actSpecCorr.Checked then Check_Loyalty(FTotalSumm);
 
+      if isFiscal {and not actSpec.Checked and not actSpecCorr.Checked} then Check_LoyaltySM(FTotalSumm);
+
       // Непосредственно печать чека
       str_log_xml:=''; i:=0;
       result := not Assigned(Cash) or Cash.AlwaysSold or Cash.OpenReceipt(isFiscal, actSpec.Checked);
@@ -6034,6 +6038,8 @@ begin
             if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
             if result and (FormParams.ParamByName('LoyaltySignID').Value <> 0) and
                (FormParams.ParamByName('LoyaltyText').Value <> '') then Cash.PrintFiscalText(FormParams.ParamByName('LoyaltyText').Value);
+            if result and (FormParams.ParamByName('LoyaltySignSMID').Value <> 0) and
+               (FormParams.ParamByName('LoyaltySMText').Value <> '') then Cash.PrintFiscalText(FormParams.ParamByName('LoyaltySMText').Value);
             if result then result := Cash.CloseReceiptEx(ACheckNumber); //Закрыли чек
             if result and isFiscal then Finish_Check_History(FTotalSumm);
           end else
@@ -6593,6 +6599,36 @@ begin
 
 end;
 
+  // Проверка и генерация промокода по Программе лояльности
+procedure TMainCashForm2.Check_LoyaltySM(ASumma : Currency);
+begin
+
+  // Если не подключен покупател
+  if FormParams.ParamByName('LoyaltySMID').Value = 0 then Exit;
+
+  // Если локально то ничего не делаем
+  if gc_User.Local then Exit;
+
+  // Получаем текст для чека
+  try
+    spLoyaltySaveMoneyChekInfo.ParamByName('ioId').Value := FormParams.ParamByName('LoyaltySMID').Value;
+    spLoyaltySaveMoneyChekInfo.ParamByName('inSummaCheck').Value := ASumma;
+    spLoyaltySaveMoneyChekInfo.ParamByName('inSumma').Value := FormParams.ParamByName('LoyaltySMSumma').Value;
+    spLoyaltySaveMoneyChekInfo.ParamByName('outText').Value := '';
+    spLoyaltySaveMoneyChekInfo.Execute;
+
+    if spLoyaltySaveMoneyChekInfo.ParamByName('outText').Value <> '' then
+    begin
+      FormParams.ParamByName('LoyaltySMText').Value := spLoyaltySaveMoneyChekInfo.ParamByName('outText').Value;
+    end else
+    begin
+      FormParams.ParamByName('LoyaltySMText').Value := '';
+    end;
+
+  except ON E:Exception do Add_Log('Check_LoyaltySP err=' + E.Message);
+  end;
+
+end;
 
 function TMainCashForm2.SaveLocal(ADS :TClientDataSet; AManagerId: Integer; AManagerName: String;
       ABayerName, ABayerPhone, AConfirmedKindName, AInvNumberOrder, AConfirmedKindClientName: String;

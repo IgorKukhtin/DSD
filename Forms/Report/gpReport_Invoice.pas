@@ -39,6 +39,14 @@ type
     actPrint2: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     bbPrint2: TdxBarButton;
+    actOpenReportForm: TdsdOpenForm;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    bbOpenReportForm: TdxBarButton;
+    actOpenForm: TdsdOpenForm;
+    actGetForm: TdsdExecStoredProc;
+    getMovementForm: TdsdStoredProc;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

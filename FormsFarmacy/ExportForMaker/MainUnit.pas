@@ -163,45 +163,45 @@ begin
     Add_Log('-------------------');
     Add_Log('ѕоставщик: ' + qryMaker.FieldByName('Name').AsString);
 
-//    if qryMaker.FieldByName('isReport1').AsBoolean then
-//    begin
-//      RepType := 0;
-//      ReportIncome(DateStart, DateEnd);
-//      btnExportClick(Nil);
-//      btnSendMailClick(Nil);
-//    end;
-//
-//    if qryMaker.FieldByName('isReport2').AsBoolean then
-//    begin
-//      RepType := 1;
-//      ReportCheck(DateStart, DateEnd);
-//      btnExportClick(Nil);
-//      btnSendMailClick(Nil);
-//    end;
-//
-//    if qryMaker.FieldByName('isReport3').AsBoolean then
-//    begin
-//      RepType := 2;
-//      ReportAnalysisRemainsSelling(DateStart, DateEnd);
-//      btnExportClick(Nil);
-//      btnSendMailClick(Nil);
-//    end;
-//
-//    if qryMaker.FieldByName('isReport4').AsBoolean then
-//    begin
-//      RepType := 3;
-//      ReportIncomeConsumptionBalance(DateStart, DateEnd);
-//      btnExportClick(Nil);
-//      btnSendMailClick(Nil);
-//    end;
-//
-//    if qryMaker.FieldByName('isReport5').AsBoolean then
-//    begin
-//      RepType := 4;
-//      ReportGoodsPartionDate;
-//      btnExportClick(Nil);
-//      btnSendMailClick(Nil);
-//    end;
+    if qryMaker.FieldByName('isReport1').AsBoolean then
+    begin
+      RepType := 0;
+      ReportIncome(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport2').AsBoolean then
+    begin
+      RepType := 1;
+      ReportCheck(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport3').AsBoolean then
+    begin
+      RepType := 2;
+      ReportAnalysisRemainsSelling(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport4').AsBoolean then
+    begin
+      RepType := 3;
+      ReportIncomeConsumptionBalance(DateStart, DateEnd);
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
+
+    if qryMaker.FieldByName('isReport5').AsBoolean then
+    begin
+      RepType := 4;
+      ReportGoodsPartionDate;
+      btnExportClick(Nil);
+      btnSendMailClick(Nil);
+    end;
 
     if qryMaker.FieldByName('isReport6').AsBoolean then
     begin
@@ -211,127 +211,127 @@ begin
       btnSendMailClick(Nil);
     end;
 
-//    if FormAddFile then
-//    begin
-//      if qryMaker.FieldByName('isReport1').AsBoolean then
-//      begin
-//        RepType := 0;
-//        ReportIncome(DateStartAdd, DateEndAdd);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport2').AsBoolean then
-//      begin
-//        RepType := 1;
-//        ReportCheck(DateStartAdd, DateEndAdd);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport3').AsBoolean then
-//      begin
-//        RepType := 2;
-//        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport4').AsBoolean then
-//      begin
-//        RepType := 3;
-//        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//    end;
-//
-//      // квартальные отчеты
-//    if FormQuarterFile then
-//    begin
-//      if qryMaker.FieldByName('isReport1').AsBoolean then
-//      begin
-//        RepType := 0;
-//        ReportIncome(DateStartQuarter, DateEndQuarter);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport2').AsBoolean then
-//      begin
-//        RepType := 1;
-//        ReportCheck(DateStartQuarter, DateEndQuarter);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport3').AsBoolean then
-//      begin
-//        RepType := 2;
-//        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport4').AsBoolean then
-//      begin
-//        RepType := 3;
-//        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//    end;
-//
-//      // дополнительно отчеты за 4 мес€ца
-//    if Form4MonthFile then
-//    begin
-//      if qryMaker.FieldByName('isReport1').AsBoolean then
-//      begin
-//        RepType := 0;
-//        ReportIncome(DateStart4Month, DateEnd4Month);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport2').AsBoolean then
-//      begin
-//        RepType := 1;
-//        ReportCheck(DateStart4Month, DateEnd4Month);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport3').AsBoolean then
-//      begin
-//        RepType := 2;
-//        ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//
-//      if qryMaker.FieldByName('isReport4').AsBoolean then
-//      begin
-//        RepType := 3;
-//        ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
-//        btnExportClick(Nil);
-//        btnSendMailClick(Nil);
-//      end;
-//    end;
-//
-//    if not FProcError then
-//    begin
-//      try
-//        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
-//        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
-//        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
-//        qrySetDateSend.ExecSQL;
-//      except
-//        on E: Exception do
-//        begin
-//          Add_Log(E.Message);
-//        end;
-//      end;
-//    end;
+    if FormAddFile then
+    begin
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        RepType := 0;
+        ReportIncome(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        RepType := 1;
+        ReportCheck(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        RepType := 2;
+        ReportAnalysisRemainsSelling(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        RepType := 3;
+        ReportIncomeConsumptionBalance(DateStartAdd, DateEndAdd);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+    end;
+
+      // квартальные отчеты
+    if FormQuarterFile then
+    begin
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        RepType := 0;
+        ReportIncome(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        RepType := 1;
+        ReportCheck(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        RepType := 2;
+        ReportAnalysisRemainsSelling(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        RepType := 3;
+        ReportIncomeConsumptionBalance(DateStartQuarter, DateEndQuarter);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+    end;
+
+      // дополнительно отчеты за 4 мес€ца
+    if Form4MonthFile then
+    begin
+      if qryMaker.FieldByName('isReport1').AsBoolean then
+      begin
+        RepType := 0;
+        ReportIncome(DateStart4Month, DateEnd4Month);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport2').AsBoolean then
+      begin
+        RepType := 1;
+        ReportCheck(DateStart4Month, DateEnd4Month);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport3').AsBoolean then
+      begin
+        RepType := 2;
+        ReportAnalysisRemainsSelling(DateStart4Month, DateEnd4Month);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+
+      if qryMaker.FieldByName('isReport4').AsBoolean then
+      begin
+        RepType := 3;
+        ReportIncomeConsumptionBalance(DateStart4Month, DateEnd4Month);
+        btnExportClick(Nil);
+        btnSendMailClick(Nil);
+      end;
+    end;
+
+    if not FProcError then
+    begin
+      try
+        qrySetDateSend.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddMonth').Value :=  qryMaker.FieldByName('AmountMonth').AsInteger;
+        qrySetDateSend.Params.ParamByName('inAddDay').Value :=  qryMaker.FieldByName('AmountDay').AsInteger;
+        qrySetDateSend.ExecSQL;
+      except
+        on E: Exception do
+        begin
+          Add_Log(E.Message);
+        end;
+      end;
+    end;
 
   except
     on E: Exception do

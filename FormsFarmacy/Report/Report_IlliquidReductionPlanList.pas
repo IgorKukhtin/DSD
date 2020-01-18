@@ -59,6 +59,9 @@ type
     cbFilter1: TcxCheckBox;
     dsdFieldFilter: TdsdFieldFilter;
     Check_Filter: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    GoodsGroupName: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

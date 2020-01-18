@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpReport_Invoice(
     IN inPaidKindId        Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumber_Full TVarChar
+             , OperDate TDateTime
              , PaidKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , NameBeforeName TVarChar
@@ -142,7 +143,7 @@ BEGIN
                                                      ON MovementFloat_ChangePercent.MovementId =  Movement_Invoice.Id
                                                     AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
                             -- строки
-                            INNER JOIN tmpMI ON MovementItem.MovementId = Movement_Invoice.Id
+                            INNER JOIN tmpMI AS MovementItem ON MovementItem.MovementId = Movement_Invoice.Id
 
                             LEFT JOIN tmpMIFloat AS MIFloat_CountForPrice
                                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -215,9 +216,10 @@ BEGIN
                                , CASE WHEN Movement.DescId = zc_Movement_Service() THEN -1 * MovementItem.Amount ELSE 0 END AS ServiceSumma 
                            FROM tmpListInvoice
                                 INNER JOIN tmpMLM_Invoice AS MLM_Invoice
-                                                                ON MLM_Invoice.MovementChildId = tmpListInvoice.MovementId
-                                                               AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
-                                INNER JOIN tmpMovementList ON Movement.Id = MLM_Invoice.MovementId
+                                                          ON MLM_Invoice.MovementChildId = tmpListInvoice.MovementId
+                                                         AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
+                                INNER JOIN tmpMovementList AS Movement 
+                                                           ON Movement.Id = MLM_Invoice.MovementId
 
                                 INNER JOIN tmpMIList AS MovementItem
                                                      ON MovementItem.MovementId = Movement.Id
@@ -284,6 +286,7 @@ BEGIN
  (SELECT tmpMIInvoice.MovementId
        , tmpMIInvoice.InvNumber
        , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+       , ('№ ' || tmpMIInvoice.InvNumber || ' от ' || tmpMIInvoice.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Full
        , tmpMIInvoice.OperDate
        , tmpMIInvoice.PaidKindName
        , tmpMIInvoice.JuridicalId

@@ -382,20 +382,30 @@ var I : Integer;
     Res: TArray<string>;
 begin
   Result := True;
-  L := '';
-  Res := TRegEx.Split(PrintText, ' ');
-  for I := 0 to High(Res) do
+  if POS(#13, PrintText) > 0 then
   begin
-    if L <> '' then L := L + ' ';
-    L := L + Res[i];
-    if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
-    if Length(L + N) > FLengNoFiscalText then
+    Res := TRegEx.Split(StringReplace(PrintText, #10, '', [rfReplaceAll]), #13);
+    for I := 0 to High(Res) do
     begin
-      if not PrintNotFiscalText(L) then Exit;
-      L := '';
+      PrintFiscalText(Res[i])
     end;
+  end else
+  begin
+    L := '';
+    Res := TRegEx.Split(PrintText, ' ');
+    for I := 0 to High(Res) do
+    begin
+      if L <> '' then L := L + ' ';
+      L := L + Res[i];
+      if I < High(Res) then N := ' ' + Res[i + 1] else N := '';
+      if Length(L + N) > FLengNoFiscalText then
+      begin
+        if not PrintNotFiscalText(L) then Exit;
+        L := '';
+      end;
+    end;
+    if L <> '' then PrintNotFiscalText(L);
   end;
-  if L <> '' then PrintNotFiscalText(L);
 end;
 
 function TCashFP3530T_NEW.SubTotal(isPrint, isDisplay: WordBool; Percent,

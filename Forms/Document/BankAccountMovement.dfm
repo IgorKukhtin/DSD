@@ -819,8 +819,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 76
-    Top = 117
+    Left = 52
+    Top = 125
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
