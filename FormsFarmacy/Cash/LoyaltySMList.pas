@@ -1,4 +1,4 @@
-unit LoyaltySPList;
+unit LoyaltySMList;
 
 interface
 
@@ -17,11 +17,11 @@ uses
   cxDataControllerConditionalFormattingRulesManagerDialog, System.Actions;
 
 type
-  TLoyaltySPListForm = class(TForm)
-    LoyaltySPListGrid: TcxGrid;
-    LoyaltySPListGridDBTableView: TcxGridDBTableView;
-    LoyaltySPListGridLevel: TcxGridLevel;
-    LoyaltySPListDS: TDataSource;
+  TLoyaltySMListForm = class(TForm)
+    LoyaltySMListGrid: TcxGrid;
+    LoyaltySMListGridDBTableView: TcxGridDBTableView;
+    LoyaltySMListGridLevel: TcxGridLevel;
+    LoyaltySMListDS: TDataSource;
     Coment: TcxGridDBColumn;
     EndSale: TcxGridDBColumn;
     BarManager: TdxBarManager;
@@ -44,9 +44,9 @@ type
     cxGridDBColumn3: TcxGridDBColumn;
     cxGridDBColumn4: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    procedure LoyaltySPListGridDBTableViewDblClick(Sender: TObject);
+    procedure LoyaltySMListGridDBTableViewDblClick(Sender: TObject);
     procedure actCloseExecute(Sender: TObject);
-    procedure LoyaltySPListGridDBTableViewKeyDown(Sender: TObject;
+    procedure LoyaltySMListGridDBTableViewKeyDown(Sender: TObject;
       var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
@@ -54,7 +54,7 @@ type
   public
   end;
 
-  function ShowLoyaltySPList : boolean;
+  function ShowLoyaltySMList : boolean;
 
 implementation
 
@@ -62,18 +62,18 @@ implementation
 
 uses CommonData;
 
-procedure TLoyaltySPListForm.actCloseExecute(Sender: TObject);
+procedure TLoyaltySMListForm.actCloseExecute(Sender: TObject);
 begin
   ModalResult := mrOk;
 end;
 
-procedure TLoyaltySPListForm.LoyaltySPListGridDBTableViewDblClick(
+procedure TLoyaltySMListForm.LoyaltySMListGridDBTableViewDblClick(
   Sender: TObject);
 begin
   ModalResult := mrOk;
 end;
 
-procedure TLoyaltySPListForm.LoyaltySPListGridDBTableViewKeyDown(
+procedure TLoyaltySMListForm.LoyaltySMListGridDBTableViewKeyDown(
   Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
     case Key of
@@ -82,39 +82,39 @@ begin
     end;
 end;
 
-procedure TLoyaltySPListForm.FormClose(Sender: TObject;
+procedure TLoyaltySMListForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   if ModalResult <> mrOk then Exit;
-  if MainCashForm.LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger > 0 then Exit;
+  if MainCashForm.LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger > 0 then Exit;
 
-  if MessageDlg('Прикрепить покупателя '#13#10#13#10 + MainCashForm.LoyaltySPCDS.FieldByName('BuyerName').AsString +  '  ' +
-                 MainCashForm.LoyaltySPCDS.FieldByName('BuyerPhone').AsString +
+  if MessageDlg('Прикрепить покупателя '#13#10#13#10 + MainCashForm.LoyaltySMCDS.FieldByName('BuyerName').AsString +  '  ' +
+                 MainCashForm.LoyaltySMCDS.FieldByName('BuyerPhone').AsString +
                  #13#10#13#10'к акции?', mtConfirmation, mbYesNo, 0) <> mrYes then Exit;
 
   MainCashForm.spInsertMovementItem.ParamByName('ioId').Value := 0;
-  MainCashForm.spInsertMovementItem.ParamByName('inMovementId').Value := MainCashForm.LoyaltySPCDS.FieldByName('Id').AsInteger;
-  MainCashForm.spInsertMovementItem.ParamByName('inBuyerID').Value := MainCashForm.LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
+  MainCashForm.spInsertMovementItem.ParamByName('inMovementId').Value := MainCashForm.LoyaltySMCDS.FieldByName('Id').AsInteger;
+  MainCashForm.spInsertMovementItem.ParamByName('inBuyerID').Value := MainCashForm.LoyaltySMCDS.FieldByName('BuyerID').AsInteger;
   MainCashForm.spInsertMovementItem.Execute;
 
   if MainCashForm.spInsertMovementItem.ParamByName('ioId').Value <> 0 then
   begin
-    MainCashForm.spLoyaltySP.ParamByName('inBuyerID').Value :=  MainCashForm.LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
-    MainCashForm.spLoyaltySP.Execute;
-    if not MainCashForm.LoyaltySPCDS.Locate('LoyaltySMID', MainCashForm.spInsertMovementItem.ParamByName('ioId').Value, []) or
-      (MainCashForm.LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger <> MainCashForm.spInsertMovementItem.ParamByName('ioId').Value) then
-      MainCashForm.LoyaltySPCDS.Close;
+    MainCashForm.spLoyaltySM.ParamByName('inBuyerID').Value :=  MainCashForm.LoyaltySMCDS.FieldByName('BuyerID').AsInteger;
+    MainCashForm.spLoyaltySM.Execute;
+    if not MainCashForm.LoyaltySMCDS.Locate('LoyaltySMID', MainCashForm.spInsertMovementItem.ParamByName('ioId').Value, []) or
+      (MainCashForm.LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger <> MainCashForm.spInsertMovementItem.ParamByName('ioId').Value) then
+      MainCashForm.LoyaltySMCDS.Close;
   end else ShowMessage('Ошибка прикрепления покупателя к акции.'#13#10#13#10'Повторите попытку.');
 end;
 
-function ShowLoyaltySPList : boolean;
-  var LoyaltySPListForm : TLoyaltySPListForm;
+function ShowLoyaltySMList : boolean;
+  var LoyaltySMListForm : TLoyaltySMListForm;
 begin
-  LoyaltySPListForm := TLoyaltySPListForm.Create(Screen.ActiveControl);
+  LoyaltySMListForm := TLoyaltySMListForm.Create(Screen.ActiveControl);
   try
-    Result := LoyaltySPListForm.ShowModal = mrOk;
+    Result := LoyaltySMListForm.ShowModal = mrOk;
   finally
-    LoyaltySPListForm.Free;
+    LoyaltySMListForm.Free;
   end;
 end;
 

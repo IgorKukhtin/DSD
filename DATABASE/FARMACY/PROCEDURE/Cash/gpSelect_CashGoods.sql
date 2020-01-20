@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer,
                MarginPercent TFloat,
                ExpirationDate TDateTime,
                Price TFloat,
+               MCSValue TFloat,
                IsClose Boolean,
                isFirst  Boolean,
                isSecond Boolean)
@@ -55,6 +56,7 @@ BEGIN
                              MarginPercent TFloat,
                              ExpirationDate TDateTime,
                              Price TFloat,
+                             MCSValue TFloat,
                              IsClose Boolean,
                              isFirst  Boolean,
                              isSecond Boolean) ON COMMIT DROP;
@@ -78,7 +80,10 @@ BEGIN
 
           -- Список цены + ТОП
         , GoodsPrice AS
-             (SELECT ObjectLink_Price_Goods.ChildObjectId AS GoodsId, COALESCE (ObjectBoolean_Top.ValueData, FALSE) AS isTOP, COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup
+             (SELECT ObjectLink_Price_Goods.ChildObjectId              AS GoodsId, 
+                     COALESCE (ObjectBoolean_Top.ValueData, FALSE)     AS isTOP, 
+                     COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup,
+                     MCS_Value.ValueData                               AS MCSValue
               FROM ObjectLink AS ObjectLink_Price_Unit
                    INNER JOIN ObjectLink AS ObjectLink_Price_Goods
                                          ON ObjectLink_Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -89,9 +94,12 @@ BEGIN
                    LEFT JOIN ObjectFloat AS ObjectFloat_PercentMarkup
                                          ON ObjectFloat_PercentMarkup.ObjectId = ObjectLink_Price_Unit.ObjectId
                                         AND ObjectFloat_PercentMarkup.DescId = zc_ObjectFloat_Price_PercentMarkup()
+                   LEFT JOIN ObjectFloat AS MCS_Value
+                                         ON MCS_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                        AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
               WHERE ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Goods()
-                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0)
+                AND ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                AND (ObjectBoolean_Top.ValueData = TRUE OR ObjectFloat_PercentMarkup.ValueData <> 0 OR MCS_Value.ValueData <> 0)
              )
           , JuridicalSettings AS
              (SELECT DISTINCT JuridicalId, ContractId, isPriceCloseOrder
@@ -124,6 +132,7 @@ BEGIN
                              0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
                              ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
                            )         :: TFloat AS Price,
+           GoodsPrice.MCSValue       AS MCSValue,
            ObjectGoodsView.IsClose AS IsClose,
            ObjectGoodsView.isFirst AS isFirst,
            ObjectGoodsView.isSecond AS isSecond
@@ -186,6 +195,7 @@ BEGIN
               _GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
               _GoodsPriceAll.MarginPercent     AS MarginPercent,
               _GoodsPriceAll.ExpirationDate    AS ExpirationDate,
+              _GoodsPriceAll.MCSValue          AS MCSValue,
               _GoodsPriceAll.Price             AS Price,
               _GoodsPriceAll.isClose           AS isClose,
               _GoodsPriceAll.isFirst           AS isFirst,
@@ -202,6 +212,7 @@ BEGIN
               GoodsPriceAll.MarginPercent       AS MarginPercent,
               GoodsPriceAll.ExpirationDate      AS ExpirationDate,
               GoodsPriceAll.Price               AS Price,
+              GoodsPriceAll.MCSValue            AS MCSValue,
               GoodsPriceAll.isClose             AS isClose,
               GoodsPriceAll.isFirst             AS isFirst,
               GoodsPriceAll.isSecond            AS isSecond
@@ -221,10 +232,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.01.19                                                                                     *
  05.12.18                                                                                     *
  26.11.18                                                                                     *
  11.09.18        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoods (inSession := '3354092');
+-- SELECT * FROM gpSelect_CashGoods (inSession := '3');

@@ -287,14 +287,18 @@ begin
       if AmountDiff <> 0 Then S := S +  #13#10'Отказы сегодня: ' + CurrToStr(AmountDiff);
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + CurrToStr(AmountDiffPrev);
       if S = '' then S := #13#10'За последнии два дня отказы не найдены';
-      if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + CurrToStr(AmountIncome) + ' Цена (в пути): ' + CurrToStr(PriceSaleIncome);
       if ListDate <> Null then S := S +  #13#10'Последний раз менеджер забрал заказ: ' + FormatDateTime('DD.mm.yyyy HH:NN', ListDate);
       if not MainCashForm.CashListDiffCDS.Active then S := #13#10'Работа автономно (Данные по кассе)' + S;
       S := 'Препарат: '#13#10 + GoodsCDS.FieldByName('GoodsName').AsString + S;
       Label1.Caption := S;
 
-      if AmountDiffUser <> 0 Then Label7.Caption := 'ВЫ УЖЕ ПОСТАВИЛИ СЕГОДНЯ - ' + CurrToStr(AmountDiffUser) + ' упк.'
-      else Label7.Caption := '';
+      S := '';
+      if AmountDiffUser <> 0 Then S := 'ВЫ УЖЕ ПОСТАВИЛИ СЕГОДНЯ - ' + CurrToStr(AmountDiffUser) + ' упк.';
+      if S <> '' then S := S +  #13#10;
+      if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + CurrToStr(AmountIncome) + ' Цена (в пути): ' + CurrToStr(PriceSaleIncome);
+      if S <> '' then S := S +  #13#10;
+      S := S + '"ВНИМАНИЕ   У ВАС НТЗ = ' + GoodsCDS.FieldByName('MCSValue').AsString + 'упк.  ВАМ ДЕЙСТВИТЕЛЬНО НУЖНО БОЛЬШЕ ?!"';
+      Label7.Caption := S;
       Label7.Visible := Label7.Caption <> '';
 
       WaitForSingleObject(MutexGoods, INFINITE);

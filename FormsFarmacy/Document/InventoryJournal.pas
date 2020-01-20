@@ -25,7 +25,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalc;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalc, dsdExportToXLSAction;
 
 type
   TInventoryJournalForm = class(TAncestorJournalForm)
@@ -50,6 +50,10 @@ type
     Comment: TcxGridDBColumn;
     spPUSHCompile: TdsdStoredProc;
     actPUSHCompile: TdsdShowPUSHMessage;
+    actPrintInventoryTime: TdsdExportToXLS;
+    spInventoryTime: TdsdStoredProc;
+    actExecInventoryTime: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

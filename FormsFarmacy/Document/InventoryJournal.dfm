@@ -388,6 +388,136 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end>
       Caption = 'actPUSHCompile'
     end
+    object actPrintInventoryTime: TdsdExportToXLS
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecInventoryTime
+      ItemsDataSet = PrintItemsCDS
+      Title = #1054#1090#1095#1077#1090' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086'  '#1074#1088#1077#1084#1077#1085#1080' '#1084#1077#1078#1076#1091' '#1089#1086#1079#1076#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      ColumnParams = <
+        item
+          Caption = #1053#1086#1084#1077#1088
+          FieldName = 'InvNumber'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+          FieldName = 'OperDate'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+          FieldName = 'UnitName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 30
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1042#1074#1077#1083
+          FieldName = 'InsertName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 18
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1072#1090#1072' '#1074#1074#1086#1076#1072
+          FieldName = 'InsertDate'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 18
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1055#1088#1086#1074#1077#1083
+          FieldName = 'UpdateName'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 18
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1103
+          FieldName = 'UpdateDate'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 18
+          CalcColumnLists = <>
+        end
+        item
+          Caption = #1048#1085#1090#1077#1088#1074#1072#1083
+          FieldName = 'Interv'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 18
+          CalcColumnLists = <>
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086'  '#1074#1088#1077#1084#1077#1085#1080' '#1084#1077#1078#1076#1091' '#1089#1086#1079#1076#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084
+      Hint = #1054#1090#1095#1077#1090' '#1088#1072#1079#1085#1080#1094#1072' '#1087#1086'  '#1074#1088#1077#1084#1077#1085#1080' '#1084#1077#1078#1076#1091' '#1089#1086#1079#1076#1072#1085#1080#1077#1084' '#1080' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077#1084
+      ImageIndex = 21
+    end
+    object actExecInventoryTime: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInventoryTime
+      StoredProcList = <
+        item
+          StoredProc = spInventoryTime
+        end>
+      Caption = 'actExecInventoryTime'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -502,6 +632,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -534,6 +668,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Hint = #1055#1077#1095#1072#1090#1100
       Visible = ivAlways
       ImageIndex = 16
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actPrintInventoryTime
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -736,5 +874,33 @@ inherited InventoryJournalForm: TInventoryJournalForm
     PackSize = 1
     Left = 706
     Top = 344
+  end
+  object spInventoryTime: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Inventory_Time'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 535
+    Top = 336
   end
 end

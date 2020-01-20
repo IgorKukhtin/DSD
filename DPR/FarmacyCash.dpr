@@ -121,7 +121,7 @@ uses
   Report_ImplementationPlanEmployeeCash in '..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas' {Report_ImplementationPlanEmployeeCashForm},
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   EnterLoyaltySaveMoney in '..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas' {EnterLoyaltySaveMoneyForm},
-  LoyaltySPList in '..\FormsFarmacy\Cash\LoyaltySPList.pas' {LoyaltySPListForm: TParentForm};
+  LoyaltySMList in '..\FormsFarmacy\Cash\LoyaltySMList.pas' {LoyaltySMListForm: TParentForm};
 
 {$R *.res}
 
