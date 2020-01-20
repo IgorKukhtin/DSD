@@ -122,6 +122,12 @@ type
     actDoLoad: TExecuteImportSettingsAction;
     macStartLoad: TMultiAction;
     bbStartLoad: TdxBarButton;
+    dsdStoredProc1: TdsdStoredProc;
+    spGetImportSettingDopId: TdsdStoredProc;
+    actDoLoadDop: TExecuteImportSettingsAction;
+    actGetImportSettingDop: TdsdExecStoredProc;
+    macStartLoadDop: TMultiAction;
+    bb: TdxBarButton;
   private
   public
   end;
