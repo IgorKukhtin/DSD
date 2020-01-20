@@ -403,7 +403,6 @@ END $$;
 
 
 
-
 --Загрузка из экскля Приходов
 DO $$
 DECLARE vbImportTypeId Integer;
@@ -428,15 +427,23 @@ BEGIN
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportTypeId, 'zc_Enum_ImportType_IncomeJournal');
     --Создаём настройку загрузки
-    vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0),
+    vbImportSettingId := gpInsertUpdate_Object_ImportSettings(ioId           := COALESCE(vbImportSettingId,0) ::Integer,
                                                               inCode         := COALESCE(vbImportSettingCode,0) ::Integer,
-                                                              inName         := 'Загрузка приходов',
+                                                              inName         := 'Загрузка приходов'::TVarChar,
                                                               inJuridicalId  := NULL::Integer,
-                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel(),
-                                                              inImportTypeId := vbImportTypeId,
-                                                              inStartRow     := 2,
+                                                              inFileTypeId   := zc_Enum_FileTypeKind_Excel()::Integer,
+                                                              inImportTypeId := vbImportTypeId ::Integer,
+                                                              inEmailId      := NULL::Integer,
+                                                              inStartRow     := 2 ::Integer,
+                                                              inHDR          := False ::Boolean ,
                                                               inDirectory    := NULL::TVarChar,
+                                                              inQuery        := NULL::TBlob,
+                                                              inStartTime    := NULL::TVarChar,
+                                                              inEndTime      := NULL::TVarChar,
+                                                              inTime         := 0 ::TFloat,
+                                                              inIsMultiLoad  := False ::Boolean ,
                                                               inSession      := vbUserId::TVarChar);
+                                                              
     --Создали Enum
     PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Enum(), vbImportSettingId, 'zc_Enum_ImportSetting_IncomeJournal');
     --Добавляем Итемы
@@ -640,7 +647,7 @@ BEGIN
     vbImportSettingsItem := 0;
     Select id INTO vbImportSettingsItem FROM Object_ImportSettingsItems_View WHERE ImportSettingsId = vbImportSettingId AND ImportTypeItemsId = vbImportTypeItemId;
     PERFORM gpInsertUpdate_Object_ImportSettingsItems(ioId                := vbImportSettingsItem,
-                                                      inName              := 'К',
+                                                      inName              := 'K',
                                                       inImportSettingsId  := vbImportSettingId,
                                                       inImportTypeItemsId := vbImportTypeItemId,
                                                       inDefaultValue      := NULL::TVarCHar,
