@@ -12,7 +12,18 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount_From_BankS());
-
+/*
+if inMovementId = 15504781
+then
+         PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                      , inUserId     := vbUserId);
+         -- Ставим статус у элементов документа выписки
+         PERFORM lpUnComplete_Movement (inMovementId := Movement.Id
+                                       , inUserId     := vbUserId)
+         FROM Movement
+         WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
+end if;
+*/
 
      -- проверка
      /*IF EXISTS (SELECT 1
@@ -208,10 +219,20 @@ BEGIN
      WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
 
 
-if inSession = '5'
+if inSession = '5' OR  inMovementId = 15504781
 then
     RAISE EXCEPTION 'inSession = 5';
     -- 'Повторите действие через 3 мин.'
+/*
+if vb1 < 0 and exists (select 1 from MovementItem as MI_Child where MI_Child.MovementId = inMovementId
+                                               AND MI_Child.DescId = zc_MI_Child()
+                                               --AND MI_Child.isErased = FALSE
+                                             )
+then
+    RAISE EXCEPTION 'test2';
+    -- 'Повторите действие через 3 мин.'
+end if;
+*/
 end if;
 
 

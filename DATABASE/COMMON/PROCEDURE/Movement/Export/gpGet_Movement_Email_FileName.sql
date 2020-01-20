@@ -25,6 +25,7 @@ BEGIN
             INTO outFileName, outDefaultFileExt, outEncodingANSI
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
+        , tmpProtocol AS (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1)
      SELECT CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Mida35273055()
                       THEN COALESCE (ObjectString_GLNCode.ValueData, '')
                  || '_' || REPLACE (zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData), '.', '')
@@ -47,13 +48,19 @@ BEGIN
                  --|| '_' || zfConvert_DateShortToString (MovementDate_OperDatePartner.ValueData)
                  -- || '.csv'
                  
+                 WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150())
+                      THEN 'Zakaz'
+                 || '_' || '000'
+                 || '_' || zfConvert_DateTimeToStringY (COALESCE (tmpProtocol.OperDate, CURRENT_TIMESTAMP) :: TDateTime)
+                 || '_' || Movement.InvNumber
+
             END AS outFileName
-          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386())
+          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN 'xml'
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
                       THEN 'csv'
             END AS outDefaultFileExt
-          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386())
+          , CASE WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Mida35273055(), zc_Enum_ExportKind_Brusn34604386(), zc_Enum_ExportKind_Glad2514900150())
                       THEN FALSE
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
                       THEN TRUE
@@ -101,6 +108,7 @@ BEGIN
                                  ON ObjectString_GLNCode.ObjectId = Object_Partner.Id
                                 AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
           LEFT JOIN tmpExportJuridical ON tmpExportJuridical.PartnerId = Object_Partner.Id
+          LEFT JOIN tmpProtocol ON 1=1
      WHERE Movement.Id = inMovementId) AS tmp
     ;
 
@@ -121,3 +129,4 @@ $BODY$
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3376510, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Mida35273055()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3252496, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Vez37171990()
 -- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 3438890, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Brusn34604386()
+-- SELECT * FROM gpGet_Movement_Email_FileName (inMovementId:= 15595974, inSession:= zfCalc_UserAdmin()) -- zc_Enum_ExportKind_Glad2514900150()
