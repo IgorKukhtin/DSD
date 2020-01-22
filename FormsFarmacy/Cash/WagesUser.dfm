@@ -10,23 +10,23 @@ inherited WagesUserForm: TWagesUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 123
+    Top = 107
     Width = 655
-    Height = 326
+    Height = 342
     TabOrder = 0
-    ExplicitTop = 79
+    ExplicitTop = 107
     ExplicitWidth = 655
-    ExplicitHeight = 370
-    ClientRectBottom = 326
+    ExplicitHeight = 342
+    ClientRectBottom = 342
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
-      ExplicitHeight = 370
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 211
+        Height = 227
         ExplicitWidth = 655
-        ExplicitHeight = 255
+        ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,13 +79,12 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 211
+        Top = 227
         Width = 655
         Height = 115
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 255
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -255,7 +254,7 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 655
-    Height = 97
+    Height = 81
     Align = alTop
     ShowCaption = False
     TabOrder = 1
@@ -329,8 +328,8 @@ inherited WagesUserForm: TWagesUserForm
       Width = 57
     end
     object ceSummaCleaning: TcxCurrencyEdit
-      Left = 135
-      Top = 50
+      Left = 65
+      Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 10
@@ -338,60 +337,65 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel11: TcxLabel
       Left = 14
-      Top = 51
-      Caption = #1044#1086#1087'. '#1088#1072#1089#1093#1086#1076#1099': '#1059#1073#1086#1088#1082#1072
+      Top = 36
+      Caption = #1044#1086#1087'. '#1088#1072#1089#1093#1086#1076#1099' ('#1085#1072' '#1072#1087#1090#1077#1082#1091'):'
     end
     object ceSummaSP: TcxCurrencyEdit
-      Left = 222
-      Top = 50
+      Left = 156
+      Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 12
       Width = 65
     end
     object cxLabel12: TcxLabel
-      Left = 201
-      Top = 51
+      Left = 135
+      Top = 56
       Caption = #1057#1055
     end
     object ceSummaOther: TcxCurrencyEdit
-      Left = 332
-      Top = 50
+      Left = 266
+      Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 14
       Width = 65
     end
     object cxLabel13: TcxLabel
-      Left = 288
-      Top = 51
+      Left = 222
+      Top = 56
       Caption = #1055#1088#1086#1095#1077#1077
     end
     object ceSummaValidationResults: TcxCurrencyEdit
-      Left = 578
-      Top = 50
+      Left = 457
+      Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 16
       Width = 65
     end
     object cxLabel14: TcxLabel
-      Left = 401
-      Top = 51
+      Left = 335
+      Top = 56
       Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
     end
     object ceSummaTotal: TcxCurrencyEdit
       Left = 578
-      Top = 72
+      Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 18
       Width = 65
     end
     object cxLabel15: TcxLabel
-      Left = 401
-      Top = 73
-      Caption = #1048#1090#1086#1075#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+      Left = 536
+      Top = 56
+      Caption = #1048#1090#1086#1075#1086':'
+    end
+    object cxLabel17: TcxLabel
+      Left = 14
+      Top = 56
+      Caption = #1059#1073#1086#1088#1082#1072
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

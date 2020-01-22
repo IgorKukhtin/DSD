@@ -1,4 +1,4 @@
-object LoyaltySPListForm: TLoyaltySPListForm
+object LoyaltySMListForm: TLoyaltySMListForm
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
@@ -16,18 +16,18 @@ object LoyaltySPListForm: TLoyaltySPListForm
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object LoyaltySPListGrid: TcxGrid
+  object LoyaltySMListGrid: TcxGrid
     Left = 0
     Top = 28
     Width = 619
     Height = 333
     Align = alClient
     TabOrder = 0
-    object LoyaltySPListGridDBTableView: TcxGridDBTableView
-      OnDblClick = LoyaltySPListGridDBTableViewDblClick
-      OnKeyDown = LoyaltySPListGridDBTableViewKeyDown
+    object LoyaltySMListGridDBTableView: TcxGridDBTableView
+      OnDblClick = LoyaltySMListGridDBTableViewDblClick
+      OnKeyDown = LoyaltySMListGridDBTableViewKeyDown
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = LoyaltySPListDS
+      DataController.DataSource = LoyaltySMListDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -79,9 +79,9 @@ object LoyaltySPListForm: TLoyaltySPListForm
         Width = 84
       end
     end
-    object LoyaltySPListGridLevel: TcxGridLevel
+    object LoyaltySMListGridLevel: TcxGridLevel
       Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
-      GridView = LoyaltySPListGridDBTableView
+      GridView = LoyaltySMListGridDBTableView
     end
   end
   object cxGrid1: TcxGrid
@@ -92,10 +92,10 @@ object LoyaltySPListForm: TLoyaltySPListForm
     Align = alClient
     TabOrder = 5
     object cxGridDBTableView1: TcxGridDBTableView
-      OnDblClick = LoyaltySPListGridDBTableViewDblClick
-      OnKeyDown = LoyaltySPListGridDBTableViewKeyDown
+      OnDblClick = LoyaltySMListGridDBTableViewDblClick
+      OnKeyDown = LoyaltySMListGridDBTableViewKeyDown
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = LoyaltySPListDS
+      DataController.DataSource = LoyaltySMListDS
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -162,8 +162,8 @@ object LoyaltySPListForm: TLoyaltySPListForm
     Left = 160
     Top = 64
   end
-  object LoyaltySPListDS: TDataSource
-    DataSet = MainCashForm2.LoyaltySPCDS
+  object LoyaltySMListDS: TDataSource
+    DataSet = MainCashForm2.LoyaltySMCDS
     Left = 432
     Top = 136
   end

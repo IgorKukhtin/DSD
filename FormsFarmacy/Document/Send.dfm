@@ -1364,6 +1364,65 @@ inherited SendForm: TSendForm
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actCreateLoss: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecCreateLoss
+        end
+        item
+          Action = actOpenLossForm
+        end>
+      QuestionBeforeExecute = #1057#1086#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1080' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1085#1077#1075#1086' '#1090#1086#1074#1072#1088'?'
+      Caption = #1057#1086#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1080' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1085#1077#1075#1086' '#1090#1086#1074#1072#1088
+      Hint = #1057#1086#1086#1079#1076#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1089#1087#1080#1089#1072#1085#1080#1103' '#1080' '#1089#1082#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1074' '#1085#1077#1075#1086' '#1090#1086#1074#1072#1088
+      ImageIndex = 24
+    end
+    object actExecCreateLoss: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spCreateLoss
+      StoredProcList = <
+        item
+          StoredProc = spCreateLoss
+        end>
+      Caption = 'actExecCreateLoss'
+    end
+    object actOpenLossForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenLossForm'
+      FormName = 'TLossForm'
+      FormNameParam.Value = 'TLossForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'LossID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1551,6 +1610,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1601,6 +1664,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton4: TdxBarButton
       Action = actSetNotDisplaySUN
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actCreateLoss
       Category = 0
     end
   end
@@ -1673,6 +1740,11 @@ inherited SendForm: TSendForm
         Name = 'inOperDate'
         Value = 43681d
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LossID'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -3157,5 +3229,38 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 744
     Top = 491
+  end
+  object spCreateLoss: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Loss_FromSend'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outLossID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'LossID'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 878
+    Top = 400
   end
 end

@@ -155,6 +155,11 @@ type
     dxBarButton4: TdxBarButton;
     cbSun_v2: TcxCheckBox;
     PartyRelated: TcxGridDBColumn;
+    actCreateLoss: TMultiAction;
+    dxBarButton5: TdxBarButton;
+    spCreateLoss: TdsdStoredProc;
+    actExecCreateLoss: TdsdExecStoredProc;
+    actOpenLossForm: TdsdOpenForm;
   private
     { Private declarations }
   public

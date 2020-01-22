@@ -17,11 +17,16 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            , Object_ImportType.Id         AS ImportTypeId
            , Object_ImportType.ValueData  AS ImportTypeName 
 
+
            , ObjectString_Directory.ValueData AS Directory
            
            , Object_ImportSettings.isErased   AS isErased
            , ObjectString_ProcedureName.ValueData AS ProcedureName
            , ObjectFloat_StartRow.ValueData::Integer AS StartRow
+           
+           , ObjectBoolean_HDR.ValueData          AS HDR
+           , ObjectBlob_Query.ValueData           AS Query
+           , ObjectString_JSONParamName.ValueData AS JSONParamName
            
        FROM Object AS Object_ImportSettings
            LEFT JOIN ObjectLink AS ObjectLink_ImportSettings_Juridical
@@ -49,6 +54,18 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            LEFT JOIN ObjectFloat AS ObjectFloat_StartRow 
                                   ON ObjectFloat_StartRow.ObjectId = Object_ImportSettings.Id
                                  AND ObjectFloat_StartRow.DescId = zc_ObjectFloat_ImportSettings_StartRow()
+
+           LEFT JOIN ObjectBlob AS ObjectBlob_Query 
+                                ON ObjectBlob_Query.ObjectId = Object_ImportSettings.Id
+                               AND ObjectBlob_Query.DescId = zc_ObjectBlob_ImportSettings_Query()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_HDR 
+                                   ON ObjectBoolean_HDR.ObjectId = Object_ImportSettings.Id
+                                  AND ObjectBoolean_HDR.DescId = zc_ObjectBoolean_ImportSettings_HDR()
+
+           LEFT JOIN ObjectString AS ObjectString_JSONParamName 
+                                  ON ObjectString_JSONParamName.ObjectId = Object_ImportType.Id
+                                 AND ObjectString_JSONParamName.DescId = zc_ObjectString_ImportType_JSONParamName()
 
        WHERE Object_ImportSettings.DescId = zc_Object_ImportSettings();
 

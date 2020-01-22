@@ -11,6 +11,9 @@ CREATE OR REPLACE FUNCTION zc_objectBlob_UserFormSettings_Data() RETURNS integer
 INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
    SELECT zc_object_UserFormSettings(), 'zc_objectBlob_UserFormSettings_Data','Пользовательские данные формы' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_objectBlob_UserFormSettings_Data');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBlob_ImportSettings_Query() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_ImportSettings_Query'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBLOBDesc (DescId, Code ,itemname)
+   SELECT zc_Object_ImportSettings(), 'zc_ObjectBlob_ImportSettings_Query','Запрос' WHERE NOT EXISTS (SELECT * FROM ObjectBlobDesc WHERE Code = 'zc_ObjectBlob_ImportSettings_Query');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

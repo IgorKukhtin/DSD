@@ -62,7 +62,7 @@ BEGIN
      vbPartnerId := (SELECT Object.Id 
                      FROM Object
                      WHERE Object.DescId = zc_Object_Partner()
-                        AND UPPER (TRIM (Object.ValueData) ) LIKE UPPER('%'||TRIM (inBrandName||' ' ||inPeriodName)||'%')
+                        AND UPPER (TRIM (Object.ValueData) ) LIKE UPPER('%'||TRIM (inBrandName||'-' ||UPPER (TRIM(LEFT (inPeriodName, length(inPeriodName)-4)))|| '-' || RIGHT (TRIM (inPeriodName), 4))||'%')
                      );
 
      IF COALESCE (vbPartnerId,0) = 0
@@ -176,24 +176,27 @@ BEGIN
                                                                                    ) AS tmp);
      END IF;
      
-     PERFORM gpInsertUpdate_MIEdit_Income(ioId                 :=   0  -- Ключ объекта <Элемент документа>
-                                        , inMovementId         :=   vbMovementId
-                                        , inGoodsGroupId       :=   vbGoodsGroupId
-                                        , inMeasureId          :=   219                                    -- шт.
-                                        , inJuridicalId        :=   0         -- Юр.лицо(наше)
-                                        , ioGoodsCode          :=   NEXTVAL ('Object_Goods_seq')   ::Integer      -- код товара
-                                        , inGoodsName          :=   TRIM (inObjectCode :: TVarChar) :: TVarChar  -- Товары
-                                        , inGoodsInfoName      :=   inGoodsInfoName                 :: TVarChar  --
-                                        , inGoodsSizeName      :=   ''                              :: TVarChar  --
-                                        , inCompositionName    :=   inCompositionName
-                                        , inLineFabricaName    :=   '-'                :: TVarChar  --
-                                        , inLabelName          :=   inLabelName  --
-                                        , inAmount             :=   inAmount           :: TFloat    -- Количество
-                                        , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
-                                        , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
-                                        , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
-                                        , inSession            :=   inSession  -- сессия пользователя
-                                         );      
+     -- проверка если уже загружен товар
+     
+     
+     PERFORM gpInsertUpdate_MIEdit_IncomeLoad(ioId                 :=   0  -- Ключ объекта <Элемент документа>
+                                            , inMovementId         :=   vbMovementId
+                                            , inGoodsGroupId       :=   vbGoodsGroupId
+                                            , inMeasureId          :=   219                                    -- шт.
+                                            , inJuridicalId        :=   0         -- Юр.лицо(наше)
+                                            , ioGoodsCode          :=   inObjectCode  ::Integer      -- код товара --NEXTVAL ('Object_Goods_seq')   ::Integer      -- код товара
+                                            , inGoodsName          :=   TRIM (inObjectCode :: TVarChar) :: TVarChar  -- Товары
+                                            , inGoodsInfoName      :=   inGoodsInfoName                 :: TVarChar  --
+                                            , inGoodsSizeName      :=   ''                              :: TVarChar  --
+                                            , inCompositionName    :=   inCompositionName
+                                            , inLineFabricaName    :=   '-'                :: TVarChar  --
+                                            , inLabelName          :=   inLabelName  --
+                                            , inAmount             :=   inAmount           :: TFloat    -- Количество
+                                            , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
+                                            , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
+                                            , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
+                                            , inSession            :=   inSession  -- сессия пользователя
+                                             );      
 
 END;
 $BODY$

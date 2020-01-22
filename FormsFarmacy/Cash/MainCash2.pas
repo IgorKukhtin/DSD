@@ -436,8 +436,8 @@ type
     cxButton8: TcxButton;
     edLoyaltySMSumma: TcxCurrencyEdit;
     lblLoyaltySMSumma: TLabel;
-    spLoyaltySP: TdsdStoredProc;
-    LoyaltySPCDS: TClientDataSet;
+    spLoyaltySM: TdsdStoredProc;
+    LoyaltySMCDS: TClientDataSet;
     spInsertMovementItem: TdsdStoredProc;
     MainNotSold60: TcxGridDBColumn;
     spLoyaltySaveMoneyChekInfo: TdsdStoredProc;
@@ -732,7 +732,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
      EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash, EnterLoyaltySaveMoney,
-     LoyaltySPList;
+     LoyaltySMList;
 
 const
   StatusUnCompleteCode = 1;
@@ -2699,6 +2699,12 @@ procedure TMainCashForm2.actSetLoyaltySaveMoneyExecute(Sender: TObject);
       nLoyaltySMID : integer; nPromoCodeSumma: currency;
 begin
 
+  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger <= 0 then
+  Begin
+    ShowMessage('œÓ„‡ÏÏ‡ ÎÓˇÎ¸ÌÓÒÚË Ì‡ÍÓÔËÚÂÎ¸Ì‡ˇ ÌÂ ‡ÍÚË‚Ì‡...');
+    Exit;
+  End;
+
   if gc_User.Local and not FileExists(Buyer_lcl) then
   Begin
     ShowMessage('¬ ÓÚÎÓÊÂÌÌÓÏ ÂÊËÏÂ ÒÔ‡‚Ó˜ÌËÍ ÔÓÍÛÔ‡ÚÂ‰ÎÂÈ ÌÂ Ì‡È‰ÂÌ...');
@@ -2741,38 +2747,38 @@ begin
     else  ShowMessage('¿ÍÚË‚ÌÓÈ ‡ÍˆËË ÔÓ ÔÓÍÛÔ‡ÚÂÎ˛ '#13#10 + cName + ' ' + cPhone + #13#10'ÌÂ Ì‡È‰ÂÌÓ..');
   end else
   begin
-    spLoyaltySP.ParamByName('inBuyerID').Value := nID;
-    spLoyaltySP.Execute;
-    if LoyaltySPCDS.RecordCount <= 0 then
+    spLoyaltySM.ParamByName('inBuyerID').Value := nID;
+    spLoyaltySM.Execute;
+    if LoyaltySMCDS.RecordCount <= 0 then
     begin
       ShowMessage('¿ÍÚË‚ÌÓÈ ‡ÍˆËË ÔÓ ÔÓÍÛÔ‡ÚÂÎ˛ '#13#10 + cName + ' ' + cPhone + #13#10'ÌÂ Ì‡È‰ÂÌÓ..');
       Exit;
-    end else if LoyaltySPCDS.RecordCount = 1 then
+    end else if LoyaltySMCDS.RecordCount = 1 then
     begin
-      if LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger = 0 then
+      if LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger = 0 then
       begin
         spInsertMovementItem.ParamByName('ioId').Value := 0;
-        spInsertMovementItem.ParamByName('inMovementId').Value := LoyaltySPCDS.FieldByName('Id').AsInteger;
-        spInsertMovementItem.ParamByName('inBuyerID').Value := LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
+        spInsertMovementItem.ParamByName('inMovementId').Value := LoyaltySMCDS.FieldByName('Id').AsInteger;
+        spInsertMovementItem.ParamByName('inBuyerID').Value := LoyaltySMCDS.FieldByName('BuyerID').AsInteger;
         spInsertMovementItem.Execute;
 
         if spInsertMovementItem.ParamByName('ioId').Value <> 0 then
         begin
-          spLoyaltySP.ParamByName('inBuyerID').Value :=  LoyaltySPCDS.FieldByName('BuyerID').AsInteger;
-          spLoyaltySP.Execute;
-          if not LoyaltySPCDS.Locate('LoyaltySMID', spInsertMovementItem.ParamByName('ioId').Value, []) or
-            (LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger <> spInsertMovementItem.ParamByName('ioId').Value) then
-            LoyaltySPCDS.Close;
+          spLoyaltySM.ParamByName('inBuyerID').Value :=  LoyaltySMCDS.FieldByName('BuyerID').AsInteger;
+          spLoyaltySM.Execute;
+          if not LoyaltySMCDS.Locate('LoyaltySMID', spInsertMovementItem.ParamByName('ioId').Value, []) or
+            (LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger <> spInsertMovementItem.ParamByName('ioId').Value) then
+            LoyaltySMCDS.Close;
         end else ShowMessage('Œ¯Ë·Í‡ ÔËÍÂÔÎÂÌËˇ ÔÓÍÛÔ‡ÚÂÎˇ Í ‡ÍˆËË.'#13#10#13#10'œÓ‚ÚÓËÚÂ ÔÓÔ˚ÚÍÛ.');
-        if not LoyaltySPCDS.Active then Exit;
+        if not LoyaltySMCDS.Active then Exit;
       end;
     end else
     begin
-      if not ShowLoyaltySPList then Exit;
-      if not LoyaltySPCDS.Active then Exit;
+      if not ShowLoyaltySMList then Exit;
+      if not LoyaltySMCDS.Active then Exit;
     end;
-    if LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger > 0 then
-      SetPromoCodeLoyaltySM(LoyaltySPCDS.FieldByName('LoyaltySMID').AsInteger, cPhone, cName, LoyaltySPCDS.FieldByName('SummaRemainder').AsCurrency, 0)
+    if LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger > 0 then
+      SetPromoCodeLoyaltySM(LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger, cPhone, cName, LoyaltySMCDS.FieldByName('SummaRemainder').AsCurrency, 0)
     else ShowMessage('Œ¯Ë·Í‡ ÔËÍÂÔÎÂÌËˇ ÔÓÍÛÔ‡ÚÂÎˇ Í ‡ÍˆËË.'#13#10#13#10'œÓ‚ÚÓËÚÂ ÔÓÔ˚ÚÍÛ.');
   end;
 end;
@@ -5810,44 +5816,44 @@ var str_log_xml : String; Disc, nSumAll: Currency;
     var ÒAccommodationName : string; nDisc: Currency;
   begin
      // ÔÓÒ˚Î‡ÂÏ ÒÚÓÍÛ ‚ Í‡ÒÒÛ Ë ÂÒÎË ‚ÒÂ OK, ÚÓ ÒÚ‡‚ËÏ ÏÂÚÍÛ Ó ÔÓ‰‡ÊÂ
-     if not Assigned(Cash) or Cash.AlwaysSold then
-        result := true
-     else
-       if not SoldParallel then
-         with CheckCDS do
-         begin
-            if isFiscal or FieldByName('AccommodationName').IsNull then ÒAccommodationName := ''
-            else ÒAccommodationName := ' ' + FieldByName('AccommodationName').Text;
-            if ((FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMSumma').Value) > 0) or
-               (Self.FormParams.ParamByName('InvNumberSP').Value = '') and (DiscountServiceForm.gCode = 0) and
-               not UnitConfigCDS.FieldByName('PermanentDiscountID').IsNull and (UnitConfigCDS.FieldByName('PermanentDiscountPercent').AsCurrency > 0)then
+   if not Assigned(Cash) or Cash.AlwaysSold then
+      result := true
+   else
+     if not SoldParallel then
+       with CheckCDS do
+       begin
+          if isFiscal or FieldByName('AccommodationName').IsNull then ÒAccommodationName := ''
+          else ÒAccommodationName := ' ' + FieldByName('AccommodationName').Text;
+          if ((FormParams.ParamByName('LoyaltyChangeSumma').Value + FormParams.ParamByName('LoyaltySMSumma').Value) > 0) or
+             (Self.FormParams.ParamByName('InvNumberSP').Value = '') and (DiscountServiceForm.gCode = 0) and
+             not UnitConfigCDS.FieldByName('PermanentDiscountID').IsNull and (UnitConfigCDS.FieldByName('PermanentDiscountPercent').AsCurrency > 0)then
+          begin
+            if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
             begin
-              if checkCDS.FieldByName('PricePartionDate').asCurrency > 0 then
-              begin
-                result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
-                                          AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
-                                          FieldByName('Amount').asCurrency,
-                                          FieldByName('PricePartionDate').asCurrency,
-                                          FieldByName('NDS').asCurrency);
-                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency);
-              end else
-              begin
+              result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                        AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+                                        FieldByName('Amount').asCurrency,
+                                        FieldByName('PricePartionDate').asCurrency,
+                                        FieldByName('NDS').asCurrency);
+              nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PricePartionDate').asCurrency);
+            end else
+            begin
 
-                result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
-                                          AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
-                                          FieldByName('Amount').asCurrency,
-                                          FieldByName('PriceSale').asCurrency,
-                                          FieldByName('NDS').asCurrency);
-                nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency);
-              end;
-              if nDisc <> 0 then Cash.DiscountGoods(nDisc);
-            end else result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
-                                               AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
-                                               FieldByName('Amount').asCurrency,
-                                               FieldByName('Price').asCurrency,
-                                               FieldByName('NDS').asCurrency);
-         end
-       else result:=true;
+              result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                        AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+                                        FieldByName('Amount').asCurrency,
+                                        FieldByName('PriceSale').asCurrency,
+                                        FieldByName('NDS').asCurrency);
+              nDisc := FieldByName('Summ').AsCurrency - GetSummFull(FieldByName('Amount').asCurrency, FieldByName('PriceSale').asCurrency);
+            end;
+            if nDisc <> 0 then Cash.DiscountGoods(nDisc);
+          end else result := Cash.SoldFromPC(FieldByName('GoodsCode').asInteger,
+                                             AnsiUpperCase(FieldByName('GoodsName').Text + ÒAccommodationName),
+                                             FieldByName('Amount').asCurrency,
+                                             FieldByName('Price').asCurrency,
+                                             FieldByName('NDS').asCurrency);
+       end
+     else result:=true;
   end;
 {------------------------------------------------------------------------------}
 begin
@@ -6038,7 +6044,7 @@ begin
             if result then result := Cash.TotalSumm(SalerCash, SalerCashAdd, PaidType);
             if result and (FormParams.ParamByName('LoyaltySignID').Value <> 0) and
                (FormParams.ParamByName('LoyaltyText').Value <> '') then Cash.PrintFiscalText(FormParams.ParamByName('LoyaltyText').Value);
-            if result and (FormParams.ParamByName('LoyaltySignSMID').Value <> 0) and
+            if result and (FormParams.ParamByName('LoyaltySMID').Value <> 0) and
                (FormParams.ParamByName('LoyaltySMText').Value <> '') then Cash.PrintFiscalText(FormParams.ParamByName('LoyaltySMText').Value);
             if result then result := Cash.CloseReceiptEx(ACheckNumber); //«‡Í˚ÎË ˜ÂÍ
             if result and isFiscal then Finish_Check_History(FTotalSumm);
@@ -6625,7 +6631,7 @@ begin
       FormParams.ParamByName('LoyaltySMText').Value := '';
     end;
 
-  except ON E:Exception do Add_Log('Check_LoyaltySP err=' + E.Message);
+  except ON E:Exception do Add_Log('Check_LoyaltySM err=' + E.Message);
   end;
 
 end;
