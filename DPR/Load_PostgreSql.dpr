@@ -61,7 +61,10 @@ uses
   dsdExportToXLSAction in '..\SOURCE\COMPONENT\dsdExportToXLSAction.pas',
   Medoc_J1201010 in '..\SOURCE\MeDOC\Medoc_J1201010.pas',
   Medoc_J1201210 in '..\SOURCE\MeDOC\Medoc_J1201210.pas',
-  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm};
+  PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
+  DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
 
 {$R *.res}
 
