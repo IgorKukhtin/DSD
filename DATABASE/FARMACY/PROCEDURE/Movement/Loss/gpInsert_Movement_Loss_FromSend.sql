@@ -19,6 +19,11 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
    vbUserId:= lpGetUserBySession (inSession);
 
+   IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+   THEN
+      RAISE EXCEPTION 'Ошибка. Создание документа списания по перемещению разрешено только администратору.';
+   END IF;
+
     IF COALESCE (inMovementId, 0) = 0
     THEN
       RAISE EXCEPTION 'Документ перемещения не созранен.';

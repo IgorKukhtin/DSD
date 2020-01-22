@@ -1125,7 +1125,9 @@ end;
 
 function TdsdFormParams.ParamByName(const Value: string): TdsdParam;
 begin
-  result := FParams.ParamByName(Value)
+  result := FParams.ParamByName(Value);
+//  if not Assigned(result) then
+//    raise Exception.Create('Параметр "' + Value + '" не найден.');
 end;
 
 

@@ -80,6 +80,10 @@ type
     bbUpdate_isSun: TdxBarButton;
     isSUN_v2: TcxGridDBColumn;
     isNotDisplaySUN: TcxGridDBColumn;
+    actUnCompleteView: TMultiAction;
+    actExecUnCompleteView: TdsdExecStoredProc;
+    spUnCompleteView: TdsdStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

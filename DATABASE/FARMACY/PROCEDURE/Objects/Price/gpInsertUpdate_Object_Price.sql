@@ -85,6 +85,13 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка.Кол-во дней для периода должно быть больше 0.';
     END IF;    
+    
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+       AND COALESCE (inDays, 0) > 7
+    THEN
+      RAISE EXCEPTION 'Ошибка. Кол-во дней для периода должно быть не более 7.';     
+    END IF;         
 
     -- проверили корректность цены
     IF COALESCE (inMCSValue_min, 0) > COALESCE (inMCSValue, 0)
@@ -412,6 +419,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 21.01.20                                                                      * Кол-во дней для периода не более 7 для кассира
  21.12.19                                                                      * НТЗ для СУН
  30.11.18         *
  13.06.17         * без Object_Price_View
