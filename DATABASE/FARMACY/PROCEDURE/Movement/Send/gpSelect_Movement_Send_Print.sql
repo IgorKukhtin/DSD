@@ -150,11 +150,12 @@ BEGIN
                                   )   
 
          , tmpMIContainer AS (SELECT MIContainer_Count.MovementItemId           AS MovementItemId
-                                   , COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd())::TDateTime AS MinExpirationDate -- Срок годности
+                                   , MIN (COALESCE(MIDate_ExpirationDate.ValueData,zc_DateEnd()))::TDateTime AS MinExpirationDate -- Срок годности
                               FROM tmpMIContainerSend AS MIContainer_Count
                                    LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                ON MIDate_ExpirationDate.MovementItemId = MIContainer_Count.MIIncomeId 
                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               GROUP BY MIContainer_Count.MovementItemId
                               )
                                  
       , tmpMI_Child AS (SELECT MovementItem.ParentId
