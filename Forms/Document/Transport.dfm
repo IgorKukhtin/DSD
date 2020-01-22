@@ -1652,6 +1652,44 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actPrintRoadList: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end
+        item
+          StoredProc = spSelectPrintHeader
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'isFrom'
+          Value = True
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1090#1080#1087'. '#1092#1086#1088#1084#1072' 2)'
+      ReportNameParam.Value = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' ('#1090#1080#1087'. '#1092#1086#1088#1084#1072' 2)'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrintFrom: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -3679,6 +3717,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbPrintRoadList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIProtocol'
         end
         item
@@ -3794,6 +3840,10 @@
     end
     object bbSetUnErasedChild: TdxBarButton
       Action = SetUnErasedChild
+      Category = 0
+    end
+    object bbPrintRoadList: TdxBarButton
+      Action = actPrintRoadList
       Category = 0
     end
   end

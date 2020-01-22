@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
 RETURNS TABLE (Id Integer, IdBarCode TVarChar, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
+             , StartPlanHour TFloat, StartPlanMinute TFloat
+             , EndPlanHour TFloat, EndPlanMinute   TFloat
              , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar
@@ -57,6 +59,11 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
            , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
           
+           , date_part ('HOUR',CURRENT_TIMESTAMP)  ::TFloat AS StartPlanHour
+           , date_part ('MINUTE',CURRENT_TIMESTAMP)::TFloat AS StartPlanMinute
+           , date_part ('HOUR',CURRENT_TIMESTAMP)  ::TFloat AS EndPlanHour
+           , date_part ('MINUTE',CURRENT_TIMESTAMP)::TFloat AS EndPlanMinute
+
            , CAST (0 as TFloat)                    AS HoursWork
            , CAST (0 as TFloat)                    AS HoursAdd
                       
@@ -105,7 +112,12 @@ BEGIN
            , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_EndRunPlan.ValueData, Movement.OperDate))   AS TDateTime) AS EndRunPlan
            , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_StartRun.ValueData, Movement.OperDate))     AS TDateTime) AS StartRun
            , CAST (DATE_TRUNC ('MINUTE', COALESCE (MovementDate_EndRun.ValueData, Movement.OperDate))       AS TDateTime) AS EndRun
-          
+
+           , date_part ('HOUR',  COALESCE (MovementDate_StartRunPlan.ValueData, Movement.OperDate))  ::TFloat AS StartPlanHour
+           , date_part ('MINUTE',COALESCE (MovementDate_StartRunPlan.ValueData, Movement.OperDate))  ::TFloat AS StartPlanMinute
+           , date_part ('HOUR',  COALESCE (MovementDate_EndRunPlan.ValueData, Movement.OperDate))    ::TFloat AS EndPlanHour
+           , date_part ('MINUTE',COALESCE (MovementDate_EndRunPlan.ValueData, Movement.OperDate))    ::TFloat AS EndPlanMinute
+
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
                       
@@ -219,6 +231,8 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 22.01.20         * add StartPlanHour, StartPlanMinute, 
+                        EndPlanHour, EndPlanMinute
  16.12.13                                        * err on DriverCertificate
  15.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal

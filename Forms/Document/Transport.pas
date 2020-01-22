@@ -249,6 +249,8 @@ type
     SetUnErasedChild: TdsdUpdateErased;
     bbSetUnErasedChild: TdxBarButton;
     colchisErased: TcxGridDBColumn;
+    actPrintRoadList: TdsdPrintAction;
+    bbPrintRoadList: TdxBarButton;
   private
   public
   end;

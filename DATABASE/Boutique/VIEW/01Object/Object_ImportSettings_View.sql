@@ -26,7 +26,6 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
            
            , ObjectBoolean_HDR.ValueData          AS HDR
            , ObjectBlob_Query.ValueData           AS Query
-           , ObjectString_ProcedureName.ValueData AS ProcedureName
            , ObjectString_JSONParamName.ValueData AS JSONParamName
            
        FROM Object AS Object_ImportSettings
@@ -64,9 +63,6 @@ CREATE OR REPLACE VIEW Object_ImportSettings_View AS
                                    ON ObjectBoolean_HDR.ObjectId = Object_ImportSettings.Id
                                   AND ObjectBoolean_HDR.DescId = zc_ObjectBoolean_ImportSettings_HDR()
 
-           LEFT JOIN ObjectString AS ObjectString_ProcedureName 
-                                  ON ObjectString_ProcedureName.ObjectId = Object_ImportType.Id
-                                 AND ObjectString_ProcedureName.DescId = zc_ObjectString_ImportType_ProcedureName()
            LEFT JOIN ObjectString AS ObjectString_JSONParamName 
                                   ON ObjectString_JSONParamName.ObjectId = Object_ImportType.Id
                                  AND ObjectString_JSONParamName.DescId = zc_ObjectString_ImportType_JSONParamName()
