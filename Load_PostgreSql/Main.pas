@@ -12,6 +12,11 @@ uses
   IdBaseComponent, IdComponent, IdIPWatch;
 
 type
+  TCurrencyItem = record
+    Name:   string;
+  end;
+  TArrayCurrencyList = array of TCurrencyItem;
+
   TMainForm = class(TForm)
     DataSource: TDataSource;
     DBGrid: TDBGrid;
@@ -204,6 +209,8 @@ type
     cbPromo: TCheckBox;
     PanelErr: TPanel;
     cbFillAuto: TCheckBox;
+    cbCurrency: TCheckBox;
+    BranchEdit: TEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -225,6 +232,8 @@ type
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
 
     GroupId_branch : Integer;
+
+    ArrayCurrencyList : TArrayCurrencyList;
 
     procedure AddToLog(num, lMovementId : Integer; S: string);
 
@@ -298,6 +307,7 @@ type
     procedure pCompleteDocument_Diff;
     procedure pCompleteDocument_ReturnIn_Auto;
     procedure pCompleteDocument_Promo;
+    procedure pCompleteDocument_Currency;
 
     procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
     procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
@@ -466,18 +476,125 @@ type
     procedure pLoadGuide_ProfitLossDirection;
     procedure pLoadGuide_ProfitLoss;
 
+    procedure pLoad_https_Currency_all;
+    procedure pLoad_https_Currency(OperDate : TDateTime);
+    function GetArrayCurrencyList_Index_byName (Name:String):Integer;
+
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
+
   public
     procedure StartProcess;
   end;
+
 
 var
   MainForm: TMainForm;
 
 implementation
-uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics;
+uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics, XMLIntf, XMLDoc, IdHTTP
+, IdTCPConnection, IdTCPClient, IdSSLOpenSSL;
 {$R *.dfm}
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.GetArrayCurrencyList_Index_byName (Name:String):Integer;
+var i: Integer;
+begin
+  Result:=-1;
+  for i := 0 to Length(ArrayCurrencyList)-1 do
+    if ArrayCurrencyList[i].Name = Name then begin Result:=i;break;end;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoad_https_Currency_all;
+var i,count: Integer;
+begin
+    if (not cbCurrency.Checked)or(not cbCurrency.Enabled) then exit;
+    //
+    toStoredProc_two.StoredProcName:='gpInsertUpdate_Movement_Currency_https';
+    toStoredProc_two.OutputType := otResult;
+    toStoredProc_two.Params.Clear;
+    toStoredProc_two.Params.AddParam ('inOperDate',ftDateTime,ptInput, 0);
+    toStoredProc_two.Params.AddParam ('inAmount_text',ftString,ptInput, '');
+    toStoredProc_two.Params.AddParam ('inInternalName',ftString,ptInput, '');
+    //
+    count:= 0;
+    while StrToDate(StartDateCompleteEdit.Text) + count <= StrToDate(EndDateCompleteEdit.Text)
+    do count:= count + 1;
+    //
+    for i:= 0 to count
+    do
+       pLoad_https_Currency(StrToDate(StartDateCompleteEdit.Text) + i);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoad_https_Currency(OperDate : TDateTime);
+  var XML : IXMLDocument; RootNode, xmlNode: IXMLNode;
+      i:Integer;
+          function GetHTTPjson(AURL : string) : String;
+            var  mStream: TMemoryStream;
+                 IdHTTP: TIdHTTP;
+                 IdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
+          begin
+            Result := '';
+
+            IdHTTP := TIdHTTP.Create(Nil);
+            IdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(Nil);
+            IdHTTP.IOHandler := IdSSLIOHandlerSocketOpenSSL;
+            mStream := TMemoryStream.Create;
+
+            try
+              IdHTTP.Request.ContentType := 'application/xml';
+              IdHTTP.Request.ContentEncoding := 'utf-8';
+              IdHTTP.Request.CustomHeaders.FoldLines := False;
+
+              try
+                Result := IdHTTP.Get(AURL);
+              except
+              end;
+            finally
+              mStream.Free;
+              IdHTTP.Free;
+              IdSSLIOHandlerSocketOpenSSL.Free;
+            end;
+          end;
+begin
+//  Memo1.Lines.Clear;
+  XML := TXMLDocument.Create(nil);
+  XML.XML.Text := GetHTTPjson('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date='
+                             + FormatDateTime('YYYYMMDD', OperDate)
+                             );
+  if XML.XML.Text <> '' then
+  begin
+    XML.Active := True;
+    RootNode := XML.DocumentElement;
+    for i :=0 to RootNode.ChildNodes.Count-1 do
+    begin
+      {if (RootNode.ChildNodes[i].ChildNodes['cc'].Text = 'EUR')
+      then begin
+          ShowMessage (RootNode.ChildNodes[i].ChildNodes['cc'].Text);
+          ShowMessage (RootNode.ChildNodes[i].NodeName);
+          ShowMessage (IntToStr(GetArrayCurrencyList_Index_byName (RootNode.ChildNodes[i].ChildNodes['cc'].Text)));
+          ShowMessage (ArrayCurrencyList[0].Name);
+          ShowMessage (ArrayCurrencyList[1].Name);
+      end;}
+
+      if (RootNode.ChildNodes[i].NodeName = 'currency')
+      and (GetArrayCurrencyList_Index_byName (RootNode.ChildNodes[i].ChildNodes['cc'].Text) >= 0)
+      //and (RootNode.ChildNodes[i].ChildNodes['r030'].Text = '840')
+      then begin
+               toStoredProc_two.Params.ParamByName('inOperDate').Value:=OperDate;
+               toStoredProc_two.Params.ParamByName('inAmount_text').Value:=RootNode.ChildNodes[i].ChildNodes['rate'].Text;
+               toStoredProc_two.Params.ParamByName('inInternalName').Value:=RootNode.ChildNodes[i].ChildNodes['cc'].Text;
+               if not myExecToStoredProc_two then ;
+
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['r030'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['txt'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['rate'].Text);
+//        Memo1.Lines.Add(RootNode.ChildNodes[i].ChildNodes['exchangedate'].Text);
+
+      end;
+    end;
+    XML.Active := False;
+  end;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFindIncome_ContractId_pg(JuridicalId,IMCode,InfoMoneyId,PaidKindId:Integer;OperDate:TdateTime):Integer;
 begin
@@ -1566,11 +1683,12 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Present: TDateTime;
   Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  i : Integer;
 begin
-     try if Pos('br-', ParamStr(4)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(4), 4, 2));
-         OKPOEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
+     try if Pos('br-', ParamStr(5)) = 1 then GroupId_branch:= StrToInt(Copy(ParamStr(5), 4, 2));
+         BranchEdit.Text:= 'BranchId : ' + IntToStr(GroupId_branch);
      except GroupId_branch:= -1;
-            OKPOEdit.Text:= '!!!ERROR!!! BranchId : ???';
+            BranchEdit.Text:= '!!!ERROR!!! BranchId : ???';
      end;
      //
      Gauge.Visible:=false;
@@ -1653,6 +1771,20 @@ begin
           ShowMessage ('not zc_Enum_PaidKind_FirstForm + zc_Enum_PaidKind_SecondForm');
      end;
      //
+     try
+         fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_Currency_List()');
+         SetLength(ArrayCurrencyList,toSqlQuery.RecordCount);
+         toSqlQuery.First;
+         i:=0;
+         for i:= 0 to toSqlQuery.RecordCount - 1
+         do begin
+              ArrayCurrencyList[i].Name := toSqlQuery.FieldByName('InternalName').AsString;
+              toSqlQuery.Next;
+         end;
+     except
+          ShowMessage ('not gpComplete_SelectAll_Sybase_Currency_List');
+     end;
+     //
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormShow(Sender: TObject);
@@ -1687,6 +1819,8 @@ procedure TMainForm.StartProcess;
                cbReturnIn_Auto.Checked:=true;
                //Расчет акций
                cbPromo.Checked:=true;
+               //Расчет Currency
+               cbCurrency.Checked:=true;
 
                //Проводим+Распроводим
                cbComplete.Checked:=true;
@@ -2357,6 +2491,10 @@ begin
      //
      // ВСЕГДА - Расчет акций
      if (not fStop) then pCompleteDocument_Promo;
+     // ВСЕГДА - загрузка курсов
+     if (not fStop) then pLoad_https_Currency_all;
+     // ВСЕГДА - Расчет Курс разн.
+     if (not fStop) then pCompleteDocument_Currency;
      // ВСЕГДА - Привязка Возвраты
      if (not fStop) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
      //
@@ -21216,6 +21354,114 @@ begin
      end;
      //
      myDisabledCB(cbReturnIn_Auto);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Currency;
+  function myAdd :String;
+  begin
+       result:='';
+       if not toSqlQuery.EOF then
+       with toSqlQuery do
+       result:=' select ' + FieldByName('MovementId').AsString
+              +'       ,' + FormatToDateServer_notNULL(FieldByName('OperDate').AsDateTime)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('InvNumber').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(FieldByName('Code').AsString)
+              +'       ,' + FormatToVarCharServer_isSpace(myReplaceStr(FieldByName('ItemName').AsString,chr(39),'`'));
+       Gauge.Progress:=Gauge.Progress+1;
+  end;
+var ExecStr1,ExecStr2,ExecStr3,ExecStr4,addStr:String;
+    i,SaveRecord:Integer;
+    MSec_complete:Integer;
+    isSale_str:String;
+begin
+     if (not cbCurrency.Checked)or(not cbCurrency.Enabled) then exit;
+     //
+     myEnabledCB(cbCurrency);
+     //
+     // !!!заливка в сибасе!!!
+     fOpenSqToQuery ('select * from gpComplete_SelectAll_Sybase_Currency_Auto('+FormatToVarCharServer_isSpace(StartDateCompleteEdit.Text)+','+FormatToVarCharServer_isSpace(EndDateCompleteEdit.Text)+')');
+
+     // delete Data on Sybase
+     fromADOConnection.Connected:=false;
+     fExecSqFromQuery('delete dba._pgMovementReComlete');
+
+     SaveRecord:=toSqlQuery.RecordCount;
+     Gauge.Progress:=0;
+     Gauge.MaxValue:=SaveRecord;
+     cbCurrency.Caption:='('+IntToStr(SaveRecord)+') !!!Расчет курсовых разн.!!!';
+
+     with toSqlQuery do
+        while not EOF do
+        begin
+             // insert into Sybase
+             ExecStr1:='insert into dba._pgMovementReComlete(MovementId,OperDate,InvNumber,Code,ItemName)'
+                     +myAdd;
+             ExecStr2:='';
+             ExecStr3:='';
+             ExecStr4:='';
+             for i:=1 to 100 do
+             begin
+                  Next;
+                  addStr:=myAdd;
+                  if addStr <> '' then
+                  if LengTh(ExecStr1) < 3500
+                  then ExecStr1:=ExecStr1 + ' union all ' + addStr
+                  else if LengTh(ExecStr2) < 3500
+                       then ExecStr2:=ExecStr2 + ' union all ' + addStr
+                        else if LengTh(ExecStr3) < 3500
+                             then ExecStr3:=ExecStr3 + ' union all ' + addStr
+                             else ExecStr4:=ExecStr4 + ' union all ' + addStr;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+                  Application.ProcessMessages;
+             end;
+             fromADOConnection.Connected:=false;
+             fExecSqFromQuery(ExecStr1+ExecStr2+ExecStr3+ExecStr4);
+             Next;
+        end;
+     //
+     fromADOConnection.Connected:=false;
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgMovementReComlete.*');
+        Add('from dba._pgMovementReComlete');
+        Add('order by OperDate,MovementId,InvNumber');
+        Open;
+
+        cbCurrency.Caption:='('+IntToStr(RecordCount)+') Расчет курс. разн.';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_two.StoredProcName:='gpReComplete_Movement_Currency';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
+             if not myExecToStoredProc_two then ;//exit;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCurrency);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Promo;
