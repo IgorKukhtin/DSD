@@ -254,6 +254,8 @@ type
     actPrint_Quality_ReportName: TdsdExecStoredProc;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
+    macExportAll: TMultiAction;
+    bbmacExportAll: TdxBarButton;
   private
     { Private declarations }
   public
