@@ -414,6 +414,42 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 70
           end
+          object BuyerPhone: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1088'. '#1085#1072#1082'. '#1090#1077#1083#1077#1092#1086#1085' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'BuyerPhone'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 115
+          end
+          object BuyerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1088'. '#1085#1072#1082'. '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'BuyerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
+          end
+          object LoyaltySMDiscount: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1088'. '#1085#1072#1082'. '#1089#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'LoyaltySMDiscount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
+          object LoyaltySMSumma: TcxGridDBColumn
+            Caption = #1055#1088#1086#1075#1088'. '#1085#1072#1082'. '#1089#1091#1084#1084#1072' '#1074' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'LoyaltySMSumma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 66
+          end
         end
       end
     end

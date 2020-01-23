@@ -160,6 +160,13 @@ type
     spAddGoods: TdsdStoredProc;
     spEditAmount: TdsdStoredProc;
     actGoodsChoice: TOpenChoiceForm;
+    actUpdateNotMCS: TdsdExecStoredProc;
+    SPUpdate_NotMCS: TdsdStoredProc;
+    dxBarButton10: TdxBarButton;
+    edLoyaltySMDiscount: TcxTextEdit;
+    cxLabel30: TcxLabel;
+    edLoyaltySMSumma: TcxTextEdit;
+    cxLabel31: TcxLabel;
   private
     { Private declarations }
   public

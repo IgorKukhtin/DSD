@@ -374,10 +374,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberSPChoiceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberSPChoiceDialogForm');
-
+}
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckJournalUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckJournalUserForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceDeferredCheckForm'));

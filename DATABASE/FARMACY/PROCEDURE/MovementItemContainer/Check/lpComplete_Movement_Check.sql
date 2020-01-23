@@ -453,7 +453,18 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
 
-
+      -- Программа лояльности накопительная накапливаем сумму
+     IF COALESCE((SELECT MovementFloat.ValueData
+                  FROM MovementFloat
+                  WHERE MovementFloat.DescID = zc_MovementFloat_LoyaltySMID()
+                    AND MovementFloat.MovementId = inMovementId), 0) <> 0
+     THEN
+       PERFORM gpUpdate_LoyaltySaveMoney_Summa (inMovementId, MovementFloat_LoyaltySMID.ValueData::INTEGER, inUserId::TVarChar)
+       FROM MovementFloat AS MovementFloat_LoyaltySMID
+       WHERE MovementFloat_LoyaltySMID.DescID = zc_MovementFloat_LoyaltySMID()
+         AND MovementFloat_LoyaltySMID. MovementId = inMovementId;
+     END IF;
+      
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Check()
@@ -477,4 +488,4 @@ $BODY$
 --    IN inUserId            Integer    -- Пользователь
 -- SELECT * FROM lpComplete_Movement_Check (inMovementId:= 12671, inUserId:= zfCalc_UserAdmin()::Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM MovementItemContainer WHERE MovementId = 12671
+-- SELECT * FROM MovementItemContainer WHERE MovementId = 12671`

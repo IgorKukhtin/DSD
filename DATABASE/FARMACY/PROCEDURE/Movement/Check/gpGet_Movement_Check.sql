@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , JackdawsChecksId Integer, JackdawsChecksName TVarChar
              , PartionDateKindId Integer, PartionDateKindName TVarChar
              , Delay Boolean
+             , BuyerPhone TVarChar, BuyerName TVarChar, LoyaltySMDiscount TFloat, LoyaltySMSumma TFloat
 )
 AS
 $BODY$
@@ -67,6 +68,29 @@ BEGIN
                                                                    AND MIString_GUID.DescId = zc_MIString_GUID()
                                     WHERE MovementFloat_MovementItemId.MovementId = inMovementId
                                       AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId())
+              -- Программа лояльности накопительная                                      
+             , tmpLoyaltySM AS (SELECT Object_Buyer.ValueData                                       AS BuyerPhone
+                                     , ObjectString_Buyer_Name.ValueData                            AS BuyerName
+                                     , MovementFloat_LoyaltySMDiscount.ValueData                    AS LoyaltySMDiscount
+                                     , MovementFloat_LoyaltySMSumma.ValueData                       AS LoyaltySMSumma
+           
+                                FROM MovementFloat AS MovementFloat_LoyaltySMID
+                                                          
+                                 LEFT JOIN  MovementItem AS MovementItem_LoyaltySaveMoney
+                                                         ON MovementItem_LoyaltySaveMoney.ID = COALESCE (MovementFloat_LoyaltySMID.ValueData, 0)::INTEGER
+                                            LEFT JOIN Object AS Object_Buyer ON Object_Buyer.Id = MovementItem_LoyaltySaveMoney.ObjectId
+                                            LEFT JOIN ObjectString AS ObjectString_Buyer_Name
+                                                                   ON ObjectString_Buyer_Name.ObjectId = Object_Buyer.Id
+                                                                  AND ObjectString_Buyer_Name.DescId = zc_ObjectString_Buyer_Name()
+                                            LEFT JOIN MovementFloat AS MovementFloat_LoyaltySMDiscount
+                                                                     ON MovementFloat_LoyaltySMDiscount.DescID = zc_MovementFloat_LoyaltySMDiscount()
+                                                                    AND MovementFloat_LoyaltySMDiscount. MovementId = inMovementId
+                                            LEFT JOIN MovementFloat AS MovementFloat_LoyaltySMSumma
+                                                                     ON MovementFloat_LoyaltySMSumma.DescID = zc_MovementFloat_LoyaltySMSumma()
+                                                                    AND MovementFloat_LoyaltySMSumma. MovementId = inMovementId
+                                WHERE MovementFloat_LoyaltySMID.DescID = zc_MovementFloat_LoyaltySMID()
+                                  AND MovementFloat_LoyaltySMID. MovementId = inMovementId) 
+
 
          SELECT       
              Movement_Check.Id
@@ -83,12 +107,12 @@ BEGIN
            , Movement_Check.PaidKindName
            , Movement_Check.PaidTypeName
            , CASE WHEN Movement_Check.InvNumberOrder <> '' AND COALESCE (Movement_Check.CashMember, '') = '' THEN zc_Member_Site() ELSE Movement_Check.CashMember END :: TVarChar AS CashMember
-           , Movement_Check.Bayer
+           , COALESCE( Movement_Check.Bayer, tmpLoyaltySM.BuyerName)
            , Movement_Check.FiscalCheckNumber
            , Movement_Check.NotMCS
            , COALESCE(MovementBoolean_Site.ValueData,FALSE) :: Boolean AS isSite
            , (Movement_Check.DiscountCardName || ' ' || COALESCE (Object_DiscountExternal.ValueData, '')) :: TVarChar AS DiscountCardName
-           , Movement_Check.BayerPhone
+           , COALESCE(Movement_Check.BayerPhone, tmpLoyaltySM.BuyerPhone)
            , Movement_Check.InvNumberOrder
            , Movement_Check.ConfirmedKindName
            , Movement_Check.ConfirmedKindClientName
@@ -123,7 +147,11 @@ BEGIN
            , Object_PartionDateKind.Id                                    AS PartionDateKindId
            , Object_PartionDateKind.ValueData                             AS PartionDateKindName
 
-           , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean       AS Delay
+           , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
+           , tmpLoyaltySM.BuyerPhone                                      AS BuyerPhone
+           , tmpLoyaltySM.BuyerName                                       AS BuyerName
+           , tmpLoyaltySM.LoyaltySMDiscount                               AS LoyaltySMDiscount
+           , tmpLoyaltySM.LoyaltySMSumma                                  AS LoyaltySMSumma
 
         FROM Movement_Check_View AS Movement_Check
              LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -183,6 +211,9 @@ BEGIN
                                        ON MovementBoolean_Delay.MovementId = Movement_Check.Id
                                       AND MovementBoolean_Delay.DescId = zc_MovementBoolean_Delay()
 
+             -- Программа лояльности накопительная
+             LEFT JOIN tmpLoyaltySM ON 1 = 1
+                                     
        WHERE Movement_Check.Id = inMovementId;
 
 END;

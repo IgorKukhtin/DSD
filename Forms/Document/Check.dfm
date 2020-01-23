@@ -240,6 +240,7 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 804
     Height = 216
+    ExplicitLeft = -1
     ExplicitWidth = 804
     ExplicitHeight = 216
     inherited edInvNumber: TcxTextEdit
@@ -282,6 +283,7 @@ inherited CheckForm: TCheckForm
       PopupMenu = nil
       ExplicitTop = 48
       ExplicitWidth = 141
+      ExplicitHeight = 22
       Width = 141
     end
     object edCashRegisterName: TcxTextEdit
@@ -490,7 +492,7 @@ inherited CheckForm: TCheckForm
         end>
       Properties.ReadOnly = True
       TabOrder = 35
-      Width = 237
+      Width = 177
     end
     object cxLabel27: TcxLabel
       Left = 7
@@ -498,7 +500,7 @@ inherited CheckForm: TCheckForm
       Caption = 'POS '#1090#1077#1088#1084#1080#1085#1072#1083
     end
     object edJackdawsChecks: TcxButtonEdit
-      Left = 250
+      Left = 190
       Top = 194
       Properties.Buttons = <
         item
@@ -508,10 +510,10 @@ inherited CheckForm: TCheckForm
         end>
       Properties.ReadOnly = True
       TabOrder = 37
-      Width = 213
+      Width = 186
     end
     object cxLabel28: TcxLabel
-      Left = 250
+      Left = 190
       Top = 179
       Caption = #1058#1080#1087' '#1075#1072#1083#1082#1080
     end
@@ -527,6 +529,30 @@ inherited CheckForm: TCheckForm
       ShowHint = True
       TabOrder = 39
       Width = 143
+    end
+    object edLoyaltySMDiscount: TcxTextEdit
+      Left = 603
+      Top = 194
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 94
+    end
+    object cxLabel30: TcxLabel
+      Left = 603
+      Top = 178
+      Caption = #1055#1088'. '#1085#1072#1082'. '#1089#1082#1080#1076#1082#1072
+    end
+    object edLoyaltySMSumma: TcxTextEdit
+      Left = 700
+      Top = 194
+      Properties.ReadOnly = True
+      TabOrder = 42
+      Width = 101
+    end
+    object cxLabel31: TcxLabel
+      Left = 700
+      Top = 178
+      Caption = #1055#1088'. '#1085#1072#1082'. '#1085#1072#1082#1086#1087#1083#1077#1085
     end
   end
   object edInvNumberOrder: TcxTextEdit [2]
@@ -682,12 +708,12 @@ inherited CheckForm: TCheckForm
     Width = 212
   end
   object cxLabel29: TcxLabel [25]
-    Left = 464
+    Left = 379
     Top = 179
     Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
   end
   object edPartionDateKind: TcxButtonEdit [26]
-    Left = 464
+    Left = 379
     Top = 194
     Properties.Buttons = <
       item
@@ -1704,6 +1730,20 @@ inherited CheckForm: TCheckForm
         end>
       Caption = 'actExecEditAmount'
     end
+    object actUpdateNotMCS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = SPUpdate_NotMCS
+      StoredProcList = <
+        item
+          StoredProc = SPUpdate_NotMCS
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"'
+      ImageIndex = 36
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1839,6 +1879,14 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton9'
         end>
     end
@@ -1899,6 +1947,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton9: TdxBarButton
       Action = actGridToExcel
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = actUpdateNotMCS
       Category = 0
     end
   end
@@ -2345,6 +2397,20 @@ inherited CheckForm: TCheckForm
         Value = Null
         Component = cbDelay
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySMDiscount'
+        Value = Null
+        Component = edLoyaltySMDiscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'LoyaltySMSumma'
+        Value = Null
+        Component = edLoyaltySMSumma
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -2899,7 +2965,7 @@ inherited CheckForm: TCheckForm
         MultiSelectSeparator = ','
       end>
     Left = 712
-    Top = 176
+    Top = 104
   end
   object DetailDCS: TClientDataSet
     Aggregates = <>
@@ -3077,5 +3143,37 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 738
     Top = 225
+  end
+  object SPUpdate_NotMCS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check__NotMCS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotMCS'
+        Value = Null
+        Component = chbNotMCS
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisNotMCS'
+        Value = Null
+        Component = chbNotMCS
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 394
+    Top = 256
   end
 end
