@@ -196,8 +196,8 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
     Top = 8
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 392
-    Top = 24
+    Left = 376
+    Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -358,8 +358,8 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 24
-    Top = 232
+    Left = 56
+    Top = 216
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -545,8 +545,8 @@ object Report_MotionGoodsAssetDialogForm: TReport_MotionGoodsAssetDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 56
-    Top = 216
+    Left = 48
+    Top = 128
   end
   object GuidesLocation_by: TdsdGuides
     KeyField = 'Id'

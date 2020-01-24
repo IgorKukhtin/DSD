@@ -2347,11 +2347,6 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
           'Checked')
       end
       item
-        Component = cbInfoMoney
-        Properties.Strings = (
-          'Checked')
-      end
-      item
         Component = cbPartionGoods
         Properties.Strings = (
           'Checked')
@@ -2588,8 +2583,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 216
+    Top = 248
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -3882,8 +3877,8 @@ object Report_MotionGoodsAssetForm: TReport_MotionGoodsAssetForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 392
-    Top = 5
+    Left = 376
+    Top = 165
   end
   object FormParams: TdsdFormParams
     Params = <
