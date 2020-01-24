@@ -86,6 +86,7 @@ BEGIN
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_PriceFrom()     , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.PriceFrom, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_JuridicalPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.JuridicalPrice, 0))
              , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_DefermentPrice(), MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.DefermentPrice, 0))
+             , lpInsertUpdate_MovementItemFloat   (zc_MIFloat_Income()        , MovementItem.Id, COALESCE (_tmpMI_OrderInternal_Master.Income, 0))
              , lpInsertUpdate_MovementItemString  (zc_MIString_Maker()        , MovementItem.Id, _tmpMI_OrderInternal_Master.Maker)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Close()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isClose)
              , lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_First()       , MovementItem.Id, _tmpMI_OrderInternal_Master.isFirst)
