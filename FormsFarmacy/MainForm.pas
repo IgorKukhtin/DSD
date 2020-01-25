@@ -616,6 +616,8 @@ type
     N213: TMenuItem;
     actReport_StockTiming_RemainderForm: TdsdOpenForm;
     N214: TMenuItem;
+    actReport_InventoryErrorRemains: TdsdOpenForm;
+    N215: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

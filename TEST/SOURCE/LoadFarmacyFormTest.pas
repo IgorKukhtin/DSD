@@ -833,7 +833,13 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
-{    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDialogForm');
+    exit;
+
+    {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderDialogForm');
