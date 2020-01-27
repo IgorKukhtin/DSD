@@ -15,12 +15,12 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 821
-    ExplicitHeight = 410
+    ExplicitHeight = 450
     ClientRectBottom = 450
     ClientRectRight = 821
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 821
-      ExplicitHeight = 410
+      ExplicitHeight = 450
       inherited cxGrid: TcxGrid
         Width = 821
         Height = 177
@@ -109,10 +109,6 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = -10
-        ExplicitTop = 248
-        ExplicitWidth = 878
-        ExplicitHeight = 504
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ListDS
@@ -168,66 +164,12 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colRemains_Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = colRemains
             end
             item
               Format = '+ ,0.####;- ,0.####; '
               Kind = skSum
-            end
-            item
-              Format = '+ ,0.00;- ,0.00; '
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = cplRemainsDiff
             end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
@@ -237,31 +179,12 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             item
               Format = '+ ,0.####;- ,0.####; '
               Kind = skSum
-            end
-            item
-              Format = '+ ,0.####;- ,0.####; '
-              Kind = skSum
-            end
-            item
-              Format = '+ ,0.00;- ,0.00; '
-              Kind = skSum
-            end
-            item
-              Format = '+ ,0.00;- ,0.00; '
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
+              Column = colRemainsDiff_Summa
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = colRemainsSave
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -292,10 +215,10 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Options.Editing = False
             Width = 282
           end
-          object colRemains_Amount: TcxGridDBColumn
+          object colRemains: TcxGridDBColumn
             AlternateCaption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
             Caption = #1056#1072#1089#1095'. '#1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Remains_Amount'
+            DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; '
@@ -338,6 +261,37 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Options.Editing = False
             Width = 50
           end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 63
+          end
+          object cplRemainsDiff: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'RemainsDiff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object colRemainsDiff_Summa: TcxGridDBColumn
+            Caption = #1056#1072#1079#1085#1080#1094#1072' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'RemainsDiff_Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -350,7 +304,6 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
         Height = 8
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 273
       end
     end
   end

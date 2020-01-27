@@ -38,7 +38,7 @@ BEGIN
                                      , Movement.OperDate
                                      , Movement.UnitId
                                      , MovementItem.ID           AS MovementItemID
-                                     , MovementItem.ObjectId     AS GuudsID
+                                     , MovementItem.ObjectId     AS GoodsId
                                      , MovementItem.Amount
                                 FROM tmpInventory AS Movement
                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -48,7 +48,7 @@ BEGIN
            tmpRemansAll AS (SELECT tmpInventoryList.MovementItemID
                                  , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                             FROM tmpInventoryList
-                                 INNER JOIN Container ON Container.ObjectId = tmpInventoryList.GuudsID
+                                 INNER JOIN Container ON Container.ObjectId = tmpInventoryList.GoodsId
                                                      AND Container.WhereObjectId = tmpInventoryList.UnitID
                                                      AND Container.DescID = zc_Container_Count()
 
@@ -76,7 +76,7 @@ BEGIN
             , tmpInventoryList.OperDate
             , tmpInventoryList.UnitId
             , tmpInventoryList.MovementItemID
-            , tmpInventoryList.GuudsID
+            , tmpInventoryList.GoodsId
             , tmpInventoryList.Amount
             , tmpRemans.Amount            AS Remains
             , MIFloat_Remains.ValueData   AS RemainsSave
@@ -157,17 +157,45 @@ BEGIN
      RETURN NEXT cur1;
 
      OPEN cur2 FOR
+/*       WITH tmpPrice AS (SELECT tmpMovementItemAll.GoodsId              AS GoodsId
+                              , tmpMovementItemAll.UnitId               AS UnitId
+                              , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+                         FROM tmpMovementItemAll
+                              INNER JOIN ObjectLink AS ObjectLink_Price_Unit
+                                                    ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                                   AND ObjectLink_Price_Unit.ChildObjectId = tmpMovementItemAll.UnitId
+                              INNER JOIN ObjectLink AS Price_Goods
+                                      ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                     AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                     AND Price_Goods.ChildObjectId = tmpMovementItemAll.GoodsId
+                              LEFT JOIN ObjectFloat AS Price_Value
+                                     ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                    AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                        )
+*/
        SELECT tmpMovementItemAll.Id                AS MovementID
             , tmpMovementItemAll.MovementItemID    AS Id
-            , tmpMovementItemAll.GuudsID
+            , tmpMovementItemAll.GoodsId
             , Object_Goods.ObjectCode              AS GoodsCode
             , Object_Goods.ValueData               AS GoodsName
             , tmpMovementItemAll.Amount
             , tmpMovementItemAll.Remains
             , tmpMovementItemAll.RemainsSave
+            , MIFloat_Price.ValueData              AS Price
+            , (tmpMovementItemAll.Remains
+              - tmpMovementItemAll.RemainsSave)::TFloat AS RemainsDiff
+            , ((tmpMovementItemAll.Remains
+              - tmpMovementItemAll.RemainsSave) * MIFloat_Price.ValueData)::TFloat AS RemainsDiff_Summa
        FROM tmpMovementItemAll
-            INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItemAll.GuudsID
-       ;
+            INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItemAll.GoodsId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = tmpMovementItemAll.MovementItemID
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+/*            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpMovementItemAll.GoodsId
+                              AND tmpPrice.UnitId = tmpMovementItemAll.UnitId
+*/       ;
      RETURN NEXT cur2;
 END;
 $BODY$

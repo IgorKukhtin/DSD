@@ -350,6 +350,8 @@ Begin
       end;
 
       GuidesMemberSP.DisableGuidesOpen := True;
+      cePartnerMedicalPropertiesChange(Nil);
+      edSPKindPropertiesChange(Nil);
 
       //
       Result := ShowModal = mrOK;

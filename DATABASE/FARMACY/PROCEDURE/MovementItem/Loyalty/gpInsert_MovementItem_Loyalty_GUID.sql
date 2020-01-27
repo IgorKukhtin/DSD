@@ -234,21 +234,24 @@ BEGIN
         -- Сформировали промокод
         outGUID := TO_CHAR(CURRENT_DATE, 'MMYY')||'-';
 
-        vbUnitKey := to_hex((random() * 65535)::Integer);
+--        vbUnitKey := to_hex((random() * 65535)::Integer);
+        vbUnitKey := (random() * 9999)::Integer::TVarChar;
         WHILE LENGTH(vbUnitKey) < 4
         LOOP
           vbUnitKey := '0'||vbUnitKey;
         END LOOP;
         outGUID := outGUID||vbUnitKey||'-';
 
-        vbUnitKey := to_hex((random() * 65535)::Integer);
+--        vbUnitKey := to_hex((random() * 65535)::Integer);
+        vbUnitKey := (random() * 9999)::Integer::TVarChar;
         WHILE LENGTH(vbUnitKey) < 4
         LOOP
           vbUnitKey := '0'||vbUnitKey;
         END LOOP;
         outGUID := outGUID||vbUnitKey||'-';
 
-        vbUnitKey := to_hex((random() * 65535)::Integer);
+--        vbUnitKey := to_hex((random() * 65535)::Integer);
+        vbUnitKey := (random() * 9999)::Integer::TVarChar;
         WHILE LENGTH(vbUnitKey) < 4
         LOOP
           vbUnitKey := '0'||vbUnitKey;
@@ -302,7 +305,7 @@ BEGIN
     
     IF inSession = '3'
     THEN
-      RAISE EXCEPTION 'Ошибка. Прошло % ...', vbAmount;
+      RAISE EXCEPTION 'Ошибка. Прошло % % ...', vbAmount, outGUID;
     END IF;
 
 END;

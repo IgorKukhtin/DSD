@@ -65,6 +65,9 @@ type
     dxBarButton2: TdxBarButton;
     edComment: TcxTextEdit;
     cxLabel7: TcxLabel;
+    spWriteRestFromPoint: TdsdStoredProc;
+    actInsertMaskMIMaster: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

@@ -59,7 +59,6 @@ $BODY$
    DECLARE vbDividePartionDate   boolean;
 
    DECLARE vbAreaId   Integer;
-   DECLARE vbIlliquidUnitId Integer;   
 BEGIN
 -- if inSession = '3' then return; end if;
 
@@ -164,34 +163,6 @@ BEGIN
       vbDividePartionDate := False;
     END IF;
     
-    IF EXISTS(SELECT 1
-              FROM Movement
-
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
-
-              WHERE Movement.OperDate = date_trunc('month',CURRENT_DATE)
-                AND Movement.DescId = zc_Movement_IlliquidUnit()
-                AND Movement.StatusId = zc_Enum_Status_Complete())
-    THEN
-       SELECT Movement.ID
-       INTO vbIlliquidUnitId
-       FROM Movement
-
-            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
-
-       WHERE Movement.OperDate = date_trunc('month',CURRENT_DATE)
-         AND Movement.DescId = zc_Movement_IlliquidUnit()
-         AND Movement.StatusId = zc_Enum_Status_Complete()
-       LIMIT 1;
-    END IF;
-    
-
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
@@ -573,11 +544,7 @@ BEGIN
                                      GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
                                       )
                    -- Без Продажи за последнии 60 дней
-                 , tmpIlliquidUnit AS (SELECT DISTINCT MovementItem.ObjectId AS GoodsID 
-                                       FROM MovementItem
-                                       WHERE MovementItem.MovementId = vbIlliquidUnitId
-                                         AND MovementItem.DescId     = zc_MI_Master()
-                                         AND MovementItem.isErased   = FALSE)
+                 , tmpIlliquidUnit AS (SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := vbUserId))
 
 
         -- Результат
@@ -976,4 +943,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') where NotSold = True
+-- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3997097') where NotSold60 = True

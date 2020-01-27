@@ -637,6 +637,7 @@ inherited InventoryForm: TInventoryForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = Panel1
+        ExplicitWidth = 8
       end
       object Panel1: TPanel
         Left = 0
@@ -1190,6 +1191,21 @@ inherited InventoryForm: TInventoryForm
           StoredProc = spPUSHCompile
         end>
       Caption = 'actPUSHCompile'
+    end
+    object BooleanStoredProcAction1: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 76
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 77
+      ImageIndexFalse = 76
     end
   end
   inherited MasterDS: TDataSource

@@ -111,6 +111,7 @@ type
     cxLabel8: TcxLabel;
     spPUSHCompile: TdsdStoredProc;
     actPUSHCompile: TdsdShowPUSHMessage;
+    BooleanStoredProcAction1: TBooleanStoredProcAction;
   private
     { Private declarations }
   public

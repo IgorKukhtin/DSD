@@ -709,10 +709,11 @@ BEGIN
                                           ON tmpList2.GoodsId = tmpList.GoodsId
                                          AND tmpList2.UnitId  = tmpList.UnitId
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List  ON MinPrice_List.GoodsId  = tmpList.GoodsId
-                                                          AND MinPrice_List.AreaId   = tmpList.AreaId
+                                                          AND MinPrice_List.AreaId   = 
+                                                              CASE WHEN tmpList.AreaId <> 12487449  THEN tmpList.AreaId ELSE zc_Area_Basis() END
              LEFT JOIN _tmpMinPrice_List AS MinPrice_List_D  ON MinPrice_List_D.GoodsId  = tmpList.GoodsId
                                                             AND MinPrice_List_D.AreaId   = 
-                                                                CASE WHEN tmpList.AreaId = 5959000 THEN tmpList.AreaId ELSE zc_Area_Basis() END
+                                                                CASE WHEN tmpList.AreaId <> 12487449 AND tmpList.AreaId = 5959000 THEN tmpList.AreaId ELSE zc_Area_Basis() END
 
              LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmpList.GoodsId
              LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MinPrice_List.ContractId

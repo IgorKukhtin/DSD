@@ -695,7 +695,7 @@ procedure TMainForm.FormShow(Sender: TObject);
 begin
   inherited;
 
-  actReport_Analysis_Remains_Selling.Visible := actReport_CheckPromo.Visible;
+  actReport_Analysis_Remains_Selling.Visible := actReport_CheckPromo.Visible or (gc_User.Session = '11263040');
   actReport_IncomeConsumptionBalance.Visible := actReport_CheckPromo.Visible;
 
   if gc_User.Session = '3' then
