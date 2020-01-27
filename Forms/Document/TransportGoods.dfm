@@ -11,6 +11,7 @@
     Left = 154
     Top = 366
     Height = 26
+    TabOrder = 1
     ExplicitLeft = 154
     ExplicitTop = 366
     ExplicitHeight = 26
@@ -19,6 +20,7 @@
     Left = 295
     Top = 366
     Height = 26
+    TabOrder = 2
     ExplicitLeft = 295
     ExplicitTop = 366
     ExplicitHeight = 26
@@ -39,7 +41,7 @@
     EditValue = 42092d
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 2
+    TabOrder = 3
     Width = 88
   end
   object edInvNumber_Sale: TcxButtonEdit [5]
@@ -51,7 +53,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 3
+    TabOrder = 4
     Width = 130
   end
   object cxLabel6: TcxLabel [6]
@@ -63,7 +65,7 @@
     Left = 8
     Top = 27
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 8
     Text = '0'
     Width = 75
   end
@@ -74,7 +76,7 @@
     Properties.ReadOnly = True
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 8
+    TabOrder = 9
     Width = 130
   end
   object edRoute: TcxButtonEdit [9]
@@ -86,7 +88,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 9
+    TabOrder = 10
     Width = 267
   end
   object cxLabel67: TcxLabel [10]
@@ -109,7 +111,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
+    TabOrder = 13
     Width = 267
   end
   object cxLabel3: TcxLabel [13]
@@ -118,20 +120,20 @@
     Caption = #1054#1090' '#1082#1086#1075#1086
   end
   object cxLabel9: TcxLabel [14]
-    Left = 8
-    Top = 157
+    Left = 135
+    Top = 158
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object edCar: TcxButtonEdit [15]
-    Left = 8
+    Left = 135
     Top = 178
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
-    Width = 247
+    TabOrder = 16
+    Width = 120
   end
   object cxLabel5: TcxLabel [16]
     Left = 270
@@ -147,7 +149,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = False
-    TabOrder = 17
+    TabOrder = 18
     Width = 267
   end
   object cxLabel7: TcxLabel [18]
@@ -164,25 +166,25 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 19
+    TabOrder = 20
     Width = 120
   end
   object cxLabel4: TcxLabel [20]
     Left = 8
-    Top = 107
+    Top = 158
     Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
   end
   object edCarModel: TcxButtonEdit [21]
     Left = 8
-    Top = 127
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 21
-    Width = 247
+    TabOrder = 22
+    Width = 120
   end
   object cxLabel8: TcxLabel [22]
     Left = 8
@@ -198,7 +200,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 24
     Width = 120
   end
   object cxLabel10: TcxLabel [24]
@@ -216,7 +218,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 25
+    TabOrder = 26
     Width = 267
   end
   object cxLabel14: TcxLabel [26]
@@ -232,7 +234,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 27
+    TabOrder = 28
     Width = 247
   end
   object cxLabel11: TcxLabel [28]
@@ -248,13 +250,13 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 29
+    TabOrder = 30
     Width = 267
   end
   object edInvNumberMark: TcxTextEdit [30]
     Left = 183
     Top = 27
-    TabOrder = 30
+    TabOrder = 31
     Width = 72
   end
   object cxLabel12: TcxLabel [31]
@@ -275,7 +277,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 33
+    TabOrder = 34
     Width = 247
   end
   object edMember4: TcxButtonEdit [34]
@@ -286,7 +288,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 34
+    TabOrder = 35
     Width = 267
   end
   object cxLabel15: TcxLabel [35]
@@ -308,8 +310,19 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 37
+    TabOrder = 38
     Width = 247
+  end
+  object edBarCode: TcxTextEdit [38]
+    Left = 8
+    Top = 127
+    TabOrder = 0
+    Width = 247
+  end
+  object cxLabel17: TcxLabel [39]
+    Left = 8
+    Top = 107
+    Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' '#1080#1083#1080' '#1085#1086#1084#1077#1088' '#1055#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
@@ -335,17 +348,20 @@
         Name = 'Id'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = '0'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 20
     Top = 364
@@ -359,6 +375,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumber'
@@ -366,6 +383,7 @@
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -373,6 +391,7 @@
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Sale'
@@ -380,6 +399,7 @@
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inInvNumberMark'
@@ -387,6 +407,7 @@
         Component = edInvNumberMark
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -394,6 +415,7 @@
         Component = GuideCar
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarTrailerId'
@@ -401,6 +423,7 @@
         Component = GuideCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
@@ -408,6 +431,7 @@
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverName'
@@ -415,6 +439,7 @@
         Component = edPersonalDriver
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inRouteId'
@@ -422,6 +447,7 @@
         Component = GuideRoute
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId1'
@@ -429,6 +455,7 @@
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName1'
@@ -436,6 +463,7 @@
         Component = edMember1
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId2'
@@ -443,6 +471,7 @@
         Component = GuideMember2
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName2'
@@ -450,6 +479,7 @@
         Component = edMember2
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId3'
@@ -457,6 +487,7 @@
         Component = GuideMember3
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName3'
@@ -464,6 +495,7 @@
         Component = edMember3
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId4'
@@ -471,6 +503,7 @@
         Component = GuideMember4
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName4'
@@ -478,6 +511,7 @@
         Component = edMember4
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId5'
@@ -485,6 +519,7 @@
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName5'
@@ -492,6 +527,7 @@
         Component = edMember1
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId6'
@@ -499,6 +535,7 @@
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName6'
@@ -506,17 +543,20 @@
         Component = edMember1
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberId7'
         Value = 0
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMemberName7'
         Value = ''
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarName'
@@ -524,6 +564,7 @@
         Component = edCar
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarModelId'
@@ -531,6 +572,7 @@
         Component = GuideCarModel
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarJuridicalId'
@@ -538,6 +580,15 @@
         Component = GuidesCarJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode'
+        Value = Null
+        Component = edBarCode
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 384
     Top = 356
@@ -551,6 +602,7 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMovementId_Sale'
@@ -558,6 +610,7 @@
         Component = FormParams
         ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inOperDate'
@@ -566,36 +619,42 @@
         ComponentItem = 'OperDate'
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Id'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber'
         Value = '0'
         Component = edInvNumber
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumberMark'
         Value = 0.000000000000000000
         Component = edInvNumberMark
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MovementId_Sale'
         Value = 0d
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_Sale'
@@ -603,24 +662,28 @@
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate_Sale'
         Value = ''
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = 0.000000000000000000
         Component = edFrom
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -628,12 +691,14 @@
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteId'
         Value = ''
         Component = GuideRoute
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'RouteName'
@@ -641,12 +706,14 @@
         Component = GuideRoute
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarId'
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarName'
@@ -654,12 +721,14 @@
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelId'
         Value = ''
         Component = GuideCarModel
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -667,12 +736,14 @@
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerId'
         Value = ''
         Component = GuideCarTrailer
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerName'
@@ -680,12 +751,14 @@
         Component = GuideCarTrailer
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerModelId'
         Value = ''
         Component = GuideCarTrailerModel
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarTrailerModelName'
@@ -693,12 +766,14 @@
         Component = GuideCarTrailerModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverId'
         Value = ''
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverName'
@@ -706,12 +781,14 @@
         Component = GuidePersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId1'
         Value = '0'
         Component = GuideMember1
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName1'
@@ -719,12 +796,14 @@
         Component = GuideMember1
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId2'
         Value = Null
         Component = GuideMember2
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName2'
@@ -732,12 +811,14 @@
         Component = GuideMember2
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId3'
         Value = Null
         Component = GuideMember3
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName3'
@@ -745,12 +826,14 @@
         Component = GuideMember3
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberId4'
         Value = Null
         Component = GuideMember4
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName4'
@@ -758,12 +841,14 @@
         Component = GuideMember4
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarJuridicalId'
         Value = Null
         Component = GuidesCarJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarJuridicalName'
@@ -771,6 +856,14 @@
         Component = GuidesCarJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BarCode'
+        Value = Null
+        Component = edBarCode
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 312
     Top = 364
@@ -780,6 +873,7 @@
     LookupControl = edInvNumber_Sale
     FormNameParam.Value = 'TSaleJournalChoiceForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TSaleJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -788,6 +882,7 @@
         Value = ''
         Component = GuideSaleJournalChoice
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -795,24 +890,28 @@
         Component = GuideSaleJournalChoice
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'OperDate'
         Value = 'NULL'
         Component = edOperDate_Sale
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'FromName'
         Value = Null
         Component = edFrom
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'ToName'
@@ -820,24 +919,28 @@
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inStartDate'
         Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inEndDate'
         Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerId'
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PartnerName'
@@ -845,6 +948,7 @@
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 23
@@ -854,6 +958,7 @@
     IdParam.Value = '0'
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
     GuidesList = <
       item
         Guides = GuideSaleJournalChoice
@@ -876,6 +981,7 @@
     LookupControl = edRoute
     FormNameParam.Value = 'TRouteForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -884,6 +990,7 @@
         Value = ''
         Component = GuideRoute
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -891,6 +998,7 @@
         Component = GuideRoute
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 394
     Top = 154
@@ -900,6 +1008,7 @@
     LookupControl = edCar
     FormNameParam.Value = 'TCarUnionForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarUnionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -908,6 +1017,7 @@
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -915,12 +1025,14 @@
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelId'
         Value = Null
         Component = GuideCarModel
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -928,12 +1040,14 @@
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalId'
         Value = Null
         Component = GuidesCarJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalName'
@@ -941,8 +1055,9 @@
         Component = GuidesCarJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 33
+    Left = 201
     Top = 156
   end
   object GuidePersonalDriver: TdsdGuides
@@ -950,6 +1065,7 @@
     LookupControl = edPersonalDriver
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -959,6 +1075,7 @@
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -967,6 +1084,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 434
     Top = 197
@@ -976,6 +1094,7 @@
     LookupControl = edCarTrailer
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -985,6 +1104,7 @@
         Component = GuideCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -993,6 +1113,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -1000,6 +1121,7 @@
         Component = GuideCarTrailerModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 186
     Top = 205
@@ -1009,6 +1131,7 @@
     LookupControl = edMember1
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1018,6 +1141,7 @@
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1026,6 +1150,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 254
@@ -1035,6 +1160,7 @@
     LookupControl = edMember2
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1044,6 +1170,7 @@
         Component = GuideMember2
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1052,6 +1179,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 430
     Top = 261
@@ -1061,6 +1189,7 @@
     LookupControl = edCarModel
     FormNameParam.Value = 'TCarModelForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1069,6 +1198,7 @@
         Value = ''
         Component = GuideCarModel
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1076,15 +1206,17 @@
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
-    Left = 128
-    Top = 114
+    Left = 72
+    Top = 170
   end
   object GuideCarTrailerModel: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCarTrailerModel
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1093,6 +1225,7 @@
         Value = ''
         Component = GuideCarTrailer
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1100,6 +1233,7 @@
         Component = GuideCarTrailer
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -1107,6 +1241,7 @@
         Component = GuideCarTrailerModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 212
@@ -1116,6 +1251,7 @@
     LookupControl = edMember3
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1125,6 +1261,7 @@
         Component = GuideMember3
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1133,6 +1270,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 305
@@ -1142,6 +1280,7 @@
     LookupControl = edMember4
     FormNameParam.Value = 'TMemberPlace_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TMemberPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1151,6 +1290,7 @@
         Component = GuideMember4
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1159,6 +1299,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 422
     Top = 303
@@ -1168,6 +1309,7 @@
     LookupControl = edTo
     FormNameParam.Value = 'TForm_NULL'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TForm_NULL'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1176,6 +1318,7 @@
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1183,6 +1326,7 @@
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
@@ -1190,6 +1334,7 @@
         Component = GuideCarModel
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 98
@@ -1199,6 +1344,7 @@
     LookupControl = edCarJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1207,6 +1353,7 @@
         Value = ''
         Component = GuidesCarJuridical
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -1214,6 +1361,7 @@
         Component = GuidesCarJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 153
     Top = 68

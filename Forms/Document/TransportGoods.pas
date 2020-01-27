@@ -62,6 +62,8 @@ type
     cxLabel16: TcxLabel;
     edCarJuridical: TcxButtonEdit;
     GuidesCarJuridical: TdsdGuides;
+    edBarCode: TcxTextEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public
