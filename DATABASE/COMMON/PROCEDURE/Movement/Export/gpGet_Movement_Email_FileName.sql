@@ -50,7 +50,7 @@ BEGIN
                  
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Glad2514900150())
                       THEN 'Zakaz'
-                 || '_' || '000'
+                 || '_' || '1024'
                  || '_' || zfConvert_DateTimeToStringY (COALESCE (tmpProtocol.OperDate, CURRENT_TIMESTAMP) :: TDateTime)
                  || '_' || Movement.InvNumber
 

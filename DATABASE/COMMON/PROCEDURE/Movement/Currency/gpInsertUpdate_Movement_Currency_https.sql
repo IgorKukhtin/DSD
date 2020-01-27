@@ -30,7 +30,7 @@ BEGIN
      vbPaidKindId:= zc_Enum_PaidKind_FirstForm();
 
      -- 
-     vbParValue:= CASE WHEN CEIL (zfConvert_StringToFloat (inAmount_text) * 10000.0) = zfConvert_StringToFloat (inAmount_text) * 10000.0
+     vbParValue:= CASE WHEN 1=0 AND CEIL (zfConvert_StringToFloat (inAmount_text) * 10000.0) = zfConvert_StringToFloat (inAmount_text) * 10000.0
                             THEN 1
                        WHEN CEIL (zfConvert_StringToFloat (inAmount_text) * 1000000.0) = zfConvert_StringToFloat (inAmount_text) * 1000000.0
                             THEN 100
@@ -99,7 +99,7 @@ BEGIN
                                                  , inInvNumber                := CAST (NEXTVAL ('Movement_currency_seq') AS TVarChar)
                                                  , inOperDate                 := inOperDate
                                                  , inAmount                   := vbAmount
-                                                 , inParValue                 := 1
+                                                 , inParValue                 := vbParValue
                                                  , inComment                  := 'bank.gov.ua'
                                                  , inCurrencyFromId           := vbCurrencyFromId
                                                  , inCurrencyToId             := vbCurrencyToId

@@ -69,6 +69,11 @@ BEGIN
                || CASE WHEN Object_Period.ObjectCode = 1 THEN 'L' ELSE 'Z' END
                || SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 4, 1)
                  ) AS PeriodName
+
+               , CASE WHEN 6318  = (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_To())
+                           THEN '-экв. '
+                      ELSE 'Грн '
+                 END :: TVarChar AS ValutaName
     
            FROM tmpMI
                 LEFT JOIN tmpList ON tmpList.Amount = tmpMI.Amount
@@ -142,6 +147,11 @@ BEGIN
                || SUBSTR ((Object_PartionGoods.PeriodYear :: Integer) :: TVarChar, 4, 1)
                  ) AS PeriodName
     
+               , CASE WHEN 6318  = Object_PartionGoods.UnitId
+                           THEN '-экв. '
+                      ELSE 'Грн '
+                 END :: TVarChar AS ValutaName
+
            FROM tmpGoodsPrint
                 LEFT JOIN tmpList ON tmpList.Amount = tmpGoodsPrint.Amount
                 
@@ -182,4 +192,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inUserId:= 2, inGoodsPrintId:= 0, inIsGoodsPrint:= FALSE, inSession:= '2');

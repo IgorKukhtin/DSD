@@ -882,7 +882,7 @@ BEGIN
 
      -- Шапка
      INSERT INTO _Result(RowData)
-        SELECT '<Stock DistCode="0000"'                                                                             -- Код поставщика, предоставляется нами.
+        SELECT '<Stock DistCode="1024"'                                                                             -- Код поставщика, предоставляется нами.
                   ||    ' DistName="' || REPLACE (COALESCE (OH_JuridicalDetails_From.FullName, ''), '"', '') ||'"'  -- название поставщика
                   ||    ' StockCode="' || COALESCE (ObjectString_RoomNumber.ValueData, '') ||'"'                    -- код Магазина/Маркета/Склада, на который осуществляется доставка – предоставляется нами.
                   ||    ' StockName="' || REPLACE (COALESCE (Object_To.ValueData, ''), '"', '') ||'">'              -- название магазина/склада.

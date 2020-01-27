@@ -686,7 +686,9 @@ BEGIN
                   END  :: TVarChar   AS PlaceOf
            , CASE WHEN COALESCE (Object_Personal_View.PersonalName, '') <> '' THEN zfConvert_FIO (Object_Personal_View.PersonalName, 2, FALSE) ELSE '' END AS PersonalBookkeeperName   -- бухгалтер из спр.Филиалы
 
-           , MovementSale_Comment.ValueData        AS SaleComment
+           , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('02147345') THEN '' ELSE MovementSale_Comment.ValueData END :: TVarChar AS SaleComment
+           , CASE WHEN OH_JuridicalDetails_To.OKPO IN ('02147345') THEN MovementSale_Comment.ValueData ELSE '' END :: TVarChar AS SaleComment_02147345
+
            , CASE WHEN vbIsInfoMoney_30200 = FALSE AND TRIM (MovementOrder_Comment.ValueData) <> TRIM (COALESCE (MovementSale_Comment.ValueData, '')) THEN MovementOrder_Comment.ValueData ELSE '' END AS OrderComment
            , CASE WHEN Movement.DescId = zc_Movement_Loss() THEN TRUE ELSE FALSE END isMovementLoss
 
