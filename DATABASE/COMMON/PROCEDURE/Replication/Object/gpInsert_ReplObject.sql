@@ -51,7 +51,32 @@ BEGIN
 
      -- Результат
      INSERT INTO ReplObject (ObjectId, DescId, UserId_last, OperDate_last, OperDate, SessionGUID)
-        WITH tmpDesc AS (-- все Desc
+        WITH tmpList_ReplMovement AS (WITH tmpReplMovement AS (SELECT ReplMovement.*
+                                                               FROM ReplMovement
+                                                               WHERE ReplMovement.SessionGUID = inSessionGUID_mov
+                                                              )
+                                      -- из MovementLinkObject
+                                      SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                                      FROM tmpReplMovement AS ReplMovement
+                                           INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = ReplMovement.MovementId
+                                           INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
+                                     UNION
+                                      -- из MovementItem
+                                      SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                                      FROM tmpReplMovement AS ReplMovement
+                                           INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
+                                           INNER JOIN Object ON Object.Id = MovementItem.ObjectId
+                                     UNION
+                                      -- из MovementItemLinkObject
+                                      SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
+                                      FROM tmpReplMovement AS ReplMovement
+                                           INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
+                                           INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
+                                           INNER JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
+                                     )
+            , tmpDesc AS (-- все Desc
+                         SELECT DISTINCT tmpList_ReplMovement.DescId FROM tmpList_ReplMovement
+                        UNION
                          SELECT ObjectDesc.Id AS DescId
                          FROM ObjectDesc
                          WHERE (ObjectDesc.Id = vbDescId OR vbDescId = 0)
@@ -98,13 +123,7 @@ BEGIN
                                AND inIsProtocol            = TRUE
                                AND ObjectProtocol.OperDate >= inStartDate - INTERVAL '1 HOUR' -- на всякий случай, что б отловить ВСЕ изменения
                             )
-          , tmpList_0 AS (WITH -- если надо обновить все Object из документов
-                               tmpReplMovement AS (SELECT ReplMovement.*
-                                                   FROM ReplMovement
-                                                   WHERE inIsProtocol = TRUE
-                                                     AND ReplMovement.SessionGUID = inSessionGUID_mov
-                                                  )
-                          -- если надо - из протокола,
+          , tmpList_0 AS (-- если надо - из протокола,
                           SELECT tmpProtocol.DescId, tmpProtocol.ObjectId
                           FROM tmpProtocol
                           WHERE tmpProtocol.Ord = 1 -- !!!последний!!!
@@ -115,24 +134,8 @@ BEGIN
                                INNER JOIN Object ON Object.DescId = tmpDesc.DescId
                           WHERE inIsProtocol = FALSE
                          UNION
-                          -- из MovementLinkObject
-                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
-                          FROM tmpReplMovement AS ReplMovement
-                               INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = ReplMovement.MovementId
-                               INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId
-                         UNION
-                          -- из MovementItem
-                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
-                          FROM tmpReplMovement AS ReplMovement
-                               INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
-                               INNER JOIN Object ON Object.Id = MovementItem.ObjectId
-                         UNION
-                          -- из MovementItemLinkObject
-                          SELECT DISTINCT Object.DescId, Object.Id AS ObjectId
-                          FROM tmpReplMovement AS ReplMovement
-                               INNER JOIN MovementItem ON MovementItem.MovementId = ReplMovement.MovementId
-                               INNER JOIN MovementItemLinkObject ON MovementItemLinkObject.MovementItemId = MovementItem.Id
-                               INNER JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId
+                          -- из ReplMovement
+                          SELECT tmpList_ReplMovement.DescId, tmpList_ReplMovement.ObjectId FROM tmpList_ReplMovement
                          )
           , tmpList_1 AS (SELECT DISTINCT Object.DescId, ObjectLink.ChildObjectId AS ObjectId
                           FROM tmpList_0
@@ -228,9 +231,9 @@ BEGIN
         , MIN (ReplObject.Id) AS outMinId
         , MAX (ReplObject.Id) AS outMaxId
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
-        , 25000               AS CountIteration
+        , 20000               AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
-        , 400                 AS CountPack
+        , 200                 AS CountPack
           --
           INTO outCount, outMinId, outMaxId, outCountIteration, outCountPack
      FROM ReplObject
@@ -269,5 +272,5 @@ END;$BODY$
 -- тест
 -- SELECT * FROM ReplObject ORDER BY Id DESC;
 -- TRUNCATE TABLE ReplObject;
--- SELECT * FROM gpInsert_ReplObject  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartDate:= CURRENT_TIMESTAMP - INTERVAL '1 DAY', inDescCode:= '', inIsProtocol:= FALSE, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpInsert_ReplObject  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inStartDate:= CURRENT_TIMESTAMP - INTERVAL '1 DAY', inDescCode:= '', inIsProtocol:= TRUE,  inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_ReplObject  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inSessionGUID_mov:= '', inStartDate:= CURRENT_TIMESTAMP - INTERVAL '1 DAY', inDescCode:= '', inIsProtocol:= FALSE, inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpInsert_ReplObject  (inSessionGUID:= CURRENT_TIMESTAMP :: TVarChar, inSessionGUID_mov:= '', inStartDate:= CURRENT_TIMESTAMP - INTERVAL '1 DAY', inDescCode:= '', inIsProtocol:= TRUE,  inDataBaseId:= 0, gConnectHost:= '', inSession:= zfCalc_UserAdmin())
