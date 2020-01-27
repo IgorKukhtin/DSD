@@ -919,18 +919,17 @@ BEGIN
                                                                                                   ELSE ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                                              END
                    -- привязываем цены 2 раза по виду и без
-                   LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
-                                        AND tmpPL_Basis_kind.GoodsKindId IS NULL
-                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind 
-                                         ON tmpPL_Basis_kind.GoodsId = tmpMI.GoodsId
-                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
-
+                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind
+                                         ON tmpPL_Basis_kind.GoodsId                   = tmpMI.GoodsId
+                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+                   LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId     = tmpMI.GoodsId
+                                        AND tmpPL_Basis.GoodsKindId IS NULL
                    -- привязываем цены 2 раза по виду и без
-                   LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId = tmpMI.GoodsId
+                   LEFT JOIN tmpPL_Jur AS tmpPL_Jur_kind
+                                       ON tmpPL_Jur_kind.GoodsId                   = tmpMI.GoodsId
+                                      AND COALESCE (tmpPL_Jur_kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+                   LEFT JOIN tmpPL_Jur ON tmpPL_Jur.GoodsId     = tmpMI.GoodsId
                                       AND tmpPL_Jur.GoodsKindId IS NULL
-                   LEFT JOIN tmpPL_Jur AS tmpPL_Jur_kind 
-                                       ON tmpPL_Jur_kind.GoodsId = tmpMI.GoodsId
-                                      AND COALESCE (tmpPL_Jur_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
              ) AS _tmp;
 
      -- !!!надо определить - есть ли скидка в цене!!!

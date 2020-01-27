@@ -421,11 +421,12 @@ END IF;
                    --LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate) -- по "ƒате склад"
                    --       AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId
 
-                   LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
-                                         AND tmpPriceList.GoodsKindId IS NULL
+                   -- прив€зываем цены 2 раза по виду и без
                    LEFT JOIN tmpPriceList AS tmpPriceList_kind
-                                          ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                          ON tmpPriceList_kind.GoodsId                   = MovementItem.ObjectId
                                          AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = MovementItem.ObjectId
+                                         AND tmpPriceList.GoodsKindId IS NULL
 
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                 ON MovementLinkObject_To.MovementId = Movement.Id

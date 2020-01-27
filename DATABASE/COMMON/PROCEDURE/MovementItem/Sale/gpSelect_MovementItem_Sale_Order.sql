@@ -511,11 +511,11 @@ BEGIN
                               AND (tmpPromo.GoodsKindId = tmpGoods.GoodsKindId OR tmpPromo.GoodsKindId = 0)
 
             -- привязываем цены 2 раза по виду товара и без
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
-                                  AND tmpPriceList.GoodsKindId IS NULL
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind
-                                   ON tmpPriceList_Kind.GoodsId = tmpGoods.GoodsId
-                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
+                                   ON tmpPriceList_Kind.GoodsId                   = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = tmpGoods.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
@@ -640,11 +640,11 @@ BEGIN
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo  
 
             -- привязываем цены 2 раза по виду товара и без
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
-                                  AND tmpPriceList.GoodsKindId IS NULL
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind
-                                   ON tmpPriceList_Kind.GoodsId = tmpMI.GoodsId
-                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+                                   ON tmpPriceList_Kind.GoodsId                   = tmpMI.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = tmpMI.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id
@@ -1066,13 +1066,12 @@ BEGIN
 
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = tmpMI.MovementId_Promo  
 
-            --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
             -- привязываем цены 2 раза по виду товара и без
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpMI.GoodsId
-                                  AND tmpPriceList.GoodsKindId IS NULL
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind
-                                   ON tmpPriceList_Kind.GoodsId = tmpMI.GoodsId
-                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+                                   ON tmpPriceList_Kind.GoodsId                   = tmpMI.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = tmpMI.GoodsId
+                                  AND tmpPriceList.GoodsKindId IS NULL
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id

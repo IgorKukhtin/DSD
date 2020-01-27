@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS lpComplete_Movement_SendOnPrice_Price (Integer, Integer)
 CREATE OR REPLACE FUNCTION lpComplete_Movement_SendOnPrice_Price(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer                 -- Пользователь
-)                              
+)
  RETURNS VOID
 AS
 $BODY$
@@ -75,7 +75,7 @@ BEGIN
      END IF;
 
 
-     -- Эти параметры нужны для 
+     -- Эти параметры нужны для
      SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
        INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
      FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfObject_PriceList;
@@ -182,7 +182,7 @@ BEGIN
        AND Movement.DescId = zc_Movement_SendOnPrice()
        AND Movement.StatusId IN (zc_Enum_Status_Complete());
 
-     
+
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, isLossMaterials
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_GoodsTransit, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate
@@ -271,13 +271,13 @@ BEGIN
             , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId END AS BusinessId_To
 
             , _tmp.isPartionCount
-            , _tmp.isPartionSumm 
+            , _tmp.isPartionSumm
 
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId_From
             , 0 AS PartionGoodsId_To
 
-        FROM 
+        FROM
              (SELECT
                     MovementItem.Id AS MovementItemId
 
@@ -286,7 +286,7 @@ BEGIN
                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
- 
+
                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price
                     -- количество с остатка
                   , MovementItem.Amount AS OperCount
@@ -359,11 +359,12 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
-                                         AND tmpPriceList.GoodsKindId IS NULL
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPriceList AS tmpPriceList_kind
-                                          ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                          ON tmpPriceList_kind.GoodsId                   = MovementItem.ObjectId
                                          AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = MovementItem.ObjectId
+                                         AND tmpPriceList.GoodsKindId IS NULL
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_SendOnPrice()

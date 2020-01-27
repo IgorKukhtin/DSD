@@ -233,7 +233,7 @@ BEGIN
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplObject, т.е. inStartId and inEndId
         , 20000               AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
-        , 200                 AS CountPack
+        , 400                 AS CountPack
           --
           INTO outCount, outMinId, outMaxId, outCountIteration, outCountPack
      FROM ReplObject

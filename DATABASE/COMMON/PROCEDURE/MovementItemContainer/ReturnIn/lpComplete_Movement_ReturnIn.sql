@@ -498,7 +498,7 @@ BEGIN
                                  FROM MovementItem
                                       LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                                   ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                                                 AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                       LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
                                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                                                      ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
@@ -518,7 +518,7 @@ BEGIN
                             , tmpMI_all.PartionGoodsDate
                             , tmpMI_all.ChangePercent
                             , COALESCE (tmpChangePrice.isChangePrice, FALSE) AS isChangePrice
-         
+
                             , tmpMI_all.OperCount
                             , tmpMI_all.OperCount_Partner
                             , CASE WHEN tmpChangePrice.isChangePrice = TRUE -- !!!для НАЛ "иногда" не учитываем, для БН - всегда учитываем!!!
@@ -531,9 +531,9 @@ BEGIN
                               END AS Price
                             , tmpMI_all.Price_original
                             , tmpMI_all.CountForPrice
-         
+
                             , tmpMI_all.MovementId_Partion
-         
+
                        FROM tmpMI_all
                             LEFT JOIN tmpChangePrice ON tmpChangePrice.isChangePrice = TRUE
                             LEFT JOIN tmpMI_child ON tmpMI_child.ParentId = tmpMI_all.MovementItemId
@@ -713,14 +713,12 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   /*LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId*/
-                   
                    -- привязываем цены 2 раза по виду и без
-                   LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId = tmpMI.GoodsId
-                                        AND tmpPL_Basis_kind.GoodsKindId IS NULL
-                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind 
-                                         ON tmpPL_Basis_kind.GoodsId = tmpMI.GoodsId
-                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId,0) = COALESCE (tmpMI.GoodsKindId,0)
+                   LEFT JOIN tmpPL_Basis AS tmpPL_Basis_kind
+                                         ON tmpPL_Basis_kind.GoodsId                   = tmpMI.GoodsId
+                                        AND COALESCE (tmpPL_Basis_kind.GoodsKindId, 0) = COALESCE (tmpMI.GoodsKindId, 0)
+                   LEFT JOIN tmpPL_Basis ON tmpPL_Basis.GoodsId     = tmpMI.GoodsId
+                                        AND tmpPL_Basis.GoodsKindId IS NULL
              ) AS _tmp;
 
      -- !!!надо определить - есть ли скидка в цене!!!

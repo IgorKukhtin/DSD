@@ -20,20 +20,20 @@ BEGIN
    IF COALESCE (inGoodsKindId,0) > 0
    THEN  
        -- пока ставим запрет на сохранение цены с видом
-        RAISE EXCEPTION 'Ошибка.Запрещено сохранение цены по виду товара.';
+       -- RAISE EXCEPTION 'Ошибка.Запрещено сохранение цены по виду товара.';
        -- поиск
-       SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
-       FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-            JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                            ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                           AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-            JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
-                            ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                           AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
-                           AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId = inGoodsKindId
-       WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
-         AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
+       vbId:= SELECT ObjectLink_PriceListItem_Goods.ObjectId
+              FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                   JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                   ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                  AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                   JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                   ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                  AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                                  AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId = inGoodsKindId
+              WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
+                AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
    ELSE
         -- поиск
        SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId

@@ -336,17 +336,19 @@ BEGIN
                                                  ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                                 AND MIBoolean_Calculated.DescId         = zc_MIBoolean_Calculated()
 
-                   LEFT JOIN tmpPriceSeparate ON tmpPriceSeparate.GoodsId       = MovementItem.ObjectId
-                                             AND tmpPriceSeparate.GoodsKindId IS NULL
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPriceSeparate AS tmpPriceSeparate_kind
-                                              ON tmpPriceSeparate_kind.GoodsId       = MovementItem.ObjectId
-                                             AND COALESCE (tmpPriceSeparate_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                              ON tmpPriceSeparate_kind.GoodsId                   = MovementItem.ObjectId
+                                             AND COALESCE (tmpPriceSeparate_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   LEFT JOIN tmpPriceSeparate ON tmpPriceSeparate.GoodsId     = MovementItem.ObjectId
+                                             AND tmpPriceSeparate.GoodsKindId IS NULL
 
-                   LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId = MovementItem.ObjectId
-                                                 AND tmpPriceSeparateHist.GoodsKindId IS NULL
+                   -- привязываем цены 2 раза по виду и без
                    LEFT JOIN tmpPriceSeparateHist AS tmpPriceSeparateHist_kind
-                                                  ON tmpPriceSeparateHist_kind.GoodsId = MovementItem.ObjectId
-                                                 AND COALESCE (tmpPriceSeparateHist_kind.GoodsKindId,0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                  ON tmpPriceSeparateHist_kind.GoodsId                   = MovementItem.ObjectId
+                                                 AND COALESCE (tmpPriceSeparateHist_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                   LEFT JOIN tmpPriceSeparateHist ON tmpPriceSeparateHist.GoodsId     = MovementItem.ObjectId
+                                                 AND tmpPriceSeparateHist.GoodsKindId IS NULL
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
