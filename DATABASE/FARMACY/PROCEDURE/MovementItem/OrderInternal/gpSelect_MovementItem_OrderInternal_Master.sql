@@ -746,16 +746,15 @@ BEGIN
            , NULLIF (COALESCE (-- Количество, установленное вручную
                                MIFloat_AmountManual.ValueData
                                -- округлили ВВЕРХ AllLot
-                             , CEIL ((-- Спецзаказ
-                                      tmpMI.Amount
-                                      -- Количество дополнительное
-                                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
-                                      -- кол-во отказов
-                                    + COALESCE (tmpMI.ListDiffAmount, 0)
+                             , CEIL ((
+                                      CASE WHEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (tmpMI.ListDiffAmount, 0)
+                                           THEN (COALESCE (tmpMI.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                           ELSE COALESCE (tmpMI.ListDiffAmount, 0)                                                   -- кол-во отказов
+                                      END
                                      ) / COALESCE (tmpMI.MinimumLot, 1)
                                     ) * COALESCE (tmpMI.MinimumLot, 1)
                               ), 0) :: TFloat AS CalcAmountAll
-
+                                   
            , (COALESCE (MIFloat_Price.ValueData, 0)
                       * COALESCE (-- Количество, установленное вручную
                                   MIFloat_AmountManual.ValueData
@@ -1634,7 +1633,7 @@ BEGIN
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
                               -- округлили ВВЕРХ AllLot
-                            , CEIL ((-- Спецзаказ
+                            /*, CEIL ((-- Спецзаказ
                                      MovementItem.Amount
                                      -- Количество дополнительное
                                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
@@ -1642,6 +1641,14 @@ BEGIN
                                    + COALESCE (MIFloat_ListDiff.ValueData, 0)
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
+                             */
+                            , CEIL (( CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                     END
+                                     ) / COALESCE (MovementItem.MinimumLot, 1)
+                                   ) * COALESCE(MovementItem.MinimumLot, 1)                    AS CalcAmountAll
+
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
 
@@ -1956,7 +1963,7 @@ BEGIN
                             INNER JOIN tmpGoodsId AS tmp
                                                   ON tmp.GoodsId = MI_Send.ObjectId
                      -- WHERE Movement_Send.OperDate >= vbOperDate - interval '30 DAY'
-                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'
+                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '91 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'  -- 27.01.2020  - 91 день, до этого было 31 - по просьбе Любы Пелиной
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
@@ -3059,7 +3066,7 @@ BEGIN
                             , MIFloat_AmountSecond.ValueData                                   AS AmountSecond
                             , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) AS AmountAll
                               -- округлили ВВЕРХ AllLot
-                            , CEIL ((-- Спецзаказ
+/*                            , CEIL ((-- Спецзаказ
                                      MovementItem.Amount
                                      -- Количество дополнительное
                                    + COALESCE (MIFloat_AmountSecond.ValueData, 0)
@@ -3067,6 +3074,16 @@ BEGIN
                                    + COALESCE (MIFloat_ListDiff.ValueData, 0)
                                     ) / COALESCE (MovementItem.MinimumLot, 1)
                                    ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
+*/
+--27.01.2020 Люба просит чтоб в расчет ложилась не сумма а большее из "Спец + Авто" и "Отказы" - поскольку сумма этих колонок приводит к затоварке аптек
+                            , CEIL ((                                -- Спецзаказ + Количество дополнительное                        -- кол-во отказов
+                                     CASE WHEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0)) >= COALESCE (MIFloat_ListDiff.ValueData, 0)
+                                          THEN (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_AmountSecond.ValueData, 0))         -- Спецзаказ + Количество дополнительное
+                                          ELSE COALESCE (MIFloat_ListDiff.ValueData, 0)                                                   -- кол-во отказов
+                                     END
+                                    ) / COALESCE (MovementItem.MinimumLot, 1)
+                                   ) * COALESCE (MovementItem.MinimumLot, 1)                   AS CalcAmountAll
+
                             , MIFloat_AmountManual.ValueData                                   AS AmountManual
                             , MIFloat_ListDiff.ValueData                                       AS ListDiffAmount
                             , MovementItem.isErased
@@ -3363,7 +3380,7 @@ BEGIN
                             INNER JOIN tmpGoodsId AS tmp
                                                   ON tmp.GoodsId = MI_Send.ObjectId
                      -- WHERE Movement_Send.OperDate >= vbOperDate - interval '30 DAY'
-                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '31 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'
+                     WHERE Movement_Send.OperDate BETWEEN CURRENT_DATE - INTERVAL '91 DAY' AND CURRENT_DATE + INTERVAL '30 DAY'  -- 27.01.2020  - 91 день, до этого было 31 - по просьбе Любы Пелиной
                        AND Movement_Send.OperDate < vbOperDateEnd
                        AND Movement_Send.DescId = zc_Movement_Send()
                        AND Movement_Send.StatusId = zc_Enum_Status_UnComplete()
