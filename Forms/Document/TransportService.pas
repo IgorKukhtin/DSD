@@ -26,11 +26,11 @@ type
     ceOperDate: TcxDateEdit;
     ceCar: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    ContractConditionKindGuides_Old: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
-    RouteGuides: TdsdGuides;
-    InfoMoneyGuides: TdsdGuides;
-    CarGuides: TdsdGuides;
+    GuidesContractConditionKind_Old: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
+    GuidesRoute: TdsdGuides;
+    GuidesInfoMoney: TdsdGuides;
+    GuidesCar: TdsdGuides;
     ceJuridical: TcxButtonEdit;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
@@ -38,7 +38,7 @@ type
     cxLabel8: TcxLabel;
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
-    ContractGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
     cxLabel4: TcxLabel;
     ceDistance: TcxCurrencyEdit;
     cxLabel11: TcxLabel;
@@ -47,21 +47,26 @@ type
     ceCountPoint: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
     ceTrevelTime: TcxCurrencyEdit;
-    ContractJuridicalGuides: TdsdGuides;
+    GuidesContractJuridical: TdsdGuides;
     cxLabel7: TcxLabel;
     ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     cxLabel14: TcxLabel;
     edStartRunPlan: TcxDateEdit;
     cxLabel15: TcxLabel;
     edStartRun: TcxDateEdit;
     cxLabel16: TcxLabel;
     ceWeightTransport: TcxCurrencyEdit;
-    ContractConditionKindGuides: TdsdGuides;
+    GuidesContractConditionKind: TdsdGuides;
     cxLabel17: TcxLabel;
     ceValue: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
     ceSummAdd: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edMemberExternal: TcxButtonEdit;
+    GuidesMemberExternal: TdsdGuides;
+    cxLabel20: TcxLabel;
+    edDriverCertificate: TcxTextEdit;
   private
     { Private declarations }
   public

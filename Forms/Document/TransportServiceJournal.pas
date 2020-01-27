@@ -60,6 +60,8 @@ type
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     Cost_Info: TcxGridDBColumn;
+    MemberExternalName: TcxGridDBColumn;
+    DriverCertificate: TcxGridDBColumn;
   private
     { Private declarations }
   public

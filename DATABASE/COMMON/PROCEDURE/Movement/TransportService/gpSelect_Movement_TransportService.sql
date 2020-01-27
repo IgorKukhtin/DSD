@@ -24,9 +24,10 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar
-             , CarModelId Integer, CarModelName TVarChar
+             , CarModelId Integer, CarModelName TVarChar           
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
+             , MemberExternalId Integer, MemberExternalName TVarChar, DriverCertificate TVarChar
              , Cost_Info TVarChar
               )
 AS
@@ -113,9 +114,16 @@ BEGIN
                                                                                , zc_MILinkObject_PaidKind()
                                                                                , zc_MILinkObject_Route()
                                                                                , zc_MILinkObject_Car()
-                                                                               , zc_MILinkObject_ContractConditionKind())
+                                                                               , zc_MILinkObject_ContractConditionKind()
+                                                                               , zc_MILinkObject_MemberExternal())
                                         )
 
+        , tmpObjectString AS (SELECT *
+                              FROM ObjectString
+                              WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpMovementItemLinkObject.ObjectId FROM tmpMovementItemLinkObject WHERE tmpMovementItemLinkObject.DescId = zc_MILinkObject_MemberExternal())
+                               AND ObjectString.DescId = zc_ObjectString_MemberExternal_DriverCertificate()
+                              )
+                                 
        -- результат
        SELECT
              Movement.Id
@@ -169,6 +177,10 @@ BEGIN
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
            
+           , Object_MemberExternal.Id          AS MemberExternalId
+           , Object_MemberExternal.ValueData   AS MemberExternalName
+           , tmpObjectString.ValueData  :: TVarChar AS DriverCertificate
+
            , tmpCost.Cost_Info ::TVarChar
 
        FROM tmpMovement AS Movement
@@ -230,30 +242,37 @@ BEGIN
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
-                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                ON MILinkObject_Contract.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_InfoMoney
-                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_PaidKind
-                                             ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                                                ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Route
-                                             ON MILinkObject_Route.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                                                ON MILinkObject_Route.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = MILinkObject_Route.ObjectId
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Car
-                                             ON MILinkObject_Car.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
+                                                ON MILinkObject_Car.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
 
+            LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_MemberExternal
+                                                ON MILinkObject_MemberExternal.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_MemberExternal.DescId = zc_MILinkObject_MemberExternal()
+            LEFT JOIN Object AS Object_MemberExternal ON Object_MemberExternal.Id = MILinkObject_MemberExternal.ObjectId
+
+            LEFT JOIN tmpObjectString ON tmpObjectString.ObjectId = MILinkObject_MemberExternal.ObjectId
+            
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
@@ -283,4 +302,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '01.01.2020', inEndDate:= '01.02.2020', inJuridicalBasisId:= 0, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

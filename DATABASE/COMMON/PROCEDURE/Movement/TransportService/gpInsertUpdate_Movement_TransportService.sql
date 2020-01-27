@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportService (Integer, Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -26,6 +27,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
 
     IN inComment                  TVarChar  , -- Примечание
     
+    IN inMemberExternalName       TVarChar  , -- Физические лица(сторонние)
+    IN inDriverCertificate        TVarChar  , -- Водительское удостоверение 	
+    
     IN inJuridicalId              Integer   , -- Юридические лица
     IN inContractId               Integer   , -- Договор
     IN inInfoMoneyId              Integer   , -- Статьи назначения
@@ -44,6 +48,8 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbValue TFloat;
    DECLARE vbValueAdd TFloat;
+   DECLARE vbMemberExternalId Integer;
+   DECLARE vbDriverCertificate TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportService());
@@ -215,6 +221,39 @@ BEGIN
                                       , inUserId     := vbUserId);
      END IF;
 
+     IF COALESCE (inMemberExternalName, '') <> ''
+     THEN
+         -- ищем существует ли такой сотрудник
+         vbMemberExternalId := (SELECT Object.Id
+                                FROM Object 
+                                WHERE Object.DescId = zc_Object_MemberExternal()
+                                  AND LOWER (Object.ValueData) LIKE '%'|| LOWER (inMemberExternalName) ||'%' 
+                                LIMIT 1);   -- на всякий случай
+
+         vbDriverCertificate := (SELECT ObjectString.ValueData
+                                 FROM ObjectString
+                                 WHERE ObjectString.ObjectId = vbMemberExternalId
+                                   AND ObjectString.DescId = zc_ObjectString_MemberExternal_DriverCertificate());
+
+         IF COALESCE (vbMemberExternalId, 0) = 0
+         THEN
+             -- Создание
+             vbMemberExternalId := lpInsertUpdate_Object_MemberExternal (ioId	 := 0
+                                                                       , inCode  := lfGet_ObjectCode(0, zc_Object_MemberExternal())
+                                                                       , inName  := inMemberExternalName  :: TVarChar
+                                                                       , inDriverCertificate := COALESCE (inDriverCertificate,'') :: TVarChar
+                                                                       , inUserId:= vbUserId
+                                                                        );
+         ELSE 
+             -- если отличается вод.удостоверение перезаписываем
+             IF COALESCE (inDriverCertificate,'') <> '' AND  COALESCE (vbDriverCertificate,'') <> COALESCE (inDriverCertificate,'')
+                THEN 
+                    -- сохранили
+                    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MemberExternal_DriverCertificate(), vbMemberExternalId, inDriverCertificate);
+             END IF;
+
+         END IF;
+     END IF;
 
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -264,6 +303,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Car(), ioMIId, inCarId);
      -- сохранили связь с <Типы условий договоров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), ioMIId, inContractConditionKindId);
+     -- сохранили связь с <Физические лица(сторонние)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MemberExternal(), ioMIId, vbMemberExternalId);
      
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -287,6 +328,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.01.20         * add inMemberExternalName
+                        inDriverCertificate
  03.07.16         * Add inSummAdd, vbValue, vbValueAdd
  16.12.15         * add WeightTransport
  26.08.15         * add inStartRunPlan
