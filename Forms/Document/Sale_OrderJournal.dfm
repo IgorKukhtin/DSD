@@ -15,17 +15,17 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1186
+    ExplicitWidth = 1492
     ExplicitHeight = 374
     ClientRectBottom = 374
     ClientRectRight = 1492
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1186
+      ExplicitWidth = 1492
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
         Width = 1492
         Height = 374
-        ExplicitWidth = 1186
+        ExplicitWidth = 1492
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -763,7 +763,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   inherited Panel: TPanel
     Width = 1492
     Height = 50
-    ExplicitWidth = 1186
+    ExplicitWidth = 1492
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 112
@@ -816,7 +816,6 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     Align = alBottom
     TabOrder = 6
     Visible = False
-    ExplicitWidth = 1186
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -3283,6 +3282,20 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end>
       Caption = 'actUpdate_isMail'
     end
+    object macExportAll: TMultiAction
+      Category = 'Export_Email'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExport
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084'?'
+      InfoAfterExecute = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' '#1086#1090#1087#1088#1072#1074#1083#1077#1085#1099
+      Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1042#1057#1045#1052' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      ImageIndex = 55
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3579,6 +3592,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbmacExportAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInvoice'
         end
         item
@@ -3735,6 +3756,10 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
     object bbPrint_PackWeight: TdxBarButton
       Action = actPrint_PackWeight
+      Category = 0
+    end
+    object bbmacExportAll: TdxBarButton
+      Action = macExportAll
       Category = 0
     end
   end

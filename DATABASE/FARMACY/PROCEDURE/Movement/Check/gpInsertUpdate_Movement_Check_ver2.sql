@@ -9,6 +9,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, TVarChar, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Check_ver2 (Integer, TDateTime,  TVarChar, Integer, Integer, TVarChar, TVarChar, Boolean, Integer, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TDateTime, Integer, Integer, Integer, TFloat, Integer, Boolean, Integer, Integer, Boolean, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ ЧЕК>
@@ -41,6 +42,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Check_ver2(
     IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inConfirmationCodeSP  TVarChar  , -- код подтверждения рецепта (Соц. проект)
     IN inLoyaltySignID       Integer   , -- Регистрация промокода "Программа лояльности"
+    IN inLoyaltySMID         Integer   , -- Программа лояльности накопительная
+    IN inLoyaltySMDiscount   TFloat    , -- Сумма скидки по Программа лояльности накопительная
     IN inUserSession	     TVarChar  , -- сессия пользователя под которой создан чек в программе
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -209,17 +212,17 @@ BEGIN
     IF COALESCE(inSiteDiscount, False) = True OR EXISTS(SELECT 1 FROM MovementBoolean WHERE DescId = zc_MovementBoolean_Site() AND MovementId = ioId) THEN
       PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Site(), ioId, inSiteDiscount);
 	END IF;
-    
+
     IF COALESCE (inBankPOSTerminalId, 0) <> 0
     THEN
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankPOSTerminal(), ioId, inBankPOSTerminalId);    
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankPOSTerminal(), ioId, inBankPOSTerminalId);
     END IF;
-    
+
     IF COALESCE (inPartionDateKindID, 0) <> 0
     THEN
-      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), ioId, inPartionDateKindID);    
+      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), ioId, inPartionDateKindID);
     END IF;
-    
+
     IF COALESCE (inConfirmationCodeSP, '') <> ''
     THEN
       PERFORM lpInsertUpdate_MovementString (zc_MovementString_ConfirmationCodeSP(), ioId, inConfirmationCodeSP);
@@ -233,11 +236,11 @@ BEGIN
       FROM Object
       WHERE Object.DescId = zc_Object_JackdawsChecks()
         AND Object.ObjectCode = inJackdawsChecksCode;
-    
+
       IF COALESCE (vbJackdawsChecksId, 0) <> 0
       THEN
-        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JackdawsChecks(), ioId, vbJackdawsChecksId);    
-      END IF;        
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JackdawsChecks(), ioId, vbJackdawsChecksId);
+      END IF;
     END IF;
 
     IF vbIsInsert = TRUE
@@ -247,7 +250,7 @@ BEGIN
           -- сохранили свойство <Пользователь (создание)>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
     END IF;
-    
+
     IF COALESCE(inLoyaltySignID, 0) <> 0
     THEN
       IF EXISTS(SELECT * FROM MovementItem WHERE ID = inLoyaltySignID)
@@ -262,6 +265,18 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не найдена активация промокода %', inLoyaltySignID;
       END IF;
     END IF;
+
+    -- Программа лояльности накопительная
+    IF COALESCE(inLoyaltySMID, 0) > 0
+    THEN
+	   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LoyaltySMID(), ioId, inLoyaltySMID);
+       IF COALESCE(inLoyaltySMDiscount, 0) <> 0
+       THEN
+   	      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_LoyaltySMDiscount(), ioId, inLoyaltySMDiscount);
+          PERFORM gpUpdate_LoyaltySaveMoney_SummaDiscount (inLoyaltySMID, inLoyaltySMDiscount, inSession);
+       END IF;
+    END IF;
+
 
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
@@ -281,6 +296,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Подмогильный В.В.   Шаблий О.В.
+ 15.01.20                                                                                                         * add inLoyaltySM...
  07.11.19                                                                                                         * add inLoyaltySignID
  15.05.19                                                                                                         * add inPartionDateKindID, inConfirmationCodeSP
  28.11.18                                                                                                         * add SiteDiscount

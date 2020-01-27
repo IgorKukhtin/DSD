@@ -1505,7 +1505,7 @@ begin
                   dsdSave.Params.AddParam('inLoyaltySignID', ftInteger, ptInput, Head.LOYALTYID);
                   // ***15.01.20
                   dsdSave.Params.AddParam('inLoyaltySMID', ftInteger, ptInput, Head.LOYALTYSM);
-                  dsdSave.Params.AddParam('inLoyaltySMSumma', ftFloat, ptInput, Head.LOYALSMSUM);
+                  dsdSave.Params.AddParam('inLoyaltySMDiscount', ftFloat, ptInput, Head.LOYALSMSUM);
                   // ***24.01.17
                   dsdSave.Params.AddParam('inUserSession', ftString, ptInput, Head.USERSESION);
 

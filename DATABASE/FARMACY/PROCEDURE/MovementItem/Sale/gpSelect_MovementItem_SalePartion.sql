@@ -75,9 +75,10 @@ BEGIN
                                          LEFT JOIN tmpMovementItemContainer ON tmpMovementItemContainer.ID = Container.Id
                                     WHERE (Container.Amount + COALESCE (tmpMovementItemContainer.Amount, 0)) > 0
                                  )
-                  ,tmpRemainsIncome AS (SELECT tmpRemains.*
+                  ,tmpRemainsPrice AS (SELECT tmpRemains.*
                                              , MI_Income.Id              AS IncomeId
                                              , MI_Income.MovementId      AS MovementId
+                                             , MIFloat_Price.ValueData     AS Price
                                         FROM
                                             tmpRemains
                                             LEFT OUTER JOIN ContainerLinkObject AS CLI_MI 
@@ -86,17 +87,11 @@ BEGIN
                                             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
 
                                             LEFT OUTER JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode :: Integer
-                                 )
-                  ,tmpRemainsPrice AS ( SELECT tmpRemains.*
-                                             , MIFloat_Price.ValueData     AS Price
-                                        FROM
-                                            tmpRemainsIncome AS tmpRemains
 
                                             LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                                        ON MIFloat_Price.MovementItemId = tmpRemains.IncomeId
+                                                                        ON MIFloat_Price.MovementItemId = MI_Income.Id
                                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                       )
-                                                                 
+                                 )                                                                 
                   ,tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
                                        , ObjectFloat_NDSKind_NDS.ValueData
                                   FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
@@ -484,7 +479,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 21.01.20                                                                         * Оптимизация
  22.11.19         *
  18.01.18         *
  26.12.15                                                          *

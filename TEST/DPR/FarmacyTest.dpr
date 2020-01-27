@@ -799,7 +799,9 @@ uses
   LoyaltySaveMoney in '..\..\FormsFarmacy\Document\LoyaltySaveMoney.pas' {LoyaltySaveMoneyForm: TParentForm},
   LoyaltySaveMoneyJournal in '..\..\FormsFarmacy\Document\LoyaltySaveMoneyJournal.pas' {LoyaltySaveMoneyJournalForm: TParentForm},
   Report_StockTiming_RemainderDialog in '..\..\FormsFarmacy\Report\Report_StockTiming_RemainderDialog.pas' {Report_StockTiming_RemainderDialogForm: TParentForm},
-  Report_StockTiming_Remainder in '..\..\FormsFarmacy\Report\Report_StockTiming_Remainder.pas' {Report_StockTiming_RemainderForm: TParentForm};
+  Report_StockTiming_Remainder in '..\..\FormsFarmacy\Report\Report_StockTiming_Remainder.pas' {Report_StockTiming_RemainderForm: TParentForm},
+  Report_InventoryErrorRemains in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemains.pas' {Report_InventoryErrorRemainsForm: TParentForm},
+  Report_InventoryErrorRemainsDialog in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDialog.pas' {Report_InventoryErrorRemainsDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

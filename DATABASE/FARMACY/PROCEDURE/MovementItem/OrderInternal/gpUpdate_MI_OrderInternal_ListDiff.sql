@@ -121,7 +121,10 @@ BEGIN
      PERFORM lpInsertUpdate_MI_OrderInternal_ListDiff (inId             := COALESCE (_tmp_MI.Id, 0)
                                                      , inMovementId     := inMovementId
                                                      , inGoodsId        := COALESCE ( _tmp_MI.GoodsId, tmpListDiff_MI.GoodsId)
-                                                     , inAmountManual   := (COALESCE (_tmp_MI.AmountManual,0) + COALESCE (tmpListDiff_MI.Amount, 0) ) ::TFloat
+                                                     , inAmountManual   := CASE WHEN COALESCE (_tmp_MI.AmountManual,0) >= COALESCE (tmpListDiff_MI.Amount, 0)    --27.01.2020 ренее была сумма этих значений
+                                                                                THEN COALESCE (_tmp_MI.AmountManual,0)
+                                                                                ELSE COALESCE (tmpListDiff_MI.Amount, 0)
+                                                                           END ::TFloat
                                                      , inListDiffAmount := (COALESCE (_tmp_MI.ListDiffAmount,0) + COALESCE (tmpListDiff_MI.Amount, 0) )::TFloat
 
                                                      , inComment        := CASE WHEN COALESCE (_tmp_MI.Comment, '') <> '' 
@@ -151,7 +154,6 @@ BEGIN
      FROM _tmpListDiff_MI AS tmp;
 
 
-
      -- если все позиции из листа отказа перенесены во внутренний заказ - проводим документ Лист отказа, проводятся листы отказов за прошлый день, а листы отказов за текущий день не проводятся 
      PERFORM gpComplete_Movement_ListDiff (tmp.MovementId, inSession)
      FROM (SELECT Movement.Id AS MovementId
@@ -164,13 +166,14 @@ BEGIN
                                            AND MovementItem.isErased = FALSE
                                            AND MovementItem.DescId   = zc_MI_Master()
             WHERE Movement.DescId = zc_Movement_ListDiff() 
-              AND Movement.StatusId <> zc_Enum_Status_UnComplete()
+              AND Movement.StatusId = zc_Enum_Status_UnComplete()
               AND Movement.OperDate >= '07.11.2018'
               AND Movement.OperDate < CURRENT_DATE
 
            GROUP BY Movement.Id
            HAVING SUM (CASE WHEN COALESCE (MovementItemFloat.ValueData,0) <> 0 THEN 0 ELSE 1 END) = 0
            ) AS tmp;
+
 
 END;
 $BODY$

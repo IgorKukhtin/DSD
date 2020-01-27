@@ -4645,7 +4645,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 424
+    Left = 416
     Top = 224
   end
   object spGetDescSets: TdsdStoredProc

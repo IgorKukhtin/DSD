@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
              , TotalSummFine TFloat, TotalSummFineOth TFloat, TotalSummFineOthRecalc TFloat
              , TotalSummHosp TFloat, TotalSummHospOth TFloat, TotalSummHospOthRecalc TFloat
+             , TotalSummCompensation TFloat, TotalSummCompensationRecalc TFloat
              , Comment TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -210,25 +211,28 @@ BEGIN
 
            , MovementFloat_TotalSummAddOth.ValueData           AS TotalSummAddOth
            , MovementFloat_TotalSummAddOthRecalc.ValueData     AS TotalSummAddOthRecalc
-           
+
            , MovementFloat_TotalSummFine.ValueData          :: TFloat AS TotalSummFine
            , MovementFloat_TotalSummFineOth.ValueData       :: TFloat AS TotalSummFineOth
            , MovementFloat_TotalSummFineOthRecalc.ValueData :: TFloat AS TotalSummFineOthRecalc
            , MovementFloat_TotalSummHosp.ValueData          :: TFloat AS TotalSummHosp
            , MovementFloat_TotalSummHospOth.ValueData       :: TFloat AS TotalSummHospOth
            , MovementFloat_TotalSummHospOthRecalc.ValueData :: TFloat AS TotalSummHospOthRecalc
-           
+
+           , MovementFloat_TotalSummCompensation.ValueData        :: TFloat AS TotalSummCompensation
+           , MovementFloat_TotalSummCompensationRecalc.ValueData  :: TFloat AS TotalSummCompensationRecalc
+
            , MovementString_Comment.ValueData           AS Comment
            , Object_PersonalServiceList.Id              AS PersonalServiceListId
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
-         
+
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
            , tmpSign.strSign
            , tmpSign.strSignNo 
-           
+
            , Object_Member.ValueData                    AS MemberName 
 
        FROM tmpMovement
@@ -350,6 +354,13 @@ BEGIN
                                     ON MovementFloat_TotalSummHospOthRecalc.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummHospOthRecalc.DescId     = zc_MovementFloat_TotalSummHospOthRecalc()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCompensation
+                                    ON MovementFloat_TotalSummCompensation.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCompensation.DescId = zc_MovementFloat_TotalSummCompensation()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummCompensationRecalc
+                                    ON MovementFloat_TotalSummCompensationRecalc.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummCompensationRecalc.DescId = zc_MovementFloat_TotalSummCompensationRecalc()
+
             LEFT JOIN MovementString AS MovementString_Comment 
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -374,11 +385,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
---ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.01.20         *
  15.10.19         *
  29.07.19         *
  20.09.18         *

@@ -211,8 +211,8 @@ end;
 
 procedure TListDiffAddGoodsForm.FormShow(Sender: TObject);
   var AmountDiffUser, AmountDiff, AmountDiffPrev : currency;
-      AmountIncome, PriceSaleIncome : currency; ListDate : Variant;
-      S : string;
+      AmountIncome, PriceSaleIncome, Remains : currency; ListDate : Variant;
+      S : string; nID, nGoods : integer;
 begin
   if GoodsCDS = Nil then Exit;
   WaitForSingleObject(MutexDiffCDS, INFINITE);
@@ -250,6 +250,29 @@ begin
         finally
           ReleaseMutex(MutexDiffKind);
         end;
+      end;
+
+      Remains := 0;
+      try
+        nGoods := GoodsCDS.FieldByName('Id').AsInteger;
+        nID := MainCashForm.RemainsCDS.RecNo;
+        MainCashForm.RemainsCDS.DisableControls;
+        MainCashForm.RemainsCDS.Filtered := False;
+        MainCashForm.RemainsCDS.First;
+        while not MainCashForm.RemainsCDS.Eof do
+        begin
+          if MainCashForm.RemainsCDS.FieldByName('Id').AsInteger = nGoods then
+          begin
+            Remains := Remains + MainCashForm.RemainsCDS.FieldByName('Remains').AsCurrency +
+                                 MainCashForm.RemainsCDS.FieldByName('Reserved').AsCurrency +
+                                 MainCashForm.RemainsCDS.FieldByName('DeferredSend').AsCurrency;
+          end;
+          MainCashForm.RemainsCDS.Next;
+        end;
+      finally
+        MainCashForm.RemainsCDS.Filtered := True;
+        MainCashForm.RemainsCDS.RecNo := nID;
+        MainCashForm.RemainsCDS.EnableControls;
       end;
 
       if FileExists(ListDiff_lcl) then
@@ -297,7 +320,9 @@ begin
       if S <> '' then S := S +  #13#10;
       if AmountIncome > 0 then S := S +  #13#10'Òîâàğ â ïóòè: ' + CurrToStr(AmountIncome) + ' Öåíà (â ïóòè): ' + CurrToStr(PriceSaleIncome);
       if S <> '' then S := S +  #13#10;
-      S := S + '"ÂÍÈÌÀÍÈÅ   Ó ÂÀÑ ÍÒÇ = ' + GoodsCDS.FieldByName('MCSValue').AsString + 'óïê.  ÂÀÌ ÄÅÉÑÒÂÈÒÅËÜÍÎ ÍÓÆÍÎ ÁÎËÜØÅ ?!"';
+      S := S + 'ÂÍÈÌÀÍÈÅ  Ó ÂÀÑ ÍÒÇ = ' + CurrToStr(GoodsCDS.FieldByName('MCSValue').AsCurrency) + ' óïê. ÎÑÒÀÒÎÊ = ' + CurrToStr(Remains) + ' óïê.';
+      if S <> '' then S := S +  #13#10;
+      S := S + '                ÂÀÌ ÄÅÉÑÒÂÈÒÅËÜÍÎ ÍÓÆÍÎ ÁÎËÜØÅ ?!';
       Label7.Caption := S;
       Label7.Visible := Label7.Caption <> '';
 

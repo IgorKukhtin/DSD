@@ -2764,6 +2764,14 @@
 				<Form>Report_StockTiming_RemainderForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_InventoryErrorRemains.pas">
+				<Form>Report_InventoryErrorRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDialog.pas">
+				<Form>Report_InventoryErrorRemainsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

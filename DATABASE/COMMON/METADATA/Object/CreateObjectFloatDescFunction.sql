@@ -998,6 +998,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Car_KoeffHoursWork() RETURNS Integer A
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Car_KoeffHoursWork', zc_Object_Car(), 'коэфф. для модели Рабочее время из путевого листа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Car_KoeffHoursWork');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_PersonalServiceList_Compensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_PersonalServiceList_Compensation', zc_Object_Car(), 'В каком месяце начисляется компенсация' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_PersonalServiceList_Compensation');
+
 
 --!!! АПТЕКА
 
@@ -1552,6 +1556,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.01.20         * zc_ObjectFloat_PersonalServiceList_Compensation
  21.12.19                                                                                      * zc_ObjectFloat_Price_MCSValueSun
  17.12.19         * zc_ObjectFloat_Unit_SunIncome
  13.12.19                                                                                      * zc_ObjectFloat_Unit_MorionCode

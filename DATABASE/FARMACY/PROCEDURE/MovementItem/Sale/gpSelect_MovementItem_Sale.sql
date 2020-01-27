@@ -138,16 +138,27 @@ BEGIN
                                       )
 
               , tmpMarion AS (SELECT tmpGoods.GoodsId
-                                   , MAX (Object_LinkGoods_Marion.GoodsCodeint) AS MorionCode
+                                   , Object_Goods_Main.MorionCode AS MorionCode
                               FROM (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains) AS tmpGoods
-                                   JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = tmpGoods.GoodsId 
-                                   JOIN Object_LinkGoods_View AS Object_LinkGoods_Marion -- связь товара в прайсе с главным товаром
-                                                              ON Object_LinkGoods_Marion.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-                                                             AND Object_LinkGoods_Marion.ObjectId = zc_Enum_GlobalConst_Marion() --tmpMI_Master.JuridicalId
-                              GROUP BY tmpGoods.GoodsId
+                                   JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
+                                   JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                               )
+              , tmpRemainsFull AS (SELECT MovementItem_Sale.Id                                   AS Id
+                                        , COALESCE(MovementItem_Sale.GoodsId,tmpRemains.GoodsId) AS GoodsId
+                                        , tmpRemains.Amount                                      AS Remains
+                                        , MovementItem_Sale.Amount                               AS Amount
+                                        , MovementItem_Sale.Price                                AS Price
+                                        , MovementItem_Sale.PriceSale                            AS PriceSale 
+                                        , MovementItem_Sale.ChangePercent                        AS ChangePercent
+                                        , MovementItem_Sale.Summ
+                                        , MovementItem_Sale.isSP 
+                                        , MovementItem_Sale.IsErased
+                                   FROM tmpRemains
+                                       FULL OUTER JOIN MovementItem_Sale ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
+                                   )
+                                   
             --
-            SELECT COALESCE(MovementItem_Sale.Id,0)                      AS Id
+            SELECT COALESCE(tmpRemainsFull.Id,0)                         AS Id
                  , Object_Goods.Id                                       AS GoodsId
                  , Object_Goods.ObjectCode                               AS GoodsCode
                  , Object_Goods.ValueData                                AS GoodsName
@@ -155,49 +166,39 @@ BEGIN
                  , ObjectLink_Goods_GoodsGroup.GoodsGroupName         :: TVarChar
                  , ObjectLink_Goods_ConditionsKeep.ConditionsKeepName :: TVarChar
                  , ObjectLink_Goods_NDS.NDS    :: TFloat
-                 , MovementItem_Sale.Amount                              AS Amount
+                 , tmpRemainsFull.Amount                                 AS Amount
                  , MovementItemContainer.Amount::TFloat                  AS AmountDeferred
-                 , NULLIF(COALESCE(tmpRemains.Amount, 0) +
+                 , NULLIF(COALESCE(tmpRemainsFull.Remains, 0) +
                    COALESCE(MovementItemContainer.Amount, 0), 0)::TFloat AS AmountRemains
-                 , COALESCE(MovementItem_Sale.Price, tmpPrice.Price)     AS Price
-                 , COALESCE(MovementItem_Sale.PriceSale, tmpPrice.Price) AS PriceSale
-                 , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (MovementItem_Sale.ChangePercent, 100) ELSE MovementItem_Sale.ChangePercent END :: TFloat AS ChangePercent
-                 , MovementItem_Sale.Summ
-                 , MovementItem_Sale.isSP ::Boolean
-                 , COALESCE(MovementItem_Sale.IsErased,FALSE)            AS isErased
-            FROM tmpRemains
-                FULL OUTER JOIN MovementItem_Sale ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE(MovementItem_Sale.GoodsId,tmpRemains.GoodsId)
-                LEFT JOIN MovementItemContainer ON MovementItemContainer.Id = MovementItem_Sale.Id 
-                LEFT JOIN tmpPrice ON tmpPrice.GoodsId =  COALESCE(MovementItem_Sale.GoodsId,tmpRemains.GoodsId)
+                 , COALESCE(tmpRemainsFull.Price, tmpPrice.Price)        AS Price
+                 , COALESCE(tmpRemainsFull.PriceSale, tmpPrice.Price)    AS PriceSale
+                 , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (tmpRemainsFull.ChangePercent, 100) ELSE tmpRemainsFull.ChangePercent END :: TFloat AS ChangePercent
+                 , tmpRemainsFull.Summ
+                 , tmpRemainsFull.isSP ::Boolean
+                 , COALESCE(tmpRemainsFull.IsErased,FALSE)               AS isErased
+            FROM tmpRemainsFull
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpRemainsFull.GoodsId
+                LEFT JOIN MovementItemContainer ON MovementItemContainer.Id = tmpRemainsFull.Id 
+                LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpRemainsFull.GoodsId
 
                 -- группа товара
                 LEFT JOIN tmpObjectLink_GoodsGroup AS ObjectLink_Goods_GoodsGroup
-                                                   ON ObjectLink_Goods_GoodsGroup.GoodsId = Object_Goods.Id
+                                                   ON ObjectLink_Goods_GoodsGroup.GoodsId = tmpRemainsFull.GoodsId
                 -- условия хранения
                 LEFT JOIN tmpObjectLink_ConditionsKeep AS ObjectLink_Goods_ConditionsKeep 
-                                                       ON ObjectLink_Goods_ConditionsKeep.GoodsId = Object_Goods.Id
+                                                       ON ObjectLink_Goods_ConditionsKeep.GoodsId = tmpRemainsFull.GoodsId
                 -- НДС
                 LEFT JOIN tmpObjectLink_NDS AS ObjectLink_Goods_NDS 
-                                            ON ObjectLink_Goods_NDS.GoodsId = Object_Goods.Id
+                                            ON ObjectLink_Goods_NDS.GoodsId = tmpRemainsFull.GoodsId
                 -- код Марион
-                LEFT JOIN tmpMarion ON tmpMarion.GoodsId = Object_Goods.Id
+                LEFT JOIN tmpMarion ON tmpMarion.GoodsId = tmpRemainsFull.GoodsId
             WHERE Object_Goods.isErased = FALSE
-               OR MovementItem_Sale.id is not null;
+               OR tmpRemainsFull.id is not null;
     ELSE
         -- Результат другой
         RETURN QUERY
             WITH
-                tmpRemains AS (SELECT Container.ObjectId                  AS GoodsId
-                                    , SUM(Container.Amount)::TFloat       AS Amount
-                               FROM Container
-                               WHERE Container.DescId = zc_Container_Count()
-                                 AND Container.WhereObjectId = vbUnitId
-                                 AND Container.Amount <> 0
-                               GROUP BY Container.ObjectId
-                               HAVING SUM(Container.Amount)<>0
-                              )
-              , MovementItem_Sale AS (SELECT MovementItem.Id                    AS Id
+                MovementItem_Sale AS (SELECT MovementItem.Id                    AS Id
                                            , MovementItem.ObjectId              AS GoodsId
                                            , MovementItem.Amount                AS Amount
                                            , MIFloat_Price.ValueData            AS Price
@@ -226,6 +227,16 @@ BEGIN
                                         AND MovementItem.DescId = zc_MI_Master()
                                         AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                       )
+              , tmpRemains AS (SELECT Container.ObjectId                  AS GoodsId
+                                    , SUM(Container.Amount)::TFloat       AS Amount
+                               FROM Container
+                               WHERE Container.DescId = zc_Container_Count()
+                                 AND Container.WhereObjectId = vbUnitId
+                                 AND Container.Amount <> 0
+                                 AND Container.ObjectId in (SELECT DISTINCT MovementItem_Sale.GoodsId FROM MovementItem_Sale)
+                               GROUP BY Container.ObjectId
+                               HAVING SUM(Container.Amount)<>0
+                              )
               , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemID     AS Id
                                                , SUM(-MovementItemContainer.Amount)       AS Amount
                                       FROM  MovementItemContainer
@@ -259,13 +270,10 @@ BEGIN
                                         AND ObjectLink.DescId = zc_ObjectLink_Goods_NDSKind()
                                       )
               , tmpMarion AS (SELECT tmpGoods.GoodsId
-                                   , MAX (Object_LinkGoods_Marion.GoodsCodeint) AS MorionCode
+                                   , Object_Goods_Main.MorionCode AS MorionCode
                               FROM (SELECT DISTINCT MovementItem_Sale.GoodsId FROM MovementItem_Sale) AS tmpGoods
-                                   JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsId = tmpGoods.GoodsId 
-                                   JOIN Object_LinkGoods_View AS Object_LinkGoods_Marion -- связь товара в прайсе с главным товаром
-                                                              ON Object_LinkGoods_Marion.GoodsMainId = Object_LinkGoods_View.GoodsMainId
-                                                             AND Object_LinkGoods_Marion.ObjectId = zc_Enum_GlobalConst_Marion() --tmpMI_Master.JuridicalId
-                              GROUP BY tmpGoods.GoodsId
+                                   JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
+                                   JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                               )
 
 
@@ -311,7 +319,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 21.01.20                                                                         * Оптимизация
  24.11.19         *
  18.01.17         *
  22.02.17         *

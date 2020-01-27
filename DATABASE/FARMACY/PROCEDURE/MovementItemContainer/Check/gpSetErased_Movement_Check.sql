@@ -31,6 +31,21 @@ BEGIN
       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescID = zc_MI_Child() AND MovementItem.isErased = False;
     END IF;
 
+    -- Программа лояльности накопительная возвращаем списанную сумму
+    IF COALESCE((SELECT MovementFloat.ValueData
+                 FROM MovementFloat
+                 WHERE MovementFloat.DescID = zc_MovementFloat_LoyaltySMDiscount()
+                   AND MovementFloat.MovementId = inMovementId), 0) <> 0
+    THEN
+      PERFORM gpUpdate_LoyaltySaveMoney_SummaDiscount (MovementFloat_LoyaltySMID.ValueData::INTEGER, -1.0 * MovementFloat.ValueData, inSession)
+      FROM MovementFloat
+           INNER JOIN MovementFloat AS MovementFloat_LoyaltySMID
+                                    ON MovementFloat_LoyaltySMID.DescID = zc_MovementFloat_LoyaltySMID()
+                                   AND MovementFloat_LoyaltySMID. MovementId = inMovementId
+      WHERE MovementFloat.DescID = zc_MovementFloat_LoyaltySMDiscount()
+        AND MovementFloat.MovementId = inMovementId;
+    END IF;
+
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                 , inUserId     := vbUserId);

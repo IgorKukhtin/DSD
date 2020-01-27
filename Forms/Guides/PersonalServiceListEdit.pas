@@ -60,6 +60,8 @@ type
     cxLabel8: TcxLabel;
     edMemberBookkeeper: TcxButtonEdit;
     GuidesMemberBookkeeper: TdsdGuides;
+    cxLabel33: TcxLabel;
+    edCompensation: TcxCurrencyEdit;
   private
     { Private declarations }
   public

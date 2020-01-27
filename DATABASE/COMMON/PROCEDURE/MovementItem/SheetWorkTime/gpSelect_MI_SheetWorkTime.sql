@@ -20,62 +20,144 @@ $BODY$
           vbCrossString Text;
           vbQueryText Text;
           vbFieldNameText Text;
+  DECLARE vbStartDate TDateTime;
+  DECLARE vbEndDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
-
-
+     
+     vbStartDate := DATE_TRUNC ('MONTH', inDate);
+     vbEndDate   := DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+     
      --
      CREATE TEMP TABLE tmpOperDate ON COMMIT DROP AS
-        SELECT GENERATE_SERIES (DATE_TRUNC ('MONTH', inDate), DATE_TRUNC ('MONTH', inDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY', '1 DAY' :: INTERVAL) AS OperDate;
+        SELECT GENERATE_SERIES (vbStartDate, vbEndDate, '1 DAY' :: INTERVAL) AS OperDate;
+
+     CREATE TEMP TABLE tmpDateOut_All ON COMMIT DROP AS
+        WITH
+        -- сотрудники дата приема , увольнения
+        tmpList AS (SELECT Object_Personal_View.MemberId
+                         , Object_Personal_View.PersonalId
+                         , Object_Personal_View.PositionId
+                         , Object_Personal_View.DateIn
+                         , Object_Personal_View.DateOut
+                    FROM Object_Personal_View
+                    WHERE ((Object_Personal_View.DateOut >= vbStartDate AND Object_Personal_View.DateOut <= vbEndDate)
+                        OR (Object_Personal_View.DateIn >= vbStartDate AND Object_Personal_View.DateIn <= vbEndDate))
+                      AND Object_Personal_View.UnitId = inUnitId
+             -- and MemberId IN (3119489, 4507324)
+                   )
+        --
+        SELECT tmpList.MemberId
+             , tmpList.PersonalId
+             , tmpList.PositionId
+             , tmpOperDate.OperDate
+             , 12918                                         AS WorkTimeKindId 
+             , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+        FROM tmpOperDate
+             LEFT JOIN tmpList ON tmpList.DateOut <= tmpOperDate.OperDate
+                               OR tmpList.DateIn > tmpOperDate.OperDate
+             LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
+                                    ON ObjectString_WorkTimeKind_ShortName.ObjectId = 12918 --  уволен  Х
+                                   AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName();
 
      -- все данные за месяц
      CREATE TEMP TABLE tmpMI ON COMMIT DROP AS
-                                          SELECT tmpOperDate.operdate
-                                               , MI_SheetWorkTime.Amount
-                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
-                                               , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
-                                               , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
-                                               , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
-                                               , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
-                                               , MIObject_WorkTimeKind.ObjectId                AS ObjectId
-                                               , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
-                                               , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
-                                               , CASE WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0
-                                                           THEN zc_Color_GreenL()
-                                                      WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0
-                                                           THEN 13816530 -- светло серый  15395562
-                                                      ELSE zc_Color_White()
-                                                 END AS Color_Calc   
-                                          FROM tmpOperDate
-                                               JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
-                                                             AND Movement.DescId = zc_Movement_SheetWorkTime()
-                                               JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                       ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                      AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                               JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
-                                               LEFT JOIN MovementItemLinkObject AS MIObject_Position
-                                                                                ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
-                                                                               AND MIObject_Position.DescId = zc_MILinkObject_Position()
-                                               LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
-                                                                                ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
-                                                                               AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
-                                               LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
-                                                                                ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
-                                                                               AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
-                                               LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
-                                                                                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
-                                                                               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
-                                               LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
-                                                                                ON ObjectFloat_WorkTimeKind_Tax.ObjectId = MIObject_WorkTimeKind.ObjectId
-                                                                               AND ObjectFloat_WorkTimeKind_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
-                                               LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
-                                                                                ON ObjectString_WorkTimeKind_ShortName.ObjectId = MIObject_WorkTimeKind.ObjectId
-                                                                               AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
-                                               LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
-                                                                                ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
-                                                                               AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
-                                          WHERE MovementLinkObject_Unit.ObjectId = inUnitId;
+            WITH
+            tmpMovement AS (SELECT tmpOperDate.operdate
+                                 , MI_SheetWorkTime.Amount
+                                 , COALESCE(MI_SheetWorkTime.ObjectId, 0)        AS MemberId
+                                 , COALESCE(MIObject_Position.ObjectId, 0)       AS PositionId
+                                 , COALESCE(MIObject_PositionLevel.ObjectId, 0)  AS PositionLevelId
+                                 , COALESCE(MIObject_StorageLine.ObjectId, 0)    AS StorageLineId
+                                 , COALESCE(MIObject_PersonalGroup.ObjectId, 0)  AS PersonalGroupId
+                                 , MIObject_WorkTimeKind.ObjectId                AS ObjectId
+                                 , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+                                 , CASE WHEN MI_SheetWorkTime.isErased = TRUE THEN 0 ELSE 1 END AS isErased
+                                 , CASE WHEN ObjectFloat_WorkTimeKind_Tax.ValueData > 0 AND COALESCE (MI_SheetWorkTime.Amount, 0) <> 0
+                                             THEN zc_Color_GreenL()
+                                        WHEN COALESCE (MI_SheetWorkTime.Amount, 0) <> 0
+                                             THEN 13816530 -- светло серый  15395562
+                                        ELSE zc_Color_White()
+                                   END AS Color_Calc
+                            FROM tmpOperDate
+                                 JOIN Movement ON Movement.operDate = tmpOperDate.OperDate
+                                               AND Movement.DescId = zc_Movement_SheetWorkTime()
+                                 JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                 JOIN MovementItem AS MI_SheetWorkTime ON MI_SheetWorkTime.MovementId = Movement.Id
+                                 LEFT JOIN MovementItemLinkObject AS MIObject_Position
+                                                                  ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id
+                                                                 AND MIObject_Position.DescId = zc_MILinkObject_Position()
+                                 LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                                                                  ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id
+                                                                 AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
+                                 LEFT JOIN MovementItemLinkObject AS MIObject_StorageLine
+                                                                  ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id
+                                                                 AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                                 LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+                                                                  ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id
+                                                                 AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_WorkTimeKind_Tax
+                                                                  ON ObjectFloat_WorkTimeKind_Tax.ObjectId = MIObject_WorkTimeKind.ObjectId
+                                                                 AND ObjectFloat_WorkTimeKind_Tax.DescId = zc_ObjectFloat_WorkTimeKind_Tax()
+                                 LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
+                                                                  ON ObjectString_WorkTimeKind_ShortName.ObjectId = MIObject_WorkTimeKind.ObjectId
+                                                                 AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+                                 LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+                                                                  ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id
+                                                                 AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
+                            WHERE MovementLinkObject_Unit.ObjectId = inUnitId
+                            )
+            -- связываем даты до приема, после увольнения с текущими
+          , tmpDateOut AS (SELECT tmpDateOut_All.OperDate
+                                , tmpDateOut_All.MemberId
+                                , tmpDateOut_All.PositionId
+                                , tmpMI.PositionLevelId
+                                , tmpMI.StorageLineId
+                                , tmpMI.PersonalGroupId
+                                , zc_Color_White() AS Color_Calc
+                                , tmpDateOut_All.WorkTimeKindId
+                                , tmpDateOut_All.ShortName
+                           FROM tmpDateOut_All
+                                INNER JOIN (SELECT DISTINCT tmpMI.MemberId, tmpMI.PositionId, PositionLevelId, StorageLineId, PersonalGroupId 
+                                            FROM tmpMovement AS tmpMI
+                                           ) AS tmpMI ON tmpMI.MemberId = tmpDateOut_All.MemberId
+                                                     AND tmpMI.PositionId = tmpDateOut_All.PositionId
+                           )
+            -- объединяем даты увольнения и рабочие
+            -- рабочий график
+            SELECT tmp.OperDate
+                 , tmp.Amount :: TFloat
+                 , tmp.MemberId
+                 , tmp.PositionId
+                 , tmp.PositionLevelId
+                 , tmp.StorageLineId
+                 , tmp.PersonalGroupId
+                 , COALESCE (tmpDateOut.WorkTimeKindId, tmp.ObjectId) AS ObjectId
+                 , COALESCE (tmpDateOut.ShortName, tmp.ShortName)     AS ShortName
+                 , tmp.isErased
+                 , tmp.Color_Calc   
+            FROM tmpMovement AS tmp
+                 -- если был принят не сначала месяца или уволен в течении месяца отмечаем Х
+                 LEFT JOIN tmpDateOut ON tmpDateOut.OperDate = tmp.OperDate
+                                     AND tmpDateOut.MemberId = tmp.MemberId
+                                     AND tmpDateOut.PositionId = tmp.PositionId
+          UNION
+            -- дни увольнения (не рабочие)
+            SELECT tmp.OperDate
+                 , 0 :: TFloat AS Amount
+                 , tmp.MemberId
+                 , tmp.PositionId
+                 , tmp.PositionLevelId
+                 , tmp.StorageLineId
+                 , tmp.PersonalGroupId
+                 , tmp.WorkTimeKindId AS ObjectId
+                 , tmp.ShortName
+                 , 1 AS isErased
+                 , tmp.Color_Calc   
+            FROM tmpDateOut AS tmp;
 
      vbIndex := 0;
      -- именно так, из-за перехода времени кол-во дней может быть разное
@@ -217,6 +299,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.01.20         *
  25.05.17         * StorageLineId
  25.03.16         * AmountHours
  20.01.16         *

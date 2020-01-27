@@ -80,6 +80,10 @@ type
     Delay: TcxGridDBColumn;
     PartionDateKindName: TcxGridDBColumn;
     DateDelay: TcxGridDBColumn;
+    BuyerPhone: TcxGridDBColumn;
+    BuyerName: TcxGridDBColumn;
+    LoyaltySMDiscount: TcxGridDBColumn;
+    LoyaltySMSumma: TcxGridDBColumn;
   private
     { Private declarations }
   public

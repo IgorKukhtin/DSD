@@ -243,8 +243,14 @@ BEGIN
             ,MovementString_InvNumberBranch.ValueData AS InvNumberBranch
             ,MovementDate_Branch.ValueData            AS BranchDate
 
-            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MIDate_Insert.ValueData ELSE MovementDate_Insert.ValueData END AS InsertDate
-            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MILO_Insert.ValueData ELSE Object_Insert.ValueData END AS InsertName
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MIDate_Insert.ValueData 
+                  WHEN Movement.DescId = zc_Movement_OrderExternal() THEN MovementDate_Update.ValueData 
+                  ELSE MovementDate_Insert.ValueData 
+             END AS InsertDate
+            ,CASE WHEN Movement.DescId = zc_Movement_ListDiff() THEN MILO_Insert.ValueData
+                  WHEN Movement.DescId = zc_Movement_OrderExternal() THEN Object_Update.ValueData 
+                  ELSE Object_Insert.ValueData
+             END AS InsertName
 
       FROM tmpMovement AS Movement
 
@@ -256,10 +262,21 @@ BEGIN
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
         LEFT JOIN tmpMLObject AS MLO_Insert
-                                     ON MLO_Insert.MovementId = Movement.Id
-                                    AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+                              ON MLO_Insert.MovementId = Movement.Id
+                             AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
         LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = MLO_Insert.ObjectId
 
+        -- для заказа внутреннего Дата отправки и польз. отправки
+        LEFT JOIN MovementDate AS MovementDate_Update
+                               ON MovementDate_Update.MovementId = Movement.Id
+                              AND MovementDate_Update.DescId = zc_MovementDate_Update()
+                              AND Movement.DescId = zc_Movement_OrderExternal()
+        LEFT JOIN MovementLinkObject AS MLO_Update
+                                     ON MLO_Update.MovementId = Movement.Id
+                                    AND MLO_Update.DescId = zc_MovementLinkObject_Update()
+                                    AND Movement.DescId = zc_Movement_OrderExternal()
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = MLO_Update.ObjectId 
+          
         JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
         LEFT JOIN Object ON Object.Id = Movement.ObjectId
@@ -346,12 +363,12 @@ BEGIN
                                ON MovementDate_Branch.MovementId = Movement.Id
                               AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
         LEFT JOIN tmpMIFloat AS MIFloat_AmountManual
-                                    ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
-                                   AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
+                             ON MIFloat_AmountManual.MovementItemId = Movement.MovementItemId
+                            AND MIFloat_AmountManual.DescId = zc_MIFloat_AmountManual()
 
         LEFT JOIN tmpMIFloat AS MIFloat_PriceSample
-                                    ON MIFloat_PriceSample.MovementItemId = Movement.MovementItemId
-                                   AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
+                             ON MIFloat_PriceSample.MovementItemId = Movement.MovementItemId
+                            AND MIFloat_PriceSample.DescId = zc_MIFloat_PriceSample()
 
         LEFT JOIN tmpObject_Insert AS MILO_Insert
                                    ON MILO_Insert.MovementItemId = Movement.MovementItemId

@@ -229,8 +229,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 180
+    Left = 256
+    Top = 108
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -484,8 +484,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 96
+    Left = 304
+    Top = 40
   end
   object GuidesUnitGroup: TdsdGuides
     KeyField = 'Id'

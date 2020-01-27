@@ -4,7 +4,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -794,6 +794,38 @@ inherited SendJournalForm: TSendJournalForm
         end>
       Caption = 'actExecSetSent'
     end
+    object actUnCompleteView: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUnCompleteView
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1074#1089#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086#1076' ' +
+        #1092#1080#1083#1100#1090#1088#1086#1084'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1074#1089#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086#1076' ' +
+        #1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = 
+        #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' '#1085#1077' '#1087#1088#1086#1074#1077#1076#1077#1085' '#1085#1072' '#1074#1089#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086#1076' ' +
+        #1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 10
+    end
+    object actExecUnCompleteView: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUnCompleteView
+      StoredProcList = <
+        item
+          StoredProc = spUnCompleteView
+        end>
+      Caption = 'actExecUnCompleteView'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -968,6 +1000,14 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -1002,6 +1042,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object bbUpdate_isSun: TdxBarButton
       Action = actUpdate_isSun
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUnCompleteView
       Category = 0
     end
   end
@@ -1378,5 +1422,22 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 408
     Top = 339
+  end
+  object spUnCompleteView: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Send_UnCompleteView'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 419
   end
 end
