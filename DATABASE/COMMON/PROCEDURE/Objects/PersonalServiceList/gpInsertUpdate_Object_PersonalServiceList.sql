@@ -4,7 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
@@ -18,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inMemberHeadManagerId   Integer   ,     -- Физ лица(исполнительный директор)
     IN inMemberManagerId       Integer   ,     -- Физ лица(директор)
     IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
+    IN inCompensation          TFloat    ,     -- месяц компенсации
     IN inisSecond              Boolean   ,     -- 
    -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
     IN inSession               TVarChar        -- сессия пользователя
@@ -67,6 +69,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Second(), ioId, inisSecond);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_Compensation(), ioId, inCompensation);
         
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -80,6 +84,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.01.20         * add inCompensation
  20.02.17         * add inisSecond
  26.08.15         * add inMemberId
  15.04.15         * add PaidKind, Branch, Bank

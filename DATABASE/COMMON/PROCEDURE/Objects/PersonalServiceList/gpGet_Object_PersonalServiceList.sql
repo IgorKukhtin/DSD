@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
+             , Compensation TFloat
              , isSecond Boolean
              , isErased Boolean) AS
 $BODY$
@@ -46,8 +47,10 @@ BEGIN
            , CAST ('' as TVarChar)  AS MemberHeadManagerName
            , 0                      AS MemberManagerId
            , CAST ('' as TVarChar)  AS MemberManagerName
-           , 0                      AS MemberId
-           , CAST ('' as TVarChar)  AS MemberName
+           , 0                      AS MemberBookkeeperId
+           , CAST ('' as TVarChar)  AS MemberBookkeeperName
+           
+           , CAST (0 AS TFloat)     AS Compensation
 
            , CAST(FALSE AS Boolean) AS isSecond
 
@@ -77,6 +80,8 @@ BEGIN
            , Object_MemberManager.ValueData       AS MemberManagerName
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
+           
+           , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat AS Compensation
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
 
@@ -86,6 +91,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
+                                 ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
+                                AND ObjectFloat_Compensation.DescId = zc_ObjectFloat_PersonalServiceList_Compensation()
 
            LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Juridical
                                 ON ObjectLink_PersonalServiceList_Juridical.ObjectId = Object_PersonalServiceList.Id 
@@ -140,6 +149,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.01.20         * add Compensation
  16.12.15         * add MemberHeadManager, MemberManager, MemberBookkeeper
  26.08.15         * add Member
  15.04.15         * add PaidKind, Branch, Bank

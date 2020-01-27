@@ -2,7 +2,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
-  ClientHeight = 413
+  ClientHeight = 445
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxButton1: TcxButton
     Left = 44
-    Top = 378
+    Top = 414
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
   end
   object cxButton2: TcxButton
     Left = 188
-    Top = 378
+    Top = 414
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -180,6 +180,22 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     TabOrder = 20
     Width = 273
   end
+  object cxLabel33: TcxLabel
+    Left = 12
+    Top = 367
+    Hint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103' '#1080#1079' '#1087#1091#1090'. '#1083#1080#1089#1090#1072
+    Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095'-'#1080#1103' '#1082#1086#1084#1087#1077#1085#1089'.'
+  end
+  object edCompensation: TcxCurrencyEdit
+    Left = 12
+    Top = 384
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0.'
+    TabOrder = 22
+    Width = 133
+  end
   object ActionList: TActionList
     Left = 152
     Top = 40
@@ -297,6 +313,14 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCompensation'
+        Value = Null
+        Component = edCompensation
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisSecond'
         Value = Null
         Component = ceisSecond
@@ -305,7 +329,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
+    Left = 224
     Top = 8
   end
   object dsdFormParams: TdsdFormParams
@@ -455,6 +479,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         Component = GuidesMemberManager
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Compensation'
+        Value = Null
+        Component = edCompensation
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

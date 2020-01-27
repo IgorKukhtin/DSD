@@ -50,21 +50,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 63
+        Width = 55
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 145
+        Width = 126
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 101
+        Width = 88
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -82,7 +82,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 72
+        Width = 63
       end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
@@ -90,7 +90,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 88
+        Width = 76
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -98,7 +98,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 48
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') '
@@ -113,7 +113,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 115
+        Width = 99
       end
       object MemberHeadManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -128,7 +128,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 106
+        Width = 93
       end
       object MemberManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -143,7 +143,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 75
       end
       object MemberBookkeeperName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088') '
@@ -158,7 +158,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 75
       end
       object isSecond: TcxGridDBColumn
         Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
@@ -166,7 +166,17 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 48
+      end
+      object Compensation: TcxGridDBColumn
+        Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+        DataBinding.FieldName = 'Compensation'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.;-,0.; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 126
       end
     end
     object cxGridLevel: TcxGridLevel
