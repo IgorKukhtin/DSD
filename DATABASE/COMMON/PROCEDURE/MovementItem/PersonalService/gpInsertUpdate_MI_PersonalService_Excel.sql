@@ -111,6 +111,7 @@ BEGIN
                                                         , inSummFineOthRecalc  := COALESCE (gpSelect.SummFineOthRecalc, 0)
                                                         , inSummHosp           := COALESCE (gpSelect.SummHosp, 0)
                                                         , inSummHospOthRecalc  := COALESCE (gpSelect.SummHospOthRecalc, 0)
+                                                        , inSummCompensationRecalc := COALESCE (gpSelect.SummCompensationRecalc, 0)
                                                         , inComment            := COALESCE (gpSelect.Comment, '')
                                                         , inInfoMoneyId        := COALESCE (gpSelect.InfoMoneyId, zc_Enum_InfoMoney_60101()) -- 60101 Заработная плата + Заработная плата
                                                         , inUnitId             := tmpPersonal.UnitId

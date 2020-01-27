@@ -179,6 +179,10 @@ type
     SummCardSecondDiff: TcxGridDBColumn;
     SummFineOth: TcxGridDBColumn;
     SummHospOth: TcxGridDBColumn;
+    spUpdate_Compensation: TdsdStoredProc;
+    actUpdate_Compensation: TdsdExecStoredProc;
+    macUpdate_Compensation: TMultiAction;
+    bbUpdate_Compensation: TdxBarButton;
   private
     { Private declarations }
   public

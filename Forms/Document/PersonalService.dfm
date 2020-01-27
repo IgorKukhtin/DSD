@@ -2183,6 +2183,35 @@ inherited PersonalServiceForm: TPersonalServiceForm
       Hint = #1050#1086#1087#1080#1088#1086#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103#1084' '#1080#1079' '#1076#1088#1091#1075#1086#1081' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
       ImageIndex = 59
     end
+    object actUpdate_Compensation: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Compensation
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Compensation
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
+    end
+    object macUpdate_Compensation: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Compensation
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' c'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089 +
+        #1082'.?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1102' '#1079#1072' '#1085#1077#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1085#1099#1081' '#1086#1090#1087#1091#1089#1082
+      ImageIndex = 56
+    end
     object actUpdateCardSecond: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2623,6 +2652,14 @@ inherited PersonalServiceForm: TPersonalServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Compensation'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMISignYes'
         end
         item
@@ -2707,6 +2744,10 @@ inherited PersonalServiceForm: TPersonalServiceForm
     end
     object bbPrint_Child: TdxBarButton
       Action = actPrint_Detail
+      Category = 0
+    end
+    object bbUpdate_Compensation: TdxBarButton
+      Action = macUpdate_Compensation
       Category = 0
     end
   end
@@ -3522,8 +3563,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 608
-    Top = 56
+    Left = 688
+    Top = 24
   end
   object spUpdateIsMain: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PersonalService_isMain'
@@ -3720,8 +3761,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 592
-    Top = 352
+    Left = 616
+    Top = 400
   end
   object spSelectMISign: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PersonalService_Sign'
@@ -4049,5 +4090,22 @@ inherited PersonalServiceForm: TPersonalServiceForm
     PackSize = 1
     Left = 375
     Top = 328
+  end
+  object spUpdate_Compensation: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_PersonalService_Compensation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 456
   end
 end

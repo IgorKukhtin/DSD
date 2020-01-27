@@ -69,6 +69,7 @@ BEGIN
                                                      , inSummFineOthRecalc      := inSummFineOthRecalc
                                                      , inSummHosp               := inSummHosp
                                                      , inSummHospOthRecalc      := inSummHospOthRecalc
+                                                     , inSummCompensationRecalc := 0
                                                      , inComment                := inComment
                                                      , inInfoMoneyId            := inInfoMoneyId
                                                      , inUnitId                 := inUnitId
