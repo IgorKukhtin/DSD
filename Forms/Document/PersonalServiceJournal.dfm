@@ -4,9 +4,8 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
   ClientWidth = 1221
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -431
   ExplicitWidth = 1237
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -205,6 +204,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummHospOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummCompensationRecalc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -381,6 +390,16 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummHospOth
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummCompensation
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummCompensationRecalc
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -784,6 +803,24 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1091#1084#1084#1072' '#1073#1086#1083#1100#1085#1080#1095#1085#1099#1077' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 87
+          end
+          object TotalSummCompensation: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' ('#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086')'
+            DataBinding.FieldName = 'TotalSummCompensation'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummCompensationRecalc: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' ('#1074#1074#1086#1076')'
+            DataBinding.FieldName = 'TotalSummCompensationRecalc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object isAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080

@@ -45,6 +45,7 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummFineOthRecalc(), MovementItem.Id, 0)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummHospOthRecalc(), MovementItem.Id, 0)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensationRecalc(), MovementItem.Id, 0)
      FROM MovementItem
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId = zc_MI_Master();

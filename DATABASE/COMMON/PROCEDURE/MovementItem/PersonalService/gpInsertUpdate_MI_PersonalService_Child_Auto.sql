@@ -283,6 +283,7 @@ end if;
                                                                         , inSummFineOthRecalc      := 0
                                                                         , inSummHosp               := 0
                                                                         , inSummHospOthRecalc      := 0
+                                                                        , inSummCompensationRecalc := 0
                                                                         , inComment                := ''
                                                                         , inInfoMoneyId            := vbInfoMoneyId_def
                                                                         , inUnitId                 := inUnitId
@@ -398,6 +399,7 @@ end if;
                                                           , inSummFineOthRecalc      := COALESCE (MIFloat_SummFineOthRecalc.ValueData, 0)
                                                           , inSummHosp               := COALESCE (MIFloat_SummHosp.ValueData, 0)
                                                           , inSummHospOthRecalc      := COALESCE (MIFloat_SummHospOthRecalc.ValueData, 0)
+                                                          , inSummCompensationRecalc := COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)
                                                           , inComment                := MIString_Comment.ValueData
                                                           , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                           , inUnitId                 := inUnitId
@@ -464,6 +466,10 @@ end if;
                                         ON MIFloat_SummHospOthRecalc.MovementItemId = MovementItem.Id
                                        AND MIFloat_SummHospOthRecalc.DescId = zc_MIFloat_SummHospOthRecalc()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
+                                        ON MIFloat_SummCompensationRecalc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = MovementItem.Id
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -489,6 +495,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 27.01.20         * SummCompensationRecalc
  15.10.19         *
  29.07.19         *
  05.01.18         *

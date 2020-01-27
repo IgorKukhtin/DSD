@@ -211,7 +211,7 @@ BEGIN
 
            , MovementFloat_TotalSummAddOth.ValueData           AS TotalSummAddOth
            , MovementFloat_TotalSummAddOthRecalc.ValueData     AS TotalSummAddOthRecalc
-           
+
            , MovementFloat_TotalSummFine.ValueData          :: TFloat AS TotalSummFine
            , MovementFloat_TotalSummFineOth.ValueData       :: TFloat AS TotalSummFineOth
            , MovementFloat_TotalSummFineOthRecalc.ValueData :: TFloat AS TotalSummFineOthRecalc
@@ -227,12 +227,12 @@ BEGIN
            , Object_PersonalServiceList.ValueData       AS PersonalServiceListName
            , Object_Juridical.Id                        AS JuridicalId
            , Object_Juridical.ValueData                 AS JuridicalName
-         
+
            , COALESCE(MovementBoolean_isAuto.ValueData, False) :: Boolean  AS isAuto
 
            , tmpSign.strSign
            , tmpSign.strSignNo 
-           
+
            , Object_Member.ValueData                    AS MemberName 
 
        FROM tmpMovement
