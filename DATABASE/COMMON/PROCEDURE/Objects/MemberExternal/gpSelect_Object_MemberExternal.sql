@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberExternal(
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , DriverCertificate TVarChar
              , isErased Boolean
               )
 AS
@@ -24,11 +25,14 @@ BEGIN
            Object_MemberExternal.Id         AS Id
          , Object_MemberExternal.ObjectCode AS Code
          , Object_MemberExternal.ValueData  AS Name
+         , ObjectString_DriverCertificate.ValueData :: TVarChar AS DriverCertificate
 
          , Object_MemberExternal.isErased                   AS isErased
 
      FROM Object AS Object_MemberExternal
-                                
+           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                  ON ObjectString_DriverCertificate.ObjectId = Object_MemberExternal.Id 
+                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_MemberExternal_DriverCertificate()
      WHERE Object_MemberExternal.DescId = zc_Object_MemberExternal()
        AND (Object_MemberExternal.isErased = FALSE
             OR (Object_MemberExternal.isErased = TRUE AND inIsShowAll = TRUE)
@@ -43,6 +47,7 @@ ALTER FUNCTION gpSelect_Object_MemberExternal (Boolean, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.01.20         * add DriverCertificate
  28.03.15                                        *
 */
 -- тест

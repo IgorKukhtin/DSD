@@ -54,13 +54,13 @@ object MemberExternalForm: TMemberExternalForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 69
+        Width = 83
       end
       object Name: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 212
+        Width = 226
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -70,6 +70,14 @@ object MemberExternalForm: TMemberExternalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
+      end
+      object DriverCertificate: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+        DataBinding.FieldName = 'DriverCertificate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 115
       end
     end
     object cxGridLevel: TcxGridLevel

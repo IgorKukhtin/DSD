@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_MemberExternal(
     IN inId          Integer,        -- Физические лица 
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , DriverCertificate TVarChar)
 AS
 $BODY$
 BEGIN
@@ -19,7 +20,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_MemberExternal()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS DriverCertificate
       ;
    ELSE
        RETURN QUERY 
@@ -27,8 +29,12 @@ BEGIN
            Object_MemberExternal.Id         AS Id
          , Object_MemberExternal.ObjectCode AS Code
          , Object_MemberExternal.ValueData  AS Name
+         , ObjectString_DriverCertificate.ValueData :: TVarChar AS DriverCertificate
 
      FROM Object AS Object_MemberExternal
+           LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                  ON ObjectString_DriverCertificate.ObjectId = Object_MemberExternal.Id 
+                                 AND ObjectString_DriverCertificate.DescId = zc_ObjectString_MemberExternal_DriverCertificate()
      WHERE Object_MemberExternal.Id = inId;
      
    END IF;
@@ -40,6 +46,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.01.20         * add DriverCertificate
  28.03.15                                        *
 */
 

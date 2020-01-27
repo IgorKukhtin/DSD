@@ -1,11 +1,13 @@
 -- Function: lpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_MemberExternal(
  INOUT ioId	             Integer   ,    -- ключ объекта <Физические лица(сторонние)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта
+    IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение
     IN inUserId              Integer        -- пользователь
 )
 RETURNS Integer
@@ -27,6 +29,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_MemberExternal(), vbCode_calc, TRIM (inName), inAccessKeyId:= NULL);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_MemberExternal_DriverCertificate(), ioId, inDriverCertificate);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, inUserId);
    
@@ -36,6 +41,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.01.20         *
  30.03.15                                        *
 */
 

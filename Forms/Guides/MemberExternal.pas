@@ -59,6 +59,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    DriverCertificate: TcxGridDBColumn;
   private
     { Private declarations }
   public

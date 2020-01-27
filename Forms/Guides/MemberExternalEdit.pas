@@ -39,6 +39,8 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
+    edDriverCertificate: TcxTextEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public
