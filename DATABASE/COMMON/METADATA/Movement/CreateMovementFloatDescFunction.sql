@@ -501,9 +501,19 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_LoyaltySMDiscount() RETURNS Integer 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_LoyaltySMDiscount', 'Сумма скидки по Программа лояльности накопительная' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_LoyaltySMDiscount');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCompensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCompensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummCompensation', 'Компенсация (распределено)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCompensation');
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCompensationRecalc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCompensationRecalc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummCompensationRecalc', 'Компенсация (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCompensationRecalc');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 27.01.20         * zc_MovementFloat_TotalSummCompensation
+                    zc_MovementFloat_TotalSummCompensationRecalc
  21.01.20                                                                                     * zc_MovementFloat_LoyaltySMID, zc_MovementFloat_LoyaltySMSumma
  20.11.19                                                                                     * zc_MovementFloat_ProcGoods, zc_MovementFloat_ProcUnit, zc_MovementFloat_Penalty
  04.11.19                                                                                     * zc_MovementFloat_MonthCount
