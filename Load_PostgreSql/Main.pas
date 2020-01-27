@@ -2473,10 +2473,10 @@ begin
 
            //
            // сам расчет с/с - 1-ый - ТОЛЬКО производство
-           if not fStop then pInsertHistoryCost (TRUE);
+           if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(TRUE);
            //
            // перепроведение
-           if not fStop then pCompleteDocument_List(TRUE, FALSE, FALSE);
+           if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_List(TRUE, FALSE, FALSE);
 
      end;
      //
@@ -2490,13 +2490,13 @@ begin
      if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(FALSE);
      //
      // ВСЕГДА - Расчет акций
-     if (not fStop) then pCompleteDocument_Promo;
+     if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Promo;
      // ВСЕГДА - загрузка курсов
-     if (not fStop) then pLoad_https_Currency_all;
+     if (not fStop)and(GroupId_branch <= 0) then pLoad_https_Currency_all;
      // ВСЕГДА - Расчет Курс разн.
-     if (not fStop) then pCompleteDocument_Currency;
+     if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_Currency;
      // ВСЕГДА - Привязка Возвраты
-     if (not fStop) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
+     if (not fStop)and(GroupId_branch <= 0) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
      //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);

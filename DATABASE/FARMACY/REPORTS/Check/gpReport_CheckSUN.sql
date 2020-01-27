@@ -99,6 +99,7 @@ BEGIN
                                                                    ON MIContainer.ContainerId = tmpContainer_Check.ContainerId
                                                                   AND MIContainer.DescId = zc_MIContainer_Count()
                                                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                                  AND MIContainer.isActive = TRUE
                                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
                                                              ON MovementBoolean_SUN.MovementId = MIContainer.MovementId
                                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()

@@ -684,6 +684,34 @@ BEGIN
                                 WHERE tmpNotSold_PartionDate.GoodsID  IS NULL
                                   AND tmpIncome.GoodsID IS NULL
                                )
+       -- ѕеремещение SUN - расход - Erased - за —≈√ќƒЌя, что б не отправл€ть эти товары повторно в —”Ќ-2
+     , tmpMI_SUN_out AS (SELECT DISTINCT
+                                MovementLinkObject_From.ObjectId AS UnitId_from
+                              , MovementItem.ObjectId            AS GoodsId
+                         FROM Movement
+                              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                              -- !!!только дл€ таких јптек!!!
+                              INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_From.ObjectId
+                              INNER JOIN MovementItem AS MovementItem
+                                                      ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+                                                     AND MovementItem.Amount     > 0
+                              INNER JOIN MovementBoolean AS MB_SUN
+                                                         ON MB_SUN.MovementId = Movement.Id
+                                                        AND MB_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                        AND MB_SUN.ValueData  = TRUE
+                              LEFT JOIN MovementBoolean AS MB_SUN_v2
+                                                        ON MB_SUN_v2.MovementId = Movement.Id
+                                                       AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
+                                                       AND MB_SUN_v2.ValueData  = TRUE
+                         WHERE Movement.OperDate = inOperDate
+                           AND Movement.DescId   = zc_Movement_Send()
+                           AND Movement.StatusId = zc_Enum_Status_Erased()
+                           AND MB_SUN_v2.MovementId IS NULL
+                        )
         -- –езультат
         SELECT 0 AS ContainerDescId
              , tmpNotSold.UnitId
@@ -702,9 +730,13 @@ BEGIN
                                      ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
                                     AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
                                     AND OB_Unit_SUN_in.ValueData = TRUE
+             -- !!!ѕеремещение SUN - расход - Erased - за —≈√ќƒЌя, что б не отправл€ть эти товары повторно в —”Ќ-2
+             LEFT JOIN tmpMI_SUN_out ON tmpMI_SUN_out.UnitId_from = tmpNotSold.UnitId
+                                    AND tmpMI_SUN_out.GoodsId     = tmpNotSold.GoodsId
         WHERE -- !!!
               OB_Unit_SUN_in.ObjectId IS NULL
               -- !!!
+          AND tmpMI_SUN_out.GoodsId IS NULL
        ;
 
 

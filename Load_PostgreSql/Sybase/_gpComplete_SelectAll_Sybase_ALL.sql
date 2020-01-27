@@ -1,28 +1,27 @@
 -- Function: gpComplete_SelectAll_Sybase_ALL()
 
  DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean);
--- DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean, Integer);
+ DROP FUNCTION IF EXISTS gpComplete_SelectAll_Sybase (TDateTime, TDateTime, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION gpComplete_SelectAll_Sybase(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inIsSale             Boolean   , --
-    IN inIsBefoHistoryCost  Boolean     --
---    IN inGroupId            Integer     -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
+    IN inIsBefoHistoryCost  Boolean   , --
+    IN inGroupId            Integer     -- -1:Все 0:ф.Днепр 1:ф.Киев 2:остальные филиалы
 )
 RETURNS TABLE (MovementId Integer, OperDate TDateTime, InvNumber TVarChar, Code TVarChar, ItemName TVarChar
               )
 AS
 $BODY$
-DECLARE inGroupId Integer;
 BEGIN
 
 IF inIsBefoHistoryCost = TRUE
 THEN
     inGroupId:= -1;
-ELSE
---    inGroupId:= -1; -- Все
-    inGroupId:=  0; -- ф.Днепр
+-- ELSE
+--  inGroupId:= -1; -- Все
+--  inGroupId:=  0; -- ф.Днепр
 --  inGroupId:=  1; -- ф.Киев
 --  inGroupId:=  2; -- остальные филиалы
 END IF;
@@ -509,7 +508,7 @@ create table dba._pgMovementReComlete
           LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 */
 -- тест
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE)
--- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.03.2019', inEndDate:= '31.03.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.06.2019', inEndDate:= '30.06.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= TRUE, inGroupId:= -1)
+-- SELECT * FROM gpComplete_SelectAll_Sybase (inStartDate:= '01.10.2019', inEndDate:= '31.10.2019', inIsSale:= TRUE, inIsBefoHistoryCost:= FALSE, inGroupId:= -1)
