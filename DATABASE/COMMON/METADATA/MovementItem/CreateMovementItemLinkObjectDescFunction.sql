@@ -295,10 +295,15 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_PayrollType() RETURNS Integer AS $BOD
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_PayrollType', 'Типы расчета заработной платы' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_PayrollType');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_MemberExternal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MemberExternal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_MemberExternal', 'Физические лица(сторонние)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_MemberExternal');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 27.01.20         * zc_MILinkObject_MemberExternal
  26.08.19                                                                    * zc_MILinkObject_PayrollType
  11.12.18         * zc_MILinkObject_DiffKind
  07.11.18         * zc_MILinkObject_List
