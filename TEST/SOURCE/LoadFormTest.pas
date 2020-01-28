@@ -1482,8 +1482,10 @@ end;
 
 procedure TLoadFormTest.LoadTransportGoodsFormTest;
 begin
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
 end;

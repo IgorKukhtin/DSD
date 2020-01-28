@@ -5,7 +5,7 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 991
-  ExplicitHeight = 572
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -384,11 +384,14 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_PersonalService'
-      ReportNameParam.Value = ''
+      ReportName = 'PrintMovement_TTN'
+      ReportNameParam.Value = 'PrintMovement_TTN'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -702,8 +705,8 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
       item
         Name = 'inMovementId'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
