@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Email_FileName(
    OUT outFileName            TVarChar  ,
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI        Boolean   ,
+   OUT outExportType          TVarChar  ,
     IN inMovementId           Integer   ,
     IN inSession              TVarChar
 )
@@ -21,8 +22,8 @@ BEGIN
 
 
      -- Результат
-     SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI
-            INTO outFileName, outDefaultFileExt, outEncodingANSI
+     SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI, tmp.outExportType
+            INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
         , tmpProtocol AS (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1)
@@ -65,6 +66,12 @@ BEGIN
                  WHEN tmpExportJuridical.ExportKindId IN (zc_Enum_ExportKind_Vez37171990(), zc_Enum_ExportKind_Dakort39135074())
                       THEN TRUE
             END AS outEncodingANSI
+            
+          , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
+                      THEN 'cxegExportToXmlUTF8'
+                 ELSE 'cxegExportToText'
+            END AS outExportType
+            
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                  ON MovementDate_OperDatePartner.MovementId = Movement.Id

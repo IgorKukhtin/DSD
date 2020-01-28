@@ -1,31 +1,32 @@
 inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1087#1086' '#1079#1072#1103#1074#1082#1077')>'
   ClientHeight = 535
-  ClientWidth = 1492
+  ClientWidth = 1366
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1508
-  ExplicitHeight = 573
+  ExplicitLeft = -593
+  ExplicitWidth = 1382
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 76
-    Width = 1492
+    Width = 1366
     Height = 374
     TabOrder = 3
     ExplicitTop = 76
-    ExplicitWidth = 1492
+    ExplicitWidth = 1366
     ExplicitHeight = 374
     ClientRectBottom = 374
-    ClientRectRight = 1492
+    ClientRectRight = 1366
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1492
+      ExplicitWidth = 1366
       ExplicitHeight = 374
       inherited cxGrid: TcxGrid
-        Width = 1492
+        Width = 1366
         Height = 374
-        ExplicitWidth = 1492
+        ExplicitWidth = 1366
         ExplicitHeight = 374
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -761,9 +762,9 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1492
+    Width = 1366
     Height = 50
-    ExplicitWidth = 1492
+    ExplicitWidth = 1366
     ExplicitHeight = 50
     inherited deStart: TcxDateEdit
       Left = 112
@@ -811,7 +812,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
   object ExportXmlGrid: TcxGrid [2]
     Left = 0
     Top = 450
-    Width = 1492
+    Width = 1366
     Height = 85
     Align = alBottom
     TabOrder = 6
@@ -2783,7 +2784,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actExport_Grid: TExportGrid
       Category = 'Export_Email'
       MoveParams = <>
-      ExportType = cxegExportToText
+      ExportType = cxegExportToXmlUTF8
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
@@ -4844,6 +4845,14 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
         Value = Null
         Component = actSMTPFile
         ComponentItem = 'FileName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outExportType'
+        Value = Null
+        Component = actGridToExcel
+        ComponentItem = 'ExportType'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

@@ -229,6 +229,7 @@
 				<Form>PUSHMessageForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
