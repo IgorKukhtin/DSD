@@ -15,7 +15,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , PersonalCode Integer, PersonalName TVarChar
             , PositionId Integer, PositionCode Integer, PositionName TVarChar
             , PositionLevelName TVarChar
-            , UnitCode Integer, UnitName TVarChar
+            , UnitId Integer, UnitCode Integer, UnitName TVarChar
             , BranchName TVarChar
             , PersonalGroupName TVarChar
             , StorageLineName TVarChar
@@ -423,6 +423,7 @@ BEGIN
          , tmpPersonal.PositionCode
          , tmpPersonal.PositionName
          , tmpPersonal.PositionLevelName
+         , tmpPersonal.UnitId
          , tmpPersonal.UnitCode
          , tmpPersonal.UnitName
          , tmpPersonal.BranchName
