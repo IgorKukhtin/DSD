@@ -1451,7 +1451,7 @@ object IncomeForm: TIncomeForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintSticker'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
       StoredProcList = <

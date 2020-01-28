@@ -171,6 +171,10 @@ type
     bbPart_isOlapYes_list: TdxBarButton;
     bbPart_isOlapNo_list: TdxBarButton;
     bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
+    macPrintSticker: TMultiAction;
+    actPrintSticker: TdsdPrintAction;
+    spSelectPrintSticker: TdsdStoredProc;
+    bbPrintSticker: TdxBarButton;
   private
   public
   end;

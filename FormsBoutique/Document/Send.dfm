@@ -873,6 +873,14 @@ object SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSticker'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsPrintList_Print'
         end
         item
@@ -997,6 +1005,10 @@ object SendForm: TSendForm
     end
     object bbDelete_PartionGoods_ReportOLAP: TdxBarButton
       Action = actDelete_PartionGoods_ReportOLAP
+      Category = 0
+    end
+    object bbPrintSticker: TdxBarButton
+      Action = macPrintSticker
       Category = 0
     end
   end
@@ -2117,6 +2129,49 @@ object SendForm: TSendForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086' '#1055#1072#1088#1090#1080#1080' OLAP - '#1044#1040
       ImageIndex = 76
     end
+    object macPrintSticker: TMultiAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_PrinterByUser
+        end
+        item
+          Action = actPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+    end
+    object actPrintSticker: TdsdPrintAction
+      Category = 'PrintSticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1062#1077#1085#1085#1080#1082#1086#1074
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = Null
+      PrinterNameParam.Component = FormParams
+      PrinterNameParam.ComponentItem = 'PrinterName'
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2902,7 +2957,7 @@ object SendForm: TSendForm
     Top = 22
   end
   object spSelectPrintStickerList: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
+    StoredProcName = 'gpSelect_Movement_Send_PrintSticker'
     DataSet = PrintItemsCDS
     DataSets = <
       item
@@ -2943,7 +2998,7 @@ object SendForm: TSendForm
       end>
     PackSize = 1
     Left = 759
-    Top = 232
+    Top = 240
   end
   object spGet_GoodsPrint_Null: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsPrint_Null'
@@ -3241,5 +3296,45 @@ object SendForm: TSendForm
     PackSize = 1
     Left = 600
     Top = 136
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Send_PrintSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsPrintId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsGoodsPrint'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 759
+    Top = 200
   end
 end
