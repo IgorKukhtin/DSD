@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankAccountId Integer, BankAccountName  TVarChar
              , AccountDirectionId Integer, AccountDirectionName TVarChar
              , GoodsGroupId Integer, GoodsGroupName  TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , isPartnerBarCode Boolean
 ) 
 AS
@@ -49,6 +50,8 @@ BEGIN
            , '' :: TVarChar                         AS AccountDirectionName 
            ,  0 :: Integer                          AS GoodsGroupId          
            , '' :: TVarChar                         AS GoodsGroupName
+           ,  0 :: Integer                          AS PriceListId
+           , '' :: TVarChar                         AS PriceListName
            , FALSE :: Boolean                       AS isPartnerBarCode
        ;
    ELSE
@@ -76,6 +79,9 @@ BEGIN
 
            , Object_GoodsGroup.Id           AS GoodsGroupId
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
+
+           , Object_PriceList.Id            AS PriceListId
+           , Object_PriceList.ValueData     AS PriceListName
 
            , COALESCE (ObjectBoolean_PartnerBarCode.ValueData, FALSE) :: Boolean  AS isPartnerBarCode     
        FROM Object AS Object_Unit
@@ -130,6 +136,11 @@ BEGIN
                                 AND ObjectLink_Unit_GoodsGroup.DescId = zc_ObjectLink_Unit_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Unit_GoodsGroup.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
+                                 ON ObjectLink_Unit_PriceList.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_PriceList.DescId = zc_ObjectLink_Unit_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Unit_PriceList.ChildObjectId
+
       WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -143,6 +154,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+28.01.20          *
 22.03.18          *
 05.03.18          *
 27.02.18          * Printer

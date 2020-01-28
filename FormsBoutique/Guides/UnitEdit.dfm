@@ -2,7 +2,7 @@ object UnitEditForm: TUnitEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
-  ClientHeight = 547
+  ClientHeight = 591
   ClientWidth = 302
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton1: TcxButton
     Left = 36
-    Top = 517
+    Top = 561
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object UnitEditForm: TUnitEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 517
+    Top = 561
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -228,6 +228,23 @@ object UnitEditForm: TUnitEditForm
     TabOrder = 28
     Width = 275
   end
+  object cxLabel14: TcxLabel
+    Left = 10
+    Top = 513
+    Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+  end
+  object edPriceList: TcxButtonEdit
+    Left = 8
+    Top = 529
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 275
+  end
   object ActionList: TActionList
     Left = 144
     Top = 80
@@ -380,6 +397,14 @@ object UnitEditForm: TUnitEditForm
         Name = 'inGoodsGroupId'
         Value = Null
         Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceListId'
+        Value = Null
+        Component = GuidesPriceList
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -555,6 +580,21 @@ object UnitEditForm: TUnitEditForm
         Name = 'GoodsGroupName'
         Value = Null
         Component = GuidesGoodsGroup
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListId'
+        Value = Null
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PriceListName'
+        Value = Null
+        Component = GuidesPriceList
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -755,5 +795,34 @@ object UnitEditForm: TUnitEditForm
       end>
     Left = 144
     Top = 482
+  end
+  object GuidesPriceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPriceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 136
+    Top = 515
   end
 end

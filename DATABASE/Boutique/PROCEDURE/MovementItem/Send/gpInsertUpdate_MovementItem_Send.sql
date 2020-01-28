@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_Send()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
  INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outOperPrice           TFloat    , -- Цена
    OUT outCountForPrice       TFloat    , -- Цена за количество
  INOUT ioOperPriceList        TFloat    , -- Цена (прайс)
+    IN inOperPriceListTo      TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
    OUT outTotalSumm           TFloat    , -- Сумма вх.
    OUT outTotalSummBalance    TFloat    , -- Сумма вх. (ГРН)
    OUT outTotalSummPriceList  TFloat    , -- Сумма по прайсу
@@ -26,6 +29,8 @@ $BODY$
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
    DECLARE vbCurrencyId Integer;
+   DECLARE vbToId Integer;
+   DECLARE vbPriceListId_to Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -43,12 +48,22 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
      END IF;
 
-
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
  
-     -- Дата документа
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     -- Дата документа, подразделение Кому, прайс для подразд. кому
+     SELECT Movement.OperDate 
+          , MovementLinkObject_To.ObjectId AS ToId
+          , ObjectLink_Unit_PriceList.ChildObjectId AS PriceListId_to
+   INTO vbOperDate, vbToId, vbPriceListId_to
+     FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+         LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
+                              ON ObjectLink_Unit_PriceList.ObjectId = MovementLinkObject_To.ObjectId
+                             AND ObjectLink_Unit_PriceList.DescId = zc_ObjectLink_Unit_PriceList()
+     WHERE Movement.Id = inMovementId;
 
      -- Цена (прайс)
      IF vbUserId = zc_User_Sybase()
@@ -107,6 +122,19 @@ BEGIN
      END IF;
 
 
+     -- если есть цена и прайс для подр. кому определен сохраняем цену 
+     IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (inOperPriceListTo,0) <> 0
+     THEN
+         --
+         PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
+                                                           , inPriceListId:= vbPriceListId_to
+                                                           , inGoodsId    := inGoodsId
+                                                           , inOperDate   := vbOperDate
+                                                           , inValue      := inOperPriceListTo
+                                                           , inUserId     := vbUserId
+                                                            ); 
+     END IF;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inPartionId, inMovementId, inAmount, NULL);
    
@@ -114,6 +142,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, ioOperPriceList);
+     
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListTo(), ioId, inOperPriceListTo);
+     
+     
      -- сохранили свойство <Цена за количество>
      IF COALESCE (outCountForPrice, 0) = 0 THEN outCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, outCountForPrice);

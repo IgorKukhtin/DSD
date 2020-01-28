@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , BankAccountName TVarChar, BankName TVarChar
              , AccountDirectionName TVarChar
              , GoodsGroupName  TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , StartDate_sybase TDateTime
              , isPartnerBarCode Boolean
              , isOLAP Boolean
@@ -61,6 +62,9 @@ BEGIN
            , Object_AccountDirection.ValueData  AS AccountDirectionName
            
            , Object_GoodsGroup.ValueData    AS GoodsGroupName
+
+           , Object_PriceList.Id            AS PriceListId
+           , Object_PriceList.ValueData     AS PriceListName
 
            , CASE WHEN Object_Unit.ValueData = 'магазин MaxMara'
                        THEN '2006-01-01' -- MaxMara -- OK
@@ -149,6 +153,11 @@ BEGIN
                                  ON ObjectLink_Unit_Child.ObjectId = Object_Unit.Id
                                 AND ObjectLink_Unit_Child.DescId = zc_ObjectLink_Unit_Child()
             LEFT JOIN Object AS Object_Child ON Object_Child.Id = ObjectLink_Unit_Child.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
+                                 ON ObjectLink_Unit_PriceList.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_PriceList.DescId = zc_ObjectLink_Unit_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Unit_PriceList.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_BankAccount
                                  ON ObjectLink_Unit_BankAccount.ObjectId = Object_Unit.Id

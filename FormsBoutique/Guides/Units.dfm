@@ -157,6 +157,13 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 80
       end
+      object PriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 112
+      end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
