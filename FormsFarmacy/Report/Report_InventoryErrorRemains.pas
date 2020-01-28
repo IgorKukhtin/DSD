@@ -53,12 +53,15 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colRemains_Amount: TcxGridDBColumn;
+    colRemains: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     colIsErased: TcxGridDBColumn;
     colRemainsSave: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    colPrice: TcxGridDBColumn;
+    cplRemainsDiff: TcxGridDBColumn;
+    colRemainsDiff_Summa: TcxGridDBColumn;
   private
     { Private declarations }
   public

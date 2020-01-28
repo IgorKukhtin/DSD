@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , CarId Integer, CarName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
+             , MemberExternalId Integer, MemberExternalName TVarChar, DriverCertificate TVarChar
              )
 AS
 $BODY$
@@ -81,8 +82,12 @@ BEGIN
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
 
-           , View_Unit.Id   AS UnitForwardingId
-           , View_Unit.Name AS UnitForwardingName
+           , View_Unit.Id                     AS UnitForwardingId
+           , View_Unit.Name                   AS UnitForwardingName
+
+           , 0                                AS MemberExternalId
+           , CAST ('' as TVarChar)            AS MemberExternalName
+           , CAST ('' as TVarChar)            AS DriverCertificate
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_TransportService()))
@@ -138,6 +143,10 @@ BEGIN
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
+           
+           , Object_MemberExternal.Id         AS MemberExternalId
+           , Object_MemberExternal.ValueData  AS MemberExternalName
+           , ObjectString_DriverCertificate.ValueData :: TVarChar AS DriverCertificate
    
        FROM Movement
 
@@ -217,6 +226,15 @@ BEGIN
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MemberExternal
+                                             ON MILinkObject_MemberExternal.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_MemberExternal.DescId = zc_MILinkObject_MemberExternal()
+            LEFT JOIN Object AS Object_MemberExternal ON Object_MemberExternal.Id = MILinkObject_MemberExternal.ObjectId
+
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                   ON ObjectString_DriverCertificate.ObjectId = MILinkObject_MemberExternal.ObjectId
+                                  AND ObjectString_DriverCertificate.DescId = zc_ObjectString_MemberExternal_DriverCertificate()
+
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
                                    ON MovementDate_StartRunPlan.MovementId = Movement.Id
                                   AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
@@ -232,7 +250,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*

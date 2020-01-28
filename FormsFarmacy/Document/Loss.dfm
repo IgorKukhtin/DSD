@@ -12,17 +12,17 @@ inherited LossForm: TLossForm
     Width = 783
     Height = 549
     ExplicitTop = 119
-    ExplicitWidth = 800
+    ExplicitWidth = 783
     ExplicitHeight = 549
     ClientRectBottom = 549
     ClientRectRight = 783
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 800
+      ExplicitWidth = 783
       ExplicitHeight = 525
       inherited cxGrid: TcxGrid
         Width = 783
         Height = 525
-        ExplicitWidth = 800
+        ExplicitWidth = 783
         ExplicitHeight = 525
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -179,8 +179,7 @@ inherited LossForm: TLossForm
     Width = 783
     Height = 93
     TabOrder = 3
-    ExplicitLeft = 24
-    ExplicitWidth = 800
+    ExplicitWidth = 783
     ExplicitHeight = 93
     inherited edInvNumber: TcxTextEdit
       Left = 182
@@ -481,6 +480,21 @@ inherited LossForm: TLossForm
         end>
       Caption = 'actExecSPAddSend'
     end
+    object actInsertMaskMIMaster: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spWriteRestFromPoint
+      StoredProcList = <
+        item
+          StoredProc = spWriteRestFromPoint
+        end>
+      Caption = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080
+      Hint = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080
+      ImageIndex = 30
+      QuestionBeforeExecute = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -629,11 +643,15 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarButton3'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
     end
     object bbComplete: TdxBarButton
@@ -646,6 +664,10 @@ inherited LossForm: TLossForm
     end
     object dxBarButton2: TdxBarButton
       Action = actLoadSend
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actInsertMaskMIMaster
       Category = 0
     end
   end
@@ -1441,5 +1463,22 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 470
     Top = 544
+  end
+  object spWriteRestFromPoint: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Loss_WriteRestFromPoint'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 403
   end
 end

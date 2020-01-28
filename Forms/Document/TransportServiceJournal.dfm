@@ -4,7 +4,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   ClientWidth = 1212
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -140
   ExplicitWidth = 1228
   ExplicitHeight = 374
   PixelsPerInch = 96
@@ -427,6 +426,22 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1079#1072#1090#1088#1072#1090
             Width = 160
+          end
+          object MemberExternalName: TcxGridDBColumn
+            Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1089#1090#1086#1088#1086#1085#1085#1080#1077')'
+            DataBinding.FieldName = 'MemberExternalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 129
+          end
+          object DriverCertificate: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+            DataBinding.FieldName = 'DriverCertificate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 134
           end
         end
       end

@@ -14,13 +14,15 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime,
                isSP Boolean, DateSP TDateTime, StartTimeSP TDateTime, EndTimeSP TDateTime,
                FtpDir TVarChar, DividePartionDate Boolean,
-               Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar, 
+               Helsi_IdSP Integer, Helsi_Id TVarChar, Helsi_be TVarChar, Helsi_ClientId TVarChar,
                Helsi_ClientSecret TVarChar, Helsi_IntegrationClient TVarChar,
                isSpotter boolean,
                LoyaltyID Integer, LoyaltySummCash TFloat,
-               ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar, 
+               ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar,
                PermanentDiscountID Integer, PermanentDiscountPercent TFloat,
-               LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer
+               LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
+               SPKindId Integer, SPKindName TVarChar,
+               PartnerMedicalID Integer, PartnerMedicalName TVarChar
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -95,13 +97,13 @@ BEGIN
                              INNER JOIN MovementDate AS MovementDate_EndPromo
                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                                                    
+
                              INNER JOIN MovementItem AS MI_Loyalty
                                                      ON MI_Loyalty.MovementId = Movement.Id
                                                     AND MI_Loyalty.DescId = zc_MI_Child()
-                                                    AND MI_Loyalty.isErased = FALSE 
+                                                    AND MI_Loyalty.isErased = FALSE
                                                     AND MI_Loyalty.ObjectId = vbUnitId
-                                                    
+
                         WHERE Movement.DescId = zc_Movement_Loyalty()
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
@@ -124,7 +126,7 @@ BEGIN
                                       INNER JOIN MovementDate AS MovementDate_EndSale
                                                               ON MovementDate_EndSale.MovementId = Movement.Id
                                                              AND MovementDate_EndSale.DescId = zc_MovementDate_EndSale()
-                                                              
+
                                  WHERE Movement.DescId = zc_Movement_LoyaltySaveMoney()
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                    AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
@@ -137,7 +139,7 @@ BEGIN
                                        INNER JOIN MovementFloat AS MovementFloat_ChangePercent
                                                                 ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                                                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-                                                               
+
                                        INNER JOIN MovementLinkObject AS MovementLinkObject_Retail
                                                                      ON MovementLinkObject_Retail.MovementId = Movement.Id
                                                                     AND MovementLinkObject_Retail.DescId = zc_MovementLinkObject_Retail()
@@ -149,7 +151,7 @@ BEGIN
                                        INNER JOIN MovementDate AS MovementDate_EndPromo
                                                                ON MovementDate_EndPromo.MovementId = Movement.Id
                                                               AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
-                                                                                                                            
+
                                   WHERE Movement.DescId = zc_Movement_PermanentDiscount()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
                                     AND MovementDate_StartPromo.ValueData <= CURRENT_DATE
@@ -164,10 +166,10 @@ BEGIN
                                   , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
-                                                         ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
+                                                         ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
                                                         AND ObjectString_CashSettings_ShareFromPriceName.DescId = zc_ObjectString_CashSettings_ShareFromPriceName()
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceCode
-                                                         ON ObjectString_CashSettings_ShareFromPriceCode.ObjectId = Object_CashSettings.Id 
+                                                         ON ObjectString_CashSettings_ShareFromPriceCode.ObjectId = Object_CashSettings.Id
                                                         AND ObjectString_CashSettings_ShareFromPriceCode.DescId = zc_ObjectString_CashSettings_ShareFromPriceCode()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
@@ -197,13 +199,13 @@ BEGIN
        , ObjectDate_SP.ValueData                       :: TDateTime AS DateSP
        , CASE WHEN COALESCE (ObjectDate_StartSP.ValueData ::Time,'00:00') <> '00:00' THEN ObjectDate_StartSP.ValueData ELSE Null END :: TDateTime AS StartTimeSP
        , CASE WHEN COALESCE (ObjectDate_EndSP.ValueData ::Time,'00:00')   <> '00:00' THEN ObjectDate_EndSP.ValueData ELSE Null END   :: TDateTime AS EndTimeSP
-       , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251) 
-         THEN 'Franchise' 
+       , CASE WHEN Object_Parent.ID IN (7433754, 4103484, 10127251)
+         THEN 'Franchise'
          ELSE '' END::TVarChar                               AS FtpDir
 
       , COALESCE (ObjectBoolean_DividePartionDate.ValueData, FALSE)  :: Boolean   AS DividePartionDate
 
-         
+
       , CASE WHEN COALESCE (ObjectBoolean_RedeemByHandSP.ValueData, FALSE) = FALSE THEN Object_Helsi_IdSP.Id
         ELSE NULL::Integer END                               AS Helsi_IdSP
        , Object_Helsi_Id.ValueData                           AS Helsi_Id
@@ -212,19 +214,24 @@ BEGIN
        , Object_Helsi_ClientSecret.ValueData                 AS Helsi_ClientSecret
        , Object_Helsi_IntegrationClient.ValueData            AS Helsi_IntegrationClient
 
-       , CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  
+       , CASE WHEN EXISTS (SELECT 1 FROM ObjectLink_UserRole_View
          WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Spotter(), zc_Enum_Role_Admin())) THEN TRUE ELSE FALSE END AS isSpotter
-         
+
        , tmpLoyalty.LoyaltyID
        , tmpLoyalty.LoyaltySummCash
        , tmpCashSettings.ShareFromPriceName
        , tmpCashSettings.ShareFromPriceCode
-       
+
        , tmpPermanentDiscount.PermanentDiscountID          AS PermanentDiscountID
        , tmpPermanentDiscount.PermanentDiscountPercent     AS PermanentDiscountPercent
 
-       , tmpLoyaltySaveMoney.LoyaltySaveMoneyCount         AS LoyaltySaveMoneyCount 
-       , tmpLoyaltySaveMoney.LoyaltySaveMoneyID            AS LoyaltySaveMoneyID 
+       , tmpLoyaltySaveMoney.LoyaltySaveMoneyCount         AS LoyaltySaveMoneyCount
+       , tmpLoyaltySaveMoney.LoyaltySaveMoneyID            AS LoyaltySaveMoneyID
+
+       , Object_SPKind.ID                                  AS SPKindID
+       , Object_SPKind.ValueData                           AS SPKindName
+       , Object_PartnerMedical.ID                          AS PartnerMedicalID
+       , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
 
    FROM Object AS Object_Unit
 
@@ -251,7 +258,7 @@ BEGIN
         LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
 
         LEFT JOIN ObjectFloat AS ObjectFloat_ShareFromPrice
-                              ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id 
+                              ON ObjectFloat_ShareFromPrice.ObjectId = Object_Retail.Id
                              AND ObjectFloat_ShareFromPrice.DescId = zc_ObjectFloat_Retail_ShareFromPrice()
 
         LEFT JOIN ObjectDate AS ObjectDate_TaxUnitStart
@@ -272,8 +279,8 @@ BEGIN
                               ON ObjectDate_TimePUSHFinal2.ObjectId = vbCashRegisterId
                              AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP 
-                                ON ObjectBoolean_SP.ObjectId = Object_Unit.Id 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SP
+                                ON ObjectBoolean_SP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_SP.DescId = zc_ObjectBoolean_Unit_SP()
 
         LEFT JOIN ObjectDate AS ObjectDate_SP
@@ -303,13 +310,19 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RedeemByHandSP
                                 ON ObjectBoolean_RedeemByHandSP.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RedeemByHandSP.DescId = zc_ObjectBoolean_Unit_RedeemByHandSP()
-                               
+
         LEFT JOIN tmpLoyalty ON 1 = 1
         LEFT JOIN tmpLoyaltySaveMoney ON 1 = 1
-        
+
         LEFT JOIN tmpCashSettings ON 1 = 1
-        
+
         LEFT JOIN tmpPermanentDiscount ON 1 = 1
+
+
+        LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = zc_Enum_SPKind_1303()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical ON ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
+                                                              AND ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id
+        LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
@@ -325,6 +338,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 26.01.20                                                       *
  08.01.20                                                       *
  08.12.19                                                       *
  04.12.19                                                       *
@@ -339,5 +353,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- ÚÂÒÚ
--- 
-SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

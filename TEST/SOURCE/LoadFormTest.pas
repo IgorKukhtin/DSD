@@ -1472,10 +1472,10 @@ end;
 
 procedure TLoadFormTest.LoadTransportServiceFormTest;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceJournalForm');
 end;

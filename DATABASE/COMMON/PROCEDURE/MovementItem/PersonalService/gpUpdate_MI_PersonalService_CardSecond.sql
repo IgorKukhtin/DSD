@@ -1,5 +1,5 @@
 -- Function: gpUpdate_MI_PersonalService_CardSecond()
-
+--рабочая
 DROP FUNCTION IF EXISTS gpUpdate_MI_PersonalService_CardSecond (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PersonalService_CardSecond(
@@ -351,6 +351,7 @@ BEGIN
                                                         , inSummFineOthRecalc  := 0
                                                         , inSummHosp           := 0
                                                         , inSummHospOthRecalc  := 0
+                                                        , inSummCompensationRecalc := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

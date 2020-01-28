@@ -282,6 +282,7 @@ BEGIN
                                                         , inSummMinusExtRecalc := 0
                                                         , inSummFineRecalc     := 0
                                                         , inSummHospRecalc     := 0
+                                                        , inSummCompensationRecalc := 0
                                                         , inComment            := ''
                                                         , inInfoMoneyId        := _tmpMI.InfoMoneyId
                                                         , inUnitId             := _tmpMI.UnitId

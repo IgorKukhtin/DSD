@@ -441,6 +441,7 @@ type
     spInsertMovementItem: TdsdStoredProc;
     MainNotSold60: TcxGridDBColumn;
     spLoyaltySaveMoneyChekInfo: TdsdStoredProc;
+    spCheckItem_SPKind_1303: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -3710,14 +3711,28 @@ begin
   //
   with TSPDialogForm.Create(nil) do
   try
-     PartnerMedicalId  := Self.FormParams.ParamByName('PartnerMedicalId').Value;
-     PartnerMedicalName:= Self.FormParams.ParamByName('PartnerMedicalName').Value;
+     if UnitConfigCDS.FieldByName('PartnerMedicalID').IsNull then
+     begin
+       PartnerMedicalId  := Self.FormParams.ParamByName('PartnerMedicalId').Value;
+       PartnerMedicalName:= Self.FormParams.ParamByName('PartnerMedicalName').Value;
+     end else
+     begin
+       PartnerMedicalId     := UnitConfigCDS.FieldByName('PartnerMedicalID').AsInteger;
+       PartnerMedicalName   := UnitConfigCDS.FieldByName('PartnerMedicalName').AsString;
+     end;
      Ambulance    := Self.FormParams.ParamByName('Ambulance').Value;
      MedicSP      := Self.FormParams.ParamByName('MedicSP').Value;
      InvNumberSP  := Self.FormParams.ParamByName('InvNumberSP').Value;
      SPTax        := Self.FormParams.ParamByName('SPTax').Value;
-     SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
-     SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
+     if UnitConfigCDS.FieldByName('SPKindId').IsNull then
+     begin
+       SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
+       SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
+     end else
+     begin
+       SPKindId     := UnitConfigCDS.FieldByName('SPKindId').AsInteger;
+       SPKindName   := UnitConfigCDS.FieldByName('SPKindName').AsString;
+     end;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
      HelsiID      := Self.FormParams.ParamByName('HelsiID').Value;
      HelsiIDList  := Self.FormParams.ParamByName('HelsiIDList').Value;
@@ -4766,6 +4781,7 @@ begin
   //
   if SoldRegim = TRUE then
   begin
+
       if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
        and(Self.FormParams.ParamByName('SPTax').Value = 0)
        and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
@@ -4773,6 +4789,23 @@ begin
         ShowMessage('Ошибка.Выбранный код товара не участвует в Соц.проекте!');
         exit;
       end;
+
+      // проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
+      if (Self.FormParams.ParamByName('SPKindId').Value = 4823010)
+      then 
+      begin
+        spCheckItem_SPKind_1303.ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value;
+        spCheckItem_SPKind_1303.ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').AsInteger;
+        spCheckItem_SPKind_1303.ParamByName('inPriceSale').Value := SourceClientDataSet.FieldByName('Price').asCurrency;
+        spCheckItem_SPKind_1303.ParamByName('outError').Value := '';
+        spCheckItem_SPKind_1303.Execute; 
+        if spCheckItem_SPKind_1303.ParamByName('outError').Value <> '' then
+        begin
+          ShowMessage(spCheckItem_SPKind_1303.ParamByName('outError').Value);
+          exit;
+        end;
+      end;
+
       //
       //23.01.2018 - Нужно опять вернуть  проверку, чтобы в один чек пробивался только один пр-т
       if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')

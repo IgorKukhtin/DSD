@@ -541,7 +541,7 @@ type
 
 type
   TcxExport = (cxegExportToHtml, cxegExportToXml, cxegExportToText,
-    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf);
+    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf, cxegExportToXmlUTF8);
 
   TExportGrid = class(TdsdCustomAction)
   private
@@ -883,7 +883,9 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
   frxDBSet, Printers,
   cxGridAddOn, cxTextEdit, cxGridDBDataDefinitions, ExternalSave,
   dxmdaset, dxCore, cxCustomData, cxGridLevel, cxImage, UnilWin, dsdAddOn,
-  dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage;
+  dsdExportToXLSAction, dsdExportToXMLAction, PUSHMessage, Xml.XMLDoc, XMLIntf;
+
+var XML: IXMLDocument;
 
 procedure Register;
 begin
@@ -1675,7 +1677,7 @@ begin
     case ExportType of
       cxegExportToHtml:
         FileName := FileName + '.html';
-      cxegExportToXml:
+      cxegExportToXml, cxegExportToXmlUTF8:
         FileName := FileName + '.xml';
       cxegExportToText:
         FileName := FileName + '.txt';
@@ -1744,6 +1746,15 @@ begin
         ExportGridToHTML(FileName, TcxGrid(FGrid), IsCtrlPressed);
       cxegExportToXml:
         ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+      cxegExportToXmlUTF8:
+        begin
+          ExportGridToXML(FileName, TcxGrid(FGrid), IsCtrlPressed);
+          XML.Active := False;
+          XML.LoadFromFile(FileName);
+          XML.Active := True;
+          XML.SaveToFile(FileName);
+          XML.Active := False;
+        end;
       cxegExportToText:
         ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed,true,Separator,'','',ext);
       cxegExportToExcel:
@@ -1788,6 +1799,16 @@ begin
       cxegExportToXml:
         cxExportPivotGridToXML(FileName, TcxCustomPivotGrid(FGrid),
           IsCtrlPressed);
+      cxegExportToXmlUTF8:
+        begin
+          cxExportPivotGridToXML(FileName, TcxCustomPivotGrid(FGrid),
+            IsCtrlPressed);
+          XML.Active := False;
+          XML.LoadFromFile(FileName);
+          XML.Active := True;
+          XML.SaveToFile(FileName);
+          XML.Active := False;
+        end;
       cxegExportToText:
         cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid),
           IsCtrlPressed {$IFDEF DELPHI103RIO}, 'txt', nil,  nil {$ENDIF});
@@ -3725,6 +3746,10 @@ procedure TdsdDOCReportFormAction.SetDataSet(const Value: TDataSet);
 begin
   FDataSet := Value;
 end;
+
+initialization
+
+  XML := TXMLDocument.Create(nil);
 
 end.
 

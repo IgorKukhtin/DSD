@@ -782,6 +782,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummCompensationRecalc() RETURNS Integer A
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummCompensationRecalc', 'Сумма компенсации (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummCompensationRecalc');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_DayCompensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayCompensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_DayCompensation', 'Кол. дней отпуска, за которые компенсация' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayCompensation');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_PriceCompensation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceCompensation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_PriceCompensation', 'средняя зп для расчета суммы компенсации' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceCompensation');
+
 ----!!!!!!Farmacy
 
 CREATE OR REPLACE FUNCTION zc_MIFloat_JuridicalPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1167,6 +1175,8 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
  27.01.20         * zc_MIFloat_SummCompensation
                     zc_MIFloat_SummCompensationRecalc
+                    zc_MIFloat_DayCompensation
+                    zc_MIFloat_PriceCompensation
  15.10.19         * zc_MIFloat_SummFineRecalc
                     zc_MIFloat_SummHospRecalc
  02.10.19                                                                                                     * zc_MIFloat_ValidationResults

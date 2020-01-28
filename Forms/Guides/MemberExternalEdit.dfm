@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'('#1089#1090#1086#1088#1086#1085#1085#1080#1077')>'
-  ClientHeight = 157
-  ClientWidth = 422
+  ClientHeight = 210
+  ClientWidth = 412
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1060#1048#1054
   end
   object cxButton1: TcxButton
-    Left = 91
-    Top = 116
+    Left = 90
+    Top = 171
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 241
-    Top = 116
+    Left = 224
+    Top = 171
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -60,6 +60,17 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 302
+  end
+  object edDriverCertificate: TcxTextEdit
+    Left = 59
+    Top = 122
+    TabOrder = 6
+    Width = 302
+  end
+  object cxLabel9: TcxLabel
+    Left = 59
+    Top = 101
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
   end
   object ActionList: TActionList
     Left = 272
@@ -105,12 +116,14 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCode'
         Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inName'
@@ -118,6 +131,15 @@
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDriverCertificate'
+        Value = Null
+        Component = edDriverCertificate
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -129,6 +151,7 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end>
     Left = 272
     Top = 72
@@ -144,17 +167,27 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Name'
         Value = ''
         Component = edName
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Code'
         Value = 0.000000000000000000
         Component = ceCode
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DriverCertificate'
+        Value = Null
+        Component = edDriverCertificate
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -176,7 +209,7 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 64
+    Left = 312
+    Top = 48
   end
 end

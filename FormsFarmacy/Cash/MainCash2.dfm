@@ -1586,7 +1586,7 @@ inherited MainCashForm2: TMainCashForm2
     object lblPartnerMedicalName: TLabel
       Left = 64
       Top = 1
-      Width = 405
+      Width = 261
       Height = 16
       Align = alClient
       Caption = '...'
@@ -1596,11 +1596,10 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitWidth = 12
-      ExplicitHeight = 14
+      ExplicitWidth = 291
     end
     object Label7: TLabel
-      Left = 469
+      Left = 325
       Top = 1
       Width = 26
       Height = 16
@@ -1612,12 +1611,12 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 13
+      ExplicitLeft = 468
     end
     object lblMedicSP: TLabel
-      Left = 495
+      Left = 351
       Top = 1
-      Width = 362
+      Width = 506
       Height = 16
       Align = alRight
       AutoSize = False
@@ -1628,8 +1627,6 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
-      ExplicitLeft = 463
-      ExplicitTop = 0
     end
   end
   object pnlPromoCode: TPanel [7]
@@ -5645,5 +5642,39 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 785
     Top = 389
+  end
+  object spCheckItem_SPKind_1303: TdsdStoredProc
+    StoredProcName = 'gpSelect_CheckItem_SPKind_1303'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSPKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceSale'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outError'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 785
+    Top = 437
   end
 end

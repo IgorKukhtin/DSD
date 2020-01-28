@@ -1,11 +1,13 @@
 -- Function: gpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_MemberExternal (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_MemberExternal(
  INOUT ioId	             Integer   ,    -- ключ объекта <Физические лица(сторонние)> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта
+    IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer
@@ -21,6 +23,7 @@ BEGIN
    ioId := lpInsertUpdate_Object_MemberExternal (ioId	 := ioId
                                                , inCode  := inCode
                                                , inName  := inName
+                                               , inDriverCertificate := inDriverCertificate
                                                , inUserId:= vbUserId
                                                 );
 
@@ -31,6 +34,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.01.20         *
  28.03.15                                        *
 */
 
