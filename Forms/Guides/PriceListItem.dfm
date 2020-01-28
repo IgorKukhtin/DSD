@@ -271,7 +271,7 @@ object PriceListItemForm: TPriceListItemForm
     object edShowDate: TcxDateEdit
       Left = 433
       Top = 9
-      EditValue = 43101d
+      EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -291,7 +291,7 @@ object PriceListItemForm: TPriceListItemForm
   object edOperDate: TcxDateEdit
     Left = 679
     Top = 35
-    EditValue = 43101d
+    EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7
@@ -934,6 +934,8 @@ object PriceListItemForm: TPriceListItemForm
       item
         Name = 'inGoodsKindId'
         Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

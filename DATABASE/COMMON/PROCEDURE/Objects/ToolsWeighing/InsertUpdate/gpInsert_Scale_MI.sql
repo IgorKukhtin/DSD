@@ -318,12 +318,14 @@ BEGIN
      IF 1 < (SELECT COUNT(*) FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                    , inPriceListId:= vbPriceListId_Dnepr
                                                                    , inGoodsId    := inGoodsId
+                                                                   , inGoodsKindId:= inGoodsKindId
                                                                    , inSession    := inSession
                                                                     ) AS tmp) THEN
-        RAISE EXCEPTION 'Ошибка.Записей у <%> <%> <%> <%> <%> для Цена = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (vbPriceListId_Dnepr), lfGet_Object_ValueData (inPriceListId), DATE (vbOperDate_Dnepr), DATE (vbOperDate)
+        RAISE EXCEPTION 'Ошибка.Записей у <%> <%> <%> <%> <%> <%> для Цена = <%>.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData_sh (inGoodsKindId), lfGet_Object_ValueData (vbPriceListId_Dnepr), lfGet_Object_ValueData (inPriceListId), DATE (vbOperDate_Dnepr), DATE (vbOperDate)
           , (SELECT COUNT(*) FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                    , inPriceListId:= vbPriceListId_Dnepr
                                                                    , inGoodsId    := inGoodsId
+                                                                   , inGoodsKindId:= inGoodsKindId
                                                                    , inSession    := inSession
                                                                     ) AS tmp);
      END IF;
@@ -398,6 +400,7 @@ BEGIN
                                                                                             THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := vbOperDate_Dnepr
                                                                                                                                                                         , inPriceListId:= vbPriceListId_Dnepr
                                                                                                                                                                         , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inGoodsKindId:= inGoodsKindId
                                                                                                                                                                         , inSession    := inSession
                                                                                                                                                                          ) AS tmp), 0)
                                                                                        -- если Возврат
@@ -408,6 +411,7 @@ BEGIN
                                                                                             THEN COALESCE ((SELECT tmp.ValuePrice FROM gpGet_ObjectHistory_PriceListItem (inOperDate   := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbOperDate_Dnepr    ELSE vbOperDate    END
                                                                                                                                                                         , inPriceListId:= CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                                                                                                                                         , inGoodsId    := inGoodsId
+                                                                                                                                                                        , inGoodsKindId:= inGoodsKindId
                                                                                                                                                                         , inSession    := inSession
                                                                                                                                                                          ) AS tmp), 0)
                                                                                        -- иначе из грида

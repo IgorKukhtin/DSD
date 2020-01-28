@@ -274,7 +274,7 @@ BEGIN
                                       , FALSE AS isTare
                                  FROM (-- По коду
                                        SELECT vbGoodsId AS GoodsId, zc_GoodsKind_Basis() AS GoodsKindId
-                                            , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId) AS lpGet) AS Price
+                                            , (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate_price, vbPriceListId, vbGoodsId, 0) AS lpGet) AS Price
                                        WHERE vbGoodsId <> 0
                                       UNION ALL
                                        -- По Названию - Склад Специй
@@ -807,6 +807,9 @@ BEGIN
                                                       ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
                                                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
                                                      AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                    AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                        AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -814,6 +817,7 @@ BEGIN
                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                          WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
                          )
           , tmpPrice2 AS (SELECT tmpGoods.GoodsId
                                , COALESCE (ObjectHistoryFloat_PriceListItem_Value.ValueData, 0) AS Price
@@ -825,6 +829,9 @@ BEGIN
                                                       ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
                                                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis()
                                                      AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                                     ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                                    AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
                                 LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                         ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                                        AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
@@ -833,6 +840,7 @@ BEGIN
                                 LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                              ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                             AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                          WHERE ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
                          )
           , tmpChangePercentAmount AS
                          (SELECT tmpGoods.GoodsId

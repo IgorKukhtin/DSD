@@ -1,7 +1,7 @@
 -- Function: lpGetInsert_Object_PriceListItem(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer);
---DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpGetInsert_Object_PriceListItem (Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetInsert_Object_PriceListItem(
@@ -22,32 +22,34 @@ BEGIN
        -- пока ставим запрет на сохранение цены с видом
        -- RAISE EXCEPTION 'ќшибка.«апрещено сохранение цены по виду товара.';
        -- поиск
-       vbId:= SELECT ObjectLink_PriceListItem_Goods.ObjectId
-              FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-                   JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                                   ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                                  AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-                   JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
-                                   ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                                  AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
-                                  AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId = inGoodsKindId
-              WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
-                AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
+       vbId:= (SELECT ObjectLink_PriceListItem_Goods.ObjectId
+               FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                    JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                    ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                   AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                   AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                    JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                    ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                   AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                                   AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId = inGoodsKindId
+               WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
+                 AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId
+              );
    ELSE
         -- поиск
-       SELECT ObjectLink_PriceListItem_Goods.ObjectId INTO vbId
-       FROM ObjectLink AS ObjectLink_PriceListItem_Goods
-            JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
-                            ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                           AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
-                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
-            JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
-                            ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                           AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
-                           AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL -- = inGoodsKindId
-       WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
-         AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId;
+       vbId:= (SELECT ObjectLink_PriceListItem_Goods.ObjectId
+               FROM ObjectLink AS ObjectLink_PriceListItem_Goods
+                    JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                    ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                   AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                                   AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+                    LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                         ON ObjectLink_PriceListItem_GoodsKind.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
+                                        AND ObjectLink_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+               WHERE ObjectLink_PriceListItem_Goods.DescId            = zc_ObjectLink_PriceListItem_Goods()
+                 AND ObjectLink_PriceListItem_Goods.ChildObjectId     = inGoodsId
+                 AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
+              );
    END IF;
 
 

@@ -131,6 +131,10 @@ BEGIN
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
 
+           , COALESCE (OH_JuridicalDetails_car.FullName, OH_JuridicalDetails_From.FullName)                 :: TVarChar AS JuridicalName_car
+           , COALESCE (OH_JuridicalDetails_car.JuridicalAddress, OH_JuridicalDetails_From.JuridicalAddress) :: TVarChar AS JuridicalAddress_car
+
+
            , tmpTransportGoods.InvNumber
              -- параметр для Склад ГП ф.Киев + Львов - !!!временно!!!
            , CASE WHEN MovementLinkObject_From.ObjectId IN (8411, 3080691) THEN COALESCE (MovementDate_OperDatePartner.ValueData, tmpTransportGoods.OperDate) ELSE tmpTransportGoods.OperDate END :: TDateTime AS OperDate
@@ -140,7 +144,7 @@ BEGIN
            , tmpTransportGoods.CarTrailerName
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
-           , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+           , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
            , tmpTransportGoods.MemberName1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3
@@ -174,6 +178,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate
                                    ON ObjectString_DriverCertificate.ObjectId = ObjectLink_Personal_Member.ChildObjectId
                                   AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate_external
+                                   ON ObjectString_DriverCertificate_external.ObjectId = tmpTransportGoods.PersonalDriverId
+                                  AND ObjectString_DriverCertificate_external.DescId   = zc_ObjectString_MemberExternal_DriverCertificate()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -220,18 +227,26 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())*/
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = vbContractId -- MovementLinkObject_Contract.ObjectId
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = CASE WHEN vbDescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id) END
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
-                                                               AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_From
+                   ON OH_JuridicalDetails_From.JuridicalId = CASE WHEN vbDescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (View_Contract.JuridicalBasisId, Object_From.Id) END
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id 
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_To
                    ON OH_JuridicalDetails_To.JuridicalId = CASE WHEN vbDescId = zc_Movement_SendOnPrice() THEN zc_Juridical_Basis() ELSE COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id) END   -- CASE WHEN zc_Juridical_Basis() --
                   AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_To.StartDate
                   AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_To.EndDate
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate
+                   AS OH_JuridicalDetails_car
+                   ON OH_JuridicalDetails_car.JuridicalId = tmpTransportGoods.JuricalId_car
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_car.StartDate
+                  AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_car.EndDate
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()

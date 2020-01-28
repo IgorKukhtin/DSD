@@ -271,6 +271,9 @@ BEGIN
                                                   , inMemberId7       := inMemberId7
                                                   , inUserId          := vbUserId
                                                    );
+     -- сохранили связь с документом <Transport>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Transport(), ioId, vbMovementId_Transport);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

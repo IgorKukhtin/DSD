@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_SendOnPrice(
  RETURNS VOID
 AS
 $BODY$
+  DECLARE vbMovementItemId_check Integer;
+
   DECLARE vbIsHistoryCost Boolean; -- нужны проводки с/с для этого пользователя
 
   DECLARE vbMovementDescId Integer;
@@ -462,6 +464,37 @@ END IF;
                 AND Movement.DescId = zc_Movement_SendOnPrice()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
+
+
+     -- !!!проверка!!!
+     IF EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.OperCount <> _tmpItem.OperCount_ChangePercent AND vbIsBranch_to = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка. В приходе с филиала нельзя вводить Скидку в весе для товара <%>', (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId) FROM _tmpItem WHERE _tmpItem.OperCount <>_tmpItem.OperCount_ChangePercent AND vbIsBranch_to = FALSE LIMIT 1);
+     END IF;
+
+
+     -- проверка - цена = 0
+     vbMovementItemId_check:= (SELECT MIN (_tmpItem.MovementItemId)
+                               FROM _tmpItem
+                               WHERE _tmpItem.OperCount_Partner > 0
+                                 AND _tmpItem.OperSumm_Partner  = 0
+                                 AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                           , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                           , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                            ));
+     --
+     IF vbMovementItemId_check > 0 AND 1=1 -- AND inUserId = 5
+     THEN
+         RAISE EXCEPTION 'Ошибка.%В документе № <%> от <%> цена = 0%<%> <%>.%Проведение невозможно.'
+                       , CHR (13)
+                       , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                       , zfConvert_DateToString (vbOperDate)
+                       , CHR (13)
+                       , (SELECT lfGet_Object_ValueData (_tmpItem.GoodsId)        FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId_check)
+                       , (SELECT lfGet_Object_ValueData_sh (_tmpItem.GoodsKindId) FROM _tmpItem WHERE _tmpItem.MovementItemId = vbMovementItemId_check)
+                       , CHR (13)
+                        ;
+     END IF;
 
 
      IF inUserId <> zfCalc_UserAdmin() :: Integer THEN

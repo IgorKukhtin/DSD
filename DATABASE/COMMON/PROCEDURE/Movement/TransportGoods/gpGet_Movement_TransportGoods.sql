@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberId6 Integer, MemberName6 TVarChar
              , MemberId7 Integer, MemberName7 TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , JuricalId_car Integer
              , TotalCountBox TFloat
              , TotalWeightBox TFloat
              , BarCode TVarChar
@@ -225,6 +226,8 @@ BEGIN
            , Object_To.Id             AS ToId
            , Object_To.ValueData      AS ToName
 
+           , MI_Transport.ObjectId AS JuricalId_car
+
            , 0  :: TFloat   AS TotalCountBox
            , 0  :: TFloat   AS TotalWeightBox
            , '' :: TVarChar AS BarCode
@@ -344,6 +347,17 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MLM_Transport
+                                           ON MLM_Transport.MovementId = Movement.Id
+                                          AND MLM_Transport.DescId     = zc_MovementLinkMovement_Transport()
+
+            LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = MLM_Transport.MovementChildId
+            LEFT JOIN MovementItem AS MI_Transport
+                                   ON MI_Transport.MovementId = Movement_Transport.Id
+                                  AND MI_Transport.DescId = zc_MI_Master()
+                                  AND MI_Transport.isErased = FALSE
+                                  AND Movement_Transport.DescId = zc_Movement_TransportService()
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_TransportGoods()

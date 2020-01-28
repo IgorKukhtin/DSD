@@ -1,6 +1,6 @@
 -- Function: gpGet_Scale_GoodsRetail()
 
--- DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_GoodsRetail(
@@ -230,11 +230,13 @@ BEGIN
                             LIMIT 1
                            )
              , tmpPrice AS (SELECT tmp.GoodsId
+                                 , tmp.GoodsKindId
                                  , tmp.ValuePrice AS Price
                                  , 1              AS CountForPrice
                             FROM lpGet_ObjectHistory_PriceListItem (inOperDate    := inOperDate
                                                                   , inPriceListId := inPriceListId
-                                                                  , inGoodsId     := (SELECT tmpGoods.GoodsId FROM tmpGoods LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId WHERE tmpMI_Order.GoodsId IS NULL)
+                                                                  , inGoodsId     := (SELECT tmpGoods.GoodsId     FROM tmpGoods LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId WHERE tmpMI_Order.GoodsId IS NULL)
+                                                                  , inGoodsKindId := (SELECT tmpGoods.GoodsKindId FROM tmpGoods LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId WHERE tmpMI_Order.GoodsId IS NULL)
                                                                    ) AS tmp
                            )
        -- Результат - по заявке
@@ -250,16 +252,21 @@ BEGIN
             , 0 :: TFloat                       AS ChangePercentAmount
             , 0 :: TFloat                       AS CountTare
             , 0 :: TFloat                       AS WeightTare
-            , COALESCE (tmpMI_Order.Price, tmpPrice.Price)                 :: TFloat AS Price
-            , COALESCE (tmpMI_Order.CountForPrice, tmpPrice.CountForPrice) :: TFloat AS CountForPrice
+            , COALESCE (tmpMI_Order.Price, COALESCE (tmpPrice_Kind.Price, tmpPrice.Price))                         :: TFloat AS Price
+            , COALESCE (tmpMI_Order.CountForPrice, COALESCE (tmpPrice_Kind.CountForPrice, tmpPrice.CountForPrice)) :: TFloat AS CountForPrice
             , 0 :: TFloat                       AS Price_Return
             , 0 :: TFloat                       AS CountForPrice_Return
        FROM tmpGoods
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId = tmpGoods.GoodsId
-            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpGoods.GoodsId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = tmpGoods.MeasureId
+            -- привязываем цены 2 раза по виду товара и без
+            LEFT JOIN tmpPrice AS tmpPrice_Kind
+                               ON tmpPrice_Kind.GoodsId                   = tmpGoods.GoodsId
+                              AND COALESCE (tmpPrice_Kind.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
+            LEFT JOIN tmpPrice ON tmpPrice.GoodsId     = tmpGoods.GoodsId
+                              AND tmpPrice.GoodsKindId IS NULL
       ;
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
@@ -311,7 +318,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Scale_GoodsRetail (TVarChar, Integer, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

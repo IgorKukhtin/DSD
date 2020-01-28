@@ -195,7 +195,7 @@ BEGIN
         , MIN (ReplMovement.Id) AS outMinId
         , MAX (ReplMovement.Id) AS outMaxId
           -- !!!временно ЗАХАРДКОДИЛИ!!! - по сколько записей будет возвращать gpSelect_ReplMovement, т.е. inStartId and inEndId
-        , 20000                  AS CountIteration
+        , 10000                  AS CountIteration
           -- !!!временно ЗАХАРДКОДИЛИ!!! - сколько записей в одном Sql для вызова
         , 400                   AS CountPack
           --
