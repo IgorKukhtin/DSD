@@ -31,10 +31,11 @@ BEGIN
         vbProficitSumm, --излишек сумма
         vbDiff,         --разница кол-во
         vbDiffSumm      --разница сумма
-    FROM gpSelect_MovementItem_Inventory(inMovementId := inMovementId, -- ключ Документа
-                                         inShowAll    := FALSE, --
-                                         inIsErased   := FALSE, --
-                                         inSession    := '') AS MovementItem_Inventory;-- сессия пользователя
+    FROM gpSelect_MovementItem_Inventory(inMovementId   := inMovementId, -- ключ Документа
+                                         inShowAll      := FALSE, --
+                                         inIsErased     := FALSE, --
+                                         inShowDeviated := FALSE, --
+                                         inSession      := '') AS MovementItem_Inventory;-- сессия пользователя
     
 
     -- Сохранили свойство <Итого сумма недостачи>
@@ -55,7 +56,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSummInventory (Integer) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

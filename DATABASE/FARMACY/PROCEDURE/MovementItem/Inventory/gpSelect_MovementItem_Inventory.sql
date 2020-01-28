@@ -1,18 +1,20 @@
 -- Function: gpSelect_MovementItem_Inventory()
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
-    IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , --
-    IN inIsErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inMovementId   Integer      , -- ключ Документа
+    IN inShowAll      Boolean      , --
+    IN inIsErased     Boolean      , --
+    IN inShowDeviated Boolean      , --
+    IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, AmountUser TFloat, CountUser TFloat
              , Price TFloat, Summ TFloat
              , isErased Boolean
-             , Remains_Amount TFloat, Remains_Summ TFloat, Remains_Save TFloatv, Remains_SumSave TFloat
+             , Remains_Amount TFloat, Remains_Summ TFloat, Remains_Save TFloat, Remains_SumSave TFloat
              , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat, Diff TFloat, DiffSumm TFloat
              , Diff_calc TFloat, DiffSumm_calc TFloat, Diff_diff TFloat, DiffSumm_diff TFloat
@@ -30,6 +32,7 @@ DECLARE
   vbOperDate TDateTime;
   vbIsFullInvent Boolean;
   vbIsRemains Boolean;
+  vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Inventory());
@@ -284,6 +287,7 @@ BEGIN
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = COALESCE (MovementItem.ObjectId, REMAINS.ObjectId)
 
                 LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = MovementItem.Id
+            WHERE inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0
             ;
 
     ELSEIF inShowAll = FALSE
@@ -484,7 +488,8 @@ BEGIN
               AND MovementItem.DescId     = zc_MI_Master()
               AND (MovementItem.isErased  = FALSE
                    OR inIsErased          = TRUE
-                  );
+                  )
+              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0);
 
     ELSE
         -- РЕЗУЛЬТАТ
@@ -688,13 +693,14 @@ BEGIN
             WHERE Object_Goods.ObjectId  = vbObjectId
               AND (Object_Goods.IsErased = FALSE
                 OR MovementItem.Id       > 0
-                  );
+                  )
+              AND (inShowDeviated = FALSE OR (COALESCE (MovementItem.Amount, 0) - COALESCE (REMAINS.Amount, 0)) <> 0);
 
     END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
