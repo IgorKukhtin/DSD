@@ -441,6 +441,17 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
+          object OperPriceListTo: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089') ('#1082#1086#1084#1091') '#9
+            DataBinding.FieldName = 'OperPriceListTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' ('#1087#1088#1072#1081#1089') ('#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103') '#9
+            Width = 80
+          end
           object IsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -2225,6 +2236,15 @@ object SendForm: TSendForm
         ComponentItem = 'OperPriceList'
         DataType = ftFloat
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperPriceListTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'OperPriceListTo'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item

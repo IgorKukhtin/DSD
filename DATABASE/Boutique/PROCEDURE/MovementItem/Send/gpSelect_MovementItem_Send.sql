@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer
              , Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat
              , OperPriceList TFloat
+             , OperPriceListTo TFloat
              , TotalSumm TFloat
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
@@ -96,6 +97,7 @@ BEGIN
                         , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                         , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                         , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                        , COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS OperPriceListTo
                         , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
                                           THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                       ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
@@ -113,6 +115,11 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                      ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                     AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+                         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
+                                                     ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceListTo()
+
                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -269,6 +276,7 @@ BEGIN
                , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
                --, tmpPriceList.OperPriceList :: TFloat AS OperPriceList
                , tmpPartion.OperPriceList   :: TFloat AS OperPriceList
+               , 0                          :: TFloat AS OperPriceListTo
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceList
@@ -346,6 +354,7 @@ BEGIN
                , tmpMI.OperPrice           ::TFloat 
                , tmpMI.CountForPrice       ::TFloat
                , tmpMI.OperPriceList       ::TFloat
+               , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
                , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
@@ -439,6 +448,7 @@ BEGIN
                          , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
                          , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                          , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                         , COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS OperPriceListTo
                          , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
                                            THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                        ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
@@ -455,6 +465,11 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                       ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                      AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+                         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
+                                                     ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceListTo()
+
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -551,6 +566,7 @@ BEGIN
                , tmpMI.OperPrice           ::TFloat 
                , tmpMI.CountForPrice       ::TFloat
                , tmpMI.OperPriceList       ::TFloat
+               , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
                , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
@@ -614,6 +630,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 28.01.20         * add OperPriceListTo
  15.05.18         * add isOlap
  03.04.18         *
  18.04.17         *
