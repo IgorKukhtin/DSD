@@ -10,10 +10,10 @@ CREATE OR REPLACE FUNCTION gpReport_HolidayCompensation(
     --IN inPositionId     Integer,   --должность
     IN inSession        TVarChar   --сессия пользователя
 )
-RETURNS TABLE(MemberId Integer, PersonalId Integer
-            , PersonalCode Integer, PersonalName TVarChar
-            , PositionCode Integer, PositionName TVarChar
-            , UnitCode Integer, UnitName TVarChar
+RETURNS TABLE(MemberId Integer
+            , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+            , PositionId Integer, PositionCode Integer, PositionName TVarChar
+            , UnitId Integer, UnitCode Integer, UnitName TVarChar
             , BranchName TVarChar
             , PersonalGroupName TVarChar
             , DateIn TDateTime, DateOut TDateTime
@@ -105,6 +105,7 @@ BEGIN
                        , tmp.PositionId
                        , tmp.PositionCode
                        , tmp.PositionName
+                       , tmp.UnitId
                        , tmp.UnitCode
                        , tmp.UnitName
                        , tmp.BranchName
@@ -167,8 +168,10 @@ BEGIN
          , tmpReport.PersonalId
          , tmpReport.PersonalCode
          , tmpReport.PersonalName
+         , tmpReport.PositionId
          , tmpReport.PositionCode
          , tmpReport.PositionName
+         , tmpReport.UnitId
          , tmpReport.UnitCode
          , tmpReport.UnitName
          , tmpReport.BranchName

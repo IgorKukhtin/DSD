@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , TotalSummChild TFloat, SummDiff TFloat
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummCompensation TFloat, SummCompensationRecalc TFloat
+             , DayCompensation TFloat, PriceCompensation TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -253,6 +254,8 @@ BEGIN
 
             , MIFloat_SummCompensation.ValueData        ::TFloat AS SummCompensation
             , MIFloat_SummCompensationRecalc.ValueData  ::TFloat AS SummCompensationRecalc
+            , MIFloat_DayCompensation.ValueData         ::TFloat AS DayCompensation
+            , MIFloat_PriceCompensation.ValueData       ::TFloat AS PriceCompensation
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -388,6 +391,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
                                         ON MIFloat_SummCompensationRecalc.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummCompensationRecalc.DescId = zc_MIFloat_SummCompensationRecalc()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_DayCompensation
+                                        ON MIFloat_DayCompensation.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayCompensation.DescId = zc_MIFloat_DayCompensation()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceCompensation
+                                        ON MIFloat_PriceCompensation.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_PriceCompensation.DescId = zc_MIFloat_PriceCompensation()
 
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId

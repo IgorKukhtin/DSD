@@ -183,6 +183,8 @@ type
     actUpdate_Compensation: TdsdExecStoredProc;
     macUpdate_Compensation: TMultiAction;
     bbUpdate_Compensation: TdxBarButton;
+    DayCompensation: TcxGridDBColumn;
+    PriceCompensation: TcxGridDBColumn;
   private
     { Private declarations }
   public
