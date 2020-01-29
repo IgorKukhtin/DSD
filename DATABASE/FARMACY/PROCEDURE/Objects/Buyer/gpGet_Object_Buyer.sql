@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Buyer(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Phone TVarChar
-             , Name TVarChar, Email TVarChar, Address TVarChar, Comment TVarChar
+             , Name TVarChar, Email TVarChar, Address TVarChar
+             , DateBirth TVarChar, Sex TVarChar
+             , Comment TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -25,6 +27,8 @@ BEGIN
            , CAST ('' as TVarChar)   AS Name
            , CAST ('' as TVarChar)   AS Email
            , CAST ('' as TVarChar)   AS Address
+           , CAST ('' as TVarChar)   AS DateBirth
+           , CAST ('' as TVarChar)   AS Sex
            , CAST ('' as TVarChar)   AS Comment
            , CAST (FALSE AS Boolean) AS isErased;
    ELSE
@@ -35,6 +39,8 @@ BEGIN
             , ObjectString_Buyer_Name.ValueData     AS Name
             , ObjectString_Buyer_EMail.ValueData    AS Email
             , ObjectString_Buyer_Address.ValueData  AS Address
+            , ObjectString_Buyer_DateBirth.ValueData AS DateBirth
+            , ObjectString_Buyer_Sex.ValueData      AS Sex
             , ObjectString_Buyer_Comment.ValueData  AS Comment
             , Object_Buyer.isErased                 AS isErased
        FROM Object AS Object_Buyer
@@ -50,6 +56,13 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Buyer_Comment
                                    ON ObjectString_Buyer_Comment.ObjectId = Object_Buyer.Id 
                                   AND ObjectString_Buyer_Comment.DescId = zc_ObjectString_Buyer_Comment()
+
+            LEFT JOIN ObjectString AS ObjectString_Buyer_DateBirth
+                                   ON ObjectString_Buyer_DateBirth.ObjectId = Object_Buyer.Id 
+                                  AND ObjectString_Buyer_DateBirth.DescId = zc_ObjectString_Buyer_DateBirth()
+            LEFT JOIN ObjectString AS ObjectString_Buyer_Sex
+                                   ON ObjectString_Buyer_Sex.ObjectId = Object_Buyer.Id 
+                                  AND ObjectString_Buyer_Sex.DescId = zc_ObjectString_Buyer_Sex()
        WHERE Object_Buyer.Id = inId;
    END IF; 
   
@@ -63,6 +76,7 @@ ALTER FUNCTION gpGet_Object_Buyer(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 29.01.20         *
  27.12.19                                                       *
 
 */

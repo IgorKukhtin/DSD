@@ -2,7 +2,7 @@ object BuyerEditForm: TBuyerEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 352
+  ClientHeight = 385
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object BuyerEditForm: TBuyerEditForm
   end
   object cxButton1: TcxButton
     Left = 41
-    Top = 314
+    Top = 347
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object BuyerEditForm: TBuyerEditForm
   end
   object cxButton2: TcxButton
     Left = 185
-    Top = 314
+    Top = 347
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,12 +61,12 @@ object BuyerEditForm: TBuyerEditForm
   end
   object cxLabel5: TcxLabel
     Left = 8
-    Top = 168
+    Top = 201
     Caption = 'e-mail'
   end
   object edEmail: TcxTextEdit
     Left = 8
-    Top = 188
+    Top = 221
     TabOrder = 7
     Width = 273
   end
@@ -85,25 +85,47 @@ object BuyerEditForm: TBuyerEditForm
   end
   object edAddress: TcxTextEdit
     Left = 8
-    Top = 237
+    Top = 270
     TabOrder = 10
     Width = 273
   end
   object cxLabel4: TcxLabel
     Left = 8
-    Top = 217
+    Top = 250
     Caption = #1040#1076#1088#1077#1089
   end
   object edComment: TcxTextEdit
     Left = 8
-    Top = 285
+    Top = 318
     TabOrder = 12
     Width = 273
   end
   object cxLabel6: TcxLabel
     Left = 8
-    Top = 265
+    Top = 298
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object cxLabel7: TcxLabel
+    Left = 8
+    Top = 157
+    Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+  end
+  object edDateBirth: TcxTextEdit
+    Left = 8
+    Top = 176
+    TabOrder = 15
+    Width = 129
+  end
+  object cxLabel8: TcxLabel
+    Left = 159
+    Top = 157
+    Caption = #1055#1086#1083
+  end
+  object edSex: TcxTextEdit
+    Left = 159
+    Top = 176
+    TabOrder = 17
+    Width = 122
   end
   object ActionList: TActionList
     Left = 208
@@ -196,6 +218,22 @@ object BuyerEditForm: TBuyerEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDateBirth'
+        Value = Null
+        Component = edDateBirth
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSex'
+        Value = Null
+        Component = edSex
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -265,10 +303,24 @@ object BuyerEditForm: TBuyerEditForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateBirth'
+        Value = Null
+        Component = edDateBirth
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Sex'
+        Value = Null
+        Component = edSex
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 64
-    Top = 152
+    Top = 185
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -283,7 +335,7 @@ object BuyerEditForm: TBuyerEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 176
-    Top = 151
+    Top = 184
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 248
