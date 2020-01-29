@@ -1003,7 +1003,7 @@ BEGIN
             , _tmpPay.ContainerId                     AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , vbUnitId                                AS ObjectIntId_Analyzer   -- Аналитический справочник - Подразделение
             , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
-            , -1 * _tmpPay.OperSumm                   AS Amount
+            , CASE WHEN inUserId = zfCalc_UserAdmin() :: Integer THEN -1 ELSE -1 END * _tmpPay.OperSumm                   AS Amount
             , vbOperDate                              AS OperDate
             , FALSE                                   AS isActive
        FROM _tmpPay
@@ -1025,7 +1025,7 @@ BEGIN
             , _tmpPay.ContainerId_from                AS ContainerIntId_Analyzer-- Контейнер - тот же самый
             , vbUnitId                                AS ObjectIntId_Analyzer   -- Аналитический справочник - Подразделение
             , vbClientId                              AS ObjectExtId_Analyzer   -- Аналитический справочник - Покупатель
-            , 1 * _tmpPay.OperSumm_from               AS Amount
+            , CASE WHEN inUserId = zfCalc_UserAdmin() :: Integer THEN 1 ELSE 1 END * _tmpPay.OperSumm_from               AS Amount
             , vbOperDate                              AS OperDate
             , TRUE                                    AS isActive
        FROM _tmpPay

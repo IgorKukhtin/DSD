@@ -158,6 +158,7 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                            , inPriceListId := vbPriceListId
                                                            , inGoodsId     := tmp.GoodsId
+                                                           , inGoodsKindId := 0
                                                            , inOperDate    := tmp.OperDate
                                                            , inValue       := tmp.Price
                                                            , inUserId      := vbUserId

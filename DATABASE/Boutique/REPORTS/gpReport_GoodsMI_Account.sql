@@ -559,9 +559,9 @@ BEGIN
                                 , 0    :: TFloat    AS Amount
                                 , 0    :: TFloat    AS TotalPay
                                 , 0    :: TFloat    AS Debt
-                                , tmpMI_Child_Exc.Amount_GRN     :: TFloat AS TotalPay_Grn
-                                , tmpMI_Child_Exc.Amount_USD     :: TFloat AS TotalPay_USD
-                                , tmpMI_Child_Exc.Amount_EUR     :: TFloat AS TotalPay_EUR
+                                , (tmpMI_Child_Exc.Amount_GRN * CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END) :: TFloat AS TotalPay_Grn
+                                , (tmpMI_Child_Exc.Amount_USD * CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END) :: TFloat AS TotalPay_USD
+                                , (tmpMI_Child_Exc.Amount_EUR * CASE WHEN tmp.MovementDescId = zc_Movement_ReturnIn() THEN -1 ELSE 1 END) :: TFloat AS TotalPay_EUR
                                 , 0    :: TFloat    AS TotalPay_Card
                                   -- ¹ ï/ï
                                 , 0 AS Ord
