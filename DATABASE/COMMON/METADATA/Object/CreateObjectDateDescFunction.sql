@@ -398,9 +398,24 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Unit_SundayEnd() RETURNS Integer AS $BO
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectDate_Unit_SundayEnd', 'Воскресенье конец работы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Unit_SundayEnd');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PlanIventory_OperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_OperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PlanIventory(), 'zc_ObjectDate_PlanIventory_OperDate', 'Дата инвентаризации' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_OperDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PlanIventory_DateEnd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_DateEnd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PlanIventory(), 'zc_ObjectDate_PlanIventory_DateEnd', 'Дата инвентаризации' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_DateEnd');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_PlanIventory_DateStart() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_DateStart'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_PlanIventory(), 'zc_ObjectDate_PlanIventory_DateStart', 'Дата инвентаризации' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_DateStart');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 29.01.20         * zc_ObjectDate_PlanIventory_DateEnd
+                    zc_ObjectDate_PlanIventory_DateStart
+                    zc_ObjectDate_PlanIventory_OperDate
  10.12.19                                                                                     * zc_ObjectFloat_RecalcMCSSheduler_DateRunSun 
  28.10.19                                                                                     * График работы
  14.08.19                                                                                     * zc_ObjectDate_PartionGoods_Cat_5

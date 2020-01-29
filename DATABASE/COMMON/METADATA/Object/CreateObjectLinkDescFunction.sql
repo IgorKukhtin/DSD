@@ -2257,9 +2257,24 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_LabMark_LabProduct() RETURNS Integer AS
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_LabMark_LabProduct', 'Связь Название показателя с Продукт исследования', zc_Object_LabMark(), zc_Object_LabProduct() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_LabMark_LabProduct');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PlanIventory_Unit() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PlanIventory_Unit', 'Связь с Аптекой', zc_Object_PlanIventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_Unit');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PlanIventory_Member() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PlanIventory_Member', 'Связь с ФИО ответственного', zc_Object_PlanIventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_Member');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PlanIventory_MemberReturn() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_MemberReturn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_PlanIventory_MemberReturn', 'Связь с ФИО ответственного за возврат', zc_Object_PlanIventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_MemberReturn');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.01.20         * zc_ObjectLink_PlanIventory_Unit
+                    zc_ObjectLink_PlanIventory_Member
+                    zc_ObjectLink_PlanIventory_MemberReturn
  11.12.19                                                                                      * zc_ObjectLink_Unit_UnitOld
  27.11.19         * zc_ObjectLink_PriceListItem_GoodsKind
  18.10.19                                                                                      * zc_ObjectLink_RecalcMCSSheduler_UserRun

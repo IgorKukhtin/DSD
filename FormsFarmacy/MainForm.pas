@@ -618,6 +618,8 @@ type
     N214: TMenuItem;
     actReport_InventoryErrorRemains: TdsdOpenForm;
     N215: TMenuItem;
+    actPlanIventory: TdsdOpenForm;
+    miPlanIventory: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
