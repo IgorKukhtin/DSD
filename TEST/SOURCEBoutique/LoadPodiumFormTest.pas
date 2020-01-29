@@ -923,6 +923,11 @@ begin
 end;
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleTwoForm'));

@@ -321,7 +321,9 @@ uses
   PUSHMessage in '..\..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
+  SalePodium in '..\..\FormsBoutique\Document\SalePodium.pas' {SalePodiumForm: TParentForm},
+  SalePodiumJournal in '..\..\FormsBoutique\Document\SalePodiumJournal.pas' {SalePodiumJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
