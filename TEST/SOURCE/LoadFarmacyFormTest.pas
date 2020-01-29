@@ -99,6 +99,7 @@ type
     procedure LoadPermanentDiscountFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadPersonalGroupFormTest;
+    procedure LoadPlanIventoryFormTest;
     procedure LoadPositionEducationFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
@@ -2002,6 +2003,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
+end;
+
+  procedure TLoadFormTest.LoadPlanIventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPlanIventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPlanIventoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPlanIventoryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPlanIventoryEditForm');
 end;
 
 procedure TLoadFormTest.LoadPositionEducationFormTest;

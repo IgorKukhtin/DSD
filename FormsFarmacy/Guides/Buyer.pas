@@ -58,6 +58,9 @@ type
     bbProtocolOpenForm: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    DateBirth: TcxGridDBColumn;
+    Sex: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1052,11 +1052,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_Comment() RETURNS Integer AS $B
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Buyer_Comment', zc_object_Buyer(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_DateBirth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_DateBirth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Buyer_DateBirth', zc_object_Buyer(), 'Дата рождения' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_DateBirth');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_Sex() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Sex'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Buyer_Sex', zc_object_Buyer(), 'Пол' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Sex');
 
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 29.01.20         * zc_ObjectString_Buyer_DateBirth
+                    zc_ObjectString_Buyer_Sex
  26.12.19                                                                                                         * zc_ObjectString_Buyer_ 
  13.12.19                                                                                                         * zc_ObjectString_Unit_AccessKeyYF 
  25.11.19                                                                                                         * zc_ObjectString_CashSettings_ 

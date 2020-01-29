@@ -46,6 +46,10 @@ type
     cxLabel4: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    edDateBirth: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edSex: TcxTextEdit;
   private
     { Private declarations }
   public

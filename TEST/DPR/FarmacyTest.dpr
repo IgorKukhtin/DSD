@@ -801,7 +801,9 @@ uses
   Report_StockTiming_RemainderDialog in '..\..\FormsFarmacy\Report\Report_StockTiming_RemainderDialog.pas' {Report_StockTiming_RemainderDialogForm: TParentForm},
   Report_StockTiming_Remainder in '..\..\FormsFarmacy\Report\Report_StockTiming_Remainder.pas' {Report_StockTiming_RemainderForm: TParentForm},
   Report_InventoryErrorRemains in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemains.pas' {Report_InventoryErrorRemainsForm: TParentForm},
-  Report_InventoryErrorRemainsDialog in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDialog.pas' {Report_InventoryErrorRemainsDialogForm: TParentForm};
+  Report_InventoryErrorRemainsDialog in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDialog.pas' {Report_InventoryErrorRemainsDialogForm: TParentForm},
+  PlanIventory in '..\..\FormsFarmacy\Guides\PlanIventory.pas' {PlanIventoryForm: TParentForm},
+  PlanIventoryEdit in '..\..\FormsFarmacy\Guides\PlanIventoryEdit.pas' {PlanIventoryEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

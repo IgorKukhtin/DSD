@@ -3,7 +3,7 @@ object BuyerForm: TBuyerForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1082#1091#1087#1072#1090#1077#1083#1080'>'
   ClientHeight = 331
-  ClientWidth = 592
+  ClientWidth = 642
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object BuyerForm: TBuyerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 592
+    Width = 642
     Height = 305
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 592
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -76,6 +77,30 @@ object BuyerForm: TBuyerForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 78
+      end
+      object DateBirth: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateBirth'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object Sex: TcxGridDBColumn
+        Caption = #1055#1086#1083
+        DataBinding.FieldName = 'Sex'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
