@@ -1,8 +1,8 @@
 -- Function: gpSelect_Movement_TTN_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TTN_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TTN_Print2 (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_TTN_Print(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_TTN_Print2(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -260,6 +260,9 @@ BEGIN
                                              , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
                                              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
                                              , Object_GoodsPropertyValue.ValueData  AS Name
+
+                                             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId, 0)  AS GoodsBoxId
+                                             , COALESCE (ObjectFloat_Weight.ValueData, 0)                          AS GoodsBox_Weight
                                         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
                                              ) AS tmpGoodsProperty
                                              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
@@ -273,6 +276,13 @@ BEGIN
                                              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                                             
+                                             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsBox
+                                                                  ON ObjectLink_GoodsPropertyValue_GoodsBox.ObjectId = Object_GoodsPropertyValue.Id
+                                                                 AND ObjectLink_GoodsPropertyValue_GoodsBox.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsBox()
+                                             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                   ON ObjectFloat_Weight.ObjectId = ObjectLink_GoodsPropertyValue_GoodsBox.ChildObjectId
+                                                                  AND ObjectFloat_Weight.DescId   = zc_ObjectFloat_Goods_Weight()
                                        )
        -- список Названия для товаров (нужны если не найдем по GoodsKindId)
      , tmpObject_GoodsPropertyValueGroup AS (SELECT tmpObject_GoodsPropertyValue.GoodsId
@@ -395,13 +405,28 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END )) AS TFloat) AS Amount_Weight
-
+--------------------
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1000
                  + COALESCE (tmpMI.Box_Weight, 0) / 1000
+                   ) AS TFloat) AS TotalWeight_BruttoT_old
+
+--------------------
+           , CAST ((tmpMI.Amount * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1000
+                 + (COALESCE (tmpMI.BoxCount, 0) * COALESCE (tmpObject_GoodsPropertyValue.GoodsBox_Weight, 0) )/ 1000
+                 + -- плюс Вес Упаковок (пакетов)
+                   CASE WHEN COALESCE (ObjectFloat_WeightTotal.ValueData, 0) > 0
+                        THEN -- "чистый" вес "у покупателя" ДЕЛИМ НА вес в упаковке: "чистый" вес + вес 1-ого пакета МИНУС вес 1-ого пакета
+                             CAST (tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / (COALESCE (ObjectFloat_WeightTotal.ValueData, 0) ) AS NUMERIC (16, 0))
+                           * -- вес 1-ого пакета
+                             COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
+                        ELSE 0
+                   END /1000
                    ) AS TFloat) AS TotalWeight_BruttoT
+--------------------
            , CAST ((tmpMI.AmountPartner * (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END ) / 1
                  + COALESCE (tmpMI.Box_Weight, 0) / 1
                    ) AS TFloat) AS TotalWeight_BruttoKg
+
 
        FROM tmpMI
 
@@ -422,6 +447,17 @@ BEGIN
             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = Object_Goods.Id
                                                        AND tmpObject_GoodsPropertyValue.GoodsId      IS NULL
 
+          -- Товар и Вид товара
+          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId     = tmpMI.GoodsId
+                                                AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI.GoodsKindId
+          -- вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightPackage
+                                ON ObjectFloat_WeightPackage.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightPackage.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightPackageSticker()
+          -- вес в упаковке: "чистый" вес + вес 1-ого пакета
+          LEFT JOIN ObjectFloat AS ObjectFloat_WeightTotal
+                                ON ObjectFloat_WeightTotal.ObjectId = Object_GoodsByGoodsKind_View.Id
+                               AND ObjectFloat_WeightTotal.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightTotal()
        WHERE tmpMI.AmountPartner <> 0
          AND tmpMI.Price <> 0
        ORDER BY Object_Goods.ValueData, Object_GoodsKind.ValueData
@@ -474,13 +510,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TTN_Print (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.01.20         * 
  03.02.17         *
  08.01.15                                                       *
 */
 -- тест
--- SELECT * FROM gpSelect_Movement_TTN_Print (inMovementId := 597300, inSession:= zfCalc_UserAdmin());
+--select * from gpSelect_Movement_TTN_Print2(inMovementId := 15691934 ,  inSession := '5');
+--FETCH ALL "<unnamed portal 20>";
