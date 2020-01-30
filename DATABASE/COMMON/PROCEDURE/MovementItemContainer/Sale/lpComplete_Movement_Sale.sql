@@ -1043,9 +1043,11 @@ END IF;*/
                                  AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                            , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                           , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                                                                             ));
      --
      IF vbMovementItemId_check > 0 AND 1=1 -- AND inUserId = 5
+        AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе № <%> от <%> цена = 0%<%> <%>.%Проведение невозможно.'
                        , CHR (13)

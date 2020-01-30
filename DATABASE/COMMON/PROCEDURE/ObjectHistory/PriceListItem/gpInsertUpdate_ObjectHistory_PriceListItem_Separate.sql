@@ -65,7 +65,7 @@ BEGIN
                                 , tmpMovement.OperDate   AS OperDate
                                 , MovementItem.Id        AS MI_Id
                                 , MovementItem.ObjectId  AS GoodsId
-                                , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                              --, MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                            FROM tmpMovement
                                 LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                       AND MovementItem.DescId     = zc_MI_Child()

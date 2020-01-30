@@ -1279,9 +1279,10 @@ object MainCehForm: TMainCehForm
       Left = 0
       Top = 160
       Width = 130
-      Height = 494
+      Height = 49
       Align = alTop
       BevelOuter = bvNone
+      Caption = '494'
       TabOrder = 7
       object infoWeightOnBoxTotal_2Panel: TPanel
         Left = 0

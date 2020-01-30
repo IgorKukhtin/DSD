@@ -22,6 +22,7 @@ RETURNS TABLE (GoodsId    Integer
              , MeasureCode  Integer
              , MeasureName  TVarChar
              , Weight_gd TFloat, WeightTare_gd TFloat, CountForWeight_gd TFloat
+             , isEnterCount Boolean
               )
 AS
 $BODY$
@@ -45,15 +46,24 @@ BEGIN
                                   , COALESCE (View_GoodsByGoodsKind.GoodsCode, Object.ObjectCode) :: Integer  AS GoodsCode
                                   , COALESCE (View_GoodsByGoodsKind.GoodsName, Object.ValueData)  :: TVarChar AS GoodsName
                                   , COALESCE (View_GoodsByGoodsKind.GoodsKindId, zc_Enum_GoodsKind_Main())    AS GoodsKindId
+                                  , Object_InfoMoney_View.InfoMoneyDestinationId
+                                  , Object_InfoMoney_View.InfoMoneyId
                              FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13 - 4)) AS ObjectId WHERE CHAR_LENGTH (inBarCode) >= 13) AS tmp
                                   LEFT JOIN Object ON Object.Id = tmp.ObjectId
                                                   AND Object.DescId IN (zc_Object_Goods(), zc_Object_GoodsByGoodsKind())
                                   LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.Id = Object.Id
+
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                       ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id
+                                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                  LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                             UNION
                              SELECT Object.Id         AS GoodsId
                                   , Object.ObjectCode AS GoodsCode
                                   , Object.ValueData  AS GoodsName
                                   , 0                 AS GoodsKindId
+                                  , Object_InfoMoney_View.InfoMoneyDestinationId
+                                  , Object_InfoMoney_View.InfoMoneyId
                              FROM (SELECT inBarCode :: BigInt AS ObjectCode WHERE CHAR_LENGTH (inBarCode) BETWEEN 1 AND 12) AS tmp
                                   LEFT JOIN Object ON Object.ObjectCode = tmp.ObjectCode
                                                   AND Object.DescId = zc_Object_Goods()
@@ -144,6 +154,8 @@ BEGIN
             , ObjectFloat_Weight.ValueData         AS Weight_gd
             , ObjectFloat_WeightTare.ValueData     AS WeightTare_gd
             , ObjectFloat_CountForWeight.ValueData AS CountForWeight_gd
+            
+            , CASE WHEN Object_Goods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() THEN TRUE ELSE FALSE END :: Boolean AS isEnterCount
 
        FROM Object_Goods
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = Object_Goods.GoodsKindId

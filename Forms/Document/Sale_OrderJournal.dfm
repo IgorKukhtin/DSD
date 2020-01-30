@@ -2784,7 +2784,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
     object actExport_Grid: TExportGrid
       Category = 'Export_Email'
       MoveParams = <>
-      ExportType = cxegExportToXmlUTF8
+      ExportType = cxegExportToText
       Grid = ExportXmlGrid
       Caption = 'actExport_Grid'
       OpenAfterCreate = False
@@ -4851,7 +4851,7 @@ inherited Sale_OrderJournalForm: TSale_OrderJournalForm
       item
         Name = 'outExportType'
         Value = Null
-        Component = actGridToExcel
+        Component = actExport_Grid
         ComponentItem = 'ExportType'
         DataType = ftString
         MultiSelectSeparator = ','

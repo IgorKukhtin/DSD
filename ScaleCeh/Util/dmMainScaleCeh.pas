@@ -885,6 +885,8 @@ begin
               then ParamByName('isWeight_gd').AsBoolean := true
               else ParamByName('isWeight_gd').AsBoolean := false;
 
+              // только для программы ScaleCeh - всегда ввод кол-ва - надо для тары
+              ParamByName('isEnterCount').asBoolean     := DataSet.FieldByName('isEnterCount').asBoolean;
 
               // только для программы ScaleCeh
               ParamByName('GoodsKindId_list').asString   := DataSet.FieldByName('GoodsKindId_list').asString;

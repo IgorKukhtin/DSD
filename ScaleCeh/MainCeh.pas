@@ -562,6 +562,7 @@ begin
         if  ((ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
           and(SettingMain.isCalc_sht = FALSE))
          or (ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+         or (ParamByName('isEnterCount').AsBoolean = TRUE)
         then ParamByName('OperCount').AsFloat:=calcOperCount
         else ParamByName('OperCount').AsFloat:=calcOperCount
                                               -ParamByName('WeightTare').AsFloat
@@ -572,6 +573,7 @@ begin
         //
         if  ((ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
         and (ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+        and (ParamByName('isEnterCount').AsBoolean = FALSE)
         then EditEnterCount.Text:='';
         //
         PanelGoodsWeight.Caption:= FormatFloat(fmtWeight, ParamByName('OperCount').AsFloat);
@@ -1744,6 +1746,7 @@ begin
           WriteParamsMovement;
           if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
            or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+           or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
           //и выставим вид упаковки
           if (PanelGoodsKind.Visible) {and (rgGoodsKind.ItemIndex>=0)} and (rgGoodsKind.Items.Count > 1) and (ParamsMI.ParamByName('GoodsKindCode_max').AsInteger > 0)
@@ -1785,6 +1788,7 @@ begin
      if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
      and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+     and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
      then begin if SettingMain.isModeSorting = FALSE then ActiveControl:=EditGoodsCode;
                 PanelMovementDesc.Font.Color:=clRed;
                 PanelMovementDesc.Caption:='Ошибка.Не определен вес <Продукции>';
@@ -2130,6 +2134,7 @@ procedure TMainCehForm.EditEnterCountPropertiesChange(Sender: TObject);
 begin
      if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
       or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
+      or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
      then
           try ParamsMI.ParamByName('RealWeight').AsFloat:=StrToFloat(EditEnterCount.Text);
               SetParams_OperCount;
@@ -2142,6 +2147,7 @@ procedure TMainCehForm.EditEnterCountEnter(Sender: TObject);
 begin
      if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
       and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+      and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
      then ActiveControl:=EditGoodsCode;
 end;
 //---------------------------------------------------------------------------------------------
@@ -2796,6 +2802,7 @@ begin
        or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
        or(SettingMain.isCalc_sht = TRUE))
      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+     and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
      then begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;

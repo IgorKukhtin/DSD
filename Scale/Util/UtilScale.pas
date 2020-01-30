@@ -468,6 +468,7 @@ begin
      ParamAdd(Params,'PartionGoods',ftString);       //
      ParamAdd(Params,'PartionGoodsDate',ftDateTime); //
      ParamAdd(Params,'isStartWeighing',ftBoolean);   //локальный параметр
+     ParamAdd(Params,'isEnterCount',ftBoolean);      //всегда ввод кол-ва - надо для тары
      end;
      //
      if SettingMain.isSticker = TRUE then
