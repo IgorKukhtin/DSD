@@ -209,14 +209,24 @@ BEGIN
          -- !!!для SYBASE - потом убрать!!!
          IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
      ELSE
-         -- из Истории
-         ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
-                                                                                                   , zc_PriceList_Basis()
-                                                                                                   , ioGoodsId
-                                                                                                    ) AS tmp), 0);
-         -- проверка - свойство должно быть установлено
-         IF COALESCE (ioOperPriceList, 0) <= 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
+         IF zc_Enum_GlobalConst_isTerry() = TRUE
+         THEN
+             -- из Истории
+             ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                                       , zc_PriceList_Basis()
+                                                                                                       , ioGoodsId
+                                                                                                        ) AS tmp), 0);
+             -- проверка - свойство должно быть установлено
+             IF COALESCE (ioOperPriceList, 0) <= 0 THEN
+                RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
+             END IF;
+         ELSE 
+             -- -- для Podium  берется значение введенное в гриде   
+             -- проверка - свойство должно быть установлено
+             IF COALESCE (ioOperPriceList, 0) <= 0 THEN
+                RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
+             END IF;
+         
          END IF;
 
      END IF;

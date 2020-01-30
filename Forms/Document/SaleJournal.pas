@@ -252,6 +252,10 @@ type
     actPrint_PackWeight: TdsdPrintAction;
     spGetReportNameQuality: TdsdStoredProc;
     actPrint_Quality_ReportName: TdsdExecStoredProc;
+    spSelectPrint_TTN2: TdsdStoredProc;
+    mactPrint_TTN2: TMultiAction;
+    actPrint_TTN2: TdsdPrintAction;
+    bbPrint_TTN2: TdxBarButton;
   private
     { Private declarations }
   public
