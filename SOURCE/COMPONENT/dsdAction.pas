@@ -541,7 +541,8 @@ type
 
 type
   TcxExport = (cxegExportToHtml, cxegExportToXml, cxegExportToText,
-    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf, cxegExportToXmlUTF8);
+    cxegExportToExcel, cxegExportToXlsx, cxegExportToDbf, cxegExportToXmlUTF8,
+    cxegExportToTextUTF8);
 
   TExportGrid = class(TdsdCustomAction)
   private
@@ -1679,7 +1680,7 @@ begin
         FileName := FileName + '.html';
       cxegExportToXml, cxegExportToXmlUTF8:
         FileName := FileName + '.xml';
-      cxegExportToText:
+      cxegExportToText, cxegExportToTextUTF8:
         FileName := FileName + '.txt';
       cxegExportToExcel:
         FileName := FileName + '.xls';
@@ -1757,6 +1758,17 @@ begin
         end;
       cxegExportToText:
         ExportGridToText(FileName, TcxGrid(FGrid), IsCtrlPressed,true,Separator,'','',ext);
+      cxegExportToTextUTF8: if TcxGrid(FGrid).Views[0].DataController is TcxGridDBDataController then
+        begin
+          sl := TStringList.Create;
+          try
+            for I := 0 to TcxGrid(FGrid).Views[0].DataController.RecordCount - 1 do
+              sl.Add(TcxGrid(FGrid).Views[0].DataController.Values[I, 0]);
+            sl.SaveToFile(FileName, TEncoding.UTF8)
+          finally
+            sl.Free;
+          end;
+        end;
       cxegExportToExcel:
         {begin
           with TExportGridToLibre.Create(FileName, TcxGrid(FGrid)) do
@@ -1812,6 +1824,17 @@ begin
       cxegExportToText:
         cxExportPivotGridToText(FileName, TcxCustomPivotGrid(FGrid),
           IsCtrlPressed {$IFDEF DELPHI103RIO}, 'txt', nil,  nil {$ENDIF});
+      cxegExportToTextUTF8: if TcxCustomPivotGrid(FGrid).DataController is TcxGridDBDataController then
+        begin
+          sl := TStringList.Create;
+          try
+            for I := 0 to TcxCustomPivotGrid(FGrid).DataController.RecordCount - 1 do
+              sl.Add(TcxCustomPivotGrid(FGrid).DataController.Values[I, 0]);
+            sl.SaveToFile(FileName, TEncoding.UTF8)
+          finally
+            sl.Free;
+          end;
+        end;
       cxegExportToExcel, cxegExportToXlsx:
         cxExportPivotGridToExcel(FileName, TcxCustomPivotGrid(FGrid),
           IsCtrlPressed);

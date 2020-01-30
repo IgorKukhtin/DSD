@@ -192,7 +192,7 @@ type
     actSetSP: TAction;
     pnlSP: TPanel;
     Label4: TLabel;
-    lblPartnerMedicalName: TLabel;
+    lblSPKindName: TLabel;
     Label7: TLabel;
     lblMedicSP: TLabel;
     miSetSP: TMenuItem;
@@ -442,6 +442,12 @@ type
     MainNotSold60: TcxGridDBColumn;
     spLoyaltySaveMoneyChekInfo: TdsdStoredProc;
     spCheckItem_SPKind_1303: TdsdStoredProc;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    lblPartnerMedicalName: TLabel;
+    Label30: TLabel;
+    Label31: TLabel;
+    lblMemberSP: TLabel;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -1117,6 +1123,7 @@ begin
   FormParams.ParamByName('SummPayAdd').Value                := 0;
   //***14.01.19
   FormParams.ParamByName('MemberSPID').Value                := 0;
+  FormParams.ParamByName('MemberSP').Value                  := '';
   //***28.01.19
   FormParams.ParamByName('SiteDiscount').Value              := 0;
   //***20.02.19
@@ -1357,10 +1364,11 @@ begin
   lblDiscountCardNumber.Caption  := '  ' + FormParams.ParamByName('DiscountCardNumber').Value + '  ';
   pnlDiscount.Visible            := FormParams.ParamByName('DiscountExternalId').Value > 0;
 
+  if FormParams.ParamByName('SPTax').Value <> 0 then lblSPKindName.Caption:= '  ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+  else lblSPKindName.Caption:= '  ' + FormParams.ParamByName('SPKindName').Value;
   lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value; // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
-  lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+'  от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
-  if FormParams.ParamByName('SPTax').Value <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
-  else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FormParams.ParamByName('SPKindName').Value;
+  lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+' от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+  lblMemberSP.Caption:= '  ' + FormParams.ParamByName('MemberSP').Value;
   pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
 
   lblCashMember.Caption := FormParams.ParamByName('ManagerName').AsString;
@@ -3681,7 +3689,7 @@ end;
 procedure TMainCashForm2.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID, I : Integer;
-  PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
+  PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName, MemberSP: String;
   OperDateSP : TDateTime; SPTax : Currency;
   HelsiID, HelsiIDList, HelsiName : string; HelsiQty : currency;
   Res: TArray<string>;
@@ -3734,6 +3742,7 @@ begin
        SPKindName   := UnitConfigCDS.FieldByName('SPKindName').AsString;
      end;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
+     MemberSP     := Self.FormParams.ParamByName('MemberSP').Value;
      HelsiID      := Self.FormParams.ParamByName('HelsiID').Value;
      HelsiIDList  := Self.FormParams.ParamByName('HelsiIDList').Value;
      HelsiName    := Self.FormParams.ParamByName('HelsiName').Value;
@@ -3744,7 +3753,7 @@ begin
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
      if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
-       MemberSPID, HelsiID, HelsiIDList, HelsiName, HelsiQty)
+       MemberSPID, MemberSP, HelsiID, HelsiIDList, HelsiName, HelsiQty)
      then exit;
   finally
      Free;
@@ -3760,6 +3769,7 @@ begin
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
   FormParams.ParamByName('MemberSPID').Value := MemberSPID;
+  FormParams.ParamByName('MemberSP').Value := MemberSP;
   FormParams.ParamByName('RoundingDown').Value := True; //SPKindId = 4823009;
   FormParams.ParamByName('HelsiID').Value := HelsiID;
   FormParams.ParamByName('HelsiIDList').Value := HelsiIDList;
@@ -3767,10 +3777,12 @@ begin
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
 
   //
+  if FormParams.ParamByName('SPTax').Value <> 0 then lblSPKindName.Caption:= '  ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+  else lblSPKindName.Caption:= '  ' + FormParams.ParamByName('SPKindName').Value;
   pnlSP.Visible := InvNumberSP <> '';
   if FormParams.ParamByName('HelsiID').Value <> '' then
   begin
-    Label4.Caption:= '     Медикамент.: ';
+    Label30.Caption:= '     Медикамент.: ';
     Label7.Caption:= 'Вып.';
     lblPartnerMedicalName.Caption:= '  ' + HelsiName; // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
@@ -3816,15 +3828,15 @@ begin
       RemainsCDS.EnableControls;
     end;
     lblMedicSP.Caption  := CurrToStr(HelsiQty) + ' рец. №' + InvNumberSP + ' от ' + DateToStr(OperDateSP);
-    lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + 'Доступні Ліки';
   end else
   begin
-    Label4.Caption:= '     Мед.уч.: ';
-    Label7.Caption:= 'ФИО';
-    lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  № амб. ' + Ambulance;
-    lblMedicSP.Caption  := '  ' + MedicSP + '  /  № '+InvNumberSP+'  от ' + DateToStr(OperDateSP);
-    if SPTax <> 0 then lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + FloatToStr(SPTax) + '% : ' + SPKindName
-    else lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + SPKindName;
+    Label30.Caption:= '     Мед.уч.: ';
+    Label7.Caption:= 'ФИО Врача:';
+
+    lblPartnerMedicalName.Caption:= '  ' + FormParams.ParamByName('PartnerMedicalName').Value; // + '  /  № амб. ' + FormParams.ParamByName('Ambulance').Value;
+    lblMedicSP.Caption:= '  ' + FormParams.ParamByName('MedicSP').Value + '  /  № '+FormParams.ParamByName('InvNumberSP').Value+' от ' + DateToStr(FormParams.ParamByName('OperDateSP').Value);
+    lblMemberSP.Caption:= '  ' + FormParams.ParamByName('MemberSP').Value;
+    pnlSP.Visible:= FormParams.ParamByName('InvNumberSP').Value <> '';
   end;
 end;
 
@@ -3913,10 +3925,12 @@ begin
   FormParams.ParamByName('HelsiQty').Value := HelsiQty;
 
   //
+  if FormParams.ParamByName('SPTax').Value <> 0 then lblSPKindName.Caption:= '  ' + FloatToStr(FormParams.ParamByName('SPTax').Value) + '% : ' + FormParams.ParamByName('SPKindName').Value
+  else lblSPKindName.Caption:= '  ' + FormParams.ParamByName('SPKindName').Value;
   pnlSP.Visible := InvNumberSP <> '';
   if FormParams.ParamByName('HelsiID').Value <> '' then
   begin
-    Label4.Caption:= '     Медикамент.: ';
+    Label30.Caption:= '     Медикамент.: ';
     Label7.Caption:= 'Вып.';
     lblPartnerMedicalName.Caption:= '  ' + HelsiName; // + '  /  № амб. ' + Ambulance;
     RemainsCDS.DisableControls;
@@ -3962,11 +3976,10 @@ begin
       RemainsCDS.EnableControls;
     end;
     lblMedicSP.Caption  := CurrToStr(HelsiQty) + '  рец. № ' + InvNumberSP + '  от ' + DateToStr(OperDateSP);
-    lblMedicSP.Caption:= lblMedicSP.Caption + ' * ' + 'Доступні Ліки';
   end else
   begin
-    Label4.Caption:= '     Мед.уч.: ';
-    Label7.Caption:= 'ФИО';
+    Label30.Caption:= '     Мед.уч.: ';
+    Label7.Caption:= 'ФИО Врача:';
   end;
 end;
 
@@ -4782,7 +4795,8 @@ begin
   if SoldRegim = TRUE then
   begin
 
-      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+      if (Self.FormParams.ParamByName('SPKindId').Value <> 4823010)
+       and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
        and(Self.FormParams.ParamByName('SPTax').Value = 0)
        and(SourceClientDataSet.FieldByName('isSP').asBoolean = FALSE)
       then begin
@@ -4798,10 +4812,11 @@ begin
         spCheckItem_SPKind_1303.ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').AsInteger;
         spCheckItem_SPKind_1303.ParamByName('inPriceSale').Value := SourceClientDataSet.FieldByName('Price').asCurrency;
         spCheckItem_SPKind_1303.ParamByName('outError').Value := '';
-        spCheckItem_SPKind_1303.Execute; 
+        spCheckItem_SPKind_1303.ParamByName('outError2').Value := '';
+        spCheckItem_SPKind_1303.Execute;
         if spCheckItem_SPKind_1303.ParamByName('outError').Value <> '' then
         begin
-          ShowMessage(spCheckItem_SPKind_1303.ParamByName('outError').Value);
+          ShowMessage(spCheckItem_SPKind_1303.ParamByName('outError').Value + spCheckItem_SPKind_1303.ParamByName('outError2').Value);
           exit;
         end;
       end;
@@ -5606,6 +5621,7 @@ begin
   FormParams.ParamByName('SummPayAdd').Value                := 0;
   //***14.01.19
   FormParams.ParamByName('MemberSPID').Value                := 0;
+  FormParams.ParamByName('MemberSP').Value                  := '';
   //***28.01.19
   FormParams.ParamByName('SiteDiscount').Value              := 0;
   //***20.02.19

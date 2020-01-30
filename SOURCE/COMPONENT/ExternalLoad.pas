@@ -543,7 +543,12 @@ begin
         CheckExcelFloat(FileName);
       }
 
-      strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
+      // Подключение для  xlsx
+      if Pos('.xlsx', AnsiLowerCase(FileName)) > 0 then
+        strConn:='Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;' +
+                 'Data Source=' + FileName + ';' +
+                 'Extended Properties="Excel 12.0 Xml' + FExtendedProperties + ';IMEX=1;"'
+      else strConn:='Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;' +
                'Data Source=' + FileName + ';' +
                'Extended Properties="Excel 8.0' + FExtendedProperties + ';IMEX=1;"';
 //      strConn:='Provider=Microsoft.ACE.OLEDB.12.0;Mode=Read;' +

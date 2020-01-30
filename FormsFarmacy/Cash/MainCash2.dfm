@@ -282,9 +282,9 @@ inherited MainCashForm2: TMainCashForm2
   end
   object MainPanel: TPanel [2]
     Left = 0
-    Top = 242
+    Top = 260
     Width = 858
-    Height = 162
+    Height = 144
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
@@ -292,7 +292,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 0
       Top = 21
       Width = 858
-      Height = 108
+      Height = 90
       Align = alClient
       TabOrder = 0
       object MainGridDBTableView: TcxGridDBTableView
@@ -978,7 +978,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object SearchPanel: TPanel
       Left = 0
-      Top = 129
+      Top = 111
       Width = 858
       Height = 33
       Align = alBottom
@@ -1561,77 +1561,144 @@ inherited MainCashForm2: TMainCashForm2
     Left = 0
     Top = 77
     Width = 858
-    Height = 18
+    Height = 36
     Align = alTop
     Color = 15656679
     ParentBackground = False
     TabOrder = 6
     Visible = False
-    object Label4: TLabel
+    object Panel2: TPanel
       Left = 1
       Top = 1
-      Width = 63
-      Height = 16
+      Width = 424
+      Height = 34
       Align = alLeft
-      Caption = '     '#1052#1077#1076'.'#1091#1095'.: '
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      OnClick = Label4Click
-      ExplicitHeight = 13
+      BevelOuter = bvNone
+      Caption = 'Panel2'
+      ShowCaption = False
+      TabOrder = 0
+      object lblSPKindName: TLabel
+        Left = 86
+        Top = 1
+        Width = 12
+        Height = 14
+        Caption = '...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label4: TLabel
+        Left = 1
+        Top = 1
+        Width = 85
+        Height = 13
+        Caption = '     '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090'.: '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        OnClick = Label4Click
+      end
+      object lblPartnerMedicalName: TLabel
+        Left = 86
+        Top = 16
+        Width = 12
+        Height = 14
+        Caption = '...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label30: TLabel
+        Left = 1
+        Top = 16
+        Width = 63
+        Height = 13
+        Caption = '     '#1052#1077#1076'.'#1091#1095'.: '
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        OnClick = Label4Click
+      end
     end
-    object lblPartnerMedicalName: TLabel
-      Left = 64
+    object Panel3: TPanel
+      Left = 425
       Top = 1
-      Width = 261
-      Height = 16
+      Width = 432
+      Height = 34
       Align = alClient
-      Caption = '...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-      ExplicitWidth = 291
-    end
-    object Label7: TLabel
-      Left = 325
-      Top = 1
-      Width = 26
-      Height = 16
-      Align = alRight
-      Caption = #1060#1048#1054' '
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clGray
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      ExplicitLeft = 468
-    end
-    object lblMedicSP: TLabel
-      Left = 351
-      Top = 1
-      Width = 506
-      Height = 16
-      Align = alRight
-      AutoSize = False
-      Caption = '...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -12
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
+      BevelOuter = bvNone
+      Caption = 'Panel3'
+      ShowCaption = False
+      TabOrder = 1
+      object lblMedicSP: TLabel
+        Left = 91
+        Top = 0
+        Width = 12
+        Height = 14
+        Caption = '...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label7: TLabel
+        Left = 10
+        Top = 1
+        Width = 60
+        Height = 13
+        Caption = #1060#1048#1054' '#1042#1088#1072#1095#1072':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object Label31: TLabel
+        Left = 10
+        Top = 17
+        Width = 79
+        Height = 13
+        Caption = #1060#1048#1054' '#1055#1072#1094#1080#1077#1085#1090#1072':'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clGray
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
+      object lblMemberSP: TLabel
+        Left = 91
+        Top = 15
+        Width = 12
+        Height = 14
+        Caption = '...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -12
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
     end
   end
   object pnlPromoCode: TPanel [7]
     Left = 0
-    Top = 95
+    Top = 113
     Width = 858
     Height = 21
     Align = alTop
@@ -1755,7 +1822,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlManualDiscount: TPanel [8]
     Left = 0
-    Top = 158
+    Top = 176
     Width = 858
     Height = 21
     Align = alTop
@@ -1816,7 +1883,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlSiteDiscount: TPanel [9]
     Left = 0
-    Top = 200
+    Top = 218
     Width = 858
     Height = 21
     Align = alTop
@@ -1876,7 +1943,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlTaxUnitNight: TPanel [10]
     Left = 0
-    Top = 179
+    Top = 197
     Width = 858
     Height = 21
     Align = alTop
@@ -1915,7 +1982,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlAnalogFilter: TPanel [11]
     Left = 0
-    Top = 221
+    Top = 239
     Width = 858
     Height = 21
     Align = alTop
@@ -2067,7 +2134,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlPromoCodeLoyalty: TPanel [13]
     Left = 0
-    Top = 116
+    Top = 134
     Width = 858
     Height = 21
     Align = alTop
@@ -2145,7 +2212,7 @@ inherited MainCashForm2: TMainCashForm2
   end
   object pnlLoyaltySaveMoney: TPanel [14]
     Left = 0
-    Top = 137
+    Top = 155
     Width = 858
     Height = 21
     Align = alTop
@@ -3695,13 +3762,13 @@ inherited MainCashForm2: TMainCashForm2
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
-    Left = 616
-    Top = 72
+    Left = 600
+    Top = 40
   end
   object RemainsDS: TDataSource
     DataSet = RemainsCDS
-    Left = 248
-    Top = 32
+    Left = 256
+    Top = 48
   end
   object RemainsCDS: TClientDataSet
     Aggregates = <>
@@ -3712,8 +3779,8 @@ inherited MainCashForm2: TMainCashForm2
     IndexFieldNames = 'Id'
     Params = <>
     StoreDefs = True
-    Left = 208
-    Top = 32
+    Left = 216
+    Top = 48
   end
   object PopupMenu: TPopupMenu
     Left = 112
@@ -4018,6 +4085,12 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end
       item
+        Name = 'MemberSP'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'InvNumberSP'
         Value = Null
         DataType = ftString
@@ -4206,7 +4279,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     Left = 32
-    Top = 56
+    Top = 32
   end
   object spSelectCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_CheckLoadCash'
@@ -4542,8 +4615,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
-    Top = 72
+    Left = 112
+    Top = 32
   end
   object spGet_Password_MoneyInCash: TdsdStoredProc
     StoredProcName = 'gpGet_Password_MoneyInCash'
@@ -4557,8 +4630,8 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 256
-    Top = 64
+    Left = 264
+    Top = 80
   end
   object spGet_User_IsAdmin: TdsdStoredProc
     StoredProcName = 'gpGet_User_IsAdmin'
@@ -4635,7 +4708,7 @@ inherited MainCashForm2: TMainCashForm2
       end>
     PackSize = 1
     AutoWidth = True
-    Left = 192
+    Left = 200
     Top = 72
   end
   object TimerSaveAll: TTimer
@@ -4643,14 +4716,14 @@ inherited MainCashForm2: TMainCashForm2
     Interval = 360000
     OnTimer = TimerSaveAllTimer
     Left = 84
-    Top = 40
+    Top = 16
   end
   object TimerMoneyInCash: TTimer
     Enabled = False
     Interval = 25000
     OnTimer = TimerMoneyInCashTimer
-    Left = 368
-    Top = 88
+    Left = 456
+    Top = 464
   end
   object spUpdate_UnitForFarmacyCash: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_UnitForFarmacyCash'
@@ -4671,8 +4744,8 @@ inherited MainCashForm2: TMainCashForm2
   object TimerBlinkBtn: TTimer
     Enabled = False
     OnTimer = TimerBlinkBtnTimer
-    Left = 320
-    Top = 88
+    Left = 408
+    Top = 464
   end
   object spGet_BlinkVIP: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Check_ConfirmedKind'
@@ -4859,14 +4932,14 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
-    Top = 32
+    Left = 352
+    Top = 48
   end
   object MemData: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 152
-    Top = 32
+    Left = 160
+    Top = 48
     object MemDataID: TIntegerField
       FieldName = 'ID'
     end
@@ -4929,8 +5002,8 @@ inherited MainCashForm2: TMainCashForm2
   object mdCheck: TdxMemData
     Indexes = <>
     SortOptions = []
-    Left = 448
-    Top = 32
+    Left = 456
+    Top = 48
     object mdCheckID: TIntegerField
       FieldName = 'ID'
     end
@@ -4943,13 +5016,14 @@ inherited MainCashForm2: TMainCashForm2
   end
   object SaveExcelDialog: TSaveDialog
     Filter = 'Excel files (*.xls)|*.xls'
-    Left = 640
+    Left = 648
+    Top = 40
   end
   object TimerServiceRun: TTimer
     Enabled = False
     OnTimer = TimerServiceRunTimer
-    Left = 720
-    Top = 40
+    Left = 728
+    Top = 56
   end
   object spUpdate_Accommodation: TdsdStoredProc
     StoredProcName = 'gpUpdate_Cash_Accommodation'
@@ -5135,7 +5209,7 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
+    Left = 712
     Top = 56
   end
   object gpGet_Movement_GoodsSP_ID: TdsdStoredProc
@@ -5182,8 +5256,8 @@ inherited MainCashForm2: TMainCashForm2
   object TimerPUSH: TTimer
     Enabled = False
     OnTimer = TimerPUSHTimer
-    Left = 784
-    Top = 48
+    Left = 808
+    Top = 56
   end
   object spGet_PUSH_Cash: TdsdStoredProc
     StoredProcName = 'gpGet_PUSH_Cash'
@@ -5374,8 +5448,8 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 200
     OnTimer = TimerDroppedDownTimer
-    Left = 432
-    Top = 87
+    Left = 520
+    Top = 463
   end
   object TimerAnalogFilter: TTimer
     Enabled = False
@@ -5412,14 +5486,14 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 528
-    Top = 32
+    Left = 544
+    Top = 24
   end
   object cdsInventoryEveryMonth: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 528
-    Top = 64
+    Left = 520
+    Top = 56
   end
   object spGet_BanCash: TdsdStoredProc
     StoredProcName = 'gpGet_EmployeeSchedule_Ban_Cash'
@@ -5669,6 +5743,12 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'outError'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outError2'
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
