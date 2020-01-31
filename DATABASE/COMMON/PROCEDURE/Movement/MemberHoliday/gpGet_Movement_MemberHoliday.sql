@@ -32,8 +32,8 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('movement_memberholiday_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
-             , (inOperDate - INTERVAL '1 year') :: TDateTime    AS OperDateStartDate
-             , inOperDate                                       AS OperDateEndDate
+             , DATE_TRUNC ('YEAR', inOperDate) :: TDateTime    AS OperDateStartDate
+             , (DATE_TRUNC ('YEAR', inOperDate) + INTERVAL '1 YEAR' - INTERVAL '1 DAY') :: TDateTime    AS OperDateEndDate
              , CURRENT_DATE			:: TDateTime    AS BeginDateStartDate
              , CURRENT_DATE                     :: TDateTime    AS BeginDateEndDate
              , 0                                                AS MemberId

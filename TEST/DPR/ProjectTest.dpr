@@ -1125,7 +1125,8 @@ uses
   OrderInternalBasisPackJournal in '..\..\Forms\Document\OrderInternalBasisPackJournal.pas' {OrderInternalBasisPackJournalForm: TParentForm},
   OrderInternalBasisPack in '..\..\Forms\Document\OrderInternalBasisPack.pas' {OrderInternalBasisPackForm: TParentForm},
   ProductionSeparateJournalChoice in '..\..\Forms\Document\ProductionSeparateJournalChoice.pas' {ProductionSeparateJournalChoiceForm: TParentForm},
-  Report_InvoiceDetail in '..\..\Forms\Report\Report_InvoiceDetail.pas' {Report_InvoiceDetailForm: TParentForm};
+  Report_InvoiceDetail in '..\..\Forms\Report\Report_InvoiceDetail.pas' {Report_InvoiceDetailForm: TParentForm},
+  MemberHoliday_Choice in '..\..\Forms\Guides\MemberHoliday_Choice.pas' {MemberHoliday_ChoiceForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

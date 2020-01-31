@@ -27,7 +27,7 @@ type
     edUpdate: TcxButtonEdit;
     cxLabel11: TcxLabel;
     edMember: TcxButtonEdit;
-    GuideMember: TdsdGuides;
+    GuideMemberHoliday: TdsdGuides;
     GuideUpdate: TdsdGuides;
     edMemberMain: TcxButtonEdit;
     cxLabel15: TcxLabel;

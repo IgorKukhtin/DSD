@@ -4,7 +4,7 @@
   ClientWidth = 366
   AddOnFormData.isSingle = False
   ExplicitWidth = 372
-  ExplicitHeight = 435
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -306,7 +306,7 @@
       item
         Name = 'inMemberId'
         Value = ''
-        Component = GuideMember
+        Component = GuideMemberHoliday
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -394,14 +394,14 @@
       item
         Name = 'MemberId'
         Value = 0.000000000000000000
-        Component = GuideMember
+        Component = GuideMemberHoliday
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'MemberName'
         Value = ''
-        Component = GuideMember
+        Component = GuideMemberHoliday
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -537,19 +537,19 @@
     Left = 161
     Top = 260
   end
-  object GuideMember: TdsdGuides
+  object GuideMemberHoliday: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember
-    FormNameParam.Value = 'TMember_ChoiceForm'
+    FormNameParam.Value = 'TMemberHoliday_ChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMember_ChoiceForm'
+    FormName = 'TMemberHoliday_ChoiceForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuideMember
+        Component = GuideMemberHoliday
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -557,10 +557,33 @@
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuideMember
+        Component = GuideMemberHoliday
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateIn_Holiday'
+        Value = 'NULL'
+        Component = edOperDateStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DateOut_Holiday'
+        Value = 'NULL'
+        Component = edOperDateEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 134
