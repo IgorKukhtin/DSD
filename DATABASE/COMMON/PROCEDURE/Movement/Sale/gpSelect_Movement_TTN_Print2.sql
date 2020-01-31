@@ -118,7 +118,6 @@ BEGIN
                                           COALESCE (ObjectFloat_WeightPackage.ValueData, 0)
                                      ELSE 0
                                 END ) ) ) :: TFloat AS TotalWeightPackage
-
                      FROM (SELECT  MovementItem.ObjectId                         AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale())

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,TDateTime,TFloat,TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,TDateTime,TFloat,TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PriceListItem (Integer,Integer,Integer,Integer,TDateTime,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
@@ -16,7 +16,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
 $BODY$
 DECLARE
    DECLARE vbUserId Integer;
-   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
@@ -30,7 +29,6 @@ BEGIN
                                                      , inValue       := inValue
                                                      , inUserId      := vbUserId
                                                      );
- 
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
