@@ -2,7 +2,7 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ClientHeight = 537
+  ClientHeight = 472
   ClientWidth = 952
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,12 +21,13 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
     Left = 0
     Top = 67
     Width = 952
-    Height = 470
+    Height = 405
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitHeight = 470
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
