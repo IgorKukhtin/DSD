@@ -72,7 +72,7 @@ type
     FHelsiDate : TDateTime;
   public
      function DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
+       var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
        var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
      function CheckInvNumberSP(ASPKind : integer; ANumber : string) : boolean;
   end;
@@ -305,7 +305,7 @@ begin
 end;
 
 function TSPDialogForm.DiscountDialogExecute(var APartnerMedicalId, ASPKindId: Integer; var APartnerMedicalName, AAmbulance, AMedicSP, AInvNumberSP, ASPKindName: String;
-  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer;
+  var AOperDateSP : TDateTime; var ASPTax : Currency; var AMemberSPID: Integer; var AMemberSPName: String;
   var AHelsiID, AHelsiIDList, AHelsiName : string; var AHelsiQty : currency): boolean;
 Begin
       FHelsiID := ''; FHelsiIDList := ''; FHelsiName := '';
@@ -377,8 +377,15 @@ Begin
         end;
         ASPKindName   := SPKindGuides.Params.ParamByName('TextValue').Value;
         if Panel2.Visible then
-          AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value
-        else AMemberSPID := 0;
+        begin
+          AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value;
+          AMemberSPName := GuidesMemberSP.Params.ParamByName('TextValue').Value;
+          if edGroupMemberSP.Text <> '' then AMemberSPName := AMemberSPName + ' / ' + edGroupMemberSP.Text
+        end else
+        begin
+          AMemberSPID := 0;
+          AMemberSPName :=''
+        end;
 
         if (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger <> 0) and
           (MainCashForm.UnitConfigCDS.FieldByName('Helsi_IdSP').AsInteger = ASPKindId) then
@@ -405,6 +412,7 @@ Begin
               ASPKindId           := 0;
               ASPKindName         := '';
               AMemberSPID         := 0;
+              AMemberSPName       := '';
               AHelsiID            := '';
               AHelsiName          := '';
               AHelsiQty           := 0;

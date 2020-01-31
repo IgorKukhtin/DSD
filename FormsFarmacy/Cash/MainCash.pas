@@ -1332,7 +1332,7 @@ end;
 procedure TMainCashForm.actSetSPExecute(Sender: TObject);
 var
   PartnerMedicalId, SPKindId, MemberSPID : Integer;
-  PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName: String;
+  PartnerMedicalName, MedicSP, Ambulance, InvNumberSP, SPKindName, MemberSP : String;
   OperDateSP : TDateTime; SPTax : Currency;
   HelsiID, HelsiIDList, AHelsiName : string; HelsiQty : currency;
 begin
@@ -1353,12 +1353,13 @@ begin
      SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
      SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
+     MemberSP     := Self.FormParams.ParamByName('MemberSP').Value;
      //
      if Self.FormParams.ParamByName('PartnerMedicalId').Value > 0
      then OperDateSP   := Self.FormParams.ParamByName('OperDateSP').Value
      else OperDateSP   := NOW;
      if not DiscountDialogExecute(PartnerMedicalId, SPKindId, PartnerMedicalName, Ambulance, MedicSP, InvNumberSP, SPKindName, OperDateSP, SPTax,
-       MemberSPID, HelsiID, HelsiIDList, AHelsiName, HelsiQty)
+       MemberSPID, MemberSP, HelsiID, HelsiIDList, AHelsiName, HelsiQty)
      then exit;
   finally
      Free;
@@ -1374,6 +1375,7 @@ begin
   FormParams.ParamByName('SPKindId').Value  := SPKindId;
   FormParams.ParamByName('SPKindName').Value:= SPKindName;
   Self.FormParams.ParamByName('MemberSPID').Value := MemberSPID;
+  Self.FormParams.ParamByName('MemberSP').Value := MemberSP;
   //
   pnlSP.Visible := InvNumberSP <> '';
   lblPartnerMedicalName.Caption:= '  ' + PartnerMedicalName; // + '  /  Й рьс. ' + Ambulance;
