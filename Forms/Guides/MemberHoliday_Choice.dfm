@@ -12,9 +12,9 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -27,9 +27,6 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitWidth = 625
-    ExplicitHeight = 511
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -157,8 +154,6 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
-    ExplicitLeft = -209
-    ExplicitWidth = 834
     object edOperDate: TcxDateEdit
       Left = 81
       Top = 12
@@ -462,7 +457,7 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
         Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 124

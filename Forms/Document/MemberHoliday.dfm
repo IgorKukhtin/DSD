@@ -4,7 +4,7 @@
   ClientWidth = 366
   AddOnFormData.isSingle = False
   ExplicitWidth = 372
-  ExplicitHeight = 432
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -586,8 +586,8 @@
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 134
-    Top = 61
+    Left = 182
+    Top = 69
   end
   object GuideUpdate: TdsdGuides
     KeyField = 'Id'
