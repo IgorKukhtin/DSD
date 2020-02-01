@@ -252,8 +252,9 @@ BEGIN
      ELSE
      -- определили !!!только дл€ ƒнепра!!!
      IF vbMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND (inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
-         OR  inBranchCode BETWEEN 301 AND 310 -- иногда Dnepr-SPEC-Zapch
+        AND (inBranchCode = 1                 -- Dnepr
+          OR inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
+          OR inBranchCode BETWEEN 301 AND 310 -- иногда Dnepr-SPEC-Zapch
             )
      THEN
          -- !!!замена!!!
@@ -269,7 +270,7 @@ BEGIN
                                                                                    THEN (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = vbMovementId_order)
                                                                               ELSE NULL
                                                                          END
-                                                   , inOperDatePartner:= CASE WHEN 1=0 AND inBranchCode = 201 -- Dnepr-OBV
+                                                   , inOperDatePartner:= CASE WHEN 1=0 AND inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
                                                                                    THEN (SELECT tmpOperDate.OperDate FROM gpGet_Scale_OperDate (inIsCeh:= FALSE, inBranchCode:= inBranchCode, inSession:= inSession) AS tmpOperDate)
                                                                               WHEN vbMovementId_order <> 0
                                                                                    THEN NULL

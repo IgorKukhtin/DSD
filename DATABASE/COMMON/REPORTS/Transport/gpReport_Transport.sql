@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, TVarC
 DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Transport(
-    IN inStartDate     TDateTime , -- 
+    IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inCarId         Integer   , --
     IN inBranchId      Integer   , -- филиал
@@ -34,7 +34,7 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
 
-      RETURN QUERY 
+      RETURN QUERY
            -- Получили все Путевые листы по маршрутам
       WITH tmpTransport AS (SELECT Movement.Id AS MovementId
                                  , Movement.InvNumber
@@ -292,7 +292,7 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              -- AND Movement.Id = 4902267 
+                              -- AND Movement.Id = 4902267
                               AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
                                 OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
                                   )
@@ -346,7 +346,7 @@ BEGIN
                                                                     ELSE 4
                                                                END
                                                      ) = 1
-                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0)) 
+                                             THEN COALESCE (MIFloat_RatePrice.ValueData, 0) * (COALESCE (MovementItem.Amount,0) + COALESCE (MIFloat_DistanceFuelChild.ValueData, 0))
                                                 + COALESCE (MIFloat_RateSummaAdd.ValueData, 0)
                                         ELSE 0 END AS SumTransportAddLong
                                  , CASE WHEN ROW_NUMBER() OVER (PARTITION BY MovementItem.Id
@@ -474,7 +474,7 @@ BEGIN
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                              -- AND Movement.Id = 4902267 
+                              -- AND Movement.Id = 4902267
                               AND (MI.ParentId IS NULL OR MI.Amount <> 0 OR MIFloat_StartAmountFuel.ValueData <> 0
                                 OR MIFloat_Weight.ValueData <> 0 OR MIFloat_WeightTransport.ValueData <> 0
                                   )
@@ -556,42 +556,55 @@ BEGIN
                                   , STRING_AGG (DISTINCT tmp.InvNumber || ' ' || tmp.FromName, ';')          AS InvNumber
                                   , COUNT (DISTINCT tmp.MovementId_sale)          AS CountDoc
                                   , SUM (tmp.TotalCountKg)                        AS TotalCountKg
-                             FROM
-                            (SELECT tmp.MovementId                                            AS MovementId
-                               -- , STRING_AGG (DISTINCT Movement_Reestr.InvNumber, ';')      AS InvNumber
-                                  , Movement_Reestr.InvNumber                                 AS InvNumber
-                                  , Object_From.ValueData                                     AS FromName
-                                  , MovementFloat_MovementItemId.MovementId                   AS MovementId_sale
-                                  , MovementFloat_TotalCountKg.ValueData                      AS TotalCountKg
-                             FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
-                                  INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                                                  ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
-                                                                 AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                  INNER JOIN Movement AS Movement_Reestr 
-                                                      ON Movement_Reestr.Id       = MovementLinkMovement_Transport.MovementId
-                                                     AND Movement_Reestr.DescId   = zc_Movement_Reestr()
-                                                     AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()  --IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())   --zc_Enum_Status_Erased()
-                                  -- строки реестра
-                                  INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Transport.MovementId
-                                                         AND MovementItem.DescId     = zc_MI_Master()
-                                                         AND MovementItem.isErased   = FALSE
-                                  -- связь с накладными
-                                  LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                                          ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
-                                                         AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
-                                  -- вес накладных
-                                  LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                                          ON MovementFloat_TotalCountKg.MovementId = MovementFloat_MovementItemId.MovementId -- Movement_Sale.Id
-                                                         AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                               ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
-                                                              AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                                  LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-                                  INNER JOIN Movement AS Movement_Sale
-                                                      ON Movement_Sale.Id       = MovementFloat_MovementItemId.MovementId
-                                                     AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
-                             ORDER BY tmp.MovementId, Movement_Reestr.InvNumber, Object_From.ValueData
-                            ) AS tmp
+                                  , SUM (tmp.TotalCountKg_Reestr_zp)              AS TotalCountKg_Reestr_zp
+
+                             FROM (SELECT tmp.MovementId                                            AS MovementId
+                                     -- , STRING_AGG (DISTINCT Movement_Reestr.InvNumber, ';')      AS InvNumber
+                                        , Movement_Reestr.InvNumber                                 AS InvNumber
+                                        , Object_From.ValueData                                     AS FromName
+                                        , MovementFloat_MovementItemId.MovementId                   AS MovementId_sale
+                                        , MovementFloat_TotalCountKg.ValueData                      AS TotalCountKg
+                                        , CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg_Reestr_zp
+                                   FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
+                                        INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
+                                                                        ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
+                                                                       AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
+                                        INNER JOIN Movement AS Movement_Reestr
+                                                            ON Movement_Reestr.Id       = MovementLinkMovement_Transport.MovementId
+                                                           AND Movement_Reestr.DescId   = zc_Movement_Reestr()
+                                                           AND Movement_Reestr.StatusId <> zc_Enum_Status_Erased()  --IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())   --zc_Enum_Status_Erased()
+                                        -- строки реестра
+                                        INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement_Transport.MovementId
+                                                               AND MovementItem.DescId     = zc_MI_Master()
+                                                               AND MovementItem.isErased   = FALSE
+                                        -- связь с накладными
+                                        LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                                ON MovementFloat_MovementItemId.ValueData = MovementItem.Id
+                                                               AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                        -- вес накладных
+                                        LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                                                ON MovementFloat_TotalCountKg.MovementId = MovementFloat_MovementItemId.MovementId -- Movement_Sale.Id
+                                                               AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                     ON MovementLinkObject_From.MovementId = MovementFloat_MovementItemId.MovementId
+                                                                    AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                        LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+                                        INNER JOIN Movement AS Movement_Sale
+                                                            ON Movement_Sale.Id       = MovementFloat_MovementItemId.MovementId
+                                                           AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+                                        -- маршрут в заявке
+                                        LEFT JOIN MovementLinkMovement AS MLM_Order
+                                                                       ON MLM_Order.MovementId = Movement_Sale.Id
+                                                                      AND MLM_Order.DescId     = zc_MovementLinkMovement_Order()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                                     ON MovementLinkObject_Route.MovementId = MLM_Order.MovementChildId
+                                                                    AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+                                        LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
+                                                                ON OB_NotPayForWeight.ObjectId  = MovementLinkObject_Route.ObjectId
+                                                               AND OB_NotPayForWeight.DescId    = zc_ObjectBoolean_Route_NotPayForWeight()
+
+                                   ORDER BY tmp.MovementId, Movement_Reestr.InvNumber, Object_From.ValueData
+                                  ) AS tmp
                              GROUP BY tmp.MovementId
                              )
 
@@ -608,7 +621,7 @@ BEGIN
              , Object_RouteKind.ValueData       AS RouteKindName
              , Object_RateFuelKind.ValueData    AS RateFuelKindName
              , Object_Fuel.ValueData            AS FuelName
-             
+
 
              , SUM (tmpFuel.DistanceFuel)    :: TFloat AS DistanceFuel
              , MAX (tmpFuel.RateFuelKindTax) :: TFloat AS RateFuelKindTax
@@ -641,7 +654,9 @@ BEGIN
 
              , MAX (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
              , MAX (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
-             , MAX (CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE COALESCE (tmpDataReestr.TotalCountKg, 0) END) :: TFloat AS TotalCountKg_Reestr_zp
+           --, MAX (CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE COALESCE (tmpDataReestr.TotalCountKg, 0) END) :: TFloat AS TotalCountKg_Reestr_zp
+             , MAX (COALESCE (tmpDataReestr.TotalCountKg_Reestr_zp, 0)) :: TFloat AS TotalCountKg_Reestr_zp
+
              , MAX (COALESCE (tmpDataReestr.InvNumber, ''))         :: TVarChar AS InvNumber_Reestr
 
               -- группировка по всем
@@ -683,114 +698,114 @@ BEGIN
                    , MAX (tmpAll.SumTransportAddLong)      AS SumTransportAddLong
                    , MAX (tmpAll.SumTransportTaxi)         AS SumTransportTaxi
                    , MAX (tmpAll.SumRateExp)               AS SumRateExp
-                   
+
                    , ROW_NUMBER() OVER (PARTITION BY tmpAll.MovementId ORDER BY tmpAll.MovementId, MAX (tmpAll.Weight) desc) AS Ord
-              FROM
-             (-- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
-              SELECT tmpTransport.MovementId
-                   , tmpTransport.InvNumber
-                   , tmpTransport.OperDate
-                   , tmpTransport.CarId
-                   , tmpTransport.PersonalDriverId
-                   , tmpTransport.RouteId
-                   , tmpTransport.RouteKindId
-                   , tmpTransport.RateFuelKindId
-                   , tmpTransport.FuelId
 
-                   , tmpTransport.DistanceFuel
-                   , tmpTransport.RateFuelKindTax
+              FROM (-- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
+                    SELECT tmpTransport.MovementId
+                         , tmpTransport.InvNumber
+                         , tmpTransport.OperDate
+                         , tmpTransport.CarId
+                         , tmpTransport.PersonalDriverId
+                         , tmpTransport.RouteId
+                         , tmpTransport.RouteKindId
+                         , tmpTransport.RateFuelKindId
+                         , tmpTransport.FuelId
 
-                   , tmpTransport.Weight
-                   , tmpTransport.WeightTransport
+                         , tmpTransport.DistanceFuel
+                         , tmpTransport.RateFuelKindTax
 
-                   , tmpTransport.StartOdometre
-                   , tmpTransport.EndOdometre
+                         , tmpTransport.Weight
+                         , tmpTransport.WeightTransport
 
-                   , tmpTransport.AmountFuel_Start
-                   , 0 AS AmountFuel_In
-                   , tmpTransport.AmountFuel_Out
+                         , tmpTransport.StartOdometre
+                         , tmpTransport.EndOdometre
 
-                   , tmpTransport.ColdHour
-                   , tmpTransport.ColdDistance
+                         , tmpTransport.AmountFuel_Start
+                         , 0 AS AmountFuel_In
+                         , tmpTransport.AmountFuel_Out
 
-                   , tmpTransport.AmountFuel
-                   , tmpTransport.AmountColdHour
-                   , tmpTransport.AmountColdDistance
+                         , tmpTransport.ColdHour
+                         , tmpTransport.ColdDistance
 
-                   , tmpTransport.Amount_Distance_calc
-                   , tmpTransport.Amount_ColdHour_calc
-                   , tmpTransport.Amount_ColdDistance_calc
+                         , tmpTransport.AmountFuel
+                         , tmpTransport.AmountColdHour
+                         , tmpTransport.AmountColdDistance
 
-                   , tmpTransport.SumTransportAdd
-                   , tmpTransport.SumTransportAddLong
-                   , tmpTransport.SumTransportTaxi
-                   , tmpTransport.SumRateExp
+                         , tmpTransport.Amount_Distance_calc
+                         , tmpTransport.Amount_ColdHour_calc
+                         , tmpTransport.Amount_ColdDistance_calc
 
-              FROM tmpTransport
-             UNION ALL
-              -- 2.2. Приход топлива
-              SELECT Movement.ParentId AS MovementId
-                   , Movement_Transport.InvNumber
-                   , Movement.OperDate
-                   , ContainerLO_Car.ObjectId AS CarId
-                   , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                   , MovementLinkObject_Route.ObjectId AS RouteId
-                   , 0 AS RouteKindId
-                   , 0 AS RateFuelKindId
-                   , MIContainer.ObjectId_Analyzer AS FuelId
+                         , tmpTransport.SumTransportAdd
+                         , tmpTransport.SumTransportAddLong
+                         , tmpTransport.SumTransportTaxi
+                         , tmpTransport.SumRateExp
 
-                   , 0 AS DistanceFuel
-                   , 0 AS RateFuelKindTax
+                    FROM tmpTransport
+                   UNION ALL
+                    -- 2.2. Приход топлива
+                    SELECT Movement.ParentId AS MovementId
+                         , Movement_Transport.InvNumber
+                         , Movement.OperDate
+                         , ContainerLO_Car.ObjectId AS CarId
+                         , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
+                         , MovementLinkObject_Route.ObjectId AS RouteId
+                         , 0 AS RouteKindId
+                         , 0 AS RateFuelKindId
+                         , MIContainer.ObjectId_Analyzer AS FuelId
 
-                   , 0 AS Weight
-                   , 0 AS WeightTransport
-                   , 0 AS StartOdometre
-                   , 0 AS EndOdometre
-                   , 0 AS AmountFuel_Start
-                   , MIContainer.Amount AS AmountFuel_In
-                   , 0 AS AmountFuel_Out
+                         , 0 AS DistanceFuel
+                         , 0 AS RateFuelKindTax
 
-                   , 0 AS ColdHour
-                   , 0 AS ColdDistance
+                         , 0 AS Weight
+                         , 0 AS WeightTransport
+                         , 0 AS StartOdometre
+                         , 0 AS EndOdometre
+                         , 0 AS AmountFuel_Start
+                         , MIContainer.Amount AS AmountFuel_In
+                         , 0 AS AmountFuel_Out
 
-                   , 0 AS AmountFuel
-                   , 0 AS AmountColdHour
-                   , 0 AS AmountColdDistance
+                         , 0 AS ColdHour
+                         , 0 AS ColdDistance
 
-                   , 0 AS Amount_Distance_calc
-                   , 0 AS Amount_ColdHour_calc
-                   , 0 AS Amount_ColdDistance_calc
+                         , 0 AS AmountFuel
+                         , 0 AS AmountColdHour
+                         , 0 AS AmountColdDistance
 
-                   , 0 AS SumTransportAdd
-                   , 0 AS SumTransportAddLong
-                   , 0 AS SumTransportTaxi
-                   , 0 AS SumRateExp
+                         , 0 AS Amount_Distance_calc
+                         , 0 AS Amount_ColdHour_calc
+                         , 0 AS Amount_ColdDistance_calc
 
-              FROM Container
-                   -- так ограничили приходы только на Автомобиль
-                   JOIN ContainerLinkObject AS ContainerLO_Car
-                                            ON ContainerLO_Car.ContainerId = Container.Id
-                                           AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
-                                           AND ContainerLO_Car.ObjectId > 0
-                   JOIN MovementItemContainer AS MIContainer
-                                              ON MIContainer.ContainerId = ContainerLO_Car.ContainerId
-                                             AND MIContainer.MovementDescId = zc_Movement_Income()
-                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                   LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                         , 0 AS SumTransportAdd
+                         , 0 AS SumTransportAddLong
+                         , 0 AS SumTransportTaxi
+                         , 0 AS SumRateExp
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                                ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                               AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                                ON MovementLinkObject_Route.MovementId = Movement.Id
-                                               AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+                    FROM Container
+                         -- так ограничили приходы только на Автомобиль
+                         JOIN ContainerLinkObject AS ContainerLO_Car
+                                                  ON ContainerLO_Car.ContainerId = Container.Id
+                                                 AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
+                                                 AND ContainerLO_Car.ObjectId > 0
+                         JOIN MovementItemContainer AS MIContainer
+                                                    ON MIContainer.ContainerId = ContainerLO_Car.ContainerId
+                                                   AND MIContainer.MovementDescId = zc_Movement_Income()
+                                                   AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                         LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
 
-                   LEFT JOIN Movement AS Movement_Transport
-                                      ON Movement_Transport.Id     = Movement.ParentId
-                                     AND Movement_Transport.DescId = zc_Movement_Transport()
-              WHERE Container.DescId = zc_container_Count()
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                      ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                                     AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                                      ON MovementLinkObject_Route.MovementId = Movement.Id
+                                                     AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
 
-             ) AS tmpAll
+                         LEFT JOIN Movement AS Movement_Transport
+                                            ON Movement_Transport.Id     = Movement.ParentId
+                                           AND Movement_Transport.DescId = zc_Movement_Transport()
+                    WHERE Container.DescId = zc_container_Count()
+
+                   ) AS tmpAll
               GROUP BY tmpAll.MovementId
                      , tmpAll.InvNumber
                      , tmpAll.OperDate
@@ -810,28 +825,29 @@ BEGIN
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = tmpFuel.RateFuelKindId
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
 
-             LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
-                                     ON OB_NotPayForWeight.ObjectId = tmpFuel.RouteId
-                                    AND OB_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
+           --LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
+           --                        ON OB_NotPayForWeight.ObjectId = tmpFuel.RouteId
+           --                       AND OB_NotPayForWeight.DescId   = zc_ObjectBoolean_Route_NotPayForWeight()
 
              -- ограничиваем по филиалу, если нужно
-             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                   ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                  AND ObjectLink_Car_Unit.DescId   = zc_ObjectLink_Car_Unit()
              LEFT JOIN Object_Unit_View AS ViewObject_Unit
                                         ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
-                                        
+
              LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
                                   ON ObjectLink_Route_Unit.ObjectId = tmpFuel.RouteId
                                  AND ObjectLink_Route_Unit.DescId   = zc_ObjectLink_Route_Unit()
              LEFT JOIN Object AS Object_Unit_route ON Object_Unit_route.Id = ObjectLink_Route_Unit.ChildObjectId
-                                   
+
              -- данные из реестра виз
              LEFT JOIN tmpDataReestr ON tmpDataReestr.MovementId = tmpFuel.MovementId
                                     AND tmpFuel.Ord = 1
-        WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
-           OR inBranchId = 0 
-           OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)   
+
+        WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId
+           OR inBranchId = 0
+           OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
 
         GROUP BY tmpFuel.MovementId
                , tmpFuel.InvNumber
@@ -859,7 +875,7 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
  21.06.18         * add tmpDataReestr
  07.07.14                                       * add Weight and WeightTransport
  09.02.14         * ограничения для zc_Branch_Basis()
- 12.12.13         * add inBranchId     
+ 12.12.13         * add inBranchId
  28.10.13                                        *
  05.10.13         *
 */

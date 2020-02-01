@@ -25,7 +25,7 @@ BEGIN
                                       THEN (DATE_TRUNC ('DAY', '25.07.2018 06:38:51' :: TDateTime) - INTERVAL '1 DAY') :: TDateTime
                                  ELSE DATE_TRUNC ('DAY', '25.07.2018 06:38:51' :: TDateTime) :: TDateTime
                             END*/
-                  WHEN inBranchCode = 201 -- Dnepr-OBV: Scale + ScaleCeh
+                  WHEN inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV: Scale + ScaleCeh
                        THEN CASE WHEN EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) >= 0 AND EXTRACT ('HOUR' FROM CURRENT_TIMESTAMP) < 4
                                       THEN (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) - INTERVAL '1 DAY') :: TDateTime
                                  ELSE DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) :: TDateTime

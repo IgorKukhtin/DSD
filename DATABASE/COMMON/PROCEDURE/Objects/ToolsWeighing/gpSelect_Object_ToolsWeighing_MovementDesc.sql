@@ -4,7 +4,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_ToolsWeighing_MovementDesc (Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc(
-    IN inIsCeh       Boolean   , --
+    IN inIsCeh       Boolean   , -- программа ScaleCeh - да/нет
     IN inBranchCode  Integer   , --
     IN inSession     TVarChar    -- сессия пользователя
 )
@@ -133,9 +133,9 @@ BEGIN
             , CASE WHEN tmp.isLockStartWeighing = 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
             
 
-            , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode = 201 -- если Обвалка
+            , CASE WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                         THEN 'после Шприцевания' -- 'Упаковка'
-                   -- WHEN (tmp.FromId IN ('951601', '981821') OR tmp.ToId IN ('951601', '981821')) AND inBranchCode = 201 -- если Обвалка
+                   -- WHEN (tmp.FromId IN ('951601', '981821') OR tmp.ToId IN ('951601', '981821')) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                    --      THEN 'Упаковка / на Шприцевание'
                    WHEN tmp.MovementDescId IN (zc_Movement_ProductionUnion() :: TVarChar, zc_Movement_ProductionSeparate() :: TVarChar)
                         THEN 'Производство'
@@ -446,7 +446,20 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_MovementDesc (Integer, TVarChar) OW
  20.03.14                                                         *
  14.03.14                                                         *
 */
-
+/*
+--  update Object set ValueData = xx.ValueData
+-- from (
+ select a.Id, a.ValueData
+, b.Id as Id2, b.ValueData as ValueData2
+-- , a.*
+from gpSelect_Object_ToolsWeighing (inSession := '5') as a
+ join (select * from gpSelect_Object_ToolsWeighing (inSession := '5') as x where (x.namefull  ilike '%ScaleCeh_202%') )as b
+ on b.namefull   ilike  zfCalc_Text_replace (a.namefull , 'ScaleCeh_201', 'ScaleCeh_202')
+where (a.namefull  ilike '%ScaleCeh_201%')
+-- and b.namefull  is null
+and b.ValueData = a.ValueData
+--) as xx where xx.Id2 = Object.Id
+*/
 -- тест
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (TRUE, 201, zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_MovementDesc (FALSE, 201, zfCalc_UserAdmin())

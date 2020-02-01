@@ -50,7 +50,10 @@ BEGIN
                        THEN 'Производство - (104)ЦЕХ Упаковки (маркировка+сортировка)'
 
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_201'
-                       THEN 'Производство - (201)Сырье'
+                       THEN 'Производство - (201)Сырье - Склад'
+
+                  WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_202'
+                       THEN 'Производство - (202)Сырье - Бойня'
 
                   WHEN Object_ToolsWeighing_View.Name = 'ScaleCeh_301'
                        THEN 'Производство - (301)Склад специй'

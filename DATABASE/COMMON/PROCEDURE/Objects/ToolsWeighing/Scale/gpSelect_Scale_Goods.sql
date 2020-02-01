@@ -599,7 +599,7 @@ BEGIN
             WHERE Object_Goods.DescId = zc_Object_Goods()
               AND inBranchCode IN (1, 102)
            UNION ALL
-            -- Производство - (201)Сырье
+            -- Производство - (201-210)Сырье
             SELECT DISTINCT Object_Goods.Id AS GoodsId
                  , 0   AS GoodsKindId_max
                  , ''  AS WordList
@@ -615,7 +615,7 @@ BEGIN
                                                                                     )
                                                      )
             WHERE Object_Goods.DescId = zc_Object_Goods()
-              AND inBranchCode IN (201)
+              AND inBranchCode BETWEEN 201 AND 210
            UNION ALL
             -- По коду - Склад Специй
             SELECT vbGoodsId AS GoodsId
@@ -713,8 +713,8 @@ BEGIN
                                 UNION
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
-                                 -- Производство - (201)Сырье
-                                 WHERE inBranchCode IN (201)
+                                 -- Производство - (201-210)Сырье
+                                 WHERE inBranchCode BETWEEN 201 AND 210
                                    AND (View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                                  )
                                     AND View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10201() -- Специи

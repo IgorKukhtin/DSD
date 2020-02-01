@@ -32,7 +32,7 @@ BEGIN
 
 
      -- поиск маршрута
-     IF inMovementId_order = 0 AND inBranchCode = 201 -- Dnepr-OBV
+     IF inMovementId_order = 0 AND inBranchCode BETWEEN 201 AND 210 -- Dnepr-OBV
      THEN
          vbRouteId:= 0;
          --

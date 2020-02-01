@@ -42,7 +42,7 @@ BEGIN
 
      -- определили !!!только дл€ ƒнепра!!!
      IF inMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
-        AND inBranchCode IN (1, 201) -- Dnepr + Dnepr-OBV
+        AND (inBranchCode = 1 OR inBranchCode BETWEEN 201 AND 210) -- Dnepr + Dnepr-OBV
      THEN
          -- !!!замена!!!
          vbPriceListId_Dnepr:=

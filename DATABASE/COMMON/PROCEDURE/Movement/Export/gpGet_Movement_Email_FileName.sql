@@ -68,7 +68,7 @@ BEGIN
             END AS outEncodingANSI
             
           , CASE WHEN tmpExportJuridical.ExportKindId = zc_Enum_ExportKind_Glad2514900150()
-                      THEN 'cxegExportToXmlUTF8'
+                      THEN 'cxegExportToTextUTF8'
                  ELSE 'cxegExportToText'
             END AS outExportType
             

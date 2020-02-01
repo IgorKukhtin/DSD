@@ -630,8 +630,8 @@ end if;
                                                   , inInvNumberOrder        := InvNumberOrder
                                                   , inOperDate              := inOperDate
                                                   , inOperDatePartner       := -- !!!если по заявке, тогда расчет OperDatePartner от OperDate заявки - надо только для inBranchCode = 201 + 2
-                                                                              (CASE WHEN inBranchCode IN (201, 2) THEN vbOperDate_order ELSE inOperDate END
-                                                                             + (CASE WHEN inBranchCode IN (201, 2) THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
+                                                                              (CASE WHEN inBranchCode = 2 OR inBranchCode BETWEEN 201 AND 210 THEN vbOperDate_order ELSE inOperDate END
+                                                                             + (CASE WHEN inBranchCode = 2 OR inBranchCode BETWEEN 201 AND 210 THEN COALESCE (ObjectFloat_PrepareDayCount.ValueData, 0) ELSE 0 END :: TVarChar || ' DAY') :: INTERVAL
                                                                              + (COALESCE (ObjectFloat_Partner_DocumentDayCount.ValueData, 0) :: TVarChar || ' DAY') :: INTERVAL) :: TDateTime
                                                   , inChecked               := NULL
                                                   , inChangePercent         := ChangePercent
@@ -1217,7 +1217,7 @@ end if;
                            , CASE WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsProductionIn = FALSE THEN NULL ELSE COALESCE (MLO_To.ObjectId, 0) END AS UnitId_to
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        THEN 0 -- надо суммировать
-                                  WHEN vbMovementDescId IN (zc_Movement_Send()) AND inBranchCode = 201 -- если Обвалка
+                                  WHEN vbMovementDescId IN (zc_Movement_Send()) AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                                        THEN MovementItem.Id -- пока не надо суммировать
                                   ELSE 0 -- можно суммировать, даже для Обвалки
                              END AS myId
@@ -1593,7 +1593,7 @@ end if;
      END IF;
 
      -- проверка когда суммирование
-     -- IF vbMovementDescId NOT IN (zc_Movement_Send()) OR inBranchCode <> 201 -- если Обвалка
+     -- IF vbMovementDescId NOT IN (zc_Movement_Send()) OR inBranchCode NOT BETWEEN 201 AND 210 -- если Обвалка
      IF vbMovementDescId = zc_Movement_Inventory() AND 1=0
      THEN
           -- !!!Проверка что элемент один - проверка уникальности!!!

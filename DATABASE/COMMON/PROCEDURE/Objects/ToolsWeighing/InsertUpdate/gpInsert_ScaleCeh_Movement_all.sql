@@ -169,7 +169,7 @@ BEGIN
 
 
      -- для zc_Movement_ProductionUnion + если Обвалка - !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
-     IF 1=0 AND vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
+     IF 1=0 AND vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
      THEN
            -- определили <Приход или Расход>, нужен для Обвалка
            vbIsProductionIn:= (SELECT MB_isIncome.ValueData FROM MovementBoolean AS MB_isIncome WHERE MB_isIncome.MovementId = inMovementId AND MB_isIncome.DescId = zc_MovementBoolean_isIncome());
@@ -828,10 +828,10 @@ BEGIN
                                    AND vbMovementDescId = zc_Movement_Send()
                                        THEN MovementItem.Id -- не надо суммировать
 
-                                  WHEN inBranchCode <> 201 -- если НЕ Обвалка
+                                  WHEN inBranchCode NOT BETWEEN 201 AND 210 -- если НЕ Обвалка
                                        THEN 0 -- можно суммировать
                                   -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
-                                  -- WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
+                                  -- WHEN vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
                                   --      THEN 0 -- надо суммировать
                                   ELSE MovementItem.Id -- пока не надо суммировать
                              END AS myId
@@ -1083,7 +1083,7 @@ BEGIN
      --
      IF vbMovementDescId = zc_Movement_ProductionSeparate()
         -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
-        -- OR (vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201) -- если Обвалка
+        -- OR (vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210) -- если Обвалка
      THEN
           -- сохранили свойство <Номер взвешивания>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_WeighingNumber(), inMovementId, vbWeighingNumber);
@@ -1201,7 +1201,7 @@ BEGIN
 
      -- !!!Убрал т.к. раньше для Упаковки была какая-то другая схема ....!!!
      /*-- !!!Проверка!!!
-     IF vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode = 201 -- если Обвалка
+     IF vbMovementDescId = zc_Movement_ProductionUnion() AND inBranchCode BETWEEN 201 AND 210 -- если Обвалка
      THEN -- !!!Проверка что документ один!!!
           IF EXISTS (SELECT Movement.Id
                      FROM Movement
