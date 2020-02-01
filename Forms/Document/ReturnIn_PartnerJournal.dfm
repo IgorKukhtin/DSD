@@ -878,6 +878,12 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAkt'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = 'NULL'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1264,6 +1270,32 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end>
       Caption = 'actGet_Export_Email'
     end
+    object mactPrintAkt: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrintAkt
+        end>
+      Caption = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 15
+    end
     object actGet_Export_FileName: TdsdExecStoredProc
       Category = 'Export_Email'
       MoveParams = <>
@@ -1366,6 +1398,64 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
           StoredProc = spSavePrintState
         end>
       Caption = 'actSPSavePrintState'
+    end
+    object actPrintAkt: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintAkt
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintAkt
+        end>
+      Caption = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAkt'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -1544,6 +1634,14 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintAkt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementProtocol'
         end
         item
@@ -1601,6 +1699,10 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     end
     object bbExport: TdxBarButton
       Action = actExport
+      Category = 0
+    end
+    object bbPrintAkt: TdxBarButton
+      Action = mactPrintAkt
       Category = 0
     end
   end
@@ -2376,5 +2478,29 @@ inherited ReturnIn_PartnerJournalForm: TReturnIn_PartnerJournalForm
     PackSize = 1
     Left = 760
     Top = 336
+  end
+  object spSelectPrintAkt: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintAkt'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 714
+    Top = 162
   end
 end

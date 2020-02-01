@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1242
   ExplicitWidth = 1258
-  ExplicitHeight = 672
+  ExplicitHeight = 675
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2164,6 +2164,12 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAkt'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -2750,6 +2756,20 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
       Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074#1086#1076#1080#1090#1077#1083#1100'/'#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088
     end
+    object mactPrintAkt: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrintAkt
+        end>
+      Caption = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 15
+    end
     object actMemberOpenForm: TOpenChoiceForm
       Category = 'Member'
       MoveParams = <>
@@ -2810,6 +2830,52 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           StoredProc = spSavePrintState
         end>
       Caption = 'actSPSavePrintState'
+    end
+    object actPrintAkt: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintAkt
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintAkt
+        end>
+      Caption = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAkt'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -3057,6 +3123,14 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintAkt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -3162,6 +3236,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     end
     object bbMemberOpenForm: TdxBarButton
       Action = macMemberOpenForm
+      Category = 0
+    end
+    object bbPrintAkt: TdxBarButton
+      Action = mactPrintAkt
       Category = 0
     end
   end
@@ -4789,8 +4867,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1064
-    Top = 120
+    Left = 1032
+    Top = 184
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'
@@ -4819,7 +4897,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 984
+    Left = 912
     Top = 120
   end
   object TaxCorrectiveCDS: TClientDataSet
@@ -5515,5 +5593,29 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
     PackSize = 1
     Left = 1056
     Top = 368
+  end
+  object spSelectPrintAkt: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintAkt'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1130
+    Top = 346
   end
 end

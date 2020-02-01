@@ -4,9 +4,8 @@ inherited ReturnInJournalChoiceForm: TReturnInJournalChoiceForm
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitTop = -55
   ExplicitWidth = 1126
-  ExplicitHeight = 574
+  ExplicitHeight = 573
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

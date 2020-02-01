@@ -235,6 +235,10 @@ type
     cxLabel25: TcxLabel;
     edMemberExp: TcxButtonEdit;
     GuidesMemberExp: TdsdGuides;
+    spSelectPrintAkt: TdsdStoredProc;
+    mactPrintAkt: TMultiAction;
+    actPrintAkt: TdsdPrintAction;
+    bbPrintAkt: TdxBarButton;
   private
     { Private declarations }
   public

@@ -136,6 +136,10 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
+    spSelectPrintAkt: TdsdStoredProc;
+    actPrintAkt: TdsdPrintAction;
+    mactPrintAkt: TMultiAction;
+    bbPrintAkt: TdxBarButton;
   private
     { Private declarations }
   public
