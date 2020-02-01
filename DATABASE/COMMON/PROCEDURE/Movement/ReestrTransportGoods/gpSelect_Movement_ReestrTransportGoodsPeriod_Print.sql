@@ -45,7 +45,7 @@ BEGIN
                              END AS DateDescId
                       );
      -- Определяется
-     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerInTo() THEN zc_MILinkObject_PartnerInTo()
+     vbMILinkObjectId := (SELECT CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN zc_MILinkObject_PartnerInTo()
                                       WHEN inReestrKindId = zc_Enum_ReestrKind_Buh()       THEN zc_MILinkObject_Buh()
                                  END AS MILinkObjectId
                       );
