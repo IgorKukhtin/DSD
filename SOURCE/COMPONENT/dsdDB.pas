@@ -967,6 +967,7 @@ var
   PhotoGUID: TGUID;
   PhotoName: string;
   E : TcxExport;
+  I : integer;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -1029,11 +1030,16 @@ begin
         if LowerCase(ComponentItem) = LowerCase('DefaultFileName') then
            (Component as TExportGrid).DefaultFileName := FValue;
         if LowerCase(ComponentItem) = LowerCase('ExportType') then
-           for E := Low(TcxExport) to High(TcxExport) do
-           if AnsiUpperCase(FValue) =  AnsiUpperCase(GetEnumName(TypeInfo(TcxExport), ord(E))) then
            begin
-             (Component as TExportGrid).ExportType := E;
-             Break;
+             if not TryStrToInt(FValue, I) then
+             begin
+               for E := Low(TcxExport) to High(TcxExport) do
+               if AnsiUpperCase(FValue) =  AnsiUpperCase(GetEnumName(TypeInfo(TcxExport), ord(E))) then
+               begin
+                 (Component as TExportGrid).ExportType := E;
+                 Break;
+               end;
+             end else (Component as TExportGrid).ExportType := FValue;
            end;
         if LowerCase(ComponentItem) = LowerCase('DefaultFileExt') then 
            (Component as TExportGrid).DefaultFileExt := FValue;

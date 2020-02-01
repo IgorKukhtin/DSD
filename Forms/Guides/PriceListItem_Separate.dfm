@@ -839,6 +839,12 @@ object PriceListItem_SeparateForm: TPriceListItem_SeparateForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inOperDate'
         Value = 'NULL'
         Component = edOperDate

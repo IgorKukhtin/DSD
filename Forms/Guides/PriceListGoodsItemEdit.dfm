@@ -236,6 +236,12 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsKindId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'PriceListId'
         Value = Null
         ParamType = ptInputOutput
@@ -252,13 +258,6 @@
         Name = 'StartDate'
         Value = 'NULL'
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'GoodsKindId'
-        Value = Null
-        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
