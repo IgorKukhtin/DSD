@@ -32,7 +32,7 @@ BEGIN
                                         , MovementId_to Integer, MovementItemId_to Integer, PersonalServiceListId_to Integer
                                         , ServiceDate TDateTime, UnitId Integer, PersonalId Integer, PositionId Integer, InfoMoneyId Integer
                                         , SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummNalogRecalc TFloat, SummNalogRetRecalc TFloat
-                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
+                                        , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat, SummCompensationRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
      END IF;
 
 
@@ -56,6 +56,8 @@ BEGIN
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHosp()), 0)
                     -- SummHospOth
                   + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
+                    -- SummCompensation
+                  + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = MovementItem.Id AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
                     -- 
                   , MovementItem.ParentId
                   )
@@ -151,7 +153,7 @@ BEGIN
                                        -- AND COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
                                     LIMIT 1
                                     );
-             IF vbMovementItemId_err > 0
+             IF vbMovementItemId_err > 0 -- AND 1=0
              THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%> которая создана <%>.'
                            , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                            , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
@@ -192,7 +194,7 @@ BEGIN
                                    AND COALESCE (ObjectDate_DateOut.ValueData + INTERVAL'1 MONTH', zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
                                  LIMIT 1
                                 );
-         IF vbMovementItemId_err > 0
+         IF vbMovementItemId_err > 0 -- AND 1=0
          THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%>.' --  id=%
                        , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))
@@ -308,16 +310,27 @@ BEGIN
 
 
      -- распределение !!!если это БН!!! - <На карточку БН (ввод) - 1ф> + <На карточку БН (ввод) - 2ф> + <Налоги - удержания (ввод)> + <Алименты - удержание (ввод)> + <Удержания сторон. юр.л. (ввод)>
-     IF EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
-                FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
-                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
-                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MovementLinkObject_PersonalServiceList.ObjectId
-                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
-                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
-                WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
-                  AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
-               )
-               AND inUserId > 0
+     IF (EXISTS (SELECT ObjectLink_PersonalServiceList_PaidKind.ChildObjectId
+                 FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                      INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                            ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MovementLinkObject_PersonalServiceList.ObjectId
+                                           AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                           AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+                 WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                   AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                )
+      OR EXISTS (SELECT 1
+                 FROM MovementItem
+                      INNER JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
+                                                   ON MIFloat_SummCompensationRecalc.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_SummCompensationRecalc.DescId         IN (zc_MIFloat_SummCompensationRecalc())
+                                                  AND MIFloat_SummCompensationRecalc.ValueData      > 0
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId     = zc_MI_Master()
+                   AND MovementItem.isErased   = FALSE
+                )
+        )
+    AND inUserId > 0
      THEN
           PERFORM lpComplete_Movement_PersonalService_Recalc (inMovementId := inMovementId
                                                             , inUserId     := inUserId);
@@ -1295,6 +1308,7 @@ BEGIN
                                                                   , inSummFineOthRecalc      := 0 :: TFloat
                                                                   , inSummHosp               := 0 :: TFloat
                                                                   , inSummHospOthRecalc      := 0 :: TFloat
+                                                                  , inSummCompensationRecalc := 0 :: TFloat
                                                                   , inComment                := ''
                                                                   , inInfoMoneyId            := tmpMI.InfoMoneyId
                                                                   , inUnitId                 := tmpMI.UnitId

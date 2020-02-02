@@ -198,6 +198,8 @@ BEGIN
                - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummFineOth()), 0)
                  -- "плюс" <больничн (распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
+                 -- "плюс" <компенсация(распределено)>
+               + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
                 ;
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
@@ -218,7 +220,7 @@ BEGIN
                     - COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummFineOth()), 0)
                       -- "плюс" <больничн (распределено)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummHospOth()), 0)
-                      -- "плюс"" <Компенсация>
+                      -- "плюс"" <компенсация(распределено)>
                     + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummCompensation()), 0)
                      ;
      -- рассчитываем сумму к выплате из кассы
@@ -272,7 +274,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChildRecalc(), ioId, inSummChildRecalc);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinusExtRecalc(), ioId, inSummMinusExtRecalc);
-     -- сохранили свойство <>
+     -- сохранили свойство <компенсация (ввод для распределения)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummCompensationRecalc(), ioId, inSummCompensationRecalc);
 
      -- сохранили свойство <Сумма ГСМ (удержание за заправку, хотя может быть и доплатой...)>

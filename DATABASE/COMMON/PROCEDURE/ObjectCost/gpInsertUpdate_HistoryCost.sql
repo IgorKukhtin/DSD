@@ -600,9 +600,9 @@ end if;
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1153989, 1145422); -- 06.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (130771, 128511, 1489115, 131613, 1453527, 129793); -- 08.2017
      -- DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (2811931, 2807719); -- 12.2019
-      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (141327, 912120, 132601, 140990, 910322, 149565
-                                                            , 939977, 1511515, 125986, 939920, 1496124, 129848, 939979, 1496297, 125540, 935652, 1494455, 716864, 943278, 141221, 1496128, 1530795, 1510665, 716862, 539342, 1512974
-                                                             ); -- 01.2020
+--      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (141327, 912120, 132601, 140990, 910322, 149565
+--                                                            , 939977, 1511515, 125986, 939920, 1496124, 129848, 939979, 1496297, 125540, 935652, 1494455, 716864, 943278, 141221, 1496128, 1530795, 1510665, 716862, 539342, 1512974
+--                                                             ); -- 01.2020
 
 /*   -- 04.2018
      DELETE FROM _tmpMaster WHERE _tmpMaster.ContainerId IN (1150822, 1164386, 1178003, 1177898);

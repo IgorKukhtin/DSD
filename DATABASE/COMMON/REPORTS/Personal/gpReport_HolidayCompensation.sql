@@ -186,7 +186,10 @@ BEGIN
          , tmpReport.Day_diff       :: TFloat       -- не использовано   
 
          , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
-         , (tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END) :: TFloat AS SummaCompensation
+         , CASE WHEN tmpReport.Day_diff > 0
+                     THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
+                ELSE 0.0
+           END :: TFloat AS SummaCompensation
          , tmpReport.Day_calendar    :: TFloat
          , tmpPersonalService.Amount :: TFloat
     FROM tmpReport

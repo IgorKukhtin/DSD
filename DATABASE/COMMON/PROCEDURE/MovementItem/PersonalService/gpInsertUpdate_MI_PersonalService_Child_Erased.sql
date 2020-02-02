@@ -106,6 +106,7 @@ end if;
                                                              , inSummFineOthRecalc      := 0
                                                              , inSummHosp               := 0
                                                              , inSummHospOthRecalc      := 0
+                                                             , inSummCompensationRecalc := 0
                                                              , inComment                := MIString_Comment.ValueData
                                                              , inInfoMoneyId            := MILinkObject_InfoMoney.ObjectId
                                                              , inUnitId                 := MILinkObject_Unit.ObjectId
