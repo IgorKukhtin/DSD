@@ -3832,6 +3832,18 @@
 				<Form>MemberHoliday_ChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrTransportGoodsJournal.pas">
+				<Form>ReestrTransportGoodsJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrTransportGoodsStartMovement.pas">
+				<Form>ReestrTransportGoodsStartMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ReestrTransportGoodsUpdateMovement.pas">
+				<Form>ReestrTransportGoodsUpdateMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1068,6 +1068,16 @@ type
     miReport_Movement_ProfitLossService: TMenuItem;
     actOrderInternalBasisPack: TdsdOpenForm;
     N206: TMenuItem;
+    actReestrTTN: TdsdOpenForm;
+    actReestrStartTTN: TdsdOpenForm;
+    actReestrPartnerInTTN: TdsdOpenForm;
+    actReestrBuhTTN: TdsdOpenForm;
+    miReestrTTNAll: TMenuItem;
+    N207: TMenuItem;
+    N208: TMenuItem;
+    N209: TMenuItem;
+    N210: TMenuItem;
+    N211: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -138,6 +138,10 @@ type
     PeriodSecMobile: TcxGridDBColumn;
     spSavePrintState: TdsdStoredProc;
     actSPSavePrintState: TdsdExecStoredProc;
+    spSelectPrintAkt: TdsdStoredProc;
+    mactPrintAkt: TMultiAction;
+    actPrintAkt: TdsdPrintAction;
+    bbPrintAkt: TdxBarButton;
   private
     { Private declarations }
   public
