@@ -157,6 +157,9 @@ type
     spSelectPrintNoGroup: TdsdStoredProc;
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
+    spSelectPrintBarCode: TdsdStoredProc;
+    actPrintBarCode: TdsdPrintAction;
+    bbPrintBarCode: TdxBarButton;
   private
   public
   end;

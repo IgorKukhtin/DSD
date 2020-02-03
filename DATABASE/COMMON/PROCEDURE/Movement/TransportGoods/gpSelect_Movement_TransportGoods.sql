@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportGoods(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , InvNumberMark TVarChar
+             , InvNumber_Full TVarChar
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , InvNumberPartner_Sale TVarChar, OperDatePartner_Sale TDateTime
              , RouteName TVarChar
@@ -26,9 +27,16 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MemberName5 TVarChar
              , MemberName6 TVarChar
              , MemberName7 TVarChar
-             , FromName TVarChar, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindName TVarChar
              , TotalCountSh TFloat, TotalCountKg TFloat, TotalSumm TFloat
+
+             , ReestrKindName TVarChar
+             , OperDate_reestr TDateTime, InvNumber_reestr TVarChar
+             , StatusCode_reestr Integer, StatusName_reestr TVarChar
+             , CarName_reestr TVarChar, CarModelName_reestr TVarChar
+             , PersonalDriverName_reestr TVarChar, MemberName_reestr TVarChar
+             , InvNumber_Transport_reestr TVarChar, OperDate_Transport_reestr TDateTime
               )
 AS
 $BODY$
@@ -63,6 +71,7 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
 
            , MovementString_InvNumberMark.ValueData  AS InvNumberMark
+           , zfCalc_PartionMovementName (Movement.DescId, MovementDesc.ItemName, Movement.InvNumber, Movement.OperDate) AS InvNumber_Full
 
            , Movement_Sale.Id        AS MovementId_Sale
            , Movement_Sale.InvNumber AS InvNumber_Sale
@@ -85,13 +94,30 @@ BEGIN
            , Object_Member6.ValueData AS MemberName6
            , Object_Member7.ValueData AS MemberName7
  
+           , Object_From.Id                       AS FromId
            , Object_From.ValueData                AS FromName
+           , Object_To.Id                         AS ToId
            , Object_To.ValueData                  AS ToName
            , Object_PaidKind.ValueData            AS PaidKindName
            , MovementFloat_TotalCountSh.ValueData AS TotalCountSh
            , MovementFloat_TotalCountKg.ValueData AS TotalCountKg
            , MovementFloat_TotalSumm.ValueData    AS TotalSumm
 
+          --реестр
+           , Object_ReestrKind.ValueData                AS ReestrKindName
+           , Movement_reestr.OperDate                   AS OperDate_reestr
+           , Movement_reestr.InvNumber                  AS InvNumber_reestr
+           , Object_Status_reestr.ObjectCode            AS StatusCode_reestr
+           , Object_Status_reestr.ValueData             AS StatusName_reestr
+
+           , Object_Car_reestr.ValueData                AS CarName_reestr
+           , Object_CarModel_reestr.ValueData           AS CarModelName
+           , Object_PersonalDriver_reestr.PersonalName  AS PersonalDriverName_reestr
+           , Object_Member_reestr.ValueData             AS MemberName_reestr
+
+           , Movement_Transport_reestr.InvNumber        AS InvNumber_Transport_reestr
+           , Movement_Transport_reestr.OperDate         AS OperDate_Transport_reestr
+           
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -99,6 +125,7 @@ BEGIN
             JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
             LEFT JOIN MovementString AS MovementString_InvNumberMark
                                      ON MovementString_InvNumberMark.MovementId =  Movement.Id
@@ -228,6 +255,44 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            -- реестр
+            LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
+                                    ON MovementFloat_MovementItemId.MovementId = Movement.Id
+                                   AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
+            LEFT JOIN MovementItem AS MI_reestr 
+                                   ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
+                                  AND MI_reestr.isErased = FALSE
+            LEFT JOIN Movement AS Movement_reestr ON Movement_reestr.Id = MI_reestr.MovementId
+            LEFT JOIN Object AS Object_Status_reestr ON Object_Status_reestr.Id = Movement_reestr.StatusId
+            
+            LEFT JOIN MovementLinkObject AS MLO_Car_reestr
+                                         ON MLO_Car_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_Car_reestr.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car_reestr ON Object_Car_reestr.Id = MLO_Car_reestr.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel_reestr ON ObjectLink_Car_CarModel_reestr.ObjectId = Object_Car_reestr.Id
+                                                                  AND ObjectLink_Car_CarModel_reestr.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel_reestr ON Object_CarModel_reestr.Id = ObjectLink_Car_CarModel_reestr.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MLO_PersonalDriver_reestr
+                                         ON MLO_PersonalDriver_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_PersonalDriver_reestr.DescId     = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS Object_PersonalDriver_reestr ON Object_PersonalDriver_reestr.PersonalId = MLO_PersonalDriver_reestr.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MLO_Member_reestr
+                                         ON MLO_Member_reestr.MovementId = Movement_reestr.Id
+                                        AND MLO_Member_reestr.DescId     = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member_reestr ON Object_Member_reestr.Id = MLO_Member_reestr.ObjectId
+            -- инфа из П/л (реестр)
+            LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
+                                           ON MLM_Transport_reestr.MovementId = Movement_reestr.Id
+                                          AND MLM_Transport_reestr.DescId     = zc_MovementLinkMovement_Transport()
+            LEFT JOIN Movement AS Movement_Transport_reestr ON Movement_Transport_reestr.Id = MLM_Transport_reestr.MovementChildId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
+            LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
       ;
   
 END;

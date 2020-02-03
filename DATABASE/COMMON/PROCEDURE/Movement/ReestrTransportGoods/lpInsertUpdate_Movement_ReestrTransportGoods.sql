@@ -17,7 +17,7 @@ BEGIN
 
      -- определяем ключ доступа !!!то что захардкоженно - временно!!!
      vbAccessKeyId:= CASE WHEN 1 = 1
-                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_ReturnIn())
+                               THEN lpGetAccessKey (ABS (inUserId), zc_Enum_Process_InsertUpdate_Movement_TransportGoods())
                           ELSE zc_Enum_Process_AccessKey_DocumentDnepr()
                      END;
 

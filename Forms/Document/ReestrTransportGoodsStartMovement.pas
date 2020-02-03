@@ -32,7 +32,7 @@ type
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
-    actReturnChoiceForm: TOpenChoiceForm;
+    actTTNChoiceForm: TOpenChoiceForm;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
     cxGrid1: TcxGrid;

@@ -1,5 +1,5 @@
 inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMovementForm
-  Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+  Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1080#1079#1091' '#1074' '#1058#1058#1053
   ClientHeight = 400
   ClientWidth = 1007
   ObjectMenuItem = Excel1

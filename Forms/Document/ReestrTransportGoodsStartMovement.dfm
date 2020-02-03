@@ -23,7 +23,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         Top = 67
         Width = 937
         Height = 230
-        ExplicitTop = 67
+        ExplicitLeft = 96
+        ExplicitTop = 73
         ExplicitWidth = 937
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -74,9 +75,9 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
             Options.Editing = False
             Width = 37
           end
-          object BarCode_ReturnIn: TcxGridDBColumn [1]
+          object BarCode_TTN: TcxGridDBColumn [1]
             Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-            DataBinding.FieldName = 'BarCode_ReturnIn'
+            DataBinding.FieldName = 'BarCode_TTN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -89,9 +90,9 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object StatusCode_ReturnIn: TcxGridDBColumn [3]
+          object StatusCode_TTN: TcxGridDBColumn [3]
             Caption = #1057#1090#1072#1090#1091#1089
-            DataBinding.FieldName = 'StatusCode_ReturnIn'
+            DataBinding.FieldName = 'StatusCode_TTN'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
             Properties.Items = <
@@ -114,31 +115,23 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object OperDate_ReturnIn: TcxGridDBColumn [4]
+          object OperDate_TTN: TcxGridDBColumn [4]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'OperDate_ReturnIn'
+            DataBinding.FieldName = 'OperDate_TTN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object OperDatePartner: TcxGridDBColumn [5]
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'OperDatePartner'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object InvNumber_ReturnIn: TcxGridDBColumn [6]
+          object InvNumber_TTN: TcxGridDBColumn [5]
             Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber_ReturnIn'
+            DataBinding.FieldName = 'InvNumber_TTN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object InvNumberPartner: TcxGridDBColumn [7]
-            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'InvNumberPartner'
+          object InvNumberMark: TcxGridDBColumn [6]
+            Caption = #8470' '#1087#1083#1086#1084#1073#1080' ('#1079#1072' '#1085#1072#1103#1074#1085#1086#1089#1090#1110')'
+            DataBinding.FieldName = 'InvNumberMark'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -237,14 +230,14 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
             Width = 60
           end
           object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072')'
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072')'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
           object MemberName: TcxGridDBColumn
-            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
+            Caption = #1060#1048#1054' ('#1074#1080#1079#1072' '#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1057#1086#1079#1076#1072#1085#1080#1077')'
             DataBinding.FieldName = 'MemberName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -418,7 +411,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actReturnChoiceForm
+                Action = actTTNChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -853,13 +846,13 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
           MultiSelectSeparator = ','
         end>
     end
-    object actReturnChoiceForm: TOpenChoiceForm
+    object actTTNChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       Caption = 'ReturnJournalChoice'
-      FormName = 'TReturnInJournalChoiceForm'
-      FormNameParam.Value = 'TReturnInJournalChoiceForm'
+      FormName = 'TTransportGoodsJournalForm'
+      FormNameParam.Value = 'TTransportGoodsJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1327,7 +1320,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
     Top = 0
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReestrReturn'
+    StoredProcName = 'gpGet_Movement_ReestrTransportGoods'
     Params = <
       item
         Name = 'inMovementId'
@@ -1471,7 +1464,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
     Top = 320
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_ReestrTransportGoodsReturnStart'
+    StoredProcName = 'gpInsertUpdate_MI_ReestrTransportGoodsStart'
     Params = <
       item
         Name = 'ioMovementId'

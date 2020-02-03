@@ -45,15 +45,8 @@ type
     spSelectPrint: TdsdStoredProc;
     bbPrint: TdxBarButton;
     ReestrKindName: TcxGridDBColumn;
-    InvNumberPartner: TcxGridDBColumn;
-    InvNumberOrder: TcxGridDBColumn;
-    RouteGroupName: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
-    OperDatePartner: TcxGridDBColumn;
-    MemberName: TcxGridDBColumn;
+    InvNumberMark: TcxGridDBColumn;
     TotalCountKg: TcxGridDBColumn;
-    actPrintForDriver: TdsdPrintAction;
-    bbPrintForDriver: TdxBarButton;
   private
     { Private declarations }
   public

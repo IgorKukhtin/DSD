@@ -60,6 +60,8 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    actChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public

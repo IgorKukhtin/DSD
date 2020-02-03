@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransportGoods(
     IN inOperDate         TDateTime , -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, IdBarCode Integer
+             , InvNumber TVarChar, OperDate TDateTime
              , InvNumberMark TVarChar
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
              , RouteId Integer, RouteName TVarChar
@@ -181,8 +182,10 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
            , Movement.InvNumber
            , Movement.OperDate
+
 
            , MovementString_InvNumberMark.ValueData  AS InvNumberMark
 

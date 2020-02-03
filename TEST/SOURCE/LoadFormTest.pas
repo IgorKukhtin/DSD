@@ -3338,6 +3338,7 @@ end;
  begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   //
