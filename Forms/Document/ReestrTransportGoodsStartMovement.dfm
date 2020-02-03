@@ -23,8 +23,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         Top = 67
         Width = 937
         Height = 230
-        ExplicitLeft = 96
-        ExplicitTop = 73
+        ExplicitTop = 67
         ExplicitWidth = 937
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView

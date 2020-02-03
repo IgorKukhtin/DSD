@@ -16,7 +16,7 @@ $BODY$
    DECLARE vbMemberId_user Integer;
    DECLARE vbId_mi Integer;
    DECLARE vbId_mi_find Integer;
-   DECLARE vbMovementId_ReturnIn Integer;
+   DECLARE vbMovementId_TTN Integer;
    DECLARE vbMovementId_reestr Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -54,48 +54,48 @@ BEGIN
      -- найдем Возврат от покупателя
      IF CHAR_LENGTH (inBarCode) >= 13
      THEN -- по штрих коду, но для "проверки" ограничение - 4 MONTH
-          vbMovementId_ReturnIn:= (SELECT Movement.Id
+          vbMovementId_TTN:= (SELECT Movement.Id
                                    FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                          ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.DescId = zc_Movement_TransportGoods()
                                                           AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
           -- продолжаем поиск - еще 4 MONTH
-          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          IF COALESCE (vbMovementId_TTN, 0) = 0
           THEN
-          vbMovementId_ReturnIn:= (SELECT Movement.Id
+          vbMovementId_TTN:= (SELECT Movement.Id
                                    FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                          ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.DescId = zc_Movement_TransportGoods()
                                                           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '8 MONTH' AND CURRENT_DATE - INTERVAL '4 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
           END IF;
 
           -- продолжаем поиск - еще 4 MONTH
-          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          IF COALESCE (vbMovementId_TTN, 0) = 0
           THEN
-          vbMovementId_ReturnIn:= (SELECT Movement.Id
+          vbMovementId_TTN:= (SELECT Movement.Id
                                    FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                          ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.DescId = zc_Movement_TransportGoods()
                                                           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '12 MONTH' AND CURRENT_DATE - INTERVAL '8 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
           END IF;
 
           -- продолжаем поиск - еще 4 MONTH
-          IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+          IF COALESCE (vbMovementId_TTN, 0) = 0
           THEN
-          vbMovementId_ReturnIn:= (SELECT Movement.Id
+          vbMovementId_TTN:= (SELECT Movement.Id
                                    FROM (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId
                                          ) AS tmp
                                        INNER JOIN Movement ON Movement.Id = tmp.MovementId
-                                                          AND Movement.DescId = zc_Movement_ReturnIn()
+                                                          AND Movement.DescId = zc_Movement_TransportGoods()
                                                           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '15 MONTH' AND CURRENT_DATE - INTERVAL '12 MONTH'
                                                           AND Movement.StatusId <> zc_Enum_Status_Erased()
                                    );
@@ -105,7 +105,7 @@ BEGIN
           IF 1 < (SELECT COUNT(*)
                   FROM Movement
                   WHERE Movement.InvNumber = TRIM (inBarCode)
-                    AND Movement.DescId = zc_Movement_ReturnIn()
+                    AND Movement.DescId = zc_Movement_TransportGoods()
                     AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                     AND Movement.StatusId <> zc_Enum_Status_Erased()
                  )
@@ -113,17 +113,17 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.Нельзя однозначно определить по № <%> , т.к. с таким № несколько документов .', inBarCode;
           END IF;
           -- по InvNumber, но для скорости ограничение - 4 MONTH
-          vbMovementId_ReturnIn:= (SELECT Movement.Id
+          vbMovementId_TTN:= (SELECT Movement.Id
                                    FROM Movement
                                    WHERE Movement.InvNumber = TRIM (inBarCode)
-                                     AND Movement.DescId = zc_Movement_ReturnIn()
+                                     AND Movement.DescId = zc_Movement_TransportGoods()
                                      AND Movement.OperDate >= CURRENT_DATE - INTERVAL '4 MONTH'
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   );
      END IF;
 
      -- Проверка
-     IF COALESCE (vbMovementId_ReturnIn, 0) = 0
+     IF COALESCE (vbMovementId_TTN, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Документ <Товаро-транспортная накладная> с № <%> не найден.', inBarCode;
      END IF;
@@ -131,7 +131,7 @@ BEGIN
      -- найдем элемент
      vbId_mi:= (SELECT MF_MovementItemId.ValueData ::Integer AS Id
                 FROM MovementFloat AS MF_MovementItemId 
-                WHERE MF_MovementItemId.MovementId = vbMovementId_ReturnIn
+                WHERE MF_MovementItemId.MovementId = vbMovementId_TTN
                   AND MF_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
                );
 
@@ -140,7 +140,7 @@ BEGIN
      THEN
          vbId_mi_find:= (SELECT MF_MovementItemId.ValueData :: Integer AS Id
                          FROM MovementFloat AS MF_MovementItemId 
-                         WHERE MF_MovementItemId.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = vbMovementId_ReturnIn)
+                         WHERE MF_MovementItemId.MovementId = (SELECT Movement.ParentId FROM Movement WHERE Movement.Id = vbMovementId_TTN)
                            AND MF_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
                         );
          -- если Parent существует
@@ -151,7 +151,7 @@ BEGIN
               -- сохранили <когда сформирована виза "">   
               PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
               -- сохранили свойство у документа возврата <№ строчной части в Реестре накладных>
-              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_ReturnIn, vbId_mi);
+              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_TTN, vbId_mi);
          END IF;
 
      END IF;
@@ -159,7 +159,7 @@ BEGIN
      -- Проверка
      IF COALESCE (vbId_mi, 0) = 0
      THEN
-         -- RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> с № <%> не зарегистрирован в реестре.', inBarCode;
+         -- RAISE EXCEPTION 'Ошибка..', inBarCode;
          --
          -- Попробуем найти "пустышку"
          vbMovementId_reestr:= (SELECT Movement.Id
@@ -190,8 +190,8 @@ BEGIN
          -- сохранили <Элемент документа> - но "криво" <кто сформировал визу "Вывезено со склада">
          vbId_mi := lpInsertUpdate_MovementItem (vbId_mi, zc_MI_Master(), vbMemberId_user, vbMovementId_reestr, 0, NULL);
 
-         -- сохранили свойство у документа возврат <№ строчной части в Реестре накладных>
-         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_ReturnIn, vbId_mi);
+         -- сохранили свойство у документа ТТН <№ строчной части в Реестре накладных>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_TTN, vbId_mi);
 
      END IF; -- if COALESCE (vbId_mi, 0) = 0
 
@@ -215,7 +215,7 @@ BEGIN
     END IF;
 
     -- Установили "последнее" значение визы - <Состояние по реестру>
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_ReturnIn, inReestrKindId);
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_TTN, inReestrKindId);
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId_mi, vbUserId, FALSE);
