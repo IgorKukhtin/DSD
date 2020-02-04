@@ -4,11 +4,12 @@ DROP FUNCTION IF EXISTS gpReport_HolidayCompensation (TDateTime, Integer, Intege
 DROP FUNCTION IF EXISTS gpReport_HolidayCompensation (TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_HolidayCompensation(
-    IN inStartDate      TDateTime, --дата начала периода
-    IN inUnitId         Integer,   --подразделение
-    IN inMemberId       Integer,   --сотрудник
+    IN inStartDate                 TDateTime, --дата начала периода
+    IN inUnitId                    Integer,   --подразделение
+    IN inMemberId                  Integer,   --сотрудник
+    IN inPersonalServiceListId     Integer,   -- ведомость начисления(главная)
     --IN inPositionId     Integer,   --должность
-    IN inSession        TVarChar   --сессия пользователя
+    IN inSession                   TVarChar   --сессия пользователя
 )
 RETURNS TABLE(MemberId Integer
             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
@@ -16,6 +17,7 @@ RETURNS TABLE(MemberId Integer
             , UnitId Integer, UnitCode Integer, UnitName TVarChar
             , BranchName TVarChar
             , PersonalGroupName TVarChar
+            , PersonalServiceListName TVarChar
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
             , Day_vacation  TFloat
@@ -68,6 +70,7 @@ BEGIN
                                                                                           OR ObjectBoolean.ValueData          = TRUE)
                                      WHERE ObjectLink_User_Member.ObjectId = vbUserId
                                        AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                       AND (Object_PersonalServiceList.Id = inPersonalServiceListId OR inPersonalServiceListId = 0)
                                     UNION
                                      SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                                      FROM ObjectLink AS ObjectLink_User_Member
@@ -78,18 +81,21 @@ BEGIN
                                                                                         AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
                                      WHERE ObjectLink_User_Member.ObjectId = vbUserId
                                        AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                                       AND (Object_PersonalServiceList.Id = inPersonalServiceListId OR inPersonalServiceListId = 0)
                                     UNION
                                      -- Админ и другие видят ВСЕХ
                                      SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                                      FROM Object AS Object_PersonalServiceList
                                      WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
                                        AND EXISTS (SELECT 1 FROM tmpUserAll)
+                                       AND (Object_PersonalServiceList.Id = inPersonalServiceListId OR inPersonalServiceListId = 0)
                                     UNION
                                      -- Админ и другие видят ВСЕХ
                                      SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
                                      FROM Object AS Object_PersonalServiceList
                                      WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
                                        AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+                                       AND (Object_PersonalServiceList.Id = inPersonalServiceListId OR inPersonalServiceListId = 0)
                                     /*UNION
                                      -- "ЗП филиалов" видят "Галат Е.Н."
                                      SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
@@ -111,6 +117,7 @@ BEGIN
                        , tmp.BranchName
                        , tmp.PersonalGroupName
                        , tmp.StorageLineName
+                       , tmp.PersonalServiceListName
                        , tmp.DateIn
                        , tmp.DateOut
                        , tmp.isDateOut
@@ -120,7 +127,7 @@ BEGIN
                        , tmp.Day_holiday   -- использовано 
                        , tmp.Day_diff      -- не использовано   
                        , tmp.Day_calendar
-                    FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inisDetail:= FALSE, inSession:= inSession) AS tmp
+                    FROM gpReport_HolidayPersonal (inStartDate:= inStartDate, inUnitId:= inUnitId, inMemberId:= inMemberId, inPersonalServiceListId := inPersonalServiceListId, inisDetail:= FALSE, inSession:= inSession) AS tmp
                    )
 
   , tmpMovement AS (SELECT Movement.Id
@@ -160,6 +167,7 @@ BEGIN
                                                             ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                            AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
                            WHERE tmpMemberPersonalServiceList.PersonalServiceListId > 0
+                             AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                            GROUP BY ObjectLink_Personal_Member.ChildObjectId
                            )
 
@@ -176,6 +184,7 @@ BEGIN
          , tmpReport.UnitName
          , tmpReport.BranchName
          , tmpReport.PersonalGroupName
+         , tmpReport.PersonalServiceListName
          , tmpReport.DateIn
          , tmpReport.DateOut
          , tmpReport.isDateOut

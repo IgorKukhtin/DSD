@@ -71,6 +71,11 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Format = ',0.####'
           Kind = skSum
           Column = Day_calendar
+        end
+        item
+          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = PersonalName
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -126,6 +131,13 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 180
+      end
+      object PersonalServiceListName: TcxGridDBColumn
+        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1075#1083#1072#1074#1085#1072#1103')'
+        DataBinding.FieldName = 'PersonalServiceListName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 111
       end
       object DateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
@@ -263,7 +275,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Width = 85
     end
     object edPersonal: TcxButtonEdit
-      Left = 546
+      Left = 529
       Top = 5
       Properties.Buttons = <
         item
@@ -275,12 +287,12 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 482
+      Left = 465
       Top = 6
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082':'
     end
     object edPosition: TcxButtonEdit
-      Left = 824
+      Left = 944
       Top = 5
       Properties.Buttons = <
         item
@@ -293,8 +305,8 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 758
-      Top = 6
+      Left = 1006
+      Top = 16
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
       Visible = False
     end
@@ -302,6 +314,26 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       Left = 13
       Top = 6
       Caption = #1053#1072' '#1076#1072#1090#1091' :'
+    end
+    object cxLabel2: TcxLabel
+      Left = 741
+      Top = 6
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
+    end
+    object edPersonalServiceList: TcxButtonEdit
+      Left = 804
+      Top = 5
+      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      ParentShowHint = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 7
+      Width = 205
     end
   end
   object cxLabel1: TcxLabel
@@ -319,7 +351,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 223
+    Width = 208
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -362,6 +394,12 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
       end
       item
         Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GuidesPersonalServiceList
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -567,6 +605,23 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Name = 'UnitName'
           Value = Null
           Component = GuidesUnit
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListId'
+          Value = Null
+          Component = GuidesPersonalServiceList
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalServiceListName'
+          Value = Null
+          Component = GuidesPersonalServiceList
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -883,11 +938,11 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPositionId'
+        Name = 'inPersonalServiceListId'
         Value = '0'
-        Component = PositionGuides
+        Component = GuidesPersonalServiceList
         ComponentItem = 'Key'
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -945,7 +1000,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 880
+    Left = 1000
     Top = 8
   end
   object PeriodChoice: TPeriodChoice
@@ -1019,6 +1074,7 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Component = deStart
       end
       item
+        Component = GuidesPersonalServiceList
       end
       item
         Component = GuidesUnit
@@ -1188,5 +1244,36 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         MultiSelectSeparator = ','
       end>
     Left = 392
+  end
+  object GuidesPersonalServiceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalServiceList
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 872
+    Top = 8
   end
 end

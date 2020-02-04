@@ -2,14 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpReport_HolidayPersonal (TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_HolidayPersonal (TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_HolidayPersonal (TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_HolidayPersonal(
-    IN inStartDate      TDateTime, -- дата !!!ќ ќЌ„јЌ»я!!! периода - последний день мес€ца
-    IN inUnitId         Integer,   -- подразделение
-    IN inMemberId       Integer,   -- сотрудник
-  --IN inPositionId     Integer,   -- должность
-    IN inIsDetail       Boolean,   -- детализировать по дн€м
-    IN inSession        TVarChar   -- сесси€ пользовател€
+    IN inStartDate                 TDateTime, -- дата !!!ќ ќЌ„јЌ»я!!! периода - последний день мес€ца
+    IN inUnitId                    Integer,   -- подразделение
+    IN inMemberId                  Integer,   -- сотрудник
+    IN inPersonalServiceListId     Integer,   -- ведомость начислени€(главна€)
+    IN inIsDetail                  Boolean,   -- детализировать по дн€м
+    IN inSession                   TVarChar   -- сесси€ пользовател€
 )
 RETURNS TABLE(MemberId Integer, PersonalId Integer
             , PersonalCode Integer, PersonalName TVarChar
@@ -19,6 +20,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , BranchName TVarChar
             , PersonalGroupName TVarChar
             , StorageLineName TVarChar
+            , PersonalServiceListName TVarChar
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
            -- , Age_work      TVarChar
@@ -90,6 +92,7 @@ BEGIN
                                , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
                                , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
                                , Object_PositionLevel.ValueData                  AS PositionLevelName
+                               , Object_PersonalServiceList.ValueData            AS PersonalServiceListName
 
                                  -- дата прин€ти€
                                , COALESCE (ObjectDate_DateIn.ValueData, zc_DateEnd())  AS DateIn
@@ -176,10 +179,16 @@ BEGIN
                                                    AND ObjectLink_Personal_PositionLevel.DescId   = zc_ObjectLink_Personal_PositionLevel()
                                LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
 
+                               LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalServiceList
+                                                    ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
+                                                   AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
+                               LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
                           WHERE ObjectLink_Personal_Member.ChildObjectId > 0
                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
                             AND (ObjectLink_Personal_Member.ChildObjectId = inMemberId OR inMemberId = 0)
                             --AND (ObjectLink_Personal_Unit.ChildObjectId = inUnitId OR inUnitId = 0) --выбираем по всем подразделени€м, чтоб можно было определить реальную дату приема на работу (вдруг были переводы по подразделени€м)
+                            AND (ObjectLink_Personal_PersonalServiceList.ChildObjectId = inPersonalServiceListId OR inPersonalServiceListId = 0)
                          )
 
     -- сотрудники - только основное место работы и только ќƒ»Ќ
@@ -429,8 +438,9 @@ BEGIN
          , tmpPersonal.BranchName
          , tmpPersonal.PersonalGroupName
          , tmpPersonal.StorageLineName
-         , tmpPersonal.DateIn_real :: TDateTime AS DateIn
-         , tmpPersonal.DateOut_user                       :: TDateTime AS DateOut
+         , tmpPersonal.PersonalServiceListName
+         , tmpPersonal.DateIn_real  :: TDateTime AS DateIn
+         , tmpPersonal.DateOut_user :: TDateTime AS DateOut
          , tmpPersonal.isDateOut
          , tmpPersonal.isMain
          , tmpPersonal.isOfficial
@@ -476,4 +486,4 @@ $BODY$
  24.12.18         *
 */
 -- тест
--- SELECT * FROM gpReport_HolidayPersonal(inStartDate:= '24.12.2019', inUnitId:= 0, inMemberId:= 2671562, inIsDetail:= FALSE, inSession:= '5');
+-- SELECT * FROM gpReport_HolidayPersonal(inStartDate:= '24.12.2019', inUnitId:= 0, inMemberId:= 2671562, inPersonalServiceListId:= 0, inIsDetail:= FALSE, inSession:= '5');

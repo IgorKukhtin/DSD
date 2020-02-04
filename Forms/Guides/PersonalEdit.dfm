@@ -916,8 +916,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 55
-    Top = 267
+    Left = 79
+    Top = 187
   end
   object StorageLineGuides: TdsdGuides
     KeyField = 'Id'

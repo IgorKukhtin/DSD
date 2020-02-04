@@ -33,7 +33,7 @@ BEGIN
      END IF;
      
      --данные из шапки
-     SELECT MovementLinkObject_To.ObjectId   AS ToId
+     SELECT MovementLinkObject_To.ObjectId AS ToId
    INTO vbToId
      FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
