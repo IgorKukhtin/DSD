@@ -72,6 +72,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     Compensation: TcxGridDBColumn;
+    CompensationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

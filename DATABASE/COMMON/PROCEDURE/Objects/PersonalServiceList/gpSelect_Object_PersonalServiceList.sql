@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberHeadManagerId Integer, MemberHeadManagerName TVarChar
              , MemberManagerId Integer, MemberManagerName TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
-             , Compensation TFloat
+             , Compensation TFloat, CompensationName TVarChar
              , isSecond Boolean
              , isErased Boolean
               )
@@ -57,9 +57,24 @@ BEGIN
            , Object_MemberBookkeeper.Id           AS MemberBookkeeperId
            , Object_MemberBookkeeper.ValueData    AS MemberBookkeeperName
            
-           , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat AS Compensation
+           , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat   AS Compensation
+           , (CASE COALESCE (ObjectFloat_Compensation.ValueData, 0)
+                   WHEN 1 THEN 'Январь'
+                   WHEN 2 THEN 'Февраль'
+                   WHEN 3 THEN 'Март'
+                   WHEN 4 THEN 'Апрель'
+                   WHEN 5 THEN 'Май'
+                   WHEN 6 THEN 'Июнь'
+                   WHEN 7 THEN 'Июль'
+                   WHEN 8 THEN 'Август'
+                   WHEN 9 THEN 'Сентябрь'
+                   WHEN 10 THEN 'Октябрь'
+                   WHEN 11 THEN 'Ноябрь'
+                   WHEN 12 THEN 'Декабрь'
+                   ELSE ''
+              END)                                            :: TVarChar AS CompensationName
 
-           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
+           , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean   AS isSecond
 
            , Object_PersonalServiceList.isErased  AS isErased
 

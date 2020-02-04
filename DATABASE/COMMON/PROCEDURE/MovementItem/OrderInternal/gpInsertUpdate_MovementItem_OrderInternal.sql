@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbMovementItemId Integer;
+   DECLARE vbToId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -30,8 +31,24 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Товар>.';
      END IF;
+     
+     --данные из шапки
+     SELECT MovementLinkObject_To.ObjectId   AS ToId
+   INTO vbToId
+     FROM Movement
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
+
      -- проверка + временно захардкодил
-     IF COALESCE (inGoodsKindId, 0) = 0 AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)) -- ЦЕХ колбаса+дел-сы
+     IF COALESCE (inGoodsKindId, 0) = 0 AND NOT EXISTS (SELECT MovementId 
+                                                        FROM MovementLinkObject 
+                                                        WHERE DescId = zc_MovementLinkObject_From() 
+                                                          AND MovementId = inMovementId AND ( ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp) -- 8446 ЦЕХ колбаса+дел-сы 
+                                                                                          OR (ObjectId = 8451 AND vbToId = 8455))   --  8451 "ЦЕХ упаковки"  8455 склад специй - нет вида товара
+                                                       )
      THEN
          RAISE EXCEPTION 'Ошибка.Не определено значение <Вид товара>.';
      END IF;
