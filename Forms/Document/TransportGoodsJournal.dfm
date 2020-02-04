@@ -278,6 +278,16 @@ inherited TransportGoodsJournalForm: TTransportGoodsJournalForm
             Options.Editing = False
             Width = 61
           end
+          object CarName_Transport: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1055'.'#1083'. -'#1058#1058#1053')'
+            DataBinding.FieldName = 'CarName_Transport'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1085#1085#1099#1077' '#1080#1079' '#1044#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1076#1072#1078#1080
+            Options.Editing = False
+            Width = 80
+          end
           object PersonalDriverName_Transport: TcxGridDBColumn
             Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1055'.'#1083'. -'#1058#1058#1053')'
             DataBinding.FieldName = 'PersonalDriverName_Transport'

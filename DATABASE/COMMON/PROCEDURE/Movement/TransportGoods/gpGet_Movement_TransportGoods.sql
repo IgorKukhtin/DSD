@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransportGoods(
     IN inOperDate         TDateTime , -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, IdBarCode Integer
+RETURNS TABLE (Id Integer, IdBarCode TVarChar
              , InvNumber TVarChar, OperDate TDateTime
              , InvNumberMark TVarChar
              , MovementId_Sale Integer, InvNumber_Sale TVarChar, OperDate_Sale TDateTime
@@ -182,7 +182,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id) AS IdBarCode
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement.Id):: TVarChar AS IdBarCode
            , Movement.InvNumber
            , Movement.OperDate
 
@@ -211,7 +211,7 @@ BEGIN
 
            , Object_Member1.Id        AS MemberId1
            , Object_Member1.ValueData AS MemberName1
-           , Object_Member2.Id        AS MemberId2
+           ,  Object_Member2.Id        AS MemberId2
            , Object_Member2.ValueData AS MemberName2
            , Object_Member3.Id        AS MemberId3
            , Object_Member3.ValueData AS MemberName3
@@ -233,7 +233,7 @@ BEGIN
 
            , 0  :: TFloat   AS TotalCountBox
            , 0  :: TFloat   AS TotalWeightBox
-           , '' :: TVarChar AS BarCode
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Transport.Id)  :: TVarChar AS BarCode -- ш/к путевого листа
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberMark

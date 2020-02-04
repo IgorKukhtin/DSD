@@ -40,6 +40,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime, InvNumber_Transport_Full TVarChar
              , PersonalDriverName_Transport TVarChar
+             , CarName_Transport TVarChar
               )
 AS
 $BODY$
@@ -127,6 +128,7 @@ BEGIN
            , Movement_Transport.OperDate               AS OperDate_Transport
            , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Transport_Full
            , Object_PersonalDriver_Transport.ValueData AS PersonalDriverName_Transport
+           , Object_Car.ValueData                      AS CarName_Transport
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_TransportGoods()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -168,6 +170,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
+                                         ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
+                                        AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
+            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
+            
 --          определяем юр.лицо
             LEFT JOIN ObjectLink AS ObjectLink_Car_Juridical                                                      -- юр.лицо авто
                                  ON ObjectLink_Car_Juridical.ObjectId = Object_Car.Id
@@ -236,6 +243,11 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver_Transport.MovementId = Movement_Transport.Id
                                         AND MovementLinkObject_PersonalDriver_Transport.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver_Transport ON Object_PersonalDriver_Transport.Id = MovementLinkObject_PersonalDriver_Transport.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
                                            ON MovementLinkMovement_TransportGoods.MovementChildId = Movement.Id 
