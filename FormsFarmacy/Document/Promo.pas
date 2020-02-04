@@ -132,6 +132,10 @@ type
     spUpdate_GoodsGroupPromo: TdsdStoredProc;
     actGoodsGroupPromo: TMultiAction;
     actExecUpdate_GoodsGroupPromo: TdsdExecStoredProc;
+    spLoad_From_Object: TdsdStoredProc;
+    actLoad_From_Object: TdsdExecStoredProc;
+    actPartnerChoice: TOpenChoiceForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

@@ -45,6 +45,7 @@ BEGIN
                                                  , inGoodsId            := vbGoodsId
                                                  , inAmount             := inAmount
                                                  , inPrice              := inPrice
+                                                 , inIsChecked          := False
                                                  , inUserId             := vbUserId);
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

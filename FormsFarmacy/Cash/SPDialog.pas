@@ -327,8 +327,8 @@ Begin
       //
       SPKindGuides.Params.ParamByName('Key').Value      := ASPKindId;
       SPKindGuides.Params.ParamByName('TextValue').Value:= '';
-      SPKindGuides.Params.ParamByName('Tax').Value:= 0;
-      FormParams.ParamByName('SPTax').Value:=ASPTax;
+      SPKindGuides.Params.ParamByName('Tax').Value:= ASPTax;
+      //FormParams.ParamByName('SPTax').Value:=ASPTax;
 
       if ASPKindId > 0 then
       begin
@@ -369,13 +369,13 @@ Begin
         AInvNumberSP:= trim (edInvNumberSP.Text);
         AOperDateSP:= StrToDate (edOperDateSP.Text);
 
-        ASPTax:=FormParams.ParamByName('SPTax').Value;
         try ASPKindId := SPKindGuides.Params.ParamByName('Key').Value;
         except
             ASPKindId := 0;
             SPKindGuides.Params.ParamByName('Key').Value:= 0;
         end;
         ASPKindName   := SPKindGuides.Params.ParamByName('TextValue').Value;
+        ASPTax        := SPKindGuides.Params.ParamByName('Tax').Value;
         if Panel2.Visible then
         begin
           AMemberSPID := GuidesMemberSP.Params.ParamByName('Key').Value;

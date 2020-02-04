@@ -1090,6 +1090,42 @@ inherited PromoForm: TPromoForm
         end>
       Caption = 'actExecUpdate_GoodsGroupPromo'
     end
+    object actLoad_From_Object: TdsdExecStoredProc
+      Category = 'Load'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actPartnerChoice
+      PostDataSetBeforeExecute = False
+      StoredProc = spLoad_From_Object
+      StoredProcList = <
+        item
+          StoredProc = spLoad_From_Object
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      ImageIndex = 54
+      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
+    object actPartnerChoice: TOpenChoiceForm
+      Category = 'Load'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'JuridicalChoiceForm'
+      FormName = 'TPartnerCodeForm'
+      FormNameParam.Value = 'TPartnerCodeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ObjectId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Promo'
@@ -1198,6 +1234,10 @@ inherited PromoForm: TPromoForm
         item
           Visible = True
           ItemName = 'bbactStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -1315,6 +1355,10 @@ inherited PromoForm: TPromoForm
       Action = macUpdate_Checked_No
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actLoad_From_Object
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SearchAsFilter = False
@@ -1371,6 +1415,11 @@ inherited PromoForm: TPromoForm
         Name = 'GoodsGroupPromoName'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ObjectId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2369,5 +2418,32 @@ inherited PromoForm: TPromoForm
     ParamKeyField = 'inMovementId'
     Left = 288
     Top = 304
+  end
+  object spLoad_From_Object: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Promo_From_Object'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inObjectId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'ObjectId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'ioId'
+    Left = 706
+    Top = 296
   end
 end

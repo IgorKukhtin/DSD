@@ -20,6 +20,7 @@ BEGIN
                                              , inGoodsId            := MovementItem.ObjectId
                                              , inAmount             := 0::TFloat
                                              , inPrice              := COALESCE(MovementItemFloat_Price.ValueData,0)
+                                             , inIsChecked          := False
                                              , inUserId             := vbUserId)
     FROM MovementItem
         LEFT OUTER JOIN MovementItemFloat AS MovementItemFloat_Price

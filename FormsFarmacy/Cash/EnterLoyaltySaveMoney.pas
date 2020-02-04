@@ -18,17 +18,19 @@ type
     Label1: TLabel;
     pn1: TPanel;
     pn2: TPanel;
-    MutexBuyerCDS: TClientDataSet;
-    spSelectObjectBuyerId: TdsdStoredProc;
-    spInsertObjectBuyer: TdsdStoredProc;
+    BuyerCDS: TClientDataSet;
+    spSelectObjectBuyer: TdsdStoredProc;
     edMaskName: TcxMaskEdit;
     Label2: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure edMaskNumberPropertiesValidate(Sender: TObject;
+      var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
   private
     FID : integer;
     FPhone : String;
     FName : String;
     FLoyaltySMID : integer;
+    FisFormClose : Boolean;
     { Private declarations }
   public
     { Public declarations }
@@ -42,125 +44,95 @@ implementation
 
 uses CommonData, LocalWorkUnit;
 
+procedure TEnterLoyaltySaveMoneyForm.edMaskNumberPropertiesValidate(
+  Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
+  var Error: Boolean);
+begin
+  Error := Error and FisFormClose;
+end;
+
 procedure TEnterLoyaltySaveMoneyForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   if ModalResult = mrOk then
-  begin
+  try
+    FisFormClose := True;
+    if edMaskName.Text = '' then
     try
-      if edMaskNumber.ValidateEdit(True) then
-      begin
-        if gc_User.Local then
-        begin
-          MutexBuyerCDS.Close;
-          MutexBuyerCDS.Filtered := False;
-          WaitForSingleObject(MutexBuyer, INFINITE);
-          try
-            if FileExists(Buyer_lcl) then
-            begin
-              LoadLocalData(MutexBuyerCDS, Buyer_lcl);
-              if not MutexBuyerCDS.Active then MutexBuyerCDS.Open;
-            end;
-          finally
-            ReleaseMutex(MutexBuyer);
-          end;
-
-          if MutexBuyerCDS.Active then
-          begin
-            MutexBuyerCDS.Filter := 'Phone = ''' + edMaskNumber.Text + '''';
-            MutexBuyerCDS.Filtered := True;
-            MutexBuyerCDS.First;
-            if not MutexBuyerCDS.Eof then
-            begin
-              if not MutexBuyerCDS.FieldByName('isErased').AsBoolean then
-              begin
-                FID := MutexBuyerCDS.FieldByName('Id').AsInteger;
-                FPhone :=  MutexBuyerCDS.FieldByName('Phone').AsString;
-                FName := MutexBuyerCDS.FieldByName('Name').AsString;
-                FLoyaltySMID := MutexBuyerCDS.FieldByName('LoyaltySMID').AsInteger;
-              end else ShowMessage('Учетная запись покупателя ' + MutexBuyerCDS.FieldByName('Name').AsString + ' удалена.');
-            end else
-            begin
-              ShowMessage('По номеру телефона ' + edMaskNumber.Text + ' покупатель не найден.');
-              Action := caNone;
-            end;
-          end else
-          begin
-            ShowMessage('Ошибка загрузки справочника покупатедлей.');
-            Action := caNone;
-          end;
-        end else
-        begin
-          try
-            if FPhone = '' then
-            begin
-              spSelectObjectBuyerId.ParamByName('inPhone').Value := edMaskNumber.Text;
-              spSelectObjectBuyerId.ParamByName('Id').Value := 0;
-              spSelectObjectBuyerId.Execute;
-              if spSelectObjectBuyerId.ParamByName('Id').Value = 0 then
-              begin
-                if FPhone = '' then
-                begin
-                  if MessageDlg('По номеру телефона ' + edMaskNumber.Text + ' покупатель не найден.'#13#10#13#10 +
-                     'Создать карточку нового покупателя?', mtConfirmation, mbYesNo, 0) = mrYes then
-                  begin
-                    Label1.Caption := 'Подтвердите номер телефона покупателя';
-                    FPhone := edMaskNumber.Text;
-                    edMaskNumber.Text := '';
-                    Label2.Visible := True;
-                    edMaskName.Visible := True;
-                    edMaskName.Text := '';
-                    Action := caNone;
-                  end;
-                end;
-              end else
-              begin
-                if not spSelectObjectBuyerId.ParamByName('isErased').Value then
-                begin
-                  FID := spSelectObjectBuyerId.ParamByName('Id').Value;
-                  FPhone :=  spSelectObjectBuyerId.ParamByName('Phone').Value;
-                  FName := spSelectObjectBuyerId.ParamByName('Name').Value;
-                end else ShowMessage('Учетная запись покупателя ' + spSelectObjectBuyerId.ParamByName('Name').Value + ' удалена.');
-              end;
-            end else
-            begin
-              if FPhone <> edMaskNumber.Text then
-              begin
-                ShowMessage('Ошибка подтверждения номера телефона.');
-                Action := caNone;
-                Exit;
-              end;
-              if Trim(edMaskName.Text) = '' then
-              begin
-                ShowMessage('Ошибка не заполнено Фамилия Имя Отчество покупателя.');
-                Action := caNone;
-                Exit;
-              end;
-
-              spInsertObjectBuyer.ParamByName('ioId').Value := 0;
-              spInsertObjectBuyer.ParamByName('inPhone').Value := edMaskNumber.Text;
-              spInsertObjectBuyer.ParamByName('inName').Value := edMaskName.Text;
-              spInsertObjectBuyer.Execute;
-
-              spSelectObjectBuyerId.ParamByName('inPhone').Value := edMaskNumber.Text;
-              spSelectObjectBuyerId.ParamByName('Id').Value := 0;
-              spSelectObjectBuyerId.Execute;
-              if spSelectObjectBuyerId.ParamByName('Id').Value <> 0 then
-              begin
-                FID := spSelectObjectBuyerId.ParamByName('Id').Value;
-                FPhone :=  spSelectObjectBuyerId.ParamByName('Phone').Value;
-                FName := spSelectObjectBuyerId.ParamByName('Name').Value;
-              end else ShowMessage('Учетная запись покупателя ' + edMaskNumber.Text + ' не создана.');
-            end;
-          except on E: Exception do
-            ShowMessage('Ошибка получения информации о покупателе: ' + #13#10 + E.Message);
-          end;
-        end;
-      end;
+      edMaskNumber.ValidateEdit(True);
     except
       ShowMessage('Ошибка ввода номера телефона.');
       Action := caNone;
+      Exit;
     end;
+
+    if gc_User.Local then
+    begin
+      BuyerCDS.Close;
+      BuyerCDS.Filtered := False;
+      WaitForSingleObject(MutexBuyer, INFINITE);
+      try
+        if FileExists(Buyer_lcl) then
+        begin
+          LoadLocalData(BuyerCDS, Buyer_lcl);
+          if not BuyerCDS.Active then BuyerCDS.Open;
+        end;
+      finally
+        ReleaseMutex(MutexBuyer);
+      end;
+
+      if BuyerCDS.Active then
+      begin
+        BuyerCDS.Filter := 'Phone = ''' + edMaskNumber.Text + '''';
+        BuyerCDS.Filtered := True;
+        BuyerCDS.First;
+      end else
+      begin
+        ShowMessage('Ошибка загрузки справочника покупатедлей.');
+        Action := caNone;
+        Exit;
+      end;
+    end else
+    begin
+      try
+        if FPhone = '' then
+        begin
+          spSelectObjectBuyer.ParamByName('inPhone').Value := edMaskNumber.Text;
+          spSelectObjectBuyer.ParamByName('inName').Value  := edMaskName.Text;
+          spSelectObjectBuyer.Execute;
+        end;
+      except on E: Exception do
+        begin
+          ShowMessage('Ошибка получения информации о покупателе: ' + #13#10 + E.Message);
+          Action := caNone;
+          Exit;
+        end;
+      end;
+    end;
+
+    if BuyerCDS.RecordCount = 1 then
+    begin
+      if not BuyerCDS.FieldByName('isErased').AsBoolean then
+      begin
+        FID := BuyerCDS.FieldByName('Id').AsInteger;
+        FPhone :=  BuyerCDS.FieldByName('Phone').AsString;
+        FName := BuyerCDS.FieldByName('Name').AsString;
+        if Assigned(BuyerCDS.FindField('LoyaltySMID')) then FLoyaltySMID := BuyerCDS.FieldByName('LoyaltySMID').AsInteger;
+      end else ShowMessage('Учетная запись покупателя ' + BuyerCDS.FieldByName('Name').AsString + ' удалена.');
+    end else
+    begin
+      ShowMessage('По номеру телефона ' + edMaskNumber.Text + ' покупатель не найден.');
+      Action := caNone;
+      Exit;
+    end;
+
+    if FLoyaltySMID = 0 then
+    begin
+
+    end;
+
+  finally
+    FisFormClose := False;
   end;
 end;
 
@@ -174,6 +146,7 @@ begin
     EnterLoyaltySaveMoneyForm.FPhone := '';
     EnterLoyaltySaveMoneyForm.FName := '';
     EnterLoyaltySaveMoneyForm.FLoyaltySMID := 0;
+    EnterLoyaltySaveMoneyForm.FisFormClose := False;
     Result := EnterLoyaltySaveMoneyForm.ShowModal = mrOk;
     AId := EnterLoyaltySaveMoneyForm.FId;
     APhone := EnterLoyaltySaveMoneyForm.FPhone;

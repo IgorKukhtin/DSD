@@ -1960,7 +1960,7 @@ begin
 
   if gc_User.Local then
   Begin
-    ShowMessage('В отложенном режиме неработает...');
+    ShowMessage('В отложенном режиме не работает...');
     Exit;
   End;
 
@@ -3064,7 +3064,7 @@ begin
 
   if gc_User.Local then
   Begin
-    ShowMessage('В отложенном режиме неработает...');
+    ShowMessage('В отложенном режиме не работает...');
     Exit;
   End;
 
@@ -3736,10 +3736,12 @@ begin
      begin
        SPKindId     := Self.FormParams.ParamByName('SPKindId').Value;
        SPKindName   := Self.FormParams.ParamByName('SPKindName').Value;
+       SPTax        := Self.FormParams.ParamByName('SPTax').Value;
      end else
      begin
        SPKindId     := UnitConfigCDS.FieldByName('SPKindId').AsInteger;
        SPKindName   := UnitConfigCDS.FieldByName('SPKindName').AsString;
+       SPTax        := UnitConfigCDS.FieldByName('SPTax').AsInteger;
      end;
      MemberSPID   := Self.FormParams.ParamByName('MemberSPID').Value;
      MemberSP     := Self.FormParams.ParamByName('MemberSP').Value;
@@ -4182,7 +4184,7 @@ procedure TMainCashForm2.actWagesUserExecute(Sender: TObject);
 begin
   if gc_User.Local then
   Begin
-    ShowMessage('В отложенном режиме неработает...');
+    ShowMessage('В отложенном режиме не работает...');
     Exit;
   End;
 
@@ -4206,7 +4208,7 @@ procedure TMainCashForm2.btnCheckClick(Sender: TObject);
 begin
   if gc_User.Local then
   Begin
-    ShowMessage('В отложенном режиме неработает...');
+    ShowMessage('В отложенном режиме не работает...');
     Exit;
   End;
   APoint := btnCheck.ClientToScreen(Point(0, btnCheck.ClientHeight));

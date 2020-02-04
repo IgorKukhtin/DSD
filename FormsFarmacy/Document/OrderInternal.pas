@@ -142,6 +142,7 @@ type
     bbReportSendSUN: TdxBarButton;
     bbReportSendDefSUN: TdxBarButton;
     spSelectChild: TdsdStoredProc;
+    spPUSHEVip: TdsdStoredProc;
   private
     { Private declarations }
   public

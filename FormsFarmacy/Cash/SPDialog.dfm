@@ -528,8 +528,8 @@ inherited SPDialogForm: TSPDialogForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 520
-    Top = 80
+    Left = 448
+    Top = 32
   end
   object spGet_SPKind_def: TdsdStoredProc
     StoredProcName = 'gpGet_Object_SPKind_def'

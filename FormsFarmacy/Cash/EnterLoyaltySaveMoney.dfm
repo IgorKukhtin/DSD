@@ -94,14 +94,15 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      Visible = False
     end
     object edMaskNumber: TcxMaskEdit
       Left = 48
       Top = 57
       Anchors = [akLeft, akTop, akRight]
       ParentFont = False
+      Properties.AutoSelect = False
       Properties.EditMask = '!\(999\)000-0000;1;_'
+      Properties.OnValidate = edMaskNumberPropertiesValidate
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -19
@@ -124,74 +125,26 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
       Style.Font.Style = []
       Style.IsFontAssigned = True
       TabOrder = 1
-      Visible = False
       Width = 331
     end
   end
-  object MutexBuyerCDS: TClientDataSet
+  object BuyerCDS: TClientDataSet
     Aggregates = <>
     FieldDefs = <>
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 352
-    Top = 16
+    Left = 296
+    Top = 8
   end
-  object spSelectObjectBuyerId: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Buyer_Id'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
+  object spSelectObjectBuyer: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Buyer_Filter'
+    DataSet = BuyerCDS
+    DataSets = <
       item
-        Name = 'inPhone'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Id'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Code'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Phone'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Name'
-        Value = Null
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isErased'
-        Value = Null
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
+        DataSet = BuyerCDS
       end>
-    PackSize = 1
-    Left = 353
-    Top = 69
-  end
-  object spInsertObjectBuyer: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_Buyer_Cash'
-    DataSets = <>
-    OutputType = otResult
     Params = <
-      item
-        Name = 'ioId'
-        Value = Null
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
       item
         Name = 'inPhone'
         Value = Null
@@ -207,7 +160,7 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 225
-    Top = 69
+    Left = 169
+    Top = 13
   end
 end

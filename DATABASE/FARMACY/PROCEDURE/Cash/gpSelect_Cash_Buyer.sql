@@ -7,6 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Cash_Buyer(
 )
 RETURNS TABLE (Id Integer, Code Integer, Phone TVarChar
              , Name TVarChar
+             , DateBirth TVarChar, Sex TVarChar
+             , Comment TVarChar 
              , LoyaltySMID Integer
              , isErased boolean) AS
 $BODY$
@@ -82,9 +84,22 @@ BEGIN
         , Object_Buyer.Code
         , Object_Buyer.Phone
         , Object_Buyer.Name
+        , ObjectString_Buyer_DateBirth.ValueData AS DateBirth
+        , ObjectString_Buyer_Sex.ValueData       AS Sex
+        , ObjectString_Buyer_Comment.ValueData   AS Comment
         , tmpLoyaltySM.ID                      AS LoyaltySMID
         , Object_Buyer.isErased 
    FROM tmpBuyer AS Object_Buyer
+        LEFT JOIN ObjectString AS ObjectString_Buyer_Comment
+                               ON ObjectString_Buyer_Comment.ObjectId = Object_Buyer.Id 
+                              AND ObjectString_Buyer_Comment.DescId = zc_ObjectString_Buyer_Comment()
+
+        LEFT JOIN ObjectString AS ObjectString_Buyer_DateBirth
+                               ON ObjectString_Buyer_DateBirth.ObjectId = Object_Buyer.Id 
+                              AND ObjectString_Buyer_DateBirth.DescId = zc_ObjectString_Buyer_DateBirth()
+        LEFT JOIN ObjectString AS ObjectString_Buyer_Sex
+                               ON ObjectString_Buyer_Sex.ObjectId = Object_Buyer.Id 
+                              AND ObjectString_Buyer_Sex.DescId = zc_ObjectString_Buyer_Sex()
         LEFT JOIN tmpLoyaltySM ON tmpLoyaltySM.BuyerID = Object_Buyer.ID
                               AND tmpLoyaltySM.Ord = 1 
    ;
