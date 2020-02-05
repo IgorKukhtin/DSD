@@ -3,8 +3,8 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1086#1090#1087#1091#1089#1082#1072#1084'>'
-  ClientHeight = 226
-  ClientWidth = 388
+  ClientHeight = 204
+  ClientWidth = 392
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 64
-    Top = 178
+    Left = 56
+    Top = 160
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 238
-    Top = 178
+    Left = 230
+    Top = 160
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -46,7 +46,7 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
   end
   object edPosition: TcxButtonEdit
     Left = 101
-    Top = 124
+    Top = 186
     Properties.Buttons = <
       item
         Default = True
@@ -76,7 +76,7 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
   end
   object cxLabel1: TcxLabel
     Left = 34
-    Top = 124
+    Top = 186
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100':'
     Visible = False
   end
@@ -108,6 +108,23 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
       end>
     Properties.ReadOnly = True
     TabOrder = 10
+    Width = 250
+  end
+  object cxLabel4: TcxLabel
+    Left = 37
+    Top = 126
+    Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100':'
+  end
+  object edPersonalServiceList: TcxButtonEdit
+    Left = 101
+    Top = 125
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 12
     Width = 250
   end
   object PeriodChoice: TPeriodChoice
@@ -200,9 +217,26 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListid'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PersonalServiceListName'
+        Value = Null
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 27
-    Top = 142
+    Left = 3
+    Top = 126
   end
   object GuidesPosition: TdsdGuides
     KeyField = 'Id'
@@ -309,5 +343,36 @@ object Report_HolidayPersonalDialogForm: TReport_HolidayPersonalDialogForm
       end>
     Left = 158
     Top = 56
+  end
+  object GuidesPersonalServiceList: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalServiceList
+    Key = '0'
+    FormNameParam.Value = 'TPersonalServiceListForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPersonalServiceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonalServiceList
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 216
+    Top = 136
   end
 end

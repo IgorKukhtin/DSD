@@ -958,7 +958,7 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
       end
       item
         Name = 'isPack'
-        Value = 'FALSE'
+        Value = 'TRUE'
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -1333,22 +1333,18 @@ inherited OrderInternalBasisPackForm: TOrderInternalBasisPackForm
       item
         Name = 'inGoodsKindId'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inReceiptId_basis'
         Value = Null
-        Component = MasterCDS
-        ComponentItem = 'ReceiptId_basis'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inIsPack'
-        Value = Null
+        Value = 'TRUE'
         Component = FormParams
         ComponentItem = 'isPack'
         DataType = ftBoolean

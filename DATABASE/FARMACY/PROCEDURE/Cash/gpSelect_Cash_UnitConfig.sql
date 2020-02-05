@@ -21,7 +21,7 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                ShareFromPriceName TVarChar, ShareFromPriceCode TVarChar,
                PermanentDiscountID Integer, PermanentDiscountPercent TFloat,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
-               SPKindId Integer, SPKindName TVarChar,
+               SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
                PartnerMedicalID Integer, PartnerMedicalName TVarChar
               ) AS
 $BODY$
@@ -230,6 +230,7 @@ BEGIN
 
        , Object_SPKind.ID                                  AS SPKindID
        , Object_SPKind.ValueData                           AS SPKindName
+       , COALESCE (ObjectFloat_SPKind_Tax.ValueData, 0) :: TFLoat AS Tax 
        , Object_PartnerMedical.ID                          AS PartnerMedicalID
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
 
@@ -320,6 +321,9 @@ BEGIN
 
 
         LEFT JOIN Object AS Object_SPKind ON Object_SPKind.Id = zc_Enum_SPKind_1303()
+        LEFT JOIN ObjectFloat AS ObjectFloat_SPKind_Tax
+                              ON ObjectFloat_SPKind_Tax.ObjectId = Object_SPKind.Id
+                             AND ObjectFloat_SPKind_Tax.DescId = zc_ObjectFloat_SPKind_Tax()        
         LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical ON ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
                                                               AND ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId

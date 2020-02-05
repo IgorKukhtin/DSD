@@ -30,6 +30,9 @@ type
     cxLabel2: TcxLabel;
     edUnit: TcxButtonEdit;
     GuidesUnit: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edPersonalServiceList: TcxButtonEdit;
+    GuidesPersonalServiceList: TdsdGuides;
   private
     { Private declarations }
   public

@@ -629,14 +629,16 @@ begin
     '  GoodsCode AS "Код", '#13#10 +
     '  GoodsName AS "Название", '#13#10 +
     '  Price AS "Цена с НДС", '#13#10 +
-    '  AmountDeferred AS "Отложено количество", '#13#10 +
-    '  SummaDeferred AS "Отложено сумма", '#13#10 +
-    '  AmountComplete AS "Перемещено количество", '#13#10 +
-    '  SummaComplete AS "Перемещено сумма", '#13#10 +
-    '  Amount AS "Остаток количество", '#13#10 +
-    '  Summa AS "Остаток сумма", '#13#10 +
+    '  Sum(AmountDeferred) AS "Отложено количество", '#13#10 +
+    '  Sum(SummaDeferred) AS "Отложено сумма", '#13#10 +
+//    '  AmountComplete AS "Перемещено количество", '#13#10 +
+//    '  SummaComplete AS "Перемещено сумма", '#13#10 +
+//    '  Amount AS "Остаток количество", '#13#10 +
+//    '  Summa AS "Остаток сумма", '#13#10 +
     '  ExpirationDate AS "Срок годности остатка" '#13#10 +
-    'from gpReport_StockTiming_Remainder(CURRENT_DATE, 0, :inMaker, ''3'')';
+    'from gpReport_StockTiming_Remainder(CURRENT_DATE, 0, :inMaker, ''3'') '#13#10 +
+    'GROUP BY UnitName, GoodsCode, GoodsName, Price, ExpirationDate '#13#10 +
+    'HAVING Sum(AmountDeferred) > 0';
 
   qryReport_Upload.Params.ParamByName('inMaker').Value := qryMaker.FieldByName('Id').AsInteger;
 
@@ -644,7 +646,7 @@ begin
 
   if grtvMaker.ColumnCount = 0 then Exit;
 
-  for I := 4 to 9 do
+  for I := 4 to 5 do
   with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
   begin
     Column := grtvMaker.Columns[I];

@@ -22,12 +22,13 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReestrTransportGoods());
+    -- vbUserId:= lpGetUserBySession (inSession);  
      
      -- определяется что это режим Find ioMovementId, и если не нашли, тогда будет Insert
      vbIsFindOnly:= COALESCE (ioMovementId, 0) = 0 AND TRIM (inBarCode) = '';
 
      -- если меняется Путевой лист - будет режим Find !!!другой!!! ioMovementId
-     IF ioMovementId > 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLО WHERE MLО.MovementId = ioMovementId AND MLО.DescId = zc_MovementLinkObject_Insert() /*AND COALESCE (MLM.MovementChildId, 0) = COALESCE (ioMovementId_TransportTop, 0)*/)
+     IF ioMovementId > 0 AND NOT EXISTS (SELECT 1 FROM MovementLinkObject AS MLО WHERE MLО.MovementId = ioMovementId AND MLО.DescId = zc_MovementLinkObject_Insert() )
      THEN
          ioMovementId:= 0;
          vbIsFindOnly:= TRUE;
@@ -53,7 +54,7 @@ BEGIN
           END IF;
      END IF;
 
-     -- найдем Возврат
+     -- найдем ТТН
      IF TRIM (inBarCode) <> ''
      THEN
          IF CHAR_LENGTH (inBarCode) >= 13
@@ -155,7 +156,7 @@ BEGIN
                                                                 , inUserId           := vbUserId
                                                                 );
 
-      -- Только если есть возврат
+      -- Только если есть ТТН
       IF vbMovementId_TTN <> 0
       THEN
           -- Определяется <Физическое лицо> - кто сформировал визу "Вывезено со склада"
@@ -172,14 +173,13 @@ BEGIN
               RAISE EXCEPTION 'Ошибка.У пользователя <%> не определно значение <Физ.лицо>.', lfGet_Object_ValueData (vbUserId);
           END IF;
 
-          -- Поиск элемента для документа <возврат>
+          -- Поиск элемента для документа <ТТН>
           vbId_mi:= (SELECT MF_MovementItemId.ValueData :: Integer
                      FROM MovementFloat AS MF_MovementItemId
                      WHERE MF_MovementItemId.MovementId = vbMovementId_TTN
                        AND MF_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                     );
 
-       
           -- определяем признак Создание/Корректировка
           vbIsInsert:= COALESCE (vbId_mi, 0) = 0;
 
@@ -201,10 +201,10 @@ BEGIN
           PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), vbId_mi, CURRENT_TIMESTAMP);
 
 
-          -- сохранили свойство у документа возврата <№ строчной части в Реестре накладных>
+          -- сохранили свойство у документа ТТН <№ строчной части в Реестре накладных>
           PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_MovementItemId(), vbMovementId_TTN, vbId_mi);
           -- сохранили у документа продажи связь с <Состояние по реестру>
-          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_TTN, zc_Enum_ReestrKind_PartnerIn());
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ReestrKind(), vbMovementId_TTN, zc_Enum_ReestrKind_PartnerOut());
 
 
           -- сохранили протокол

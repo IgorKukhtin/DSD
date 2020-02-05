@@ -44,7 +44,7 @@ type
     DBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Day_vacation: TcxGridDBColumn;
-    GuidesPosition: TdsdGuides;
+    GuidesPersonalServiceList: TdsdGuides;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -64,7 +64,7 @@ type
     deStart: TcxDateEdit;
     edMember: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    edPosition: TcxButtonEdit;
+    edPersonalServiceList: TcxButtonEdit;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     PersonalCode: TcxGridDBColumn;
@@ -81,6 +81,7 @@ type
     Day_calendar: TcxGridDBColumn;
     Day_real: TcxGridDBColumn;
     Day_Hol: TcxGridDBColumn;
+    PersonalServiceListName: TcxGridDBColumn;
   private
   public
   end;

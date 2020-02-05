@@ -29,10 +29,11 @@ uses
 
 type
   TReestrTransportGoodsUpdateMovementForm = class(TAncestorJournalForm)
+    OperDatePartner: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     TotalSumm: TcxGridDBColumn;
-    InvNumberMark: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
     Date_Insert: TcxGridDBColumn;
     N13: TMenuItem;
     miInvoice: TMenuItem;
@@ -47,6 +48,9 @@ type
     cxGridLevel1: TcxGridLevel;
     ClientDataSet: TClientDataSet;
     DataSource: TDataSource;
+    cxLabel5: TcxLabel;
+    edMember: TcxButtonEdit;
+    MemberGuides: TdsdGuides;
     actUpdateDataSource: TdsdUpdateDataSet;
     MovementItemProtocolOpenForm: TdsdOpenForm;
     cxSplitter1: TcxSplitter;
@@ -61,6 +65,7 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    CarModelName: TcxGridDBColumn;
     macMISetErased: TMultiAction;
     actExternalDialog: TExecuteDialog;
     bbExternalDialog: TdxBarButton;
@@ -70,18 +75,20 @@ type
     actDialog_Print: TExecuteDialog;
     macPrintPeriod: TMultiAction;
     edIsShowAll: TcxCheckBox;
+    spSelectPrintGroup: TdsdStoredProc;
     cxLabel18: TcxLabel;
     cePersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
     cxLabel19: TcxLabel;
     cePersonalTrade: TcxButtonEdit;
+    cbReestrKind: TcxCheckBox;
     GuidesPersonalTrade: TdsdGuides;
-    spSelectPrintGroupPersonal: TdsdStoredProc;
-    spSelectPrintPeriodGroupPersonal: TdsdStoredProc;
-    actPrintGroupPersonal: TdsdPrintAction;
-    actPrintPeriodGroupPersonal: TdsdPrintAction;
-    bbPrintGroupPersonal: TdxBarButton;
-    bb: TdxBarButton;
+    actPrintGroup: TdsdPrintAction;
+    actPrintPeriodGroup: TdsdPrintAction;
+    spSelectPrintPeriodGroup: TdsdStoredProc;
+    macPrintPeriodGroup: TMultiAction;
+    bbPrintGroup: TdxBarButton;
+    bbPrintPeriodGroup: TdxBarButton;
   private
     { Private declarations }
   public

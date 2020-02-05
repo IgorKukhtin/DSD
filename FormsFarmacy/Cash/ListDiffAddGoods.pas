@@ -86,15 +86,16 @@ begin
     Exit;
   end;
 
-  if (FAmountDay + nAmount) < 0 then
-  begin
-    if FAmountDay = 0 then
-      ShowMessage('Медикамент в течении дня не добавлялся в лист оказов.')
-    else ShowMessage('Вы пытаетест отменить с листа отказов больше чем добавлено.'#13#10 +
-                     'Можно вернуть не более ' + CurrToStr(FAmountDay));
-    ceAmount.SetFocus;
-    Exit;
-  end;
+  // Люба сказала отменить контролт 03.02.2020
+//  if (FAmountDay + nAmount) < 0 then
+//  begin
+//    if FAmountDay = 0 then
+//      ShowMessage('Медикамент в течении дня не добавлялся в лист оказов.')
+//    else ShowMessage('Вы пытаетест отменить с листа отказов больше чем добавлено.'#13#10 +
+//                     'Можно вернуть не более ' + CurrToStr(FAmountDay));
+//    ceAmount.SetFocus;
+//    Exit;
+//  end;
 
   if lcbDiffKind.EditValue = Null then
   begin

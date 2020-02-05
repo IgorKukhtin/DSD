@@ -79,6 +79,9 @@ type
     SummaCompensation: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Day_calendar: TcxGridDBColumn;
+    cxLabel2: TcxLabel;
+    edPersonalServiceList: TcxButtonEdit;
+    GuidesPersonalServiceList: TdsdGuides;
   private
   public
   end;

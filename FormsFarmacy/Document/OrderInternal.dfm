@@ -1657,6 +1657,9 @@ inherited OrderInternalForm: TOrderInternalForm
       StoredProcList = <
         item
           StoredProc = spPUSH
+        end
+        item
+          StoredProc = spPUSHEVip
         end>
       Caption = 'actPUSHInfo'
       PUSHMessageType = pmtInformation
@@ -2993,5 +2996,39 @@ inherited OrderInternalForm: TOrderInternalForm
     PackSize = 1
     Left = 272
     Top = 248
+  end
+  object spPUSHEVip: TdsdStoredProc
+    StoredProcName = 'gpSelect_ShowPUSHVIP_OrderInternal'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outShowMessage'
+        Value = Null
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPUSHType'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outText'
+        Value = Null
+        DataType = ftWideString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 802
+    Top = 416
   end
 end

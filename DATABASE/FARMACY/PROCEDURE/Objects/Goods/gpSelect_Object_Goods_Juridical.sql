@@ -50,7 +50,34 @@ BEGIN
                                           ) AS tt
                                     WHERE tt.Ord = 1
                                     )
+         , tmpObject_LinkGoods_View AS (SELECT 
+                                           ObjectLink_LinkGoods_GoodsMain.ObjectId       AS Id
+                                                                                        
+                                         , ObjectLink_LinkGoods_GoodsMain.ChildObjectId  AS GoodsMainId
+                                         , Object_MainGoods.ObjectCode                   AS GoodsMainCode
+                                         , Object_MainGoods.ValueData                    AS GoodsMainName
 
+                                         , ObjectLink_LinkGoods_Goods.ChildObjectId      AS GoodsId
+                                         , Object_Goods.GoodsCodeInt                     AS GoodsCodeInt
+                                         , Object_Goods.GoodsCode                        AS GoodsCode
+                                         , Object_Goods.GoodsName                        AS GoodsName
+                                         , Object_Goods.MakerName                        AS MakerName
+
+                                         , Object_Goods.ObjectId                         AS ObjectId
+                                         , Object_Goods.AreaId                           AS AreaId
+                                         , FALSE                                         AS isErased
+                                         
+                                     FROM ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                          LEFT JOIN Object AS Object_MainGoods ON Object_MainGoods.Id = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                 
+                                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                          ON ObjectLink_LinkGoods_Goods.ObjectId = ObjectLink_LinkGoods_GoodsMain.ObjectId
+                                                         AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                          JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
+                                          
+                                     WHERE ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                                       AND Object_Goods.ObjectId  = zc_Enum_GlobalConst_Marion())
+                                    
       SELECT 
            ObjectLink_LinkGoods_GoodsMain.ObjectId AS Id
          , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
@@ -152,8 +179,8 @@ BEGIN
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
                          
-          LEFT JOIN Object_LinkGoods_View ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
-                                         AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
+          LEFT JOIN tmpObject_LinkGoods_View AS Object_LinkGoods_View 
+                                             ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
 
           LEFT JOIN tmpLoadPriceListItem AS tmpLPLI ON tmpLPLI.BarCode = Object_Goods.ValueData
                                         AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
@@ -191,3 +218,5 @@ $BODY$
 
 -- тест
  --select * from gpSelect_Object_Goods_Juridical(inObjectId := 59614 , inIsErased := 'False' ,  inSession := '3');
+ 
+ select * from gpSelect_Object_Goods_Juridical(inObjectId := 183345 , inIsErased := 'False' ,  inSession := '3');

@@ -4,7 +4,7 @@
   ClientWidth = 547
   AddOnFormData.isSingle = False
   ExplicitWidth = 553
-  ExplicitHeight = 442
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton

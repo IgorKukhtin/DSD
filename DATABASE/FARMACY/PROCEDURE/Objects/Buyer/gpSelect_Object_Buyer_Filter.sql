@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Buyer_Id()
+-- Function: gpSelect_Object_Buyer_Filter()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Buyer_Id(TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Buyer_Id(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Buyer_Filter(
     IN inPhone       TVarChar,      -- номер телефона
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -31,7 +31,7 @@ END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Buyer_Id(TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Buyer_Filter(TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -42,4 +42,4 @@ ALTER FUNCTION gpSelect_Object_Buyer_Id(TVarChar, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Buyer_Id('(067)553-2077', '3')
+-- SELECT * FROM gpSelect_Object_Buyer_Filter('(067)553-2077', '3')
