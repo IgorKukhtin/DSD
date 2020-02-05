@@ -53,7 +53,8 @@ BEGIN
     vbUserId := inSession::Integer;
 
     -- начальна€ дата - ровно год
-    vbStartDate := inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY';
+  --vbStartDate := inStartDate - INTERVAL '1 YEAR' + INTERVAL '1 DAY';
+    vbStartDate := DATE_TRUNC ('YEAR', inStartDate);
     -- дата !!!ќ ќЌ„јЌ»я!!! периода - как правило последний день мес€ца
     vbEndDate   := inStartDate;
 
