@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummAddOth TFloat, SummAddOthRecalc TFloat
              , SummCompensation TFloat, SummCompensationRecalc TFloat
              , DayCompensation TFloat, PriceCompensation TFloat
+             , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -256,6 +257,10 @@ BEGIN
             , MIFloat_SummCompensationRecalc.ValueData  ::TFloat AS SummCompensationRecalc
             , MIFloat_DayCompensation.ValueData         ::TFloat AS DayCompensation
             , MIFloat_PriceCompensation.ValueData       ::TFloat AS PriceCompensation
+            
+            , MIFloat_DayVacation.ValueData             ::TFloat AS DayVacation
+            , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
+            , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -399,6 +404,16 @@ BEGIN
                                         ON MIFloat_PriceCompensation.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_PriceCompensation.DescId = zc_MIFloat_PriceCompensation()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_DayVacation
+                                        ON MIFloat_DayVacation.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayVacation.DescId = zc_MIFloat_DayVacation()
+            LEFT JOIN MovementItemFloat AS MIFloat_DayHoliday
+                                        ON MIFloat_DayHoliday.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayHoliday.DescId = zc_MIFloat_DayHoliday()
+            LEFT JOIN MovementItemFloat AS MIFloat_DayWork
+                                        ON MIFloat_DayWork.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayWork.DescId = zc_MIFloat_DayWork()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -443,7 +458,6 @@ BEGIN
                                     ON ObjectBoolean_Member_Official.ObjectId = tmpAll.MemberId_Personal
                                    AND ObjectBoolean_Member_Official.DescId = zc_ObjectBoolean_Member_Official()
 
-
             LEFT JOIN tmpMIChild ON tmpMIChild.ParentId = tmpAll.MovementItemId
       ;
 
@@ -455,6 +469,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.02.20         *
  27.01.19         *
  15.10.19         *
  09.09.19         *

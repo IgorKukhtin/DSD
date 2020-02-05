@@ -125,10 +125,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
-
+ {
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;
-{
+
   LoadReportFromFile('PrintMovement_WeighingProduction', ReportPath + '\Товарный Учет\PrintMovement_WeighingProduction.fr3');
   LoadReportFromFile('PrintMovement_WeighingProductionWmsSticker', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionWmsSticker.fr3');
   exit;
@@ -389,7 +389,10 @@ begin
 
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
   exit;
-
+  }
+  LoadReportFromFile('PrintMovement_ReturnInAkt', ReportPath + '\Товарный Учет\PrintMovement_ReturnInAkt.fr3');
+  exit;
+  {
   LoadReportFromFile('PrintMovement_ReturnIn', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');

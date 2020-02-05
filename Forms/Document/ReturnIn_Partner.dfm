@@ -2164,12 +2164,6 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAkt'
-          Value = 'False'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
       ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -2858,18 +2852,10 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
           Component = FormParams
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAkt'
-          Value = 'TRUE'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_TaxCorrective'
+      ReportName = 'PrintMovement_ReturnInAkt'
       ReportNameParam.Name = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
-      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.Value = 'PrintMovement_ReturnInAkt'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3239,7 +3225,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
       Category = 0
     end
     object bbPrintAkt: TdxBarButton
-      Action = mactPrintAkt
+      Action = actPrintAkt
       Category = 0
     end
   end
@@ -4897,8 +4883,8 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 912
-    Top = 120
+    Left = 840
+    Top = 200
   end
   object TaxCorrectiveCDS: TClientDataSet
     Aggregates = <>

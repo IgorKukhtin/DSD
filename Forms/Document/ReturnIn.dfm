@@ -10,7 +10,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 166
     Width = 1252
     Height = 482
-    ExplicitTop = 182
+    ExplicitTop = 166
     ExplicitWidth = 1252
     ExplicitHeight = 482
     ClientRectBottom = 482
@@ -692,6 +692,9 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -2120,11 +2123,9 @@ inherited ReturnInForm: TReturnInForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReturnIn'
+      ReportName = 'PrintMovement_ReturnInAkt'
       ReportNameParam.Name = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
-      ReportNameParam.Value = 'PrintMovement_ReturnIn'
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.Value = 'PrintMovement_ReturnInAkt'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -2155,12 +2156,6 @@ inherited ReturnInForm: TReturnInForm
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isAkt'
-          Value = 'False'
-          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = 'PrintMovement_TaxCorrective'
@@ -2359,9 +2354,6 @@ inherited ReturnInForm: TReturnInForm
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
-        item
-          Action = actSPPrintProcName
-        end
         item
           Action = actPrintAkt
         end>
@@ -3572,7 +3564,7 @@ inherited ReturnInForm: TReturnInForm
       Category = 0
     end
     object bbPrintAkt: TdxBarButton
-      Action = mactPrintAkt
+      Action = actPrintAkt
       Category = 0
     end
   end
@@ -3632,7 +3624,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'ReportName'
-        Value = 'PrintMovement_ReturnIn'
+        Value = 'PrintMovement_ReturnInAkt'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
