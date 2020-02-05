@@ -685,8 +685,8 @@ object IncomeJournalForm: TIncomeJournalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_IncomePODIUM'
+      ReportNameParam.Value = 'PrintMovement_IncomePODIUM'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -773,8 +773,8 @@ object IncomeJournalForm: TIncomeJournalForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Income'
-      ReportNameParam.Value = 'PrintMovement_Income'
+      ReportName = 'PrintMovement_IncomePODIUM'
+      ReportNameParam.Value = 'PrintMovement_IncomePODIUM'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''

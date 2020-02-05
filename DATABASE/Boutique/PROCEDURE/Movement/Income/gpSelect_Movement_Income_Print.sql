@@ -40,6 +40,7 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income_Print());
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
 
+
      -- очень важная проверка
      IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_Complete()
      THEN
@@ -86,6 +87,7 @@ BEGIN
            , Object_To.ValueData                         AS ToName
            , Object_CurrencyDocument.ValueData           AS CurrencyDocumentName
            , Object_CurrencyPartner.ValueData            AS CurrencyPartnerName
+           , Object_Currency_PriceList.ValueData         AS CurrencyriceListName
            , MovementString_Comment.ValueData            AS Comment
          
        FROM  Movement
@@ -137,8 +139,14 @@ BEGIN
                                          ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
                                         AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
             LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
-
-
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList
+                                 ON ObjectLink_Unit_PriceList.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_Unit_PriceList.DescId = zc_ObjectLink_Unit_PriceList()
+            LEFT JOIN ObjectLink AS Object_PriceList_Currency
+                                 ON Object_PriceList_Currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                AND Object_PriceList_Currency.DescId = zc_ObjectLink_PriceList_Currency()
+            LEFT JOIN Object AS Object_Currency_PriceList ON Object_Currency_PriceList.Id = Object_PriceList_Currency.ChildObjectId
       WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Income();
      
@@ -172,55 +180,116 @@ BEGIN
 
                      )
        -- Результат
-       SELECT
-             tmpMI.Id
-           , tmpMI.PartionId
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
-           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-           , Object_Measure.ValueData AS MeasureName
-           , Object_Juridical.ValueData as JuridicalName
-           , Object_CompositionGroup.ValueData   AS CompositionGroupName
-           , Object_Composition.ValueData   AS CompositionName
-           , Object_GoodsInfo.ValueData     AS GoodsInfoName
-           , Object_LineFabrica.ValueData   AS LineFabricaName
-           , Object_Label.ValueData         AS LabelName
-           , Object_GoodsSize.ValueData     AS GoodsSizeName
+       , tmpData AS (SELECT tmpMI.Id
+                          , tmpMI.PartionId
+                          , Object_Goods.Id          AS GoodsId
+                          , Object_Goods.ObjectCode  AS GoodsCode
+                          , Object_Goods.ValueData   AS GoodsName
+                          , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                          , Object_Measure.ValueData AS MeasureName
+                          , Object_Juridical.ValueData as JuridicalName
+                          , Object_CompositionGroup.ValueData   AS CompositionGroupName
+                          , Object_Composition.ValueData   AS CompositionName
+                          , Object_GoodsInfo.ValueData     AS GoodsInfoName
+                          , Object_LineFabrica.ValueData   AS LineFabricaName
+                          , Object_Label.ValueData         AS LabelName
+                          , Object_GoodsSize.ValueData     AS GoodsSizeName
+               
+                          , tmpMI.Amount
+               
+                          , tmpMI.OperPrice      ::TFloat
+                          , tmpMI.CountForPrice  ::TFloat
+                          , tmpMI.OperPriceList  ::TFloat
+               
+                          , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
+                          , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
+                          , tmpMI.isErased
+               
+                      FROM tmpMI
+               
+                           LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
+               
+                           LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id       = tmpMI.GoodsId
+                           LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id     = Object_PartionGoods.MeasureId
+                           LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id = Object_PartionGoods.CompositionId
+                           LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
+               
+                           LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id   = Object_PartionGoods.GoodsInfoId
+                           LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
+                           LEFT JOIN Object AS Object_Label            ON Object_Label.Id       = Object_PartionGoods.LabelId
+                           LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
+                           LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id   = Object_PartionGoods.JuridicalId
+               
+                           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                                  ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
+                                                 AND ObjectString_Goods_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
+                      WHERE tmpMI.Amount <> 0
+                      )
+                      
+       SELECT tmpData.Id
+            , tmpData.PartionId
+            , tmpData.GoodsId
+            , tmpData.GoodsCode
+            , tmpData.GoodsName
+            , tmpData.GoodsGroupNameFull
+            , tmpData.MeasureName
+            , tmpData.JuridicalName
+            , tmpData.CompositionGroupName
+            , tmpData.CompositionName
+            , tmpData.GoodsInfoName
+            , tmpData.LineFabricaName
+            , LabelName
+            , tmpData.GoodsSizeName
+            , tmpData.Amount             ::TFloat
+            , tmpData.OperPrice          ::TFloat
+            , tmpData.CountForPrice      ::TFloat
+            , tmpData.OperPriceList      ::TFloat
+            , tmpData.TotalSumm          ::TFloat
+            , tmpData.TotalSummPriceList ::TFloat
+            , tmpData.isErased
+       FROM tmpData
+       WHERE zc_Enum_GlobalConst_isTerry() = TRUE
+     UNION
+       SELECT 0 AS Id
+            , 0 AS PartionId
+            , tmpData.GoodsId
+            , tmpData.GoodsCode
+            , tmpData.GoodsName
+            , tmpData.GoodsGroupNameFull
+            , tmpData.MeasureName
+            , tmpData.JuridicalName
+            , tmpData.CompositionGroupName
+            , tmpData.CompositionName
+            , tmpData.GoodsInfoName
+            , tmpData.LineFabricaName
+            , LabelName
+            , STRING_AGG ('[' ||tmpData.GoodsSizeName ||'] '||CAST (tmpData.Amount AS NUMERIC (16,2)), '; ') AS GoodsSizeName
+            , SUM (tmpData.Amount) ::TFloat AS Amount
+            , tmpData.OperPrice          ::TFloat
+            , tmpData.CountForPrice      ::TFloat
+            , tmpData.OperPriceList      ::TFloat
+            , SUM (tmpData.TotalSumm)          ::TFloat AS TotalSumm
+            , SUM (tmpData.TotalSummPriceList) ::TFloat AS TotalSummPriceList
+            , tmpData.isErased
+       FROM tmpData
+       WHERE zc_Enum_GlobalConst_isTerry() = FALSE -- для Подиум
+       GROUP BY tmpData.GoodsId
+              , tmpData.GoodsCode
+              , tmpData.GoodsName
+              , tmpData.GoodsGroupNameFull
+              , tmpData.MeasureName
+              , tmpData.JuridicalName
+              , tmpData.CompositionGroupName
+              , tmpData.CompositionName
+              , tmpData.GoodsInfoName
+              , tmpData.LineFabricaName
+              , LabelName
+              , tmpData.OperPrice
+              , tmpData.CountForPrice
+              , tmpData.OperPriceList
+              , tmpData.isErased
 
-           , tmpMI.Amount
-
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPriceList  ::TFloat
-
-           , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
-           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
-           , tmpMI.isErased
-
-       FROM tmpMI
-
-            LEFT JOIN Object_PartionGoods               ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
-
-            LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id       = tmpMI.GoodsId
-            LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id     = Object_PartionGoods.MeasureId
-            LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id = Object_PartionGoods.CompositionId
-            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = Object_PartionGoods.CompositionGroupId
-
-            LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id   = Object_PartionGoods.GoodsInfoId
-            LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id = Object_PartionGoods.LineFabricaId
-            LEFT JOIN Object AS Object_Label            ON Object_Label.Id       = Object_PartionGoods.LabelId
-            LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id   = Object_PartionGoods.GoodsSizeId
-            LEFT JOIN Object AS Object_Juridical        ON Object_Juridical.Id   = Object_PartionGoods.JuridicalId
-
-            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
-                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
-                                  AND ObjectString_Goods_GoodsGroupFull.DescId   =  zc_ObjectString_Goods_GroupNameFull()
-
-           
-
-       WHERE tmpMI.Amount <> 0
-       ORDER BY Object_Goods.ValueData
+       ORDER BY 5       --GoodsName                
 
        ;
 
