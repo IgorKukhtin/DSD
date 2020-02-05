@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat, OperPriceListReal TFloat
              , TotalSumm TFloat
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
@@ -85,6 +85,7 @@ BEGIN
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
+                           , COALESCE (MIFloat_OperPriceListReal.ValueData, 0)     AS OperPriceListReal
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
@@ -121,6 +122,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListReal
+                                                        ON MIFloat_OperPriceListReal.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceListReal.DescId         = zc_MIFloat_OperPriceListReal()
                             -- в магазине ограничиваем инфу
                             LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                         ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
@@ -248,12 +252,13 @@ BEGIN
            , Object_DiscountSaleKind.Id        AS DiscountSaleKindId
            , Object_DiscountSaleKind.ValueData AS DiscountSaleKindName
 
-           , tmpMI.Amount         :: TFloat AS Amount
-           , Container.Amount     :: TFloat AS Remains
+           , tmpMI.Amount              :: TFloat AS Amount
+           , Container.Amount          :: TFloat AS Remains
 
-           , tmpMI.OperPrice      :: TFloat AS OperPrice
-           , tmpMI.CountForPrice  :: TFloat AS CountForPrice
-           , tmpMI.OperPriceList  :: TFloat AS OperPriceList
+           , tmpMI.OperPrice           :: TFloat AS OperPrice
+           , tmpMI.CountForPrice       :: TFloat AS CountForPrice
+           , tmpMI.OperPriceList       :: TFloat AS OperPriceList
+           , tmpMI.OperPriceListReal   :: TFloat AS OperPriceListReal
 
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance

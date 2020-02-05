@@ -2957,7 +2957,7 @@ object SendForm: TSendForm
     Top = 22
   end
   object spSelectPrintStickerList: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_PrintSticker'
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
     DataSet = PrintItemsCDS
     DataSets = <
       item
@@ -3298,7 +3298,7 @@ object SendForm: TSendForm
     Top = 136
   end
   object spSelectPrintSticker: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send_PrintSticker'
+    StoredProcName = 'gpSelect_Movement_Income_PrintSticker'
     DataSet = PrintItemsCDS
     DataSets = <
       item

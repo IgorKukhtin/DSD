@@ -1,4 +1,4 @@
-unit SalePodium;
+ unit SalePodium;
 
 interface
 
@@ -187,6 +187,7 @@ type
     actGet_TotalSumm_byClient: TdsdDataSetRefresh;
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
+    OperPriceListReal: TcxGridDBColumn;
   private
   public
   end;

@@ -859,15 +859,28 @@ object SalePodiumForm: TSalePodiumForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
-          object OperPriceList: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1043#1056#1053
-            DataBinding.FieldName = 'OperPriceList'
+          object OperPriceListReal: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1092#1072#1082#1090' '#1043#1056#1053
+            DataBinding.FieldName = 'OperPriceListReal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            HeaderHint = #1062#1077#1085#1072' '#1092#1072#1082#1090' '#1043#1056#1053
+            Width = 70
+          end
+          object OperPriceList: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1043#1056#1053
+            DataBinding.FieldName = 'OperPriceList'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1043#1056#1053
+            Options.Editing = False
             Width = 70
           end
           object TotalSummPriceList: TcxGridDBColumn
@@ -2248,6 +2261,14 @@ object SalePodiumForm: TSalePodiumForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'OperPriceListReal'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceListReal'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'Remains'
           Value = Null
           Component = MasterCDS
@@ -2715,7 +2736,7 @@ object SalePodiumForm: TSalePodiumForm
         Name = 'ioOperPriceList'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceList'
+        ComponentItem = 'OperPriceListReal'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

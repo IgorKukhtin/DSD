@@ -55,7 +55,7 @@ BEGIN
              , 12918                                         AS WorkTimeKindId 
              , ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
         FROM tmpOperDate
-             LEFT JOIN tmpList ON tmpList.DateOut <= tmpOperDate.OperDate
+             LEFT JOIN tmpList ON tmpList.DateOut < tmpOperDate.OperDate
                                OR tmpList.DateIn > tmpOperDate.OperDate
              LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
                                     ON ObjectString_WorkTimeKind_ShortName.ObjectId = 12918 --  уволен  Х
@@ -211,8 +211,8 @@ BEGIN
                                                , COALESCE (Movement_Data.StorageLineId, Object_Data.StorageLineId)     -- AS PositionLevelId
                                                 ] :: Integer[]
                                          , COALESCE (Movement_Data.OperDate, Object_Data.OperDate) AS OperDate
-                                         , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName) ) :: VarChar
-                                               , COALESCE (Movement_Data.ObjectId,  0) :: VarChar
+                                         , ARRAY[(zfCalc_ViewWorkHour (COALESCE(Movement_Data.Amount, 0), COALESCE (Movement_Data.ShortName, ObjectString_WorkTimeKind_ShortName.ValueData))) :: VarChar
+                                               , COALESCE (Movement_Data.ObjectId,  COALESCE (tmpDateOut_All.WorkTimeKindId, 0)) :: VarChar
                                                , COALESCE (Movement_Data.Color_Calc, zc_Color_White()) :: VarChar
                                                 ] :: TVarChar
                                     FROM (WITH tmpAll AS (SELECT tmpMI.MemberId, tmpMI.PositionId, tmpMI.PositionLevelId, tmpMI.PersonalGroupId, tmpMI.StorageLineId
@@ -267,6 +267,14 @@ BEGIN
                                           AND Object_Data.PositionLevelId = Movement_Data.PositionLevelId
                                           AND Object_Data.PersonalGroupId = Movement_Data.PersonalGroupId
                                           AND Object_Data.StorageLineId = Movement_Data.StorageLineId
+
+                                        LEFT JOIN tmpDateOut_All ON tmpDateOut_All.OperDate   = Object_Data.OperDate
+                                                                AND tmpDateOut_All.MemberId   = Object_Data.MemberId
+                                                                AND tmpDateOut_All.PositionId = Object_Data.PositionId
+                                        LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName
+                                                               ON ObjectString_WorkTimeKind_ShortName.ObjectId = tmpDateOut_All.WorkTimeKindId
+                                                              AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()
+
                                   order by 1,2''
                                 , ''SELECT OperDate FROM tmpOperDate order by 1
                                   '') AS CT (' || vbCrossString || ')

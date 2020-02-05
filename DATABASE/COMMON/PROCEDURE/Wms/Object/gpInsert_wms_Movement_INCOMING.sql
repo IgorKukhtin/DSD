@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbTagName           TVarChar;
    DECLARE vbTagName_detail    TVarChar;
    DECLARE vbActionName        TVarChar;
+   DECLARE vbOperDate          TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Insert_wms_Object_SKU());
@@ -27,7 +28,8 @@ BEGIN
      vbTagName_detail:= 'incoming_detail';
      --
      vbActionName:= 'set';
-
+     --
+     vbOperDate:= CURRENT_DATE - INTERVAL '0 DAY';
 
      -- Проверка
      IF TRIM (COALESCE (inGUID, '')) = ''
@@ -41,7 +43,7 @@ BEGIN
 
 
      -- сформировали новые данные - если надо - wms_MI_Incoming
-     PERFORM lpInsertUpdate_wms_MI_Incoming (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inUserId:= vbUserId);
+     PERFORM lpInsertUpdate_wms_MI_Incoming (inOperDate:= vbOperDate, inUserId:= vbUserId);
 
 
      -- Результат
@@ -58,7 +60,7 @@ BEGIN
                               -- ObjectId
                             , wms_MI_Incoming.Id
                        FROM wms_MI_Incoming
-                       WHERE wms_MI_Incoming.OperDate     = CURRENT_DATE - INTERVAL '0 DAY'
+                       WHERE wms_MI_Incoming.OperDate     = vbOperDate
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
                          -- AND wms_MI_Incoming.StatusId_wms IS NULL

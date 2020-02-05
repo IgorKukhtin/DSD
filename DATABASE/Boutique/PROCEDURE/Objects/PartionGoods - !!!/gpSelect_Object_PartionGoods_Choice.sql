@@ -27,6 +27,8 @@ RETURNS TABLE (Id                   Integer
              , RemainsWithDebt      TFloat
              , OperPrice            TFloat
              , OperPriceList        TFloat
+             , OperPriceListReal    TFloat
+             , CurrencyValue_pl     TFloat
              , BrandName            TVarChar
              , PeriodName           TVarChar
              , PeriodYear           Integer
@@ -40,6 +42,7 @@ RETURNS TABLE (Id                   Integer
              , CompositionGroupName TVarChar
              , GoodsSizeId          Integer
              , GoodsSizeName        TVarChar
+             , CurrencyName_pl      TVarChar
              , isErased             Boolean
              , isArc                Boolean
              , DiscountTax          TFloat
@@ -49,9 +52,13 @@ RETURNS TABLE (Id                   Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId           Integer;
-   DECLARE vbIsOperPrice      Boolean;
-   DECLARE vbPeriodYear_start Integer;
+   DECLARE vbUserId            Integer;
+   DECLARE vbIsOperPrice       Boolean;
+   DECLARE vbPeriodYear_start  Integer;
+   DECLARE vbCurrencyValue_usd TFloat;
+   DECLARE vbParValue_usd      TFloat;
+   DECLARE vbCurrencyValue_eur TFloat;
+   DECLARE vbParValue_eur      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_PartionGoods());
@@ -68,6 +75,20 @@ BEGIN
      vbPeriodYear_start:= EXTRACT (YEAR FROM CURRENT_DATE) - 5;
 
 
+     -- Определили курс на Дату документа
+     SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
+            INTO vbCurrencyValue_eur, vbParValue_eur
+     FROM lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
+                                           , inCurrencyFromId:= zc_Currency_Basis()
+                                           , inCurrencyToId  := zc_Currency_EUR()
+                                            ) AS tmp;
+     -- Определили курс на Дату документа
+     SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
+            INTO vbCurrencyValue_usd, vbParValue_usd
+     FROM lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
+                                           , inCurrencyFromId:= zc_Currency_Basis()
+                                           , inCurrencyToId  := zc_Currency_EUR()
+                                            ) AS tmp;
      -- Результат
      RETURN QUERY
            WITH tmpWhere AS (SELECT lfSelect.UnitId
@@ -115,6 +136,30 @@ BEGIN
                                                      ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                     AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
                   )
+   , tmpPriceList AS (SELECT ObjectLink_Unit_PriceList.ObjectId               AS UnitId
+                           , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
+                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
+                           , OL_currency.ChildObjectId                        AS CurrencyId
+                      FROM ObjectLink AS ObjectLink_Unit_PriceList
+                           LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                                              AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
+                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
+                                                 ON ObjectLink_PriceListItem_PriceList.ChildObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                                AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                           INNER JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                                                 ON ObjectLink_PriceListItem_Goods.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+
+                           LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
+                                                   ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
+                                                  AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
+                                                  AND ObjectHistory_PriceListItem.EndDate = zc_DateEnd()
+                           LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
+                                                        ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                       AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+                      WHERE ObjectLink_Unit_PriceList.ObjectId = inUnitId
+                        AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
+                     )
        -- Результат
        SELECT tmpContainer.PartionId              AS Id
             , Movement.Id                         AS MovementId
@@ -135,6 +180,21 @@ BEGIN
 
             , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
             , Object_PartionGoods.OperPriceList   AS OperPriceList
+
+            , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
+                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (Object_PartionGoods.OperPriceList, vbCurrencyValue_eur, vbParValue_eur))
+                   WHEN tmpPriceList.CurrencyId = zc_Currency_USD()
+                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (Object_PartionGoods.OperPriceList, vbCurrencyValue_usd, vbParValue_usd))
+                   ELSE Object_PartionGoods.OperPriceList
+              END :: TFloat                       AS OperPriceListReal
+
+            , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
+                        THEN zfCalc_CurrencyFrom (1, vbCurrencyValue_eur, vbParValue_eur)
+                   WHEN tmpPriceList.CurrencyId = zc_Currency_USD()
+                        THEN zfCalc_CurrencyFrom (1, vbCurrencyValue_usd, vbParValue_usd)
+                   ELSE 0
+              END :: TFloat                       AS CurrencyValue_pl
+            
             , Object_Brand.ValueData              AS BrandName
             , Object_Period.ValueData             AS PeriodName
             , Object_PartionGoods.PeriodYear      AS PeriodYear
@@ -148,6 +208,7 @@ BEGIN
             , Object_CompositionGroup.ValueData   AS CompositionGroupName
             , Object_GoodsSize.Id                 AS GoodsSizeId
             , Object_GoodsSize.ValueData          AS GoodsSizeName
+            , Object_Currency_pl.ValueData        AS CurrencyName_pl
             , COALESCE (Object_PartionGoods.isErased, Object_PartionGoods_er.isErased) AS isErased
             , COALESCE (Object_PartionGoods.isArc   , Object_PartionGoods_er.isArc)    AS isArc
 
@@ -163,6 +224,7 @@ BEGIN
               END :: Integer                      AS Color_Calc
 
        FROM tmpContainer
+           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpContainer.GoodsId
 
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
                                         AND Object_PartionGoods.isErased       = FALSE
@@ -184,6 +246,7 @@ BEGIN
                                   ON ObjectString_GoodsGroupFull.ObjectId = Object_Goods.Id
                                  AND ObjectString_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
 
+           LEFT JOIN Object AS Object_Currency_pl      ON Object_Currency_pl.Id      = COALESCE (tmpPriceList.CurrencyId, zc_Currency_Basis())
            LEFT JOIN Object AS Object_Currency         ON Object_Currency.Id         = Object_PartionGoods.CurrencyId
            LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
            LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId

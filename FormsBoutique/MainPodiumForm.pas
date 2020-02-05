@@ -113,7 +113,6 @@ type
     actBank: TdsdOpenForm;
     miBank: TMenuItem;
     actSale: TdsdOpenForm;
-    miSale: TMenuItem;
     actBankAccount: TdsdOpenForm;
     miBankAccount: TMenuItem;
     actReturnIn: TdsdOpenForm;
@@ -230,7 +229,7 @@ type
     miImportSettings: TMenuItem;
     N10: TMenuItem;
     actSalePodium: TdsdOpenForm;
-    N3: TMenuItem;
+    miSalePodium: TMenuItem;
   private
     { Private declarations }
   public

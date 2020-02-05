@@ -56,7 +56,7 @@ BEGIN
                                                    , inWeightMax      := wms_Object_GoodsByGoodsKind.WeightMax
                                                     )) AS qty
                               -- Дата производства
-                            , MI.PartionDate AS production_date
+                            , MI.PartionDate - INTERVAL '0 DAY' AS production_date
                               -- Вес (вес товара)
                             , SUM (MI.RealWeight) AS real_weight
                               -- Вес лотка

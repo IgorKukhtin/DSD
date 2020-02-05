@@ -97,6 +97,9 @@ type
     DiscountTax: TcxGridDBColumn;
     PanelGoodsGroupNameFull: TPanel;
     DBLabelGoodsGroupNameFull: TcxDBLabel;
+    OperPriceListReal: TcxGridDBColumn;
+    CurrencyName_pl: TcxGridDBColumn;
+    CurrencyValue_pl: TcxGridDBColumn;
   private
     { Private declarations }
   public
