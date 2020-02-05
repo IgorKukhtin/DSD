@@ -1,11 +1,11 @@
 -- Function: gpUpdate_Object_Goods_IsUpload()
 
-DROP FUNCTION IF EXISTS gpUpdate_Unit_isSUN_in(Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Unit_isSUN_NotSold(Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdate_Unit_isSUN_in(
+CREATE OR REPLACE FUNCTION gpUpdate_Unit_isSUN_NotSold(
     IN inId                  Integer   ,    -- ключ объекта <Подразделение>
-    IN inisSUN_in            Boolean   ,    -- Работают по СУН
-   OUT outisSUN_in           Boolean   ,
+    IN inisSUN_NotSold       Boolean   ,    -- отключена модель "без продаж" для СУН
+   OUT outisSUN_NotSold      Boolean   ,
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS Boolean AS
@@ -20,9 +20,9 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
 
    -- определили признак
-   outisSUN_in:= NOT inisSUN_in;
+   outisSUN_NotSold:= NOT inisSUN_NotSold;
 
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_in(), inId, outisSUN_in);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_SUN_NotSold(), inId, outisSUN_NotSold);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
@@ -34,5 +34,5 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 19.11.19         *
+ 05.02.20         *
 */

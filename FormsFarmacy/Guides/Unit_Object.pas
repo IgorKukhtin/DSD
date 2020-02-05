@@ -108,6 +108,9 @@ type
     ListDaySUN: TcxGridDBColumn;
     isNotCashMCS: TcxGridDBColumn;
     isNotCashListDiff: TcxGridDBColumn;
+    spUpdate_Unit_isSUN_NotSold: TdsdStoredProc;
+    actUpdate_Unit_isSUN_NotSold: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN_NotSold: TdxBarButton;
   private
     { Private declarations }
   public

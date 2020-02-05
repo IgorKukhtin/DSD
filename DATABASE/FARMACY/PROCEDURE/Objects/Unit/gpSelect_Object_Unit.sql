@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EndTimeSP   TDateTime
              , isSP        Boolean
              , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
+             , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
 ) AS
@@ -147,6 +148,7 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
       , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
+      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean AS isSUN_NotSold
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)   :: Boolean   AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
@@ -277,6 +279,10 @@ BEGIN
                                 ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
+                                ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
@@ -381,6 +387,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬. 
+ 05.02.20         * add isSUN_NotSold
  17.12.19         * add SunIncome
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff
  20.11.19         * ListDaySUN
