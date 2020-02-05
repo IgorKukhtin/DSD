@@ -50,6 +50,16 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Format = ',0.####'
           Kind = skSum
           Column = Day_calendar
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaCompensation_fact
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaCompensation_diff
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -76,6 +86,16 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = PersonalName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaCompensation_fact
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummaCompensation_diff
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -230,7 +250,29 @@ object Report_HolidayCompensationForm: TReport_HolidayCompensationForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082
+        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082' ('#1088#1072#1089#1095#1077#1090')'
+        Options.Editing = False
+        Width = 90
+      end
+      object SummaCompensation_fact: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089'. '#1079#1072' '#1085#1077#1080#1089#1087'. '#1086#1090#1087#1091#1089#1082' ('#1092#1072#1082#1090')'
+        DataBinding.FieldName = 'SummaCompensation_fact'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1079#1072' '#1085#1077#1080#1089#1087'.'#1086#1090#1087#1091#1089#1082'('#1092#1072#1082#1090')'
+        Options.Editing = False
+        Width = 90
+      end
+      object SummaCompensation_diff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1082#1086#1084#1087#1077#1085#1089'. '#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090
+        DataBinding.FieldName = 'SummaCompensation_diff'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083'. '#1087#1086' '#1089#1091#1084#1084#1077' '#1082#1086#1084#1087#1077#1085#1089'. '#1088#1072#1089#1095#1077#1090' '#1080' '#1092#1072#1082#1090
         Options.Editing = False
         Width = 90
       end
