@@ -95,7 +95,7 @@ type
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
     actPrintIn: TdsdPrintAction;
-    bb: TdxBarButton;
+    bbPrintIn: TdxBarButton;
     cbIsProtocol: TcxCheckBox;
     cxLabel5: TcxLabel;
     deStartProtocol: TcxDateEdit;
@@ -103,6 +103,8 @@ type
     deEndProtocol: TcxDateEdit;
     PeriodChoice1: TPeriodChoice;
     spGet_Current_Date: TdsdStoredProc;
+    actPrintAllPrice: TdsdPrintAction;
+    bbPrintAllPrice: TdxBarButton;
   private
   public
   end;
