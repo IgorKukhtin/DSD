@@ -263,7 +263,7 @@ BEGIN
             , tmpData.GoodsInfoName
             , tmpData.LineFabricaName
             , LabelName
-            , STRING_AGG ('[' ||tmpData.GoodsSizeName ||'] '||CAST (tmpData.Amount AS NUMERIC (16,2)), '; ') AS GoodsSizeName
+            , STRING_AGG ('[' ||tmpData.GoodsSizeName ||'] '||zfConvert_FloatToString (tmpData.Amount), '; ') AS GoodsSizeName
             , SUM (tmpData.Amount) ::TFloat AS Amount
             , tmpData.OperPrice          ::TFloat
             , tmpData.CountForPrice      ::TFloat
