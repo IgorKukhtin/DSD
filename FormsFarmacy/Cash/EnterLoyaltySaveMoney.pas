@@ -25,6 +25,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure edMaskNumberPropertiesValidate(Sender: TObject;
       var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure BuyerCDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
   private
     FID : integer;
     FPhone : String;
@@ -42,7 +43,27 @@ implementation
 
 {$R *.dfm}
 
-uses CommonData, LocalWorkUnit;
+uses CommonData, LocalWorkUnit, BuyerList;
+
+procedure TEnterLoyaltySaveMoneyForm.BuyerCDSFilterRecord(DataSet: TDataSet;
+  var Accept: Boolean);
+  Var S,S1:String; k:integer; F:Boolean;
+begin
+  S1 := Trim(edMaskName.Text);
+  if S1 = '' then exit;
+  Accept:=true;
+
+  repeat
+    k:=pos(' ',S1);
+    if K = 0 then k:=length(S1)+1;
+    s := Trim(copy(S1,1,k-1));
+    S1 := Trim(copy(S1,k,Length(S1)));
+
+    F := Pos(AnsiUpperCase(s), AnsiUpperCase(DataSet.FieldByName('Name').AsString)) > 0;
+
+    Accept:=Accept AND F;
+  until (S1='') or (Accept = False);
+end;
 
 procedure TEnterLoyaltySaveMoneyForm.edMaskNumberPropertiesValidate(
   Sender: TObject; var DisplayValue: Variant; var ErrorText: TCaption;
@@ -83,7 +104,8 @@ begin
 
       if BuyerCDS.Active then
       begin
-        BuyerCDS.Filter := 'Phone = ''' + edMaskNumber.Text + '''';
+        if edMaskName.Text <> '' then BuyerCDS.OnFilterRecord := BuyerCDSFilterRecord
+        else BuyerCDS.Filter := 'Phone = ''' + edMaskNumber.Text + '''';
         BuyerCDS.Filtered := True;
         BuyerCDS.First;
       end else
@@ -119,6 +141,22 @@ begin
         FName := BuyerCDS.FieldByName('Name').AsString;
         if Assigned(BuyerCDS.FindField('LoyaltySMID')) then FLoyaltySMID := BuyerCDS.FieldByName('LoyaltySMID').AsInteger;
       end else ShowMessage('Учетная запись покупателя ' + BuyerCDS.FieldByName('Name').AsString + ' удалена.');
+    end else if BuyerCDS.RecordCount > 1 then
+    begin
+      if ShowBuyerList then
+      begin
+        if not BuyerCDS.FieldByName('isErased').AsBoolean then
+        begin
+          FID := BuyerCDS.FieldByName('Id').AsInteger;
+          FPhone :=  BuyerCDS.FieldByName('Phone').AsString;
+          FName := BuyerCDS.FieldByName('Name').AsString;
+          if Assigned(BuyerCDS.FindField('LoyaltySMID')) then FLoyaltySMID := BuyerCDS.FieldByName('LoyaltySMID').AsInteger;
+        end else ShowMessage('Учетная запись покупателя ' + BuyerCDS.FieldByName('Name').AsString + ' удалена.');
+      end else
+      begin
+        Action := caNone;
+        Exit;
+      end;
     end else
     begin
       ShowMessage('По номеру телефона ' + edMaskNumber.Text + ' покупатель не найден.');
@@ -126,12 +164,10 @@ begin
       Exit;
     end;
 
-    if FLoyaltySMID = 0 then
-    begin
-
-    end;
-
   finally
+    BuyerCDS.Filtered := False;
+    BuyerCDS.Filter := '';
+    BuyerCDS.OnFilterRecord := Nil;
     FisFormClose := False;
   end;
 end;

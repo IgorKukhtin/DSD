@@ -1,13 +1,15 @@
 -- Function: gpInsertUpdate_Object_Member_All(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member_All (Integer, Integer, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member_All(
  INOUT ioId	                 Integer   ,    -- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
     IN inIsOfficial          Boolean   ,    -- Оформлен официально
+    IN inIsNotCompensation   Boolean   ,    -- Исключить из компенсации отпуска
     IN inINN                 TVarChar  ,    -- Код ИНН
     IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
     IN inCard                TVarChar  ,    -- № карточного счета ЗП
@@ -69,6 +71,8 @@ BEGIN
 
    -- сохранили свойство <Оформлен официально>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_Official(), ioId, inIsOfficial);
+   -- сохранили свойство <Исключить из компенсации отпуска>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Member_NotCompensation(), ioId, inIsNotCompensation);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_INN(), ioId, inINN);
@@ -117,6 +121,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.02.20         * add inIsNotCompensation
  09.09.19         * inCardIBAN, inCardIBANSecond
  05.03.17         * add banks
  20.02.17         *

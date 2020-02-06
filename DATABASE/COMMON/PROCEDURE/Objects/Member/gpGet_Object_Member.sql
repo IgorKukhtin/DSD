@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PositionId Integer, PositionName TVarChar
              , PersonalServiceListId Integer, PersonalServiceListName TVarChar
              , isOfficial Boolean
+             , isNotCompensation Boolean
               )
 AS
 $BODY$
@@ -63,7 +64,8 @@ BEGIN
            , 0                      AS PersonalServiceListId
            , CAST ('' AS TVarChar)  AS PersonalServiceListName
 
-           , FALSE AS isOfficial;
+           , FALSE                  AS isOfficial
+           , FALSE                  AS isNotCompensation;
    ELSE
        RETURN QUERY
        WITH tmpPersonal AS (SELECT ObjectLink_Personal_Member.ObjectId        AS PersonalId
@@ -137,6 +139,7 @@ BEGIN
             , Object_PersonalServiceList.ValueData AS PersonalServiceListName
       
             , ObjectBoolean_Official.ValueData         AS isOfficial
+            , COALESCE (ObjectBoolean_NotCompensation.ValueData,FALSE) ::Boolean  AS isNotCompensation
       
         FROM Object AS Object_Member
              LEFT JOIN tmpPersonal ON tmpPersonal.ord = 1
@@ -147,6 +150,10 @@ BEGIN
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                      ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                     AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
+                                     ON ObjectBoolean_NotCompensation.ObjectId = Object_Member.Id
+                                    AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
+
              LEFT JOIN ObjectString AS ObjectString_INN 
                                     ON ObjectString_INN.ObjectId = Object_Member.Id 
                                    AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
@@ -207,6 +214,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.02.20         * add isNotCompensation
  09.09.19         * CardIBAN, CardIBANSecond
  03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond

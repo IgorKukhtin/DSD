@@ -382,6 +382,7 @@ BEGIN
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := vbDocumentKindId
+                                                  , inSubjectDocId          := 0
                                                   , inComment               := '' :: TvarChar
                                                   , inUserId                := vbUserId
                                                    )

@@ -180,6 +180,7 @@ type
     procedure LoadStorageLineFormTest;
     procedure LoadStorage_ObjectFormTest;
     procedure LoadStoreRealFormTest;
+    procedure LoadSubjectDocFormTest;
     procedure LoadTaskTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
@@ -2882,6 +2883,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStoreRealJournalForm');
 end;
 
+  procedure TLoadFormTest.LoadSubjectDocFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSubjectDocForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSubjectDocForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSubjectDocEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSubjectDocEditForm');
+end;
+
 procedure TLoadFormTest.LoadRoleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
@@ -2943,11 +2952,10 @@ procedure TLoadFormTest.LoadMemberFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberHoliday_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberHoliday_ChoiceForm');
-  exit;
 
-  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMember_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMember_ChoiceForm');
-  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalPosition_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalPosition_ObjectForm');
 

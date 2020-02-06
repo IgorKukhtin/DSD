@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , isAuto Boolean
              , InsertDate TDateTime, InsertName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -27,10 +28,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- проверка прав
      vbIsDocumentUser:= EXISTS (SELECT 1 FROM Object_RoleAccessKey_View AS View_RoleAccessKey WHERE View_RoleAccessKey.AccessKeyId = zc_Enum_Process_AccessKey_DocumentUser() AND View_RoleAccessKey.UserId = vbUserId);
-
 
      -- Результат
      RETURN QUERY
@@ -68,6 +67,9 @@ BEGIN
 
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
+
+           , Object_SubjectDoc.Id                   AS SubjectDocId
+           , Object_SubjectDoc.ValueData            AS SubjectDocName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -124,6 +126,12 @@ BEGIN
                                          ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
        WHERE (Object_To.DescId   IN (zc_Object_Member(), zc_Object_Car())
            OR Object_From.DescId IN (zc_Object_Member(), zc_Object_Car())
              )

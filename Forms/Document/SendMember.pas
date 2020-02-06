@@ -74,6 +74,9 @@ type
     edInsertDate: TcxDateEdit;
     cxLabel7: TcxLabel;
     edInsertName: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
     { Private declarations }
   public

@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа (в документе)
+    IN inSubjectDocId        Integer   , -- Основание для перемещения
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )
@@ -42,6 +44,9 @@ BEGIN
      -- сохранили связь с <Тип документа (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentKind(), ioId, inDocumentKindId);
 
+     -- сохранили связь с <Основание для перемещения>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), ioId, inSubjectDocId);
+
      -- Комментарий
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
@@ -67,6 +72,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.02.20         * add inSubjectDocId
  27.02.19         *
  03.10.17         *
  17.06.16         *

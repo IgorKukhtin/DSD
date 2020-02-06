@@ -134,6 +134,7 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
+    OnFilterRecord = BuyerCDSFilterRecord
     Left = 296
     Top = 8
   end

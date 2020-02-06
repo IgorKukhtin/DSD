@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbLimitSUN TFloat;
    DECLARE vbGoodsName TVarChar;
    DECLARE vbAmount TFloat;
+   DECLARE vbAmountStorage  TFloat;
    DECLARE vbSaldo TFloat;
    DECLARE vbUnit_From Integer;
 BEGIN
@@ -141,6 +142,35 @@ BEGIN
                RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во перемещения <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
            END IF;
 
+           -- Проверка: Не проводить накладные перемещения - у которых колонка - "Кол-во получателя" отличается от кол-ки "Факт кол-во". 
+           vbGoodsName := '';
+           SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountStorage
+           INTO vbGoodsName, vbAmount, vbAmountStorage
+           FROM (SELECT MovementItem.ObjectId                             AS GoodsId
+                      , SUM (MovementItem.Amount)                         AS Amount
+                      , SUM (COALESCE(MIFloat_AmountStorage.ValueData,0))  AS AmountStorage
+                 FROM MovementItem
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
+                                                  ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+                 WHERE MovementItem.MovementId = inMovementId
+                   AND MovementItem.DescId = zc_MI_Master()
+                   AND MovementItem.isErased = FALSE
+                 GROUP BY MovementItem.ObjectId
+                ) AS tmp
+                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+           WHERE tmp.Amount <> tmp.AmountStorage
+             AND zfCalc_AccessKey_SendAll (vbUserId) = FALSE -- !!!ЭТИМ ПОЛЬЗОВАТЕЛЯМ - РАЗРЕШИЛИ!!!
+           LIMIT 1
+           ;
+
+           IF vbGoodsName <> '' AND 
+              vbUserId NOT IN (375661, 2301972) -- Зерин Юрий Геннадиевич              
+           THEN
+               RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам Кол-во получателя <%> отличается от Факт кол-ва точки-отправителя <%>.', vbGoodsName, vbAmount, vbAmountStorage;
+           END IF;
+
+
            -- собст	венно проводки
            PERFORM lpComplete_Movement_Send(inMovementId  -- ключ Документа
                                           , vbUserId);    -- Пользователь  
@@ -168,6 +198,7 @@ LANGUAGE plpgsql VOLATILE;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 06.02.20                                                                      *
  08.11.17         *
 */

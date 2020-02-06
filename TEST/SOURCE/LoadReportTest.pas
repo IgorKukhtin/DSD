@@ -389,10 +389,10 @@ begin
 
   LoadReportFromFile('PrintMovement_Quality32049199', ReportPath + '\Товарный Учет\PrintMovement_Quality32049199.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_ReturnInAkt', ReportPath + '\Товарный Учет\PrintMovement_ReturnInAkt.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_ReturnIn', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32049199', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32049199.fr3');
   LoadReportFromFile('PrintMovement_ReturnIn32516492', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn32516492.fr3');
@@ -423,17 +423,17 @@ begin
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
   LoadReportFromFile('PrintMovement_TaxCorrectiveReestr', ReportPath + '\Товарный Учет\PrintMovement_TaxCorrectiveReestr.fr3');
 
-  }
+
   LoadReportFromFile('PrintMovement_TTN', ReportPath + '\Товарный Учет\PrintMovement_TTN.fr3');
   exit;
-  {
+
   LoadReportFromFile('PrintMovement_SalePackGross', ReportPath + '\Товарный Учет\PrintMovement_SalePackGross.fr3');
   exit;
-  }
+
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
   LoadReportFromFile('PrintMovement_Sale32294926', ReportPath + '\Товарный Учет\PrintMovement_Sale32294926.fr3');
    exit;
-  {
+
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
@@ -443,9 +443,9 @@ begin
 
   LoadReportFromFile('PrintMovement_OrderExternal', ReportPath + '\Товарный Учет\PrintMovement_OrderExternal.fr3');
   //exit;
-  }
+
   LoadReportFromFile('PrintMovement_Loss', ReportPath + '\Товарный Учет\PrintMovement_Loss.fr3');
-  {exit;
+  exit;
   LoadReportFromFile('PrintMovement_Income', ReportPath + '\Товарный Учет\PrintMovement_Income.fr3');
   LoadReportFromFile('PrintMovement_IncomeAsset', ReportPath + '\Товарный Учет\PrintMovement_IncomeAsset.fr3');
   LoadReportFromFile('PrintMovement_IncomeFuel', ReportPath + '\Товарный Учет\PrintMovement_IncomeFuel.fr3');

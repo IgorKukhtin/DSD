@@ -875,6 +875,11 @@ INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_JuridicalOrderFinance', 'Параметры Юр.лица в планировании платежей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalOrderFinance');
 
 
+CREATE OR REPLACE FUNCTION zc_Object_SubjectDoc() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SubjectDoc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_SubjectDoc', 'Основание для перемещения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SubjectDoc');
+
+
 
 --!!! Аптека
 CREATE OR REPLACE FUNCTION zc_Object_FileTypeKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_FileTypeKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1233,6 +1238,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 06.02.20         * zc_Object_SubjectDoc
  29.01.20         * zc_Object_PlanIventory
  26.12.19                                                                                        * zc_Object_Buyer
  19.11.19         * zc_Object_GoodsReprice

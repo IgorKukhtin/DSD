@@ -238,7 +238,7 @@ BEGIN
             , tmpData.CompositionName
             , tmpData.GoodsInfoName
             , tmpData.LineFabricaName
-            , LabelName
+            , tmpData.LabelName
             , tmpData.GoodsSizeName
             , tmpData.Amount             ::TFloat
             , tmpData.OperPrice          ::TFloat
@@ -262,7 +262,7 @@ BEGIN
             , tmpData.CompositionName
             , tmpData.GoodsInfoName
             , tmpData.LineFabricaName
-            , LabelName
+            , tmpData.LabelName
             , STRING_AGG ('[' ||tmpData.GoodsSizeName ||'] '||zfConvert_FloatToString (tmpData.Amount), '; ') AS GoodsSizeName
             , SUM (tmpData.Amount) ::TFloat AS Amount
             , tmpData.OperPrice          ::TFloat

@@ -57,6 +57,7 @@ type
     Panel: TPanel;
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
+    isNotCompensation: TcxGridDBColumn;
   private
     { Private declarations }
   public

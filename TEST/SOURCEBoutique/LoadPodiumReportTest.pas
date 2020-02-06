@@ -59,6 +59,7 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('PrintMovement_SendPODIUM', ReportPath + '\PrintMovement_SendPODIUM.fr3');
   LoadReportFromFile('PrintMovement_IncomePODIUM', ReportPath + '\PrintMovement_IncomePODIUM.fr3');
   exit;
   LoadReportFromFile('Анализ продаж1', ReportPath + '\Анализ продаж1.fr3');

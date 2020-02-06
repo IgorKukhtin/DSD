@@ -115,6 +115,11 @@ type
     cbFilter3: TcxCheckBox;
     AmountPlan: TcxGridDBBandedColumn;
     AmountPlanAward: TcxGridDBBandedColumn;
+    cdsTheFineEnable: TClientDataSet;
+    cdsTheFineEnableGoodsCode: TIntegerField;
+    cdsTheFineEnableAmountTheFineTab: TCurrencyField;
+    cbFilter4: TcxCheckBox;
+    cdsTheFineEnableisEnabled: TBooleanField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -143,6 +148,9 @@ type
     procedure cbHighlightStringsClick(Sender: TObject);
     procedure cbFilter1Click(Sender: TObject);
     procedure ClientDataSetFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems0GetText(
+      Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
+      var AText: string);
   private
     FUnit : TStrings;
     FUnitCategory : TStrings;
@@ -155,6 +163,8 @@ type
 
     FAmountPlan :  TcxGridDBBandedColumn;
     FAmountPlanAward :  TcxGridDBBandedColumn;
+
+    FPresence : Currency;
 
   public
   end;
@@ -243,6 +253,7 @@ begin
   cbFilter1.Visible := cbHighlightStrings.Checked;
   cbFilter2.Visible := cbHighlightStrings.Checked;
   cbFilter3.Visible := cbHighlightStrings.Checked;
+  cbFilter4.Visible := cbHighlightStrings.Checked;
 
   if not ClientDataSet.Active  then Exit;
 
@@ -367,6 +378,19 @@ begin
 
     cdsListBands.Next;
   end;
+
+  with cxImplementationPlanEmployeeDBBandedTableView1.CreateColumn do
+  begin
+    Caption := 'isEnabled';
+    Position.BandIndex := nIndexUnit;
+    HeaderAlignmentHorz := TAlignment.taCenter;
+    Options.Editing := False;
+    DataBinding.FieldName := 'isEnabled';
+    Name := 'col' + DataBinding.FieldName;
+    Tag := nIndexUnit;
+    Visible := False;
+  end;
+
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsListFieldsAfterOpen(
@@ -426,6 +450,13 @@ begin
       Field.DataSet := ClientDataSet;
     end;
   end;
+
+  Field := TCurrencyField.Create(Self);
+  Field.FieldKind := fkCalculated;
+  Field.FieldName := 'isEnabled';
+  Field.Name := 'cds' + Field.FieldName;
+  Field.DataSet := ClientDataSet;
+
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsResultCalcFields(
@@ -445,7 +476,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cdsUnitAfterOpen(
   DataSet: TDataSet);
-  var nCount : integer; I : Integer;
+  var nCount  : integer; I : Integer;
 begin
   FUnitCalck := 0;
   nCount := 0;
@@ -471,6 +502,8 @@ begin
     end;
   finally
     cdsUnit.First;
+    if cdsUnit.FieldByName('NormOfManDays').AsCurrency <= nCount then FPresence := 100
+    else FPresence := nCount / cdsUnit.FieldByName('NormOfManDays').AsCurrency * 100;
     cdsUnit.EnableControls;
   end;
 end;
@@ -488,6 +521,8 @@ begin
   FCountO := 0;
   FCountYes := 0;
   try
+    cdsTheFineEnable.Close;
+    cdsTheFineEnable.CreateDataSet;
     ClientDataSet.AfterPost :=  Nil;
     ClientDataSet.DisableControls;
     while not ClientDataSet.Eof do
@@ -502,6 +537,16 @@ begin
         Inc(FCountYes);
       end else ClientDataSet.FieldByName('Consider').AsString := 'No';
       ClientDataSet.Post;
+
+      if DataSet['AmountTheFineTab'] > 0 then
+      begin
+        cdsTheFineEnable.Append;
+        cdsTheFineEnable.FieldByName('GoodsCode').AsInteger := DataSet['GoodsCode'];
+        cdsTheFineEnable.FieldByName('AmountTheFineTab').AsCurrency := DataSet['AmountTheFineTab'];
+        cdsTheFineEnable.FieldByName('isEnabled').AsBoolean := True;
+        cdsTheFineEnable.Post;
+      end;
+
       ClientDataSet.Next;
     end;
   finally
@@ -532,6 +577,21 @@ begin
       cdsResult.FieldByName('Awarding').AsString := 'Yes'
     else cdsResult.FieldByName('Awarding').AsString := 'No';
     cdsResult.Post;
+
+    if FPresence < 100 then
+    begin
+      cdsTheFineEnable.First;
+      while not cdsTheFineEnable.Eof do
+      begin
+        cdsTheFineEnable.Edit;
+        cdsTheFineEnable.FieldByName('isEnabled').AsBoolean := False;
+        cdsTheFineEnable.Post;
+        if cdsTheFineEnable.RecNo > (cdsTheFineEnable.RecordCount * (100 - FPresence) / 100) then Break;
+        cdsTheFineEnable.Next;
+      end;
+      ClientDataSet.Resync([]);
+    end;
+
   finally
     cdsUnitCategory.First;
     cdsUnitCategory.EnableControls;
@@ -543,6 +603,8 @@ procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetAfterPost(
   var Pos : Integer;
 begin
   if not ClientDataSet.Active then Exit;
+  cdsTheFineEnable.Close;
+  cdsTheFineEnable.Open;
   Pos := ClientDataSet.RecNo;
   FCountYes := 0;
   try
@@ -551,12 +613,37 @@ begin
     while not ClientDataSet.Eof do
     begin
       if DataSet['Consider'] = 'Yes' then Inc(FCountYes);
+      if DataSet['AmountTheFineTab'] > 0 then
+      begin
+        cdsTheFineEnable.Append;
+        cdsTheFineEnable.FieldByName('GoodsCode').AsInteger := DataSet['GoodsCode'];
+        cdsTheFineEnable.FieldByName('AmountTheFineTab').AsCurrency := DataSet['AmountTheFineTab'];
+        cdsTheFineEnable.FieldByName('isEnabled').AsBoolean := True;
+        cdsTheFineEnable.Post;
+      end;
+
       ClientDataSet.Next;
     end;
+
+    if FPresence < 100 then
+    begin
+      cdsTheFineEnable.First;
+      while not cdsTheFineEnable.Eof do
+      begin
+        cdsTheFineEnable.Edit;
+        cdsTheFineEnable.FieldByName('isEnabled').AsBoolean := False;
+        cdsTheFineEnable.Post;
+        if cdsTheFineEnable.RecNo > (cdsTheFineEnable.RecordCount * (100 - FPresence) / 100) then Break;
+        cdsTheFineEnable.Next;
+      end;
+      ClientDataSet.Resync([]);
+    end;
+
   finally
     ClientDataSet.RecNo := Pos;
     ClientDataSet.EnableControls;
   end;
+
 
   cdsResult.Resync([]);
 end;
@@ -699,6 +786,10 @@ begin
         cdsUnitCategory.FieldByName('PremiumImplPlan').AsCurrency / 100;
     end;
     Dataset['BonusAmountTab'] := nSum;
+
+    if cdsTheFineEnable.Locate('GoodsCode', Dataset['GoodsCode'], []) then
+      Dataset['isEnabled'] := cdsTheFineEnable.FieldByName('isEnabled').AsBoolean
+    else Dataset['isEnabled'] := True;
   finally
     cdsUnitCategory.RecNo := rnUnitCategory;
     cdsUnit.RecNo := rnUnit;
@@ -709,7 +800,7 @@ end;
 
 procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetFilterRecord(
   DataSet: TDataSet; var Accept: Boolean);
-  var I, rnUnit : Integer; nAmount, nAmountPlan, nAmountPlanAward : Currency;
+  var I, rnUnit : Integer; nAmount, nAmountPlan, nAmountPlanAward : Currency; isEnabled : boolean;
 
   function Min(A, B : Currency) : Currency;
   begin
@@ -718,7 +809,7 @@ procedure TReport_ImplementationPlanEmployeeForm.ClientDataSetFilterRecord(
 
 begin
   if not cbHighlightStrings.Checked then Exit;
-  if cbFilter1.Checked and cbFilter2.Checked and cbFilter3.Checked then Exit;
+  if cbFilter1.Checked and cbFilter2.Checked and cbFilter3.Checked and cbFilter4.Checked then Exit;
   nAmount := 0; nAmountPlan := 0; nAmountPlanAward := 0;
 
   for I := 0 to FUnit.Count - 1 do
@@ -744,9 +835,14 @@ begin
     nAmountPlanAward := nAmountPlanAward + Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]];
   end;
 
-  if not cbFilter1.Checked and (nAmount < nAmountPlan) then Accept := False
+  if cdsTheFineEnable.Locate('GoodsCode', Dataset['GoodsCode'], []) then
+    isEnabled := cdsTheFineEnable.FieldByName('isEnabled').AsBoolean
+  else isEnabled := True;
+
+  if not cbFilter1.Checked and (nAmount < nAmountPlan) and isEnabled then Accept := False
   else if not cbFilter2.Checked and (nAmount >= nAmountPlan) and (nAmount < nAmountPlanAward) then Accept := False
-  else if not cbFilter3.Checked and (nAmount >= nAmountPlanAward) then Accept := False;
+  else if not cbFilter3.Checked and (nAmount >= nAmountPlanAward) then Accept := False
+  else if not cbFilter4.Checked and not isEnabled then Accept := False;
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.colGroupNameStylesGetContentStyle(
@@ -757,13 +853,15 @@ begin
   begin
     if StartOfTheMonth(deStart.Date) < StartOfTheMonth(Date)  then
     begin
-      if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanTab.Index] then FStyle.TextColor := clRed
+      if not ARecord.Values[Sender.FindItemByName('colisEnabled').Index] then FStyle.TextColor := clGray
+      else if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanTab.Index] then FStyle.TextColor := clRed
       else if ARecord.Values[colAmount.Index] < ARecord.Values[colAmountPlanAwardTab.Index] then FStyle.TextColor := clGreen
       else FStyle.TextColor := clBlue;
       AStyle := FStyle
     end else if Assigned(FAmountPlan) and Assigned(FAmountPlanAward) then
     begin
-      if ARecord.Values[colAmount.Index] < ARecord.Values[FAmountPlan.Index] then FStyle.TextColor := clRed
+      if not ARecord.Values[Sender.FindItemByName('colisEnabled').Index] then FStyle.TextColor := clGray
+      else if ARecord.Values[colAmount.Index] < ARecord.Values[FAmountPlan.Index] then FStyle.TextColor := clRed
       else if ARecord.Values[colAmount.Index] < ARecord.Values[FAmountPlanAward.Index] then FStyle.TextColor := clGreen
       else FStyle.TextColor := clBlue;
       AStyle := FStyle
@@ -778,11 +876,30 @@ begin
   try
     ClientDataSet.DisableControls;
     ClientDataSet.Filtered := False;
-    ClientDataSet.Filtered := not cbFilter1.Checked or not cbFilter2.Checked or not cbFilter3.Checked or
+    ClientDataSet.Filtered := not cbFilter1.Checked or not cbFilter2.Checked or not cbFilter3.Checked or not cbFilter4.Checked or
       (Trim(edFilter.Text) <> '');
   finally
     ClientDataSet.EnableControls;
   end;
+end;
+
+procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems0GetText(
+  Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean;
+  var AText: string);
+var nSum : currency;
+begin
+  nSum := 0;
+  if cdsTheFineEnable.Active then
+  begin
+    cdsTheFineEnable.First;
+    while not cdsTheFineEnable.Eof do
+    begin
+      if cdsTheFineEnable.FieldByName('isEnabled').AsBoolean then nSum := nSum + cdsTheFineEnable.FieldByName('AmountTheFineTab').AsCurrency;
+      cdsTheFineEnable.Next;
+    end;
+  end;
+
+  AText := FormatCurr(',0.00', nSum);
 end;
 
 procedure TReport_ImplementationPlanEmployeeForm.cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems2GetText(

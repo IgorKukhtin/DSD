@@ -213,6 +213,7 @@ BEGIN
                                          , inFromId           := vbFromId
                                          , inToId             := tmp.ToId
                                          , inDocumentKindId   := 0
+                                         , inSubjectDocId     := 0
                                          , inComment          := '' ::TVarChar
                                          , inUserId           := vbUserId
                                           )

@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InsertDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
              , MovementId_Order Integer, InvNumberOrder TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -41,14 +42,14 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
-             , 0                     		                AS FromId
-             , CAST ('' AS TVarChar) 		                AS FromName
-             , 0                     		                AS ToId
-             , CAST ('' AS TVarChar) 		                AS ToName
+             , 0                                                AS FromId
+             , CAST ('' AS TVarChar)                            AS FromName
+             , 0                                                AS ToId
+             , CAST ('' AS TVarChar)                            AS ToName
              , 0                                                AS DocumentKindId
-             , CAST ('' AS TVarChar) 		                AS DocumentKindName
+             , CAST ('' AS TVarChar)                            AS DocumentKindName
              
-             , CAST ('' as TVarChar) 		                AS Comment
+             , CAST ('' as TVarChar)                            AS Comment
 
              , FALSE                                            AS isAuto
 
@@ -58,7 +59,10 @@ BEGIN
              , 0                                                AS MovementId_Send
              , CAST ('' AS TVarChar)                            AS InvNumber_SendFull
              , 0                                                AS MovementId_Order
-             , CAST ('' AS TVarChar) 			        AS InvNumberOrder
+             , CAST ('' AS TVarChar)                            AS InvNumberOrder
+             
+             , 0                                                  AS SubjectDocId
+             , CAST ('' AS TVarChar)                              AS SubjectDocName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
               LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId
           ;
@@ -84,7 +88,7 @@ BEGIN
            , COALESCE(MovementBoolean_isAuto.ValueData, False) ::Boolean  AS isAuto
 
            , Object_Insert.ValueData                            AS InsertName
-           , MovementDate_Insert.ValueData                      AS InsertDate
+           , COALESCE (MovementDate_Insert.ValueData, Movement.OperDate) :: TDateTime AS InsertDate
            
            , COALESCE(Movement_Send.Id, -1)                         AS MovementId_Send
            , COALESCE(CASE WHEN Movement_Send.StatusId = zc_Enum_Status_Erased()
@@ -108,7 +112,9 @@ BEGIN
                             ELSE '***' || Movement_Order.InvNumber
                        END
              END                                    :: TVarChar AS InvNumberOrder
-           
+
+           , Object_SubjectDoc.Id                                 AS SubjectDocId
+           , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -161,6 +167,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
                                      ON MovementString_InvNumberPartner_Order.MovementId = Movement_Order.Id
                                     AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_Send();

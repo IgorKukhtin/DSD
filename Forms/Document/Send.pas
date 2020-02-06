@@ -80,6 +80,9 @@ type
     cxLabel5: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
     GuidesInvNumberOrder: TdsdGuides;
+    cxLabel9: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
     { Private declarations }
   public

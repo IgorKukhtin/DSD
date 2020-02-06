@@ -42,9 +42,9 @@ BEGIN
     END IF;   
         vbUnitId := vbUnitKey::Integer;
 
-    IF NOT EXISTS(SELECT * FROM MovementItemString PromoCode_GUID
-                    WHERE PromoCode_GUID.descid = zc_MIString_GUID()
-                      AND PromoCode_GUID.valuedata = inPromoGUID) THEN
+    IF NOT EXISTS(SELECT * FROM MovementItem_PromoCode_GUID PromoCode_GUID
+                    WHERE PromoCode_GUID.GUID = inPromoGUID) 
+    THEN
         RAISE EXCEPTION 'Указанный промокод не найден';
     END IF;
 
@@ -66,7 +66,7 @@ BEGIN
         vbStatusID, vbStartPromo, vbEndPromo, vbForSite, vbOneCode, vbBuySite, vbPromoCodeChangePercent,
         vbPromoID, vbPromoChecked, vbPromoErased, vbPromoName, vbBayerName
     FROM
-        MovementItemString PromoCode_GUID
+        MovementItem_PromoCode_GUID PromoCode_GUID
         INNER JOIN MovementItem PromoCode
                 ON PromoCode_GUID.movementitemid = PromoCode.id AND PromoCode.descid = zc_MI_Sign()
         INNER JOIN Movement Promo
@@ -90,7 +90,7 @@ BEGIN
         LEFT JOIN MovementItemString MIString_Bayer
                 ON PromoCode.ID = MIString_Bayer.MovementItemId AND MIString_Bayer.DescId = zc_MIString_Bayer()
     WHERE
-        PromoCode_GUID.descid = zc_MIString_GUID() AND PromoCode_GUID.valuedata = inPromoGUID;
+        PromoCode_GUID.GUID = inPromoGUID;
 
     IF vbStatusID = zc_Enum_Status_UnComplete() THEN
         RAISE EXCEPTION 'Указанная акция неподготовлена';
@@ -160,6 +160,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 05.02.20                                                                                                        *
  23.06.19                                                                                                        *
  07.08.18                                                                                                        *
  16.06.18                                                                                                        *

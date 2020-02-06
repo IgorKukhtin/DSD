@@ -57,6 +57,7 @@ type
     edCardIBAN: TcxTextEdit;
     edCardIBANSecond: TcxTextEdit;
     cxLabel16: TcxLabel;
+    cbNotCompensation: TcxCheckBox;
   private
     { Private declarations }
   public

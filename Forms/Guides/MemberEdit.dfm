@@ -59,7 +59,7 @@
       object edCardIBAN: TcxTextEdit
         Left = 7
         Top = 401
-        TabOrder = 26
+        TabOrder = 24
         Width = 130
       end
       object cxLabel15: TcxLabel
@@ -82,7 +82,7 @@
       object ceCardChild: TcxTextEdit
         Left = 7
         Top = 267
-        TabOrder = 12
+        TabOrder = 11
         Width = 151
       end
       object cxLabel9: TcxLabel
@@ -104,7 +104,7 @@
       object ceCard: TcxTextEdit
         Left = 7
         Top = 177
-        TabOrder = 14
+        TabOrder = 12
         Text = '1234 5678 9092 2345'
         Width = 151
       end
@@ -151,9 +151,19 @@
       end
       object cbOfficial: TcxCheckBox
         Left = 140
-        Top = 22
+        Top = 6
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+        TabOrder = 23
+        Width = 140
+      end
+      object cbNotCompensation: TcxCheckBox
+        Left = 140
+        Top = 33
+        Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087'.'
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 2
         Width = 140
       end
@@ -188,7 +198,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 20
+        TabOrder = 16
         Width = 116
       end
       object cxLabel12: TcxLabel
@@ -205,7 +215,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 22
+        TabOrder = 18
         Width = 116
       end
       object cxLabel13: TcxLabel
@@ -222,7 +232,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 24
+        TabOrder = 20
         Width = 116
       end
     end
@@ -324,6 +334,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisNotCompensation'
+        Value = Null
+        Component = cbNotCompensation
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inINN'
         Value = ''
         Component = ceINN
@@ -420,7 +438,7 @@
         MultiSelectSeparator = ','
       end>
     Left = 224
-    Top = 48
+    Top = 80
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Member'
@@ -567,6 +585,13 @@
         Component = BankChildGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotCompensation'
+        Value = Null
+        Component = cbNotCompensation
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Top = 136

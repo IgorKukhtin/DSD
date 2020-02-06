@@ -317,6 +317,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Union() RETURNS Integer AS $BOD
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Union', 'Пользователь, кот. объединил документы' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Union');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_SubjectDoc() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_SubjectDoc', 'Пользователь, кот. объединил документы' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_SubjectDoc');
+
 --!!!!!!!!!!!  Аптека
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_CheckMember() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_CheckMember'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
@@ -438,6 +442,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.02.20         * zc_MovementLinkObject_SubjectDoc
  04.02.20         * zc_MovementLinkObject_JuridicalCar
  29.07.19         * zc_MovementLinkObject_OrderFinance
  20.06.19         * zc_MovementLinkObject_GoodsTypeKind

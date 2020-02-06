@@ -96,6 +96,8 @@ BEGIN
                   ELSE ''
              END :: TVarChar AS StoreKeeperName_to -- кладовщик
 
+           , Object_SubjectDoc.ValueData                        AS SubjectDocName
+
        FROM Movement
             LEFT JOIN MovementFloat AS MFloat_WeighingNumber
                                     ON MFloat_WeighingNumber.MovementId = inMovementId_Weighing
@@ -116,6 +118,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Inventory())
@@ -216,7 +223,7 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionGoods
                                                     ON MILinkObject_PartionGoods.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_PartionGoods.DescId = zc_MILinkObject_PartionGoods()
- 
+
               WHERE MovementItem.MovementId = CASE WHEN vbIsWeighing = TRUE THEN inMovementId_Weighing ELSE inMovementId END
                 AND MovementItem.DescId     = CASE WHEN vbIsProductionOut = TRUE AND vbIsWeighing = FALSE THEN zc_MI_Child() ELSE zc_MI_Master() END
                 AND MovementItem.isErased   = FALSE
