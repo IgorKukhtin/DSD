@@ -180,6 +180,7 @@ type
     procedure LoadStorageLineFormTest;
     procedure LoadStorage_ObjectFormTest;
     procedure LoadStoreRealFormTest;
+    procedure LoadSubjectDocFormTest;
     procedure LoadTaskTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
@@ -2880,6 +2881,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TStoreRealForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStoreRealJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStoreRealJournalForm');
+end;
+
+  procedure TLoadFormTest.LoadSubjectDocFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSubjectDocForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSubjectDocForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSubjectDocEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSubjectDocEditForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;

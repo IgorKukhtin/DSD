@@ -1129,7 +1129,9 @@ uses
   MemberHoliday_Choice in '..\..\Forms\Guides\MemberHoliday_Choice.pas' {MemberHoliday_ChoiceForm: TParentForm},
   ReestrTransportGoodsJournal in '..\..\Forms\Document\ReestrTransportGoodsJournal.pas' {ReestrTransportGoodsJournalForm: TParentForm},
   ReestrTransportGoodsStartMovement in '..\..\Forms\Document\ReestrTransportGoodsStartMovement.pas' {ReestrTransportGoodsStartMovementForm: TParentForm},
-  ReestrTransportGoodsUpdateMovement in '..\..\Forms\Document\ReestrTransportGoodsUpdateMovement.pas' {ReestrTransportGoodsUpdateMovementForm: TParentForm};
+  ReestrTransportGoodsUpdateMovement in '..\..\Forms\Document\ReestrTransportGoodsUpdateMovement.pas' {ReestrTransportGoodsUpdateMovementForm: TParentForm},
+  SubjectDoc in '..\..\Forms\Guides\SubjectDoc.pas' {SubjectDocForm: TParentForm},
+  SubjectDocEdit in '..\..\Forms\Guides\SubjectDocEdit.pas' {SubjectDocEditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

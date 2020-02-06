@@ -11,17 +11,17 @@ inherited SendMemberForm: TSendMemberForm
     Width = 1013
     Height = 476
     ExplicitTop = 126
-    ExplicitWidth = 863
+    ExplicitWidth = 1013
     ExplicitHeight = 476
     ClientRectBottom = 476
     ClientRectRight = 1013
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 863
+      ExplicitWidth = 1013
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
         Width = 1013
         Height = 452
-        ExplicitWidth = 863
+        ExplicitWidth = 1013
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -338,7 +338,7 @@ inherited SendMemberForm: TSendMemberForm
     Width = 1013
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 863
+    ExplicitWidth = 1013
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -408,15 +408,15 @@ inherited SendMemberForm: TSendMemberForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel22: TcxLabel
-      Left = 423
+      Left = 649
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 423
+      Left = 649
       Top = 63
       TabOrder = 11
-      Width = 436
+      Width = 210
     end
     object cxLabel8: TcxLabel
       Left = 868
@@ -478,9 +478,26 @@ inherited SendMemberForm: TSendMemberForm
     TabOrder = 8
     Width = 187
   end
+  object cxLabel5: TcxLabel [5]
+    Left = 423
+    Top = 45
+    Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+  end
+  object edSubjectDoc: TcxButtonEdit [6]
+    Left = 423
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 10
+    Width = 220
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
+    Left = 211
+    Top = 504
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -1163,6 +1180,21 @@ inherited SendMemberForm: TSendMemberForm
         Component = edInsertName
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -1219,6 +1251,14 @@ inherited SendMemberForm: TSendMemberForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = 'False'
         Component = ceComment
@@ -1267,6 +1307,7 @@ inherited SendMemberForm: TSendMemberForm
         Control = ceComment
       end
       item
+        Control = edSubjectDoc
       end
       item
       end
@@ -1636,8 +1677,8 @@ inherited SendMemberForm: TSendMemberForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 536
-    Top = 16
+    Left = 560
+    Top = 8
   end
   object GuidesDocumentKind: TdsdGuides
     KeyField = 'Id'
@@ -1704,5 +1745,34 @@ inherited SendMemberForm: TSendMemberForm
     PackSize = 1
     Left = 455
     Top = 400
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSubjectDoc
+    FormNameParam.Value = 'TSubjectDocForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSubjectDocForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 496
+    Top = 56
   end
 end

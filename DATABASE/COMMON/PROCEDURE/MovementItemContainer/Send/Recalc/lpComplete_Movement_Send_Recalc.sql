@@ -111,6 +111,7 @@ BEGIN
                                          , inFromId           := inToId
                                          , inToId             := inFromId
                                          , inDocumentKindId   := (SELECT ObjectId  FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_DocumentKind())
+                                         , inSubjectDocId     := (SELECT ObjectId  FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_SubjectDoc())
                                          , inComment          := (SELECT ValueData FROM MovementString     WHERE MovementId = inMovementId AND DescId = zc_MovementString_Comment())
                                          , inUserId           := inUserId
                                           );

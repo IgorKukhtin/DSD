@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , MovementId_Send Integer, InvNumber_SendFull TVarChar
              , MovementId_Order Integer, OperDate_Order TDateTime, InvNumberOrder TVarChar
              , PartnerName_Order TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -83,7 +84,7 @@ BEGIN
 
            , Object_Union.ValueData                 AS UnionName
            , MovementDate_Union.ValueData           AS UnionDate
-
+           
            , MovementDate_Insert.ValueData          AS InsertDate
            , Object_Insert.ValueData                AS InsertName
 
@@ -111,6 +112,9 @@ BEGIN
                        END
              END                                    :: TVarChar AS InvNumberOrder
            , Object_Partner_order.ValueData                     AS PartnerName_order
+           
+           , Object_SubjectDoc.Id                               AS SubjectDocId
+           , Object_SubjectDoc.ValueData                        AS SubjectDocName
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
@@ -159,6 +163,11 @@ BEGIN
                                          ON MovementLinkObject_Union.MovementId = Movement.Id
                                         AND MovementLinkObject_Union.DescId = zc_MovementLinkObject_Union()
             LEFT JOIN Object AS Object_Union ON Object_Union.Id = MovementLinkObject_Union.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Union 
                                    ON MovementDate_Union.MovementId = Movement.Id

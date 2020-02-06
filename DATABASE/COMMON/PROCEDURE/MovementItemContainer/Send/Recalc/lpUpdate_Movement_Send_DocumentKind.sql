@@ -210,6 +210,7 @@ BEGIN
                                               , inFromId                := tmp.FromId
                                               , inToId                  := tmp.ToId
                                               , inDocumentKindId        := tmp.DocumentKindId
+                                              , inSubjectDocId          := 0
                                               , inComment               := '' :: TvarChar
                                               , inUserId                := inUserId
                                                ) AS MovementId
