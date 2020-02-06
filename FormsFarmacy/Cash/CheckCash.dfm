@@ -3,7 +3,7 @@ inherited CheckCashForm: TCheckCashForm
   ClientHeight = 523
   ClientWidth = 817
   ExplicitWidth = 833
-  ExplicitHeight = 561
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -569,6 +569,12 @@ inherited CheckCashForm: TCheckCashForm
     Width = 212
   end
   inherited ActionList: TActionList
+    inherited actMISetErased: TdsdUpdateErased
+      DataSource = nil
+    end
+    inherited actMISetUnErased: TdsdUpdateErased
+      DataSource = nil
+    end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       Enabled = False
     end
@@ -1006,14 +1012,6 @@ inherited CheckCashForm: TCheckCashForm
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton5'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton6'
         end
         item
           Visible = True

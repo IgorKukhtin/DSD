@@ -32,6 +32,7 @@ BEGIN
      THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, ioGUID);
+         PERFORM lpInsertUpdate_MovementItem_PromoCode_GUID (ioId, ioGUID, vbUserId);
      ELSE
          -- генерируем новый GUID код
          ioGUID := (SELECT zfCalc_GUID());
@@ -42,6 +43,7 @@ BEGIN
          */
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), ioId, ioGUID);
+         PERFORM lpInsertUpdate_MovementItem_PromoCode_GUID (ioId, ioGUID, vbUserId);
      END IF;
      
      -- сохранили свойство <>
@@ -76,7 +78,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 05.02.20                                                                     *
  13.12.17         *
 */
 --select * from gpInsertUpdate_MovementItem_PromoCodeSign(ioId := 67502267 , inMovementId := 3959814 , inBayerName := 'kbjjbjb' , inBayerPhone := '' , inBayerEmail := '' , ioGUID := '' , inComment := '' , inIsChecked:= TRUE, inSession := '3');

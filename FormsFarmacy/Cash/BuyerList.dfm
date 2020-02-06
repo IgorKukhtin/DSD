@@ -1,8 +1,8 @@
-object LoyaltySMListForm: TLoyaltySMListForm
+object BuyerListForm: TBuyerListForm
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu]
-  Caption = #1042#1099#1073#1086#1088' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086#1081' '#1087#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1103#1083#1100#1085#1086#1089#1090#1080
+  Caption = #1042#1099#1073#1086#1088' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 361
   ClientWidth = 619
   Color = clBtnFace
@@ -13,141 +13,94 @@ object LoyaltySMListForm: TLoyaltySMListForm
   Font.Style = []
   OldCreateOrder = True
   Position = poScreenCenter
-  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object LoyaltySMListGrid: TcxGrid
+  object cxGrid: TcxGrid
     Left = 0
     Top = 28
     Width = 619
     Height = 333
     Align = alClient
-    TabOrder = 0
-    object LoyaltySMListGridDBTableView: TcxGridDBTableView
-      OnDblClick = LoyaltySMListGridDBTableViewDblClick
+    TabOrder = 4
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
+    object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = LoyaltySMListDS
+      DataController.DataSource = BuyerListDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
-          Column = Coment
+          Column = Phone
         end>
       DataController.Summary.SummaryGroups = <>
-      OptionsData.CancelOnExit = False
+      Images = dmMain.SortImageList
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.Footer = True
-      OptionsView.GridLineColor = clBtnFace
       OptionsView.GroupByBox = False
-      OptionsView.HeaderAutoHeight = True
+      OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object Coment: TcxGridDBColumn
-        Caption = #1044#1077#1081#1089#1090#1074#1080#1077
-        DataBinding.FieldName = 'Coment'
+      object Code: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 250
+        Width = 52
       end
-      object EndPromo: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1103
-        DataBinding.FieldName = 'EndPromo'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taLeftJustify
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085
+        DataBinding.FieldName = 'Phone'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 126
+        Width = 188
       end
-      object EndSale: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-        DataBinding.FieldName = 'EndSale'
+      object Name: TcxGridDBColumn
+        Caption = #1060#1072#1084#1080#1083#1080#1103' '#1048#1084#1103' '#1054#1090#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 86
+        Width = 276
       end
-      object SummaRemainder: TcxGridDBColumn
-        Caption = #1053#1072#1082#1086#1087#1083#1077#1085#1086
-        DataBinding.FieldName = 'SummaRemainder'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+      object isErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 84
+        Width = 78
       end
-    end
-    object LoyaltySMListGridLevel: TcxGridLevel
-      Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
-      GridView = LoyaltySMListGridDBTableView
-    end
-  end
-  object cxGrid1: TcxGrid
-    Left = 0
-    Top = 28
-    Width = 619
-    Height = 333
-    Align = alClient
-    TabOrder = 5
-    object cxGridDBTableView1: TcxGridDBTableView
-      OnDblClick = LoyaltySMListGridDBTableViewDblClick
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = LoyaltySMListDS
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <
-        item
-          Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
-          Kind = skCount
-          Column = cxGridDBColumn1
-        end>
-      DataController.Summary.SummaryGroups = <>
-      OptionsData.CancelOnExit = False
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
-      OptionsView.Footer = True
-      OptionsView.GridLineColor = clBtnFace
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderAutoHeight = True
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBColumn1: TcxGridDBColumn
-        Caption = #1044#1077#1081#1089#1090#1074#1080#1077
-        DataBinding.FieldName = 'Coment'
+      object DateBirth: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateBirth'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 250
+        Width = 70
       end
-      object cxGridDBColumn2: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1085#1072#1082#1086#1087#1083#1077#1085#1080#1103
-        DataBinding.FieldName = 'EndPromo'
-        PropertiesClassName = 'TcxTextEditProperties'
-        Properties.Alignment.Horz = taLeftJustify
+      object Sex: TcxGridDBColumn
+        Caption = #1055#1086#1083
+        DataBinding.FieldName = 'Sex'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 126
+        Width = 60
       end
-      object cxGridDBColumn3: TcxGridDBColumn
-        Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1086#1075#1072#1096#1077#1085#1080#1103
-        DataBinding.FieldName = 'EndSale'
+      object Comment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 86
-      end
-      object cxGridDBColumn4: TcxGridDBColumn
-        Caption = #1053#1072#1082#1086#1087#1083#1077#1085#1086
-        DataBinding.FieldName = 'SummaRemainder'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Width = 84
+        Width = 100
       end
     end
-    object cxGridLevel1: TcxGridLevel
-      Caption = #1040#1083#1100#1090' (24 '#1087#1086#1079') "*"'
-      GridView = cxGridDBTableView1
+    object cxGridLevel: TcxGridLevel
+      GridView = cxGridDBTableView
     end
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -160,8 +113,8 @@ object LoyaltySMListForm: TLoyaltySMListForm
     Left = 160
     Top = 64
   end
-  object LoyaltySMListDS: TDataSource
-    DataSet = MainCashForm2.LoyaltySMCDS
+  object BuyerListDS: TDataSource
+    DataSet = EnterLoyaltySaveMoneyForm.BuyerCDS
     Left = 432
     Top = 136
   end
@@ -261,12 +214,8 @@ object LoyaltySMListForm: TLoyaltySMListForm
       Visible = ivAlways
     end
     object dxBarButton4: TdxBarButton
-      Caption = #1042#1099#1073#1088#1072#1090#1100
+      Action = actChoice
       Category = 0
-      Hint = #1042#1099#1073#1088#1072#1090#1100
-      Visible = ivAlways
-      ImageIndex = 7
-      OnClick = actCloseExecute
     end
   end
   object ActionList: TActionList
@@ -283,5 +232,36 @@ object LoyaltySMListForm: TLoyaltySMListForm
       Caption = 'actClose'
       OnExecute = actCloseExecute
     end
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = actChoice
+      end>
+    ActionItemList = <
+      item
+        Action = actChoice
+        ShortCut = 13
+      end
+      item
+        Action = actClose
+        ShortCut = 27
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <
+      item
+        Column = Code
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 216
+    Top = 224
   end
 end

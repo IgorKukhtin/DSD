@@ -36,6 +36,7 @@ BEGIN
       */
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, vbGUID);
+      PERFORM lpInsertUpdate_MovementItem_PromoCode_GUID (ioId, outGUID, vbUserId);
   
       -- сохранили связь с <>
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbId, vbUserId);
@@ -55,7 +56,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 05.02.20                                                                     *
  13.12.17         *
 */
 --

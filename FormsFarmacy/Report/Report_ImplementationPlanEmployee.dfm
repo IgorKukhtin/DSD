@@ -21,7 +21,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Left = 0
     Top = 0
     Width = 1252
-    Height = 59
+    Height = 63
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
@@ -81,7 +81,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cbFilter1: TcxCheckBox
       Left = 681
-      Top = 0
+      Top = -1
       Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' < '#1079#1085#1072#1095#1077#1085#1080#1077' min '#1087#1083#1072#1085' '
       State = cbsChecked
       Style.TextColor = clRed
@@ -91,7 +91,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cbFilter2: TcxCheckBox
       Left = 681
-      Top = 18
+      Top = 13
       Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' >= min '#1087#1083#1072#1085' '#1085#1086' < '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
       State = cbsChecked
       Style.TextColor = clGreen
@@ -101,7 +101,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cbFilter3: TcxCheckBox
       Left = 681
-      Top = 36
+      Top = 27
       Caption = #1074#1089#1077#1075#1086' '#1087#1088#1086#1076#1072#1085#1086' > min '#1087#1083#1072#1085' '#1080' >= '#1087#1083#1072#1085' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '
       State = cbsChecked
       Style.TextColor = clBlue
@@ -109,31 +109,43 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       OnClick = cbFilter1Click
       Width = 283
     end
+    object cbFilter4: TcxCheckBox
+      Left = 681
+      Top = 41
+      Caption = #1059#1073#1088#1072#1085#1085#1099#1077' '#1089#1090#1088#1086#1082#1080' '#1089' '#1096#1090#1088#1072#1092#1086#1084' '#1087#1086' '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1102
+      State = cbsChecked
+      Style.TextColor = clGray
+      TabOrder = 10
+      OnClick = cbFilter1Click
+      Width = 283
+    end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 85
+    Top = 89
     Width = 1252
-    Height = 575
+    Height = 571
     Align = alClient
     BevelOuter = bvNone
     ShowCaption = False
     TabOrder = 5
+    ExplicitTop = 85
+    ExplicitHeight = 575
     object cxImplementationPlanEmployee: TcxGrid
       Left = 0
       Top = 0
       Width = 1252
-      Height = 428
+      Height = 424
       Align = alClient
       TabOrder = 0
+      ExplicitHeight = 428
       object cxImplementationPlanEmployeeDBBandedTableView1: TcxGridDBBandedTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DataSource
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <
           item
-            Format = ',0.00'
-            Kind = skSum
+            OnGetText = cxImplementationPlanEmployeeDBBandedTableView1TcxGridDBDataControllerTcxDataSummaryFooterSummaryItems0GetText
             Column = colAmountTheFineTab
           end
           item
@@ -323,20 +335,22 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     end
     object cxSplitter1: TcxSplitter
       Left = 0
-      Top = 428
+      Top = 424
       Width = 1252
       Height = 8
       AlignSplitter = salBottom
       Control = Panel3
+      ExplicitTop = 428
     end
     object Panel3: TPanel
       Left = 0
-      Top = 436
+      Top = 432
       Width = 1252
       Height = 139
       Align = alBottom
       ShowCaption = False
       TabOrder = 2
+      ExplicitTop = 436
       object cxUnit: TcxGrid
         Left = 1
         Top = 1
@@ -817,8 +831,8 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     Top = 264
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 624
-    Top = 16
+    Left = 616
+    Top = 32
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -971,7 +985,49 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     TextEdit = edFilter
     DataSet = ClientDataSet
     Column = colGoodsName
+    CheckBoxList = <>
     Left = 568
     Top = 200
+  end
+  object cdsTheFineEnable: TClientDataSet
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'GoodsCode'
+        DataType = ftInteger
+      end
+      item
+        Name = 'AmountTheFineTab'
+        DataType = ftCurrency
+      end
+      item
+        Name = 'isEnabled'
+        DataType = ftBoolean
+      end>
+    IndexDefs = <
+      item
+        Name = 'AmountTheFineTab_Desc'
+        Fields = 'AmountTheFineTab'
+      end>
+    IndexName = 'AmountTheFineTab_Desc'
+    Params = <>
+    StoreDefs = True
+    Left = 456
+    Top = 384
+    Data = {
+      6B0000009619E0BD0100000018000000030000000000030000006B0009476F6F
+      6473436F6465040001000000000010416D6F756E7454686546696E6554616208
+      0004000000010007535542545950450200490006004D6F6E657900096973456E
+      61626C656402000300000000000000}
+    object cdsTheFineEnableGoodsCode: TIntegerField
+      FieldName = 'GoodsCode'
+    end
+    object cdsTheFineEnableAmountTheFineTab: TCurrencyField
+      FieldName = 'AmountTheFineTab'
+    end
+    object cdsTheFineEnableisEnabled: TBooleanField
+      FieldName = 'isEnabled'
+    end
   end
 end

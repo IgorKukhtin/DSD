@@ -34,8 +34,6 @@ type
     SummaRemainder: TcxGridDBColumn;
     EndPromo: TcxGridDBColumn;
     dxBarButton3: TdxBarButton;
-    ActionList: TActionList;
-    actClose: TAction;
     dxBarButton4: TdxBarButton;
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
@@ -44,11 +42,13 @@ type
     cxGridDBColumn3: TcxGridDBColumn;
     cxGridDBColumn4: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
+    ActionList: TActionList;
+    actChoice: TAction;
+    actClose: TAction;
     procedure LoyaltySMListGridDBTableViewDblClick(Sender: TObject);
     procedure actCloseExecute(Sender: TObject);
-    procedure LoyaltySMListGridDBTableViewKeyDown(Sender: TObject;
-      var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actChoiceExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -62,24 +62,20 @@ implementation
 
 uses CommonData;
 
-procedure TLoyaltySMListForm.actCloseExecute(Sender: TObject);
+procedure TLoyaltySMListForm.actChoiceExecute(Sender: TObject);
 begin
   ModalResult := mrOk;
+end;
+
+procedure TLoyaltySMListForm.actCloseExecute(Sender: TObject);
+begin
+  ModalResult := mrCancel;
 end;
 
 procedure TLoyaltySMListForm.LoyaltySMListGridDBTableViewDblClick(
   Sender: TObject);
 begin
   ModalResult := mrOk;
-end;
-
-procedure TLoyaltySMListForm.LoyaltySMListGridDBTableViewKeyDown(
-  Sender: TObject; var Key: Word; Shift: TShiftState);
-begin
-    case Key of
-      VK_RETURN : ModalResult := mrOk;
-      VK_ESCAPE : ModalResult := mrCancel;
-    end;
 end;
 
 procedure TLoyaltySMListForm.FormClose(Sender: TObject;
