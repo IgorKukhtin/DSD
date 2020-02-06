@@ -59,6 +59,7 @@ BEGIN
                           FROM gpReport_HolidayCompensation (inStartDate:= DATE_TRUNC ('YEAR', vbOperDate) - INTERVAL '1 DAY'
                                                            , inUnitId   := 0
                                                            , inMemberId := 0
+                                                           , inPersonalServiceListId := 0
                                                            , inSession  := inSession
                                                             ) AS tmpReport
                          )
