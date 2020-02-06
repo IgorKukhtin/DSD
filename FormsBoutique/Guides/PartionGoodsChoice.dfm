@@ -213,7 +213,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
         Width = 70
       end
       object OperPriceList: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
+        Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089
         DataBinding.FieldName = 'OperPriceList'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4

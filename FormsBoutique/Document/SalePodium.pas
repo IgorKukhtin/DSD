@@ -188,6 +188,8 @@ type
     PanelNameFull: TPanel;
     DBLabelNameFull: TcxDBLabel;
     OperPriceListReal: TcxGridDBColumn;
+    OperPriceList_curr: TcxGridDBColumn;
+    CurrencyName_pl: TcxGridDBColumn;
   private
   public
   end;

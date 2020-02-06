@@ -21,7 +21,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat, OperPriceListReal TFloat
+             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , OperPriceListReal TFloat, OperPriceList_curr TFloat, CurrencyName_pl TVarChar
+
              , TotalSumm TFloat
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
@@ -47,11 +49,11 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
               )
 AS
 $BODY$
-  DECLARE vbUserId      Integer;
-  DECLARE vbUnitId      Integer;
-  DECLARE vbPriceListId Integer;
-  DECLARE vbOperDate    TDateTime;
-  DECLARE vbIsOperPrice Boolean;
+  DECLARE vbUserId        Integer;
+  DECLARE vbUnitId        Integer;
+  DECLARE vbCurrencyId_pl Integer;
+  DECLARE vbOperDate      TDateTime;
+  DECLARE vbIsOperPrice   Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
@@ -65,11 +67,16 @@ BEGIN
      -- Параметры документа
      SELECT Movement.OperDate
           , MovementLinkObject_From.ObjectId
-            INTO vbOperDate, vbUnitId
+          , COALESCE (OL_currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl -- Получили валюту для прайса
+            INTO vbOperDate, vbUnitId, vbCurrencyId_pl
      FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS OL_pl ON OL_pl.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND OL_pl.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = OL_pl.ChildObjectId
+                                             AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
      WHERE Movement.Id = inMovementId;
 
 
@@ -259,7 +266,9 @@ BEGIN
            , tmpMI.CountForPrice       :: TFloat AS CountForPrice
            , tmpMI.OperPriceList       :: TFloat AS OperPriceList
            , tmpMI.OperPriceListReal   :: TFloat AS OperPriceListReal
-
+           , Object_PartionGoods.OperPriceList   AS OperPriceList_curr
+           , Object_Currency_pl.ValueData        AS CurrencyName_pl
+           
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
            , zfCalc_CurrencyFrom (tmpMI.TotalSumm, tmpMI.CurrencyValue, tmpMI.ParValue) :: TFloat AS TotalSummBalance
            , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
@@ -309,6 +318,8 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
+
+            LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = vbCurrencyId_pl
 
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
             LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
