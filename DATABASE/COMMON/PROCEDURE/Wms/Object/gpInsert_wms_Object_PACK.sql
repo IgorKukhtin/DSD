@@ -70,6 +70,8 @@ BEGIN
                                , COALESCE (tmp.WeightGross, 0)    AS WeightGross              -- Вес брутто полного ящика "по ???" (E2/E3)
                                , COALESCE (tmp.WeightAvgGross, 0) AS WeightAvgGross           -- Вес брутто полного ящика "по среднему весу" (E2/E3)
                                , COALESCE (tmp.WeightAvgNet, 0)   AS WeightAvgNet             -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+                               , COALESCE (tmp.WeightMaxGross, 0) AS WeightMaxGross           -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
+                               , COALESCE (tmp.WeightMaxNet, 0)   AS WeightMaxNet             -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                           FROM lpSelect_wms_Object_SKU() AS tmp
                          )
               --
@@ -123,9 +125,15 @@ BEGIN
                                -- Элемент упаковки (идентификатор упаковки из которой состоит данная). Для единичных упаковок равен 0. 
                                , tmpGoods.sku_id     :: TVarChar AS code_id
                                -- Количество элементов упаковки, т.е. количество вложенных элементов
-                               , CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END) :: Integer AS units
+                               , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
+                                           THEN tmpGoods.WeightMaxNet * 1000
+                                      ELSE CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                 END :: Integer AS units
                                -- Количество единичных упаковок в данной
-                               , CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END) :: Integer AS base_units
+                               , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
+                                           THEN tmpGoods.WeightMaxNet * 1000
+                                      ELSE CEIL (CASE WHEN tmpGoods.WeightAvg > 0 THEN tmpGoods.WeightAvgNet / tmpGoods.WeightAvg ELSE 1 END)
+                                 END :: Integer AS base_units
                                -- Остается пустым, т.к. нет прима палетными нормами
                                , 0                   :: Integer  AS layer_qty
                                -- Ширина упаковки (см)
@@ -178,7 +186,7 @@ BEGIN
                    , tmpData.pack_id AS ObjectId
                    , tmpData.GroupId
               FROM tmpData
-           -- WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
+            --WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
               ORDER BY tmpData.GroupId, tmpData.sku_id
              ) AS tmp
       --WHERE tmp.RowNum BETWEEN 1 AND 1

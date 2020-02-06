@@ -295,7 +295,7 @@ BEGIN
                             , ROW_NUMBER()     OVER (PARTITION BY tmpMI.GoodsId ORDER BY tmp.PartionGoodsDate DESC, tmp.ContainerId DESC) AS Ord      -- !!!Надо отловить ПОСЛЕДНИЙ!!!
                             , tmp.PartionGoodsId
                        FROM tmpMI
-                            INNER JOIN 
+                            INNER JOIN
                       (SELECT tmpMI.MovementItemId                                  AS MovementItemId
                             , Container.Id                                          AS ContainerId
                             , Container.Amount                                      AS Amount
@@ -551,7 +551,7 @@ BEGIN
                                                                SELECT -1 * Container.Id AS PartionGoodsId -- !!!была ошибка в проводках!!!
                                                                     , 101 AS NPP
                                                                     , Container.Amount
-                                                               FROM Container 
+                                                               FROM Container
                                                                     INNER JOIN ContainerLinkObject AS CLO_Member
                                                                                                    ON CLO_Member.ContainerId = Container.Id
                                                                                                   AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
@@ -707,7 +707,7 @@ BEGIN
                                                                   WHEN _tmpItem.UnitId_To <> 0 OR _tmpItem.CarId_To <> 0
                                                                        THEN -- !!!если вернулось на склад - будет ПУСТАЯ Партия
                                                                             0
-                                                                            
+
                                                                   -- !!!Партия не меняется - т.е. как в расходе, хотя надо бы отследить
                                                                   ELSE _tmpItem.PartionGoodsId_Item
                                                              END
@@ -723,7 +723,7 @@ BEGIN
         OR _tmpItem.ObjectDescId           = zc_Object_Asset()
     ;
 
--- if inMovementId = 7259158 
+-- if inMovementId = 7259158
 -- then
 --    RAISE EXCEPTION '<%>  %', (select distinct _tmpItem.PartionGoodsId_from from _tmpItem where _tmpItem.GoodsId = 1105050)
 --    , (select count(*) from _tmpItem where _tmpItem.GoodsId = 1105050);

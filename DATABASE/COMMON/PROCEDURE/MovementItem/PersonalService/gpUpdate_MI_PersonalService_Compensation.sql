@@ -57,11 +57,12 @@ BEGIN
                          )
       , tmpReport_all AS (SELECT tmpReport.*
                           FROM gpReport_HolidayCompensation (inStartDate:= DATE_TRUNC ('YEAR', vbOperDate) - INTERVAL '1 DAY'
-                                                           , inUnitId   := 0
-                                                           , inMemberId := 0
+                                                           , inUnitId                := 0
+                                                           , inMemberId              := 0
                                                            , inPersonalServiceListId := 0
-                                                           , inSession  := inSession
+                                                           , inSession               := inSession
                                                             ) AS tmpReport
+                          WHERE COALESCE (tmpReport.DateOut, zc_DateEnd()) > vbOperDate
                          )
            -- Результат
            SELECT COALESCE (tmpMI.MovementItemId, 0) :: Integer AS MovementItemId

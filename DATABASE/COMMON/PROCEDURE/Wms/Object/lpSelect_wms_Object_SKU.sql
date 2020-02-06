@@ -32,6 +32,8 @@ RETURNS TABLE (ObjectId Integer
              , WeightGross    TFloat -- Вес брутто полного ящика "по ???" (E2/E3)
              , WeightAvgGross TFloat -- Вес брутто полного ящика "по среднему весу" (E2/E3)
              , WeightAvgNet   TFloat -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+             , WeightMaxGross TFloat -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
+             , WeightMaxNet   TFloat -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
 
              , sku_id       Integer  -- ***Уникальный код товара в товарном справочнике предприятия
              , sku_code     Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
@@ -181,6 +183,21 @@ BEGIN
                      ELSE tmpGoods.WeightOnBox
                 END
                ) :: TFloat AS WeightAvgNet
+
+               -- ***заменили - Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax > 0
+                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax
+                     ELSE tmpGoods.WeightOnBox
+                END
+              + tmpGoods.BoxWeight
+               ) :: TFloat AS WeightMaxGross
+
+               -- ***заменили - Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3) - тоже что и WeightOnBox
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax > 0
+                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax
+                     ELSE tmpGoods.WeightOnBox
+                END
+               ) :: TFloat AS WeightMaxNet
 
              , tmpGoods.sku_id       :: Integer  -- ***Уникальный код товара в товарном справочнике предприятия
              , tmpGoods.sku_code     :: Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.

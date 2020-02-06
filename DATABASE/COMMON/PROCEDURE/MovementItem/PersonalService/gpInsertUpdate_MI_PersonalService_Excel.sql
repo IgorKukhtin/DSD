@@ -75,10 +75,10 @@ BEGIN
                                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                                                        ON ObjectBoolean_Main.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                                       AND ObjectBoolean_Main.DescId   = zc_ObjectBoolean_Personal_Main()
-                                          WHERE ObjectString_INN.ValueData = inINN
+                                          WHERE TRIM (ObjectString_INN.ValueData) = inINN
                                             AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
                                          )
-                     --
+                     -- Проверка
                      SELECT tmpPersonal.PersonalId FROM tmpPersonal WHERE tmpPersonal.Ord = 1
                     );
 

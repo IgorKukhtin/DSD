@@ -18,7 +18,7 @@ $BODY$
 BEGIN
   RETURN (CASE -- для весового количество передается в гр.
                WHEN inGoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
-                    THEN inRealWeight * 1000.0
+                    THEN inAmount * 1000.0
                -- если точно известно Шт-WMS тогда их и отдаем
                WHEN inCount > 0
                     THEN inCount

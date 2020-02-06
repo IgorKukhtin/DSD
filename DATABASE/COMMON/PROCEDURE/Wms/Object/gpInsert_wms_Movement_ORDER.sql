@@ -131,7 +131,7 @@ BEGIN
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('955244') -- 952893
+                               AND Movement.InvNumber IN ('980741') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
@@ -255,7 +255,7 @@ BEGIN
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_all.GoodsKindId
                                                                    AND tmpMI_all.sku_id    = 0
                        -- WHERE Object_Goods.Id > 0
-                          WHERE tmpMI_all.sku_id = 38391802 -- 800563
+                          WHERE tmpMI_all.sku_id = 795293 -- 800563
                          )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

@@ -1,4 +1,4 @@
- -- Function: lpComplete_Movement_ProductionUnion()
+-- Function: lpComplete_Movement_ProductionUnion()
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_ProductionUnion (Integer, Boolean, Integer);
 
@@ -560,9 +560,32 @@ BEGIN
                                                                                          , inOperDate      := _tmpItem_pr.PartionGoodsDate
                                                                                          , inPrice         := NULL
                                                                                           )
+                                               WHEN (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                  OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                  OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_70100() -- Капитальные инвестиции
+                                                    )
+                                                AND vbUnitId_To > 0
+                                                    THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
+                                                                                         , inGoodsId       := NULL
+                                                                                         , inStorageId     := NULL
+                                                                                         , inInvNumber     := NULL
+                                                                                         , inOperDate      := NULL
+                                                                                         , inPrice         := NULL
+                                                                                          )
+                                               /*WHEN _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                AND vbUnitId_To > 0
+                                                    THEN lpInsertFind_Object_PartionGoods (inUnitId_Partion:= NULL
+                                                                                         , inGoodsId       := NULL
+                                                                                         , inStorageId     := NULL
+                                                                                         , inInvNumber     := NULL
+                                                                                         , inOperDate      := NULL
+                                                                                         , inPrice         := NULL
+                                                                                          )*/
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
      WHERE _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+      --OR (_tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+      --   AND vbUnitId_To > 0)
         OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
         OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
         OR _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна

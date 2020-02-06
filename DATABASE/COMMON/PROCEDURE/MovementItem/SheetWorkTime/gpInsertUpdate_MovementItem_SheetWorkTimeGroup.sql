@@ -49,26 +49,27 @@ BEGIN
                   )
     THEN
         RAISE EXCEPTION 'Ошибка.В справочнике Сотрудников <%> <%>  <%> не найден.'
-                      , lfGet_Object_ValueData_sh (inUnitId)
                       , lfGet_Object_ValueData_sh (inMemberId)
                       , lfGet_Object_ValueData_sh (inPositionId)
+                      , lfGet_Object_ValueData_sh (inUnitId)
                         ;
     END IF;
 
     -- Проверка
-    IF EXISTS (SELECT 1
-               FROM Object_Personal_View
-               WHERE Object_Personal_View.DateOut    < vbStartDate
-                 AND Object_Personal_View.UnitId     = inUnitId
-                 AND Object_Personal_View.MemberId   = inMemberId
-                 AND Object_Personal_View.PositionId = inPositionId
-              )
+    IF NOT EXISTS (SELECT 1
+                   FROM Object_Personal_View
+                   WHERE Object_Personal_View.DateIn     <= vbStartDate
+                     AND Object_Personal_View.DateOut    >= vbStartDate
+                     AND Object_Personal_View.UnitId     = inUnitId
+                     AND Object_Personal_View.MemberId   = inMemberId
+                     AND Object_Personal_View.PositionId = inPositionId
+                  )
     THEN
         RAISE EXCEPTION 'Ошибка. Сотрудник <%> <%>  <%> уволен с <%>.Ввод в табеле закрыт.'
-                      , lfGet_Object_ValueData_sh (inUnitId)
                       , lfGet_Object_ValueData_sh (inMemberId)
                       , lfGet_Object_ValueData_sh (inPositionId)
-                      , (SELECT zfConvert_DateToString (MIN (Object_Personal_View.DateOut))
+                      , lfGet_Object_ValueData_sh (inUnitId)
+                      , (SELECT zfConvert_DateToString (MAX (Object_Personal_View.DateOut))
                          FROM Object_Personal_View
                          WHERE Object_Personal_View.DateOut    < vbStartDate
                            AND Object_Personal_View.UnitId     = inUnitId
