@@ -176,6 +176,16 @@ object MemberForm: TMemberForm
         Options.Editing = False
         Width = 45
       end
+      object isNotCompensation: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'.'
+        DataBinding.FieldName = 'isNotCompensation'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+        Options.Editing = False
+        Width = 70
+      end
       object BranchCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1092#1080#1083'.'
         DataBinding.FieldName = 'BranchCode'

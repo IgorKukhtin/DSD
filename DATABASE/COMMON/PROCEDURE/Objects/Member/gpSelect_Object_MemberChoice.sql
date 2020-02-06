@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MemberChoice(
 
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isOfficial Boolean
+             , isNotCompensation Boolean
              , BranchCode Integer, BranchName TVarChar
              , UnitCode Integer, UnitName TVarChar
              , PositionCode Integer, PositionName TVarChar
@@ -63,7 +64,8 @@ BEGIN
          , Object_Member.ObjectCode AS Code
          , Object_Member.ValueData  AS Name
 
-         , ObjectBoolean_Official.ValueData ::Boolean        AS isOfficial
+         , ObjectBoolean_Official.ValueData        ::Boolean AS isOfficial
+         , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
 
          , Object_Branch.ObjectCode   AS BranchCode
          , Object_Branch.ValueData    AS BranchName
@@ -103,9 +105,12 @@ BEGIN
                      GROUP BY View_Personal.MemberId
                     ) AS View_Personal_Branch ON View_Personal_Branch.MemberId = Object_Member.Id
 
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
-                                  ON ObjectBoolean_Official.ObjectId = Object_Member.Id
-                                 AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                                 ON ObjectBoolean_Official.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
+                                 ON ObjectBoolean_NotCompensation.ObjectId = Object_Member.Id
+                                AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
 
          LEFT JOIN tmpPersonal ON tmpPersonal.MemberId = Object_Member.Id AND tmpPersonal.Ord = 1
          LEFT JOIN Object AS Object_Branch   ON Object_Branch.Id   = tmpPersonal.BranchId
@@ -135,6 +140,7 @@ BEGIN
            , 0              AS Code
            , CAST ('”ƒ¿À»“‹' as TVarChar)  AS NAME
            , FALSE          AS isOfficial
+           , FALSE          AS isNotCompensation
 
            , 0              AS BranchCode
            , '' :: TVarChar AS BranchName
@@ -161,6 +167,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.02.20         *
  27.12.18         *
 */
 

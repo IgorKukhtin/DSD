@@ -3,7 +3,7 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 472
-  ClientWidth = 952
+  ClientWidth = 972
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,14 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 952
+    Width = 972
     Height = 405
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitHeight = 470
+    ExplicitWidth = 895
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -142,6 +142,16 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
         Visible = False
         VisibleForCustomization = False
       end
+      object isNotCompensation: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'.'
+        DataBinding.FieldName = 'isNotCompensation'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+        Options.Editing = False
+        Width = 70
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -150,11 +160,12 @@ object MemberHoliday_ChoiceForm: TMemberHoliday_ChoiceForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 952
+    Width = 972
     Height = 41
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 5
+    ExplicitWidth = 895
     object edOperDate: TcxDateEdit
       Left = 81
       Top = 12

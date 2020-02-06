@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CardIBAN TVarChar, CardIBANSecond TVarChar
              , Comment TVarChar
              , isOfficial Boolean
+             , isNotCompensation Boolean
              , BankId Integer, BankName TVarChar
              , BankSecondId Integer, BankSecondName TVarChar
              , BankChildId Integer, BankChildName TVarChar
@@ -91,6 +92,7 @@ end if;
          , ObjectString_Comment.ValueData           AS Comment
 
          , ObjectBoolean_Official.ValueData         AS isOfficial
+         , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
 
          , Object_Bank.Id               AS BankId
          , Object_Bank.ValueData        AS BankName
@@ -160,6 +162,9 @@ end if;
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
                                   ON ObjectBoolean_Official.ObjectId = Object_Member.Id
                                  AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Member_Official()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
+                                  ON ObjectBoolean_NotCompensation.ObjectId = Object_Member.Id
+                                 AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Member.Id
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
@@ -274,6 +279,7 @@ end if;
            , CAST ('' AS TVarChar)  AS CardIBANSecond
            , CAST ('' as TVarChar)  AS Comment
            , FALSE                  AS isOfficial
+           , FALSE                  AS isNotCompensation
 
            , CAST (0 as Integer)    AS BankId
            , CAST ('' as TVarChar)  AS BankName
@@ -326,6 +332,7 @@ ALTER FUNCTION gpSelect_Object_Member (Boolean, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.02.20         * add isNotCompensation
  09.09.19         *
  03.03.17         * add Bank, BankSecond, BankChild
  20.02.17         * add CardSecond

@@ -59,13 +59,13 @@
       object edCardIBAN: TcxTextEdit
         Left = 7
         Top = 419
-        TabOrder = 28
+        TabOrder = 25
         Width = 130
       end
       object edCardIBANSecond: TcxTextEdit
         Left = 150
         Top = 419
-        TabOrder = 29
+        TabOrder = 28
         Width = 130
       end
       object cxLabel16: TcxLabel
@@ -81,7 +81,7 @@
       object ceCard: TcxTextEdit
         Left = 7
         Top = 176
-        TabOrder = 15
+        TabOrder = 11
         Width = 151
       end
       object ceCode: TcxCurrencyEdit
@@ -126,12 +126,22 @@
         Width = 273
       end
       object cbOfficial: TcxCheckBox
-        Left = 139
-        Top = 22
+        Left = 140
+        Top = 6
         Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         Caption = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
         TabOrder = 2
         Width = 141
+      end
+      object cbNotCompensation: TcxCheckBox
+        Left = 140
+        Top = 33
+        Hint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'. '#1086#1090#1087'.'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 31
+        Width = 140
       end
       object cxLabel7: TcxLabel
         Left = 7
@@ -192,7 +202,7 @@
       object ceCardSecond: TcxTextEdit
         Left = 7
         Top = 214
-        TabOrder = 18
+        TabOrder = 14
         Width = 151
       end
       object cxLabel11: TcxLabel
@@ -203,7 +213,7 @@
       object ceCardChild: TcxTextEdit
         Left = 7
         Top = 251
-        TabOrder = 20
+        TabOrder = 16
         Width = 151
       end
       object cxLabel12: TcxLabel
@@ -220,7 +230,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 22
+        TabOrder = 18
         Width = 116
       end
       object cxLabel13: TcxLabel
@@ -237,7 +247,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 24
+        TabOrder = 20
         Width = 116
       end
       object cxLabel14: TcxLabel
@@ -254,7 +264,7 @@
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        TabOrder = 26
+        TabOrder = 21
         Width = 116
       end
     end
@@ -318,8 +328,8 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 120
-    Top = 31
+    Left = 128
+    Top = 103
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Member_All'
@@ -351,6 +361,14 @@
         Name = 'inIsOfficial'
         Value = 'False'
         Component = cbOfficial
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotCompensation'
+        Value = Null
+        Component = cbNotCompensation
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -490,6 +508,13 @@
         Name = 'IsOfficial'
         Value = 'False'
         Component = cbOfficial
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotCompensation'
+        Value = Null
+        Component = cbNotCompensation
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
