@@ -206,6 +206,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Client_InsertUnit() RETURNS Integer AS 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Client_InsertUnit', 'Подразделение (создание)', zc_Object_Client(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Client_InsertUnit');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Client_Currency() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Client_Currency'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Client_Currency', 'Валюта', zc_Object_Client(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Client_Currency');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Brand_CountryBrand() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Brand_CountryBrand'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
@@ -332,6 +336,7 @@ SELECT 'zc_ObjectLink_ImportSettings_Email', 'Почтовый ящик', zc_Object_ImportSe
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+07.02.20          * zc_ObjectLink_Client_Currency
 28.01.20          * zc_ObjectLink_Unit_PriceList
 29.03.19          * zc_ObjectLink_ImportSettings_Juridical
                     zc_ObjectLink_ImportSettings_FileType

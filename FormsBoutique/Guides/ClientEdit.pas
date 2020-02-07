@@ -48,7 +48,7 @@ type
     edPhone: TcxTextEdit;
     cxLabel6: TcxLabel;
     ceCity: TcxButtonEdit;
-    CityGuides: TdsdGuides;
+    GuidesCity: TdsdGuides;
     cxLabel7: TcxLabel;
     edDiscountTax: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
@@ -62,7 +62,10 @@ type
     edComment: TcxTextEdit;
     ceDiscountKind: TcxButtonEdit;
     cxLabel13: TcxLabel;
-    DiscountKindGuides: TdsdGuides;
+    GuidesDiscountKind: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edCurrency: TcxButtonEdit;
+    GuidesCurrency: TdsdGuides;
   private
     { Private declarations }
   public

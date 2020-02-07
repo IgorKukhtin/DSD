@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Client() - Покупатели
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Client (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Покупатели>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Client(
     IN inComment                  TVarChar  ,    -- Примечание
     IN inCityId                   Integer   ,    -- Населенный пункт
     IN inDiscountKindId           Integer   ,    -- Вид накопительной скидки
+    IN inCurrencyId               Integer   ,    -- Валюта
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -159,6 +161,8 @@ BEGIN
    -- сохранили связь с <Вид накопительной скидки>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_DiscountKind(), ioId, inDiscountKindId);
 
+   -- сохранили связь с <Валюта>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Client_Currency(), ioId, inCurrencyId);
 
    -- определяется признак Создание/Корректировка
    IF vbIsInsert = TRUE
@@ -187,6 +191,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятикин А.А.
+07.02.20          * add CurrencyName
 13.05.17                                                           *
 02.03.17                                                           *
 01.03.17                                                           *

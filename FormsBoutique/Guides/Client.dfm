@@ -165,6 +165,14 @@ object ClientForm: TClientForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 150
       end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object TotalDebtSumm: TcxGridDBColumn
         Caption = #1044#1086#1083#1075' '#1087#1086#1082#1091#1087'. '#1087#1086' '#1084#1072#1075'.'
         DataBinding.FieldName = 'TotalDebtSumm'
