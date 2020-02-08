@@ -97,7 +97,8 @@ uses
   PUSHMessage in '..\SOURCE\COMPONENT\PUSHMessage.pas' {PUSHMessageForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm};
 
 {$R *.res}
 
@@ -120,6 +121,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
+  Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
   //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
@@ -145,6 +147,7 @@ begin
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
+         Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
   end
   else
 
@@ -186,7 +189,7 @@ begin
          Application.CreateForm(TDialogPersonalCompleteForm, DialogPersonalCompleteForm);
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
-
+         Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
   end;
   //
   Application.Run;

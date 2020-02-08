@@ -98,7 +98,8 @@ uses
   DialogGoodsSeparate in '..\ScaleCeh\DialogGoodsSeparate.pas' {DialogGoodsSeparateForm},
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
-  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas';
+  OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
+  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm};
 
 {$R *.res}
 
@@ -121,6 +122,7 @@ begin
          //
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleCehForm, DMMainScaleCehForm);
+  Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
   // !!!важно первым!!!
   Application.CreateForm(TMainCehForm, MainCehForm);
          Application.CreateForm(TDialogMovementDescForm, DialogMovementDescForm);
@@ -138,6 +140,7 @@ begin
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
+         Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
   end
   else
 
@@ -171,6 +174,7 @@ begin
          Application.CreateForm(TGuideGoodsLineForm, GuideGoodsLineForm);
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
+         Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
 
   end;
   //
