@@ -167,15 +167,32 @@ WITH LOSS AS ( SELECT
                             Container.Id 
                            ,Container.ObjectId
                     ),
+    PartionDate AS (SELECT REMAINS.Id
+                         , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate
+                    FROM REMAINS
+                
+                         INNER JOIN Container ON Container.ParentId = REMAINS.Id
+                                             AND Container.DescID = zc_Container_CountPartionDate()
+                                             AND Container.Amount > 0 
+                                             
+                         INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                       AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                      
+                         INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                               ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId 
+                                              AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                    GROUP BY REMAINS.Id
+               ),
   DD AS (SELECT 
             LOSS.MovementItemId 
           , LOSS.Amount 
           , REMAINS.Amount AS ContainerAmount 
           , vbLossDate AS OperDate 
           , REMAINS.Id
-          , SUM(REMAINS.Amount) OVER (PARTITION BY REMAINS.objectid ORDER BY Movement.OPERDATE, REMAINS.Id)
+          , SUM(REMAINS.Amount) OVER (PARTITION BY REMAINS.objectid ORDER BY COALESCE(PartionDate.ExpirationDate, MIDate_ExpirationDate.ValueData), REMAINS.Id)
         FROM REMAINS 
             JOIN LOSS ON LOSS.objectid = REMAINS.objectid 
+            LEFT JOIN PartionDate ON PartionDate.ID = REMAINS.ID
             JOIN containerlinkobject AS CLI_MI 
                                      ON CLI_MI.containerid = REMAINS.Id
                                     AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
@@ -183,9 +200,19 @@ WITH LOSS AS ( SELECT
 			                         ON CLI_Unit.containerid = REMAINS.Id
                                     AND CLI_Unit.descid = zc_ContainerLinkObject_Unit()
                                     AND CLI_Unit.ObjectId = vbUnitId
-            JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-            JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
-            JOIN Movement ON Movement.Id = movementitem.movementid
+            LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+            -- элемент прихода
+            LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                 -- AND 1=0
+            LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                            AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
         WHERE REMAINS.Amount > 0), 
   
   tmpItem AS (SELECT 
@@ -197,7 +224,7 @@ WITH LOSS AS ( SELECT
                   ELSE Amount - SUM + ContainerAmount
                 END AS Amount
               FROM DD
-              WHERE (Amount - (SUM - ContainerAmount) >= 0)
+              WHERE (Amount - (SUM - ContainerAmount) > 0)
               )
 
 

@@ -834,6 +834,16 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNDelayForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNDelayForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNDelayDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNDelayDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsDialogForm'));
