@@ -103,6 +103,7 @@ begin
            ParamsMovement.ParamByName('isStorageLine').asBoolean           := CDS.FieldByName('isStorageLine').asBoolean;
            ParamsMovement.ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
            ParamsMovement.ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
+           ParamsMovement.ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
            ParamsMovement.ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
 
            ParamsMovement.ParamByName('FromId').AsInteger           := CDS.FieldByName('FromId').asInteger;
@@ -355,6 +356,7 @@ begin
           ParamByName('isStorageLine').asBoolean           := CDS.FieldByName('isStorageLine').asBoolean;
           ParamByName('isArticleLoss').asBoolean           := CDS.FieldByName('isArticleLoss').asBoolean;
           ParamByName('isTransport_link').asBoolean        := CDS.FieldByName('isTransport_link').asBoolean;
+          ParamByName('isSubjectDoc').asBoolean            := CDS.FieldByName('isSubjectDoc').asBoolean;
           ParamByName('isLockStartWeighing').asBoolean     := CDS.FieldByName('isLockStartWeighing').asBoolean;
 
           if  (CDS.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)

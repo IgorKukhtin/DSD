@@ -169,7 +169,7 @@ then
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
-    WHERE MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH'
+    WHERE MovementDate_ServiceDate.ValueData = DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '0 MONTH'
       AND MovementDate_ServiceDate.DescId    = zc_MovementDate_ServiceDate()
     ORDER BY CASE WHEN MovementBoolean_isAuto.ValueData = TRUE THEN 0 ELSE 1 END, MovementDate_ServiceDate.MovementId
     LIMIT 1
@@ -209,7 +209,7 @@ then
           vbMovementId := lpInsertUpdate_Movement_PersonalService (ioId                      := 0
                                                                  , inInvNumber               := CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) --inInvNumber
                                                                  , inOperDate                := inEndDate
-                                                                 , inServiceDate             := DATE_TRUNC ('MONTH', inEndDate)  + INTERVAL '1 MONTH'
+                                                                 , inServiceDate             := DATE_TRUNC ('MONTH', inEndDate)  + INTERVAL '0 MONTH'
                                                                  , inComment                 := '' :: TVarChar
                                                                  , inPersonalServiceListId   := inPersonalServiceListId
                                                                  , inJuridicalId             := vbJuridicalId

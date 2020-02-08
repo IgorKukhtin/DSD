@@ -139,6 +139,7 @@ begin
            ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
            ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
            ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
+
            // !!!ParamsLight!!!
            ParamsLight.ParamByName('GoodsId').AsInteger  := DataSet.FieldByName('GoodsId').asInteger;
            ParamsLight.ParamByName('GoodsCode').AsInteger:= DataSet.FieldByName('GoodsCode').asInteger;
@@ -259,6 +260,10 @@ begin
            ParamByName('ToId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
            ParamByName('ToCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
            ParamByName('ToName').asString:= DataSet.FieldByName('ToName').asString;
+
+           ParamByName('SubjectDocId').AsInteger   := DataSet.FieldByName('SubjectDocId').asInteger;
+           ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
+           ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
 
          end;
 
@@ -529,6 +534,7 @@ begin
          Params.AddParam('inMovementDescNumber', ftInteger, ptInput, execParamsMovement.ParamByName('MovementDescNumber').AsInteger);
          Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
          Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
+         Params.AddParam('inSubjectDocId', ftInteger, ptInput, execParamsMovement.ParamByName('SubjectDocId').AsInteger);
          Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          //try

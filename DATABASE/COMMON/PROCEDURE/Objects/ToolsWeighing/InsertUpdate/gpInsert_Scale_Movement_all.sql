@@ -715,7 +715,7 @@ end if;
                                                   , inFromId                := FromId
                                                   , inToId                  := ToId
                                                   , inDocumentKindId        := 0
-                                                  , inSubjectDocId          := 0
+                                                  , inSubjectDocId          := SubjectDocId
                                                   , inComment               := '' :: TvarChar
                                                   , inUserId                := vbUserId
                                                    )

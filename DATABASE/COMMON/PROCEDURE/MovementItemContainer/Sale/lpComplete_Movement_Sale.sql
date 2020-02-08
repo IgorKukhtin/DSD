@@ -1048,6 +1048,7 @@ END IF;*/
      --
      IF vbMovementItemId_check > 0 AND 1=1 -- AND inUserId = 5
         AND inUserId <> zc_Enum_Process_Auto_PrimeCost()
+        AND vbIsCorporate_To = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.%В документе № <%> от <%> цена = 0%<%> <%>.%Проведение невозможно.'
                        , CHR (13)

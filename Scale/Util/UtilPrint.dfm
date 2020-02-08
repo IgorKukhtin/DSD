@@ -2613,6 +2613,7 @@ object UtilPrintForm: TUtilPrintForm
         Name = 'inIsItem'
         Value = False
         DataType = ftBoolean
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1

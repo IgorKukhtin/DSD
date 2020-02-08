@@ -2358,11 +2358,12 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelSkewer2: TPanel
       Left = 0
-      Top = 533
+      Top = 572
       Width = 222
       Height = 37
       Align = alTop
       TabOrder = 4
+      ExplicitTop = 533
       object PanelSkewer2: TPanel
         Left = 1
         Top = 1
@@ -2653,11 +2654,12 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelWeightOther: TPanel
       Left = 0
-      Top = 570
+      Top = 609
       Width = 222
       Height = 38
       Align = alTop
       TabOrder = 7
+      ExplicitTop = 570
       object LabelWeightOther: TLabel
         Left = 1
         Top = 1
@@ -2769,6 +2771,54 @@ object MainCehForm: TMainCehForm
           'MemoMovementInfo')
         ReadOnly = True
         TabOrder = 0
+      end
+    end
+    object SubjectDocPanel: TPanel
+      Left = 0
+      Top = 533
+      Width = 222
+      Height = 39
+      Align = alTop
+      Alignment = taLeftJustify
+      BevelOuter = bvNone
+      TabOrder = 11
+      ExplicitTop = 571
+      object SubjectDocLabel: TLabel
+        Left = 0
+        Top = 0
+        Width = 222
+        Height = 14
+        Align = alTop
+        Alignment = taCenter
+        Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1042#1086#1079#1074#1088#1072#1090
+        Font.Charset = RUSSIAN_CHARSET
+        Font.Color = clMaroon
+        Font.Height = -11
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        ExplicitWidth = 103
+      end
+      object EditSubjectDoc: TcxButtonEdit
+        Left = 4
+        Top = 15
+        ParentFont = False
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Properties.OnButtonClick = EditSubjectDocPropertiesButtonClick
+        Style.Font.Charset = RUSSIAN_CHARSET
+        Style.Font.Color = clBlack
+        Style.Font.Height = -11
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = [fsBold]
+        Style.IsFontAssigned = True
+        TabOrder = 0
+        Text = 'EditSubjectDoc'
+        Width = 213
       end
     end
   end

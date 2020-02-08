@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integ
 DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 */
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Scale_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inId                   Integer   , -- Ключ объекта <Документ>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Scale_Movement(
     IN inContractId           Integer   , -- Договора
     IN inPaidKindId           Integer   , -- Форма оплаты
     IN inPriceListId          Integer   , -- 
+    IN inSubjectDocId         Integer   , -- 
     IN inMovementId_Order     Integer   , -- ключ Документа заявка
     IN inMovementId_Transport Integer   , -- ключ Документа ИЛИ - криво - через этот прараметр передаем - Через кого поступил возврат
     IN inChangePercent        TFloat    , -- (-)% Скидки (+)% Наценки
@@ -39,6 +41,20 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Scale_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId_Order AND Movement.DescId = zc_Movement_SendOnPrice())
+     AND (SELECT COALESCE (MLO.ObjectId, 0) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inId               AND MLO.DescId = zc_MovementLinkObject_From())
+      <> (SELECT COALESCE (MLO.ObjectId, 0) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Order AND MLO.DescId = zc_MovementLinkObject_From())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Разные подразделения <От Кого>, во взвешивании = <%>,%в документе основание = <%>.%Должны быть одинаковыми.'
+                       , lfGet_Object_ValueData_sh ((SELECT COALESCE (MLO.ObjectId, 0) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inId               AND MLO.DescId = zc_MovementLinkObject_From()))
+                       , CHR (13)
+                       , lfGet_Object_ValueData_sh ((SELECT COALESCE (MLO.ObjectId, 0) FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Order AND MLO.DescId = zc_MovementLinkObject_From()))
+                       , CHR (13)
+                       ;
+     END IF;
+          
 
      -- определили !!!только для Днепра!!!
      IF inMovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_ReturnOut())
@@ -108,6 +124,7 @@ BEGIN
                                                    , inContractId          := CASE WHEN inContractId > 0 THEN inContractId ELSE 0 END
                                                    , inPriceListId         := CASE WHEN vbPriceListId_Dnepr <> 0 THEN vbPriceListId_Dnepr ELSE inPriceListId END
                                                    , inPaidKindId          := inPaidKindId
+                                                   , inSubjectDocId        := inSubjectDocId
                                                    , inMovementId_Order    := inMovementId_Order
                                                    , inMovementId_Transport:= CASE WHEN inMovementDescId = zc_Movement_ReturnIn() THEN 0 ELSE inMovementId_Transport END
                                                    , inBranchCode          := inBranchCode
@@ -125,7 +142,7 @@ BEGIN
 
 
 -- !!! ВРЕМЕННО !!!
-if inSession = '5' AND 1=1
+if inSession = '5' AND 1=0
 then
     RAISE EXCEPTION 'Admin - Test = OK - %', inToId;
     -- 'Повторите действие через 3 мин.'

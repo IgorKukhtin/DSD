@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_ScaleCeh_Movement()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleCeh_Movement (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inId                  Integer   , -- Ключ объекта <Документ>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleCeh_Movement(
     IN inMovementDescNumber  Integer   , -- Вид документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inSubjectDocId        Integer   , -- 
     IN inIsProductionIn      Boolean   , -- 
     IN inBranchCode          Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -77,6 +79,7 @@ BEGIN
                                                       , inFromId              := inFromId
                                                       , inToId                := inToId
                                                       , inDocumentKindId      := CASE WHEN vbDocumentKindId = 0 THEN NULL ELSE vbDocumentKindId END
+                                                      , inSubjectDocId        := inSubjectDocId
                                                       , inPartionGoods        := (SELECT MovementString.ValueData FROM MovementString WHERE MovementString.MovementId = inId AND MovementString.DescId = zc_MovementString_PartionGoods())
                                                       , inIsProductionIn      := inIsProductionIn
                                                       , inSession             := inSession

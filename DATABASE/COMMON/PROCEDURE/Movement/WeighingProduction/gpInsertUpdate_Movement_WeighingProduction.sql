@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_WeighingProduction()
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа
+    IN inSubjectDocId         Integer   , -- 
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inIsProductionIn      Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -76,6 +78,8 @@ BEGIN
      -- сохранили связь с <Тип документа>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentKind(), ioId, inDocumentKindId);
 
+     -- сохранили связь с <Основание для перемещения>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), ioId, inSubjectDocId);
 
    -- !!!только при создании!!!
    IF vbIsInsert = TRUE

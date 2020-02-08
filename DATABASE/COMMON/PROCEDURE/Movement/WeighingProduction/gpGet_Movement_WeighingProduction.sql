@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentKindId Integer, DocumentKindName TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
+             , SubjectDocId Integer, SubjectDocCode Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -70,6 +71,9 @@ BEGIN
              , CAST ('' AS TVarChar) AS GoodsTypeKindName
              , 0                     AS BarCodeBoxId
              , CAST ('' AS TVarChar) AS BarCodeBoxName
+             , 0                     AS SubjectDocId
+             , 0                     AS SubjectDocCode
+             , CAST ('' AS TVarChar) AS SubjectDocName
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -112,6 +116,10 @@ BEGIN
              , Object_GoodsTypeKind.ValueData  AS GoodsTypeKindName
              , Object_BarCodeBox.Id            AS BarCodeBoxId
              , Object_BarCodeBox.ValueData     AS BarCodeBoxName
+
+             , Object_SubjectDoc.Id            AS SubjectDocId
+             , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
+             , Object_SubjectDoc.ValueData     AS SubjectDocName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -182,13 +190,17 @@ BEGIN
                                         AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingProduction();
      END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_WeighingProduction (Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

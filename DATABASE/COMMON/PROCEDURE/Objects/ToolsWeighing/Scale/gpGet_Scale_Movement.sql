@@ -57,9 +57,13 @@ RETURNS TABLE (MovementId       Integer
              , CarName              TVarChar
              , RouteName            TVarChar
 
+             , SubjectDocId   Integer
+             , SubjectDocCode Integer
+             , SubjectDocName TVarChar
+
              , TotalSumm TFloat
               )
-AS	
+AS
 $BODY$
    DECLARE vbUserId     Integer;
 BEGIN
@@ -140,6 +144,8 @@ BEGIN
                                       , MovementLinkObject_Contract.ObjectId AS ContractId -- значение - то что сохранилось при создании
                                       , zfCalc_GoodsPropertyId (MovementLinkObject_Contract.ObjectId, ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ObjectId) AS GoodsPropertyId
 
+                                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocId
+
                                       , MovementLinkMovement_Order.MovementChildId     AS MovementId_Order
                                       , MovementLinkMovement_Transport.MovementChildId AS MovementId_Transport
 
@@ -154,6 +160,10 @@ BEGIN
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                    ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                                   ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
 
                                       LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                                      ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -214,7 +224,7 @@ BEGIN
                                                                            AND Movement.DescId = zc_Movement_TransportService()
                                       LIMIT 1
                                      )
-                                           
+
            , tmpJuridicalPrint AS (SELECT tmp.Id AS JuridicalId
                                         , tmp.isMovement, tmp.CountMovement
                                         , tmp.isAccount, tmp.CountAccount
@@ -295,6 +305,10 @@ BEGIN
             , (COALESCE (Object_Car.ValueData, '') || ' ' || COALESCE (Object_CarModel.ValueData, '')) :: TVarChar AS CarName
             , Object_Route.ValueData          AS RouteName
 
+            , Object_SubjectDoc.Id            AS SubjectDocId
+            , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
+            , Object_SubjectDoc.ValueData     AS SubjectDocName
+
             , MovementFloat_TotalSumm.ValueData AS TotalSumm
 
        FROM tmpMovement
@@ -312,6 +326,8 @@ BEGIN
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementTransport.RouteId
+
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMovement.SubjectDocId
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId

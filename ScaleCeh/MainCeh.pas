@@ -265,6 +265,9 @@ type
     bbInsertPartionGoodsOpen_out: TSpeedButton;
     bbInsertPartionGoodsClose_out: TSpeedButton;
     RealWeight_gd: TcxGridDBColumn;
+    SubjectDocPanel: TPanel;
+    SubjectDocLabel: TLabel;
+    EditSubjectDoc: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -341,6 +344,8 @@ type
     procedure bbInsertPartionGoodsOpen_outClick(Sender: TObject);
     procedure bbInsertPartionGoodsClose_outClick(Sender: TObject);
     procedure EditCountPackEnter(Sender: TObject);
+    procedure EditSubjectDocPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -378,6 +383,8 @@ type
     function fGetScale_CurrentWeight:Double;
     function GetOldRealWeight:Double;
 
+    procedure pSetSubjectDoc;
+
   public
     procedure InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
     //
@@ -396,7 +403,7 @@ implementation
 {$R *.dfm}
 uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPrint
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
-    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport
+    ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc
     ,IdIPWatch, LookAndFillSettings
     ,DialogBoxLight, DialogGoodsSeparate;
 //------------------------------------------------------------------------------------------------
@@ -637,6 +644,14 @@ begin
                              ActiveControl:=EditStorageLine;
                              exit;
                    end;
+     end;
+     //Проверка
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+         and(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
+         and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
+     then begin
+         if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
+         then begin pSetSubjectDoc; exit; end;
      end;
      //Проверка
      if  (ParamsMovement.ParamByName('ToId').asInteger = 0)
@@ -1448,6 +1463,13 @@ begin
           //
           EditStorageLine.Text:= ParamsMI.ParamByName('StorageLineName').AsString;
      end;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     then pSetSubjectDoc;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.EditArticleLossPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -2443,6 +2465,7 @@ begin
     else PanelMovement.Caption:='Документ № <'+ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamByName('OperDate_Movement').AsDateTime)+'>';
 
     PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
+    EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
 
   end;
 
@@ -3011,4 +3034,31 @@ end;
 procedure TMainCehForm.actExitExecute(Sender: TObject);
 begin Close;end;
 {------------------------------------------------------------------------}
+procedure TMainCehForm.pSetSubjectDoc;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsSubjectDoc(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('SubjectDocId').AsInteger:=ParamsMovement.ParamByName('SubjectDocId').AsInteger;
+          ParamByName('SubjectDocCode').AsInteger:=ParamsMovement.ParamByName('SubjectDocCode').AsInteger;
+          ParamByName('SubjectDocName').asString:=ParamsMovement.ParamByName('SubjectDocName').asString;
+     end;
+     if GuideSubjectDocForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('SubjectDocId').AsInteger:=execParams.ParamByName('SubjectDocId').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 end.

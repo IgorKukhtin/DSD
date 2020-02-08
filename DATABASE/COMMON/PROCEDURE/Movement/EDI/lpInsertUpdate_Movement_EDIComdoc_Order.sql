@@ -315,152 +315,152 @@ BEGIN
      -- только если не нашли по значению <Ќомер за€вки у контрагента> + набирали вручную
      IF vbIsFind_InvNumberPartner = FALSE
      THEN
-     -- сохранили <«а€вки сторонние>
-     vbMovementId_Order:= lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId_Order
-                                                               , inInvNumber           := CASE WHEN vbMovementId_Order <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Order) ELSE CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) END :: TVarChar
-                                                               , inInvNumberPartner    := vbInvNumber
-                                                               , inOperDate            := vbOperDate
-                                                               , inOperDatePartner     := vbOperDatePartner
-                                                               , inOperDateMark        := vbOperDatePartner
-                                                               , inPriceWithVAT        := vbPriceWithVAT
-                                                               , inVATPercent          := vbVATPercent
-                                                               , inChangePercent       := vbChangePercent
-                                                               , inFromId              := vbPartnerId
-                                                               , inToId                := vbUnitId
-                                                               , inPaidKindId          := vbPaidKindId
-                                                               , inContractId          := vbContractId
-                                                               , inRouteId             := vbRouteId
-                                                               , inRouteSortingId      := vbRouteSortingId
-                                                               , inPersonalId          := COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
-                                                                                                     FROM ObjectLink AS ObjectLink_Partner_MemberTake
-                                                                                                     WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
-                                                                                                       AND ObjectLink_Partner_MemberTake.DescId
-                                                  = CASE EXTRACT (DOW FROM vbOperDate + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
-                                                                                         + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
-                                                                                          ) :: TVarChar || ' DAY') :: INTERVAL)
-                                                                 )
-                                                       WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
-                                                       WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
-                                                       WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
-                                                       WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
-                                                       WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
-                                                       WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
-                                                       WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
-                                                    END
-                                                                                                    ), vbMemberTakeId)
-                                                               , inPriceListId         := vbPriceListId
-                                                               , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
-                                                               , inUserId              := inUserId
-                                                                );
-
-     -- "обнулили" кол-во <Ёлемент документа>
-     /*PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, 0, MovementItem.ParentId)
-     FROM MovementItem
-          INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                       ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                      AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                      AND MIFloat_AmountSecond.ValueData <> 0
-     WHERE MovementItem.MovementId = vbMovementId_Order
-       AND MovementItem.DescId =  zc_MI_Master()
-       AND MovementItem.isErased = FALSE;*/
-
-     -- "удалили" кол-во <Ёлемент документа>
-     PERFORM lpSetErased_MovementItem (MovementItem.Id, inUserId)
-     FROM MovementItem
-          LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                      ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                     AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                     AND MIFloat_AmountSecond.ValueData <> 0
-     WHERE MovementItem.MovementId = vbMovementId_Order
-       AND MovementItem.DescId =  zc_MI_Master()
-       AND MovementItem.isErased = FALSE
-       -- AND MIFloat_AmountSecond.MovementItemId IS NULL
-    ;
-
-       -- таблица -  ÷ены из прайса
-      CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
-         INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
-             SELECT lfSelect.GoodsId     AS GoodsId
-                  , lfSelect.GoodsKindId AS GoodsKindId
-                  , lfSelect.ValuePrice  AS ValuePrice
-             FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate_pl) AS lfSelect;
-
-     -- сохранили строчную часть <«а€вки сторонние>
-     PERFORM lpInsertUpdate_MovementItem_OrderExternal_EDI (ioId                 := tmpMI.MovementItemId
-                                                          , inMovementItemId_EDI := tmpMI.MovementItemId_EDI
-                                                          , inMovementId         := vbMovementId_Order
-                                                          , inGoodsId            := tmpMI.GoodsId
-                                                          , inAmount             := tmpMI.Amount
-                                                          , inAmountSecond       := tmpMI.AmountSecond
-                                                          , inGoodsKindId        := tmpMI.GoodsKindId
-                                                          , inPrice              := tmpMI.Price
-                                                          , inCountForPrice      := 1
-                                                          , inUserId             := inUserId
-                                                           )
-           -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpMI.MovementItemId_EDI, tmpMI.Price)
-           -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpMI.MovementItemId_EDI, 1)
-     FROM (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
-                , MAX (tmpMI.MovementItemId_EDI) AS MovementItemId_EDI
-                , tmpMI.GoodsId
-                , tmpMI.GoodsKindId
-                , SUM (tmpMI.Amount)         AS Amount
-                , SUM (tmpMI.AmountSecond)   AS AmountSecond
-                , MAX (tmpMI.Price)          AS Price
-           FROM (SELECT 0                                                      AS MovementItemId
-                      , MovementItem.Id                                        AS MovementItemId_EDI
-                      , MovementItem.ObjectId                                  AS GoodsId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
-                      , MovementItem.Amount                                    AS Amount
-                      , 0                                                      AS AmountSecond
-                      , COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) :: TFloat AS Price
-                      , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                           ORDER BY MovementItem.Amount DESC)  AS Ord
-                 FROM MovementItem
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      /*LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate_pl)
-                             AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId*/
-
-                      LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
-                                            AND tmpPriceList.GoodsKindId IS NULL
-                      LEFT JOIN tmpPriceList AS tmpPriceList_kind
-                                             ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
-                                            AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-
-                 WHERE MovementItem.MovementId = inMovementId
-                   AND MovementItem.DescId     =  zc_MI_Master()
-                   AND MovementItem.isErased   = FALSE
-                UNION ALL
-                 SELECT MovementItem.Id                                     AS MovementItemId
-                      , 0                                                   AS MovementItemId_EDI
-                      , MovementItem.ObjectId                               AS GoodsId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
-                      , 0                                                   AS Amount
-                      , COALESCE (MIFloat_AmountSecond.ValueData, 0)        AS AmountSecond
-                      , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
-                      , 1 AS Ord
-                 FROM MovementItem
-                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                        LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                 WHERE MovementItem.MovementId = vbMovementId_Order
-                   AND MovementItem.DescId =  zc_MI_Master()
-                   AND MovementItem.isErased = FALSE
-                ) AS tmpMI
-           WHERE tmpMI.Ord = 1
-           GROUP BY tmpMI.GoodsId
-                  , tmpMI.GoodsKindId
-                  -- , tmpMI.Price
-           ORDER BY 2, 1
-          ) AS tmpMI
-     ;
+         -- сохранили <«а€вки сторонние>
+         vbMovementId_Order:= lpInsertUpdate_Movement_OrderExternal (ioId                  := vbMovementId_Order
+                                                                   , inInvNumber           := CASE WHEN vbMovementId_Order <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Order) ELSE CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) END :: TVarChar
+                                                                   , inInvNumberPartner    := vbInvNumber
+                                                                   , inOperDate            := vbOperDate
+                                                                   , inOperDatePartner     := vbOperDatePartner
+                                                                   , inOperDateMark        := vbOperDatePartner
+                                                                   , inPriceWithVAT        := vbPriceWithVAT
+                                                                   , inVATPercent          := vbVATPercent
+                                                                   , inChangePercent       := vbChangePercent
+                                                                   , inFromId              := vbPartnerId
+                                                                   , inToId                := vbUnitId
+                                                                   , inPaidKindId          := vbPaidKindId
+                                                                   , inContractId          := vbContractId
+                                                                   , inRouteId             := vbRouteId
+                                                                   , inRouteSortingId      := vbRouteSortingId
+                                                                   , inPersonalId          := COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                                                                                                         FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                                                                                                         WHERE ObjectLink_Partner_MemberTake.ObjectId = vbPartnerId
+                                                                                                           AND ObjectLink_Partner_MemberTake.DescId
+                                                      = CASE EXTRACT (DOW FROM vbOperDate + (((COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_PrepareDayCount()),  0)
+                                                                                             + COALESCE ((SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbPartnerId AND ObjectFloat.DescId = zc_ObjectFloat_Partner_DocumentDayCount()), 0)
+                                                                                              ) :: TVarChar || ' DAY') :: INTERVAL)
+                                                                     )
+                                                           WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                           WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                           WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                           WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                           WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                           WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                           WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                        END
+                                                                                                        ), vbMemberTakeId)
+                                                                   , inPriceListId         := vbPriceListId
+                                                                   , inPartnerId           := COALESCE ((SELECT ObjectId FROM MovementLinkObject WHERE MovementId = vbMovementId_Order AND DescId = zc_MovementLinkObject_Partner()), 0)
+                                                                   , inUserId              := inUserId
+                                                                    );
+    
+         -- "обнулили" кол-во <Ёлемент документа>
+         /*PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId, 0, MovementItem.ParentId)
+         FROM MovementItem
+              INNER JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                           ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                          AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                          AND MIFloat_AmountSecond.ValueData <> 0
+         WHERE MovementItem.MovementId = vbMovementId_Order
+           AND MovementItem.DescId =  zc_MI_Master()
+           AND MovementItem.isErased = FALSE;*/
+    
+         -- "удалили" кол-во <Ёлемент документа>
+         PERFORM lpSetErased_MovementItem (MovementItem.Id, inUserId)
+         FROM MovementItem
+              LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                          ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                                         AND MIFloat_AmountSecond.ValueData <> 0
+         WHERE MovementItem.MovementId = vbMovementId_Order
+           AND MovementItem.DescId =  zc_MI_Master()
+           AND MovementItem.isErased = FALSE
+           -- AND MIFloat_AmountSecond.MovementItemId IS NULL
+        ;
+    
+           -- таблица -  ÷ены из прайса
+          CREATE TEMP TABLE tmpPriceList (GoodsId Integer, GoodsKindId Integer, ValuePrice TFloat) ON COMMIT DROP;
+             INSERT INTO tmpPriceList (GoodsId, GoodsKindId, ValuePrice)
+                 SELECT lfSelect.GoodsId     AS GoodsId
+                      , lfSelect.GoodsKindId AS GoodsKindId
+                      , lfSelect.ValuePrice  AS ValuePrice
+                 FROM lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate_pl) AS lfSelect;
+    
+         -- сохранили строчную часть <«а€вки сторонние>
+         PERFORM lpInsertUpdate_MovementItem_OrderExternal_EDI (ioId                 := tmpMI.MovementItemId
+                                                              , inMovementItemId_EDI := tmpMI.MovementItemId_EDI
+                                                              , inMovementId         := vbMovementId_Order
+                                                              , inGoodsId            := tmpMI.GoodsId
+                                                              , inAmount             := tmpMI.Amount
+                                                              , inAmountSecond       := tmpMI.AmountSecond
+                                                              , inGoodsKindId        := tmpMI.GoodsKindId
+                                                              , inPrice              := tmpMI.Price
+                                                              , inCountForPrice      := 1
+                                                              , inUserId             := inUserId
+                                                               )
+               -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), tmpMI.MovementItemId_EDI, tmpMI.Price)
+               -- , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), tmpMI.MovementItemId_EDI, 1)
+         FROM (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
+                    , MAX (tmpMI.MovementItemId_EDI) AS MovementItemId_EDI
+                    , tmpMI.GoodsId
+                    , tmpMI.GoodsKindId
+                    , SUM (tmpMI.Amount)         AS Amount
+                    , SUM (tmpMI.AmountSecond)   AS AmountSecond
+                    , MAX (tmpMI.Price)          AS Price
+               FROM (SELECT 0                                                      AS MovementItemId
+                          , MovementItem.Id                                        AS MovementItemId_EDI
+                          , MovementItem.ObjectId                                  AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
+                          , MovementItem.Amount                                    AS Amount
+                          , 0                                                      AS AmountSecond
+                          , COALESCE (tmpPriceList_kind.ValuePrice, tmpPriceList.ValuePrice, 0) :: TFloat AS Price
+                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                               ORDER BY MovementItem.Amount DESC)  AS Ord
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          /*LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= vbPriceListId, inOperDate:= vbOperDate_pl)
+                                 AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = MovementItem.ObjectId*/
+    
+                          LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = MovementItem.ObjectId
+                                                AND tmpPriceList.GoodsKindId IS NULL
+                          LEFT JOIN tmpPriceList AS tmpPriceList_kind
+                                                 ON tmpPriceList_kind.GoodsId = MovementItem.ObjectId
+                                                AND COALESCE (tmpPriceList_kind.GoodsKindId, 0) = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+    
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId     =  zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                    UNION ALL
+                     SELECT MovementItem.Id                                     AS MovementItemId
+                          , 0                                                   AS MovementItemId_EDI
+                          , MovementItem.ObjectId                               AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                          , 0                                                   AS Amount
+                          , COALESCE (MIFloat_AmountSecond.ValueData, 0)        AS AmountSecond
+                          , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                          , 1 AS Ord
+                     FROM MovementItem
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                            LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                        ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                     WHERE MovementItem.MovementId = vbMovementId_Order
+                       AND MovementItem.DescId =  zc_MI_Master()
+                       AND MovementItem.isErased = FALSE
+                    ) AS tmpMI
+               WHERE tmpMI.Ord = 1
+               GROUP BY tmpMI.GoodsId
+                      , tmpMI.GoodsKindId
+                      -- , tmpMI.Price
+               ORDER BY 2, 1
+              ) AS tmpMI
+         ;
      ELSE
          -- сформировали св€зь <–асходна€ накладна€> с EDI (если по она уже сформирована по за€вке)
          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), Movement.Id, inMovementId)

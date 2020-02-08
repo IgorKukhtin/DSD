@@ -225,6 +225,10 @@ type
     miLine16: TMenuItem;
     bbSale_Order_diffTax: TSpeedButton;
     rgLanguage: TRadioGroup;
+    infoSubjectDocPanel: TPanel;
+    SubjectDocPanel: TPanel;
+    SubjectDocLabel: TLabel;
+    EditSubjectDoc: TcxButtonEdit;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -259,6 +263,8 @@ type
     procedure bbGuideGoodsViewClick(Sender: TObject);
     procedure miFontClick(Sender: TObject);
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
+    procedure EditSubjectDocPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -279,6 +285,7 @@ type
     procedure Initialize_afterSave_MI;
     procedure myActiveControl;
     procedure pSetDriverReturn;
+    procedure pSetSubjectDoc;
 
   public
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
@@ -294,7 +301,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -340,19 +347,19 @@ begin
      Result:=false;
      //
      OperDateEdit.Text:=DateToStr(DMMainScaleForm.gpGet_Scale_OperDate(ParamsMovement));
-     //
+     //Проверка
      if SettingMain.isSticker = TRUE
      then begin
          ShowMessage('Ошибка.Проведение документа не предусмотрено.');
          exit;
      end;
-     //
+     //Проверка
      if ParamsMovement.ParamByName('MovementId').AsInteger=0
      then begin
          ShowMessage('Ошибка.Продукция не взвешена.');
          exit;
      end;
-     //
+     //Проверка
      if (ParamsMovement.ParamByName('OrderExternalId').AsInteger > 0)
          and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
          and(ParamsMovement.ParamByName('TransportId').AsInteger = 0)
@@ -363,7 +370,7 @@ begin
          ActiveControl:=EditBarCodeTransport;
          exit;
      end;
-     //
+     //Проверка
      if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
          and(GetArrayList_Value_byName(Default_Array,'isDriverReturn') = AnsiUpperCase('TRUE'))
          and(ParamsMovement.ParamByName('PersonalDriverId').AsInteger=0)
@@ -374,7 +381,7 @@ begin
          pSetDriverReturn;
          exit;
      end;
-     //
+     //Проверка
      if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)
          and(ParamsMovement.ParamByName('isTransport_link').AsBoolean = TRUE)
          and(ParamsMovement.ParamByName('TransportId').AsInteger = 0)
@@ -389,6 +396,14 @@ begin
      if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
      then exit;
 
+     //Проверка
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+         and(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
+         and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
+     then begin
+         if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
+         then begin pSetSubjectDoc; exit; end;
+     end;
 
      //параметры для списания на сотрудника
      if Save_Movement_PersonalLoss(ParamsMovement) = FALSE then
@@ -1201,6 +1216,33 @@ begin
      WriteParamsMovement;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.pSetSubjectDoc;
+var execParams:TParams;
+begin
+     if ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = FALSE then exit;
+     //
+     Create_ParamsSubjectDoc(execParams);
+     //
+     with execParams do
+     begin
+          ParamByName('SubjectDocId').AsInteger:=ParamsMovement.ParamByName('SubjectDocId').AsInteger;
+          ParamByName('SubjectDocCode').AsInteger:=ParamsMovement.ParamByName('SubjectDocCode').AsInteger;
+          ParamByName('SubjectDocName').asString:=ParamsMovement.ParamByName('SubjectDocName').asString;
+     end;
+     if GuideSubjectDocForm.Execute(execParams)
+     then begin
+               ParamsMovement.ParamByName('SubjectDocId').AsInteger:=execParams.ParamByName('SubjectDocId').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocCode').AsInteger:=execParams.ParamByName('SubjectDocCode').AsInteger;
+               ParamsMovement.ParamByName('SubjectDocName').AsString:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               EditSubjectDoc.Text:=execParams.ParamByName('SubjectDocName').AsString;
+               //
+               DMMainScaleForm.gpInsertUpdate_Scale_Movement(ParamsMovement);
+     end;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.pSetDriverReturn;
 var execParams:TParams;
 begin
@@ -1223,6 +1265,12 @@ begin
      end;
      //
      execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
+procedure TMainForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
+begin
+     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     then pSetSubjectDoc;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodeTransportPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -1476,6 +1524,8 @@ begin
      PanelPersonalDriver.Caption:=ParamByName('PersonalDriverName').asString;
      PanelCar.Caption:=ParamByName('CarName').asString;
      PanelRoute.Caption:=ParamByName('RouteName').asString;
+
+     EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
 
   end;
 end;

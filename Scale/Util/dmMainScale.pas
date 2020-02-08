@@ -181,6 +181,10 @@ begin
          ParamByName('CarName').asString             := DataSet.FieldByName('CarName').asString;
          ParamByName('RouteName').asString           := DataSet.FieldByName('RouteName').asString;
 
+         ParamByName('SubjectDocId').AsInteger   := DataSet.FieldByName('SubjectDocId').asInteger;
+         ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
+         ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
+
          ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
          ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
          ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
@@ -492,6 +496,7 @@ begin
        Params.AddParam('inContractId', ftInteger, ptInput, execParamsMovement.ParamByName('ContractId').AsInteger);
        Params.AddParam('inPaidKindId', ftInteger, ptInput, execParamsMovement.ParamByName('PaidKindId').AsInteger);
        Params.AddParam('inPriceListId', ftInteger, ptInput, execParamsMovement.ParamByName('PriceListId').AsInteger);
+       Params.AddParam('inSubjectDocId', ftInteger, ptInput, execParamsMovement.ParamByName('SubjectDocId').AsInteger);
        Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
        //криво - через этот прараметр передаем - Через кого поступил возврат
        if (GetArrayList_Value_byName(Default_Array,'isDriverReturn') = AnsiUpperCase('TRUE'))
@@ -1512,6 +1517,7 @@ begin
                         execParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         execParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         execParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
+                        execParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then execParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;
@@ -1546,6 +1552,7 @@ begin
                         ParamsMovement.ParamByName('isSendOnPriceIn').asBoolean:= CDS.FieldByName('isSendOnPriceIn').asBoolean;
                         ParamsMovement.ParamByName('isPartionGoodsDate').asBoolean:= CDS.FieldByName('isPartionGoodsDate').asBoolean;
                         ParamsMovement.ParamByName('isTransport_link').asBoolean:= CDS.FieldByName('isTransport_link').asBoolean;
+                        ParamsMovement.ParamByName('isSubjectDoc').asBoolean:= CDS.FieldByName('isSubjectDoc').asBoolean;
                         //
                         if CDS.FieldByName('isSendOnPriceIn').asBoolean = TRUE
                         then ParamsMovement.ParamByName('ChangePercentAmount').asFloat := 0;

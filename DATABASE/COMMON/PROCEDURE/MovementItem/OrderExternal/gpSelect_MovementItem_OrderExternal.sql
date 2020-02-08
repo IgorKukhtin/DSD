@@ -434,11 +434,11 @@ BEGIN
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
                                     -- привязываем цены 2 раза с видом товара и без
-                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
-                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
                                     LEFT JOIN tmpPriceList_EDI AS tmpPriceList_EDI_Kind
-                                                               ON tmpPriceList_EDI_Kind.GoodsId = tmpMI_EDI.GoodsId
-                                                              AND (COALESCE (tmpPriceList_EDI_Kind.GoodsKindId,0) = COALESCE (tmpMI_EDI.GoodsKindId,0))
+                                                               ON tmpPriceList_EDI_Kind.GoodsId                   = tmpMI_EDI.GoodsId
+                                                              AND COALESCE (tmpPriceList_EDI_Kind.GoodsKindId, 0) = COALESCE (tmpMI_EDI.GoodsKindId, 0)
+                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId     = tmpMI_EDI.GoodsId
+                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
 
 
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
@@ -604,10 +604,9 @@ BEGIN
 
             -- привязываем 2 раза по виду товара и без
             LEFT JOIN tmpPriceList AS tmpPriceList_Kind 
-                                   ON tmpPriceList_Kind.GoodsId = tmpGoods.GoodsId
-                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId,0) = COALESCE (tmpGoods.GoodsKindId,0)
-
-            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpGoods.GoodsId
+                                   ON tmpPriceList_Kind.GoodsId                   = tmpGoods.GoodsId
+                                  AND COALESCE (tmpPriceList_Kind.GoodsKindId, 0) = COALESCE (tmpGoods.GoodsKindId, 0)
+            LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId     = tmpGoods.GoodsId
                                   AND tmpPriceList.GoodsKindId IS NULL
 
             LEFT JOIN tmpPromo ON tmpPromo.GoodsId      = tmpGoods.GoodsId
@@ -991,11 +990,11 @@ BEGIN
                                     , COALESCE (tmpMI.MovementItemId, 0) AS MovementItemId
                                FROM tmpMI_EDI
                                     -- привязываем цены 2 раза с видом товара и без
-                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId = tmpMI_EDI.GoodsId
-                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
                                     LEFT JOIN tmpPriceList_EDI AS tmpPriceList_EDI_Kind
-                                                               ON tmpPriceList_EDI_Kind.GoodsId = tmpMI_EDI.GoodsId
+                                                               ON tmpPriceList_EDI_Kind.GoodsId                  = tmpMI_EDI.GoodsId
                                                               AND COALESCE (tmpPriceList_EDI_Kind.GoodsKindId,0) = COALESCE (tmpMI_EDI.GoodsKindId,0)
+                                    LEFT JOIN tmpPriceList_EDI ON tmpPriceList_EDI.GoodsId    = tmpMI_EDI.GoodsId
+                                                              AND tmpPriceList_EDI.GoodsKindId IS NULL
 
                                     LEFT JOIN (SELECT MAX (tmpMI.MovementItemId) AS MovementItemId
                                                     , tmpMI.GoodsId

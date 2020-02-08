@@ -23,6 +23,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , UserId Integer, UserName TVarChar
              , MemberId Integer, MemberName TVarChar
+
+             , SubjectDocId   Integer
+             , SubjectDocCode Integer
+             , SubjectDocName TVarChar
+
              , isPromo Boolean
 
              , PersonalId1 Integer, PersonalName1 TVarChar
@@ -118,6 +123,10 @@ BEGIN
 
              , Object_Member.Id                   AS MemberId
              , Object_Member.ValueData            AS MemberName
+
+             , Object_SubjectDoc.Id            AS SubjectDocId
+             , Object_SubjectDoc.ObjectCode    AS SubjectDocCode
+             , Object_SubjectDoc.ValueData     AS SubjectDocName
 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE) AS isPromo
 
@@ -219,6 +228,11 @@ BEGIN
                                          ON MovementLinkObject_Member.MovementId = Movement.Id
                                         AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
                                            ON MovementLinkMovement_Order.MovementId = Movement.Id

@@ -113,6 +113,7 @@ type
   procedure Create_ParamsWorkProgress(var Params:TParams);
   procedure Create_ParamsArticleLoss(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
+  procedure Create_ParamsSubjectDoc(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -240,6 +241,11 @@ begin
      ParamAdd(Params,'PersonalDriverName',ftString);
      ParamAdd(Params,'CarName',ftString);
      ParamAdd(Params,'RouteName',ftString);
+
+     ParamAdd(Params,'isSubjectDoc',ftBoolean);
+     ParamAdd(Params,'SubjectDocId',ftInteger);
+     ParamAdd(Params,'SubjectDocCode',ftInteger);
+     ParamAdd(Params,'SubjectDocName',ftString);
 
      ParamAdd(Params,'isEdiOrdspr',ftBoolean); //Подтверждение
      ParamAdd(Params,'isEdiInvoice',ftBoolean);//Счет
@@ -560,6 +566,14 @@ begin
      ParamAdd(Params,'MeasureId',ftInteger);         //
      ParamAdd(Params,'MeasureCode',ftInteger);       //
      ParamAdd(Params,'MeasureName',ftString);        //
+end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsSubjectDoc(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'SubjectDocId', ftInteger);   //
+     ParamAdd(Params,'SubjectDocCode', ftInteger); //
+     ParamAdd(Params,'SubjectDocName', ftString);  //
 end;
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}

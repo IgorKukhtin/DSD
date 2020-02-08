@@ -19,6 +19,10 @@ RETURNS TABLE (MovementId       Integer
              , MovementDescId Integer
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
              , ToId           Integer, ToCode           Integer, ToName         TVarChar
+
+             , SubjectDocId   Integer
+             , SubjectDocCode Integer
+             , SubjectDocName TVarChar
               )
 AS	
 $BODY$
@@ -69,9 +73,10 @@ BEGIN
                , tmpMovement AS (SELECT tmpMovement_find.Id
                                       , Movement.InvNumber
                                       , Movement.OperDate
-                                      , MovementFloat_MovementDesc.ValueData  AS MovementDescId
-                                      , MovementLinkObject_From.ObjectId      AS FromId
-                                      , MovementLinkObject_To.ObjectId        AS ToId
+                                      , MovementFloat_MovementDesc.ValueData   AS MovementDescId
+                                      , MovementLinkObject_From.ObjectId       AS FromId
+                                      , MovementLinkObject_To.ObjectId         AS ToId
+                                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocId
                                  FROM tmpMovement_find
                                       LEFT JOIN Movement ON Movement.Id = tmpMovement_find.Id
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -80,6 +85,9 @@ BEGIN
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                                   ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
 
                                       LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                                               ON MovementFloat_MovementDesc.MovementId =  Movement.Id
@@ -102,9 +110,15 @@ BEGIN
             , Object_To.ObjectCode                           AS ToCode
             , Object_To.ValueData                            AS ToName
 
+            , Object_SubjectDoc.Id                           AS SubjectDocId
+            , Object_SubjectDoc.ObjectCode                   AS SubjectDocCode
+            , Object_SubjectDoc.ValueData                    AS SubjectDocName
+
        FROM tmpMovement
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMovement.SubjectDocId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  tmpMovement.Id
                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
