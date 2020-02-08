@@ -59,7 +59,7 @@ object ClientEditForm: TClientEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 14
-    Width = 273
+    Width = 135
   end
   object cxLabel3: TcxLabel
     Left = 8
@@ -220,6 +220,23 @@ object ClientEditForm: TClientEditForm
     Top = 359
     Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
   end
+  object cxLabel14: TcxLabel
+    Left = 148
+    Top = 6
+    Caption = #1042#1072#1083#1102#1090#1072
+  end
+  object edCurrency: TcxButtonEdit
+    Left = 148
+    Top = 24
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 133
+  end
   object ActionList: TActionList
     Left = 166
     Top = 321
@@ -355,7 +372,7 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'inCityId'
         Value = Null
-        Component = CityGuides
+        Component = GuidesCity
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -363,7 +380,15 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'inDiscountKindId'
         Value = Null
-        Component = DiscountKindGuides
+        Component = GuidesDiscountKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCurrencyId'
+        Value = Null
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -475,14 +500,14 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'CityId'
         Value = Null
-        Component = CityGuides
+        Component = GuidesCity
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'CityName'
         Value = Null
-        Component = CityGuides
+        Component = GuidesCity
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -490,14 +515,29 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'DiscountKindId'
         Value = Null
-        Component = DiscountKindGuides
+        Component = GuidesDiscountKind
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'DiscountKindName'
         Value = Null
-        Component = DiscountKindGuides
+        Component = GuidesDiscountKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -525,7 +565,7 @@ object ClientEditForm: TClientEditForm
     Left = 78
     Top = 281
   end
-  object CityGuides: TdsdGuides
+  object GuidesCity: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCity
     FormNameParam.Value = 'TCityForm'
@@ -537,7 +577,7 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = CityGuides
+        Component = GuidesCity
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -545,7 +585,7 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CityGuides
+        Component = GuidesCity
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -554,7 +594,7 @@ object ClientEditForm: TClientEditForm
     Left = 60
     Top = 329
   end
-  object DiscountKindGuides: TdsdGuides
+  object GuidesDiscountKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceDiscountKind
     FormNameParam.Value = 'TDiscountKindForm'
@@ -566,7 +606,7 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'Key'
         Value = ''
-        Component = DiscountKindGuides
+        Component = GuidesDiscountKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -574,7 +614,7 @@ object ClientEditForm: TClientEditForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = DiscountKindGuides
+        Component = GuidesDiscountKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -582,5 +622,34 @@ object ClientEditForm: TClientEditForm
       end>
     Left = 148
     Top = 379
+  end
+  object GuidesCurrency: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCurrencyForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrency
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 204
+    Top = 10
   end
 end

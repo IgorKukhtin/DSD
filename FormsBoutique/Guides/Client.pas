@@ -100,6 +100,7 @@ type
     spUpdate_isOutlet: TdsdStoredProc;
     actUpdateisOutlet: TdsdExecStoredProc;
     bbUpdateisOutlet: TdxBarButton;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

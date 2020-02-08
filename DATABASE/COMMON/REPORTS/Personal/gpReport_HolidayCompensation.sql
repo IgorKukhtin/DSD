@@ -20,6 +20,7 @@ RETURNS TABLE(MemberId Integer
             , PersonalServiceListName TVarChar
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
+            , isNotCompensation Boolean
             , Day_vacation  TFloat
             , Day_holiday   TFloat
             , Day_diff      TFloat
@@ -125,6 +126,7 @@ BEGIN
                        , tmp.isDateOut
                        , tmp.isMain
                        , tmp.isOfficial
+                       , tmp.isNotCompensation
                        , tmp.Day_vacation
                        , tmp.Day_holiday   -- использовано 
                        , tmp.Day_diff      -- не использовано   
@@ -221,17 +223,18 @@ BEGIN
          , tmpReport.isDateOut
          , tmpReport.isMain
          , tmpReport.isOfficial
+         , tmpReport.isNotCompensation
          , tmpReport.Day_vacation   :: TFloat
          , tmpReport.Day_holiday    :: TFloat       -- использовано 
-         , tmpReport.Day_diff       :: TFloat       -- не использовано   
+         , CASE WHEN tmpReport.isNotCompensation = FALSE THEN tmpReport.Day_diff ELSE 0 END   :: TFloat  AS Day_diff     -- не использовано   
 
          , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
-         , CASE WHEN tmpReport.Day_diff > 0
+         , CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
                      THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
                 ELSE 0.0
            END :: TFloat AS SummaCompensation
          , tmpMICompens.SummCompensation :: TFloat AS SummaCompensation_fact
-         , CAST (CASE WHEN tmpReport.Day_diff > 0
+         , CAST (CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
                       THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
                  ELSE 0.0
             END

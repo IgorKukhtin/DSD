@@ -25,9 +25,6 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Height = 405
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 62
-    ExplicitWidth = 965
-    ExplicitHeight = 434
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -202,6 +199,15 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
         Options.Editing = False
         Width = 80
       end
+      object isNotCompensation: TcxGridDBColumn
+        Caption = #1048#1089#1082#1083'. '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089'.'
+        DataBinding.FieldName = 'isNotCompensation'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1089#1082#1083#1102#1095#1080#1090#1100' '#1080#1079' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' '#1086#1090#1087#1091#1089#1082#1072
+        Options.Editing = False
+        Width = 70
+      end
       object PositionName_old: TcxGridDBColumn
         Caption = #1055#1088#1077#1076#1099#1076#1091#1097#1072#1103' '#1076#1086#1083#1078#1085#1086#1089#1090#1100' '
         DataBinding.FieldName = 'PositionName_old'
@@ -343,7 +349,6 @@ object Report_HolidayPersonalForm: TReport_HolidayPersonalForm
     Height = 65
     Align = alTop
     TabOrder = 2
-    ExplicitWidth = 1202
     object deStart: TcxDateEdit
       Left = 65
       Top = 5

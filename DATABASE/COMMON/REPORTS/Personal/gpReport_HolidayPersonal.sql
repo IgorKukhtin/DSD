@@ -23,6 +23,7 @@ RETURNS TABLE(MemberId Integer, PersonalId Integer
             , PersonalServiceListName TVarChar
             , DateIn TDateTime, DateOut TDateTime
             , isDateOut Boolean, isMain Boolean, isOfficial Boolean
+            , isNotCompensation Boolean
            -- , Age_work      TVarChar
             , Month_work    TFloat
             , Day_calendar  TFloat -- Рабоч. дней
@@ -94,6 +95,7 @@ BEGIN
                                , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
                                , Object_PositionLevel.ValueData                  AS PositionLevelName
                                , Object_PersonalServiceList.ValueData            AS PersonalServiceListName
+                               
 
                                  -- дата принятия
                                , COALESCE (ObjectDate_DateIn.ValueData, zc_DateEnd())  AS DateIn
@@ -105,6 +107,7 @@ BEGIN
                                  -- основное место работы
                                , COALESCE (ObjectBoolean_Main.ValueData, FALSE)     AS isMain
                                , COALESCE (ObjectBoolean_Official.ValueData, FALSE) AS isOfficial
+                               , COALESCE (ObjectBoolean_NotCompensation.ValueData, FALSE) :: Boolean  AS isNotCompensation
                                  -- на всякий случай - если 2 раза осн. место работы, выбираем всегда ТОЛЬКО ОДНО
                                , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Personal_Member.ChildObjectId
                                                     -- сортировкой определяется приоритет для выбора, т.к. выбираем с Ord = 1
@@ -184,6 +187,10 @@ BEGIN
                                                     ON ObjectLink_Personal_PersonalServiceList.ObjectId = ObjectLink_Personal_Member.ObjectId
                                                    AND ObjectLink_Personal_PersonalServiceList.DescId   = zc_ObjectLink_Personal_PersonalServiceList()
                                LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = ObjectLink_Personal_PersonalServiceList.ChildObjectId
+
+                               LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCompensation
+                                                       ON ObjectBoolean_NotCompensation.ObjectId = ObjectLink_Personal_Member.ChildObjectId
+                                                      AND ObjectBoolean_NotCompensation.DescId = zc_ObjectBoolean_Member_NotCompensation()
 
                           WHERE ObjectLink_Personal_Member.ChildObjectId > 0
                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Member()
@@ -362,6 +369,7 @@ BEGIN
                                 ELSE 0
                            END  AS Day_vacation
                     FROM tmpWork
+                    
                    )
 
     -- выбираем документы отпусков
@@ -401,8 +409,8 @@ BEGIN
                       )
 
   -- считаем кол-во дней предоставленного отпуска, по документам отпусков
-  , tmpHoliday AS (SELECT CASE WHEN inIsDetail = TRUE THEN tmpData.InvNumber          ELSE ''   END :: TVarChar  AS InvNumber
-                        , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDate           ELSE NULL END :: TDateTime AS OperDate
+  , tmpHoliday AS (SELECT CASE WHEN inIsDetail = TRUE THEN tmpData.InvNumber      ELSE ''   END :: TVarChar  AS InvNumber
+                        , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDate       ELSE NULL END :: TDateTime AS OperDate
                         , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDateStart  ELSE NULL END :: TDateTime AS OperDateStart
                         , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDateEnd    ELSE NULL END :: TDateTime AS OperDateEnd
                         , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END :: TDateTime AS BeginDateStart
@@ -412,8 +420,8 @@ BEGIN
                         , ROW_NUMBER(*) OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Ord
                         , SUM ( SUM(DATE_PART ('DAY', tmpData.BeginDateEnd - tmpData.BeginDateStart) +1 ) )  OVER (PARTITION BY tmpData.MemberId ORDER BY tmpData.MemberId) AS Day_holiday_All
                    FROM tmpMov_Holiday AS tmpData
-                   GROUP BY CASE WHEN inIsDetail = TRUE THEN tmpData.InvNumber         ELSE ''   END
-                          , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDate          ELSE NULL END
+                   GROUP BY CASE WHEN inIsDetail = TRUE THEN tmpData.InvNumber     ELSE ''   END
+                          , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDate      ELSE NULL END
                           , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDateStart ELSE NULL END
                           , CASE WHEN inIsDetail = TRUE THEN tmpData.OperDateEnd   ELSE NULL END
                           , CASE WHEN inIsDetail = TRUE THEN tmpData.BeginDateStart ELSE NULL END
@@ -445,6 +453,7 @@ BEGIN
          , tmpPersonal.isDateOut
          , tmpPersonal.isMain
          , tmpPersonal.isOfficial
+         , tmpPersonal.isNotCompensation
          --, tmpPersonal.Age_work      :: TVarChar
          , tmpVacation.Month_work        :: TFloat
            -- так считаются - Рабоч. дней

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
              , Mail TVarChar, Comment TVarChar, CityName TVarChar
              , DiscountKindName TVarChar
+             , CurrencyName TVarChar
              , LastUserName TVarChar, UnitName_User TVarChar
              , UnitName_insert TVarChar
              , InsertName TVarChar
@@ -88,6 +89,7 @@ BEGIN
            , ObjectString_Comment.ValueData          AS Comment
            , Object_City.ValueData                   AS CityName
            , Object_DiscountKind.ValueData           AS DiscountKindName
+           , Object_Currency.ValueData               AS CurrencyName
            , Object_LastUser.ValueData               AS LastUserName
            , Object_Unit.ValueData                   AS UnitName_User
 
@@ -110,6 +112,11 @@ BEGIN
                                  ON ObjectLink_Client_DiscountKind.ObjectId = Object_Client.Id
                                 AND ObjectLink_Client_DiscountKind.DescId = zc_ObjectLink_Client_DiscountKind()
             LEFT JOIN Object AS Object_DiscountKind ON Object_DiscountKind.Id = ObjectLink_Client_DiscountKind.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Client_Currency
+                                 ON ObjectLink_Client_Currency.ObjectId = Object_Client.Id
+                                AND ObjectLink_Client_Currency.DescId = zc_ObjectLink_Client_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectLink_Client_Currency.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_DiscountCard
                                    ON ObjectString_DiscountCard.ObjectId = Object_Client.Id
@@ -223,6 +230,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Полятыкин А.А.
+07.02.20          * add CurrencyName
 26.03.2017        *
 17.09.2017        *
 09.05.2017                                                           *
