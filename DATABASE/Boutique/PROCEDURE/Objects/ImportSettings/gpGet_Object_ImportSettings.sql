@@ -65,4 +65,4 @@ ALTER FUNCTION gpGet_Object_ImportSettings(Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ImportSettings ('2')
+-- SELECT * FROM gpGet_Object_ImportSettings (1, '2')

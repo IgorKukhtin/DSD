@@ -356,6 +356,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummFineOth
                                                        ON MIFloat_SummFineOth.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummFineOth.DescId         = zc_MIFloat_SummFineOth()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                        ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
@@ -365,6 +366,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                        ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                                        ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHosp.DescId         = zc_MIFloat_SummHosp()
@@ -374,6 +376,7 @@ BEGIN
                            LEFT JOIN MovementItemFloat AS MIFloat_SummCompensation
                                                        ON MIFloat_SummCompensation.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummCompensation.DescId         = zc_MIFloat_SummCompensation()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummTransportAdd
                                                        ON MIFloat_SummTransportAdd.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummTransportAdd.DescId = zc_MIFloat_SummTransportAdd()

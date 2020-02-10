@@ -181,7 +181,7 @@ BEGIN
      END IF;
      -- проверка - свойство должно быть установлено
      IF COALESCE (inOperPriceList, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена продажи>.';
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена продажи>. <%> <%> <%>', inGoodsName, inPriceJur, inOperPriceList;
      END IF;
 
 

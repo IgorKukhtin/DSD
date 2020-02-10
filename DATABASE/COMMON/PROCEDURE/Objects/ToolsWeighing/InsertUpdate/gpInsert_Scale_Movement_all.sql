@@ -762,6 +762,14 @@ end if;
              RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
          END IF;
 
+        -- дописали св-во - SubjectDoc
+        IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SubjectDoc() AND MLO.ObjectId > 0)
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), vbMovementId_begin
+                                                     , (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SubjectDoc() AND MLO.ObjectId > 0)
+                                                      );
+        END IF;
+
         -- дописали св-во - Заявка - т.к. в Приходе криво
         IF vbMovementDescId = zc_Movement_Income()
         THEN

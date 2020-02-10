@@ -397,7 +397,8 @@ begin
      then exit;
 
      //Проверка
-     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+      or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice))
          and(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
          and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
      then begin
@@ -1270,6 +1271,7 @@ end;
 procedure TMainForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
 begin
      if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+      or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
      then pSetSubjectDoc;
 end;
 //---------------------------------------------------------------------------------------------

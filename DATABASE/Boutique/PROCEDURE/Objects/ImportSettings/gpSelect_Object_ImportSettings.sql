@@ -9,8 +9,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                FileTypeId Integer, FileTypeName TVarChar,
                ImportTypeId Integer, ImportTypeName TVarChar,
-               StartRow Integer,
-               Directory TVarChar,
+               StartRow Integer, HDR Boolean,
+               Directory TVarChar, Query TBlob,
+               isMultiLoad Boolean,
                isErased Boolean) AS
 $BODY$
 BEGIN
@@ -34,10 +35,18 @@ BEGIN
            , Object_ImportSettings_View.ImportTypeId
            , Object_ImportSettings_View.ImportTypeName 
            , Object_ImportSettings_View.StartRow
+           , Object_ImportSettings_View.HDR
            , Object_ImportSettings_View.Directory
+           , Object_ImportSettings_View.Query 
+
+           , COALESCE (ObjectBoolean_MultiLoad.ValueData, FALSE) :: Boolean AS isMultiLoad
+
            , Object_ImportSettings_View.isErased
            
        FROM Object_ImportSettings_View
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_MultiLoad
+                                   ON ObjectBoolean_MultiLoad.ObjectId = Object_ImportSettings_View.Id
+                                  AND ObjectBoolean_MultiLoad.DescId   = zc_ObjectBoolean_ImportSettings_MultiLoad()
 
          ;
   

@@ -63,6 +63,7 @@ BEGIN
                                                            , inSession               := inSession
                                                             ) AS tmpReport
                           WHERE COALESCE (tmpReport.DateOut, zc_DateEnd()) > vbOperDate
+                            AND tmpReport.isNotCompensation = FALSE
                          )
            -- Результат
            SELECT COALESCE (tmpMI.MovementItemId, 0) :: Integer AS MovementItemId

@@ -28,7 +28,6 @@ object MainForm: TMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitHeight = 585
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -646,7 +645,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitTop = 544
       object gbRealWeight: TGroupBox
         Left = 249
         Top = 0
@@ -810,7 +808,6 @@ object MainForm: TMainForm
       Height = 465
       Align = alClient
       TabOrder = 2
-      ExplicitHeight = 511
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1216,7 +1213,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 1
-    ExplicitHeight = 585
     object BarCodePanel: TPanel
       Left = 0
       Top = 39
@@ -1543,7 +1539,6 @@ object MainForm: TMainForm
       Alignment = taLeftJustify
       BevelOuter = bvSpace
       TabOrder = 8
-      ExplicitTop = 438
       object BarCodeTransportPanel: TPanel
         Left = 1
         Top = 1
@@ -1567,7 +1562,7 @@ object MainForm: TMainForm
           Font.Name = 'Arial'
           Font.Style = []
           ParentFont = False
-          ExplicitLeft = -5
+          ExplicitWidth = 113
         end
         object EditBarCodeTransport: TcxButtonEdit
           Left = 4
@@ -1838,7 +1833,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitHeight = 585
     object PanelProduction_Goods: TPanel
       Left = 0
       Top = 15
@@ -2099,7 +2093,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 548
       object GBTotalWeight: TGroupBox
         Left = 0
         Top = 0
