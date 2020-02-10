@@ -47,7 +47,7 @@ BEGIN
 */
 
      -- находим товар и партию
-     SELECT Object_PartionGoods.MovementId
+     SELECT Object_PartionGoods.MovementItemId
           , Object_PartionGoods.GoodsId
     INTO vbPartionId, vbGoodsId
      FROM Object_PartionGoods
@@ -83,7 +83,7 @@ BEGIN
      IF COALESCE (vbMovementId, 0) = 0
      THEN
         -- сохранили <Документ>
-        vbMovementId := lpInsertUpdate_Movement_Send (ioId       := ioId
+        vbMovementId := lpInsertUpdate_Movement_Send (ioId       := 0
                                                     , inInvNumber:= CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
                                                     , inOperDate := inOperDate
                                                     , inFromId   := vbUnitFromId
@@ -101,7 +101,7 @@ BEGIN
                                              , inAmount              :=  inAmount ::TFloat     -- Количество
                                              , ioOperPriceList       :=  0 ::TFloat     -- Цена (прайс)
                                              , inOperPriceListTo     :=  0 ::TFloat     -- Цена (прайс)(кому) --(для магазина получателя)
-                                             , inSession             :=  TVarChar    -- сессия пользователя
+                                             , inSession             :=  inSession :: TVarChar    -- сессия пользователя
                                              );
 
 END;
