@@ -50,6 +50,11 @@ inherited WagesSUN1Form: TWagesSUN1Form
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaWeek4
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaSUN1
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil

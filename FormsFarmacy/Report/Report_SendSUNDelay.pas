@@ -59,6 +59,8 @@ type
     SummaDeferred: TcxGridDBColumn;
     AmountComplete: TcxGridDBColumn;
     SummaComplete: TcxGridDBColumn;
+    AmountLoss: TcxGridDBColumn;
+    SummaLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

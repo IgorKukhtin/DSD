@@ -17,15 +17,27 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
+   DECLARE vbSummaSUN1 TFloat;
 BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
+    
+    IF vbIsInsert = FALSE
+    THEN
+      vbSummaSUN1 := (SELECT MIFloat_SummaSUN1.ValueData
+                      FROM MovementItemFloat AS MIFloat_SummaSUN1
+                      WHERE MIFloat_SummaSUN1.MovementItemId = ioId
+                        AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1());
+    ELSE
+      vbSummaSUN1 := 0;
+    END IF;
 
      -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, COALESCE (inSummaCleaning, 0) + 
                                                                                      COALESCE (inSummaSP, 0) + 
                                                                                      COALESCE (inSummaOther, 0) + 
-                                                                                     COALESCE (inValidationResults, 0), 0);
+                                                                                     COALESCE (inValidationResults, 0) + 
+                                                                                     COALESCE (vbSummaSUN1, 0), 0);
     
      -- сохранили свойство <Уборка>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaCleaning(), ioId, inSummaCleaning);
@@ -65,6 +77,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 10.02.20                                                        *
  02.10.19                                                        *
  01.09.19                                                        *
 */

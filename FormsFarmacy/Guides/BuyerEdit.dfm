@@ -19,7 +19,7 @@ object BuyerEditForm: TBuyerEditForm
   object edName: TcxTextEdit
     Left = 8
     Top = 136
-    TabOrder = 0
+    TabOrder = 2
     Width = 273
   end
   object cxLabel1: TcxLabel
@@ -34,7 +34,7 @@ object BuyerEditForm: TBuyerEditForm
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    TabOrder = 2
+    TabOrder = 9
   end
   object cxButton2: TcxButton
     Left = 185
@@ -44,7 +44,7 @@ object BuyerEditForm: TBuyerEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 3
+    TabOrder = 10
   end
   object cxLabel2: TcxLabel
     Left = 10
@@ -56,7 +56,7 @@ object BuyerEditForm: TBuyerEditForm
     Top = 29
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 0
     Width = 273
   end
   object cxLabel5: TcxLabel
@@ -67,7 +67,7 @@ object BuyerEditForm: TBuyerEditForm
   object edEmail: TcxTextEdit
     Left = 8
     Top = 221
-    TabOrder = 7
+    TabOrder = 5
     Width = 273
   end
   object cxLabel3: TcxLabel
@@ -79,14 +79,14 @@ object BuyerEditForm: TBuyerEditForm
     Left = 8
     Top = 86
     Properties.EditMask = '!\(999\)000-0000;1;_'
-    TabOrder = 9
+    TabOrder = 1
     Text = '(   )   -    '
     Width = 273
   end
   object edAddress: TcxTextEdit
     Left = 8
     Top = 270
-    TabOrder = 10
+    TabOrder = 6
     Width = 273
   end
   object cxLabel4: TcxLabel
@@ -97,7 +97,7 @@ object BuyerEditForm: TBuyerEditForm
   object edComment: TcxTextEdit
     Left = 8
     Top = 318
-    TabOrder = 12
+    TabOrder = 7
     Width = 273
   end
   object cxLabel6: TcxLabel
@@ -110,22 +110,29 @@ object BuyerEditForm: TBuyerEditForm
     Top = 157
     Caption = #1044#1072#1090#1072' '#1088#1086#1078#1076#1077#1085#1080#1103
   end
-  object edDateBirth: TcxTextEdit
-    Left = 8
-    Top = 176
-    TabOrder = 15
-    Width = 129
-  end
   object cxLabel8: TcxLabel
     Left = 159
     Top = 157
     Caption = #1055#1086#1083
   end
-  object edSex: TcxTextEdit
+  object edDateBirth: TcxDateEdit
+    Left = 8
+    Top = 180
+    EditValue = 42951d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 3
+    Width = 100
+  end
+  object edSex: TcxComboBox
     Left = 159
-    Top = 176
-    TabOrder = 17
-    Width = 122
+    Top = 180
+    Properties.DropDownListStyle = lsFixedList
+    Properties.Items.Strings = (
+      #1052#1091#1078#1089#1082#1086#1081
+      #1046#1077#1085#1089#1082#1080#1081)
+    TabOrder = 4
+    Width = 121
   end
   object ActionList: TActionList
     Left = 208
@@ -221,9 +228,9 @@ object BuyerEditForm: TBuyerEditForm
       end
       item
         Name = 'inDateBirth'
-        Value = Null
+        Value = 'NULL'
         Component = edDateBirth
-        DataType = ftString
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -306,9 +313,9 @@ object BuyerEditForm: TBuyerEditForm
       end
       item
         Name = 'DateBirth'
-        Value = Null
+        Value = 'NULL'
         Component = edDateBirth
-        DataType = ftString
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item

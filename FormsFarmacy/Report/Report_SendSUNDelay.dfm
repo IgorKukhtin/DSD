@@ -10,21 +10,20 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
     Width = 1051
-    Height = 422
+    Height = 423
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1051
     ExplicitHeight = 422
-    ClientRectBottom = 422
+    ClientRectBottom = 423
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1051
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 1051
-        Height = 422
+        Height = 423
         ExplicitWidth = 1051
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -134,6 +133,28 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SummaComplete
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = AmountLoss
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountLoss
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = SummaLoss
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaLoss
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -183,6 +204,16 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SummaComplete
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaLoss
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountLoss
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -309,55 +340,60 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
             Options.Editing = False
             Width = 92
           end
+          object AmountLoss: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'AmountLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object SummaLoss: TcxGridDBColumn
+            Caption = #1057#1087#1080#1089#1072#1085#1086' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'SummaLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 1051
-    Height = 32
     ExplicitWidth = 1051
-    ExplicitHeight = 32
     inherited deStart: TcxDateEdit
-      Left = 611
-      Top = 3
-      Visible = False
-      ExplicitLeft = 611
-      ExplicitTop = 3
+      Left = 123
+      ExplicitLeft = 123
     end
     inherited deEnd: TcxDateEdit
-      Left = 59
-      Top = 31
-      Visible = False
-      ExplicitLeft = 59
-      ExplicitTop = 31
+      Left = 345
+      ExplicitLeft = 345
     end
     inherited cxLabel1: TcxLabel
-      Left = 562
-      Top = 5
-      Caption = #1053#1072' '#1076#1072#1090#1091':'
-      Visible = False
-      ExplicitLeft = 562
-      ExplicitTop = 5
-      ExplicitWidth = 49
+      Left = 26
+      Top = 7
+      ExplicitLeft = 26
+      ExplicitTop = 7
     end
     inherited cxLabel2: TcxLabel
-      Left = 37
-      Top = 32
-      Caption = #1087#1086':'
-      Visible = False
-      ExplicitLeft = 37
-      ExplicitTop = 32
-      ExplicitWidth = 20
+      Left = 229
+      ExplicitLeft = 229
     end
     object cxLabel3: TcxLabel
-      Left = 18
-      Top = 4
+      Left = 442
+      Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 109
-      Top = 4
+      Left = 533
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -450,6 +486,20 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
@@ -539,6 +589,22 @@ inherited Report_SendSUNDelayForm: TReport_SendSUNDelayForm
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_SendSUNDelay'
     Params = <
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inUnitId'
         Value = Null

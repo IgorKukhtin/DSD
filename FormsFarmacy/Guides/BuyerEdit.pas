@@ -19,7 +19,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
-  cxCheckBox, cxMaskEdit;
+  cxCheckBox, cxMaskEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit,
+  cxCalendar;
 
 type
   TBuyerEditForm = class(TParentForm)
@@ -47,9 +48,9 @@ type
     edComment: TcxTextEdit;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    edDateBirth: TcxTextEdit;
     cxLabel8: TcxLabel;
-    edSex: TcxTextEdit;
+    edDateBirth: TcxDateEdit;
+    edSex: TcxComboBox;
   private
     { Private declarations }
   public

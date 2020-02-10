@@ -93,6 +93,7 @@ BEGIN
                                END :: TFloat                           AS Price
                              , MCS_Value.ValueData                     AS MCSValue
                              , Price_Goods.ChildObjectId               AS GoodsId
+                             , ObjectLink_Price_Unit.ChildObjectId     AS UnitID
                         FROM ObjectLink AS ObjectLink_Price_Unit
                            LEFT JOIN ObjectLink AS Price_Goods
                                                 ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
@@ -111,7 +112,7 @@ BEGIN
                                                    ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
                                                   AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
                         WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                          AND ObjectLink_Price_Unit.ChildObjectId = 377610
+                          AND ObjectLink_Price_Unit.ChildObjectId in (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
                         )
 
     SELECT Object_From.ValueData                  AS FromName
@@ -135,6 +136,7 @@ BEGIN
          LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovementContainer.UnitToId
 
          LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Object_Goods.Id
+                                  AND tmpObject_Price.UnitId = tmpMovementContainer.UnitId
     ORDER BY Object_To.ValueData, Object_Goods.objectcode;
 
 
@@ -148,4 +150,4 @@ $BODY$
  07.02.20                                                       *
 */
 
--- тест SELECT * FROM gpReport_SendSUNLoss (inUnitId := 0, inSession := '3')
+-- тест SELECT * FROM gpReport_SendSUNLoss (inStartDate := ('01.12.2015')::TDateTime , inEndDate := ('11.02.2020')::TDateTime , inUnitId := 0, inSession := '3')
