@@ -109,6 +109,8 @@ type
     dxBarButton14: TdxBarButton;
     dxBarButton15: TdxBarButton;
     Color_Testing: TcxGridDBBandedColumn;
+    actWagesSUN1: TdsdOpenForm;
+    dxBarButton16: TdxBarButton;
   private
     { Private declarations }
   public

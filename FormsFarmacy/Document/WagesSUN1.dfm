@@ -1,8 +1,8 @@
-inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
-  Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
+inherited WagesSUN1Form: TWagesSUN1Form
+  Caption = #1064#1090#1088#1072#1092#1099' '#1087#1086' '#1057#1059#1053'1 '
   ClientHeight = 540
   ClientWidth = 877
-  AddOnFormData.AddOnFormRefresh.ParentList = 'WagesAdditionalExpenses'
+  AddOnFormData.AddOnFormRefresh.ParentList = 'WagesSUN1'
   ExplicitWidth = 893
   ExplicitHeight = 579
   PixelsPerInch = 96
@@ -29,32 +29,27 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaCleaning
+              Column = SummaWeek1
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaSP
+              Column = SummaWeek3
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaOther
+              Column = SummaWeek2
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaTotal
+              Column = SummaWeek5
             end
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaValidationResults
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-              Column = SummaSUN1
+              Column = SummaWeek4
             end>
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -68,56 +63,51 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 256
+            Width = 232
           end
-          object SummaCleaning: TcxGridDBColumn [1]
-            Caption = #1059#1073#1086#1088#1082#1072
-            DataBinding.FieldName = 'SummaCleaning'
+          object SummaWeek1: TcxGridDBColumn [1]
+            Caption = #1047#1072' '#1087#1077#1088#1074#1091#1102' '#1085#1077#1076#1077#1083#1102' '
+            DataBinding.FieldName = 'SummaWeek1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
           end
-          object SummaSP: TcxGridDBColumn [2]
-            Caption = #1057#1055
-            DataBinding.FieldName = 'SummaSP'
+          object SummaWeek2: TcxGridDBColumn [2]
+            Caption = #1047#1072' '#1074#1090#1086#1088#1091#1102' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'SummaWeek2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 76
-          end
-          object SummaOther: TcxGridDBColumn [3]
-            Caption = #1055#1088#1086#1095#1077#1077
-            DataBinding.FieldName = 'SummaOther'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
-          object SummaValidationResults: TcxGridDBColumn [4]
-            Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
-            DataBinding.FieldName = 'SummaValidationResults'
+          object SummaWeek3: TcxGridDBColumn [3]
+            Caption = #1047#1072' '#1090#1088#1077#1090#1100#1102' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'SummaWeek3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object SummaWeek4: TcxGridDBColumn [4]
+            Caption = #1047#1072' '#1095#1077#1090#1074#1077#1088#1090#1091#1102' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'SummaWeek4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
-          object SummaSUN1: TcxGridDBColumn [5]
-            Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053'1'
-            DataBinding.FieldName = 'SummaSUN1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object SummaTotal: TcxGridDBColumn [6]
-            Caption = #1048#1090#1086#1075#1086
-            DataBinding.FieldName = 'SummaTotal'
+          object SummaWeek5: TcxGridDBColumn [5]
+            Caption = #1047#1072' '#1087#1103#1090#1091#1102' '#1085#1077#1076#1077#1083#1102
+            DataBinding.FieldName = 'SummaWeek5'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
@@ -125,11 +115,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Options.Editing = False
             Width = 73
           end
+          object SummaSUN1: TcxGridDBColumn [6]
+            Caption = #1048#1090#1086#1075#1086' '#1096#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053'1'
+            DataBinding.FieldName = 'SummaSUN1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
           object isIssuedBy: TcxGridDBColumn [7]
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 62
           end
           object MIDateIssuedBy: TcxGridDBColumn [8]
@@ -139,13 +140,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 106
-          end
-          object Comment: TcxGridDBColumn [9]
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-            DataBinding.FieldName = 'Comment'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 227
           end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
@@ -285,7 +279,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 224
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_WagesAdditionalExpenses'
+    StoredProcName = 'gpSelect_MovementItem_WagesSUN1'
     Left = 64
     Top = 224
   end
@@ -322,14 +316,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -359,10 +345,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton11'
         end
         item
           Visible = True
@@ -532,7 +514,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 232
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_WagesAdditionalExpenses'
+    StoredProcName = 'gpUpdate_Status_WagesSUN1'
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Top = 232
@@ -646,7 +628,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 272
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_WagesAdditionalExpenses'
+    StoredProcName = 'gpInsertUpdate_Movement_WagesSUN1'
     Params = <
       item
         Name = 'ioId'
@@ -716,7 +698,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 256
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_WagesAdditionalExpenses'
+    StoredProcName = 'gpInsertUpdate_MovementItem_WagesSUN1'
     Params = <
       item
         Name = 'ioId'
@@ -819,7 +801,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Top = 364
   end
   object spCopySumm: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_WagesAdditionalExpenses_Copy'
+    StoredProcName = 'gpInsertUpdate_MovementItem_WagesSUN1_Copy'
     DataSets = <>
     OutputType = otResult
     Params = <

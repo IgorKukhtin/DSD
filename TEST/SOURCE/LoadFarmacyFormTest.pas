@@ -834,6 +834,16 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNDelayForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNDelayForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNDelayDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNDelayDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsDialogForm'));
@@ -1523,6 +1533,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWagesForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesSUN1Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesSUN1Form');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');

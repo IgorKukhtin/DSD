@@ -18,7 +18,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_DiffKind());
 
-    outHost := '31.193.90.213';
+    outHost := '5.180.130.52';
     outPort := 13021;
     outUsername := 'zreport';
     outPassword := 'ZAaYuMuDg3bv9ZHF';

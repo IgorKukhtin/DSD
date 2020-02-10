@@ -1014,6 +1014,33 @@ inherited WagesForm: TWagesForm
       QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1088#1091#1095#1085#1091#1102' '#1086#1090#1084#1077#1090#1082#1091'  '#1087#1086' '#1101#1082#1079#1072#1084#1077#1085#1091'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actWagesSUN1: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1064#1090#1088#1072#1092#1099' '#1087#1086' '#1057#1059#1053'1'
+      Hint = #1064#1090#1088#1072#1092#1099' '#1087#1086' '#1057#1059#1053'1'
+      ImageIndex = 61
+      FormName = 'TWagesSUN1Form'
+      FormNameParam.Value = 'TWagesSUN1Form'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1088,6 +1115,10 @@ inherited WagesForm: TWagesForm
         item
           Visible = True
           ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton16'
         end
         item
           Visible = True
@@ -1247,6 +1278,10 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton15: TdxBarButton
       Action = actMITestingUserDel
+      Category = 0
+    end
+    object dxBarButton16: TdxBarButton
+      Action = actWagesSUN1
       Category = 0
     end
   end

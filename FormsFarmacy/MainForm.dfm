@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 218
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3304,6 +3304,34 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SendSUNLoss: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1089#1087#1080#1089#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1090#1072#1090#1100#1077#1081' '#1089#1087#1080#1089#1072#1085#1080#1103
+      Hint = #1054#1090#1095#1077#1090' '#1089#1087#1080#1089#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1090#1072#1090#1100#1077#1081' '#1089#1087#1080#1089#1072#1085#1080#1103
+      FormName = 'TReport_SendSUNLossForm'
+      FormNameParam.Value = 'TReport_SendSUNLossForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_SendSUNDelay: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = 
+        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' ' +
+        #1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
+      Hint = 
+        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' ' +
+        #1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
+      FormName = 'TReport_SendSUNDelayForm'
+      FormNameParam.Value = 'TReport_SendSUNDelayForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3858,6 +3886,9 @@ inherited MainForm: TMainForm
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
       end
+      object N217: TMenuItem
+        Action = actReport_SendSUNDelay
+      end
       object N178: TMenuItem
         Caption = '-'
       end
@@ -4059,6 +4090,9 @@ inherited MainForm: TMainForm
       end
       object N208: TMenuItem
         Action = actIlliquidUnitJournal
+      end
+      object N216: TMenuItem
+        Action = actReport_SendSUNLoss
       end
       object N133: TMenuItem
         Caption = '-'

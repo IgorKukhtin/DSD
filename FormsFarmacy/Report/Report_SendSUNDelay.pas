@@ -1,4 +1,4 @@
-unit ReportMovementCheck;
+unit Report_SendSUNDelay;
 
 interface
 
@@ -24,57 +24,41 @@ uses
   dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
+  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
-  TReportMovementCheckForm = class(TAncestorReportForm)
+  TReport_SendSUNDelayForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
     rdUnit: TRefreshDispatcher;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    GoodsId: TcxGridDBColumn;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    PriceSale: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
-    SummaSale: TcxGridDBColumn;
-    SummaMargin: TcxGridDBColumn;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    GoodsGroupName: TcxGridDBColumn;
-    NDS: TcxGridDBColumn;
-    JuridicalCode: TcxGridDBColumn;
-    JuridicalName: TcxGridDBColumn;
-    PriceWithOutVAT: TcxGridDBColumn;
-    cbPartion: TcxCheckBox;
     actRefreshIsPartion: TdsdDataSetRefresh;
-    PartionDescName: TcxGridDBColumn;
-    PartionInvNumber: TcxGridDBColumn;
-    PartionOperDate: TcxGridDBColumn;
-    PartionPriceDescName: TcxGridDBColumn;
-    PartionPriceInvNumber: TcxGridDBColumn;
-    PartionPriceOperDate: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    cbPartionPrice: TcxCheckBox;
     actRefreshPartionPrice: TdsdDataSetRefresh;
-    UnitName: TcxGridDBColumn;
-    OurJuridicalName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    cbJuridical: TcxCheckBox;
     actRefreshJuridical: TdsdDataSetRefresh;
-    isPromoUnit: TcxGridDBColumn;
-    cxLabel19: TcxLabel;
-    ceRetail: TcxButtonEdit;
-    GuidesRetail: TdsdGuides;
     actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
-    SummaSaleWithOut: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
+    GoodsName: TcxGridDBColumn;
+    AmountSend: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    SummaSend: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    AmountDeferred: TcxGridDBColumn;
+    SummaDeferred: TcxGridDBColumn;
+    AmountComplete: TcxGridDBColumn;
+    SummaComplete: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -82,7 +66,7 @@ type
   end;
 
 var
-  ReportMovementCheckForm: TReportMovementCheckForm;
+  Report_SendSUNDelayForm: TReport_SendSUNDelayForm;
 
 implementation
 
@@ -90,5 +74,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReportMovementCheckForm)
+  RegisterClass(TReport_SendSUNDelayForm)
 end.
