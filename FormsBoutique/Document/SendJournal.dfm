@@ -442,6 +442,14 @@ object SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoadDop'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMIContainer'
         end
         item
@@ -551,6 +559,10 @@ object SendJournalForm: TSendJournalForm
     end
     object bbPrintAllPrice: TdxBarButton
       Action = actPrintAllPrice
+      Category = 0
+    end
+    object bbStartLoadDop: TdxBarButton
+      Action = macStartLoadDop
       Category = 0
     end
   end
@@ -1141,6 +1153,55 @@ object SendJournalForm: TSendJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetImportSettingDop: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingDopId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingDopId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object actDoLoadDop: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingDopId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoadDop: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingDop
+        end
+        item
+          Action = actDoLoadDop
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 30
+      WithoutNext = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send'
@@ -1393,6 +1454,11 @@ object SendJournalForm: TSendJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingDopId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -1442,5 +1508,37 @@ object SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 688
     Top = 137
+  end
+  object spGetImportSettingDopId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TSendJournalForm;zc_Object_ImportSetting_SendJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingDopId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 752
+    Top = 200
   end
 end

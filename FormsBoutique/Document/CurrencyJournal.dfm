@@ -12,18 +12,18 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Width = 814
     Height = 347
     TabOrder = 3
-    ExplicitWidth = 661
-    ExplicitHeight = 247
+    ExplicitWidth = 814
+    ExplicitHeight = 347
     ClientRectBottom = 347
     ClientRectRight = 814
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 661
-      ExplicitHeight = 247
+      ExplicitWidth = 814
+      ExplicitHeight = 347
       inherited cxGrid: TcxGrid
         Width = 814
         Height = 347
-        ExplicitWidth = 661
-        ExplicitHeight = 247
+        ExplicitWidth = 814
+        ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -109,7 +109,7 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
   end
   inherited Panel: TPanel
     Width = 814
-    ExplicitWidth = 661
+    ExplicitWidth = 814
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end

@@ -25,7 +25,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel,
-  dsdGuides, cxButtonEdit, cxCheckBox;
+  dsdGuides, cxButtonEdit, cxCheckBox, ExternalLoad;
 
 type
   TSendJournalForm = class(TParentForm)
@@ -105,6 +105,11 @@ type
     spGet_Current_Date: TdsdStoredProc;
     actPrintAllPrice: TdsdPrintAction;
     bbPrintAllPrice: TdxBarButton;
+    spGetImportSettingDopId: TdsdStoredProc;
+    actGetImportSettingDop: TdsdExecStoredProc;
+    actDoLoadDop: TExecuteImportSettingsAction;
+    macStartLoadDop: TMultiAction;
+    bbStartLoadDop: TdxBarButton;
   private
   public
   end;
