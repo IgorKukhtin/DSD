@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 )
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -71,6 +71,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaSP
                  , NULL::TFloat                       AS SummaOther
                  , NULL::TFloat                       AS SummaValidationResults
+                 , NULL::TFloat                       AS SummaSUN1
                  , NULL::TFloat                       AS SummaTotal
 
                  , False                              AS isIssuedBy
@@ -100,6 +101,8 @@ BEGIN
                  , MIFloat_SummaSP.ValueData           AS SummaSP
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                 , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
+
                  , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
@@ -129,6 +132,10 @@ BEGIN
                                               ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                              AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
+                                              ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
+
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                                AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
@@ -156,6 +163,7 @@ BEGIN
                  , MIFloat_SummaSP.ValueData           AS SummaSP
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                 , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
                  , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
@@ -184,6 +192,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                               ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                              AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
+                                              ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id

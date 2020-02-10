@@ -1,4 +1,4 @@
-unit WagesAdditionalExpenses;
+unit WagesSUN1;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdExportToXLSAction, cxMemo, cxBlobEdit;
 
 type
-  TWagesAdditionalExpensesForm = class(TAncestorDocumentForm)
+  TWagesSUN1Form = class(TAncestorDocumentForm)
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
@@ -42,17 +42,16 @@ type
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
     UnitName: TcxGridDBColumn;
-    SummaCleaning: TcxGridDBColumn;
-    SummaSP: TcxGridDBColumn;
-    SummaOther: TcxGridDBColumn;
-    SummaTotal: TcxGridDBColumn;
+    SummaWeek1: TcxGridDBColumn;
+    SummaWeek3: TcxGridDBColumn;
+    SummaWeek2: TcxGridDBColumn;
+    SummaWeek5: TcxGridDBColumn;
     isIssuedBy: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     MIDateIssuedBy: TcxGridDBColumn;
     actCopySumm: TdsdExecStoredProc;
     spCopySumm: TdsdStoredProc;
     dxBarButton11: TdxBarButton;
-    SummaValidationResults: TcxGridDBColumn;
+    SummaWeek4: TcxGridDBColumn;
     SummaSUN1: TcxGridDBColumn;
   private
     { Private declarations }
@@ -65,6 +64,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWagesAdditionalExpensesForm);
+  RegisterClass(TWagesSUN1Form);
 
 end.

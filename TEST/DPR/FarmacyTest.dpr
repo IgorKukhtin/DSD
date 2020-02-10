@@ -807,7 +807,8 @@ uses
   Report_SendSUNLossDialog in '..\..\FormsFarmacy\Report\Report_SendSUNLossDialog.pas' {Report_SendSUNLossDialogForm: TParentForm},
   Report_SendSUNLoss in '..\..\FormsFarmacy\Report\Report_SendSUNLoss.pas' {Report_SendSUNLossForm: TParentForm},
   Report_SendSUNDelay in '..\..\FormsFarmacy\Report\Report_SendSUNDelay.pas' {Report_SendSUNDelayForm: TParentForm},
-  Report_SendSUNDelayDialog in '..\..\FormsFarmacy\Report\Report_SendSUNDelayDialog.pas' {Report_SendSUNDelayDialogForm: TParentForm};
+  Report_SendSUNDelayDialog in '..\..\FormsFarmacy\Report\Report_SendSUNDelayDialog.pas' {Report_SendSUNDelayDialogForm: TParentForm},
+  WagesSUN1 in '..\..\FormsFarmacy\Document\WagesSUN1.pas' {WagesSUN1Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

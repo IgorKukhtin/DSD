@@ -1534,6 +1534,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesAdditionalExpensesForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesAdditionalExpensesForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesSUN1Form'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesSUN1Form');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');
 end;
