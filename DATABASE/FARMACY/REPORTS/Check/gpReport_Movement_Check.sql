@@ -31,6 +31,7 @@ RETURNS TABLE (
   PriceWithOutVAT       Tfloat, 
   Summa                 TFloat,
   SummaSale             TFloat,
+  SummaSaleWithOut      TFloat,
   SummaWithVAT          Tfloat,      --Сумма поставщика с учетом НДС (без % корр.)
   SummaWithOutVAT       Tfloat,
   SummaMargin           TFloat,
@@ -163,6 +164,7 @@ BEGIN
                      , SUM (tmpData_all.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0))    AS SummaWithVAT
                      , SUM (tmpData_all.Amount)    AS Amount
                      , SUM (tmpData_all.SummaSale) AS SummaSale
+
                        -- таким образом выделим цены = 0 (что б не искажать среднюю с/с)
                      , CASE WHEN COALESCE (MIFloat_JuridicalPrice.ValueData, 0) = 0 THEN 0 ELSE 1 END AS isPrice
                      --
@@ -337,6 +339,7 @@ BEGIN
                         
            , tmpData.Summa           :: TFloat AS Summa
            , tmpData.SummaSale       :: TFloat AS SummaSale
+           , Round(tmpData.SummaSale * 100 / (100 + ObjectFloat_NDSKind_NDS.ValueData), 2):: TFloat AS SummaSaleWithOut
            , tmpData.SummaWithVAT    :: TFloat AS SummaWithVAT
            , tmpData.SummaWithOutVAT :: TFloat AS SummaWithOutVAT
 

@@ -8,23 +8,23 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 58
+    Top = 59
     Width = 1051
-    Height = 422
+    Height = 421
     TabOrder = 3
-    ExplicitTop = 58
+    ExplicitTop = 59
     ExplicitWidth = 1051
-    ExplicitHeight = 422
-    ClientRectBottom = 422
+    ExplicitHeight = 421
+    ClientRectBottom = 421
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1051
-      ExplicitHeight = 422
+      ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1051
-        Height = 422
+        Height = 421
         ExplicitWidth = 1051
-        ExplicitHeight = 422
+        ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -214,48 +214,40 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
   end
   inherited Panel: TPanel
     Width = 1051
-    Height = 32
+    Height = 33
     ExplicitWidth = 1051
-    ExplicitHeight = 32
+    ExplicitHeight = 33
     inherited deStart: TcxDateEdit
-      Left = 611
-      Top = 3
-      Visible = False
-      ExplicitLeft = 611
-      ExplicitTop = 3
+      Left = 119
+      Top = 4
+      ExplicitLeft = 119
+      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
-      Left = 59
-      Top = 31
-      Visible = False
-      ExplicitLeft = 59
-      ExplicitTop = 31
+      Left = 326
+      Top = 4
+      ExplicitLeft = 326
+      ExplicitTop = 4
     end
     inherited cxLabel1: TcxLabel
-      Left = 562
+      Left = 20
       Top = 5
-      Caption = #1053#1072' '#1076#1072#1090#1091':'
-      Visible = False
-      ExplicitLeft = 562
+      ExplicitLeft = 20
       ExplicitTop = 5
-      ExplicitWidth = 49
     end
     inherited cxLabel2: TcxLabel
-      Left = 37
-      Top = 32
-      Caption = #1087#1086':'
-      Visible = False
-      ExplicitLeft = 37
-      ExplicitTop = 32
-      ExplicitWidth = 20
+      Left = 210
+      Top = 5
+      ExplicitLeft = 210
+      ExplicitTop = 5
     end
     object cxLabel3: TcxLabel
-      Left = 18
-      Top = 4
+      Left = 434
+      Top = 5
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object ceUnit: TcxButtonEdit
-      Left = 109
+      Left = 528
       Top = 4
       Properties.Buttons = <
         item
@@ -349,6 +341,20 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'UnitId'
           Value = ''
           Component = GuidesUnit
@@ -439,6 +445,22 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
     StoredProcName = 'gpReport_SendSUNLoss'
     Params = <
       item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inUnitId'
         Value = Null
         Component = GuidesUnit
@@ -508,8 +530,8 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 200
-    Top = 8
+    Left = 152
+    Top = 16
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

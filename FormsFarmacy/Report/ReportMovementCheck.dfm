@@ -4,7 +4,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -300,7 +300,7 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             Width = 102
           end
           object SummaSale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080'  ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
@@ -308,6 +308,14 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object SummaSaleWithOut: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080'  ('#1073#1077#1079' '#1053#1044#1057')'
+            DataBinding.FieldName = 'SummaSaleWithOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
           end
           object SummaMargin: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072#1094#1077#1085#1082#1080' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'.'
@@ -800,6 +808,9 @@ inherited ReportMovementCheckForm: TReportMovementCheckForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'

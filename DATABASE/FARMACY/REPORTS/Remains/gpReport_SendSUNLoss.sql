@@ -1,8 +1,10 @@
 -- Function: gpReport_SendSUNLoss()
 
-DROP FUNCTION IF EXISTS gpReport_SendSUNLoss (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SendSUNLoss (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SendSUNLoss (
+    IN inStartDate        TDateTime,  -- Дата начала
+    IN inEndDate          TDateTime,  -- Двта конца
     IN inUnitId           Integer  ,  -- Подразделение
     IN inSession          TVarChar    -- сессия пользователя
 )
@@ -74,7 +76,9 @@ BEGIN
                                      INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = tmpMovementContainer.ContainerID
                                                                      AND MovementItemContainer.MovementDescId = zc_Movement_Loss()
                                                                      AND MovementItemContainer.Amount <> 0
-                                     LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                                     AND MovementItemContainer.OperDate >= inStartDate
+                                                                     AND MovementItemContainer.OperDate <= inEndDate
+                                                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                                                   ON MovementLinkObject_ArticleLoss.MovementId =  MovementItemContainer.MovementId
                                                                  AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
                                      LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId

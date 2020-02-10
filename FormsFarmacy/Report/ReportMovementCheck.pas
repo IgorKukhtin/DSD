@@ -74,6 +74,7 @@ type
     GuidesRetail: TdsdGuides;
     actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
+    SummaSaleWithOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

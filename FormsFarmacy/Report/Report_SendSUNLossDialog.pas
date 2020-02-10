@@ -37,6 +37,10 @@ type
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     GuidesRetail: TdsdGuides;
+    deEnd: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    deStart: TcxDateEdit;
+    cxLabel1: TcxLabel;
   private
     { Private declarations }
   public
