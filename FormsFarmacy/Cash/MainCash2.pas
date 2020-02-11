@@ -492,7 +492,7 @@ type
     procedure actSetConfirmedKind_UnCompleteExecute(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
     procedure ParentFormDestroy(Sender: TObject);
-    procedure ceScanerKeyPress(Sender: TObject; var Key: Char); 
+    procedure ceScanerKeyPress(Sender: TObject; var Key: Char);
   	procedure actSetSPExecute(Sender: TObject);
     procedure actAddDiffMemdataExecute(Sender: TObject); // только 2 форма
     procedure actSetRimainsFromMemdataExecute(Sender: TObject); // только 2 форма
@@ -709,6 +709,8 @@ type
     procedure SetPromoCodeLoyalty(APromoCodeId: Integer; APromoCodeGUID: String; APromoCodeSumma: currency);
     procedure SetPromoCodeLoyaltySM(ALoyaltySMID : Integer; APhone, AName : string; ASummaRemainder, AChangeSumma: currency);
     procedure PromoCodeLoyaltyCalc;
+    procedure SetLoyaltySaveMoney;
+    function SetLoyaltySaveMoneyDiscount : boolean;
   end;
 
 
@@ -739,7 +741,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
      EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash, EnterLoyaltySaveMoney,
-     LoyaltySMList;
+     LoyaltySMList, EnterLoyaltySMDiscount;
 
 const
   StatusUnCompleteCode = 1;
@@ -2141,6 +2143,12 @@ begin
     end;
   end;
 
+  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger > 0 then
+  begin
+    if not pnlLoyaltySaveMoney.Visible then SetLoyaltySaveMoney;
+    if not SetLoyaltySaveMoneyDiscount then Exit;
+  end;
+
   // Контроль суммы скидки
   if FormParams.ParamByName('LoyaltyChangeSumma').Value <> 0 then
   begin
@@ -2703,47 +2711,10 @@ begin
   CalcTotalSumm;
 end;
 
-procedure TMainCashForm2.actSetLoyaltySaveMoneyExecute(Sender: TObject);
+procedure TMainCashForm2.SetLoyaltySaveMoney;
   var nID : integer; cPhone, cName : string;
       nLoyaltySMID : integer; nPromoCodeSumma: currency;
 begin
-
-  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger <= 0 then
-  Begin
-    ShowMessage('Программа лояльности накопительная не активна...');
-    Exit;
-  End;
-
-  if gc_User.Local and not FileExists(Buyer_lcl) then
-  Begin
-    ShowMessage('В отложенном режиме справочник покупатедлей не найден...');
-    Exit;
-  End;
-
-  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
-  begin
-    ShowMessage('Применен соц проект.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
-    Exit;
-  end;
-
-  if (DiscountServiceForm.gCode = 2) then
-  begin
-    ShowMessage('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
-    Exit;
-  end;
-
-  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
-  begin
-    ShowMessage('Установлен промокод.'#13#10'Для применениея изменения обнулите промокод..');
-    Exit;
-  end;
-
-  if FormParams.ParamByName('SiteDiscount').Value <> 0
-   then
-  begin
-    ShowMessage('Установлена скидка через сайт.'#13#10'Для променениея программы лояльности обнулите скидку через сайт..');
-    Exit;
-  end;
 
   nPromoCodeSumma := 0;
   if not InputEnterLoyaltySaveMoney(nID, cPhone, cName, nLoyaltySMID) then Exit;
@@ -2790,6 +2761,64 @@ begin
       SetPromoCodeLoyaltySM(LoyaltySMCDS.FieldByName('LoyaltySMID').AsInteger, cPhone, cName, LoyaltySMCDS.FieldByName('SummaRemainder').AsCurrency, 0)
     else ShowMessage('Ошибка прикрепления покупателя к акции.'#13#10#13#10'Повторите попытку.');
   end;
+end;
+
+function TMainCashForm2.SetLoyaltySaveMoneyDiscount : boolean;
+  var nDoscount : Currency;
+begin
+  Result := True;
+  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger <= 0 then Exit;
+
+  Result := ShowEnterLoyaltySMDiscount(lblLoyaltySMBuyer.Caption, FTotalSumm, edLoyaltySMSummaRemainder.Value, nDoscount);
+  if Result then
+  begin
+    edLoyaltySMSumma.Value := nDoscount;
+    edLoyaltySMSummaExit(Nil);
+  end;
+end;
+
+procedure TMainCashForm2.actSetLoyaltySaveMoneyExecute(Sender: TObject);
+begin
+
+  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger <= 0 then
+  Begin
+    ShowMessage('Программа лояльности накопительная не активна...');
+    Exit;
+  End;
+
+  if gc_User.Local and not FileExists(Buyer_lcl) then
+  Begin
+    ShowMessage('В отложенном режиме справочник покупатедлей не найден...');
+    Exit;
+  End;
+
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Применен соц проект.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if (DiscountServiceForm.gCode = 2) then
+  begin
+    ShowMessage('Применен дисконт.'#13#10'Для променениея программы лояльности обнулите чек и набрать позиции заново..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('PromoCodeGUID').Value <> '' then
+  begin
+    ShowMessage('Установлен промокод.'#13#10'Для применениея изменения обнулите промокод..');
+    Exit;
+  end;
+
+  if FormParams.ParamByName('SiteDiscount').Value <> 0
+   then
+  begin
+    ShowMessage('Установлена скидка через сайт.'#13#10'Для променениея программы лояльности обнулите скидку через сайт..');
+    Exit;
+  end;
+
+  SetLoyaltySaveMoney;
+  SetLoyaltySaveMoneyDiscount;
 end;
 
 procedure TMainCashForm2.SetPromoCode(APromoCodeId: Integer; APromoName, APromoCodeGUID, ABayerName: String;

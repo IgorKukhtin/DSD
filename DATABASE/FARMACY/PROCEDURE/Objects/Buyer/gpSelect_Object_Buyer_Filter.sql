@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Buyer_Filter(
 )
 RETURNS TABLE (Id Integer, Code Integer, Phone TVarChar
              , Name TVarChar
-             , DateBirth TVarChar, Sex TVarChar
+             , DateBirth TDateTime, Sex TVarChar
              , Comment TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
@@ -22,7 +22,7 @@ $BODY$BEGIN
         , Object_Buyer.ObjectCode                AS Code
         , Object_Buyer.ValueData                 AS Phone
         , ObjectString_Buyer_Name.ValueData      AS Name
-        , ObjectString_Buyer_DateBirth.ValueData AS DateBirth
+        , ObjectDate_Buyer_DateBirth.ValueData   AS DateBirth
         , ObjectString_Buyer_Sex.ValueData       AS Sex
         , ObjectString_Buyer_Comment.ValueData   AS Comment
         , Object_Buyer.isErased                  AS isErased
@@ -35,9 +35,9 @@ $BODY$BEGIN
                                ON ObjectString_Buyer_Comment.ObjectId = Object_Buyer.Id
                               AND ObjectString_Buyer_Comment.DescId = zc_ObjectString_Buyer_Comment()
 
-        LEFT JOIN ObjectString AS ObjectString_Buyer_DateBirth
-                               ON ObjectString_Buyer_DateBirth.ObjectId = Object_Buyer.Id
-                              AND ObjectString_Buyer_DateBirth.DescId = zc_ObjectString_Buyer_DateBirth()
+        LEFT JOIN ObjectDate AS ObjectDate_Buyer_DateBirth
+                             ON ObjectDate_Buyer_DateBirth.ObjectId = Object_Buyer.Id 
+                            AND ObjectDate_Buyer_DateBirth.DescId = zc_ObjectDate_Buyer_DateBirth()
         LEFT JOIN ObjectString AS ObjectString_Buyer_Sex
                                ON ObjectString_Buyer_Sex.ObjectId = Object_Buyer.Id
                               AND ObjectString_Buyer_Sex.DescId = zc_ObjectString_Buyer_Sex()
