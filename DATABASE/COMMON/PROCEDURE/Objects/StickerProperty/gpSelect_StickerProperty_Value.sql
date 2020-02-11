@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_StickerProperty_Value(
 )
 RETURNS TABLE (Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat
              , Value5 TFloat, Value6 TFloat, Value7 TFloat
-             , Value8 TFloat, Value9 TFloat, Value10 TFloat
+             , Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , Id Integer, Name TVarChar
               )
 AS
@@ -31,6 +31,7 @@ BEGIN
             , ObjectFloat_Value8.ValueData       AS Value8
             , ObjectFloat_Value9.ValueData       AS Value9
             , ObjectFloat_Value10.ValueData      AS Value10
+            , ObjectFloat_Value11.ValueData      AS Value11
             
             , 0               AS Id
             , '' :: TVarChar  AS Name
@@ -75,10 +76,14 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value10
                                    ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
                                   AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
-                                  
+             -- вложенность
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value11
+                                   ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
+
        WHERE Object_StickerProperty.DescId = zc_Object_StickerProperty()
          AND Object_StickerProperty.isErased = FALSE
-                  ;
+      ;
   
 END;
 $BODY$

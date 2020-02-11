@@ -176,6 +176,7 @@ type
     colValue8: TcxGridDBColumn;
     colValue9: TcxGridDBColumn;
     colValue10: TcxGridDBColumn;
+    colValue11: TcxGridDBColumn;
 
   private
     { Private declarations }

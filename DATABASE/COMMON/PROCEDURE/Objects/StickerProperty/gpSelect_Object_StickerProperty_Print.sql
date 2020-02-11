@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , isFix Boolean
-             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat
+             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , BarCode TVarChar
              , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat
 
@@ -53,6 +53,8 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
 
              , DateStart         TDateTime
              , DateEnd           TDateTime
+             -- вложенность
+             , StickerProperty_Value11 TVarChar
 
              , DateTare          TDateTime
              , DatePack          TDateTime
@@ -299,6 +301,7 @@ BEGIN
             , ObjectFloat_Value8.ValueData       AS Value8
             , ObjectFloat_Value9.ValueData       AS Value9
             , ObjectFloat_Value10.ValueData      AS Value10
+            , ObjectFloat_Value11.ValueData      AS Value11
             , ObjectString_BarCode.ValueData     AS BarCode
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
@@ -375,12 +378,23 @@ BEGIN
                               || CASE WHEN ObjectFloat_Value1.ValueData > 0 THEN
                                  tmpLanguageParam.Value3 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value1.ValueData, 0)) || '% '
                               || tmpLanguageParam.Value4 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
-                                 ELSE
-                                'за відносної вологості повітря не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% , '
-                                 END
+
                               || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
                               || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
                               || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+
+                                 ELSE
+
+                                 tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
+                              || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
+                                'та відносної вологості повітря не більш ніж ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value2.ValueData, 0)) || '% '
+                              || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+
+                                 END
+--                            || tmpLanguageParam.Value5 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value3.ValueData, 0)) || '°С '
+--                            || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
+--                            || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
+
                               -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
                               || tmpLanguageParam.Value8 ||': '
                               -- вуглеводи не більше
@@ -409,6 +423,8 @@ BEGIN
 
             , inDateStart                                                          :: TDateTime AS DateStart
             , (inDateStart + (ObjectFloat_Value5.ValueData ||' DAY') :: INTERVAL)  :: TDateTime AS DateEnd
+             -- вложенность
+            , CASE WHEN ObjectFloat_Value11.ValueData <> 0 THEN 'Кількість в упаковці ' || zfConvert_FloatToString (ObjectFloat_Value11.ValueData) || ' штук' ELSE '' END :: TVarChar AS StickerProperty_Value11
 
             , inDateTare          :: TDateTime AS DateTare
             , inDatePack          :: TDateTime AS DatePack
@@ -481,6 +497,10 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value10
                                    ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
                                   AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+             -- вложенность
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value11
+                                   ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id

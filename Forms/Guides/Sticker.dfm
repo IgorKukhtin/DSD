@@ -538,7 +538,7 @@ object StickerForm: TStickerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
-          Width = 35
+          Width = 55
         end
         object colValue9: TcxGridDBColumn
           Caption = #1058' '#1084#1072#1082#1089' '#8470'2'
@@ -549,7 +549,7 @@ object StickerForm: TStickerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
-          Width = 35
+          Width = 55
         end
         object colValue10: TcxGridDBColumn
           Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' '#8470'2'
@@ -560,7 +560,17 @@ object StickerForm: TStickerForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
-          Width = 35
+          Width = 70
+        end
+        object colValue11: TcxGridDBColumn
+          Caption = #1042#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
+          DataBinding.FieldName = 'Value11'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
         end
         object colComment: TcxGridDBColumn
           Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -2564,6 +2574,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value8'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2572,6 +2583,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value9'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2580,6 +2592,16 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value10'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue11'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Value11'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

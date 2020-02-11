@@ -2,6 +2,7 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TFloat,TFloat,TFloat,TFloat,TFloat,TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StickerProperty(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
  INOUT ioId                  Integer   , -- ключ объекта <>
@@ -24,6 +25,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StickerProperty(
     IN inValue8              TFloat    , --
     IN inValue9              TFloat    , --
     IN inValue10             TFloat    , --
+    IN inValue11             TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -85,6 +87,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value9(), ioId, inValue9);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value10(), ioId, inValue10);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StickerProperty_Value11(), ioId, inValue11);
 
 
    -- проверка "Оболочка"

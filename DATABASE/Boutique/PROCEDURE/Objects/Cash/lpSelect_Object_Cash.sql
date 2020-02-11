@@ -21,8 +21,14 @@ AS
 $BODY$
 BEGIN
 
-     -- табл - список, что б потом проверить
-     CREATE TEMP TABLE _tmpCash_list (CashId Integer, CashCode Integer, CashName TVarChar, CurrencyId Integer, CurrencyCode Integer, CurrencyName TVarChar, UnitId Integer, UnitCode Integer, UnitName TVarChar, isBankAccount Boolean) ON COMMIT DROP;
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpCash_list'))
+     THEN
+         DELETE FROM _tmpCash_list;
+     ELSE
+         -- табл - список, что б потом проверить
+         CREATE TEMP TABLE _tmpCash_list (CashId Integer, CashCode Integer, CashName TVarChar, CurrencyId Integer, CurrencyCode Integer, CurrencyName TVarChar, UnitId Integer, UnitCode Integer, UnitName TVarChar, isBankAccount Boolean) ON COMMIT DROP;
+     END IF;
+
 
      -- сформировали список
      INSERT INTO _tmpCash_list (CashId, CashCode, CashName, CurrencyId, CurrencyCode, CurrencyName, UnitId, UnitCode, UnitName, isBankAccount)
@@ -150,7 +156,7 @@ BEGIN
             , _tmpCash_list.isBankAccount
        FROM _tmpCash_list
       ;
-                      
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

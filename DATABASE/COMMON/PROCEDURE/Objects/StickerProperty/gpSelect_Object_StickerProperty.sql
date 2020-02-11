@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , BarCode TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
-             , Value8 TFloat, Value9 TFloat, Value10 TFloat
+             , Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , isErased Boolean
               )
 AS
@@ -62,6 +62,7 @@ BEGIN
             , ObjectFloat_Value8.ValueData       AS Value8
             , ObjectFloat_Value9.ValueData       AS Value9
             , ObjectFloat_Value10.ValueData      AS Value10
+            , ObjectFloat_Value11.ValueData      AS Value11
 
             , Object_StickerProperty.isErased    AS isErased
 
@@ -137,6 +138,10 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value10
                                    ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
                                   AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+             -- вложенность
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value11
+                                   ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id

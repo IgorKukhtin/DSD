@@ -157,6 +157,41 @@ BEGIN
                                  ON ObjectString_CardSecond.ObjectId  = ObjectLink_Personal_Member.ChildObjectId
                                 AND ObjectString_CardSecond.DescId    = zc_ObjectString_Member_CardSecond()
     ;
+    
+     -- Проверка
+     IF EXISTS (SELECT 1
+                FROM MovementItem
+                     JOIN MovementItemLinkObject AS MILO_PersonalServiceList
+                                                 ON MILO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                AND MILO_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+                     INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                           ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILO_PersonalServiceList.ObjectId
+                                          AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                          AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.DescId     = zc_MI_Master()
+                  AND MovementItem.isErased   = FALSE
+                --AND MovementItem.Amount     > 0
+               )
+     THEN
+         RAISE EXCEPTION 'Ошибка. В распределнии БН найдена ведомость <5>.'
+                       , lfGet_Object_ValueData_sh ((SELECT MILO_PersonalServiceList.ObjectId
+                                                     FROM MovementItem
+                                                          JOIN MovementItemLinkObject AS MILO_PersonalServiceList
+                                                                                      ON MILO_PersonalServiceList.MovementItemId = MovementItem.Id
+                                                                                     AND MILO_PersonalServiceList.DescId         = zc_MILinkObject_PersonalServiceList()
+                                                          INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                                                ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MILO_PersonalServiceList.ObjectId
+                                                                               AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                                                               AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+                                                     WHERE MovementItem.MovementId = inMovementId
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                                     --AND MovementItem.Amount     > 0
+                                                     LIMIT 1
+                                                    ));
+     END IF;
+
 
      -- cохранили протокол
      PERFORM lpInsert_MovementItemProtocol (_tmpContainer.MovementItemId, vbUserId, FALSE) FROM _tmpContainer;
