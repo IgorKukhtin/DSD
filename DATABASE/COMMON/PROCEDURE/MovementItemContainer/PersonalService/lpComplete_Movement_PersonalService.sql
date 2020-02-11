@@ -319,7 +319,7 @@ BEGIN
                  WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                    AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                 )
-      OR EXISTS (SELECT 1
+      /*OR EXISTS (SELECT 1
                  FROM MovementItem
                       INNER JOIN MovementItemFloat AS MIFloat_SummCompensationRecalc
                                                    ON MIFloat_SummCompensationRecalc.MovementItemId = MovementItem.Id
@@ -328,7 +328,7 @@ BEGIN
                  WHERE MovementItem.MovementId = inMovementId
                    AND MovementItem.DescId     = zc_MI_Master()
                    AND MovementItem.isErased   = FALSE
-                )
+                )*/
         )
     AND inUserId > 0
      THEN

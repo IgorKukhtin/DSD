@@ -173,6 +173,9 @@ type
     bbShowAll: TdxBarButton;
     spSelectPrintJPG: TdsdStoredProc;
     spSelectPrintJPGLen: TdsdStoredProc;
+    colValue8: TcxGridDBColumn;
+    colValue9: TcxGridDBColumn;
+    colValue10: TcxGridDBColumn;
 
   private
     { Private declarations }

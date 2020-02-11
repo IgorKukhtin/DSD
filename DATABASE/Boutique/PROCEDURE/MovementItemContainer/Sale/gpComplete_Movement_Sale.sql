@@ -21,6 +21,14 @@ BEGIN
      -- создаются временные таблицы - для формирование данных по проводкам
      PERFORM lpComplete_Movement_Sale_CreateTemp();
 
+     -- формирование
+     IF 1=1 AND zc_Enum_GlobalConst_isTerry() = FALSE
+     THEN
+         PERFORM lpComplete_Movement_Sale_recalc (inMovementId := inMovementId
+                                                , inSession    := inSession
+                                                 );
+     END IF;
+
      -- собственно проводки
      PERFORM lpComplete_Movement_Sale (inMovementId  -- Документ
                                      , vbUserId);    -- Пользователь

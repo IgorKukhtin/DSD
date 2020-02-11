@@ -32,7 +32,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerFileId Integer, StickerFileName TVarChar, TradeMarkName_StickerFile TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , isFix Boolean
-             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
+             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat
              , BarCode TVarChar
              , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat
 
@@ -296,6 +296,9 @@ BEGIN
             , ObjectFloat_Value5.ValueData       AS Value5
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
+            , ObjectFloat_Value8.ValueData       AS Value8
+            , ObjectFloat_Value9.ValueData       AS Value9
+            , ObjectFloat_Value10.ValueData      AS Value10
             , ObjectString_BarCode.ValueData     AS BarCode
 
             , Sticker_Value1.ValueData           AS Sticker_Value1
@@ -466,6 +469,18 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value7
                                    ON ObjectFloat_Value7.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value7.DescId = zc_ObjectFloat_StickerProperty_Value7()
+             -- Т мін - второй срок 
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                   ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value8.DescId = zc_ObjectFloat_StickerProperty_Value8()
+             -- Т макс - второй срок
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value9
+                                   ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value9.DescId = zc_ObjectFloat_StickerProperty_Value9()
+             -- кількість діб - второй срок
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                   ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id

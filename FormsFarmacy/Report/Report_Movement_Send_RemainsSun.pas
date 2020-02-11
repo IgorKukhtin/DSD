@@ -114,13 +114,25 @@ type
     DBViewAddOnBalance: TdsdDBViewAddOn;
     cxGrid4: TcxGrid;
     cxGridDBTableViewBalance: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
+    UnitName_g5: TcxGridDBColumn;
+    Summ_out: TcxGridDBColumn;
+    Summ_in: TcxGridDBColumn;
+    KoeffInSUN: TcxGridDBColumn;
     cxGridLevel4: TcxGridLevel;
     DBViewAddOnDefSUN: TdsdDBViewAddOn;
-    cxGridDBColumn5: TcxGridDBColumn;
+    KoeffOutSUN: TcxGridDBColumn;
+    Summ_out_partion: TcxGridDBColumn;
+    Summ_in_partion: TcxGridDBColumn;
+    Summ_out_partion_calc: TcxGridDBColumn;
+    Summ_in_partion_calc: TcxGridDBColumn;
+    Amount_not_out_res: TcxGridDBColumn;
+    Summ_not_out_res: TcxGridDBColumn;
+    Amount_not_in_res: TcxGridDBColumn;
+    Summ_not_in_res: TcxGridDBColumn;
+    chAmount_not_out: TcxGridDBColumn;
+    chSumm_not_out: TcxGridDBColumn;
+    chAmount_not_in: TcxGridDBColumn;
+    chSumm_not_in: TcxGridDBColumn;
   private
     { Private declarations }
   public

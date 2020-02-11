@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Email_FileName(
    OUT outDefaultFileExt      TVarChar  ,
    OUT outEncodingANSI        Boolean   ,
    OUT outExportType          TVarChar  ,
+   OUT outExportKindId        Integer   ,
     IN inMovementId           Integer   ,
     IN inSession              TVarChar
 )
@@ -22,8 +23,8 @@ BEGIN
 
 
      -- Результат
-     SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI, tmp.outExportType
-            INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType
+     SELECT tmp.outFileName, tmp.outDefaultFileExt, tmp.outEncodingANSI, tmp.outExportType, tmp.outExportKindId
+            INTO outFileName, outDefaultFileExt, outEncodingANSI, outExportType, outExportKindId
      FROM
     (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
         , tmpProtocol AS (SELECT MovementProtocol.OperDate FROM MovementProtocol WHERE MovementProtocol.MovementId = inMovementId ORDER BY MovementProtocol.Id LIMIT 1)
@@ -71,6 +72,8 @@ BEGIN
                       THEN 'cxegExportToTextUTF8'
                  ELSE 'cxegExportToText'
             END AS outExportType
+
+          , tmpExportJuridical.ExportKindId :: Integer AS outExportKindId
             
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_OperDatePartner

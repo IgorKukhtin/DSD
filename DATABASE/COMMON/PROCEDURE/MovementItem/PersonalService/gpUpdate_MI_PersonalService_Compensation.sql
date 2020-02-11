@@ -21,6 +21,35 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Документ не сохранен';
      END IF;
 
+     IF NOT (EXISTS (SELECT 1
+                     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                          INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_PaidKind
+                                                ON ObjectLink_PersonalServiceList_PaidKind.ObjectId      = MovementLinkObject_PersonalServiceList.ObjectId
+                                               AND ObjectLink_PersonalServiceList_PaidKind.DescId        = zc_ObjectLink_PersonalServiceList_PaidKind()
+                                               AND ObjectLink_PersonalServiceList_PaidKind.ChildObjectId = zc_Enum_PaidKind_FirstForm() -- !!!вот он БН!!!
+                     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                    ))
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет доступа для загрузки данных распределения.';
+     END IF;
+
+     IF NOT (EXISTS (SELECT 1
+                     FROM MovementLinkObject AS MovementLinkObject_PersonalServiceList
+                          INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                ON ObjectLink_PersonalServiceList_Member.ObjectId = MovementLinkObject_PersonalServiceList.ObjectId
+                                               AND ObjectLink_PersonalServiceList_Member.DescId   = zc_ObjectLink_PersonalServiceList_Member()
+                          INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                                ON ObjectLink_User_Member.ChildObjectId = ObjectLink_PersonalServiceList_Member.ChildObjectId
+                                               AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
+                                               AND ObjectLink_User_Member.ObjectId      = vbUserId
+                     WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
+                       AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
+                    ))
+     THEN
+         RAISE EXCEPTION 'Ошибка. Нет прав для загрузки данных.';
+     END IF;
+
      -- определяем <Месяц начислений>
      vbOperDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
 

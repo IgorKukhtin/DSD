@@ -16,7 +16,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Sale());
 
 
-     -- Проверка - Дата Документа
+     -- Проверка
      IF zc_Enum_GlobalConst_isTerry() = TRUE
      THEN
          RAISE EXCEPTION 'Ошибка.Нет доступа для проведения - gpComplete_Movement_Sale_recalc.';
@@ -34,13 +34,13 @@ BEGIN
                                , OperCount TFloat, OperPriceList TFloat, OperPriceList_pl TFloat, SummChangePercent TFloat
                                , TotalSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
                                , CurrencyValue TFloat, ParValue TFloat
-                               , CashId Integer
+                               , CashId Integer, CurrencyId_cash Integer
                                 ) ON COMMIT DROP;
      INSERT INTO _tmpItem_recalc (MovementItemId
                                 , OperCount, OperPriceList, OperPriceList_pl, SummChangePercent
                                 , TotalSummPriceList, TotalChangePercent, TotalPay
                                 , CurrencyValue, ParValue
-                                , CashId
+                                , CashId, CurrencyId_cash
                                  )
         WITH -- Курс - из истории
              tmpCurrency AS (SELECT *
@@ -63,6 +63,7 @@ BEGIN
                                      WHERE lpSelect.isBankAccount = FALSE
                                        AND lpSelect.CurrencyId    = zc_Currency_GRN()
                                     ) AS CashId
+                                  , zc_Currency_GRN() AS CurrencyId_cash
 
                              FROM Movement
                                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -111,6 +112,7 @@ BEGIN
              , tmpCurrency.ParValue AS ParValue
              
              , tmpMI.CashId
+             , tmpMI.CurrencyId_cash
         FROM tmpMI
        ;
 
@@ -124,7 +126,7 @@ BEGIN
      -- сохранили
      PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
                                          , inMovementId         := inMovementId
-                                         , inParentId           := ioId
+                                         , inParentId           := tmp.ParentId
                                          , inCashId             := tmp.CashId
                                          , inCurrencyId         := tmp.CurrencyId
                                          , inCashId_Exc         := NULL
@@ -135,6 +137,7 @@ BEGIN
                                           )
      FROM (WITH tmpMI AS (SELECT MovementItem.Id                 AS Id
                                , MovementItem.ObjectId           AS CashId
+                               , MovementItem.ParentId           AS ParentId
                                , MILinkObject_Currency.ObjectId  AS CurrencyId
                                , MIFloat_CurrencyValue.ValueData AS CurrencyValue
                                , MIFloat_ParValue.ValueData      AS ParValue
@@ -148,30 +151,23 @@ BEGIN
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency
                                                                 ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                                                AND MILinkObject_Currency.DescId         = zc_MILinkObject_Currency()
-                          WHERE MovementItem.ParentId   = ioId
-                            AND MovementItem.MovementId = inMovementId
+                          WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.DescId     = zc_MI_Child()
                             AND MovementItem.isErased   = FALSE
                          )
-           SELECT tmpMI.Id                                                  AS Id
-                , COALESCE (_tmpCash.CashId, _tmpItem_recalc.CashId)                  AS CashId
-                , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)          AS CurrencyId
-                , CASE WHEN _tmpCash.CashId > 0 THEN _tmpItem_recalc.TotalPay ELSE 0 END AS Amount
-                , COALESCE (tmpMI.CurrencyValue_pl, 0) AS CurrencyValue
-                , COALESCE (tmpMI.ParValue_pl, 0)      AS ParValue
-           FROM (SELECT DISTINCT _tmpItem_recalcCashId AS CashId, zc_Currency_GRN() AS CurrencyId FROM _tmpItem_recalc
+           SELECT tmpMI.Id                                                        AS Id
+                , COALESCE (_tmpCash.MovementItemId, tmpMI.ParentId)              AS ParentId
+                , COALESCE (_tmpCash.CashId, tmpMI.CashId)                        AS CashId
+                , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)                AS CurrencyId
+                , CASE WHEN _tmpCash.CashId > 0 THEN _tmpCash.TotalPay ELSE 0 END AS Amount
+                , COALESCE (tmpMI.CurrencyValue, 0)                               AS CurrencyValue
+                , COALESCE (tmpMI.CurrencyId, 0)                                  AS ParValue
+           FROM (SELECT DISTINCT _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CashId, _tmpItem_recalc.CurrencyId_cash AS CurrencyId, _tmpItem_recalc.TotalPay FROM _tmpItem_recalc
                 ) AS _tmpCash
-                FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId
+                FULL JOIN tmpMI ON tmpMI.CashId   = _tmpCash.CashId
+                               AND tmpMI.ParentId = _tmpCash.MovementItemId
           ) AS tmp
      ;
-
-
-     -- создаются временные таблицы - для формирование данных по проводкам
-     PERFORM lpComplete_Movement_Sale_CreateTemp();
-
-     -- собственно проводки
-     PERFORM lpComplete_Movement_Sale (inMovementId  -- Документ
-                                     , vbUserId);    -- Пользователь
 
 END;
 $BODY$

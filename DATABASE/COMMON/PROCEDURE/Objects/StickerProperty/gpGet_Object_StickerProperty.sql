@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerSkinId Integer, StickerSkinName TVarChar
              , BarCode TVarChar
              , isFix Boolean
-             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat
+             , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat
               )
 AS
 $BODY$
@@ -60,6 +60,9 @@ BEGIN
             , CAST (0 as TFloat)      AS Value5
             , CAST (0 as TFloat)      AS Value6
             , CAST (0 as TFloat)      AS Value7
+            , CAST (0 as TFloat)      AS Value8
+            , CAST (0 as TFloat)      AS Value9
+            , CAST (0 as TFloat)      AS Value10
             ;
    ELSE
        RETURN QUERY 
@@ -93,6 +96,9 @@ BEGIN
             , ObjectFloat_Value5.ValueData       AS Value5
             , ObjectFloat_Value6.ValueData       AS Value6
             , ObjectFloat_Value7.ValueData       AS Value7
+            , ObjectFloat_Value8.ValueData       AS Value8
+            , ObjectFloat_Value9.ValueData       AS Value9
+            , ObjectFloat_Value10.ValueData      AS Value10
             
        FROM Object AS Object_StickerProperty
             
@@ -149,6 +155,18 @@ BEGIN
                                    ON ObjectFloat_Value7.ObjectId = Object_StickerProperty.Id 
                                   AND ObjectFloat_Value7.DescId = zc_ObjectFloat_StickerProperty_Value7()
                                   
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                   ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value8.DescId = zc_ObjectFloat_StickerProperty_Value8()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value9
+                                   ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value9.DescId = zc_ObjectFloat_StickerProperty_Value9()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                   ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
+                                  AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                      ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id 
                                     AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
@@ -183,4 +201,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_StickerProperty (100, '2')
+-- SELECT * FROM gpGet_Object_StickerProperty (100, 0, '2')

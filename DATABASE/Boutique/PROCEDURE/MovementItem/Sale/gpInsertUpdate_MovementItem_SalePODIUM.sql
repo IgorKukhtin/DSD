@@ -565,8 +565,8 @@ BEGIN
                     , COALESCE (_tmpCash.CashId, tmpMI.CashId)                  AS CashId
                     , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)          AS CurrencyId
                     , CASE WHEN _tmpCash.CashId > 0 THEN outTotalPay ELSE 0 END AS Amount
-                    , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN COALESCE (tmpMI.CurrencyValue, 0) ELSE vbCurrencyValue_pl END AS CurrencyValue
-                    , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN COALESCE (tmpMI.CurrencyId, 0)    ELSE vbParValue_pl      END AS ParValue
+                    , COALESCE (tmpMI.CurrencyValue, 0)                         AS CurrencyValue
+                    , COALESCE (tmpMI.CurrencyId, 0)                            AS ParValue
                FROM (SELECT vbCashId AS CashId, zc_Currency_GRN() AS CurrencyId
                     ) AS _tmpCash
                     FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId

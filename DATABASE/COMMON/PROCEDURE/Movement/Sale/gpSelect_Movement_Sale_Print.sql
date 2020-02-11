@@ -1210,6 +1210,23 @@ BEGIN
                                                                    ) AS lfSelect
                          WHERE lfSelect.ValuePrice <> 0
                         )
+       -- документ Взвешивания
+     , tmpMI_WeighingPartner AS (SELECT MovementItem.ObjectId                             AS GoodsId
+                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)     AS GoodsKindId
+                                      , COUNT(*)                                          AS Box_count
+                                 FROM Movement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                            AND MovementItem.DescId     = zc_MI_Master()
+                                                            AND MovementItem.isErased   = FALSE
+                                                            -- AND MovementItem.Amount    <> 0
+                                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                 WHERE Movement.ParentId = inMovementId
+                                   AND Movement.DescId   = zc_Movement_WeighingPartner()
+                                 GROUP BY MovementItem.ObjectId
+                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                )
       -- Результат
       SELECT COALESCE (Object_GoodsByGoodsKind_View.Id, Object_Goods.Id) AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
@@ -1369,10 +1386,14 @@ BEGIN
                         THEN TRUE
                    ELSE FALSE
               END :: Boolean AS isFozziTare
+
+            , tmpMI_WeighingPartner.Box_count :: Integer AS Box_count_calc
        FROM tmpMI
             LEFT JOIN tmpUKTZED ON tmpUKTZED.GoodsGroupId = tmpMI.GoodsGroupId
             LEFT JOIN tmpMI_Order ON tmpMI_Order.GoodsId     = tmpMI.GoodsId
                                  AND tmpMI_Order.GoodsKindId = tmpMI.GoodsKindId
+            LEFT JOIN tmpMI_WeighingPartner ON tmpMI_WeighingPartner.GoodsId     = tmpMI.GoodsId
+                                           AND tmpMI_WeighingPartner.GoodsKindId = tmpMI.GoodsKindId
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight

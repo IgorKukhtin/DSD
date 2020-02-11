@@ -25,7 +25,6 @@ object StickerForm: TStickerForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 80
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -528,6 +527,39 @@ object StickerForm: TStickerForm
           Properties.DisplayFormat = ',0.##;-,0.##; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
+        object colValue8: TcxGridDBColumn
+          Caption = #1058' '#1084#1110#1085' '#8470'2'
+          DataBinding.FieldName = 'Value8'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
+          Width = 35
+        end
+        object colValue9: TcxGridDBColumn
+          Caption = #1058' '#1084#1072#1082#1089' '#8470'2'
+          DataBinding.FieldName = 'Value9'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
+          Width = 35
+        end
+        object colValue10: TcxGridDBColumn
+          Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' '#8470'2'
+          DataBinding.FieldName = 'Value10'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.##;-,0.##; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082' '
           Width = 35
         end
         object colComment: TcxGridDBColumn
@@ -2525,6 +2557,27 @@ object StickerForm: TStickerForm
         ComponentItem = 'Value7'
         DataType = ftFloat
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Value8'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Value9'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue10'
+        Value = Null
+        Component = CDSProperty
+        ComponentItem = 'Value10'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
