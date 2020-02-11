@@ -2564,6 +2564,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value8'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2571,6 +2572,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value9'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -2578,6 +2580,7 @@ object StickerForm: TStickerForm
         Value = Null
         Component = CDSProperty
         ComponentItem = 'Value10'
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
