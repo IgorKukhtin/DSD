@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
   dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides;
+  cxButtonEdit, dsdGuides, ExternalLoad;
 
 type
   TCurrencyJournalForm = class(TAncestorJournalForm)
@@ -24,6 +24,11 @@ type
     ExecuteDialog: TExecuteDialog;
     actRefreshStart: TdsdDataSetRefresh;
     colEndDate: TcxGridDBColumn;
+    spGetImportSettingDopId: TdsdStoredProc;
+    actGetImportSettingDop: TdsdExecStoredProc;
+    actDoLoadDop: TExecuteImportSettingsAction;
+    macStartLoadDop: TMultiAction;
+    bbStartLoadDop: TdxBarButton;
   private
     { Private declarations }
   public

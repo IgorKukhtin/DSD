@@ -77,6 +77,30 @@ BEGIN
                       AND (COALESCE(MovementItem.Amount,0) - COALESCE(HeldBy.Amount,0)) > 0
                       AND (MovementItem.Id = inMovementItemId OR COALESCE (inMovementItemId, 0) = 0)
                 ),
+        PartionDate AS (SELECT REMAINS.Id
+                             , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate
+                        FROM Container AS REMAINS
+                        
+                             JOIN Sale ON Sale.objectid = REMAINS.objectid
+                
+                             INNER JOIN Container ON Container.ParentId = REMAINS.Id
+                                                 AND Container.DescID = zc_Container_CountPartionDate()
+                                                 AND Container.Amount > 0 
+                                             
+                             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                           AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                                      
+                             INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                   ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId 
+                                                  AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                        WHERE 
+                              REMAINS.Amount > 0
+                              AND
+                              REMAINS.DescId = zc_Container_Count()
+                              AND
+                              REMAINS.WhereObjectId = vbUnitId
+                        GROUP BY REMAINS.Id
+               ),
         DD AS  (  -- строки документа продажи размазанные по текущему остатку(Контейнерам) на подразделении
                     SELECT
                         Sale.MovementItemId
@@ -84,15 +108,26 @@ BEGIN
                       , Container.Amount AS ContainerAmount
                       , Container.ObjectId
                       , Container.Id
-                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY Movement.OperDate,Container.Id)
+                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY COALESCE(PartionDate.ExpirationDate, MIDate_ExpirationDate.ValueData) DESC,Container.Id)
                     FROM Container
                         JOIN Sale ON Sale.objectid = Container.objectid
+                        LEFT JOIN PartionDate ON PartionDate.ID = Container.ID
                         JOIN containerlinkobject AS CLI_MI
                                                  ON CLI_MI.containerid = Container.Id
                                                 AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                        JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                        JOIN movementitem ON movementitem.Id = Object_PartionMovementItem.ObjectCode
-                        JOIN Movement ON Movement.Id = movementitem.movementid
+                        LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                        -- элемент прихода
+                        LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                        -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                        LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                    ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                   AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                        -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                        LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                             -- AND 1=0
+                        LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                         ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                        AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                     WHERE
                         Container.Amount > 0
                         AND

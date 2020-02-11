@@ -1,29 +1,29 @@
 inherited CurrencyJournalForm: TCurrencyJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1091#1088#1089#1086#1074#1072#1103' '#1088#1072#1079#1085#1080#1094#1072'>'
-  ClientHeight = 304
-  ClientWidth = 661
+  ClientHeight = 404
+  ClientWidth = 814
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 677
-  ExplicitHeight = 342
+  ExplicitWidth = 830
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 661
-    Height = 247
+    Width = 814
+    Height = 347
     TabOrder = 3
-    ExplicitWidth = 661
-    ExplicitHeight = 247
-    ClientRectBottom = 247
-    ClientRectRight = 661
+    ExplicitWidth = 814
+    ExplicitHeight = 347
+    ClientRectBottom = 347
+    ClientRectRight = 814
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 661
-      ExplicitHeight = 247
+      ExplicitWidth = 814
+      ExplicitHeight = 347
       inherited cxGrid: TcxGrid
-        Width = 661
-        Height = 247
-        ExplicitWidth = 661
-        ExplicitHeight = 247
+        Width = 814
+        Height = 347
+        ExplicitWidth = 814
+        ExplicitHeight = 347
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -108,8 +108,8 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 661
-    ExplicitWidth = 661
+    Width = 814
+    ExplicitWidth = 814
     inherited deStart: TcxDateEdit
       EditValue = 43101d
     end
@@ -247,6 +247,55 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actGetImportSettingDop: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingDopId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingDopId
+        end>
+      Caption = 'actGetImportSetting'
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1050#1091#1088#1089#1099' '#1074#1072#1083#1102#1090' '#1080#1079' '#1092#1072#1081#1083#1072
+    end
+    object actDoLoadDop: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = '0'
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingDopId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object macStartLoadDop: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSettingDop
+        end
+        item
+          Action = actDoLoadDop
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1050#1091#1088#1089#1086#1074' '#1074#1072#1083#1102#1090' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1050#1091#1088#1089#1099' '#1074#1072#1083#1102#1090' '#1080#1079' '#1092#1072#1081#1083#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1050#1091#1088#1089#1099' '#1074#1072#1083#1102#1090' '#1080#1079' '#1092#1072#1081#1083#1072
+      ImageIndex = 30
+      WithoutNext = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -319,6 +368,18 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStartLoadDop'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -341,6 +402,10 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbStartLoadDop: TdxBarButton
+      Action = macStartLoadDop
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -390,9 +455,98 @@ inherited CurrencyJournalForm: TCurrencyJournalForm
     Top = 160
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ImportSettingDopId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
     Left = 384
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Currency'
+  end
+  object spGetImportSettingDopId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TCurrencyJournalForm;zc_Object_ImportSetting_CurrencyJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingDopId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 648
+    Top = 128
+  end
+  object TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TIncomeJournalForm;zc_Object_ImportSetting_IncomeJournal'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        ComponentItem = 'ImportSettingDopId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 280
   end
 end

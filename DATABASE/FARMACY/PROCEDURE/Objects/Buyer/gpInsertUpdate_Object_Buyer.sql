@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Object_Buyer()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Buyer(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Buyer(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Buyer(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Buyer(
  INOUT ioId             Integer   ,     -- ключ объекта <Покупатель> 
@@ -11,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Buyer(
     IN inEmail          TVarChar  ,     -- E-Mail
     IN inAddress        TVarChar  ,     -- Место проживания
     IN inComment        TVarChar  ,     -- Примечание
-    IN inDateBirth      TVarChar  ,     -- Дата рождения
+    IN inDateBirth      TDateTime ,     -- Дата рождения
     IN inSex            TVarChar  ,     -- Пол
     IN inSession        TVarChar        -- сессия пользователя
 )
@@ -46,7 +45,7 @@ BEGIN
    -- сохранили Примечание
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Buyer_Comment(), ioId, inComment);
    -- сохранили 
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Buyer_DateBirth(), ioId, inDateBirth);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Buyer_DateBirth(), ioId, inDateBirth);
    -- сохранили 
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Buyer_Sex(), ioId, inSex);
    

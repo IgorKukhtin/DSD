@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Buyer(
 )
 RETURNS TABLE (Id Integer, Code Integer, Phone TVarChar
              , Name TVarChar, Email TVarChar, Address TVarChar
-             , DateBirth TVarChar, Sex TVarChar
+             , DateBirth TDateTime, Sex TVarChar
              , Comment TVarChar
              , isErased boolean) AS
 $BODY$
@@ -27,7 +27,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS Name
            , CAST ('' as TVarChar)   AS Email
            , CAST ('' as TVarChar)   AS Address
-           , CAST ('' as TVarChar)   AS DateBirth
+           , NULL::TDateTime         AS DateBirth
            , CAST ('' as TVarChar)   AS Sex
            , CAST ('' as TVarChar)   AS Comment
            , CAST (FALSE AS Boolean) AS isErased;
@@ -39,7 +39,7 @@ BEGIN
             , ObjectString_Buyer_Name.ValueData     AS Name
             , ObjectString_Buyer_EMail.ValueData    AS Email
             , ObjectString_Buyer_Address.ValueData  AS Address
-            , ObjectString_Buyer_DateBirth.ValueData AS DateBirth
+            , ObjectDate_Buyer_DateBirth.ValueData  AS DateBirth
             , ObjectString_Buyer_Sex.ValueData      AS Sex
             , ObjectString_Buyer_Comment.ValueData  AS Comment
             , Object_Buyer.isErased                 AS isErased
@@ -57,9 +57,9 @@ BEGIN
                                    ON ObjectString_Buyer_Comment.ObjectId = Object_Buyer.Id 
                                   AND ObjectString_Buyer_Comment.DescId = zc_ObjectString_Buyer_Comment()
 
-            LEFT JOIN ObjectString AS ObjectString_Buyer_DateBirth
-                                   ON ObjectString_Buyer_DateBirth.ObjectId = Object_Buyer.Id 
-                                  AND ObjectString_Buyer_DateBirth.DescId = zc_ObjectString_Buyer_DateBirth()
+            LEFT JOIN ObjectDate AS ObjectDate_Buyer_DateBirth
+                                 ON ObjectDate_Buyer_DateBirth.ObjectId = Object_Buyer.Id 
+                                AND ObjectDate_Buyer_DateBirth.DescId = zc_ObjectDate_Buyer_DateBirth()
             LEFT JOIN ObjectString AS ObjectString_Buyer_Sex
                                    ON ObjectString_Buyer_Sex.ObjectId = Object_Buyer.Id 
                                   AND ObjectString_Buyer_Sex.DescId = zc_ObjectString_Buyer_Sex()

@@ -410,9 +410,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_PlanIventory_DateStart() RETURNS Intege
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_PlanIventory(), 'zc_ObjectDate_PlanIventory_DateStart', 'Дата инвентаризации' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PlanIventory_DateStart');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Buyer_DateBirth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Buyer_DateBirth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Buyer(), 'zc_ObjectDate_Buyer_DateBirth', 'Дата рождения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Buyer_DateBirth');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 10.02.20                                                                                     * zc_ObjectDate_Buyer_DateBirth
  29.01.20         * zc_ObjectDate_PlanIventory_DateEnd
                     zc_ObjectDate_PlanIventory_DateStart
                     zc_ObjectDate_PlanIventory_OperDate
