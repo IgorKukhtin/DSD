@@ -323,7 +323,9 @@ uses
   IftminFozzXML in '..\..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\..\SOURCE\EDI\OrderSpFozzXML.pas',
   SalePodium in '..\..\FormsBoutique\Document\SalePodium.pas' {SalePodiumForm: TParentForm},
-  SalePodiumJournal in '..\..\FormsBoutique\Document\SalePodiumJournal.pas' {SalePodiumJournalForm: TParentForm};
+  SalePodiumJournal in '..\..\FormsBoutique\Document\SalePodiumJournal.pas' {SalePodiumJournalForm: TParentForm},
+  Report_MotionOLAP in '..\..\FormsBoutique\Report\Report_MotionOLAP.pas' {Report_MotionOLAPForm: TParentForm},
+  Report_MotionOLAPDialog in '..\..\FormsBoutique\Report\Report_MotionOLAPDialog.pas' {Report_MotionOLAPDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

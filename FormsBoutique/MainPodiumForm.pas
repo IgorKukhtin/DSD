@@ -230,6 +230,8 @@ type
     N10: TMenuItem;
     actSalePodium: TdsdOpenForm;
     miSalePodium: TMenuItem;
+    actReport_MotionOLAP: TdsdOpenForm;
+    miReport_MotionOLAP: TMenuItem;
   private
     { Private declarations }
   public

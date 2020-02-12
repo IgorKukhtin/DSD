@@ -1014,7 +1014,7 @@ inherited Report_GoodsCodeForm: TReport_GoodsCodeForm
       Width = 25
     end
     object edGoodsCode2: TcxCurrencyEdit
-      Left = 352
+      Left = 351
       Top = 30
       EditValue = 0.000000000000000000
       Properties.DecimalPlaces = 0
