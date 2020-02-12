@@ -233,7 +233,7 @@ BEGIN
 
            , 0  :: TFloat   AS TotalCountBox
            , 0  :: TFloat   AS TotalWeightBox
-           , zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Transport.Id)  :: TVarChar AS BarCode -- ш/к путевого листа
+           , (zfFormat_BarCode (zc_BarCodePref_Movement(), Movement_Transport.Id) || '0')  :: TVarChar AS BarCode -- ш/к путевого листа
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberMark

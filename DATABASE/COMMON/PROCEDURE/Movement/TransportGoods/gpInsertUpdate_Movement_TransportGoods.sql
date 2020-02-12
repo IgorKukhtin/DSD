@@ -53,6 +53,9 @@ BEGIN
 
 
      -- ищем путевой по ш/к или номеру
+     inBarCode:= TRIM (inBarCode);
+
+     -- ищем путевой по ш/к или номеру
      vbMovementId_Transport:= (WITH tmpInvNumber AS (SELECT inBarCode AS BarCode WHERE CHAR_LENGTH (inBarCode) > 0 AND CHAR_LENGTH (inBarCode) < 13)
                                   , tmpBarCode   AS (SELECT zfConvert_StringToNumber (SUBSTR (inBarCode, 4, 13-4)) AS MovementId WHERE CHAR_LENGTH (inBarCode) >= 13)
                                SELECT Movement.Id
