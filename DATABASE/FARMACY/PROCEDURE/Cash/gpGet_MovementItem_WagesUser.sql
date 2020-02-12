@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
              , SummaTotal TFloat
               )
 AS
@@ -95,6 +95,7 @@ BEGIN
                                                , MIFloat_SummaSP.ValueData           AS SummaSP
                                                , MIFloat_SummaOther.ValueData        AS SummaOther
                                                , MIFloat_ValidationResults.ValueData AS SummaValidationResults
+                                               , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
                                                , MovementItem.Amount                 AS SummaTotal
                                          FROM  MovementItem
 
@@ -113,6 +114,10 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_ValidationResults
                                                                             ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
+                                                                            ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
                                          WHERE MovementItem.MovementId = vbMovementId
                                            AND MovementItem.ObjectId = vbUnitId
@@ -152,6 +157,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaSP                AS SummaSP
                  , tmpAdditionalExpenses.SummaOther             AS SummaOther
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
+                 , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
             FROM  MovementItem
             
@@ -211,6 +217,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- 
-
-select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');

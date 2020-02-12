@@ -65,6 +65,8 @@ type
     ceSummaTotal: TcxCurrencyEdit;
     cxLabel15: TcxLabel;
     cxLabel17: TcxLabel;
+    ceSUN1: TcxCurrencyEdit;
+    cxLabel18: TcxLabel;
   private
     { Private declarations }
   public

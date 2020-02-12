@@ -10,21 +10,21 @@ inherited WagesUserForm: TWagesUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 107
+    Top = 127
     Width = 655
-    Height = 342
+    Height = 322
     TabOrder = 0
     ExplicitTop = 107
     ExplicitWidth = 655
     ExplicitHeight = 342
-    ClientRectBottom = 342
+    ClientRectBottom = 322
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
       ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 227
+        Height = 207
         ExplicitWidth = 655
         ExplicitHeight = 227
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -79,12 +79,13 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 227
+        Top = 207
         Width = 655
         Height = 115
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 227
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -254,7 +255,7 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 655
-    Height = 81
+    Height = 101
     Align = alTop
     ShowCaption = False
     TabOrder = 1
@@ -367,7 +368,7 @@ inherited WagesUserForm: TWagesUserForm
       Caption = #1055#1088#1086#1095#1077#1077
     end
     object ceSummaValidationResults: TcxCurrencyEdit
-      Left = 457
+      Left = 436
       Top = 55
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
@@ -377,11 +378,11 @@ inherited WagesUserForm: TWagesUserForm
     object cxLabel14: TcxLabel
       Left = 335
       Top = 56
-      Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
+      Caption = #1056#1077#1079#1091#1083#1100#1090'. '#1087#1088#1086#1074#1077#1088#1082#1080
     end
     object ceSummaTotal: TcxCurrencyEdit
       Left = 578
-      Top = 55
+      Top = 77
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 18
@@ -389,13 +390,26 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel15: TcxLabel
       Left = 536
-      Top = 56
+      Top = 78
       Caption = #1048#1090#1086#1075#1086':'
     end
     object cxLabel17: TcxLabel
       Left = 14
       Top = 56
       Caption = #1059#1073#1086#1088#1082#1072
+    end
+    object ceSUN1: TcxCurrencyEdit
+      Left = 578
+      Top = 55
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      TabOrder = 21
+      Width = 65
+    end
+    object cxLabel18: TcxLabel
+      Left = 506
+      Top = 56
+      Caption = #1064#1090#1088#1072#1092' '#1057#1059#1053'1'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -665,6 +679,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'SummaValidationResults'
         Value = Null
         Component = ceSummaValidationResults
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaSUN1'
+        Value = Null
+        Component = ceSUN1
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

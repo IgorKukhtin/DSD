@@ -122,7 +122,8 @@ uses
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   EnterLoyaltySaveMoney in '..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas' {EnterLoyaltySaveMoneyForm},
   LoyaltySMList in '..\FormsFarmacy\Cash\LoyaltySMList.pas' {LoyaltySMListForm: TParentForm},
-  BuyerList in '..\FormsFarmacy\Cash\BuyerList.pas' {BuyerListForm};
+  BuyerList in '..\FormsFarmacy\Cash\BuyerList.pas' {BuyerListForm},
+  EnterLoyaltySMDiscount in '..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas' {EnterLoyaltySMDiscountForm};
 
 {$R *.res}
 

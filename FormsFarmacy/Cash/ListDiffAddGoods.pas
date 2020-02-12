@@ -171,6 +171,12 @@ begin
     end;
   end;
 
+  if GoodsCDS.FieldByName('Id').AsInteger = 0 then
+  begin
+    ShowMessage('Ошибка Не выбран товар...');
+    Exit;
+  end;
+
   bSend := False;
   WaitForSingleObject(MutexDiffCDS, INFINITE);
   try
