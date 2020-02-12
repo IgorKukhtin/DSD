@@ -14,6 +14,8 @@ $BODY$
    DECLARE vbRec Record;
 
    DECLARE vb1 Integer;
+
+   DECLARE vbDate180 TDateTime;
 BEGIN
 
 -- inStartDate:= '01.01.2013';
@@ -30,6 +32,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      vbUserId := lpGetUserBySession (inSession);   
      vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+     
+     --
+     vbDate180 := CURRENT_DATE + zc_Interval_ExpirationDate()+ zc_Interval_ExpirationDate();   -- нужен 1 год (функция =6 мес.)
 
      
      PERFORM lpDelete_Movement(MovementId, '') 
@@ -204,13 +209,15 @@ BEGIN
                                                  ON MIFloat_ListDiff.MovementItemId = MovementItem.Id
                                                 AND MIFloat_ListDiff.DescId         = zc_MIFloat_ListDiff()
 
-                                             
                LEFT JOIN (SELECT * FROM 
-                                      (SELECT *, MIN(Id) OVER(PARTITION BY MovementItemId) AS MinId FROM
+                                      (SELECT *, MIN(Id) OVER (PARTITION BY MovementItemId) AS MinId FROM
                                            (SELECT *
-                                                , MIN(SuperFinalPrice_Deferment) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                                --, MIN(SuperFinalPrice_Deferment) OVER(PARTITION BY MovementItemId) AS MinSuperFinalPrice
+                                                , ROW_NUMBER() OVER (PARTITION BY _tmpMI.MovementItemId ORDER BY (CASE WHEN _tmpMI.PartionGoodsDate < vbDate180 THEN _tmpMI.SuperFinalPrice_Deferment + 100 ELSE _tmpMI.SuperFinalPrice_Deferment END) ASC, _tmpMI.PartionGoodsDate DESC, _tmpMI.Deferment DESC) AS Ord
                                             FROM _tmpMI) AS DDD
-                                       WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice) AS DDD
+                                       --WHERE DDD.SuperFinalPrice_Deferment = DDD.MinSuperFinalPrice
+                                       WHERE DDD.Ord = 1
+                                       ) AS DDD
                                   WHERE Id = MinId) AS MinPrice
                                                     ON MinPrice.MovementItemId = MovementItem.Id
                LEFT JOIN Object_Goods_View AS Object_Goods 

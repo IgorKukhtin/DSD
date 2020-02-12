@@ -116,7 +116,7 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
     Properties.ReadOnly = True
     TabOrder = 11
     Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1089#1077#1079#1086#1085'>'
-    Width = 350
+    Width = 185
   end
   object cxLabel5: TcxLabel
     Left = 230
@@ -273,6 +273,22 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
     TabOrder = 27
     Width = 89
   end
+  object cxLabel9: TcxLabel
+    Left = 236
+    Top = 223
+    Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072':'
+  end
+  object edGoodsCode: TcxButtonEdit
+    Left = 231
+    Top = 243
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 29
+    Width = 144
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -280,8 +296,8 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
     Top = 49
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 287
-    Top = 214
+    Left = 319
+    Top = 94
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -486,6 +502,13 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsCode'
+        Value = Null
+        Component = edGoodsCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 47
     Top = 352
@@ -637,8 +660,8 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 209
-    Top = 233
+    Left = 153
+    Top = 217
   end
   object GuidesStartYear: TdsdGuides
     KeyField = 'Id'
@@ -699,5 +722,75 @@ object Report_MotionOLAPDialogForm: TReport_MotionOLAPDialogForm
       end>
     Left = 357
     Top = 5
+  end
+  object GuidesPartionGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoodsCode
+    FormNameParam.Value = 'TPartionGoodsChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPartionGoodsChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Code'
+        Value = ''
+        Component = edGoodsCode
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterUnitName'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberAll'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsSizeName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 292
+    Top = 239
   end
 end

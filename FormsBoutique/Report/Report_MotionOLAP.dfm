@@ -2,7 +2,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' ('#1054#1051#1040#1055')'
-  ClientHeight = 448
+  ClientHeight = 423
   ClientWidth = 1362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -310,7 +310,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     Left = 0
     Top = 81
     Width = 1362
-    Height = 367
+    Height = 342
     Align = alClient
     DataSource = DataSource
     Groups = <>
@@ -553,7 +553,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_InDiscount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 23
+      AreaIndex = 29
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_InDiscount'
@@ -565,7 +565,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_OutDiscount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 27
+      AreaIndex = 33
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_OutDiscount'
@@ -577,7 +577,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_SummCost_curr_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 24
+      AreaIndex = 30
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_SummCost_curr_InD'
@@ -589,7 +589,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_SummCost_curr_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 28
+      AreaIndex = 34
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1074#1072#1083'. '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_SummCost_curr_OutD'
@@ -601,7 +601,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 25
+      AreaIndex = 31
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_InD'
@@ -613,7 +613,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 29
+      AreaIndex = 35
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_OutD'
@@ -625,7 +625,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_10200_InD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 26
+      AreaIndex = 32
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1055#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_10200_InD'
@@ -637,7 +637,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_10200_OutD: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 30
+      AreaIndex = 36
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1044#1054' '#1089#1082'.'
       DataBinding.FieldName = 'Result_Summ_10200_OutD'
@@ -780,7 +780,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
-      Visible = True
+      Hidden = True
       Width = 58
       UniqueName = #1054#1089#1090'. '#1082#1086#1083'. '
     end
@@ -793,7 +793,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
-      Visible = True
+      Hidden = True
       Width = 70
       UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
     end
@@ -805,6 +805,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
+      Hidden = True
       Width = 80
       UniqueName = #1054#1089#1090'. '#1082#1086#1083'. +'#1044'.'
     end
@@ -838,7 +839,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Area = faData
       AreaIndex = 17
       IsCaptionAssigned = True
-      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074' '#1074#1072#1083'. '
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074' '#1043#1056#1053' ('#1062#1055#1088#1080#1093')'
       DataBinding.FieldName = 'RemainsStart_Summ'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -849,10 +850,88 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvRemainsEnd_Summ: TcxDBPivotGridField
       Area = faData
+      AreaIndex = 21
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074' '#1043#1056#1053' ('#1062#1055#1088#1080#1093')'
+      DataBinding.FieldName = 'RemainsEnd_Summ'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object RemainsStart_PriceListSumm: TcxDBPivotGridField
+      Area = faData
       AreaIndex = 18
       IsCaptionAssigned = True
-      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074' '#1074#1072#1083'. '
-      DataBinding.FieldName = 'RemainsEnd_Summ'
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074' '#1043#1056#1053' ('#1062#1055#1088#1086#1076'.)'
+      DataBinding.FieldName = 'RemainsStart_PriceListSumm'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object RemainsEnd_PriceListSumm: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 22
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074' '#1043#1056#1053' ('#1062#1055#1088#1086#1076'.)'
+      DataBinding.FieldName = 'RemainsEnd_PriceListSumm'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object RemainsStart_PriceListSumm_curr: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 19
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074' '#1074#1072#1083'. ('#1062#1055#1088#1086#1076'.)'
+      DataBinding.FieldName = 'RemainsStart_PriceListSumm_curr'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object RemainsEnd_PriceListSumm_curr: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 23
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074' '#1074#1072#1083'. ('#1062#1055#1088#1086#1076'.)'
+      DataBinding.FieldName = 'RemainsEnd_PriceListSumm_curr'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object pvRemainsStart_Summ_curr: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 20
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1074' '#1074#1072#1083'. ('#1062#1055#1088#1080#1093')'
+      DataBinding.FieldName = 'RemainsStart_Summ_curr'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.;-,0.; ;'
+      Visible = True
+      Width = 70
+      UniqueName = #1054#1089#1090'. '#1074' '#1074#1072#1083'. '
+    end
+    object pvRemainsEnd_Summ_curr: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 24
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095#1085'. '#1074' '#1074#1072#1083'. ('#1062#1055#1088#1080#1093')'
+      DataBinding.FieldName = 'RemainsEnd_Summ_curr'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
@@ -923,13 +1002,12 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 70
       UniqueName = #1057'\'#1089' '#1048#1090#1086#1075' '#1074' '#1074#1072#1083'.'
     end
     object pvResult_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 41
+      AreaIndex = 47
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_SummCost'
@@ -941,7 +1019,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_10200_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 20
+      AreaIndex = 26
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_Summ_10200_curr'
@@ -949,13 +1027,12 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 90
       UniqueName = #1057#1082#1080#1076#1082#1072' '#1048#1090#1086#1075' '#1074' '#1074#1072#1083'.'
     end
     object pvResult_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 42
+      AreaIndex = 48
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_Summ_10200'
@@ -967,7 +1044,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvResult_Summ_prof_curr: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 19
+      AreaIndex = 25
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074' '#1074#1072#1083'.'
       DataBinding.FieldName = 'Result_Summ_prof_curr'
@@ -975,13 +1052,12 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 100
       UniqueName = #1055#1088#1080#1073#1099#1083#1100' '#1048#1090#1086#1075' '#1074' '#1074#1072#1083'.'
     end
     object pvResult_Summ_prof: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 21
+      AreaIndex = 27
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1073#1099#1083#1100' '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Result_Summ_prof'
@@ -1013,7 +1089,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 22
+      AreaIndex = 28
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1082#1086#1083': +'#1044'. -'#1042'. '
       DataBinding.FieldName = 'Sale_Amount'
@@ -1047,7 +1123,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 32
+      AreaIndex = 38
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_Summ'
@@ -1070,7 +1146,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 33
+      AreaIndex = 39
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_SummCost'
@@ -1093,7 +1169,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 37
+      AreaIndex = 43
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1043#1056#1053' '#1073#1077#1079' '#1074#1086#1079#1074#1088'.'
       DataBinding.FieldName = 'Sale_Summ_10200'
@@ -1105,7 +1181,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10100: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 34
+      AreaIndex = 40
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1076'. '#1073#1077#1079' '#1089#1082#1080#1076'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Sale_Summ_10100'
@@ -1117,7 +1193,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10201: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 35
+      AreaIndex = 41
       IsCaptionAssigned = True
       Caption = #1057#1077#1079#1086#1085#1085#1072#1103' '#1089#1082#1080#1076#1082#1072
       DataBinding.FieldName = 'Sale_Summ_10201'
@@ -1129,7 +1205,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10202: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 43
+      AreaIndex = 49
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' outlet'
       DataBinding.FieldName = 'Sale_Summ_10202'
@@ -1141,7 +1217,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10203: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 44
+      AreaIndex = 50
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1082#1083#1080#1077#1085#1090#1072
       DataBinding.FieldName = 'Sale_Summ_10203'
@@ -1153,7 +1229,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvSale_Summ_10204: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 36
+      AreaIndex = 42
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1072#1103
       DataBinding.FieldName = 'Sale_Summ_10204'
@@ -1165,7 +1241,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvReturn_Amount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 31
+      AreaIndex = 37
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1082#1086#1083'. '
       DataBinding.FieldName = 'Return_Amount'
@@ -1186,7 +1262,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvReturn_Summ: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 38
+      AreaIndex = 44
       IsCaptionAssigned = True
       Caption = #1042#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_Summ'
@@ -1207,7 +1283,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvReturn_SummCost: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 39
+      AreaIndex = 45
       IsCaptionAssigned = True
       Caption = #1057'\'#1089' '#1074#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_SummCost'
@@ -1228,7 +1304,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvReturn_Summ_10200: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 40
+      AreaIndex = 46
       IsCaptionAssigned = True
       Caption = #1057#1082#1080#1076#1082#1072' '#1074#1086#1079#1074#1088'. '#1074' '#1043#1056#1053
       DataBinding.FieldName = 'Return_Summ_10200'
@@ -1348,13 +1424,12 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxSelection
-      Visible = True
       Width = 45
       UniqueName = '% '#1055#1088#1086#1076'.'
     end
     object pvTax_Amount_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 45
+      AreaIndex = 51
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'A1'
@@ -1363,7 +1438,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Amount_calc2: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 46
+      AreaIndex = 52
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'A2'
@@ -1380,13 +1455,12 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
       Styles.ColumnHeader = dmMain.cxSelection
-      Visible = True
       Width = 50
       UniqueName = '% '#1056#1077#1085#1090'.'
     end
     object pvTax_Summ_prof_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 47
+      AreaIndex = 53
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = #1056'1'
@@ -1395,7 +1469,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Summ_prof_calc2: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 48
+      AreaIndex = 54
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = #1056'2'
@@ -1404,20 +1478,19 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Amount_real_calc: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 49
+      AreaIndex = 55
       IsCaptionAssigned = True
       Caption = '% '#1055#1088#1086#1076'. -'#1044'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
-      Visible = True
       Width = 50
       UniqueName = '% '#1055#1088#1086#1076'. -'#1044'.'
     end
     object pvTax_Amount_real_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 51
+      AreaIndex = 57
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'AR1'
@@ -1426,7 +1499,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Amount_real_calc2: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 52
+      AreaIndex = 58
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'AR2'
@@ -1435,20 +1508,19 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Summ_curr_calc: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 50
+      AreaIndex = 56
       IsCaptionAssigned = True
       Caption = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.Alignment.Horz = taRightJustify
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.;-,0.; ;'
-      Visible = True
       Width = 68
       UniqueName = '% '#1055#1088#1086#1076'. '#1074#1072#1083'. -'#1044'.'
     end
     object pvTax_Summ_curr_calc1: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 53
+      AreaIndex = 59
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'S1'
@@ -1457,7 +1529,7 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
     end
     object pvTax_Summ_curr_calc2: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 54
+      AreaIndex = 60
       AllowedAreas = []
       IsCaptionAssigned = True
       Caption = 'S2'
@@ -1854,6 +1926,13 @@ object Report_MotionOLAPForm: TReport_MotionOLAPForm
           Value = Null
           Component = cbMark
           DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = edGoodsCode2
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

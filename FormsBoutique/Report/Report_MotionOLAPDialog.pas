@@ -51,6 +51,9 @@ type
     GuidesStartYear: TdsdGuides;
     GuidesEndYear: TdsdGuides;
     cbMark: TcxCheckBox;
+    cxLabel9: TcxLabel;
+    edGoodsCode: TcxButtonEdit;
+    GuidesPartionGoods: TdsdGuides;
   private
     { Private declarations }
   public

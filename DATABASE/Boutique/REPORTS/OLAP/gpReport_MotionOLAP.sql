@@ -73,7 +73,13 @@ RETURNS TABLE (BrandName             VarChar (100)
              , RemainsStart      TFloat
              , RemainsEnd        TFloat
              , RemainsStart_Summ TFloat
-             , RemainsEnd_Summ   TFloat
+             , RemainsEnd_Summ TFloat
+             , RemainsStart_Summ_curr TFloat
+             , RemainsEnd_Summ_curr TFloat
+             , RemainsStart_PriceListSumm TFloat
+             , RemainsEnd_PriceListSumm TFloat
+             , RemainsStart_PriceListSumm_curr TFloat
+             , RemainsEnd_PriceListSumm_curr TFloat
 
                -- Перемещение
              , SendIn_Amount         TFloat
@@ -451,6 +457,7 @@ BEGIN
                                     LEFT JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.Containerid = Container.Id
                                                                    AND MIContainer.OperDate >= inStartDate
+
                                GROUP BY tmpPartionGoods.MovementItemId
                                       , Container.WhereObjectId
                                       , Container.Amount
@@ -912,6 +919,12 @@ BEGIN
                                , 0 AS RemainsEnd
                                , 0 AS RemainsStart_Summ
                                , 0 AS RemainsEnd_Summ
+                               , 0 AS RemainsStart_Summ_curr
+                               , 0 AS RemainsEnd_Summ_curr
+                               , 0 AS RemainsStart_PriceListSumm
+                               , 0 AS RemainsEnd_PriceListSumm
+                               , 0 AS RemainsStart_PriceListSumm_curr
+                               , 0 AS RemainsEnd_PriceListSumm_curr
 
                                  -- Перемещение
                                , tmpSale_all.SendIn_Amount
@@ -1077,8 +1090,17 @@ BEGIN
 
                                , 0 AS RemainsStart
                                , 0 AS RemainsEnd
+                               
                                , 0 AS RemainsStart_Summ
                                , 0 AS RemainsEnd_Summ
+                               , 0 AS RemainsStart_Summ_curr
+                               , 0 AS RemainsEnd_Summ_curr
+                               , 0 AS RemainsStart_PriceListSumm
+                               , 0 AS RemainsEnd_PriceListSumm
+                               , 0 AS RemainsStart_PriceListSumm_curr
+                               , 0 AS RemainsEnd_PriceListSumm_curr
+                               
+                               
                                  -- Перемещение
                                , 0 AS SendIn_Amount
                                , 0 AS SendOut_Amount
@@ -1252,9 +1274,34 @@ BEGIN
                                , tmp.RemainsStart   AS RemainsStart
                                -- Остаток - с учетом "долга" на конец периода
                                , tmp.RemainsEnd     AS RemainsEnd
+                               -- остатки в ценах прихода в грн
+                               , tmp.RemainsStart * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrencyStart.Amount, 0) END
+                                                    / CASE WHEN tmpCurrencyStart.ParValue > 0 THEN tmpCurrencyStart.ParValue  ELSE 1 END                                                    AS RemainsStart_Summ
+                               , tmp.RemainsEnd   * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrencyEnd.Amount, 0) END
+                                                    / CASE WHEN tmpCurrencyEnd.ParValue > 0 THEN tmpCurrencyEnd.ParValue  ELSE 1 END                                                        AS RemainsEnd_Summ
                                
-                               , tmp.RemainsStart * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END   AS RemainsStart_Summ
-                               , tmp.RemainsEnd   * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END   AS RemainsEnd_Summ
+                               -- остатки в ценах прих. в вал
+                               , tmp.RemainsStart * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS RemainsStart_Summ_curr
+                               , tmp.RemainsEnd   * Object_PartionGoods.OperPrice / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END AS RemainsEnd_Summ_curr
+                               
+                               
+                                -- ост. в ценах продажи в ГРН
+                               , tmp.RemainsStart * Object_PartionGoods.OperPriceList / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrencyStart.Amount, 0) END
+                                                    / CASE WHEN tmpCurrencyStart.ParValue > 0 THEN tmpCurrencyStart.ParValue  ELSE 1 END                                                AS RemainsStart_PriceListSumm
+                               , tmp.RemainsEnd   * Object_PartionGoods.OperPriceList / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END
+                                                    * CASE WHEN Object_PartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 ELSE COALESCE (tmpCurrencyEnd.Amount, 0) END
+                                                    / CASE WHEN tmpCurrencyEnd.ParValue > 0 THEN tmpCurrencyEnd.ParValue  ELSE 1 END                                                    AS RemainsEnd_PriceListSumm
+                                     
+                               
+                               -- остатки в ценах продажи в вал
+                               , tmp.RemainsStart * Object_PartionGoods.OperPriceList / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END   AS RemainsStart_PriceListSumm_curr
+                               , tmp.RemainsEnd   * Object_PartionGoods.OperPriceList / CASE WHEN Object_PartionGoods.CountForPrice > 0 THEN Object_PartionGoods.CountForPrice ELSE 1 END   AS RemainsEnd_PriceListSumm_curr
+
+
+
 
                                  -- Перемещение
                                , CASE WHEN tmp.Send_Amount > 0 THEN  1 * tmp.Send_Amount ELSE 0 END AS SendIn_Amount
@@ -1385,6 +1432,19 @@ BEGIN
                                                 FULL JOIN tmpSend ON tmpSend.PartionId = tmpRemains.PartionId
                                                                  AND tmpSend.UnitId    = tmpRemains.UnitId
                                           ) AS tmp ON tmp.PartionId = Object_PartionGoods.MovementItemId
+
+                               LEFT JOIN tmpCurrency AS tmpCurrencyStart
+                                                     ON tmpCurrencyStart.CurrencyFromId = zc_Currency_Basis()
+                                                    AND tmpCurrencyStart.CurrencyToId   = Object_PartionGoods.CurrencyId
+                                                    AND inStartDate >= tmpCurrencyStart.StartDate
+                                                    AND inStartDate <  tmpCurrencyStart.EndDate
+ 
+                               LEFT JOIN tmpCurrency AS tmpCurrencyEnd
+                                                     ON tmpCurrencyEnd.CurrencyFromId = zc_Currency_Basis()
+                                                    AND tmpCurrencyEnd.CurrencyToId   = Object_PartionGoods.CurrencyId
+                                                    AND inEndDate >= tmpCurrencyEnd.StartDate
+                                                    AND inEndDate <  tmpCurrencyEnd.EndDate
+
                           --WHERE (Object_PartionGoods.OperDate BETWEEN inStartDate AND inEndDate OR inIsPeriodAll = TRUE)
                           --(Object_PartionGoods.MovementItemId IN (SELECT tmpSale_all.PartionId FROM tmpSale_all)
                           --    OR inIsPeriodAll = TRUE)
@@ -1430,6 +1490,12 @@ BEGIN
                             , SUM (tmpData_all.RemainsEnd)          AS RemainsEnd
                             , SUM (tmpData_all.RemainsStart_Summ)   AS RemainsStart_Summ
                             , SUM (tmpData_all.RemainsEnd_Summ)     AS RemainsEnd_Summ
+                            , SUM (tmpData_all.RemainsStart_Summ_curr)     AS RemainsStart_Summ_curr
+                            , SUM (tmpData_all.RemainsEnd_Summ_curr)       AS RemainsEnd_Summ_curr
+                            , SUM (tmpData_all.RemainsStart_PriceListSumm) AS RemainsStart_PriceListSumm
+                            , SUM (tmpData_all.RemainsEnd_PriceListSumm)   AS RemainsEnd_PriceListSumm
+                            , SUM (tmpData_all.RemainsStart_PriceListSumm_curr) AS RemainsStart_PriceListSumm_curr
+                            , SUM (tmpData_all.RemainsEnd_PriceListSumm_curr)   AS RemainsEnd_PriceListSumm_curr
 
                             , SUM (tmpData_all.SendIn_Amount)       AS SendIn_Amount
                             , SUM (tmpData_all.SendOut_Amount)      AS SendOut_Amount
@@ -1677,8 +1743,14 @@ BEGIN
              , tmpData.RemainsEnd         :: TFloat   AS RemainsEnd
              , tmpData.RemainsStart_Summ  :: TFloat   AS RemainsStart_Summ
              , tmpData.RemainsEnd_Summ    :: TFloat   AS RemainsEnd_Summ
+             , tmpData.RemainsStart_Summ_curr :: TFloat     AS RemainsStart_Summ_curr
+             , tmpData.RemainsEnd_Summ_curr   :: TFloat     AS RemainsEnd_Summ_curr
+             , tmpData.RemainsStart_PriceListSumm :: TFloat AS RemainsStart_PriceListSumm
+             , tmpData.RemainsEnd_PriceListSumm   :: TFloat AS RemainsEnd_PriceListSumm
+             , tmpData.RemainsStart_PriceListSumm_curr :: TFloat AS RemainsStart_PriceListSumm_curr
+             , tmpData.RemainsEnd_PriceListSumm_curr   :: TFloat AS RemainsEnd_PriceListSumm_curr
 
-               -- Перемещение
+             -- Перемещение
              , tmpData.SendIn_Amount        :: TFloat AS SendIn_Amount
              , tmpData.SendOut_Amount       :: TFloat AS SendOut_Amount
              , tmpData.SendIn_Summ          :: TFloat AS SendIn_Summ
