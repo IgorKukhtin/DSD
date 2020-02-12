@@ -73,6 +73,7 @@ type
     dxBarStatic: TdxBarStatic;
     bbGridToExcel: TdxBarButton;
     bbOpen: TdxBarButton;
+    colContractName: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);

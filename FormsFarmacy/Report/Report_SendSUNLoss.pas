@@ -46,15 +46,12 @@ type
     actRefreshJuridical: TdsdDataSetRefresh;
     actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
-    FromName: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     AmountLoss: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     SummaLoss: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
     ArticleLossName: TcxGridDBColumn;
   private
     { Private declarations }

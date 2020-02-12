@@ -1,6 +1,7 @@
 object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
   Left = 0
   Top = 0
+  ActiveControl = bbCancel
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = #1055#1086#1080#1089#1082' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1076#1083#1103' "'#1055#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080' '#1085#1072#1082#1086#1087#1080#1090#1077#1083#1100#1085#1086#1081'"'
@@ -31,7 +32,7 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
     Font.Style = []
     ParentFont = False
     ShowCaption = False
-    TabOrder = 1
+    TabOrder = 0
     DesignSize = (
       421
       41)
@@ -65,7 +66,7 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
     Height = 168
     Align = alClient
     ShowCaption = False
-    TabOrder = 0
+    TabOrder = 1
     DesignSize = (
       421
       168)

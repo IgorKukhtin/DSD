@@ -709,6 +709,7 @@ inherited LoyaltySaveMoneyForm: TLoyaltySaveMoneyForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
@@ -716,6 +717,7 @@ inherited LoyaltySaveMoneyForm: TLoyaltySaveMoneyForm
         end
         item
           Name = 'GoodsName'
+          Value = Null
           Component = MasterCDS
           ComponentItem = 'BuyerName'
           DataType = ftString
@@ -1103,7 +1105,7 @@ inherited LoyaltySaveMoneyForm: TLoyaltySaveMoneyForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 10
       end>
     SearchAsFilter = False
   end

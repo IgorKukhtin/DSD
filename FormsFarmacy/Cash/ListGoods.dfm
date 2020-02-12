@@ -102,6 +102,12 @@ inherited ListGoodsForm: TListGoodsForm
         Options.Editing = False
         Width = 119
       end
+      object colContractName: TcxGridDBColumn
+        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
+        Width = 125
+      end
       object colGoodsNDS: TcxGridDBColumn
         Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'NDS'

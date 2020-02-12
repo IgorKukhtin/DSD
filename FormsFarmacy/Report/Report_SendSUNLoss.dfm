@@ -1,27 +1,27 @@
 inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
   Caption = #1054#1090#1095#1077#1090' '#1089#1087#1080#1089#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072' '#1089#1086' '#1089#1090#1072#1090#1100#1077#1081' '#1089#1087#1080#1089#1072#1085#1080#1103
   ClientHeight = 480
-  ClientWidth = 1051
+  ClientWidth = 800
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1067
+  ExplicitWidth = 816
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1051
+    Width = 800
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 1051
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1051
+    ClientRectRight = 800
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1051
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1051
+        Width = 800
         Height = 421
         ExplicitWidth = 1051
         ExplicitHeight = 421
@@ -42,7 +42,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = Amount
             end
             item
               Format = ',0.####;-,0.####; ;'
@@ -56,7 +55,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -73,7 +71,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = Summa
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -87,7 +84,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = Summa
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -102,7 +98,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.##;-,0.##; ;'
@@ -116,7 +111,6 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = Summa
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -126,19 +120,13 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object FromName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'FromName'
+          object UnitName: TcxGridDBColumn
+            AlternateCaption = 'UnitName'
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 140
-          end
-          object ToName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 119
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -161,26 +149,7 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 51
-          end
-          object Amount: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 88
-          end
-          object Summa: TcxGridDBColumn
-            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1086' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 91
+            Width = 58
           end
           object AmountLoss: TcxGridDBColumn
             Caption = #1057#1087#1080#1089#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -199,21 +168,21 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 82
+            Width = 88
           end
           object ArticleLossName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'ArticleLossName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 136
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1051
+    Width = 800
     Height = 33
     ExplicitWidth = 1051
     ExplicitHeight = 33

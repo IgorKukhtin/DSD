@@ -22,6 +22,7 @@ type
     procedure ButtonGroup1ButtonClicked(Sender: TObject; Index: Integer);
     procedure ButtonGroup1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure ButtonGroup1Click(Sender: TObject);
   private
     { Private declarations }
     FTotalSum, FSummaRemainder : currency;
@@ -70,10 +71,10 @@ begin
           if FSummaRemainder > 0 then
           begin
             if ceDiscount.Value = 0 then ceDiscount.SetFocus
-            else if Currency(ceDiscount.Value) > FSummaRemainder then
+            else if Round((FSummaRemainder - ceDiscount.Value) * 100) < 0  then
             begin
               ceDiscount.Value := FSummaRemainder;
-              ShowMessage('Сумма недолжна привешать ' + FormatCurr(',0.00', FSummaRemainder));
+              ShowMessage('Сумма не должна превышать ' + FormatCurr(',0.00', FSummaRemainder));
               ceDiscount.SetFocus;
             end else ModalResult := mrOk;
           end else
@@ -87,6 +88,11 @@ begin
           ModalResult := mrOk;
         end;
   end;
+end;
+
+procedure TEnterLoyaltySMDiscountForm.ButtonGroup1Click(Sender: TObject);
+begin
+  ButtonGroup1ButtonClicked(Sender, ButtonGroup1.ItemIndex);
 end;
 
 procedure TEnterLoyaltySMDiscountForm.ButtonGroup1KeyDown(Sender: TObject;

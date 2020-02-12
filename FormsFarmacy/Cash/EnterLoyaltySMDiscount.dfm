@@ -82,9 +82,8 @@ object EnterLoyaltySMDiscountForm: TEnterLoyaltySMDiscountForm
       end>
     TabOrder = 1
     OnButtonClicked = ButtonGroup1ButtonClicked
+    OnClick = ButtonGroup1Click
     OnKeyDown = ButtonGroup1KeyDown
-    ExplicitTop = 121
-    ExplicitHeight = 148
   end
   object ceDiscount: TcxCurrencyEdit
     Left = 264
