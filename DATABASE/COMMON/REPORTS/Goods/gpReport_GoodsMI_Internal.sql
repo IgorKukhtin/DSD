@@ -32,6 +32,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , ProfitLossCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar
              , ProfitLossName_All TVarChar
              , Comment TVarChar
+             , SubjectDocName  TVarChar
              , BranchCode_from Integer, BranchName_from TVarChar, UnitCode_from Integer, UnitName_from TVarChar, PositionName_from TVarChar
              , BranchCode_to Integer, BranchName_to TVarChar, UnitCode_to Integer, UnitName_to TVarChar, PositionName_to TVarChar
              )
@@ -163,9 +164,9 @@ BEGIN
                         , MIContainer.MovementId
                         , CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId
                         , CASE WHEN MIContainer.isActive = TRUE  THEN MIContainer.WhereObjectId_analyzer ELSE MIContainer.ObjectExtId_Analyzer END AS UnitId_by
-                        , MIContainer.ObjectId_analyzer AS GoodsId
+                        , MIContainer.ObjectId_analyzer                                               AS GoodsId
                         , CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ObjectIntId_Analyzer END AS GoodsKindId
-                        , COALESCE (MIContainer.AccountId, 0)  AS AccountId
+                        , COALESCE (MIContainer.AccountId, 0)                                         AS AccountId
                         , CASE WHEN inDescId = zc_Movement_Loss() THEN COALESCE (MIContainer.AnalyzerId, 0) ELSE 0 END AS ArticleLossId
                         , COALESCE (MIContainer.ContainerId_Analyzer, 0) AS ContainerId_Analyzer -- !!!для ОПиУ!!!
  
@@ -185,6 +186,7 @@ BEGIN
                         INNER JOIN _tmpUnit ON _tmpUnit.UnitId    = MIContainer.WhereObjectId_analyzer
                                            AND (_tmpUnit.UnitId_by = COALESCE (MIContainer.ObjectExtId_Analyzer, 0) OR _tmpUnit.UnitId_by = 0)
                                            AND _tmpUnit.isActive  = MIContainer.isActive
+
                    WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                      AND MIContainer.MovementDescId = inDescId
                      AND COALESCE (MIContainer.AccountId,0) NOT IN (12102, zc_Enum_Account_100301 ()) -- Прибыль текущего периода
@@ -239,8 +241,19 @@ BEGIN
                                AND MovementString.MovementId IN (SELECT DISTINCT tmpCont.MovementId FROM tmpCont)
                                AND inisComment = TRUE
                              )
+
+     , tmpSubjectDoc AS (SELECT MovementLinkObject_SubjectDoc.MovementId
+                              , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
+                         FROM MovementLinkObject AS MovementLinkObject_SubjectDoc
+                              LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+                         WHERE MovementLinkObject_SubjectDoc.MovementId IN (SELECT DISTINCT tmpCont.MovementId FROM tmpCont)
+                           AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                           AND COALESCE (Object_SubjectDoc.ValueData,'') <> ''
+                         )
+
      , tmpMI AS (SELECT tmpCont.ContainerId
                       , COALESCE (MovementString_Comment.ValueData, '') AS Comment
+                      , tmpSubjectDoc.SubjectDocName
                       , tmpCont.UnitId
                       , tmpCont.UnitId_by
                       , tmpCont.GoodsId
@@ -263,6 +276,7 @@ BEGIN
                  FROM tmpCont
                       LEFT JOIN tmpMovementString AS MovementString_Comment
                                                   ON MovementString_Comment.MovementId = tmpCont.MovementId
+                      LEFT JOIN tmpSubjectDoc ON tmpSubjectDoc.MovementId = tmpCont.MovementId
                  GROUP BY tmpCont.ContainerId
                         , COALESCE (MovementString_Comment.ValueData, '')
                         , tmpCont.UnitId
@@ -272,6 +286,7 @@ BEGIN
                         , tmpCont.AccountId
                         , tmpCont.ArticleLossId
                         , tmpCont.ContainerId_Analyzer
+                        , tmpSubjectDoc.SubjectDocName
                  )
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -330,7 +345,8 @@ BEGIN
 
          , View_ProfitLoss.ProfitLossCode, View_ProfitLoss.ProfitLossGroupName, View_ProfitLoss.ProfitLossDirectionName, View_ProfitLoss.ProfitLossName
          , View_ProfitLoss.ProfitLossName_all
-         , tmpOperationGroup.Comment  :: TVarChar
+         , tmpOperationGroup.Comment        :: TVarChar
+         , tmpOperationGroup.SubjectDocName :: TVarChar
 
          , Object_Branch_from.ObjectCode  AS BranchCode_from
          , Object_Branch_from.ValueData   AS BranchName_from
@@ -352,6 +368,7 @@ BEGIN
                 , tmpContainer.GoodsKindId
                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
                 , tmpContainer.Comment
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
 
                 , SUM (tmpContainer.AmountOut)         AS AmountOut
                 , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
@@ -382,7 +399,7 @@ BEGIN
                       , tmpMI.ArticleLossId
                       , tmpMI.ContainerId_Analyzer
                       , tmpMI.Comment
-
+                      , tmpMI.SubjectDocName
                       , tmpMI.AmountOut
                       , tmpMI.AmountOut * CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN _tmpGoods.Weight ELSE 1 END AS AmountOut_Weight
                       , CASE WHEN _tmpGoods.MeasureId = zc_Measure_Sh() THEN tmpMI.AmountOut ELSE 0 END AS AmountOut_sh
@@ -488,6 +505,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.02.20         *
  18.12.19         * add цена по виду
  30.01.19         * add Comment
  12.08.15                                        * all
@@ -495,5 +513,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '12.12.2018'::TDateTime, inEndDate:= '14.12.2018'::TDateTime, inDescId:= zc_Movement_Loss(), inFromId:= 8425, inToId:= 0, inGoodsGroupId:= 1832, inPriceListId:= 0, inIsMO_all:= FALSE, inisComment:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
+-- SELECT * FROM gpReport_GoodsMI_Internal (inStartDate:= '12.02.2020'::TDateTime, inEndDate:= '12.02.2020'::TDateTime, inDescId:= zc_Movement_Send(), inFromId:= 0, inToId:= 0, inGoodsGroupId:= 0, inPriceListId:= 0, inIsMO_all:= FALSE, inisComment:= true, inSession := zfCalc_UserAdmin()); -- Склад Реализации
 

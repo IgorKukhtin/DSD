@@ -539,6 +539,14 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
             Options.Editing = False
             Width = 150
           end
+          object SubjectDocName: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+            DataBinding.FieldName = 'SubjectDocName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 109
+          end
           object TradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
