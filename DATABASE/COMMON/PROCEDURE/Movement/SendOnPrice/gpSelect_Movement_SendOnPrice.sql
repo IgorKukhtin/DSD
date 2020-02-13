@@ -41,6 +41,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isHistoryCost Boolean
 
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -143,6 +144,9 @@ BEGIN
            
            , Object_ReestrKind.Id             		    AS ReestrKindId
            , Object_ReestrKind.ValueData       		    AS ReestrKindName
+
+           , Object_SubjectDoc.Id                                 AS SubjectDocId
+           , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -352,6 +356,11 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
        WHERE tmpBranch.UserId IS NULL
           OR ObjectLink_UnitFrom_Branch.ChildObjectId = tmpBranch.BranchId
           OR ObjectLink_UnitTo_Branch.ChildObjectId = tmpBranch.BranchId
@@ -364,6 +373,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.20         *
  11.10.18         *
  05.10.16         * add inJuridicalBasisId
  03.10.16         * add Movement_Production

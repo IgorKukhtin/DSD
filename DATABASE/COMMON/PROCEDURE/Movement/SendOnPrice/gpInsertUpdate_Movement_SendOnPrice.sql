@@ -1,8 +1,9 @@
 -- Function: gpInsertUpdate_Movement_SendOnPrice()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendOnPrice (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inSubjectDocId        Integer   , -- Основание для перемещения
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inMovementId_Order    Integer    , -- ключ Документа
@@ -42,6 +44,7 @@ BEGIN
                                       , inFromId           := inFromId
                                       , inToId             := inToId
                                       , inRouteSortingId   := inRouteSortingId
+                                      , inSubjectDocId     := inSubjectDocId
                                       , inMovementId_Order := inMovementId_Order
                                       , ioPriceListId      := ioPriceListId
                                       , inProcessId        := zc_Enum_Process_InsertUpdate_Movement_SendOnPrice()
@@ -59,6 +62,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.20         *
  08.06.15         * 
  05.05.14                                                        *   передалал все по новой на базе проц расхода.
  16.07.13                                        * zc_Movement_SendOnPrice

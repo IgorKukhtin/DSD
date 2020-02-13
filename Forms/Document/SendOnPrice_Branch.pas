@@ -107,6 +107,9 @@ type
     spSelectPrint_SaleOrderTax: TdsdStoredProc;
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrderTax: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,7 +3,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
   ClientHeight = 668
   ClientWidth = 944
   ExplicitWidth = 960
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -531,15 +531,32 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       Width = 260
     end
     object cxLabel22: TcxLabel
-      Left = 274
+      Left = 488
       Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 274
+      Left = 488
       Top = 108
       TabOrder = 24
-      Width = 550
+      Width = 336
+    end
+    object cxLabel9: TcxLabel
+      Left = 274
+      Top = 90
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+    end
+    object edSubjectDoc: TcxButtonEdit
+      Left = 274
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 200
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1647,6 +1664,21 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = FormParams
         ComponentItem = 'MovementId_TransportGoods'
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocid'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 256
@@ -1727,6 +1759,14 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -1756,11 +1796,6 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 162
@@ -1808,6 +1843,9 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edSubjectDoc
       end>
     Left = 232
     Top = 193
@@ -2150,7 +2188,7 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     Aggregates = <>
     Params = <>
     Left = 476
-    Top = 246
+    Top = 286
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
@@ -2767,5 +2805,34 @@ inherited SendOnPrice_BranchForm: TSendOnPrice_BranchForm
     PackSize = 1
     Left = 751
     Top = 248
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSubjectDoc
+    FormNameParam.Value = 'TSubjectDocForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSubjectDocForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 360
+    Top = 88
   end
 end
