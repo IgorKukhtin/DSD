@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer,
                GoodsCode Integer,
                GoodsName TVarChar,
                JuridicalName TVarChar,
+               ContractName TVarChar,
                NDS TFloat,
                JuridicalPrice TFloat,
                MarginPercent TFloat,
@@ -21,11 +22,12 @@ RETURNS TABLE (Id Integer,
 
 AS
 $BODY$
-  DECLARE vbUserId     Integer;
-  DECLARE vbObjectId   Integer;
-  DECLARE vbUnitId     Integer;
-  DECLARE vbUnitIdStr  TVarChar;
-  DECLARE vbAreaId     Integer;
+  DECLARE vbUserId      Integer;
+  DECLARE vbObjectId    Integer;
+  DECLARE vbUnitId      Integer;
+  DECLARE vbUnitIdStr   TVarChar;
+  DECLARE vbAreaId      Integer;
+  DECLARE vbJuridicalId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -46,11 +48,18 @@ BEGIN
      THEN
        vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId(inSession));
      END IF;
+     
+     SELECT ObjectLink_Unit_Juridical.ChildObjectId
+     INTO vbJuridicalId
+     FROM ObjectLink AS ObjectLink_Unit_Juridical
+     WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();     
 
     --
     CREATE TEMP TABLE _GoodsPriceAll (
                              GoodsId Integer,
                              JuridicalId Integer,
+                             ContractId Integer,
                              NDS TFloat,
                              JuridicalPrice TFloat,
                              MarginPercent TFloat,
@@ -106,7 +115,7 @@ BEGIN
                            FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS JuridicalSettings
                      LEFT JOIN Object AS Object_ContractSettings ON Object_ContractSettings.Id = JuridicalSettings.MainJuridicalId
               WHERE COALESCE (Object_ContractSettings.isErased, FALSE) = FALSE
-                   AND JuridicalSettings.MainJuridicalId <> 5603474
+                   AND JuridicalSettings.MainJuridicalId = vbJuridicalId
              )
 
         INSERT INTO _GoodsPriceAll
@@ -114,6 +123,7 @@ BEGIN
 
            LinkGoodsObject.GoodsId             AS GoodsId,
            LoadPriceList.JuridicalId           AS JuridicalId,
+           LoadPriceList.ContractId            AS ContractId,
            Object_Goods.NDS                    AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
            CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
@@ -191,6 +201,7 @@ BEGIN
               ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price)::Integer AS Ord,
               _GoodsPriceAll.GoodsId           AS GoodsId,
               _GoodsPriceAll.JuridicalId       AS JuridicalId,
+              _GoodsPriceAll.ContractId        AS ContractId,
               _GoodsPriceAll.NDS               AS NDS,
               _GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
               _GoodsPriceAll.MarginPercent     AS MarginPercent,
@@ -207,6 +218,7 @@ BEGIN
               Object_Goods.ObjectCode           AS GoodsCode,
               Object_Goods.ValueData            AS GoodsName,
               Object_Juridical.ValueData        AS JuridicalName,
+              Object_Contract.ValueData         AS ContractName,
               GoodsPriceAll.NDS                 AS NDS,
               GoodsPriceAll.JuridicalPrice      AS JuridicalPrice,
               GoodsPriceAll.MarginPercent       AS MarginPercent,
@@ -222,6 +234,7 @@ BEGIN
           INNER JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsPriceAll.GoodsId
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = GoodsPriceAll.JuridicalId
+          LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
 
      WHERE Ord = 1;
 
@@ -232,6 +245,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 12.02.20                                                                                     *
  20.01.19                                                                                     *
  05.12.18                                                                                     *
  26.11.18                                                                                     *

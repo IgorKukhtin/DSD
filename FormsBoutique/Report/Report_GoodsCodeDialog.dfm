@@ -379,8 +379,8 @@ object Report_GoodsCodeDialogForm: TReport_GoodsCodeDialogForm
         Value = '0'
         MultiSelectSeparator = ','
       end>
-    Left = 266
-    Top = 74
+    Left = 210
+    Top = 58
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

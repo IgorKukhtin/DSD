@@ -2767,7 +2767,7 @@ function TMainCashForm2.SetLoyaltySaveMoneyDiscount : boolean;
   var nDoscount : Currency;
 begin
   Result := True;
-  if UnitConfigCDS.FieldByName('LoyaltySaveMoneyCount').AsInteger <= 0 then Exit;
+  if not pnlLoyaltySaveMoney.Visible then Exit;
 
   Result := ShowEnterLoyaltySMDiscount(lblLoyaltySMBuyer.Caption, FTotalSumm, edLoyaltySMSummaRemainder.Value, nDoscount);
   if Result then

@@ -8,13 +8,10 @@ CREATE OR REPLACE FUNCTION gpReport_SendSUNLoss (
     IN inUnitId           Integer  ,  -- Подразделение
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (FromName TVarChar
-             , ToName TVarChar
+RETURNS TABLE (UnitName TVarChar
              , GoodsCode Integer
              , GoodsName TVarChar
              , Price TFloat
-             , Amount TFloat
-             , Summa TFloat
 
              , AmountLoss TFloat
              , SummaLoss TFloat
@@ -31,60 +28,41 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpMovement AS (SELECT Movement.id
-                              , MovementLinkObject_From.ObjectId  AS UnitID
-                         FROM Movement
-                              INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                         ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                        AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
-                                                        AND MovementBoolean_SUN.ValueData = True
+    WITH tmpMovement  AS (SELECT Movement.Id                            AS ID
+                               , MovementLinkObject_Unit.ObjectId       AS UnitId
+                               , Object_ArticleLoss.ValueData           AS ArticleLossName
+                          FROM Movement
 
-                               INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = Movement.Id
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                            AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
-                         WHERE Movement.DescId = zc_Movement_Send()
-                           AND Movement.StatusId = zc_Enum_Status_Complete())
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                           AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
+
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                            ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                                           AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+                               LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
+
+                          WHERE Movement.DescId = zc_Movement_Loss()
+                            AND Movement.StatusId = zc_Enum_Status_Complete()
+                            AND Movement.OperDate >= inStartDate
+                            AND Movement.OperDate <= inEndDate
+                            AND (MovementLinkObject_Unit.ObjectId = inUnitId OR inUnitId = 0))
+
+       , tmpMovementItem  AS (SELECT tmpMovement.UnitID
+                                   , MovementItem.ObjectId                              AS GoodsID
+                                   , tmpMovement.ArticleLossName
+                                   , Sum(MovementItem.Amount)::TFloat                   AS AmountLoss
+
+                                FROM tmpMovement
+
+                                     INNER JOIN MovementItem ON MovementItem.MovementID = tmpMovement.Id
+                                                            AND MovementItem.Amount > 0
+                                                            AND MovementItem.isErased = False
 
 
-       , tmpMovementContainer  AS (SELECT Movement.UnitId
-                                        , MovementLinkObject_To.ObjectId     AS UnitToId
-                                        , Container.ObjectId
-                                        , MovementItemContainer.ContainerID
-                                        , Sum(MovementItemContainer.Amount)  AS Amount
-                                   FROM tmpMovement AS Movement
-
-                                        INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.ID
-                                                                        AND MovementItemContainer.isActive = True
-                                        INNER JOIN Container ON  Container.DescId = zc_Container_Count()
-                                                            AND  Container.ID = MovementItemContainer.ContainerID
-
-                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                    GROUP BY Movement.UnitId
-                                           , MovementLinkObject_To.ObjectId
-                                           , Container.ObjectId
-                                           , MovementItemContainer.ContainerID)
-
-       , tmpContainerLoss  AS (SELECT MovementItemContainer.ContainerId
-                                     , Object_ArticleLoss.ValueData                                                   AS ArticleLossName
-                                     , Sum(-1 * MovementItemContainer.Amount)::TFloat                                 AS AmountLoss
-
-                                FROM tmpMovementContainer
-
-                                     INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = tmpMovementContainer.ContainerID
-                                                                     AND MovementItemContainer.MovementDescId = zc_Movement_Loss()
-                                                                     AND MovementItemContainer.Amount <> 0
-                                                                     AND MovementItemContainer.OperDate >= inStartDate
-                                                                     AND MovementItemContainer.OperDate <= inEndDate
-                                                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
-                                                                  ON MovementLinkObject_ArticleLoss.MovementId =  MovementItemContainer.MovementId
-                                                                 AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
-                                     LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
-
-                                GROUP BY MovementItemContainer.ContainerId
-                                       , Object_ArticleLoss.ValueData)
+                                GROUP BY tmpMovement.UnitID
+                                       , MovementItem.ObjectId
+                                       , tmpMovement.ArticleLossName)
 
        , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                      AND ObjectFloat_Goods_Price.ValueData > 0
@@ -115,29 +93,23 @@ BEGIN
                           AND ObjectLink_Price_Unit.ChildObjectId in (SELECT DISTINCT tmpMovement.UnitId FROM tmpMovement)
                         )
 
-    SELECT Object_From.ValueData                  AS FromName
-         , Object_To.ValueData                    AS ToName
+    SELECT Object_Unit.ValueData                  AS UnitName
          , Object_Goods.objectcode
          , Object_Goods.valuedata
          , tmpObject_Price.Price
-         , tmpMovementContainer.Amount::TFloat                                            AS Amount
-         , Round(tmpMovementContainer.Amount * tmpObject_Price.Price, 2)::TFloat          AS Summa
 
-         , tmpContainerLoss.AmountLoss                                                    AS AmountLoss
-         , Round(tmpContainerLoss.AmountLoss * tmpObject_Price.Price, 2)::TFloat          AS SummaLoss
-         , tmpContainerLoss.ArticleLossName                                               AS ArticleLossName
+         , tmpMovementItem.AmountLoss                                                    AS AmountLoss
+         , Round(tmpMovementItem.AmountLoss * tmpObject_Price.Price, 2)::TFloat          AS SummaLoss
+         , tmpMovementItem.ArticleLossName                                               AS ArticleLossName
 
-    FROM tmpMovementContainer
+    FROM tmpMovementItem
 
-         INNER JOIN tmpContainerLoss ON tmpContainerLoss.ContainerId = tmpMovementContainer.ContainerID
-
-         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementContainer.ObjectId
-         LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovementContainer.UnitId
-         LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovementContainer.UnitToId
+         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMovementItem.GoodsID
+         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovementItem.UnitId
 
          LEFT JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Object_Goods.Id
-                                  AND tmpObject_Price.UnitId = tmpMovementContainer.UnitId
-    ORDER BY Object_To.ValueData, Object_Goods.objectcode;
+                                  AND tmpObject_Price.UnitId = tmpMovementItem.UnitId
+    ORDER BY Object_Unit.ValueData, Object_Goods.objectcode;
 
 
 END;
@@ -150,4 +122,4 @@ $BODY$
  07.02.20                                                       *
 */
 
--- тест SELECT * FROM gpReport_SendSUNLoss (inStartDate := ('01.12.2015')::TDateTime , inEndDate := ('11.02.2020')::TDateTime , inUnitId := 0, inSession := '3')
+-- тест SELECT * FROM gpReport_SendSUNLoss (inStartDate := ('01.02.2020')::TDateTime , inEndDate := ('11.02.2020')::TDateTime , inUnitId := 0, inSession := '3')
