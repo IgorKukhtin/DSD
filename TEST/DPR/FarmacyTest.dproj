@@ -2800,6 +2800,14 @@
 				<Form>WagesSUN1Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SUNSaleDatesDialog.pas">
+				<Form>Report_SUNSaleDatesDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SUNSaleDates.pas">
+				<Form>Report_SUNSaleDatesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

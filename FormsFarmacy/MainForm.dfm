@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 218
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3343,6 +3343,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SUNSaleDates: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053
+      FormName = 'TReport_SUNSaleDatesForm'
+      FormNameParam.Value = 'TReport_SUNSaleDatesForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3980,6 +3992,9 @@ inherited MainForm: TMainForm
       end
       object N218: TMenuItem
         Action = actReport_CheckSUN
+      end
+      object N219: TMenuItem
+        Action = actReport_SUNSaleDates
       end
     end
     object N40: TMenuItem [7]

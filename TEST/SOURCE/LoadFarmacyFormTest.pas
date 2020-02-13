@@ -834,6 +834,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossForm'));
