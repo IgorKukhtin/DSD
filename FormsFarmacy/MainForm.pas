@@ -624,6 +624,9 @@ type
     actReport_SendSUNDelay: TdsdOpenForm;
     N216: TMenuItem;
     N217: TMenuItem;
+    N218: TMenuItem;
+    actReport_GoodsSendSUN: TdsdOpenForm;
+    miReport_GoodsSendSUN: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

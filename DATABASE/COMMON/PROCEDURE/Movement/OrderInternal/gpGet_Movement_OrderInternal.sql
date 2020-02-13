@@ -69,7 +69,7 @@ BEGIN
                LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN inToId = 0
                                                                      AND inFromId  > 0
                                                                          THEN inFromId
-                                                                    WHEN inIsPack = TRUE
+                                                                    WHEN inIsPack = TRUE AND inToId = 0
                                                                          THEN 8451 -- ÷ех ”паковки
                                                                     ELSE CASE WHEN inToId <> 0 
                                                                                    THEN inToId

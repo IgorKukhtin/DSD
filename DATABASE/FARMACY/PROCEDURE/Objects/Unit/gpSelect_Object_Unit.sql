@@ -43,6 +43,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EndTimeSP   TDateTime
              , isSP        Boolean
              , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
+             , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
@@ -148,8 +149,10 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
       , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
-      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean AS isSUN_NotSold
-      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)   :: Boolean   AS isTopNo
+      , COALESCE (ObjectBoolean_SUN_v2_in.ValueData, FALSE)  :: Boolean   AS isSUN_v2_in
+      , COALESCE (ObjectBoolean_SUN_v2_out.ValueData, FALSE) :: Boolean   AS isSUN_v2_out
+      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
+      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
 
@@ -278,6 +281,14 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_out
                                 ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_in
+                                ON ObjectBoolean_SUN_v2_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_in()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_out
+                                ON ObjectBoolean_SUN_v2_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_out()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
