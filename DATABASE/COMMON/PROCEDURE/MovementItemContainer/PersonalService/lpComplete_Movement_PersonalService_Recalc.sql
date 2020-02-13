@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_PersonalService_Recalc (Integer, Boolean)
+ -- Function: lpComplete_Movement_PersonalService_Recalc (Integer, Boolean)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalService_Recalc (Integer, Integer);
 
@@ -109,9 +109,9 @@ BEGIN
      WITH -- Все документы из которых будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc, по идее таких документов 2
           tmpMovement_from AS (SELECT _tmpMovement_Recalc.MovementId, _tmpMovement_Recalc.ServiceDate, _tmpMovement_Recalc.PersonalServiceListId
                                FROM _tmpMovement_Recalc
-                               WHERE (_tmpMovement_Recalc.PaidKindId  = zc_Enum_PaidKind_FirstForm() -- обязательно БН
-                                AND   _tmpMovement_Recalc.StatusId   = zc_Enum_Status_Complete())    -- или проведенный (т.к. будет обнуление всех SummCard + SummNalog + SummNalogRet + SummChild + SummMinusExt + SummAddOth + SummFineOth + SummHospOth + SummCompensation)
-                                   OR _tmpMovement_Recalc.MovementId = inMovementId                -- или текущий
+                               WHERE _tmpMovement_Recalc.PaidKindId  = zc_Enum_PaidKind_FirstForm() -- обязательно БН
+                                AND  (_tmpMovement_Recalc.StatusId   = zc_Enum_Status_Complete()    -- или проведенный (т.к. будет обнуление всех SummCard + SummNalog + SummNalogRet + SummChild + SummMinusExt + SummAddOth + SummFineOth + SummHospOth)
+                                   OR _tmpMovement_Recalc.MovementId = inMovementId)                -- или текущий
                               )
           -- элементы с суммой для переноса
         , tmpMI_from AS (SELECT MovementItem.Id                                         AS MovementItemId
@@ -193,7 +193,10 @@ BEGIN
                         )
 
           -- Все документы в которые будем переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc (здесь нет документов в которых сумма "останется")
-        , tmpMovement_to AS (SELECT MovementId, PersonalServiceListId, StatusId FROM _tmpMovement_Recalc WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm() AND EXISTS (SELECT 1 FROM tmpMI_from))
+        , tmpMovement_to AS (SELECT MovementId, PersonalServiceListId, StatusId
+                             FROM _tmpMovement_Recalc
+                             WHERE PaidKindId <> zc_Enum_PaidKind_FirstForm()
+                               AND EXISTS (SELECT 1 FROM tmpMI_from))
 
             -- Все элементы по которым будем искать куда переносить сумму SummCardRecalc + SummCardSecondRecalc + SummNalogRecalc + SummNalogRetRecalc + SummChildRecalc + SummMinusExtRecalc + SummAddOthRecalc + SummFineOthRecalc + SummHospOthRecalc + SummCompensationRecalc
           , tmpMI_to_all AS (SELECT tmpMovement_to.PersonalServiceListId          AS PersonalServiceListId
@@ -315,12 +318,13 @@ BEGIN
          ) AS tmp
      WHERE _tmpMI_Recalc.PersonalServiceListId_to = tmp.PersonalServiceListId_to;
 
-     -- создаются новые элементы
+ 
+      -- создаются новые элементы
      UPDATE _tmpMI_Recalc SET MovementItemId_to = tmp.MovementItemId_to
      FROM (SELECT lpInsertUpdate_MovementItem_PersonalService_item (ioId                 := 0
                                                                   , inMovementId         := _tmpMI_Recalc.MovementId_to
                                                                   , inPersonalId         := _tmpMI_Recalc.PersonalId
-                                                                  , inIsMain             := MIBoolean_Main.ValueData
+                                                                  , inIsMain             := CASE WHEN _tmpMI_Recalc.isMain = 1 THEN TRUE ELSE FALSE END
                                                                   , inSummService        := 0 :: TFloat
                                                                   , inSummCardRecalc     := 0 :: TFloat
                                                                   , inSummCardSecondRecalc:= 0 :: TFloat
@@ -348,16 +352,41 @@ BEGIN
                                                                   , inPersonalServiceListId  := _tmpMI_Recalc.PersonalServiceListId_to
                                                                   , inUserId             := inUserId
                                                                    ) AS MovementItemId_to
-                , _tmpMI_Recalc.MovementItemId_from
-           FROM _tmpMI_Recalc
-                LEFT JOIN MovementItemBoolean AS MIBoolean_Main
-                                              ON MIBoolean_Main.MovementItemId = _tmpMI_Recalc.MovementItemId_from
-                                             AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
-           WHERE _tmpMI_Recalc.MovementItemId_to = 0
-             AND _tmpMI_Recalc.PersonalServiceListId_to <> 0 -- !!!важно, т.е. если введено куда переносить!!!
+                , _tmpMI_Recalc.MovementId_to
+                , _tmpMI_Recalc.PersonalServiceListId_to
+                , _tmpMI_Recalc.PersonalId
+                , _tmpMI_Recalc.InfoMoneyId
+                , _tmpMI_Recalc.UnitId
+                , _tmpMI_Recalc.PositionId
+           FROM (SELECT _tmpMI_Recalc.MovementId_to
+                      , _tmpMI_Recalc.PersonalServiceListId_to
+                      , _tmpMI_Recalc.PersonalId
+                      , _tmpMI_Recalc.InfoMoneyId
+                      , _tmpMI_Recalc.UnitId
+                      , _tmpMI_Recalc.PositionId
+                      , MAX (CASE WHEN COALESCE (MIBoolean_Main.ValueData, FALSE) = TRUE THEN 1 ELSE 0 END) AS isMain
+                 FROM _tmpMI_Recalc
+                      LEFT JOIN MovementItemBoolean AS MIBoolean_Main
+                                                    ON MIBoolean_Main.MovementItemId = _tmpMI_Recalc.MovementItemId_from
+                                                   AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
+                 WHERE _tmpMI_Recalc.MovementItemId_to       = 0
+                   AND _tmpMI_Recalc.PersonalServiceListId_to <> 0 -- !!!важно, т.е. если введено куда переносить!!!
+                 GROUP BY _tmpMI_Recalc.MovementId_to
+                        , _tmpMI_Recalc.PersonalServiceListId_to
+                        , _tmpMI_Recalc.PersonalId
+                        , _tmpMI_Recalc.InfoMoneyId
+                        , _tmpMI_Recalc.UnitId
+                        , _tmpMI_Recalc.PositionId
+                ) AS _tmpMI_Recalc
          ) AS tmp
-     WHERE _tmpMI_Recalc.MovementItemId_from = tmp.MovementItemId_from;
 
+     WHERE  _tmpMI_Recalc.MovementId_to            = tmp.MovementId_to
+      -- AND _tmpMI_Recalc.PersonalServiceListId_to = tmp.PersonalServiceListId_to
+       AND _tmpMI_Recalc.PersonalId               = tmp.PersonalId
+       AND _tmpMI_Recalc.InfoMoneyId              = tmp.InfoMoneyId
+       AND _tmpMI_Recalc.UnitId                   = tmp.UnitId
+       AND _tmpMI_Recalc.PositionId               = tmp.PositionId
+    ;
 
      -- !!!Выход если нет <Сумма на карточку (БН) для распределения>!!!
      -- IF NOT EXISTS (SELECT MovementId_from FROM _tmpMI_Recalc)

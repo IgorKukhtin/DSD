@@ -586,9 +586,9 @@ BEGIN
 
 
      -- в мастер записать - Курс - из истории !!!в проводках убрал!!!
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioId, outCurrencyValue)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      ioId, outParValue)
-            ;
+     -- PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(), ioId, outCurrencyValue)
+     --       , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),      ioId, outParValue)
+     --        ;
 
 
      -- "сложно" пересчитали "итоговые" суммы по элементу

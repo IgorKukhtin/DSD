@@ -133,6 +133,8 @@ type
     actUpdate_isMail: TdsdExecStoredProc;
     actPrintWmsSticker: TdsdPrintAction;
     spSelectPrintWmsSticker: TdsdStoredProc;
+    actPrint_ReturnInAkt: TdsdPrintAction;
+    spSelectPrintAkt: TdsdStoredProc;
   private
   end;
 
@@ -238,7 +240,8 @@ end;
 procedure Print_ReturnIn (MovementId: Integer);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
-  UtilPrintForm.mactPrint_ReturnIn.Execute;
+  //UtilPrintForm.mactPrint_ReturnIn.Execute;
+  UtilPrintForm.actPrint_ReturnInAkt.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_SendOnPrice (MovementId: Integer; isSendOnPriceIn:Boolean);

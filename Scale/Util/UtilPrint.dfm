@@ -2,8 +2,8 @@ object UtilPrintForm: TUtilPrintForm
   Left = 0
   Top = 0
   Caption = 'Print'
-  ClientHeight = 640
-  ClientWidth = 926
+  ClientHeight = 648
+  ClientWidth = 934
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,12 +15,14 @@ object UtilPrintForm: TUtilPrintForm
   TextHeight = 13
   object ExportXmlGrid: TcxGrid
     Left = 0
-    Top = 555
-    Width = 926
+    Top = 563
+    Width = 934
     Height = 85
     Align = alBottom
     TabOrder = 0
     Visible = False
+    ExplicitTop = 555
+    ExplicitWidth = 926
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -2304,6 +2306,50 @@ object UtilPrintForm: TUtilPrintForm
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1069#1083#1077#1082#1090#1088#1086#1085#1085#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1102
       ImageIndex = 53
     end
+    object actPrint_ReturnInAkt: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintAkt
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintAkt
+        end>
+      Caption = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      Hint = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ImageIndex = 15
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isAkt'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ReturnInAkt'
+      ReportNameParam.Name = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
+      ReportNameParam.Value = 'PrintMovement_ReturnInAkt'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -3254,5 +3300,29 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 599
     Top = 408
+  end
+  object spSelectPrintAkt: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_PrintAkt'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 170
+    Top = 370
   end
 end

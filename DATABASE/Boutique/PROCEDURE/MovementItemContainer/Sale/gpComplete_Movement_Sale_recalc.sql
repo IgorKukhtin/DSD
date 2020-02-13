@@ -30,13 +30,13 @@ BEGIN
 
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , OperCount TFloat, OperPriceList TFloat, OperPriceList_pl TFloat, SummChangePercent TFloat
-                               , TotalSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
-                               , CurrencyValue TFloat, ParValue TFloat
-                               , CashId Integer, CurrencyId_cash Integer
-                                ) ON COMMIT DROP;
-     INSERT INTO _tmpItem_recalc (MovementItemId
+     CREATE TEMP TABLE _tmpItem_recalc (MovementItemId Integer, GoodsId Integer
+                                      , OperCount TFloat, OperPriceList TFloat, OperPriceList_pl TFloat, SummChangePercent TFloat
+                                      , TotalSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
+                                      , CurrencyValue TFloat, ParValue TFloat
+                                      , CashId Integer, CurrencyId_cash Integer
+                                       ) ON COMMIT DROP;
+     INSERT INTO _tmpItem_recalc (MovementItemId, GoodsId
                                 , OperCount, OperPriceList, OperPriceList_pl, SummChangePercent
                                 , TotalSummPriceList, TotalChangePercent, TotalPay
                                 , CurrencyValue, ParValue
@@ -50,6 +50,7 @@ BEGIN
                                                                        )
                             )
                  , tmpMI AS (SELECT MovementItem.Id                     AS MovementItemId
+                                  , MovementItem.ObjectId               AS GoodsId
                                   , MovementItem.Amount                 AS OperCount
                                   , MIFloat_ChangePercent.ValueData     AS ChangePercent
                                   , MIFloat_OperPriceListReal.ValueData AS OperPriceList
@@ -58,12 +59,15 @@ BEGIN
                                                                                      , OL_pl.ChildObjectId
                                                                                      , MovementItem.ObjectId
                                                                                       ) AS tmp)
-                                             , 0) AS OperPriceList_pl
+                                             , 0.0) AS OperPriceList_pl
                                   , (SELECT lpSelect.CashId FROM lpSelect_Object_Cash (MovementLinkObject_From.ObjectId, vbUserId) AS lpSelect
                                      WHERE lpSelect.isBankAccount = FALSE
                                        AND lpSelect.CurrencyId    = zc_Currency_GRN()
                                     ) AS CashId
                                   , zc_Currency_GRN() AS CurrencyId_cash
+
+                                  , tmpCurrency.Amount   AS CurrencyValue
+                                  , tmpCurrency.ParValue AS ParValue
 
                              FROM Movement
                                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id
@@ -83,14 +87,15 @@ BEGIN
                                   LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = OL_pl.ChildObjectId
                                                                      AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
 
-                                  LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = OL_currency.ChildObjectId OR tmpCurrency.CurrencyToId = OL_currency.CurrencyId)
-                                                       AND OL_currency.CurrencyId <> zc_Currency_Basis()
+                                  LEFT JOIN tmpCurrency ON (tmpCurrency.CurrencyFromId = OL_currency.ChildObjectId OR tmpCurrency.CurrencyToId = OL_currency.ChildObjectId)
+                                                       AND OL_currency.ChildObjectId <> zc_Currency_Basis()
 
                              WHERE Movement.Id       = inMovementId
                                AND Movement.DescId   = zc_Movement_Sale()
                              --AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
                             )
         SELECT tmpMI.MovementItemId
+             , tmpMI.GoodsId
              , tmpMI.OperCount
              , tmpMI.OperPriceList
              , tmpMI.OperPriceList_pl
@@ -108,8 +113,8 @@ BEGIN
                -- TotalPay: 1000 - 200
              , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList) AS TotalPay
 
-             , tmpCurrency.Amount   AS CurrencyValue
-             , tmpCurrency.ParValue AS ParValue
+             , tmpMI.CurrencyValue
+             , tmpMI.ParValue
              
              , tmpMI.CashId
              , tmpMI.CurrencyId_cash
@@ -117,11 +122,19 @@ BEGIN
        ;
 
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), _tmpItem_recalc.MovementItemId, COALESCE (MovementItemId.SummChangePercent, 0))
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.OperPriceList_pl)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),  _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),           _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CurrencyValue)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),           _tmpItem_recalc.MovementItemId, _tmpItem_recalc.ParValue)
      FROM _tmpItem_recalc
     ;
+--    RAISE EXCEPTION '.<%>  <%>  <%>'
+--    , (select sum (_tmpItem_recalc.SummChangePercent) from _tmpItem_recalc)
+--    , (select sum (_tmpItem_recalc.TotalChangePercent) from _tmpItem_recalc)
+--    , (select sum (_tmpItem_recalc.TotalPay) from _tmpItem_recalc)
+--    ;
 
      -- сохранили
      PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id

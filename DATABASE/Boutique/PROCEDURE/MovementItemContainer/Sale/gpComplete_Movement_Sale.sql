@@ -24,7 +24,7 @@ BEGIN
      -- формирование
      IF 1=1 AND zc_Enum_GlobalConst_isTerry() = FALSE
      THEN
-         PERFORM lpComplete_Movement_Sale_recalc (inMovementId := inMovementId
+         PERFORM gpComplete_Movement_Sale_recalc (inMovementId := inMovementId
                                                 , inSession    := inSession
                                                  );
      END IF;

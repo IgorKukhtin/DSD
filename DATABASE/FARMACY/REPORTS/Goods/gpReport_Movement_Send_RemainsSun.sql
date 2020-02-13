@@ -98,6 +98,8 @@ BEGIN
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN_balance_partion   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, Summ_out_calc TFloat, Summ_in_calc TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN_balance_partion_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, Summ_out_calc TFloat, Summ_in_calc TFloat) ON COMMIT DROP;
 
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      CREATE TEMP TABLE _tmpRemains_all   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
@@ -126,8 +128,8 @@ BEGIN
      CREATE TEMP TABLE _tmpSumm_limit_a (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
 
      -- 6.1. распределяем-1 остатки со сроками - по всем аптекам - здесь только >= vbSumm_limit
-     CREATE TEMP TABLE _tmpResult_Partion   (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpResult_Partion_a (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult_Partion   (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer, Amount_not_out TFloat, Summ_not_out TFloat, Amount_not_in TFloat, Summ_not_in TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpResult_Partion_a (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer, Amount_not_out TFloat, Summ_not_out TFloat, Amount_not_in TFloat, Summ_not_in TFloat) ON COMMIT DROP;
      -- 6.2. !!!товары - DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit - тогда они участвовать не будут !!!
      CREATE TEMP TABLE _tmpList_DefSUN   (UnitId_from Integer, UnitId_to Integer, GoodsId Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpList_DefSUN_a (UnitId_from Integer, UnitId_to Integer, GoodsId Integer) ON COMMIT DROP;
@@ -178,6 +180,10 @@ BEGIN
                                  , Summ_res            TFloat
                                  , Amount_next_res     TFloat
                                  , Summ_next_res       TFloat
+                                 , Amount_not_out_res  TFloat
+                                 , Summ_not_out_res    TFloat
+                                 , Amount_not_in_res   TFloat
+                                 , Summ_not_in_res     TFloat
                                  ) ON COMMIT DROP;
      -- Результат - ПЕРВЫЙ водитель
      INSERT INTO _tmpResult (DriverId, DriverName
@@ -219,6 +225,10 @@ BEGIN
                            , Summ_res
                            , Amount_next_res
                            , Summ_next_res
+                           , Amount_not_out_res
+                           , Summ_not_out_res
+                           , Amount_not_in_res
+                           , Summ_not_in_res
                             )
           SELECT COALESCE (vbDriverId_1, 0)                              :: Integer  AS DriverId
                , COALESCE (lfGet_Object_ValueData_sh (vbDriverId_1), '') :: TVarChar AS DriverName
@@ -263,6 +273,10 @@ BEGIN
                , tmp.Summ_res
                , tmp.Amount_next_res
                , tmp.Summ_next_res
+               , tmp.Amount_not_out_res
+               , tmp.Summ_not_out_res
+               , tmp.Amount_not_in_res
+               , tmp.Summ_not_in_res
           FROM lpInsert_Movement_Send_RemainsSun (inOperDate := inOperDate
                                                 , inDriverId := 0 -- vbDriverId_1
                                                 , inStep     := 1
@@ -272,7 +286,8 @@ BEGIN
      -- !!!1 - перенесли данные
      INSERT INTO _tmpUnit_SUN_a SELECT * FROM _tmpUnit_SUN;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
-     INSERT INTO _tmpUnit_SUN_balance_a SELECT * FROM _tmpUnit_SUN_balance;
+     INSERT INTO _tmpUnit_SUN_balance_a         SELECT * FROM _tmpUnit_SUN_balance;
+     INSERT INTO _tmpUnit_SUN_balance_partion_a SELECT * FROM _tmpUnit_SUN_balance_partion;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      INSERT INTO _tmpRemains_all_a SELECT * FROM _tmpRemains_all;
      INSERT INTO _tmpRemains_a     SELECT * FROM _tmpRemains;
@@ -388,7 +403,8 @@ BEGIN
      -- !!!2 - перенесли данные
      INSERT INTO _tmpUnit_SUN_a SELECT * FROM _tmpUnit_SUN;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
-     INSERT INTO _tmpUnit_SUN_balance_a SELECT * FROM _tmpUnit_SUN_balance;
+     INSERT INTO _tmpUnit_SUN_balance_a         SELECT * FROM _tmpUnit_SUN_balance;
+     INSERT INTO _tmpUnit_SUN_balance_partion_a SELECT * FROM _tmpUnit_SUN_balance_partion;
      -- 1. все остатки, НТЗ => получаем кол-ва автозаказа
      INSERT INTO _tmpRemains_all_a SELECT * FROM _tmpRemains_all;
      INSERT INTO _tmpRemains_a     SELECT * FROM _tmpRemains;
@@ -549,6 +565,12 @@ BEGIN
                  -- Перемещение - расход (ожидается)
                , _tmpRemains.AmountSend_out
                , _tmpRemains.Price
+
+               , tmp.Amount_not_out -- Кол-во блок расход
+               , tmp.Summ_not_out   -- Сумма блок расход
+               , tmp.Amount_not_in  -- Кол-во блок приход
+               , tmp.Summ_not_in    -- Сумма блок приход
+
           FROM _tmpResult_Partion_a AS tmp
                LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
                LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
@@ -645,12 +667,21 @@ BEGIN
      OPEN Cursor5 FOR
           SELECT Object_Unit.Id        AS UnitId
                , Object_Unit.ValueData AS UnitName
-               , tmp.Summ_out
-               , tmp.Summ_in
-               , tmp.KoeffInSUN
-               , tmp.KoeffOutSUN
-          FROM _tmpUnit_SUN_balance_a AS tmp
-               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp.UnitId
+               , tmp1.Summ_out
+               , tmp1.Summ_in
+               , tmp1.KoeffOutSUN
+               , tmp1.KoeffInSUN
+               , tmp2.Summ_out      AS Summ_out_partion
+               , tmp2.Summ_in       AS Summ_in_partion
+               , tmp2.Summ_out_calc AS Summ_out_partion_calc
+               , tmp2.Summ_in_calc  AS Summ_in_partion_calc
+          FROM _tmpUnit_SUN
+               LEFT JOIN _tmpUnit_SUN_balance_a         AS tmp1 ON tmp1.UnitId = _tmpUnit_SUN.UnitId
+               LEFT JOIN _tmpUnit_SUN_balance_partion_a AS tmp2 ON tmp2.UnitId = _tmpUnit_SUN.UnitId
+               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpUnit_SUN.UnitId
+          WHERE tmp1.Summ_out      <> 0 OR tmp1.Summ_in      <> 0
+             OR tmp2.Summ_out      <> 0 OR tmp2.Summ_in      <> 0
+             OR tmp2.Summ_out_calc <> 0 OR tmp2.Summ_in_calc <> 0
           ;
      RETURN NEXT Cursor5;
 

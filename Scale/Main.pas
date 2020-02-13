@@ -229,6 +229,10 @@ type
     SubjectDocPanel: TPanel;
     SubjectDocLabel: TLabel;
     EditSubjectDoc: TcxButtonEdit;
+    actReestrStartTTN: TdsdOpenForm;
+    bbReestrStartTTN: TSpeedButton;
+    bbReestrPartnerInTTN: TSpeedButton;
+    actReestrPartnerInTTN: TdsdOpenForm;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
