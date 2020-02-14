@@ -1,5 +1,5 @@
 inherited TechnicalRediscountForm: TTechnicalRediscountForm
-  Caption = #1047#1072#1092#1080#1082#1089#1080#1088#1086#1074#1072#1085#1085#1099#1077' '#1085#1077#1083#1080#1082#1074#1080#1076#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+  Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
   ClientHeight = 479
   ClientWidth = 706
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
@@ -192,7 +192,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Top = 62
       Properties.ReadOnly = False
       TabOrder = 8
-      Width = 218
+      Width = 426
     end
     object edUnitName: TcxButtonEdit
       Left = 223
@@ -205,63 +205,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 218
-    end
-    object cxLabel6: TcxLabel
-      Left = 447
-      Top = 5
-      Caption = #1044#1085#1077#1081' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078' '#1086#1090':'
-    end
-    object ceNotSalePastDay: TcxCurrencyEdit
-      Left = 447
-      Top = 23
-      EditValue = 60.000000000000000000
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = '0'
-      TabOrder = 11
-      Width = 90
-    end
-    object cxLabel3: TcxLabel
-      Left = 447
-      Top = 45
-      Caption = '% '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1074#1099#1087'.'
-    end
-    object ceProcGoods: TcxCurrencyEdit
-      Left = 447
-      Top = 62
-      EditValue = 20.000000000000000000
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.##'
-      TabOrder = 13
-      Width = 90
-    end
-    object ceProcUnit: TcxCurrencyEdit
-      Left = 572
-      Top = 23
-      EditValue = 10.000000000000000000
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.##'
-      TabOrder = 14
-      Width = 90
-    end
-    object cxLabel4: TcxLabel
-      Left = 572
-      Top = 5
-      Caption = '% '#1074#1099#1087'. '#1087#1086' '#1072#1087#1090#1077#1082#1077'.'
-    end
-    object cePenalty: TcxCurrencyEdit
-      Left = 572
-      Top = 62
-      EditValue = 500.000000000000000000
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.##'
-      TabOrder = 16
-      Width = 90
-    end
-    object cxLabel5: TcxLabel
-      Left = 572
-      Top = 45
-      Caption = #1064#1090#1088#1072#1092' '#1079#1072' 1% '#1085#1077#1074#1099#1087'.'
+      Width = 426
     end
   end
   inherited ActionList: TActionList
@@ -560,27 +504,23 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       item
         Name = 'DayCount'
         Value = Null
-        Component = ceNotSalePastDay
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProcGoods'
         Value = Null
-        Component = ceProcGoods
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'ProcUnit'
         Value = Null
-        Component = ceProcUnit
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'Penalty'
         Value = Null
-        Component = cePenalty
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -632,14 +572,12 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       item
         Name = 'inDayCount'
         Value = Null
-        Component = ceNotSalePastDay
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inProcGoods'
         Value = Null
-        Component = ceProcGoods
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -647,7 +585,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       item
         Name = 'inProcUnit'
         Value = Null
-        Component = ceProcUnit
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -655,7 +592,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       item
         Name = 'inPenalty'
         Value = Null
-        Component = cePenalty
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -833,7 +769,9 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Params = <
       item
         Name = 'inDefaultKey'
-        Value = 'TTechnicalRediscountForm;zc_Object_ImportSetting_TechnicalRediscount'
+        Value = 
+          'TTechnicalRediscountForm;zc_Object_ImportSetting_TechnicalRedisc' +
+          'ount'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

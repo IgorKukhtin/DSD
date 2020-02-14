@@ -3355,6 +3355,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actTechnicalRediscount: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099
+      Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099
+      FormName = 'TTechnicalRediscountJournalForm'
+      FormNameParam.Value = 'TTechnicalRediscountJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3767,6 +3779,9 @@ inherited MainForm: TMainForm
       end
       object N15: TMenuItem
         Action = actPriceList
+      end
+      object N220: TMenuItem
+        Action = actTechnicalRediscount
       end
       object N55: TMenuItem
         Action = actInventoryJournal

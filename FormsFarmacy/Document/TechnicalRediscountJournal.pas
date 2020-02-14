@@ -29,21 +29,18 @@ uses
 
 type
   TTechnicalRediscountJournalForm = class(TAncestorJournalForm)
-    UnitName: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colTotalDiff: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    DayCount: TcxGridDBColumn;
+    colTotalDiffSumm: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     dxBarButton1: TdxBarButton;
-    ProcGoods: TcxGridDBColumn;
-    ProcUnit: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
-    Penalty: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
     actTechnicalRediscount_Formation: TMultiAction;
     actExecuteDialogData: TExecuteDialog;
     actExecTechnicalRediscount_Formation: TdsdExecStoredProc;

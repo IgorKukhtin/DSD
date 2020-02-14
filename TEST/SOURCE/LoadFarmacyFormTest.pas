@@ -135,10 +135,11 @@ type
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadTaxUnitFormTest;
+    procedure LoadTechnicalRediscountFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
-    procedure LoadWagesTest;
+    procedure LoadWagesFormTest;
     procedure FormTest;
   end;
 
@@ -1467,6 +1468,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTaxUnitEditForm');
 end;
 
+procedure TLoadFormTest.LoadTechnicalRediscountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountForm');
+end;
+
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
 {
@@ -1517,7 +1526,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnnamedEnterprisesJournalForm');
 end;
 
-procedure TLoadFormTest.LoadWagesTest;
+procedure TLoadFormTest.LoadWagesFormTest;
 begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollGroupForm'));
