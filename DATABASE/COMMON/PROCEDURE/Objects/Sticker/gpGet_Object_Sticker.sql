@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , StickerFileId Integer, StickerFileName TVarChar
              , isInfo TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
+             , Value6 TFloat, Value7 TFloat, Value8 TFloat
               )
 AS
 $BODY$
@@ -68,6 +69,9 @@ BEGIN
             , CAST (0 as TFloat)      AS Value3
             , CAST (0 as TFloat)      AS Value4
             , CAST (0 as TFloat)      AS Value5
+            , CAST (0 as TFloat)      AS Value6
+            , CAST (0 as TFloat)      AS Value7
+            , CAST (0 as TFloat)      AS Value8
             ;
    ELSE
        RETURN QUERY 
@@ -107,6 +111,10 @@ BEGIN
             , ObjectFloat_Value3.ValueData      AS Value3
             , ObjectFloat_Value4.ValueData      AS Value4
             , ObjectFloat_Value5.ValueData      AS Value5
+
+            , ObjectFloat_Value6.ValueData      AS Value6
+            , ObjectFloat_Value7.ValueData      AS Value7
+            , ObjectFloat_Value8.ValueData      AS Value8
 
        FROM Object AS Object_Sticker
             
@@ -169,7 +177,17 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value5
                                    ON ObjectFloat_Value5.ObjectId = Object_Sticker.Id 
                                   AND ObjectFloat_Value5.DescId = zc_ObjectFloat_Sticker_Value5()
-             
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value6
+                                   ON ObjectFloat_Value6.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value6.DescId = zc_ObjectFloat_Sticker_Value6()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value7
+                                   ON ObjectFloat_Value7.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value7.DescId = zc_ObjectFloat_Sticker_Value7()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                   ON ObjectFloat_Value8.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
+
              LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
@@ -186,6 +204,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.02.20         *
  23.10.17         *
 */
 

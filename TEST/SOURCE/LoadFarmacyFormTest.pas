@@ -1484,7 +1484,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-
     {
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));

@@ -127,6 +127,9 @@ BEGIN
                                                    , inValue3              := inValue3            ::TFloat
                                                    , inValue4              := inValue4            ::TFloat
                                                    , inValue5              := inValue5            ::TFloat
+                                                   , inValue6              := 0            ::TFloat
+                                                   , inValue7              := 0            ::TFloat
+                                                   , inValue8              := 0            ::TFloat
                                                    , inSession             := inSession
                                                     );
      END IF;

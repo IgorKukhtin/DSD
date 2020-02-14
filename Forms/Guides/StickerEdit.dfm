@@ -94,14 +94,14 @@
     Width = 153
   end
   object edComment: TcxTextEdit
-    Left = 17
-    Top = 361
+    Left = 346
+    Top = 316
     TabOrder = 9
-    Width = 312
+    Width = 327
   end
   object cxLabel8: TcxLabel
-    Left = 19
-    Top = 345
+    Left = 348
+    Top = 300
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
@@ -272,13 +272,61 @@
     Left = 346
     Top = 20
     TabOrder = 32
-    Height = 317
+    Height = 277
     Width = 327
   end
   object cxLabel15: TcxLabel
     Left = 346
     Top = 0
     Caption = #1057#1086#1089#1090#1072#1074' '#1087#1088#1086#1076#1091#1082#1090#1072
+  end
+  object cxLabel16: TcxLabel
+    Left = 19
+    Top = 344
+    Hint = #1079' '#1085#1080#1093' '#1085#1072#1089#1080#1095#1077#1085#1110' ('#1078#1080#1088#1080')'
+    Caption = #1079' '#1085#1080#1093' '#1085#1072#1089#1080#1095#1077#1085#1110
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object ceValue6: TcxCurrencyEdit
+    Left = 19
+    Top = 359
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 35
+    Width = 87
+  end
+  object ceValue7: TcxCurrencyEdit
+    Left = 119
+    Top = 359
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 36
+    Width = 87
+  end
+  object cxLabel17: TcxLabel
+    Left = 119
+    Top = 344
+    Caption = #1094#1091#1082#1088#1080
+  end
+  object cxLabel18: TcxLabel
+    Left = 216
+    Top = 344
+    Caption = #1089#1110#1083#1100
+  end
+  object ceValue8: TcxCurrencyEdit
+    Left = 216
+    Top = 359
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 39
+    Width = 87
   end
   object ActionList: TActionList
     Left = 305
@@ -448,6 +496,30 @@
         Name = 'inValue5'
         Value = Null
         Component = ceValue5
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = ceValue6
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = ceValue7
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = ceValue8
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -659,6 +731,27 @@
         Name = 'Value5'
         Value = Null
         Component = ceValue5
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value6'
+        Value = Null
+        Component = ceValue6
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value7'
+        Value = Null
+        Component = ceValue7
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value8'
+        Value = Null
+        Component = ceValue8
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -929,7 +1022,7 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 96
+    Left = 104
     Top = 229
   end
 end
