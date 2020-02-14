@@ -538,6 +538,13 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 66
           end
+          object TimeWork: TcxGridDBColumn
+            Caption = #1042#1088#1077#1084#1103' '#1088#1072#1073#1086#1090#1099
+            DataBinding.FieldName = 'TimeWork'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
         end
       end
     end
