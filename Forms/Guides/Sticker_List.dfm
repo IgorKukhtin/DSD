@@ -518,6 +518,46 @@ object Sticker_ListForm: TSticker_ListForm
         HeaderAlignmentVert = vaCenter
         Width = 35
       end
+      object prValue8_SP: TcxGridDBColumn
+        Caption = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value8_SP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object prValue9_SP: TcxGridDBColumn
+        Caption = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value9_SP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object prValue10_SP: TcxGridDBColumn
+        Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value10_SP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 78
+      end
+      object prValue11_SP: TcxGridDBColumn
+        Caption = #1074#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'Value11_SP'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 52
+      end
       object prComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1089#1074'-'#1074#1072' '#1101#1090'.)'
         DataBinding.FieldName = 'Comment_SP'

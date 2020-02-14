@@ -2818,12 +2818,13 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSticker_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSticker_ObjectForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerProperty_ValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerProperty_ValueForm');
   //Property
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerPropertyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerPropertyEditForm');
+  {
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStickerGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStickerGroupForm');

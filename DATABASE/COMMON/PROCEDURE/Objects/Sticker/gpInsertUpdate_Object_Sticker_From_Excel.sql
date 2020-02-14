@@ -209,6 +209,10 @@ BEGIN
                                                            , inValue5            := inValue5_pr       ::TFloat
                                                            , inValue6            := inValue6_pr       ::TFloat
                                                            , inValue7            := 0                 ::TFloat
+                                                           , inValue8            := 0                 ::TFloat
+                                                           , inValue9            := 0                 ::TFloat
+                                                           , inValue10           := 0                 ::TFloat
+                                                           , inValue11           := 0                 ::TFloat
                                                            , inSession           := inSession
                                                             );
 

@@ -42,6 +42,10 @@ RETURNS TABLE (Id Integer,Code Integer, Comment TVarChar
              , Value5_SP             TFloat
              , Value6_SP             TFloat
              , Value7_SP             TFloat
+             , Value8_SP             TFloat
+             , Value9_SP             TFloat
+             , Value10_SP            TFloat
+             , Value11_SP            TFloat
              , isErased_SP           Boolean
              , isErased              Boolean
               )
@@ -308,7 +312,23 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS ObjectFloat_Value7
                                                                ON ObjectFloat_Value7.ObjectId = Object_StickerProperty.Id
                                                               AND ObjectFloat_Value7.DescId = zc_ObjectFloat_StickerProperty_Value7()
-                            
+                                         --Т мін - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                                               ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value8.DescId = zc_ObjectFloat_StickerProperty_Value8()
+                                         --Т макс - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value9
+                                                               ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value9.DescId = zc_ObjectFloat_StickerProperty_Value9()
+                                         -- кількість діб - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                                               ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+                                         --вложенность
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value11
+                                                               ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
+
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                                                  ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
@@ -393,6 +413,10 @@ BEGIN
             , Object_StickerProperty.Value5   AS Value5_SP
             , Object_StickerProperty.Value6   AS Value6_SP
             , Object_StickerProperty.Value7   AS Value7_SP
+            , Object_StickerProperty.Value8   AS Value8_SP
+            , Object_StickerProperty.Value9   AS Value9_SP
+            , Object_StickerProperty.Value10  AS Value10_SP
+            , Object_StickerProperty.Value11  AS Value11_SP
             , Object_StickerProperty.isErased AS isErased_SP
 
             , CASE WHEN Object_Sticker.isErased = TRUE OR Object_StickerProperty.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isErased
@@ -608,6 +632,10 @@ BEGIN
                                         , ObjectFloat_Value5.ValueData       AS Value5
                                         , ObjectFloat_Value6.ValueData       AS Value6
                                         , ObjectFloat_Value7.ValueData       AS Value7
+                                        , ObjectFloat_Value8.ValueData       AS Value8
+                                        , ObjectFloat_Value9.ValueData       AS Value9
+                                        , ObjectFloat_Value10.ValueData      AS Value10
+                                        , ObjectFloat_Value11.ValueData      AS Value11
                             
                                         , Object_StickerProperty.isErased    AS isErased
                             
@@ -671,7 +699,23 @@ BEGIN
                                          LEFT JOIN ObjectFloat AS ObjectFloat_Value7
                                                                ON ObjectFloat_Value7.ObjectId = Object_StickerProperty.Id
                                                               AND ObjectFloat_Value7.DescId = zc_ObjectFloat_StickerProperty_Value7()
-                            
+                                         -- Т мін - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                                               ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value8.DescId = zc_ObjectFloat_StickerProperty_Value8()
+                                         -- Т макс - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value9
+                                                               ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value9.DescId = zc_ObjectFloat_StickerProperty_Value9()
+                                         -- кількість діб - второй срок
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value10
+                                                               ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
+                                         -- вложенность
+                                         LEFT JOIN ObjectFloat AS ObjectFloat_Value11
+                                                               ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id
+                                                              AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
+                                                              
                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix
                                                                  ON ObjectBoolean_Fix.ObjectId = Object_StickerProperty.Id
                                                                 AND ObjectBoolean_Fix.DescId = zc_ObjectBoolean_StickerProperty_Fix()
@@ -744,6 +788,10 @@ BEGIN
             , Object_StickerProperty.Value5   AS Value5_SP
             , Object_StickerProperty.Value6   AS Value6_SP
             , Object_StickerProperty.Value7   AS Value7_SP
+            , Object_StickerProperty.Value8   AS Value8_SP
+            , Object_StickerProperty.Value9   AS Value9_SP
+            , Object_StickerProperty.Value10  AS Value10_SP
+            , Object_StickerProperty.Value11  AS Value11_SP
             , Object_StickerProperty.isErased AS isErased_SP
 
             , CASE WHEN Object_Sticker.isErased = TRUE OR Object_StickerProperty.isErased = TRUE THEN TRUE ELSE FALSE END :: Boolean AS isErased
