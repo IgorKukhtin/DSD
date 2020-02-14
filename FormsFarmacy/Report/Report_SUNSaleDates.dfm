@@ -1,27 +1,27 @@
 inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053'>'
   ClientHeight = 480
-  ClientWidth = 902
+  ClientWidth = 1019
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 918
+  ExplicitWidth = 1035
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 902
+    Width = 1019
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 902
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 902
+    ClientRectRight = 1019
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 902
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 902
+        Width = 1019
         Height = 421
         ExplicitWidth = 902
         ExplicitHeight = 421
@@ -128,6 +128,28 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SummaCheck
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaSendTheir
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = SummaSendTheir
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = AmountSendTheir
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountSendTheir
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -175,6 +197,16 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = SummaCheck
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaSendTheir
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountSendTheir
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -210,7 +242,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             Width = 209
           end
           object Amount: TcxGridDBColumn
-            Caption = #1055#1088#1080#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1055#1088#1080#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -218,20 +250,20 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 82
+            Width = 91
           end
           object Summa: TcxGridDBColumn
-            Caption = #1055#1088#1080#1096#1083#1086' '#1089#1091#1084#1084#1072
+            Caption = #1055#1088#1080#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 88
+            Width = 91
           end
           object AmountSend: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1059#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'AmountSend'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -239,20 +271,20 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 91
           end
           object SummaSend: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1089#1091#1084#1084#1072
+            Caption = #1059#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'SummaSend'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 91
           end
           object AmountCheck: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'AmountCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -260,24 +292,45 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 79
+            Width = 91
           end
           object SummaCheck: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1089#1091#1084#1084#1072
+            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
             DataBinding.FieldName = 'SummaCheck'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 91
+          end
+          object AmountSendTheir: TcxGridDBColumn
+            Caption = #1059#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1089#1074#1086#1080' '#1089#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'AmountSendTheir'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object SummaSendTheir: TcxGridDBColumn
+            Caption = #1059#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1089#1074#1086#1080' '#1089#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'SummaSendTheir'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 902
+    Width = 1019
     Height = 33
     ExplicitWidth = 902
     ExplicitHeight = 33

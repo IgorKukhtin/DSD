@@ -118,6 +118,7 @@ type
     bbUpdate_Unit_isSUN_v2_in: TdxBarButton;
     bbUpdate_Unit_isSUN_v2_out: TdxBarButton;
     TimeWork: TcxGridDBColumn;
+    isTechnicalRediscount: TcxGridDBColumn;
   private
     { Private declarations }
   public

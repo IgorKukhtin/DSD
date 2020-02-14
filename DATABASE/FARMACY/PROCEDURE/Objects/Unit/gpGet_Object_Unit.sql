@@ -47,7 +47,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                SundayStart TDateTime, SundayEnd TDateTime,
                isNotCashMCS Boolean, isNotCashListDiff Boolean,
                UnitOldId  Integer, UnitOldName TVarChar,
-               MorionCode Integer, AccessKeyYF TVarChar
+               MorionCode Integer, AccessKeyYF TVarChar,
+               isTechnicalRediscount Boolean
                ) AS
 $BODY$
 BEGIN
@@ -152,6 +153,7 @@ BEGIN
            
            , CAST (0 as Integer)   AS MorionCode
            , CAST ('' as TVarChar) AS AccessKeyYF
+           , FALSE                 AS isTechnicalRediscount           
 ;
    ELSE
        RETURN QUERY 
@@ -254,7 +256,7 @@ BEGIN
       
       , ObjectFloat_MorionCode.ValueData::Integer          AS MorionCode
       , ObjectString_AccessKeyYF.ValueData                 AS AccessKeyYF
-      
+      , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount      
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -500,6 +502,10 @@ BEGIN
                             AND ObjectLink_Unit_UnitOld.DescId = zc_ObjectLink_Unit_UnitOld()
         LEFT JOIN Object AS Object_UnitOld ON Object_UnitOld.Id = ObjectLink_Unit_UnitOld.ChildObjectId
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
+                                ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
+
     WHERE Object_Unit.Id = inId;
 
    END IF;
@@ -515,6 +521,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 14.02.20                                                       * add isTechnicalRediscount
  17.12.19         * add SunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF
  11.12.19                                                       * UnitOld

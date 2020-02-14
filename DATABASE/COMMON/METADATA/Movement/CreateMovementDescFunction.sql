@@ -368,10 +368,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_LoyaltySaveMoney() RETURNS Integer AS $BO
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_LoyaltySaveMoney', 'Программа лояльности накопительная' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_LoyaltySaveMoney');
 
+CREATE OR REPLACE FUNCTION zc_Movement_TechnicalRediscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TechnicalRediscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_TechnicalRediscount', 'Технический переучет' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TechnicalRediscount');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 14.02.20                                                                                     * zc_Movement_TechnicalRediscount
  31.01.20         * zc_Movement_ReestrTransportGoods
  27.12.19                                                                                     * zc_Movement_LoyaltySaveMoney
  20.12.19                                                                                     * zc_Movement_IlliquidUnit

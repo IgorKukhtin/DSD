@@ -20,6 +20,9 @@ RETURNS TABLE (UnitName TVarChar
 
              , AmountCheck TFloat
              , SummaCheck TFloat
+
+             , AmountSendTheir TFloat
+             , SummaSendTheir TFloat
               )
 AS
 $BODY$
@@ -157,6 +160,67 @@ BEGIN
 
                                 GROUP BY Container.UnitId
                                        , Container.GoodsId)
+       , tmpMovementTheir AS (SELECT Movement.id
+                                   , Movement.OperDate
+                                   , MovementLinkObject_From.ObjectId  AS UnitID
+                              FROM Movement
+                                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                              ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                             AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                             AND MovementBoolean_SUN.ValueData = True
+
+                                   INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
+                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                                AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
+
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_V2
+                                                             ON MovementBoolean_SUN_V2.MovementId = Movement.Id
+                                                            AND MovementBoolean_SUN_V2.DescId = zc_MovementBoolean_SUN_V2()
+
+                              WHERE Movement.DescId = zc_Movement_Send()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
+                                AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
+                                AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
+                                )
+
+       , tmpMovementItemTheir  AS (SELECT Movement.UnitId
+                                        , Container.ObjectId                      AS GoodsId
+                                        , Sum(-1 * MovementItemContainer.Amount)  AS AmountSendTheir
+                                        , Sum(-1 * MovementItemContainer.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0))::TFloat   AS SummaSendTheir
+                                   FROM tmpMovementTheir AS Movement
+
+                                        INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.ID
+                                                                        AND MovementItemContainer.Amount < 0
+
+                                        INNER JOIN MovementItem ON MovementItem.ID = MovementItemContainer.MovementItemID
+                                                               AND MovementItem.DescId = zc_MI_Child()
+
+                                        INNER JOIN Container ON Container.DescId = zc_Container_Count()
+                                                            AND Container.ID = MovementItemContainer.ContainerID
+                                                            AND Container.ID NOT IN (SELECT DISTINCT tmpMovementContainer.ContainerID FROM tmpMovementContainer)
+
+                                        INNER JOIN ObjectLink AS ObjectLink_Goods
+                                                              ON ObjectLink_Goods.ChildObjectId = Container.ObjectId
+                                                             AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
+                                        INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                             ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
+                                                            AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                                                            AND ObjectLink_Unit.ChildObjectId = Movement.UnitId
+
+                                               -- получаем значения цены и НТЗ из истории значений на начало дня
+                                        LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                                ON ObjectHistory_Price.ObjectId = ObjectLink_Goods.ObjectId
+                                                               AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                               AND Movement.OperDate >= ObjectHistory_Price.StartDate
+                                                               AND Movement.OperDate < ObjectHistory_Price.EndDate
+                                        LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                                                     ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                                    AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                                   GROUP BY Movement.UnitId
+                                          , Container.ObjectId)
+
 
     SELECT Object_Unit.ValueData                                               AS UnitName
          , Object_Goods.ObjectCode
@@ -170,7 +234,14 @@ BEGIN
 
          , tmpContainerCheck.AmountCheck::TFloat                               AS AmountCheck
          , tmpContainerCheck.SummaCheck::TFloat                                AS SummaCheck
-    FROM (SELECT DISTINCT tmpMovementContainer.UnitId, tmpMovementContainer.GoodsId FROM tmpMovementContainer) AS Container
+
+         , tmpMovementItemTheir.AmountSendTheir::TFloat                        AS AmountSendTheir
+         , tmpMovementItemTheir.SummaSendTheir::TFloat                         AS SummaSendTheir
+
+    FROM (SELECT DISTINCT T1.UnitId, T1.GoodsId FROM (
+           SELECT DISTINCT tmpMovementContainer.UnitId, tmpMovementContainer.GoodsId FROM tmpMovementContainer
+           UNION ALL
+           SELECT DISTINCT tmpMovementItemTheir.UnitId, tmpMovementItemTheir.GoodsId FROM tmpMovementItemTheir) AS T1) AS Container
 
          LEFT JOIN tmpContainerIn ON tmpContainerIn.UnitId = Container.UnitId
                                  AND tmpContainerIn.GoodsId = Container.GoodsId
@@ -181,12 +252,16 @@ BEGIN
          LEFT JOIN tmpContainerCheck ON tmpContainerCheck.UnitId = Container.UnitId
                                     AND tmpContainerCheck.GoodsId = Container.GoodsId
 
+         LEFT JOIN tmpMovementItemTheir ON tmpMovementItemTheir.UnitId = Container.UnitId
+                                       AND tmpMovementItemTheir.GoodsId = Container.GoodsId
+
          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = Container.GoodsId
          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = Container.UnitId
 
-/*    WHERE COALESCE(tmpContainerDelay.Amount, 0) <> 0 OR COALESCE(tmpContainerLoss.AmountLoss, 0) <> 0
-    ORDER BY Object_To.ValueData, Object_Goods.objectcode
-*/    ;
+    WHERE COALESCE(tmpContainerIn.Amount, 0) <> 0 OR COALESCE(tmpContainerSend.AmountSend, 0) <> 0
+       OR COALESCE(tmpContainerCheck.AmountCheck, 0) <> 0 OR COALESCE(tmpMovementItemTheir.AmountSendTheir, 0) <> 0
+    ORDER BY Object_Unit.ValueData, Object_Goods.objectcode
+    ;
 
 
 END;
