@@ -92,6 +92,16 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Spotter(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Spotter'), inName:= 'Корректировщик', inEnumName:= 'zc_Enum_Role_Spotter');
    END IF;
 
+   -- zc_Enum_Role_TechnicalRediscount
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Работа с техническим переучетом')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Работа с техническим переучетом')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Spotter(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TechnicalRediscount'), inName:= 'Работа с техническим переучетом', inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
+   END IF;
+
 END $$;
 /*
 DO $$

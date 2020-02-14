@@ -70,10 +70,14 @@ BEGIN
                                         INNER JOIN Container ON  Container.DescId = zc_Container_Count()
                                                             AND  Container.ID = MovementItemContainer.ContainerID
 
-                                    GROUP BY Movement.UnitId
-                                           , Movement.OperDate
-                                           , Container.ObjectId
-                                           , MovementItemContainer.ContainerID)
+                                        LEFT JOIN MovementItemContainer AS MIIncome
+                                                                        ON MIIncome.ContainerID = MovementItemContainer.ContainerID
+                                                                       AND MIIncome.MovementDescId = zc_Movement_Income()
+                                   WHERE COALESCE (MIIncome.Id, 0) = 0
+                                   GROUP BY Movement.UnitId
+                                          , Movement.OperDate
+                                          , Container.ObjectId
+                                          , MovementItemContainer.ContainerID)
 
        , tmpContainerIn  AS (SELECT tmpMovementContainer.UnitId
                                   , tmpMovementContainer.GoodsId
@@ -105,26 +109,26 @@ BEGIN
                              GROUP BY tmpMovementContainer.UnitId
                                   , tmpMovementContainer.GoodsId)
 
-       , tmpContainerSend  AS (SELECT tmpMovementContainer.UnitId
-                                     , tmpMovementContainer.GoodsId
+       , tmpContainerSend  AS (SELECT Container.UnitId
+                                     , Container.GoodsId
                                      , Sum(-1 * MovementItemContainer.Amount)::TFloat                                 AS AmountSend
                                      , Sum(-1 * MovementItemContainer.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0))::TFloat   AS SummaSend
 
-                                FROM tmpMovementContainer
+                                FROM (SELECT DISTINCT tmpMovementContainer.UnitId, tmpMovementContainer.GoodsId, tmpMovementContainer.ContainerID FROM tmpMovementContainer) AS Container
 
-                                     INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = tmpMovementContainer.ContainerID
+                                     INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.ContainerID
                                                                      AND MovementItemContainer.MovementDescId = zc_Movement_Send()
                                                                      AND MovementItemContainer.Amount < 0
                                                                      AND MovementItemContainer.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                                                                      AND MovementItemContainer.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
 
                                      INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                           ON ObjectLink_Goods.ChildObjectId = tmpMovementContainer.GoodsId
+                                                           ON ObjectLink_Goods.ChildObjectId = Container.GoodsId
                                                           AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
                                      INNER JOIN ObjectLink AS ObjectLink_Unit
                                                           ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
                                                          AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                                                         AND ObjectLink_Unit.ChildObjectId = tmpMovementContainer.UnitId
+                                                         AND ObjectLink_Unit.ChildObjectId = Container.UnitId
 
                                             -- получаем значения цены и НТЗ из истории значений на начало дня
                                      LEFT JOIN ObjectHistory AS ObjectHistory_Price
@@ -135,8 +139,8 @@ BEGIN
                                      LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
                                                                   ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
                                                                  AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-                                GROUP BY tmpMovementContainer.UnitId
-                                       , tmpMovementContainer.GoodsId)
+                                GROUP BY Container.UnitId
+                                       , Container.GoodsId)
 
        , tmpContainerCheck  AS (SELECT Container.UnitId
                                      , Container.GoodsId
@@ -195,4 +199,4 @@ $BODY$
  13.02.20                                                       *
 */
 
--- тест select * from gpReport_SUNSaleDates(inStartDate := ('01.12.2015')::TDateTime , inEndDate := ('11.02.2020')::TDateTime , inUnitId := 183292  ,  inSession := '3');
+-- тест select * from gpReport_SUNSaleDates(inStartDate := ('01.12.2015')::TDateTime , inEndDate := ('11.02.2020')::TDateTime , inUnitId := 377610   ,  inSession := '3');

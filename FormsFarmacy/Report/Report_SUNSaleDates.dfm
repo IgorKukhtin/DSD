@@ -13,17 +13,17 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 800
+    ExplicitWidth = 902
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 902
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 800
+      ExplicitWidth = 902
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 902
         Height = 421
-        ExplicitWidth = 800
+        ExplicitWidth = 902
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -190,6 +190,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 140
           end
           object GoodsCode: TcxGridDBColumn
@@ -197,6 +198,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 52
           end
           object GoodsName: TcxGridDBColumn
@@ -204,6 +206,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 209
           end
           object Amount: TcxGridDBColumn
@@ -214,6 +217,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 82
           end
           object Summa: TcxGridDBColumn
@@ -223,6 +227,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 88
           end
           object AmountSend: TcxGridDBColumn
@@ -274,7 +279,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
   inherited Panel: TPanel
     Width = 902
     Height = 33
-    ExplicitWidth = 800
+    ExplicitWidth = 902
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 119
