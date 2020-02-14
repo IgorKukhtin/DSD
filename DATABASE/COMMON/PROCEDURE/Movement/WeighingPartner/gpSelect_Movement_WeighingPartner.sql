@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , isPromo Boolean
              , MovementPromo TVarChar
              , BranchCode    Integer
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -182,6 +183,8 @@ BEGIN
 
              , MovementFloat_BranchCode.ValueData :: Integer AS BranchCode
 
+             , Object_SubjectDoc.Id                          AS SubjectDocId
+             , Object_SubjectDoc.ValueData                   AS SubjectDocName
        FROM tmpStatus
             INNER JOIN Movement ON Movement.DescId = zc_Movement_WeighingPartner()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -359,7 +362,6 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Route_RouteGroup ON ObjectLink_Route_RouteGroup.ObjectId = Object_Route.Id
                                                                AND ObjectLink_Route_RouteGroup.DescId = zc_ObjectLink_Route_RouteGroup()
             LEFT JOIN Object AS Object_RouteGroup ON Object_RouteGroup.Id = COALESCE (ObjectLink_Route_RouteGroup.ChildObjectId, Object_Route.Id)
-
 --
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                            ON MovementLinkMovement_Transport.MovementId = Movement.Id
@@ -398,6 +400,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_BranchCode
                                     ON MovementFloat_BranchCode.MovementId =  Movement.Id
                                    AND MovementFloat_BranchCode.DescId = zc_MovementFloat_BranchCode()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
            ;
 
 END;

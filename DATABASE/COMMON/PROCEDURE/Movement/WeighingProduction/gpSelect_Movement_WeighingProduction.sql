@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , DocumentKindId Integer, DocumentKindName TVarChar
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , BarCodeBoxId Integer, BarCodeBoxName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -87,6 +88,9 @@ BEGIN
 
              , Object_BarCodeBox.Id            AS BarCodeBoxId
              , Object_BarCodeBox.ValueData     AS BarCodeBoxName
+
+             , Object_SubjectDoc.Id            AS SubjectDocId
+             , Object_SubjectDoc.ValueData     AS SubjectDocName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_WeighingProduction()
@@ -162,6 +166,12 @@ BEGIN
                                          ON MovementLinkObject_BarCodeBox.MovementId = Movement.Id
                                         AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   

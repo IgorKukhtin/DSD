@@ -63,8 +63,6 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
-    ExplicitTop = 58
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -361,6 +359,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 77
+      end
+      object SubjectDocName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+        DataBinding.FieldName = 'SubjectDocName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
       end
       object GoodsTypeKindName: TcxGridDBColumn
         Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072

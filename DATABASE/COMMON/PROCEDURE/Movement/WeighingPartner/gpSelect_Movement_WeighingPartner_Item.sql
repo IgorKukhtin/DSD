@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_Tax Integer, InvNumberPartner_Tax TVarChar, OperDate_Tax TDateTime
              , StartWeighing TDateTime, EndWeighing TDateTime
              , MovementDescNumber Integer, MovementDescName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , WeighingNumber TFloat
              , InvNumberOrder TVarChar
              , MovementId_Transport Integer, InvNumber_Transport TVarChar, OperDate_Transport TDateTime
@@ -167,6 +168,10 @@ BEGIN
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
+
+             , Object_SubjectDoc.Id                       AS SubjectDocId
+             , Object_SubjectDoc.ValueData                AS SubjectDocName
+
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
              , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -419,6 +424,11 @@ BEGIN
                                          ON MovementLinkObject_User.MovementId = Movement.Id
                                         AND MovementLinkObject_User.DescId = zc_MovementLinkObject_User()
             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_User.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                            ON MovementLinkMovement_Tax.MovementId = Movement.ParentId

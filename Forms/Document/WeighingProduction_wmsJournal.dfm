@@ -221,6 +221,14 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         HeaderHint = #1074' '#1076#1086#1082'. '#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
         Width = 70
       end
+      object SubjectDocName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+        DataBinding.FieldName = 'SubjectDocName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
+      end
       object OperDate_parent_main: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085#1099#1081')'
         DataBinding.FieldName = 'OperDate_parent_main'

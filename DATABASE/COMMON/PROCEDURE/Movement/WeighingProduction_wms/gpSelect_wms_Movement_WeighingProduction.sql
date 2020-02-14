@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer
              , BoxId_2 Integer, BoxName_2 TVarChar
              , BoxId_3 Integer, BoxName_3 TVarChar
              , UserId Integer, UserName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
               )
 AS
 $BODY$
@@ -185,8 +186,11 @@ BEGIN
              , Object_Box3.Id                   AS BoxId_3
              , Object_Box3.ValueData            AS BoxName_3
 
-             , Object_User.Id                       AS UserId
-             , Object_User.ValueData                AS UserName
+             , Object_User.Id                   AS UserId
+             , Object_User.ValueData            AS UserName
+
+             , Object_SubjectDoc.Id             AS SubjectDocId
+             , Object_SubjectDoc.ValueData      AS SubjectDocName
        FROM tmpStatus
             INNER JOIN wms_Movement_WeighingProduction AS Movement
                                                        ON Movement.StatusId = tmpStatus.StatusId
@@ -240,6 +244,11 @@ BEGIN
                                  ON ObjectLink_BarCodeBox_Box3.ObjectId = Object_BarCodeBox_3.Id
                                 AND ObjectLink_BarCodeBox_Box3.DescId = zc_ObjectLink_BarCodeBox_Box()
             LEFT JOIN Object AS Object_Box3 ON Object_Box3.Id = ObjectLink_BarCodeBox_Box3.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
        ;
 
 END;
