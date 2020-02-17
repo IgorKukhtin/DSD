@@ -60,7 +60,7 @@ BEGIN
                                                 ) AS tmp
                                                 INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                                    AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                                                   AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '30 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                                   AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                                    AND Movement.StatusId <> zc_Enum_Status_Erased()
                                           );
          ELSE -- по InvNumber, но для скорости ограничение - 8 DAY
@@ -68,7 +68,7 @@ BEGIN
                                            FROM Movement
                                            WHERE Movement.InvNumber = TRIM (inBarCode_Transport)
                                              AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_TransportService())
-                                             AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '30 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                             AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '60 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                              AND Movement.StatusId <> zc_Enum_Status_Erased()
                                           );
          END IF;
@@ -122,7 +122,7 @@ BEGIN
                                         ) AS tmp
                                         INNER JOIN Movement ON Movement.Id = tmp.MovementId
                                                            AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
-                                                           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '33 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                                           AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '70 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                                            AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   );
          ELSE -- по InvNumber, но для скорости ограничение - 8 DAY

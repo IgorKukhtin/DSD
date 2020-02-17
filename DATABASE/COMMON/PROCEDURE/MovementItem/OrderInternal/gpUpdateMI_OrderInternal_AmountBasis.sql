@@ -104,6 +104,10 @@ BEGIN
             , tmpReceipt AS (SELECT tmpGoods.GoodsId_child
                                   , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
                              FROM tmpGoods
+                                  INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                        ON ObjectLink_Goods_GoodsGroup.ObjectId      = tmpGoods.GoodsId_child
+                                                       AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                       AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- —Œ-›Ã”À‹—»»
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId_child
                                                        AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()

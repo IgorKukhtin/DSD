@@ -130,9 +130,10 @@ BEGIN
                                                            AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                                LEFT JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
                           WHERE inIsServiceDate = FALSE
-                            -- Волошина Е.А.
-                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId <> 140094) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
+                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            
                          UNION ALL
                           SELECT MovementDate_ServiceDate.MovementId             AS Id
                                , MovementLinkObject_PersonalServiceList.ObjectId AS PersonalServiceListId
@@ -147,8 +148,8 @@ BEGIN
                           WHERE inIsServiceDate = TRUE
                             AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                             AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
-                            -- Волошина Е.А.
-                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId <> 140094) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
+                            -- Волошина Е.А. + Няйко В.И. + Спічка Є.А.
+                            AND ((tmpRoleAccessKey.AccessKeyId > 0 AND vbUserId NOT IN (140094, 1058530, 4538468)) OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                             -- AND (tmpRoleAccessKey.AccessKeyId > 0 OR tmpMemberPersonalServiceList.PersonalServiceListId > 0)
                          )
                          

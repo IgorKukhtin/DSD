@@ -146,6 +146,7 @@ BEGIN
                          --                             AND MLO_CurrencyDocument.ObjectId   = vbCurrencyId
                       WHERE Movement.DescId   = zc_Movement_Income()
                         AND Movement.OperDate = inOperDate
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
                      );
 
 
@@ -240,7 +241,7 @@ BEGIN
                                          , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
                                          , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
                                          , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
-                                         , inSession            :=   inSession  -- сессия пользователя
+                                         , inSession            :=   (-1 * vbUserId)    :: TVarChar  -- сессия пользователя
                                           );
 
 END;

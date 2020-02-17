@@ -96,7 +96,9 @@ BEGIN
           INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                                  AND ObjectBoolean_isCorporate.ValueData = TRUE
+                                  AND (ObjectBoolean_isCorporate.ValueData = TRUE
+                                    OR Object_BankAccount_View.JuridicalId = 15505 -- дсйн рнб 
+                                      )
           LEFT JOIN tmpCurrency ON tmpCurrency.CurrencyToId = Object_BankAccount_View.CurrencyId
      WHERE Object_BankAccount_View.isErased = FALSE
         OR (Object_BankAccount_View.isErased = TRUE AND inIsShowAll = TRUE)

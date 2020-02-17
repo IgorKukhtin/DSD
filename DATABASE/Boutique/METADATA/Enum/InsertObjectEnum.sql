@@ -778,9 +778,6 @@ DO $$
 BEGIN
     vbKey := 'TCurrencyJournalForm;zc_Object_ImportSetting_CurrencyJournal';
 
-
-29220
-
     -- Добавляем ключ дефолта
     SELECT Id INTO vbDefaultKeyId FROM DefaultKeys WHERE Key = vbKey; 
 

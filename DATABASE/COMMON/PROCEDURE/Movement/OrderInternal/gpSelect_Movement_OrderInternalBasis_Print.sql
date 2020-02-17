@@ -251,7 +251,12 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ReceiptId > 0
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
+                                AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ReceiptId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- —ќ-Ёћ”Ћ№—»»
                                                                           THEN vbFromId
                                                                      WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- ќсновное сырье + ѕрочее сырье
                                                                           THEN 8455 -- —клад специй
@@ -273,10 +278,6 @@ BEGIN
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
-                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN Object_GoodsByGoodsKind_View AS View_GoodsByGoodsKind ON View_GoodsByGoodsKind.GoodsId = Object_Goods.Id
                                                                            AND View_GoodsByGoodsKind.GoodsKindId = Object_GoodsKind.Id

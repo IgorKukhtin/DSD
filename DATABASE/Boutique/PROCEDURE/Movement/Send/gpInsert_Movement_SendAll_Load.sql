@@ -59,9 +59,9 @@ BEGIN
      --если не нашли товар пропускаем
      IF COALESCE (vbGoodsId, 0) = 0
      THEN
+         RAISE EXCEPTION 'Ошибка.Не найден товар с кодом <%>.', inObjectCode;
          -- !!!ВЫХОД!!!
-         RETURN;
-         --RAISE EXCEPTION 'Ошибка.Не найден товар с кодом <%>.', inObjectCode;
+         -- RETURN;
      END IF;
 
 
@@ -78,6 +78,7 @@ BEGIN
                                                         AND MLO_To.ObjectId   = vbUnitToId
                       WHERE Movement.DescId   = zc_Movement_Send()
                         AND Movement.OperDate = inOperDate
+                        AND Movement.StatusId <> zc_Enum_Status_Erased()
                      );
 
      IF COALESCE (vbMovementId, 0) = 0

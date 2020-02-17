@@ -57,9 +57,9 @@ BEGIN
      vbMovementId := (SELECT Movement.Id
                       FROM Movement
                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id 
-                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                  AND MovementItem.ObjectId = vbCurrencyId  --грн
-                                                  AND MovementItem.Amount = inAmount        -- курс
+                                                  AND MovementItem.DescId     = zc_MI_Master()
+                                                  AND MovementItem.ObjectId   = vbCurrencyId  --грн
+                                                --AND MovementItem.Amount     = inAmount        -- курс
                            INNER JOIN MovementItemFloat AS MIFloat_ParValue
                                                         ON MIFloat_ParValue.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ParValue.DescId = zc_MIFloat_ParValue()

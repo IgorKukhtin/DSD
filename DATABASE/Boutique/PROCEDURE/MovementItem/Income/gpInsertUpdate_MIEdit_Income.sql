@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_IncomeLoad (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
@@ -46,7 +47,12 @@ $BODY$
    DECLARE vbChangePercent TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
+     IF (inSession :: Integer) < 0
+     THEN
+         vbUserId := lpCheckRight ((-1 * (inSession :: Integer)) :: TVarChar, zc_Enum_Process_InsertUpdate_MI_Income());
+     ELSE
+         vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
+     END IF;
 
 
      -- проверка - документ должен быть сохранен
@@ -83,7 +89,7 @@ BEGIN
              vbLineFabricaId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_LineFabrica (ioId     := 0
                                                                                        , ioCode   := 0
                                                                                        , inName   := inLineFabricaName
-                                                                                       , inSession:= inSession
+                                                                                       , inSession:= vbUserId :: TVarChar
                                                                                          ) AS tmp);
          END IF;
      END IF;
@@ -102,7 +108,7 @@ BEGIN
                                                                                        , ioCode               := 0
                                                                                        , inName               := inCompositionName
                                                                                        , inCompositionGroupId := 0 -- сохраняем с пустой группой
-                                                                                       , inSession            := inSession
+                                                                                       , inSession            := vbUserId :: TVarChar
                                                                                          ) AS tmp);
          END IF;
      END IF;
@@ -120,7 +126,7 @@ BEGIN
              vbGoodsInfoId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsInfo (ioId     := 0
                                                                                    , ioCode   := 0
                                                                                    , inName   := inGoodsInfoName
-                                                                                   , inSession:= inSession
+                                                                                   , inSession:= vbUserId :: TVarChar
                                                                                      ) AS tmp);
          END IF;
      END IF;
@@ -138,7 +144,7 @@ BEGIN
              vbLabelId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Label (ioId     := 0
                                                                            , ioCode   := 0
                                                                            , inName   := inLabelName
-                                                                           , inSession:= inSession
+                                                                           , inSession:= vbUserId :: TVarChar
                                                                              ) AS tmp);
          END IF;
      END IF;
@@ -159,7 +165,7 @@ BEGIN
          vbGoodsSizeId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsSize (ioId     := 0
                                                                                , ioCode   := 0
                                                                                , inName   := inGoodsSizeName
-                                                                               , inSession:= inSession
+                                                                               , inSession:= vbUserId :: TVarChar
                                                                                  ) AS tmp);
      END IF;
 

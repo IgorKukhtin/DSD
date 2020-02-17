@@ -754,7 +754,9 @@ BEGIN
                 SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
                )
                -- меняем: добавим еще 9 дней, будет от 60 дней включительно - только для СУН
-             + INTERVAL '9 DAY'
+           --+ INTERVAL '9 DAY'
+               -- меняем: добавим еще 39 дней, будет от 90 дней включительно - только для СУН
+             + INTERVAL '39 DAY'
              ;
     -- дата + 0 месяцев
     vbDate_0:= inOperDate
@@ -1567,9 +1569,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from)
                                  ;
                  -- разрешается ли ПРИХОД
                  vbIsIn_partion:= vbAmount_sun = 0
@@ -1580,9 +1580,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to)
                                  ;
 
                  --
@@ -1642,9 +1640,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from)
                                  ;
                  -- разрешается ли ПРИХОД
                  vbIsIn_partion:= vbAmount_sun = 0
@@ -1655,9 +1651,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to)
                                  ;
 
                  --
@@ -1790,9 +1784,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from)
                                  ;
                  -- разрешается ли ПРИХОД
                  vbIsIn_partion:= vbAmount_sun = 0
@@ -1803,9 +1795,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to)
                                  ;
                  --
                  -- если НЕ отдаем, тогда проверим - может была вставка в пред итерации, поэтому повторно не надо
@@ -1864,9 +1854,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_out_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_from)
                                  ;
                  -- разрешается ли ПРИХОД
                  vbIsIn_partion:= vbAmount_sun = 0
@@ -1877,9 +1865,7 @@ BEGIN
                                    <=
                                    COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
                                 OR
-                                   0
-                                   =
-                                   COALESCE ((SELECT _tmpUnit_SUN_balance_partion.Summ_in_calc FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to), 0)
+                                   NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to)
                                  ;
                  --
                  -- если НЕ отдаем, тогда проверим - может была вставка в пред итерации, поэтому повторно не надо
@@ -1904,8 +1890,8 @@ BEGIN
                          , vbGoodsId
                          , 0                        AS Amount
                          , 0                        AS Summ
-                         , vbAmountResult           AS Amount_next
-                         , vbAmountResult * vbPrice AS Summ_next
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmountResult           ELSE 0 END AS Amount_next
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmountResult * vbPrice ELSE 0 END AS Summ_next
                          , 0                        AS MovementId
                          , 0                        AS MovementItemId
                          , CASE WHEN vbIsOut_partion = FALSE THEN vbAmountResult           ELSE 0 END AS Amount_not_out

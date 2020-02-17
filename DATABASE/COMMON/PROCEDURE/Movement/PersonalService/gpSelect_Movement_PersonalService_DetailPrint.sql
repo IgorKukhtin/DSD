@@ -69,7 +69,7 @@ BEGIN
             + COALESCE (MovementFloat_TotalSummHoliday.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHosp.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHospOth.ValueData, 0)
-            + COALESCE (MovementFloat_TotalSummCompensation.ValueData, 0)
+            + CAST (COALESCE (MovementFloat_TotalSummCompensation.ValueData, 0) AS NUMERIC (16, 2))
             -- + COALESCE (MovementFloat_TotalSummSocialAdd.ValueData, 0)
              ) :: TFloat AS TotalSummService
               -- !!!временно!!!
@@ -278,7 +278,7 @@ BEGIN
                            , COALESCE (MIFloat_SummHoliday.ValueData, 0)      AS SummHoliday
                            , COALESCE (MIFloat_SummHosp.ValueData, 0)         AS SummHosp
                            , COALESCE (MIFloat_SummHospOth.ValueData, 0)      AS SummHospOth
-                           , COALESCE (MIFloat_SummCompensation.ValueData, 0) AS SummCompensation
+                           , CAST (COALESCE (MIFloat_SummCompensation.ValueData, 0) AS NUMERIC (16, 2)) AS SummCompensation
 
                            , COALESCE (MIFloat_SummMinus.ValueData, 0)        AS SummMinus
                            , COALESCE (MIFloat_SummFine.ValueData, 0)         AS SummFine

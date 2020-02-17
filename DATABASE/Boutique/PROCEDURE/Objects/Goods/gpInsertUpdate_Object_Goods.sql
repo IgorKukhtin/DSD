@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
@@ -23,8 +24,14 @@ $BODY$
    DECLARE vbIsInsert      Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
-   vbUserId:= lpGetUserBySession (inSession);
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
+    
+    IF (inSession :: Integer) < 0
+    THEN
+        vbUserId := lpGetUserBySession ((-1 * (inSession :: Integer)) :: TVarChar);
+    ELSE
+        vbUserId:= lpGetUserBySession (inSession);
+     END IF;
 
 
    -- для загрузки из Sybase т.к. там код НЕ = 0 
@@ -45,10 +52,10 @@ BEGIN
        -- Определили
        IF zc_Enum_GlobalConst_isTerry() = TRUE
        THEN
-           -- !!!для магазина PODIUM!!!
-           ioCode:= lfGet_ObjectCode(0, zc_Object_Goods())
-       ELSE
            ioCode:= NEXTVAL ('Object_Goods_seq');
+       ELSE
+           -- !!!для магазина PODIUM!!!
+           IF (inSession :: Integer) > 0 THEN ioCode:= lfGet_ObjectCode(0, zc_Object_Goods()); END IF;
        END IF;
        
 

@@ -229,16 +229,16 @@ BEGIN
          , CASE WHEN tmpReport.isNotCompensation = FALSE THEN tmpReport.Day_diff ELSE 0 END   :: TFloat  AS Day_diff     -- не использовано   
 
          , CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0 END                        :: TFloat AS AmountCompensation
-         , CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
-                     THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
-                ELSE 0.0
-           END :: TFloat AS SummaCompensation
-         , tmpMICompens.SummCompensation :: TFloat AS SummaCompensation_fact
          , CAST (CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
-                      THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
-                 ELSE 0.0
-            END
-           - COALESCE (tmpMICompens.SummCompensation,0)  AS NUMERIC (16,2)) :: TFloat AS SummaCompensation_diff
+                           THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
+                      ELSE 0.0
+                 END AS NUMERIC (16, 2)) :: TFloat AS SummaCompensation
+         , tmpMICompens.SummCompensation :: TFloat AS SummaCompensation_fact
+         , (CAST (CASE WHEN tmpReport.Day_diff > 0 AND tmpReport.isNotCompensation = FALSE
+                            THEN tmpReport.Day_diff * CASE WHEN tmpReport.Day_calendar <> 0 THEN tmpPersonalService.Amount / tmpReport.Day_calendar ELSE 0.0 END
+                       ELSE 0.0
+                  END AS NUMERIC (16, 2))
+          - COALESCE (tmpMICompens.SummCompensation, 0)) :: TFloat AS SummaCompensation_diff
 
          , tmpReport.Day_calendar        :: TFloat
          , tmpPersonalService.Amount     :: TFloat
