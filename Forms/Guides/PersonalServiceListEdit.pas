@@ -62,6 +62,7 @@ type
     GuidesMemberBookkeeper: TdsdGuides;
     cxLabel33: TcxLabel;
     edCompensation: TcxCurrencyEdit;
+    cbRecalc: TcxCheckBox;
   private
     { Private declarations }
   public

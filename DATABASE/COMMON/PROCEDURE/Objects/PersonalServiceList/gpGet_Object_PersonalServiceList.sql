@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
              , Compensation TFloat
              , isSecond Boolean
+             , isRecalc Boolean
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -53,6 +54,7 @@ BEGIN
            , CAST (0 AS TFloat)     AS Compensation
 
            , CAST(FALSE AS Boolean) AS isSecond
+           , CAST(FALSE AS Boolean) AS isRecalc
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -84,6 +86,7 @@ BEGIN
            , COALESCE (ObjectFloat_Compensation.ValueData, 0) :: TFloat AS Compensation
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean AS isSecond
+           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean AS isRecalc
 
            , Object_PersonalServiceList.isErased   AS isErased
 
@@ -91,6 +94,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Recalc 
+                                   ON ObjectBoolean_Recalc.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_Recalc.DescId = zc_ObjectBoolean_PersonalServiceList_Recalc()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -149,6 +156,7 @@ ALTER FUNCTION gpGet_Object_PersonalServiceList(integer, TVarChar) OWNER TO post
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.01.20         * add isRecalc
  27.01.20         * add Compensation
  16.12.15         * add MemberHeadManager, MemberManager, MemberBookkeeper
  26.08.15         * add Member

@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integ
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_PersonalServiceList(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_PersonalServiceList(
     IN inMemberBookkeeperId    Integer   ,     -- Физ лица(бухгалтер)
     IN inCompensation          TFloat    ,     -- месяц компенсации
     IN inisSecond              Boolean   ,     -- 
+    IN inisRecalc              Boolean   ,     -- 
    -- IN inMemberId            Integer   ,     -- Физ лица(пользователь)
     IN inSession               TVarChar        -- сессия пользователя
 )
@@ -68,6 +70,8 @@ BEGIN
    --PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_PersonalServiceList_Member(), ioId, inMemberId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Second(), ioId, inisSecond);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_PersonalServiceList_Recalc(), ioId, inisRecalc);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PersonalServiceList_Compensation(), ioId, inCompensation);
@@ -84,6 +88,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.02.20         * add inisRecalc
  27.01.20         * add inCompensation
  20.02.17         * add inisSecond
  26.08.15         * add inMemberId
@@ -92,4 +97,4 @@ END;$BODY$
 */
 
 -- тест
--- select * from gpInsertUpdate_Object_PersonalServiceList(ioId := 957950 , inCode := 226 , inName := 'Ведомость Хлеб БН' , inJuridicalId := 131931 , inPaidKindId := 4 , inBranchId := 0 , inBankId := 0 , inMemberHeadManagerId := 0 , inMemberManagerId := 0 , inMemberBookkeeperId := 0 , inisSecond := 'False' ,  inSession := '5');
+-- select * from gpInsertUpdate_Object_PersonalServiceList(ioId := 957950 , inCode := 226 , inName := 'Ведомость Хлеб БН' , inJuridicalId := 131931 , inPaidKindId := 4 , inBranchId := 0 , inBankId := 0 , inMemberHeadManagerId := 0 , inMemberManagerId := 0 , inMemberBookkeeperId := 0 , inisSecond := 'False' , inisRecalc:=false,  inSession := '5');

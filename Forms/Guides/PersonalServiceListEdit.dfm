@@ -126,7 +126,7 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Width = 177
   end
   object ceisSecond: TcxCheckBox
-    Left = 188
+    Left = 168
     Top = 30
     Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
     TabOrder = 14
@@ -195,6 +195,16 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
     Properties.DisplayFormat = ',0.'
     TabOrder = 22
     Width = 133
+  end
+  object cbRecalc: TcxCheckBox
+    Left = 155
+    Top = 384
+    Hint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
+    Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 23
+    Width = 134
   end
   object ActionList: TActionList
     Left = 152
@@ -327,10 +337,18 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRecalc'
+        Value = Null
+        Component = cbRecalc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 8
+    Left = 248
+    Top = 64
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -437,6 +455,13 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'isRecalc'
+        Value = Null
+        Component = cbRecalc
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MemberBookkeeperId'
         Value = Null
         Component = GuidesMemberBookkeeper
@@ -489,8 +514,8 @@ object PersonalServiceListEditForm: TPersonalServiceListEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 240
-    Top = 72
+    Left = 216
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
