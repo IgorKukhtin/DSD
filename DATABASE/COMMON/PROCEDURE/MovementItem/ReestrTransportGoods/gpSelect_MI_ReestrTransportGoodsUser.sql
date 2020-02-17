@@ -90,6 +90,7 @@ BEGIN
                                                           ON MILinkObject_PartnerInTo.MovementItemId = MIDate.MovementItemId
                                                          AND MILinkObject_PartnerInTo.DescId         = vbMILinkObjectId
                                                          AND MILinkObject_PartnerInTo.ObjectId       = vbMemberId_user
+                                           
                         LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
                                                 ON MovementFloat_MovementItemId.ValueData = MIDate.MovementItemId
                                                AND MovementFloat_MovementItemId.DescId    = zc_MovementFloat_MovementItemId()
@@ -149,8 +150,13 @@ BEGIN
 
        FROM tmpMI
             LEFT JOIN MovementItem ON MovementItem.Id = tmpMI.MovementItemId
+
+            INNER JOIN Movement AS Movement_Reestr
+                    ON Movement_Reestr.Id = MovementItem.MovementId
+                   AND Movement_Reestr.DescId = zc_Movement_ReestrTransportGoods()
+                                           
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementItem.ObjectId
-            LEFT JOIN Movement AS Movement_Reestr ON Movement_Reestr.Id = MovementItem.MovementId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Reestr.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_Update

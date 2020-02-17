@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalCountChild TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar, ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , DocumentKindId Integer, DocumentKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order_Full TVarChar
@@ -58,6 +59,9 @@ BEGIN
 
          , Object_DocumentKind.Id                   AS DocumentKindId
          , Object_DocumentKind.ValueData            AS DocumentKindName
+
+         , Object_SubjectDoc.Id                     AS SubjectDocId
+         , Object_SubjectDoc.ValueData              AS SubjectDocName
 
          , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) AS isAuto
          , MovementDate_Insert.ValueData            AS InsertDate
@@ -110,6 +114,11 @@ BEGIN
                                       AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
           LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                       ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                      AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+          LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
           INNER JOIN MovementBoolean AS MovementBoolean_Peresort
                                      ON MovementBoolean_Peresort.MovementId = Movement.Id
                                     AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
@@ -142,6 +151,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.02.20         * SubjectDoc
  31.05.17         * add Movement_Order
  05.10.16         * add inJuridicalBasisId
  26.07.16         *
