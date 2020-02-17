@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , isPeresort Boolean, DocumentKindName TVarChar
+             , SubjectDocName  TVarChar
              , PartionGoods TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
@@ -90,6 +91,7 @@ BEGIN
                        (SELECT CASE WHEN inIsMovement = FALSE THEN 0 ELSE MIContainer.MovementId END AS MovementId
                              , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) AS isPeresort
                              , COALESCE (MLO_DocumentKind.ObjectId, 0)              AS DocumentKindId
+                             , Object_SubjectDoc.ValueData                          AS SubjectDocName
                              , MIContainer.DescId                 AS MIContainerDescId
                              , MIContainer.ContainerId            AS ContainerId
                              , MIContainer.ObjectId_Analyzer      AS GoodsId
@@ -105,6 +107,12 @@ BEGIN
                              LEFT JOIN MovementLinkObject AS MLO_DocumentKind
                                                           ON MLO_DocumentKind.MovementId = MIContainer.MovementId
                                                          AND MLO_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+
+                             LEFT JOIN MovementLinkObject AS MLO_SubjectDoc
+                                                          ON MLO_SubjectDoc.MovementId = MIContainer.MovementId
+                                                         AND MLO_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MLO_SubjectDoc.ObjectId
+
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND MIContainer.isActive = TRUE
                           AND MIContainer.MovementDescId = zc_Movement_ProductionUnion()
@@ -115,6 +123,7 @@ BEGIN
                                , MIContainer.ContainerId
                                , MIContainer.ObjectId_Analyzer
                                , CASE WHEN inIsPartion = FALSE THEN COALESCE (MIContainer.ObjectIntId_Analyzer, 0) ELSE COALESCE (MIContainer.ObjectIntId_Analyzer, 0) END
+                               , Object_SubjectDoc.ValueData
                        )
          , tmpContainer_in AS (SELECT DISTINCT tmpMI_ContainerIn.ContainerId
                                     , tmpMI_ContainerIn.GoodsId
@@ -167,6 +176,8 @@ BEGIN
            , tmpOperationGroup.isPeresort :: Boolean AS isPeresort
            , Object_DocumentKind.ValueData  AS DocumentKindName
 
+           , tmpOperationGroup.SubjectDocName :: TVarChar
+
            , Object_PartionGoods.ValueData AS PartionGoods
            
            , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -195,7 +206,7 @@ BEGIN
            
            , CASE WHEN tmpOperationGroup.OperCount     <> 0 THEN tmpOperationGroup.OperSumm     / tmpOperationGroup.OperCount     ELSE 0 END :: TFloat AS MainPrice
            , CASE WHEN tmpOperationGroup.OperCount_out <> 0 THEN tmpOperationGroup.OperSumm_out / tmpOperationGroup.OperCount_out ELSE 0 END :: TFloat AS ChildPrice
-           
+
       FROM (SELECT tmpMI_in.MovementId
                  , tmpMI_in.isPeresort
                  , tmpMI_in.DocumentKindId
@@ -204,6 +215,7 @@ BEGIN
                  , tmpMI_in.GoodsKindId 
                  , tmpMI_in.OperCount
                  , tmpMI_in.OperSumm
+                 , tmpMI_in.SubjectDocName
 
                  , tmpMI_out.PartionGoodsId AS PartionGoodsId_out
                  , tmpMI_out.GoodsId        AS GoodsId_out
@@ -219,6 +231,7 @@ BEGIN
                        , tmpMI_ContainerIn.GoodsKindId 
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Count() THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperCount
                        , SUM (CASE WHEN tmpMI_ContainerIn.MIContainerDescId = zc_MIContainer_Summ()  THEN tmpMI_ContainerIn.Amount ELSE 0 END) AS OperSumm
+                       , STRING_AGG (DISTINCT tmpMI_ContainerIn.SubjectDocName, '; ') AS SubjectDocName
                   FROM tmpMI_ContainerIn
                        LEFT JOIN tmpContainer_in ON tmpContainer_in.ContainerId = tmpMI_ContainerIn.ContainerId
                   GROUP BY tmpMI_ContainerIn.MovementId
@@ -301,6 +314,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.02.20         * add SubjectDocName
  15.02.16                                        * ALL
  24.09.15         * add GoodsKind
  28.11.14         *
