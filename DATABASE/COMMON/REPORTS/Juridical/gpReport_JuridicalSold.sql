@@ -53,6 +53,7 @@ RETURNS TABLE (ContainerId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , MoneySumm_Currency TFloat, ServiceSumm_Currency TFloat, ServiceRealSumm_Currency TFloat
              , TransferDebtSumm_Currency TFloat, SendDebtSumm_Currency TFloat, ChangeCurrencySumm_Currency TFloat, OtherSumm_Currency TFloat
              , EndAmount_Currency_A TFloat, EndAmount_Currency_P TFloat, EndAmount_Currency_D TFloat, EndAmount_Currency_K TFloat
+             , PartnerTagName TVarChar
               )
 AS
 $BODY$
@@ -343,7 +344,27 @@ BEGIN
 
                            )
          
+        -- данные для юр.лица / контрагента - Признак ТТ
+        , tmpPartnerTag AS (SELECT tmp.JuridicalId
+                                 , ObjectLink_Partner_Juridical.ObjectId AS PartnerId
+                                 , Object_PartnerTag.ValueData           AS PartnerTagName
+                            FROM (SELECT DISTINCT Operation_all.JuridicalId FROM Operation_all) AS tmp
+                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                      ON ObjectLink_Partner_Juridical.ChildObjectId = tmp.JuridicalId
+                                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                 LEFT JOIN ObjectLink AS ObjectLink_Partner_PartnerTag
+                                                      ON ObjectLink_Partner_PartnerTag.ObjectId = ObjectLink_Partner_Juridical.ObjectId
+                                                     AND ObjectLink_Partner_PartnerTag.DescId = zc_ObjectLink_Partner_PartnerTag()
+                                 LEFT JOIN Object AS Object_PartnerTag ON Object_PartnerTag.Id = ObjectLink_Partner_PartnerTag.ChildObjectId
+                            )
+         -- данные для юр.лица - Признак ТТ
+        , tmpJuridical_PartnerTag AS (SELECT tmpPartnerTag.JuridicalId
+                                           , STRING_AGG (DISTINCT tmpPartnerTag.PartnerTagName, '; ') AS PartnerTagName
+                                      FROM tmpPartnerTag
+                                      GROUP BY tmpPartnerTag.JuridicalId
+                                      )
 
+     -- Результат
      SELECT 
         Operation.ContainerId,
         Object_Juridical.ObjectCode AS JuridicalCode,   
@@ -464,7 +485,9 @@ BEGIN
         Operation.EndAmount_Currency        ::TFloat AS EndAmount_Currency_A,
         (-1 * Operation.EndAmount_Currency) ::TFloat AS EndAmount_Currency_P,
         CASE WHEN Operation.EndAmount_Currency > 0 THEN Operation.EndAmount_Currency ELSE 0 END      ::TFloat AS EndAmount_Currency_D,
-        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END ::TFloat AS EndAmount_Currency_K
+        CASE WHEN Operation.EndAmount_Currency < 0 THEN -1 * Operation.EndAmount_Currency ELSE 0 END ::TFloat AS EndAmount_Currency_K,
+        --
+        COALESCE (tmpPartnerTag.PartnerTagName, tmpJuridical_PartnerTag.PartnerTagName,'') :: TVarChar AS PartnerTagName
      FROM
          (SELECT MAX (Operation_all.ContainerId) AS ContainerId
                , Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
@@ -602,6 +625,9 @@ BEGIN
                               AND ObjectDate_PartionMovement_Payment.DescId = zc_ObjectDate_PartionMovement_Payment()
 
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Operation.CurrencyId
+          
+          LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerId = Operation.PartnerId
+          LEFT JOIN tmpJuridical_PartnerTag ON tmpJuridical_PartnerTag.JuridicalId = Operation.JuridicalId
 
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0
          OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0);
