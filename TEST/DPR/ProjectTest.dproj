@@ -3852,6 +3852,14 @@
 				<Form>SubjectDocEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberBankAccount.pas">
+				<Form>MemberBankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MemberBankAccountEdit.pas">
+				<Form>MemberBankAccountEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
