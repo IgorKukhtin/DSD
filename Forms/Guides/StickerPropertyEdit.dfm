@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1074#1086#1081#1089#1090#1074#1072' '#1101#1090#1080#1082#1077#1090#1082#1080'>'
-  ClientHeight = 433
+  ClientHeight = 523
   ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@
     Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1110#1085
   end
   object cxButton1: TcxButton
-    Left = 61
-    Top = 399
+    Left = 67
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 202
-    Top = 399
+    Left = 208
+    Top = 485
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -95,13 +95,13 @@
   end
   object edComment: TcxTextEdit
     Left = 19
-    Top = 364
+    Top = 450
     TabOrder = 9
     Width = 312
   end
   object cxLabel8: TcxLabel
     Left = 19
-    Top = 348
+    Top = 434
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceValue1: TcxCurrencyEdit
@@ -265,6 +265,66 @@
     Left = 178
     Top = 20
     TabOrder = 32
+    Width = 153
+  end
+  object cxLabel15: TcxLabel
+    Left = 19
+    Top = 345
+    Caption = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+  end
+  object ceValue8: TcxCurrencyEdit
+    Left = 19
+    Top = 360
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 34
+    Width = 153
+  end
+  object cxLabel16: TcxLabel
+    Left = 178
+    Top = 345
+    Caption = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+  end
+  object ceValue9: TcxCurrencyEdit
+    Left = 178
+    Top = 360
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 36
+    Width = 153
+  end
+  object cxLabel17: TcxLabel
+    Left = 19
+    Top = 389
+    Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+  end
+  object ceValue10: TcxCurrencyEdit
+    Left = 19
+    Top = 405
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 38
+    Width = 153
+  end
+  object cxLabel18: TcxLabel
+    Left = 178
+    Top = 389
+    Caption = #1074#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
+  end
+  object ceValue11: TcxCurrencyEdit
+    Left = 178
+    Top = 405
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 40
     Width = 153
   end
   object ActionList: TActionList
@@ -438,10 +498,42 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = ceValue8
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue9'
+        Value = Null
+        Component = ceValue9
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue10'
+        Value = Null
+        Component = ceValue10
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue11'
+        Value = Null
+        Component = ceValue11
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 168
-    Top = 312
+    Left = 160
+    Top = 280
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -474,8 +566,8 @@
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 376
+    Left = 286
+    Top = 480
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_StickerProperty'
@@ -632,6 +724,34 @@
         Name = 'Value7'
         Value = Null
         Component = ceValue7
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value8'
+        Value = Null
+        Component = ceValue8
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value9'
+        Value = Null
+        Component = ceValue9
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value10'
+        Value = Null
+        Component = ceValue10
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Value11'
+        Value = Null
+        Component = ceValue11
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

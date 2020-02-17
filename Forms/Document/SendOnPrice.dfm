@@ -419,7 +419,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 200
     end
     object edTo: TcxButtonEdit
-      Left = 488
+      Left = 483
       Top = 23
       Properties.Buttons = <
         item
@@ -428,7 +428,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
         end>
       Properties.ReadOnly = True
       TabOrder = 8
-      Width = 180
+      Width = 188
     end
     object cxLabel4: TcxLabel
       Left = 488
@@ -436,7 +436,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 488
+      Left = 494
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -536,13 +536,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 257
     end
     object ceComment: TcxTextEdit
-      Left = 628
+      Left = 680
       Top = 108
       TabOrder = 23
-      Width = 196
+      Width = 144
     end
     object cxLabel22: TcxLabel
-      Left = 628
+      Left = 680
       Top = 90
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
@@ -565,8 +565,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Width = 200
     end
     object edIsChecked: TcxCheckBox
-      Left = 488
-      Top = 108
+      Left = 830
+      Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
       TabOrder = 27
@@ -589,6 +589,23 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Properties.ReadOnly = True
       TabOrder = 29
       Width = 144
+    end
+    object cxLabel9: TcxLabel
+      Left = 483
+      Top = 90
+      Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+    end
+    object edSubjectDoc: TcxButtonEdit
+      Left = 483
+      Top = 108
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 188
     end
   end
   object cbCalcAmountPartner: TcxCheckBox [2]
@@ -1808,6 +1825,21 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = edReestrKind
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocId'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SubjectDocName'
+        Value = Null
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 272
@@ -1894,6 +1926,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSubjectDocId'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioPriceListId'
         Value = ''
         Component = PriceListGuides
@@ -1931,11 +1971,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1989,6 +2024,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Control = ceComment
+      end
+      item
+        Control = edSubjectDoc
       end>
     Left = 256
     Top = 217
@@ -2985,5 +3023,34 @@ inherited SendOnPriceForm: TSendOnPriceForm
     PackSize = 1
     Left = 360
     Top = 369
+  end
+  object GuidesSubjectDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edSubjectDoc
+    FormNameParam.Value = 'TSubjectDocForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TSubjectDocForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesSubjectDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 552
+    Top = 96
   end
 end

@@ -283,6 +283,36 @@ object StickerForm: TStickerForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object Value6: TcxGridDBColumn
+        Caption = #1079' '#1085#1080#1093' '#1085#1072#1089#1080#1095#1077#1085#1110' ('#1078#1080#1088#1080')'
+        DataBinding.FieldName = 'Value6'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Value7: TcxGridDBColumn
+        Caption = #1094#1091#1082#1088#1080
+        DataBinding.FieldName = 'Value7'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Value8: TcxGridDBColumn
+        Caption = #1089#1110#1083#1100' '
+        DataBinding.FieldName = 'Value8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -2358,6 +2388,33 @@ object StickerForm: TStickerForm
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Value5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue6'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue7'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inValue8'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Value8'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

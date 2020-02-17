@@ -14,6 +14,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -73,6 +80,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inUnitOldId               Integer   ,    -- Старое подразделениие (закрытое)
     IN inMorionCode              Integer   ,    -- Код мориона
     IN inAccessKeyYF             TVarChar  ,    -- Ключ ХО для отправки данных Юрия-Фарм
+    
+    IN inisTechnicalRediscount   Boolean   ,    -- Технический переучет и ПС 
 
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -289,6 +298,9 @@ BEGIN
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_RedeemByHandSP(), ioId, inRedeemByHandSP);
 
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_TechnicalRediscount(), ioId, inisTechnicalRediscount);
+
    -- сохранили связь с подразделением
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitOverdue(), ioId, inUnitOverdueId);
 
@@ -384,6 +396,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 14.02.20                                                       * add isTechnicalRediscount
  17.12.19         * add inSunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF
  11.12.19                                                       * UnitOld

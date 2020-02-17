@@ -36,6 +36,7 @@ BEGIN
                                              , inFromId           := inFromId
                                              , inToId             := inToId
                                              , inRouteSortingId   := inRouteSortingId
+                                             , inSubjectDocId     := 0--inSubjectDocId
                                              , inMovementId_Order := inMovementId_Order
                                              , ioPriceListId      := ioPriceListId
                                              , inProcessId        := inProcessId

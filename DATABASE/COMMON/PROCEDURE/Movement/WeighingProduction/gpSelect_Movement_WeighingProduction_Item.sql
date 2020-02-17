@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDescNumber Integer, MovementDescName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
              , isProductionIn Boolean, isAuto Boolean
@@ -100,6 +101,10 @@ BEGIN
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
+
+             , Object_SubjectDoc.Id                       AS SubjectDocId
+             , Object_SubjectDoc.ValueData                AS SubjectDocName
+
              , MovementFloat_WeighingNumber.ValueData     AS WeighingNumber
 
              , CASE WHEN MIString_PartionGoodsMI.ValueData <> ''
@@ -246,6 +251,11 @@ BEGIN
                                          ON MovementLinkObject_BarCodeBox.MovementId = Movement.Id
                                         AND MovementLinkObject_BarCodeBox.DescId = zc_MovementLinkObject_BarCodeBox()
             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MovementLinkObject_BarCodeBox.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id

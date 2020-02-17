@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Comment TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
+             , SubjectDocId Integer, SubjectDocName TVarChar
 
              , MovementId_TransportGoods Integer
              , InvNumber_TransportGoods TVarChar
@@ -67,6 +68,9 @@ BEGIN
 
              , 0                   			  AS ReestrKindId
              , '' :: TVarChar                     	  AS ReestrKindName
+
+             , 0                                          AS SubjectDocId
+             , CAST ('' AS TVarChar)                      AS SubjectDocName
 
              , 0                   			  AS MovementId_TransportGoods 
              , '' :: TVarChar                     	  AS InvNumber_TransportGoods 
@@ -125,6 +129,9 @@ BEGIN
 
            , Object_ReestrKind.Id             		    AS ReestrKindId
            , Object_ReestrKind.ValueData       		    AS ReestrKindName
+
+           , Object_SubjectDoc.Id                                 AS SubjectDocId
+           , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
 
            , Movement_TransportGoods.Id                     AS MovementId_TransportGoods
            , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
@@ -204,6 +211,11 @@ BEGIN
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
        WHERE Movement.Id = inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();
      END IF;
@@ -216,6 +228,7 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TDateTime, TFloat, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.20         * SubjectDoc
  11.06.15         * add inChangePercentAmount
  08.06.15         * add Order
  05.05.14                                                        *   передалал все по новой на базе проц расхода.

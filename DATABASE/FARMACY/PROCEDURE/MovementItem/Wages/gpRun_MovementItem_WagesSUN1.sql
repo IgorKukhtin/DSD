@@ -1,4 +1,4 @@
--- Function: lpInsertUpdate_MovementItem_WagesSUN1 ()
+-- Function: gpRun_MovementItem_WagesSUN1 ()
 
 DROP FUNCTION IF EXISTS gpRun_MovementItem_WagesSUN1 (TVarChar);
 
@@ -49,10 +49,21 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_V2
+                                             ON MovementBoolean_SUN_V2.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_V2.DescId = zc_MovementBoolean_SUN_V2()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_Sent
+                                             ON MovementBoolean_Sent.MovementId = Movement.Id
+                                            AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                             ON MovementBoolean_Received.MovementId = Movement.Id
+                                            AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
               WHERE Movement.OperDate >= '11.02.2020'
                 AND Movement.DescId = zc_Movement_Send()
                 AND Movement.StatusId <> zc_Enum_Status_Complete()
                 AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
+                AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
               GROUP BY MovementLinkObject_From.ObjectId) AS T1;
 
         PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', False, 'Выполнено'::TVarChar, vbUserId);

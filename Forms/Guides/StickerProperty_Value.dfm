@@ -3,7 +3,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
   Top = 0
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1101#1090#1080#1082#1077#1090#1082#1080
   ClientHeight = 356
-  ClientWidth = 544
+  ClientWidth = 767
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,12 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 31
-    Width = 540
+    Width = 763
     Height = 325
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 553
+    ExplicitWidth = 540
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -54,7 +54,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 68
       end
       object colValue2: TcxGridDBColumn
         Caption = #1042#1086#1083#1086#1075#1110#1089#1090#1100' '#1084#1072#1082#1089
@@ -64,7 +64,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object colValue3: TcxGridDBColumn
         Caption = #1058' '#1084#1110#1085
@@ -74,7 +74,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object colValue4: TcxGridDBColumn
         Caption = #1058' '#1084#1072#1082#1089
@@ -84,7 +84,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object colValue5: TcxGridDBColumn
         Caption = #1050#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073
@@ -94,7 +94,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object colValue6: TcxGridDBColumn
         Caption = #1042#1077#1089
@@ -104,7 +104,7 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 67
       end
       object colValue7: TcxGridDBColumn
         Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103
@@ -116,6 +116,46 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object colValue8: TcxGridDBColumn
+        Caption = #1058' '#1084#1110#1085' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value8'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object colValue9: TcxGridDBColumn
+        Caption = #1058' '#1084#1072#1082#1089' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value9'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 69
+      end
+      object colValue10: TcxGridDBColumn
+        Caption = #1082#1110#1083#1100#1082#1110#1089#1090#1100' '#1076#1110#1073' - '#1074#1090#1086#1088#1086#1081' '#1089#1088#1086#1082
+        DataBinding.FieldName = 'Value10'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 78
+      end
+      object colValue11: TcxGridDBColumn
+        Caption = #1074#1083#1086#1078#1077#1085#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'Value11'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 52
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -124,19 +164,19 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
   object cxTopSplitter: TcxSplitter
     Left = 0
     Top = 26
-    Width = 544
+    Width = 767
     Height = 5
     AlignSplitter = salTop
     Control = cxGrid
-    ExplicitWidth = 904
+    ExplicitWidth = 544
   end
   object cxRightSplitter: TcxSplitter
-    Left = 540
+    Left = 763
     Top = 31
     Width = 4
     Height = 325
     AlignSplitter = salRight
-    ExplicitLeft = 900
+    ExplicitLeft = 540
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -463,6 +503,38 @@ object StickerProperty_ValueForm: TStickerProperty_ValueForm
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'Value7'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value8'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value8'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value9'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value9'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value10'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value10'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Value11'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Value11'
           DataType = ftFloat
           MultiSelectSeparator = ','
         end>

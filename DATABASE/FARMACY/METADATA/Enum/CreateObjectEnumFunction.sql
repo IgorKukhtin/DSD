@@ -34,6 +34,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_Role_DirectorPartner() RETURNS integer AS $BO
 
 CREATE OR REPLACE FUNCTION zc_Enum_Role_Spotter() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_Spotter' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
+CREATE OR REPLACE FUNCTION zc_Enum_Role_TechnicalRediscount() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_TechnicalRediscount' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
 -- !!!
 -- !!! Подразделение для роли Директор Партнер
 -- !!!

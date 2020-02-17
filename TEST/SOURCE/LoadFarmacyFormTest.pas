@@ -135,10 +135,11 @@ type
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadTaxUnitFormTest;
+    procedure LoadTechnicalRediscountFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnnamedEnterprisesFormTest;
-    procedure LoadWagesTest;
+    procedure LoadWagesFormTest;
     procedure FormTest;
   end;
 
@@ -834,6 +835,12 @@ end;
 procedure TLoadFormTest.LoadReportFormTest;
 begin
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUNLossDialogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUNLossForm'));
@@ -1461,6 +1468,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTaxUnitEditForm');
 end;
 
+procedure TLoadFormTest.LoadTechnicalRediscountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountForm');
+end;
+
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
 {
@@ -1478,7 +1493,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
-
     {
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));
@@ -1512,7 +1526,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnnamedEnterprisesJournalForm');
 end;
 
-procedure TLoadFormTest.LoadWagesTest;
+procedure TLoadFormTest.LoadWagesFormTest;
 begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPayrollGroupForm'));

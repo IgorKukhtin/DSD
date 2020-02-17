@@ -26,6 +26,8 @@ type
     procedure edMaskNumberPropertiesValidate(Sender: TObject;
       var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure BuyerCDSFilterRecord(DataSet: TDataSet; var Accept: Boolean);
+    procedure bbCancelKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     FID : integer;
     FPhone : String;
@@ -44,6 +46,25 @@ implementation
 {$R *.dfm}
 
 uses CommonData, LocalWorkUnit, BuyerList;
+
+procedure TEnterLoyaltySaveMoneyForm.bbCancelKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+
+   if Key in [$30..$39, $60..$69] then
+   begin
+     edMaskNumber.SetFocus;
+     edMaskNumber.SelectAll;
+     PostMessage(edMaskNumber.Handle, WM_KEYDOWN, Key, 0);
+   end;
+   if Key in [$41..$5A, $DB, $DD, $BA, $DE, $DC, $BC, $BE, $BF, $C0] then
+   begin
+     edMaskName.SetFocus;
+     edMaskName.SelectAll;
+     PostMessage(edMaskName.Handle, WM_KEYDOWN, Key, 0);
+   end;
+
+end;
 
 procedure TEnterLoyaltySaveMoneyForm.BuyerCDSFilterRecord(DataSet: TDataSet;
   var Accept: Boolean);

@@ -146,6 +146,7 @@ type
     edAccessKeyYF: TcxTextEdit;
     cxLabel41: TcxLabel;
     cxLabel42: TcxLabel;
+    cbTechnicalRediscount: TcxCheckBox;
   private
     { Private declarations }
   public

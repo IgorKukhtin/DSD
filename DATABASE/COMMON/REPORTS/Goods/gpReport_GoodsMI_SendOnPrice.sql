@@ -21,6 +21,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
              , TradeMarkName TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
+             , SubjectDocName TVarChar
 
              , OperCount_total          TFloat  -- вес склад (итог: с потерями и скидкой)
              , OperCount_real           TFloat  -- вес склад
@@ -179,8 +180,9 @@ BEGIN
                         )
     , tmpUnit_from AS (SELECT DISTINCT _tmpUnit.UnitId FROM _tmpUnit)
     , tmpMovement_pl AS (SELECT Movement.Id, Movement.OperDate, MovementDate_OperDatePartner.ValueData AS OperDatePartner
-                              , MovementLinkObject_From.ObjectId AS FromId
-                              , MovementLinkObject_To.ObjectId   AS ToId
+                              , MovementLinkObject_From.ObjectId       AS FromId
+                              , MovementLinkObject_To.ObjectId         AS ToId
+                              , Object_SubjectDoc.ValueData            AS SubjectDocName
                          FROM Movement
                               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                                      ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -193,13 +195,19 @@ BEGIN
                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                               INNER JOIN tmpUnit_from AS _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
                                                                  -- AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                           ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                                          AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                              LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                            AND Movement.DescId = zc_Movement_SendOnPrice()
                         UNION
                          SELECT Movement.Id, Movement.OperDate, MovementDate_OperDatePartner.ValueData AS OperDatePartner
-                              , MovementLinkObject_From.ObjectId AS FromId
-                              , MovementLinkObject_To.ObjectId   AS ToId
+                              , MovementLinkObject_From.ObjectId       AS FromId
+                              , MovementLinkObject_To.ObjectId         AS ToId
+                              , Object_SubjectDoc.ValueData            AS SubjectDocName
                          FROM MovementDate AS MovementDate_OperDatePartner
                               INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId
                                                  AND Movement.DescId = zc_Movement_SendOnPrice()
@@ -212,6 +220,12 @@ BEGIN
                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                               INNER JOIN tmpUnit_from AS _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
                                                                  -- AND _tmpUnit.UnitId_by = MovementLinkObject_To.ObjectId
+
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                           ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                                          AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                              LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
                          WHERE MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                         )
@@ -233,6 +247,7 @@ BEGIN
          , Object_To.ObjectCode AS ToCode
          , Object_To.ValueData  AS ToName
 
+         , tmpOperationGroup.SubjectDocName :: TVarChar
            -- 1.1. вес, без AnalyzerId, т.е. это со склада, на транзит, с транзита
          , (tmpOperationGroup.OperCount_real) :: TFloat AS OperCount_total
          , ((tmpOperationGroup.OperCount_real     - tmpOperationGroup.OperCount_Change          + tmpOperationGroup.OperCount_40200          * 1)) :: TFloat AS OperCount_real
@@ -318,6 +333,7 @@ BEGIN
      FROM (SELECT tmpContainer.MovementId
                 , tmpContainer.FromId
                 , tmpContainer.ToId
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ')                  AS SubjectDocName
                 , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
                 , tmpContainer.GoodsKindId
                 , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
@@ -383,9 +399,10 @@ BEGIN
                 , SUM (tmpContainer.Summ_pl_real) AS Summ_pl_real
 
            FROM (SELECT CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
-                      , MIContainer.WhereObjectId_analyzer AS FromId
-                      , MIContainer.ObjectExtId_Analyzer  AS ToId
-                      , MIContainer.ObjectId_analyzer AS GoodsId
+                      , MIContainer.WhereObjectId_analyzer            AS FromId
+                      , MIContainer.ObjectExtId_Analyzer              AS ToId
+                      , Object_SubjectDoc.ValueData AS SubjectDocName
+                      , MIContainer.ObjectId_analyzer                 AS GoodsId
                       , CASE WHEN inIsGoodsKind    = TRUE THEN MIContainer.ObjectIntId_analyzer ELSE 0 END AS GoodsKindId
                       , MIContainer.ContainerId_analyzer
                       , MIContainer.ContainerIntId_analyzer
@@ -471,6 +488,13 @@ BEGIN
                                                         OR MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummOut_80401(), zc_Enum_AnalyzerId_SummOut_110101())
                                                           )
                                                       AND COALESCE (MIContainer.AccountId, 0) <>  zc_Enum_Account_100301() -- Прибыль текущего периода
+                                                      
+
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                   ON MovementLinkObject_SubjectDoc.MovementId = MIContainer.MovementId
+                                                  AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
                  GROUP BY CASE WHEN inIsMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
                         , MIContainer.WhereObjectId_analyzer
                         , MIContainer.ObjectExtId_Analyzer
@@ -480,13 +504,15 @@ BEGIN
                         , MIContainer.ContainerIntId_analyzer
                         , CASE WHEN MIContainer.AnalyzerId IN (zc_Enum_AnalyzerId_SummIn_110101(), zc_Enum_AnalyzerId_SummOut_110101()) THEN MIContainer.AnalyzerId ELSE COALESCE (MIContainer.AccountId, 0) END
                         , MIContainer.isActive
+                        , Object_SubjectDoc.ValueData
                 UNION ALL
                  SELECT tmp.*
                  FROM
                 (SELECT CASE WHEN inIsMovement = TRUE THEN tmpMovement_pl.Id ELSE 0 END AS MovementId
                       , tmpMovement_pl.FromId
                       , COALESCE (MILinkObject_Unit.ObjectId, tmpMovement_pl.ToId) AS ToId
-                      , MovementItem.ObjectId AS GoodsId
+                      , tmpMovement_pl.SubjectDocName           AS SubjectDocName
+                      , MovementItem.ObjectId                                      AS GoodsId
                       , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END AS GoodsKindId
                       , 0     AS ContainerId_analyzer
                       , 0     AS ContainerIntId_analyzer
@@ -534,6 +560,7 @@ BEGIN
                         , COALESCE (MILinkObject_Unit.ObjectId, tmpMovement_pl.ToId)
                         , MovementItem.ObjectId
                         , CASE WHEN inIsGoodsKind = TRUE THEN MILinkObject_GoodsKind.ObjectId ELSE 0 END
+                        , tmpMovement_pl.SubjectDocName
                 ) AS tmp
 
                   ) AS tmpContainer
@@ -594,9 +621,10 @@ $BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.gjghj,eq
  31.01.16                                        *
 */
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inFromId:= 8459, inToId:= 0, inGoodsGroupId:= 0, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsMovement:= FALSE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
+-- select * from gpReport_GoodsMI_SendOnPrice (inStartDate := ('13.02.2020')::TDateTime , inEndDate := ('13.02.2020')::TDateTime , inFromId := 8411 , inToId := 0 , inGoodsGroupId := 0 , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsMovement := 'False' ,  inSession := '5');

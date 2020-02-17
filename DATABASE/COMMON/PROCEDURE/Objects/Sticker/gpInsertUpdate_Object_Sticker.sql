@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Sticker()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Sticker(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TBlob, TFloat, TFloat,TFloat,TFloat,TFloat, TFloat,TFloat,TFloat,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -20,6 +21,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Sticker(
     IN inValue3              TFloat    , --
     IN inValue4              TFloat    , --
     IN inValue5              TFloat    , --
+    IN inValue6              TFloat    , --
+    IN inValue7              TFloat    , --
+    IN inValue8              TFloat    , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -71,8 +75,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value4(), ioId, inValue4);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value5(), ioId, inValue5);
-
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value6(), ioId, inValue6);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value7(), ioId, inValue7);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Sticker_Value8(), ioId, inValue8);
+   
    -- проверка "Вид продукта (Группа)"
    IF 1 < (SELECT COUNT(*) FROM Object WHERE Object.DescId = zc_Object_StickerGroup() AND UPPER (TRIM (Object.ValueData)) = UPPER (TRIM (inStickerGroupName)) AND TRIM (inStickerGroupName) <> '')
    THEN
@@ -184,6 +193,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.02.20         *
  23.10.17         *
 */
 

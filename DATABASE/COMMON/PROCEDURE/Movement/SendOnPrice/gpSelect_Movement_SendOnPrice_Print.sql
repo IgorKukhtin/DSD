@@ -300,6 +300,9 @@ BEGIN
              -- кол-во Взвешиваний
            , vbWeighingCount AS WeighingCount
 
+           --Основание для перемещения
+           , COALESCE (Object_SubjectDoc.ValueData,'') ::TVarChar AS SubjectDocName
+
        FROM Movement
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -373,6 +376,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment_order
                                      ON MovementString_Comment_order.MovementId = MovementLinkMovement_Order.MovementChildId
                                     AND MovementString_Comment_order.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -558,6 +566,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.20         * SubjectDocName
  29.10.15         * del inReportType
  04.06.15         * add unitId
  05.03.15                                        * all

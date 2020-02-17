@@ -116,6 +116,9 @@ type
     bbChecked: TdxBarButton;
     cxLabel26: TcxLabel;
     edReestrKind: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edSubjectDoc: TcxButtonEdit;
+    GuidesSubjectDoc: TdsdGuides;
   private
     { Private declarations }
   public

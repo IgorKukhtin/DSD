@@ -392,6 +392,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 100
       end
+      object SubjectDocName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
+        DataBinding.FieldName = 'SubjectDocName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 109
+      end
       object UserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
@@ -1415,6 +1423,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 55
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macUpdatePersonalComlete: TMultiAction

@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar -- , StickerName TVarC
              , StickerFileId Integer, StickerFileName TVarChar, StickerFileName_inf TVarChar, TradeMarkName_StickerFile TVarChar
              , Info TBlob
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat
+             , Value6 TFloat, Value7 TFloat, Value8 TFloat
              , isErased Boolean
               )
 AS
@@ -99,7 +100,11 @@ BEGIN
                                 , ObjectFloat_Value3.ValueData      AS Value3
                                 , ObjectFloat_Value4.ValueData      AS Value4
                                 , ObjectFloat_Value5.ValueData      AS Value5
-                    
+
+                                , ObjectFloat_Value6.ValueData      AS Value6
+                                , ObjectFloat_Value7.ValueData      AS Value7
+                                , ObjectFloat_Value8.ValueData      AS Value8
+
                                 , Object_Sticker.isErased           AS isErased
                     
                            FROM (SELECT Object_Sticker.* 
@@ -168,7 +173,17 @@ BEGIN
                                  LEFT JOIN ObjectFloat AS ObjectFloat_Value5
                                                        ON ObjectFloat_Value5.ObjectId = Object_Sticker.Id 
                                                       AND ObjectFloat_Value5.DescId = zc_ObjectFloat_Sticker_Value5()
-                                 
+
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Value6
+                                                       ON ObjectFloat_Value6.ObjectId = Object_Sticker.Id 
+                                                      AND ObjectFloat_Value6.DescId = zc_ObjectFloat_Sticker_Value6()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Value7
+                                                       ON ObjectFloat_Value7.ObjectId = Object_Sticker.Id 
+                                                      AND ObjectFloat_Value7.DescId = zc_ObjectFloat_Sticker_Value7()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                                       ON ObjectFloat_Value8.ObjectId = Object_Sticker.Id 
+                                                      AND ObjectFloat_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
+
                                  LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                                       ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                                      AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
@@ -221,6 +236,10 @@ BEGIN
             , COALESCE (Object_Sticker.Value3, 0)            :: TFloat    AS Value3
             , COALESCE (Object_Sticker.Value4, 0)            :: TFloat    AS Value4
             , COALESCE (Object_Sticker.Value5, 0)            :: TFloat    AS Value5
+
+            , COALESCE (Object_Sticker.Value6, 0)            :: TFloat    AS Value6
+            , COALESCE (Object_Sticker.Value7, 0)            :: TFloat    AS Value7
+            , COALESCE (Object_Sticker.Value8, 0)            :: TFloat    AS Value8
 
             , COALESCE (Object_Sticker.isErased, FALSE) :: Boolean           AS isErased
 
@@ -305,6 +324,10 @@ BEGIN
             , ObjectFloat_Value4.ValueData      AS Value4
             , ObjectFloat_Value5.ValueData      AS Value5
 
+            , ObjectFloat_Value6.ValueData      AS Value6
+            , ObjectFloat_Value7.ValueData      AS Value7
+            , ObjectFloat_Value8.ValueData      AS Value8
+
             , Object_Sticker.isErased           AS isErased
 
        FROM (SELECT Object_Sticker.* 
@@ -373,7 +396,17 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value5
                                    ON ObjectFloat_Value5.ObjectId = Object_Sticker.Id 
                                   AND ObjectFloat_Value5.DescId = zc_ObjectFloat_Sticker_Value5()
-             
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value6
+                                   ON ObjectFloat_Value6.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value6.DescId = zc_ObjectFloat_Sticker_Value6()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value7
+                                   ON ObjectFloat_Value7.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value7.DescId = zc_ObjectFloat_Sticker_Value7()
+             LEFT JOIN ObjectFloat AS ObjectFloat_Value8
+                                   ON ObjectFloat_Value8.ObjectId = Object_Sticker.Id 
+                                  AND ObjectFloat_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
+
              LEFT JOIN ObjectBlob AS ObjectBlob_Info
                                   ON ObjectBlob_Info.ObjectId = Object_Sticker.Id 
                                  AND ObjectBlob_Info.DescId = zc_ObjectBlob_Sticker_Info()
@@ -400,6 +433,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 14.02.20         *
  23.10.17         *
 */
 

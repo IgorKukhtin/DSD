@@ -46,6 +46,7 @@ object EnterLoyaltySaveMoneyForm: TEnterLoyaltySaveMoneyForm
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 8
       TabOrder = 0
+      OnKeyDown = bbCancelKeyDown
     end
     object bbOk: TcxButton
       Left = 236

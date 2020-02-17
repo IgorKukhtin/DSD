@@ -43,9 +43,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , EndTimeSP   TDateTime
              , isSP        Boolean
              , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
+             , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
+             , isTechnicalRediscount Boolean
+             , TimeWork TVarChar
+
 ) AS
 $BODY$
 BEGIN
@@ -69,7 +73,7 @@ BEGIN
       , ObjectString_Unit_Phone.ValueData                    AS Phone
 
       , Object_ProvinceCity.Id                               AS ProvinceCityId
-      , Object_ProvinceCity.ValueData                        AS ProvinceCityName
+      , Object_ProvinceCity.ValueData    ::TVarChar                    AS ProvinceCityName
 
       , COALESCE(ObjectLink_Unit_Parent.ChildObjectId,0)     AS ParentId
       , Object_Parent.ValueData                              AS ParentName
@@ -148,12 +152,26 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
       , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
-      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean AS isSUN_NotSold
-      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)   :: Boolean   AS isTopNo
+      , COALESCE (ObjectBoolean_SUN_v2_in.ValueData, FALSE)  :: Boolean   AS isSUN_v2_in
+      , COALESCE (ObjectBoolean_SUN_v2_out.ValueData, FALSE) :: Boolean   AS isSUN_v2_out
+      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
+      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
+      , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
 
-      
+      , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
+             THEN 'Пн-Пт '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
+             ELSE ''
+        END||'' ||
+        CASE WHEN COALESCE(ObjectDate_SaturdayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SaturdayEnd.ValueData ::Time,'00:00') <> '00:00'
+             THEN 'Сб '||LEFT ((ObjectDate_SaturdayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SaturdayEnd.ValueData::Time)::TVarChar,5)||'; '
+             ELSE ''
+        END||''||
+        CASE WHEN COALESCE(ObjectDate_SundayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_SundayEnd.ValueData ::Time,'00:00') <> '00:00'
+             THEN 'Вс '||LEFT ((ObjectDate_SundayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_SundayEnd.ValueData::Time)::TVarChar,5)
+             ELSE ''
+        END) :: TVarChar AS TimeWork
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -279,6 +297,14 @@ BEGIN
                                 ON ObjectBoolean_SUN_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_out.DescId = zc_ObjectBoolean_Unit_SUN_out()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_in
+                                ON ObjectBoolean_SUN_v2_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_in.DescId = zc_ObjectBoolean_Unit_SUN_v2_in()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_out
+                                ON ObjectBoolean_SUN_v2_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_out()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
@@ -286,6 +312,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TopNo
                                 ON ObjectBoolean_TopNo.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_TopNo.DescId = zc_ObjectBoolean_Unit_TopNo()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
+                                ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
 
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
@@ -374,6 +404,25 @@ BEGIN
 
         LEFT JOIN tmpByBadm ON tmpByBadm.UnitId = Object_Unit.Id
 
+        LEFT JOIN ObjectDate AS ObjectDate_MondayStart
+                             ON ObjectDate_MondayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_MondayStart.DescId = zc_ObjectDate_Unit_MondayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_MondayEnd
+                             ON ObjectDate_MondayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_MondayEnd.DescId = zc_ObjectDate_Unit_MondayEnd()
+        LEFT JOIN ObjectDate AS ObjectDate_SaturdayStart
+                             ON ObjectDate_SaturdayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SaturdayStart.DescId = zc_ObjectDate_Unit_SaturdayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_SaturdayEnd
+                             ON ObjectDate_SaturdayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SaturdayEnd.DescId = zc_ObjectDate_Unit_SaturdayEnd()
+        LEFT JOIN ObjectDate AS ObjectDate_SundayStart
+                             ON ObjectDate_SundayStart.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SundayStart.DescId = zc_ObjectDate_Unit_SundayStart()
+        LEFT JOIN ObjectDate AS ObjectDate_SundayEnd 
+                             ON ObjectDate_SundayEnd.ObjectId = Object_Unit.Id
+                            AND ObjectDate_SundayEnd.DescId = zc_ObjectDate_Unit_SundayEnd()
+
     WHERE Object_Unit.DescId = zc_Object_Unit()
       AND (inisShowAll = True OR Object_Unit.isErased = False);
   
@@ -386,7 +435,7 @@ LANGUAGE plpgsql VOLATILE;
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В. 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  05.02.20         * add isSUN_NotSold
  17.12.19         * add SunIncome
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff
@@ -412,7 +461,6 @@ LANGUAGE plpgsql VOLATILE;
  21.08.14                         *
  27.06.14         *
  25.06.13                         *
-
 */
 
 -- тест

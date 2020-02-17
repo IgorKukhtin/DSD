@@ -278,18 +278,43 @@ BEGIN
                                        , MIContainer.OperDate
                                )
 
+        , tmpData_Container_Sum AS (SELECT MIContainer.MI_Id                           AS MI_Id
+                                     , MIContainer.MovementId                          AS MovementId
+                                     , MIContainer.UnitId                              AS UnitId
+                                     , SUM (MIContainer.Amount)                        AS Amount
+                                     , CASE WHEN COALESCE (MB_RoundingDown.ValueData, False) = True
+                                        THEN TRUNC(SUM (MIContainer.Amount) * Max(MIContainer.Price), 1)::TFloat
+                                        ELSE CASE WHEN COALESCE (MB_RoundingTo10.ValueData, False) = True
+                                        THEN (((SUM (MIContainer.Amount)) *  Max(MIContainer.Price))::NUMERIC (16, 1))::TFloat
+                                        ELSE (((SUM (MIContainer.Amount)) *  Max(MIContainer.Price))::NUMERIC (16, 2))::TFloat END END AS SummaSale
+                                FROM tmpData_Container_All AS MIContainer
+                                     LEFT JOIN MovementBoolean AS MB_RoundingTo10
+                                                               ON MB_RoundingTo10.MovementId = MIContainer.MovementID
+                                                              AND MB_RoundingTo10.DescId = zc_MovementBoolean_RoundingTo10()
+                                     LEFT JOIN MovementBoolean AS MB_RoundingDown
+                                                               ON MB_RoundingDown.MovementId = MIContainer.MovementID
+                                                              AND MB_RoundingDown.DescId = zc_MovementBoolean_RoundingDown()
+                                GROUP BY MIContainer.MI_Id
+                                       , MIContainer.MovementId  
+                                       , MIContainer.UnitId  
+                                       , MB_RoundingTo10.ValueData
+                                       , MB_RoundingDown.ValueData
+                               )
+
         , tmpData_ContainerAll AS (SELECT MIContainer.MI_Id
                                         , MIContainer.MovementItemId
                                         , MIContainer.MovementId
                                         , MIContainer.UnitId
                                         , MIContainer.GoodsId
                                         , SUM (COALESCE (MIContainer.Amount, 0))       AS Amount
-                                        , SUM (COALESCE (MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                                        --, SUM (COALESCE (MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)) AS SummaSale
+                                        , SUM (COALESCE (tmpData_Container_Sum.SummaSale, 0) * COALESCE (MIContainer.Amount,0) / COALESCE (tmpData_Container_Sum.Amount,0)) AS SummaSale
                                         , SUM (CASE WHEN COALESCE (MIContainer.ObjectIntId_analyzer,0) <> 0 AND COALESCE (tmpListGodsMarket.GoodsId,0) <> 0 
                                                     THEN COALESCE (MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0)
                                                     ELSE 0
                                                END )                                   AS SummaPromo
                                    FROM tmpData_Container_All AS MIContainer
+                                        LEFT JOIN tmpData_Container_Sum ON tmpData_Container_Sum.MI_Id = MIContainer.MI_Id
                                         LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MIContainer.GoodsId
 /*                                                                   AND tmpListGodsMarket.StartDate_Promo <= MIContainer.OperDate
                                                                    AND tmpListGodsMarket.EndDate_Promo >= MIContainer.OperDate*/

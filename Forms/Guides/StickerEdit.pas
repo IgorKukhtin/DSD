@@ -73,6 +73,12 @@ type
     GuidesStickerNorm: TdsdGuides;
     ceInfo: TcxMemo;
     cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    ceValue6: TcxCurrencyEdit;
+    ceValue7: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    cxLabel18: TcxLabel;
+    ceValue8: TcxCurrencyEdit;
 
   private
     { Private declarations }
