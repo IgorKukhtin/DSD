@@ -755,12 +755,12 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscountCashier'
+    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscountCashier'
+    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
     Left = 654
     Top = 248
   end
@@ -884,7 +884,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TechnicalRediscountCashier_TotalSumm'
+    StoredProcName = 'gpGet_Movement_TechnicalRediscount_TotalSumm'
     Params = <
       item
         Name = 'inMovementId'
@@ -956,24 +956,6 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     Params = <>
     Left = 476
     Top = 257
-  end
-  object spInsertUpdate_MI_TechnicalRediscountCashier_Set_Zero: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_TechnicalRediscountCashier_Set_Zero'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    Left = 874
-    Top = 184
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'

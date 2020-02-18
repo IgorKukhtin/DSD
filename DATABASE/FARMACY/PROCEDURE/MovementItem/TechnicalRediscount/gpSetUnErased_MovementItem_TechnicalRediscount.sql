@@ -12,6 +12,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementId  Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
   -- проверка прав пользователя на вызов процедуры
   vbUserId := lpCheckRight (inSession, zc_Enum_Process_SetUnErased_MI_TechnicalRediscount());
@@ -22,10 +23,26 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
   END IF;
     
-  SELECT MovementItem.MovementId
-  INTO vbMovementId
+  SELECT MovementItem.MovementId, Movement.OperDate
+  INTO vbMovementId, vbOperDate
   FROM MovementItem 
+       INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
   WHERE MovementItem.ID = inMovementItemId;
+
+  IF date_part('DAY',  vbOperDate)::Integer <= 15
+  THEN
+      vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '14 DAY';
+  ELSE
+      vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+  END IF;
+
+  -- Для роли "Кассир" проверяем период
+  IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+            WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+     AND  vbOperDate < CURRENT_DATE
+  THEN
+      RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
+  END IF;
 
   -- устанавливаем новое значение
   outIsErased:= gpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inSession:= inSession);

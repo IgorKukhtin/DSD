@@ -29,7 +29,6 @@ type
     cxLabel7: TcxLabel;
     edComment: TcxTextEdit;
     cxSplitter1: TcxSplitter;
-    spInsertUpdate_MI_TechnicalRediscountCashier_Set_Zero: TdsdStoredProc;
     spGetImportSettingId: TdsdStoredProc;
     bbactStartLoad: TdxBarButton;
     GuidesUnit: TdsdGuides;

@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbMovementIncomeId Integer;
    DECLARE vbAmountIncome TFloat;
    DECLARE vbAmountOther TFloat;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -32,6 +33,26 @@ BEGIN
      IF ROUND(inRemains_Amount + inAmount, 4) < 0
      THEN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
+     END IF;
+
+     SELECT Movement.OperDate
+     INTO vbOperDate
+     FROM Movement
+     WHERE Movement.ID = inMovementId;
+
+     IF date_part('DAY',  vbOperDate)::Integer <= 15
+     THEN
+         vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '14 DAY';
+     ELSE
+         vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+     END IF;
+
+     -- Для роли "Кассир" проверяем период
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+        AND  vbOperDate < CURRENT_DATE
+     THEN
+         RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
      END IF;
 
      ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, vbUserId);

@@ -99,7 +99,7 @@ BEGIN
                                           , inDescId := zc_Object_Role()
                                           , inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
    ELSE
-       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Spotter(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TechnicalRediscount'), inName:= 'Работа с техническим переучетом', inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TechnicalRediscount(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TechnicalRediscount'), inName:= 'Работа с техническим переучетом', inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
    END IF;
 
 END $$;
