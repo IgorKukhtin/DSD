@@ -13,17 +13,17 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 902
+    ExplicitWidth = 1019
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 1019
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 902
+      ExplicitWidth = 1019
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 1019
         Height = 421
-        ExplicitWidth = 902
+        ExplicitWidth = 1019
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -150,6 +150,28 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountSendTheir
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = AmountLoss
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountLoss
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = SummaLoss
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaLoss
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -207,6 +229,16 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountSendTheir
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountLoss
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = SummaLoss
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -325,6 +357,27 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
             Options.Editing = False
             Width = 91
           end
+          object AmountLoss: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'AmountLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object SummaLoss: TcxGridDBColumn
+            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1089#1091#1084#1084#1072' ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
+            DataBinding.FieldName = 'SummaLoss'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
         end
       end
     end
@@ -332,7 +385,7 @@ inherited Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm
   inherited Panel: TPanel
     Width = 1019
     Height = 33
-    ExplicitWidth = 902
+    ExplicitWidth = 1019
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 119

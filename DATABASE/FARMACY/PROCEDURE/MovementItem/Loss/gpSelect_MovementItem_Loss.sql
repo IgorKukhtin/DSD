@@ -129,20 +129,42 @@ BEGIN
                      )
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
-                                    THEN SUM(-MovementItemContainer.Amount * MIFloat_Income_Price.ValueData) / SUM(-MovementItemContainer.Amount)
+                                    THEN SUM(-MovementItemContainer.Amount * 
+                                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData
+                                              THEN MIFloat_Income_Price.ValueData
+                                              ELSE MIFloat_Income_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData /100)
+                                    END) / SUM(-MovementItemContainer.Amount)
                                END::TFloat AS Price
                         FROM MovementItemContainer 
-                             LEFT OUTER JOIN containerlinkobject AS CLI_MI 
-                                                                 ON CLI_MI.containerid = MovementItemContainer.ContainerId
-                                                                AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
-                             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                             LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
-                                                                   ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                                                  AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                            LEFT OUTER JOIN containerlinkobject AS CLI_MI 
+                                                                ON CLI_MI.containerid = MovementItemContainer.ContainerId
+                                                               AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                            LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                            -- элемент прихода
+                            LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                            LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
+                                                              ON MIFloat_Income_Price.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id) 
+                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                      ON MovementBoolean_PriceWithVAT.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                         ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                  ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                         WHERE MovementItemContainer.MovementId = inMovementId
                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
                         GROUP BY MovementItemContainer.MovementItemId
-                       )
+                        )
 
       , tmpCheck AS (SELECT MI_Check.ObjectId               AS GoodsId
                           , SUM (MI_Check.Amount) ::TFloat  AS Amount
@@ -173,8 +195,8 @@ BEGIN
                           COALESCE(MIFloat_Price.ValueData, CurrPRICE.Price))::TFloat      AS Summ
                  , REMAINS.Amount                                                          AS Remains_Amount 
                  , tmpCheck.Amount::TFloat                                                 AS AmountCheck
-                 , COALESCE(MIContainer.Price,REMAINS.Price)::TFloat                       AS PriceIn
-                 , (MovementItem.Amount*COALESCE(MIContainer.Price,REMAINS.Price))::TFloat AS SummIn
+                 , COALESCE(MIContainer.Price, 0)::TFloat                                  AS PriceIn
+                 , (MovementItem.Amount*COALESCE(MIContainer.Price, 0))::TFloat            AS SummIn
                  , COALESCE(MovementItem.IsErased,FALSE) AS isErased
             FROM tmpGoods
                 LEFT JOIN MovementItem ON tmpGoods.Id = MovementItem.ObjectId 
@@ -297,16 +319,39 @@ BEGIN
 
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
-                                    THEN SUM(-MovementItemContainer.Amount * MIFloat_Income_Price.ValueData) / SUM(-MovementItemContainer.Amount)
+                                    THEN SUM(-MovementItemContainer.Amount * 
+                                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData
+                                              THEN MIFloat_Income_Price.ValueData
+                                              ELSE MIFloat_Income_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData /100)
+                                    END) / SUM(-MovementItemContainer.Amount)
                                END::TFloat AS Price
                         FROM MovementItemContainer 
                             LEFT OUTER JOIN containerlinkobject AS CLI_MI 
                                                                 ON CLI_MI.containerid = MovementItemContainer.ContainerId
                                                                AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
                             LEFT OUTER JOIN OBJECT AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+
+                            -- элемент прихода
+                            LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                            -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                            LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                        ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                       AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
                             LEFT OUTER JOIN MovementitemFloat AS MIFloat_Income_Price
-                                                                  ON MIFloat_Income_Price.MovementItemId = Object_PartionMovementItem.ObjectCode
-                                                                 AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                                                              ON MIFloat_Income_Price.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id) 
+                                                             AND MIFloat_Income_Price.DescId = zc_MIFloat_Price()
+                            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                                      ON MovementBoolean_PriceWithVAT.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                         ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                  ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
+                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
                         WHERE MovementItemContainer.MovementId = inMovementId
                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
                         GROUP BY MovementItemContainer.MovementItemId
@@ -351,6 +396,7 @@ BEGIN
 ;
      END IF;
 
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -359,7 +405,8 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 17.02.20                                                                     *  
  12.09.18         * убрала огр. периода при выборе непров. чеков
  04.12.17         *
  12.06.17         * убрали Object_Price_View

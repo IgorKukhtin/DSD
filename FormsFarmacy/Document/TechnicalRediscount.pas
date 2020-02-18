@@ -22,7 +22,7 @@ type
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Price: TcxGridDBColumn;
-    Summ: TcxGridDBColumn;
+    DiffSumm: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintHeaderCDS: TClientDataSet;
@@ -34,9 +34,15 @@ type
     bbactStartLoad: TdxBarButton;
     GuidesUnit: TdsdGuides;
     edUnitName: TcxButtonEdit;
-    actFormationUnit: TdsdExecStoredProc;
-    spFormationUnit: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
+    Remains_Amount: TcxGridDBColumn;
+    Proficit: TcxGridDBColumn;
+    Deficit: TcxGridDBColumn;
+    Remains_Summ: TcxGridDBColumn;
+    DeficitSumm: TcxGridDBColumn;
+    ProficitSumm: TcxGridDBColumn;
+    Remains_FactAmount: TcxGridDBColumn;
+    Remains_FactSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

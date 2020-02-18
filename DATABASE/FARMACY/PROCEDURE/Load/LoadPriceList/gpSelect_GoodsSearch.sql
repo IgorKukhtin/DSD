@@ -25,11 +25,12 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar,
 
 AS
 $BODY$
-  DECLARE vbUserId     Integer;
-  DECLARE vbObjectId   Integer;
-  DECLARE vbUnitId     Integer;
-  DECLARE vbUnitIdStr  TVarChar;
-  DECLARE vbAreaId     Integer;
+  DECLARE vbUserId       Integer;
+  DECLARE vbObjectId     Integer;
+  DECLARE vbUnitId       Integer;
+  DECLARE vbUnitIdStr    TVarChar;
+  DECLARE vbAreaId       Integer;
+  DECLARE vbJuridicalId  Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -55,6 +56,21 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
      END IF;
+     
+    -- Для роли "Безнал" отключаем проверки
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+     THEN
+      -- Для роли "Кассир аптеки"
+       SELECT ObjectLink_Unit_Juridical.ChildObjectId
+       INTO vbJuridicalId
+       FROM ObjectLink AS ObjectLink_Unit_Juridical
+       WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
+         AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();     
+     ELSE
+       vbJuridicalId := 0;
+     END IF;
+
       
      RETURN QUERY
      WITH DD AS (SELECT DISTINCT Object_MarginCategoryItem_View.MarginPercent
@@ -126,7 +142,8 @@ BEGIN
 
             INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
             LEFT JOIN (SELECT DISTINCT JuridicalId, ContractId, isPriceClose
-                         FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId)) AS JuridicalSettings
+                         FROM lpSelect_Object_JuridicalSettingsRetail (vbObjectId) AS JuridicalSettings
+                       WHERE JuridicalSettings.MainJuridicalId = vbJuridicalId OR COALESCE(vbJuridicalId, 0) = 0) AS JuridicalSettings
                     ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId 
                    AND JuridicalSettings.ContractId = LoadPriceList.ContractId 
 
@@ -185,6 +202,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 17.02.20                                                                                     * 
  03.05.18                                                                                     * 
  21.10.17         *
  13.10.17         *
@@ -196,4 +214,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsSearch (inGoodsSearch := 'крем' , inProducerSearch := 'фар' , inCodeSearch := '1534' ,  inSession := '3');
+-- select * from gpSelect_GoodsSearch(inAreaId := 5803492, inGoodsSearch := '111' , inProducerSearch := '' , inCodeSearch := '' ,  inSession := '3990942 ');
+

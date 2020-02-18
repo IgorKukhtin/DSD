@@ -57,6 +57,8 @@ type
     SummaCheck: TcxGridDBColumn;
     AmountSendTheir: TcxGridDBColumn;
     SummaSendTheir: TcxGridDBColumn;
+    AmountLoss: TcxGridDBColumn;
+    SummaLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

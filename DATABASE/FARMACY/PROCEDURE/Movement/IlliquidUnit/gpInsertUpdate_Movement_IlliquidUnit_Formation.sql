@@ -1,103 +1,76 @@
 -- Function: gpInsertUpdate_Movement_IlliquidUnit_Formation()
 
--- Function: gpSelect_Movement_IlliquidUnit()
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_IlliquidUnit_Formation (TDateTime, TVarChar);
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_IlliquidUnit (TDateTime, TDateTime, Boolean, TVarChar);
-
-CREATE OR REPLACE FUNCTION gpSelect_Movement_IlliquidUnit(
-    IN inStartDate   TDateTime , --С даты
-    IN inEndDate     TDateTime , --По дату
-    IN inIsErased    Boolean ,   --Так же удаленные
-    IN inSession     TVarChar    --сессия пользователя
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IlliquidUnit_Formation(
+    IN inOperDate            TDateTime , -- Месяц формирования
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar
-             , TotalCount TFloat, DayCount Integer, ProcGoods TFloat, ProcUnit TFloat, Penalty TFloat
-             , Comment TVarChar
-             )
+RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbObjectId Integer;
-   DECLARE vbUnitKey TVarChar;
-   DECLARE vbUnitId Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_IlliquidUnit());
-     vbUserId:= lpGetUserBySession (inSession);
-     
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId := inSession;
 
-     RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
-                       )
+    inOperDate := date_trunc('month', inOperDate);
 
-       -- Результат
-       SELECT
-             Movement.Id                                          AS Id
-           , Movement.InvNumber                                   AS InvNumber
-           , Movement.OperDate                                    AS OperDate
-           , Object_Status.ObjectCode                             AS StatusCode
-           , Object_Status.ValueData                              AS StatusName
-           
-           , Object_Unit.Id                                       AS UnitId
-           , Object_Unit.ValueData                                AS UnitName
+     -- Разрешаем только сотрудникам с правами админа
+    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+    THEN
+      RAISE EXCEPTION 'Формирование вам запрещено, обратитесь к системному администратору';
+    END IF;
 
-           , MovementFloat_TotalCount.ValueData                   AS TotalCount
-           , MovementFloat_DayCount.ValueData::Integer            AS DayCount
-           , MovementFloat_ProcGoods.ValueData                    AS ProcGoods
-           , MovementFloat_ProcUnit.ValueData                     AS ProcUnit
-           , MovementFloat_Penalty.ValueData                      AS Penalty
+  PERFORM gpInsertUpdate_Movement_IlliquidUnit_FormationUnit (inOperDate := inOperDate, inUnitID := UnitList.UnitId,  inSession := inSession)
+  FROM (
+          WITH
+          tmpCheck AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId                AS UnitId
+                      FROM Movement
 
-           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
 
-       FROM (SELECT Movement.Id
-                  , MovementLinkObject_Unit.ObjectId AS UnitId
-             FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN date_trunc('month', inStartDate) AND date_trunc('month', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
-                               AND Movement.DescId = zc_Movement_IlliquidUnit() AND Movement.StatusId = tmpStatus.StatusId
-                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            ) AS tmpMovement
-            
-            LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpMovement.UnitId
-            
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+                           INNER JOIN MovementLinkObject AS MovementLinkObject_CashRegister
+                                                         ON MovementLinkObject_CashRegister.MovementId = Movement.Id
+                                                        AND MovementLinkObject_CashRegister.DescId = zc_MovementLinkObject_CashRegister()
+                                                        AND COALESCE (MovementLinkObject_CashRegister.ObjectId, 0) <> 0
 
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_TotalCount
-                                          ON MovementFloat_TotalCount.MovementId = Movement.Id
-                                         AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_DayCount
-                                          ON MovementFloat_DayCount.MovementId = Movement.Id
-                                         AND MovementFloat_DayCount.DescId = zc_MovementFloat_DayCount()
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_ProcGoods
-                                          ON MovementFloat_ProcGoods.MovementId = Movement.Id
-                                         AND MovementFloat_ProcGoods.DescId = zc_MovementFloat_ProcGoods()
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_ProcUnit
-                                          ON MovementFloat_ProcUnit.MovementId = Movement.Id
-                                         AND MovementFloat_ProcUnit.DescId = zc_MovementFloat_ProcUnit()
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_Penalty
-                                          ON MovementFloat_Penalty.MovementId = Movement.Id
-                                         AND MovementFloat_Penalty.DescId = zc_MovementFloat_Penalty()
+                      WHERE Movement.OperDate >= inOperDate
+                        AND Movement.OperDate < inOperDate + INTERVAL '1 MONTH'
+                        AND Movement.StatusId = zc_Enum_Status_Complete()
+                        AND Movement.DescId = zc_Movement_Check()
+                      )
+        , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
+                      FROM Object AS Object_Unit
+                           INNER JOIN tmpCheck ON tmpCheck.UnitId = Object_Unit.Id
+                           INNER JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
+                                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+                                                AND ObjectLink_Unit_Parent.ChildObjectId > 0
+                           INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = 4
+                      WHERE Object_Unit.DescId = zc_Object_Unit()
+                        AND Object_Unit.isErased = False
+                      )
 
-            LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId = Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            ;
+        SELECT tmpUnit.UnitId FROM tmpUnit) AS UnitList;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_IlliquidUnit (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 22.12.19                                                       *
+ 23.12.19                                                       *
 */
 
--- тест
--- SELECT * FROM gpSelect_Movement_IlliquidUnit (inStartDate:= '23.12.2019', inEndDate:= '23.12.2019', inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpInsertUpdate_Movement_IlliquidUnit_Formation (inOperDate := '23.12.2019', inSession := '3')

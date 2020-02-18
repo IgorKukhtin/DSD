@@ -661,13 +661,13 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
-      Left = 828
-      Top = 24
+      Left = 804
+      Top = 5
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
     end
     object cbisDeferred: TcxCheckBox
-      Left = 693
-      Top = 60
+      Left = 667
+      Top = 52
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
       TabOrder = 11
@@ -693,7 +693,7 @@ inherited SendForm: TSendForm
     end
     object cbSun: TcxCheckBox
       Left = 477
-      Top = 103
+      Top = 88
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       ParentShowHint = False
@@ -703,19 +703,19 @@ inherited SendForm: TSendForm
       Width = 133
     end
     object cbDefSun: TcxCheckBox
-      Left = 610
-      Top = 103
+      Left = 667
+      Top = 106
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
-      Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1086' '#1057#1059#1053
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 15
-      Width = 193
+      Width = 126
     end
     object cbReceived: TcxCheckBox
-      Left = 808
-      Top = 84
+      Left = 667
+      Top = 88
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
       ParentShowHint = False
@@ -725,8 +725,8 @@ inherited SendForm: TSendForm
       Width = 95
     end
     object cbSent: TcxCheckBox
-      Left = 693
-      Top = 84
+      Left = 667
+      Top = 70
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072
       ParentShowHint = False
@@ -737,7 +737,7 @@ inherited SendForm: TSendForm
     end
     object edIsAuto: TcxCheckBox
       Left = 477
-      Top = 60
+      Top = 52
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -745,8 +745,8 @@ inherited SendForm: TSendForm
       Width = 188
     end
     object cbSun_v2: TcxCheckBox
-      Left = 808
-      Top = 103
+      Left = 477
+      Top = 106
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
       ParentShowHint = False
@@ -770,7 +770,7 @@ inherited SendForm: TSendForm
   end
   object cbNotDisplaySUN: TcxCheckBox [4]
     Left = 477
-    Top = 84
+    Top = 70
     Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
     Properties.ReadOnly = True
@@ -778,12 +778,12 @@ inherited SendForm: TSendForm
     Width = 188
   end
   object cxLabel6: TcxLabel [5]
-    Left = 787
-    Top = 63
+    Left = 804
+    Top = 45
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
   object edPeriod: TcxCurrencyEdit [6]
-    Left = 960
+    Left = 804
     Top = 23
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -792,8 +792,8 @@ inherited SendForm: TSendForm
     Width = 37
   end
   object edDay: TcxCurrencyEdit [7]
-    Left = 960
-    Top = 62
+    Left = 804
+    Top = 63
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
@@ -801,16 +801,16 @@ inherited SendForm: TSendForm
     Width = 37
   end
   object ceChecked: TcxCheckBox [8]
-    Left = 828
-    Top = -4
+    Left = 732
+    Top = 133
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
     TabOrder = 12
     Visible = False
     Width = 220
   end
   object edisComplete: TcxCheckBox [9]
-    Left = 610
-    Top = -3
+    Left = 514
+    Top = 134
     Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
     TabOrder = 13
     Visible = False
