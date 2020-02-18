@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 565
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -296,6 +296,8 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 1001
     Height = 122
     TabOrder = 3
+    ExplicitLeft = -16
+    ExplicitTop = 8
     ExplicitWidth = 1001
     ExplicitHeight = 122
     inherited edInvNumber: TcxTextEdit
@@ -2172,8 +2174,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 80
+    Left = 248
+    Top = 104
   end
   object GuidesJuridicalActualAddress: TdsdGuides
     KeyField = 'Id'
@@ -2205,19 +2207,20 @@ inherited ReturnOutForm: TReturnOutForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesTo
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalName'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesTo
         ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 80
+    Left = 480
+    Top = 96
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ReturnOut'
