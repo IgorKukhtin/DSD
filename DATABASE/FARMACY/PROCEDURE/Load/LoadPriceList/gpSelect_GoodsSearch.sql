@@ -57,7 +57,7 @@ BEGIN
          RAISE EXCEPTION 'Не достаточно прав доступа на изменение региона';
      END IF;
      
-    -- Для роли "Безнал" отключаем проверки
+    -- Для роли "Кассир" отключаем проверки
      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
      THEN

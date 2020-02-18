@@ -2816,6 +2816,14 @@
 				<Form>TechnicalRediscountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\TechnicalRediscountCashier.pas">
+				<Form>TechnicalRediscountCashierForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas">
+				<Form>TechnicalRediscountCashierJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

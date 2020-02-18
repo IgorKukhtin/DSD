@@ -812,7 +812,9 @@ uses
   Report_SUNSaleDatesDialog in '..\..\FormsFarmacy\Report\Report_SUNSaleDatesDialog.pas' {Report_SUNSaleDatesDialogForm: TParentForm},
   Report_SUNSaleDates in '..\..\FormsFarmacy\Report\Report_SUNSaleDates.pas' {Report_SUNSaleDatesForm: TParentForm},
   TechnicalRediscount in '..\..\FormsFarmacy\Document\TechnicalRediscount.pas' {TechnicalRediscountForm: TParentForm},
-  TechnicalRediscountJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas' {TechnicalRediscountJournalForm: TParentForm};
+  TechnicalRediscountJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas' {TechnicalRediscountJournalForm: TParentForm},
+  TechnicalRediscountCashier in '..\..\FormsFarmacy\Document\TechnicalRediscountCashier.pas' {TechnicalRediscountCashierForm: TParentForm},
+  TechnicalRediscountCashierJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas' {TechnicalRediscountCashierJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

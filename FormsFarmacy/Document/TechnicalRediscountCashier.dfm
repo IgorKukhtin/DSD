@@ -1,5 +1,5 @@
-inherited TechnicalRediscountForm: TTechnicalRediscountForm
-  Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
+  Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090'  ('#1076#1083#1103' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1074')'
   ClientHeight = 479
   ClientWidth = 915
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
@@ -145,7 +145,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 92
+            Width = 73
           end
           object Remains_Summ: TcxGridDBColumn
             Caption = 'C'#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072
@@ -282,9 +282,25 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 62
+      Properties.Buttons = <
+        item
+          Action = actCompleteMovement
+          Default = True
+          Kind = bkGlyph
+          Visible = False
+        end
+        item
+          Action = actUnCompleteMovement
+          Kind = bkGlyph
+          Visible = False
+        end
+        item
+          Action = actDeleteMovement
+          Kind = bkGlyph
+          Visible = False
+        end>
       ExplicitTop = 62
       ExplicitWidth = 200
-      ExplicitHeight = 22
       Width = 200
     end
     object lblUnit: TcxLabel
@@ -300,7 +316,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     object edComment: TcxTextEdit
       Left = 223
       Top = 62
-      Properties.ReadOnly = False
+      Properties.ReadOnly = True
       TabOrder = 8
       Width = 426
     end
@@ -396,10 +412,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
         item
           Visible = True
           ItemName = 'bbShowErased'
@@ -743,12 +755,12 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
+    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscountCashier'
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
+    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscountCashier'
     Left = 654
     Top = 248
   end
@@ -872,7 +884,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Top = 312
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TechnicalRediscount_TotalSumm'
+    StoredProcName = 'gpGet_Movement_TechnicalRediscountCashier_TotalSumm'
     Params = <
       item
         Name = 'inMovementId'
@@ -945,8 +957,8 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Left = 476
     Top = 257
   end
-  object spInsertUpdate_MI_TechnicalRediscount_Set_Zero: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_TechnicalRediscount_Set_Zero'
+  object spInsertUpdate_MI_TechnicalRediscountCashier_Set_Zero: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TechnicalRediscountCashier_Set_Zero'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -973,8 +985,8 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       item
         Name = 'inDefaultKey'
         Value = 
-          'TTechnicalRediscountForm;zc_Object_ImportSetting_TechnicalRedisc' +
-          'ount'
+          'TTechnicalRediscountCashierForm;zc_Object_ImportSetting_Technica' +
+          'lRediscount'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

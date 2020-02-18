@@ -19,12 +19,25 @@ $BODY$
    DECLARE vbObjectId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbUnitId Integer;
+   DECLARE vbUnitIdStr    TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TechnicalRediscount());
      vbUserId:= lpGetUserBySession (inSession);
-     
+     vbUnitIdStr := COALESCE (lpGet_DefaultValue ('zc_Object_Unit', vbUserId), '0');
+     IF vbUnitIdStr <> '' THEN 
+        vbUnitId := vbUnitIdStr;
+     ELSE
+     	vbUnitId := 0;
+     END IF;	   
 
+    -- Для роли "Кассир" отключаем проверки
+     IF NOT EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+                   WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+     THEN
+       vbUnitId := 0;
+     END IF;
+     
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -55,6 +68,7 @@ BEGIN
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             WHERE (MovementLinkObject_Unit.ObjectId  = vbUnitId OR vbUnitId = 0)
             ) AS tmpMovement
             
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
@@ -86,4 +100,4 @@ ALTER FUNCTION gpSelect_Movement_TechnicalRediscount (TDateTime, TDateTime, Bool
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.12.2019', inEndDate:= '23.02.2020', inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.12.2019', inEndDate:= '23.02.2020', inIsErased:= FALSE, inSession:= '11316104')

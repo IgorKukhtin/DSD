@@ -631,6 +631,8 @@ type
     N219: TMenuItem;
     actTechnicalRediscount: TdsdOpenForm;
     N220: TMenuItem;
+    actTechnicalRediscountCashier: TdsdOpenForm;
+    N221: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
