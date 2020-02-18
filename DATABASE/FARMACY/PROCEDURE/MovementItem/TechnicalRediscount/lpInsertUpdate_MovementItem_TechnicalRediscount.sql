@@ -18,6 +18,8 @@ BEGIN
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, Null);
 
+     PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff (inMovementId);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

@@ -86,4 +86,4 @@ ALTER FUNCTION gpSelect_Movement_TechnicalRediscount (TDateTime, TDateTime, Bool
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.12.2019', inEndDate:= '23.12.2019', inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.12.2019', inEndDate:= '23.02.2020', inIsErased:= FALSE, inSession:= '3')

@@ -743,10 +743,12 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
     Left = 654
     Top = 248
   end
