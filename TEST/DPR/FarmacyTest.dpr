@@ -814,7 +814,8 @@ uses
   TechnicalRediscount in '..\..\FormsFarmacy\Document\TechnicalRediscount.pas' {TechnicalRediscountForm: TParentForm},
   TechnicalRediscountJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas' {TechnicalRediscountJournalForm: TParentForm},
   TechnicalRediscountCashier in '..\..\FormsFarmacy\Document\TechnicalRediscountCashier.pas' {TechnicalRediscountCashierForm: TParentForm},
-  TechnicalRediscountCashierJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas' {TechnicalRediscountCashierJournalForm: TParentForm};
+  TechnicalRediscountCashierJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas' {TechnicalRediscountCashierJournalForm: TParentForm},
+  Report_SendSUN_SUNv2 in '..\..\FormsFarmacy\Report\Report_SendSUN_SUNv2.pas' {Report_SendSUN_SUNv2Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

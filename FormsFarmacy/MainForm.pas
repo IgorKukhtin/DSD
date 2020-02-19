@@ -633,6 +633,8 @@ type
     N220: TMenuItem;
     actTechnicalRediscountCashier: TdsdOpenForm;
     N221: TMenuItem;
+    actReport_SendSUN_SUNv2: TdsdOpenForm;
+    miReport_SendSUN_SUNv2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
