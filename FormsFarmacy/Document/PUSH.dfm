@@ -11,20 +11,20 @@ inherited PUSHForm: TPUSHForm
     Top = 195
     Width = 707
     Height = 305
-    ExplicitTop = 183
+    ExplicitTop = 195
     ExplicitWidth = 707
-    ExplicitHeight = 317
+    ExplicitHeight = 305
     ClientRectBottom = 305
     ClientRectRight = 707
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
       ExplicitWidth = 707
-      ExplicitHeight = 293
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
         Width = 707
         Height = 281
         ExplicitWidth = 707
-        ExplicitHeight = 293
+        ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -85,7 +85,6 @@ inherited PUSHForm: TPUSHForm
     object tsChild: TcxTabSheet
       Caption = #1044#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       ImageIndex = 1
-      ExplicitHeight = 293
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
@@ -94,7 +93,6 @@ inherited PUSHForm: TPUSHForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 293
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -218,7 +216,7 @@ inherited PUSHForm: TPUSHForm
       Lines.Strings = (
         'edMessage')
       TabOrder = 6
-      Height = 150
+      Height = 129
       Width = 532
     end
     object edDateEndPUSH: TcxDateEdit
@@ -254,6 +252,17 @@ inherited PUSHForm: TPUSHForm
       Caption = #1055#1086#1074#1090'. '#1077#1078#1077#1076#1085#1077#1074#1085#1086
       TabOrder = 3
       Width = 125
+    end
+    object edFunction: TcxTextEdit
+      Left = 368
+      Top = 146
+      TabOrder = 13
+      Width = 330
+    end
+    object cxLabel6: TcxLabel
+      Left = 166
+      Top = 147
+      Caption = #1060#1091#1085#1082#1094#1080#1103' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1090#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
     end
   end
   inherited ActionList: TActionList
@@ -611,6 +620,13 @@ inherited PUSHForm: TPUSHForm
         Component = edMessage
         DataType = ftWideString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Function'
+        Value = Null
+        Component = edFunction
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -672,6 +688,14 @@ inherited PUSHForm: TPUSHForm
         DataType = ftWideString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFunction'
+        Value = Null
+        Component = edFunction
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -713,6 +737,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = chbDaily
+      end
+      item
+        Control = edFunction
       end>
     Left = 208
     Top = 233
@@ -725,6 +752,7 @@ inherited PUSHForm: TPUSHForm
     Params = <
       item
         Name = 'inMovementItemId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -732,6 +760,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean
@@ -753,6 +782,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'ioMovementItemId'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -768,6 +798,7 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Name = 'outIsErased'
+        Value = Null
         Component = ChildCDS
         ComponentItem = 'IsErased'
         DataType = ftBoolean

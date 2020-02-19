@@ -58,12 +58,17 @@ BEGIN
                    LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                              ON MovementBoolean_Received.MovementId = Movement.Id
                                             AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
-              WHERE Movement.OperDate >= '11.02.2020'
+                   LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                             ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                            AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
+              WHERE Movement.OperDate >= vbOparDate
                 AND Movement.DescId = zc_Movement_Send()
                 AND Movement.StatusId <> zc_Enum_Status_Complete()
                 AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
+                AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = False
                 AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
+                AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = False
               GROUP BY MovementLinkObject_From.ObjectId) AS T1;
 
         PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', False, 'Выполнено'::TVarChar, vbUserId);

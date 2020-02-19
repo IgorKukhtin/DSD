@@ -62,6 +62,8 @@ type
     chbDaily: TcxCheckBox;
     chParentName: TcxGridDBColumn;
     DBViewAddOnChild: TdsdDBViewAddOn;
+    edFunction: TcxTextEdit;
+    cxLabel6: TcxLabel;
   private
     { Private declarations }
   public

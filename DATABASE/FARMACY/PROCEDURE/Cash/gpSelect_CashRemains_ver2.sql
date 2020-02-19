@@ -468,10 +468,18 @@ BEGIN
                                   FROM tmpContainerIn as Container
                                   GROUP BY Container.GoodsID
                                  )
+               , tmpMovementItemCheck AS (SELECT MovementItemContainer.ObjectId_Analyzer          AS GoodsID
+                                               , COUNT(1)                                         AS Check
+                                          FROM MovementItemContainer
+                                          WHERE MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                            AND MovementItemContainer.WhereObjectId_Analyzer = vbUnitId
+                                            AND MovementItemContainer.OperDate >= CURRENT_DATE - ('100 DAY')::INTERVAL
+                                          GROUP BY MovementItemContainer.ObjectId_Analyzer)
                , tmpNotSold AS (SELECT Container.GoodsID
                                 FROM tmpContainer AS Container
+                                     LEFT OUTER JOIN tmpMovementItemCheck ON tmpMovementItemCheck.GoodsID = Container.GoodsID
                                 WHERE Container.Amount > 0 AND Container.AmountIn > 0
-                                  AND Container.Check = 0
+                                  AND (Container.Check + COALESCE(tmpMovementItemCheck.Check, 0)) = 0
                                 )
                  -- Все перемещения по СУН
                 ,tmpSendAll AS (SELECT DISTINCT Movement.Id AS MovementId
@@ -913,6 +921,7 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 19.02.20                                                                                                    *
  04.12.19                                                                                                    * FixDiscount
  23.09.19                                                                                                    * NotTransferTime
  15.07.19                                                                                                    *
@@ -943,4 +952,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3997097') where NotSold60 = True
+-- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') where notsold = True

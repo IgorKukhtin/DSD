@@ -67,6 +67,15 @@ BEGIN
                           GROUP BY Container.UnitID
                                  , Container.GoodsID
                          )
+       , tmpMovementItemCheck AS (SELECT MovementItemContainer.WhereObjectId_Analyzer     AS UnitID
+                                       , MovementItemContainer.ObjectId_Analyzer          AS GoodsID
+                                       , COUNT(1)                                         AS Check
+                                  FROM MovementItemContainer
+                                  WHERE MovementItemContainer.MovementDescId = zc_Movement_Check()
+                                    AND MovementItemContainer.WhereObjectId_Analyzer in (SELECT DISTINCT tmpContainer.UnitID FROM tmpContainer WHERE tmpContainer.Check = 0)
+                                    AND MovementItemContainer.OperDate >= CURRENT_DATE - (inAmountDay||' DAY')::INTERVAL
+                                  GROUP BY MovementItemContainer.ObjectId_Analyzer
+                                         , MovementItemContainer.WhereObjectId_Analyzer)
        , tmpMovementItemContainerOld AS (SELECT ObjectLink_Unit_UnitOld.ObjectId                AS UnitID
                                               , Object_Goods_Retail_New.ID                      AS GoodsID
                                               , SUM(MovementItemContainer.Amount)               AS Amount
@@ -94,11 +103,14 @@ BEGIN
                              , Container.Amount      AS Remains
                              , Container.MI_IncomeId AS MI_IncomeId
                         FROM tmpContainer AS Container
+                             LEFT JOIN tmpMovementItemCheck AS MovementItemCheck
+                                                            ON MovementItemCheck.UnitID = Container.UnitID
+                                                           AND MovementItemCheck.GoodsID = Container.GoodsID
                              LEFT JOIN tmpMovementItemContainerOld AS MovementItemContainerOld
                                                                    ON MovementItemContainerOld.UnitID = Container.UnitID 
                                                                   AND MovementItemContainerOld.GoodsID = Container.GoodsID
                         WHERE Container.Amount > 0 AND Container.AmountIn > 0
-                          AND (Container.Check + COALESCE(MovementItemContainerOld.Check, 0)) = 0)
+                          AND (Container.Check + COALESCE(MovementItemCheck.Check, 0) + COALESCE(MovementItemContainerOld.Check, 0)) = 0)
 
 
     SELECT Object_Unit.ID            AS UnitID
@@ -144,11 +156,11 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 19.02.20                                                       *
  14.12.19                                                       *
  11.12.19                                                       *
  19.07.19                                                       *
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_GoodsNotSalePast(inUnitId :=  12812109  , inAmountDay := 100, inSession := '3')
+-- select * from gpSelect_GoodsNotSalePast(inUnitId := 377610 , inAmountDay := 100 ,  inSession := '3');
