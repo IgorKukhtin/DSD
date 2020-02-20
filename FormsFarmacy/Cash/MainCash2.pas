@@ -448,6 +448,15 @@ type
     Label30: TLabel;
     Label31: TLabel;
     lblMemberSP: TLabel;
+    actTechnicalRediscountCurr: TdsdOpenForm;
+    actTechnicalRediscountCashier: TdsdOpenForm;
+    actTechnicalRediscount: TAction;
+    N40: TMenuItem;
+    N41: TMenuItem;
+    spGet_Movement_TechnicalRediscount_Id: TdsdStoredProc;
+    actPromoCodeDoctor: TAction;
+    actChoicePromoCodeDoctor: TOpenChoiceForm;
+    pmPromoCodeDoctor: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -575,6 +584,8 @@ type
     procedure actSetLoyaltySaveMoneyExecute(Sender: TObject);
     procedure cxButton8Click(Sender: TObject);
     procedure edLoyaltySMSummaExit(Sender: TObject);
+    procedure actTechnicalRediscountExecute(Sender: TObject);
+    procedure actPromoCodeDoctorExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -2058,6 +2069,13 @@ begin
   begin actShowMessage.MessageText:= spCheck_RemainsError.ParamByName('outMessageText').Value;
         actShowMessage.Execute;
   end;
+end;
+
+procedure TMainCashForm2.actPromoCodeDoctorExecute(Sender: TObject);
+begin
+  if not actChoicePromoCodeDoctor.Execute then Exit;
+  edPromoCode.Text := actChoicePromoCodeDoctor.GuiParams.ParamByName('TextValue').Value;
+  edPromoCodeExit(Sender);
 end;
 
 procedure TMainCashForm2.actPutCheckToCashExecute(Sender: TObject);
@@ -4137,6 +4155,17 @@ begin
   else FormParams.ParamByName('JackdawsChecksCode').Value := 0;
 end;
 
+procedure TMainCashForm2.actTechnicalRediscountExecute(Sender: TObject);
+begin
+  spGet_Movement_TechnicalRediscount_Id.ParamByName('outMovementId').Value := 0;
+  spGet_Movement_TechnicalRediscount_Id.Execute;
+  if spGet_Movement_TechnicalRediscount_Id.ParamByName('outMovementId').Value <> 0 then
+  begin
+    actTechnicalRediscountCurr.GuiParams.ParamByName('Id').Value := spGet_Movement_TechnicalRediscount_Id.ParamByName('outMovementId').Value;
+    actTechnicalRediscountCurr.Execute;
+  end else ShowMessage('Активный документ технической инвентаризации не найден.'#13#10'Попробуйте позже.');
+end;
+
 procedure TMainCashForm2.actDoesNotShareExecute(Sender: TObject);
 begin
   if not RemainsCDS.Active  then Exit;
@@ -4727,6 +4756,7 @@ function TMainCashForm2.CheckShareFromPrice(Amount, Price : Currency; GoodsCode 
   var Res: TArray<string>; I : integer;
 begin
   Result := True;
+  if Self.FormParams.ParamByName('SPKindId').Value = 4823010 then Exit;
   if UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency <= 0 then Exit;
   if Price >= UnitConfigCDS.FieldByName('ShareFromPrice').AsCurrency then Exit;
   if frac(Amount) = 0 then Exit;
@@ -7638,6 +7668,8 @@ begin
       edPermanentDiscount.Text := UnitConfigCDS.FieldByName('PermanentDiscountPercent').AsString + ' %';
     end else Label24.Visible := False;
     edPermanentDiscount.Visible := Label24.Visible;
+    actPromoCodeDoctor.Enabled := UnitConfigCDS.FieldByName('isPromoCodeDoctor').AsBoolean;
+    pmPromoCodeDoctor.Visible := UnitConfigCDS.FieldByName('isPromoCodeDoctor').AsBoolean;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

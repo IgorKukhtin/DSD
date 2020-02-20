@@ -115,6 +115,7 @@ type
     cbFilter3: TcxCheckBox;
     AmountPlan: TcxGridDBBandedColumn;
     AmountPlanAward: TcxGridDBBandedColumn;
+    PercForPremium: TcxGridDBBandedColumn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -387,7 +388,7 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  for I := 1 to 7 do
+  for I := 1 to 8 do
   begin
     Field := TCurrencyField.Create(Self);
     Field.FieldKind := fkCalculated;
@@ -397,8 +398,9 @@ begin
       3 : Field.FieldName := 'AmountPlan';
       4 : Field.FieldName := 'AmountPlanAwardTab';
       5 : Field.FieldName := 'AmountPlanAward';
-      6 : Field.FieldName := 'AmountTheFineTab';
-      7 : Field.FieldName := 'BonusAmountTab';
+      6 : Field.FieldName := 'PercForPremium';
+      7 : Field.FieldName := 'AmountTheFineTab';
+      8 : Field.FieldName := 'BonusAmountTab';
     end;
     Field.Name := 'cds' + Field.FieldName;
     Field.DataSet := ClientDataSet;
@@ -673,6 +675,12 @@ begin
 //    Dataset['AmountPlanAwardTab'] := Min(nSum, nSumMax);
     Dataset['AmountPlanAwardTab'] := Dataset['AmountPlanAwardTab' + FUnit.Strings[FUnitCalck]];
     Dataset['AmountPlanAward'] := Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]];
+
+    if Dataset['AmountPlanAward'] > 0 then
+    begin
+      if Dataset['Amount'] >= Dataset['AmountPlanAward'] then Dataset['PercForPremium'] := 100
+      else Dataset['PercForPremium'] := Dataset['Amount'] / Dataset['AmountPlanAward'] * 100;
+    end;
 
 //    nSum := 0;
 //    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];

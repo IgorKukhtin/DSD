@@ -3647,6 +3647,64 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 32888
       OnExecute = actSetLoyaltySaveMoneyExecute
     end
+    object actTechnicalRediscount: TAction
+      Caption = #1058#1077#1082#1091#1097#1080#1081' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      Hint = #1058#1077#1082#1091#1097#1080#1081' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      OnExecute = actTechnicalRediscountExecute
+    end
+    object actTechnicalRediscountCurr: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actTechnicalRediscountCurr'
+      FormName = 'TTechnicalRediscountCashierForm'
+      FormNameParam.Value = 'TTechnicalRediscountCashierForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actTechnicalRediscountCashier: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099
+      Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099
+      FormName = 'TTechnicalRediscountCashierJournalForm'
+      FormNameParam.Value = 'TTechnicalRediscountCashierJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPromoCodeDoctor: TAction
+      Caption = #1042#1099#1073#1086#1088' '#1087#1088#1086#1084#1086#1082#1086#1076#1072' '#1074#1088#1072#1095#1072' '
+      Hint = #1042#1099#1073#1086#1088' '#1087#1088#1086#1084#1086#1082#1086#1076#1072' '#1074#1088#1072#1095#1072' '
+      ShortCut = 16455
+      OnExecute = actPromoCodeDoctorExecute
+    end
+    object actChoicePromoCodeDoctor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePromoCodeDoctor'
+      FormName = 'TPromoCodeDoctorForm'
+      FormNameParam.Value = 'TPromoCodeDoctorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3919,6 +3977,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N39: TMenuItem
       Action = actSetLoyaltySaveMoney
+    end
+    object pmPromoCodeDoctor: TMenuItem
+      Action = actPromoCodeDoctor
     end
     object miManualDiscount: TMenuItem
       Action = actManualDiscount
@@ -5443,6 +5504,12 @@ inherited MainCashForm2: TMainCashForm2
     object N32: TMenuItem
       Action = actSendCashJournalSun
     end
+    object N40: TMenuItem
+      Action = actTechnicalRediscount
+    end
+    object N41: TMenuItem
+      Action = actTechnicalRediscountCashier
+    end
   end
   object TimerDroppedDown: TTimer
     Enabled = False
@@ -5756,5 +5823,19 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 785
     Top = 437
+  end
+  object spGet_Movement_TechnicalRediscount_Id: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TechnicalRediscount_Cash_Id'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'outMovementId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 785
+    Top = 485
   end
 end

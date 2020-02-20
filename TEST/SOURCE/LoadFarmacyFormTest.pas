@@ -1635,6 +1635,10 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeDoctorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeDoctorForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));

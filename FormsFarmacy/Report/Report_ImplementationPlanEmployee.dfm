@@ -281,7 +281,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 5
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object colBonusAmountTab: TcxGridDBBandedColumn
@@ -296,7 +296,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 6
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
         object colConsider: TcxGridDBBandedColumn
@@ -313,7 +313,24 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 7
+          Position.ColIndex = 8
+          Position.RowIndex = 0
+        end
+        object PercForPremium: TcxGridDBBandedColumn
+          Tag = 1
+          Caption = #1055#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085'. '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1087#1088#1080' 100% '#1076#1085#1077#1081
+          DataBinding.FieldName = 'PercForPremium'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00'
+          HeaderAlignmentHorz = taCenter
+          HeaderHint = 
+            #1055#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1087#1088#1080' '#1086#1090#1088#1072#1073#1086#1090#1082#1077' 100%  '#1095#1077#1083#1086#1074#1077#1082#1086 +
+            '  '#1076#1085#1077#1081
+          Options.Editing = False
+          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
+          Width = 74
+          Position.BandIndex = 1
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
       end
@@ -971,6 +988,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     TextEdit = edFilter
     DataSet = ClientDataSet
     Column = colGoodsName
+    CheckBoxList = <>
     Left = 568
     Top = 200
   end

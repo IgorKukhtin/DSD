@@ -164,6 +164,9 @@ type
     actUnhook_MovementItem: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
     cbBeginning: TcxCheckBox;
+    spUnhook_Movement: TdsdStoredProc;
+    actUnhook_Movement: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public
