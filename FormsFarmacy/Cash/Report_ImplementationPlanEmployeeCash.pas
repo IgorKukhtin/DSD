@@ -113,7 +113,8 @@ type
     cbFilter3: TcxCheckBox;
     AmountPlan: TcxGridDBBandedColumn;
     AmountPlanAward: TcxGridDBBandedColumn;
-    cxImplementationPlanEmployeeDBBandedTableView1Column1: TcxGridDBBandedColumn;
+    cxGridDBColumn8: TcxGridDBColumn;
+    cdsResultTotalExecutionAllLine: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cdsListBandsAfterOpen(DataSet: TDataSet);
     procedure ClientDataSetCalcFields(DataSet: TDataSet);
@@ -146,6 +147,7 @@ type
     FUnit : TStrings;
     FUnitCategory : TStrings;
     FCountO : Integer;
+    FCountAllO : Integer;
     FCountYes : Integer;
     FStyle : TcxStyle;
 
@@ -386,7 +388,7 @@ begin
     Field.DataSet := ClientDataSet;
   end;
 
-  for I := 1 to 8 do
+  for I := 1 to 7 do
   begin
     Field := TCurrencyField.Create(Self);
     Field.FieldKind := fkCalculated;
@@ -396,9 +398,8 @@ begin
       3 : Field.FieldName := 'AmountPlan';
       4 : Field.FieldName := 'AmountPlanAwardTab';
       5 : Field.FieldName := 'AmountPlanAward';
-      6 : Field.FieldName := 'PercForPremium';
-      7 : Field.FieldName := 'AmountTheFineTab';
-      8 : Field.FieldName := 'BonusAmountTab';
+      6 : Field.FieldName := 'AmountTheFineTab';
+      7 : Field.FieldName := 'BonusAmountTab';
     end;
     Field.Name := 'cds' + Field.FieldName;
     Field.DataSet := ClientDataSet;
@@ -436,6 +437,10 @@ begin
   if FCountYes <> 0 then
     Dataset['TotalExecutionLine'] := (ClientDataSet.RecordCount - FCountO) / FCountYes * 100
   else Dataset['TotalExecutionLine'] := 0;
+
+  if FCountYes <> 0 then
+    Dataset['TotalExecutionAllLine'] := (ClientDataSet.RecordCount - FCountAllO) / FCountYes * 100
+  else Dataset['TotalExecutionAllLine'] := 0;
 
   if Dataset['Awarding'] = 'Yes' then
     Dataset['Total'] := cxImplementationPlanEmployeeDBBandedTableView1.DataController.Summary.FooterSummaryValues[1] -
@@ -486,6 +491,7 @@ procedure TReport_ImplementationPlanEmployeeCashForm.ClientDataSetAfterOpen(
   DataSet: TDataSet);
 begin
   FCountO := 0;
+  FCountAllO := 0;
   FCountYes := 0;
   try
     ClientDataSet.AfterPost :=  Nil;
@@ -495,6 +501,9 @@ begin
       if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
         (ClientDataSet.FieldByName('AmountPlanTab').AsCurrency = 0) or
         (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlanTab').AsCurrency) then Inc(FCountO);
+      if (ClientDataSet.FieldByName('Amount').AsCurrency = 0) or
+        (ClientDataSet.FieldByName('AmountPlan').AsCurrency = 0) or
+        (ClientDataSet.FieldByName('Amount').AsCurrency < ClientDataSet.FieldByName('AmountPlan').AsCurrency) then Inc(FCountAllO);
       ClientDataSet.Edit;
       if ClientDataSet.FieldByName('AmountPlanTab').AsCurrency >= 0.1 then
       begin
@@ -674,12 +683,6 @@ begin
     Dataset['AmountPlanAwardTab'] := Dataset['AmountPlanAwardTab' + FUnit.Strings[FUnitCalck]];
     Dataset['AmountPlanAward'] := Dataset['AmountPlanAward' + FUnit.Strings[FUnitCalck]];
 
-    if Dataset['AmountPlanAward'] > 0 then
-    begin
-      if Dataset['Amount'] >= Dataset['AmountPlanAward'] then Dataset['PercForPremium'] := 100
-      else Dataset['PercForPremium'] := Dataset['Amount'] / Dataset['AmountPlanAward'] * 100;
-    end;
-
 //    nSum := 0;
 //    for I := 0 to FUnit.Count - 1 do nSum := nSum + Dataset['AmountTheFineTab' + FUnit.Strings[I]];
 //    Dataset['AmountTheFineTab'] := nSum;
@@ -827,6 +830,7 @@ begin
   FUnit := TStringList.Create;
   FUnitCategory := TStringList.Create;
   FCountO := 0;
+  FCountAllO := 0;
   FUnitCalck := 0;
   FAmountPlan := Nil;
   FAmountPlanAward := Nil;

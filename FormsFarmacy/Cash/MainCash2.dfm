@@ -3683,7 +3683,7 @@ inherited MainCashForm2: TMainCashForm2
     object actPromoCodeDoctor: TAction
       Caption = #1042#1099#1073#1086#1088' '#1087#1088#1086#1084#1086#1082#1086#1076#1072' '#1074#1088#1072#1095#1072' '
       Hint = #1042#1099#1073#1086#1088' '#1087#1088#1086#1084#1086#1082#1086#1076#1072' '#1074#1088#1072#1095#1072' '
-      ShortCut = 16455
+      ShortCut = 16452
       OnExecute = actPromoCodeDoctorExecute
     end
     object actChoicePromoCodeDoctor: TOpenChoiceForm
@@ -5504,10 +5504,10 @@ inherited MainCashForm2: TMainCashForm2
     object N32: TMenuItem
       Action = actSendCashJournalSun
     end
-    object N40: TMenuItem
+    object pmTechnicalRediscount: TMenuItem
       Action = actTechnicalRediscount
     end
-    object N41: TMenuItem
+    object pmTechnicalRediscountCashier: TMenuItem
       Action = actTechnicalRediscountCashier
     end
   end

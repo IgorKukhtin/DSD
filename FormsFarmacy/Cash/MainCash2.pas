@@ -451,8 +451,8 @@ type
     actTechnicalRediscountCurr: TdsdOpenForm;
     actTechnicalRediscountCashier: TdsdOpenForm;
     actTechnicalRediscount: TAction;
-    N40: TMenuItem;
-    N41: TMenuItem;
+    pmTechnicalRediscount: TMenuItem;
+    pmTechnicalRediscountCashier: TMenuItem;
     spGet_Movement_TechnicalRediscount_Id: TdsdStoredProc;
     actPromoCodeDoctor: TAction;
     actChoicePromoCodeDoctor: TOpenChoiceForm;
@@ -7670,6 +7670,8 @@ begin
     edPermanentDiscount.Visible := Label24.Visible;
     actPromoCodeDoctor.Enabled := UnitConfigCDS.FieldByName('isPromoCodeDoctor').AsBoolean;
     pmPromoCodeDoctor.Visible := UnitConfigCDS.FieldByName('isPromoCodeDoctor').AsBoolean;
+    pmTechnicalRediscount.Visible := UnitConfigCDS.FieldByName('isTechnicalRediscount').AsBoolean;
+    pmTechnicalRediscountCashier.Visible := UnitConfigCDS.FieldByName('isTechnicalRediscount').AsBoolean;
   finally
     ReleaseMutex(MutexUnitConfig);
   end;

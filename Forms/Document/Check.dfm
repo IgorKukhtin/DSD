@@ -1754,7 +1754,8 @@ inherited CheckForm: TCheckForm
         item
           StoredProc = spSetPromoCode
         end>
-      Caption = 'actSetPromoCodeDoctor'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1074#1088#1072#1095#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1074#1088#1072#1095#1072
       ImageIndex = 74
     end
     object actChoicePromoCodeDoctor: TOpenChoiceForm

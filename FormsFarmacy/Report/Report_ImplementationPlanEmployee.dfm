@@ -281,7 +281,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 6
+          Position.ColIndex = 5
           Position.RowIndex = 0
         end
         object colBonusAmountTab: TcxGridDBBandedColumn
@@ -296,7 +296,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 7
+          Position.ColIndex = 6
           Position.RowIndex = 0
         end
         object colConsider: TcxGridDBBandedColumn
@@ -313,24 +313,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
           Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
           Width = 80
           Position.BandIndex = 1
-          Position.ColIndex = 8
-          Position.RowIndex = 0
-        end
-        object PercForPremium: TcxGridDBBandedColumn
-          Tag = 1
-          Caption = #1055#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085'. '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1087#1088#1080' 100% '#1076#1085#1077#1081
-          DataBinding.FieldName = 'PercForPremium'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00'
-          HeaderAlignmentHorz = taCenter
-          HeaderHint = 
-            #1055#1088#1086#1094#1077#1085#1090' '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1083#1072#1085#1072' '#1076#1083#1103' '#1087#1088#1077#1084#1080#1080' '#1087#1088#1080' '#1086#1090#1088#1072#1073#1086#1090#1082#1077' 100%  '#1095#1077#1083#1086#1074#1077#1082#1086 +
-            '  '#1076#1085#1077#1081
-          Options.Editing = False
-          Styles.OnGetContentStyle = colGroupNameStylesGetContentStyle
-          Width = 74
-          Position.BandIndex = 1
-          Position.ColIndex = 5
+          Position.ColIndex = 7
           Position.RowIndex = 0
         end
       end
@@ -405,7 +388,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
         end
       end
       object cxUnitCategory: TcxGrid
-        Left = 649
+        Left = 691
         Top = 1
         Width = 328
         Height = 137
@@ -458,7 +441,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
       object cxResult: TcxGrid
         Left = 401
         Top = 1
-        Width = 248
+        Width = 290
         Height = 137
         Align = alLeft
         TabOrder = 2
@@ -481,6 +464,17 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
             Options.Editing = False
             Width = 77
           end
+          object cxGridDBColumn8: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081'  % '#1074#1099#1087'. '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074'.'
+            DataBinding.FieldName = 'TotalExecutionAllLine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1086#1089#1090#1088#1086#1095#1085#1099#1081' '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1080' '#1074' '#1072#1087#1090#1077#1082#1077'.'
+            Options.Editing = False
+            Width = 77
+          end
           object cxGridDBColumn6: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080':'
             DataBinding.FieldName = 'Awarding'
@@ -491,7 +485,7 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
               'No')
             HeaderAlignmentHorz = taCenter
             Styles.Content = dmMain.cxGreenEdit
-            Width = 82
+            Width = 79
           end
           object cxGridDBColumn7: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086':'
@@ -926,6 +920,11 @@ object Report_ImplementationPlanEmployeeForm: TReport_ImplementationPlanEmployee
     object cdsResultTotalExecutionLine: TCurrencyField
       FieldKind = fkCalculated
       FieldName = 'TotalExecutionLine'
+      Calculated = True
+    end
+    object cdsResultTotalExecutionAllLine: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'TotalExecutionAllLine'
       Calculated = True
     end
     object cdsResultAwarding: TStringField

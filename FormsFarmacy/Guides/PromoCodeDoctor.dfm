@@ -143,6 +143,14 @@ object PromoCodeDoctorForm: TPromoCodeDoctorForm
         end
         item
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -232,6 +240,10 @@ object PromoCodeDoctorForm: TPromoCodeDoctorForm
       Visible = ivAlways
       ImageIndex = 34
     end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -292,6 +304,25 @@ object PromoCodeDoctorForm: TPromoCodeDoctorForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1089#1077#1093' '#1074#1088#1072#1095#1077#1081
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1089#1077#1093' '#1074#1088#1072#1095#1077#1081
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1088#1072#1095#1077#1081' '#1087#1086' '#1082#1086#1090#1086#1088#1099#1084' '#1091#1078#1077' '#1077#1089#1090#1100' '#1088#1077#1094#1077#1087#1090#1099
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1089#1077#1093' '#1074#1088#1072#1095#1077#1081
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1088#1072#1095#1077#1081' '#1087#1086' '#1082#1086#1090#1086#1088#1099#1084' '#1091#1078#1077' '#1077#1089#1090#1100' '#1088#1077#1094#1077#1087#1090#1099
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1074#1089#1077#1093' '#1074#1088#1072#1095#1077#1081
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoCodeDoctor'
@@ -300,27 +331,18 @@ object PromoCodeDoctorForm: TPromoCodeDoctorForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
-    PackSize = 1
-    Left = 144
-    Top = 152
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
+        Name = 'inShowAll'
         Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
+        Component = actShowAll
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 216
+    Left = 144
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 176

@@ -1,9 +1,11 @@
 --- Function: gpSelect_MovementItem_PromoCodeDoctor()
 
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoCodeDoctor (TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoCodeDoctor (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PromoCodeDoctor (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoCodeDoctor(
+    IN inShowAll     Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id         Integer
@@ -31,6 +33,7 @@ BEGIN
                     AND MI_Sign.DescId = zc_MI_Sign()
                     AND MI_Sign.isErased = FALSE
                   )
+      , tmpUse AS (SELECT DISTINCT MovementFloat.ValueData::Integer AS Id FROM MovementFloat WHERE MovementFloat.DescId = zc_MovementFloat_MovementItemId())  
 
            SELECT MI_Sign.Id
                 , MIString_GUID.ValueData       ::TVarChar AS GUID
@@ -52,8 +55,9 @@ BEGIN
                LEFT JOIN MovementItemString AS MIString_BayerEmail
                                             ON MIString_BayerEmail.MovementItemId = MI_Sign.Id
                                            AND MIString_BayerEmail.DescId = zc_MIString_BayerEmail()
-
-;
+                                           
+               LEFT JOIN tmpUse ON tmpUse.ID = MI_Sign.Id
+           WHERE COALESCE(tmpUse.ID, 0) <> 0 OR inShowAll = TRUE;
 
 
 END;
@@ -68,4 +72,4 @@ $BODY$
 */
 
 
--- select * from gpSelect_MovementItem_PromoCodeDoctor(inSession := '3');
+-- select * from gpSelect_MovementItem_PromoCodeDoctor(inShowAll := TRUE, inSession := '3');

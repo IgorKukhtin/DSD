@@ -23,7 +23,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
                PartnerMedicalID Integer, PartnerMedicalName TVarChar,
-               isPromoCodeDoctor boolean
+               isPromoCodeDoctor boolean, isTechnicalRediscount Boolean
+
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -239,6 +240,7 @@ BEGIN
        , Object_PartnerMedical.ID                          AS PartnerMedicalID
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
        , COALESCE(tmpPromoCodeDoctor.ID, 0) <> 0           AS isPromoCodeDoctor
+       , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
 
    FROM Object AS Object_Unit
 
@@ -248,6 +250,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
                                 ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
+                                ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
