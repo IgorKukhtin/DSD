@@ -18,7 +18,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
               ,PartnerGoodsName TVarChar  --Наименование поставщика
               ,MakerName  TVarChar     --Производитель
               ,NDSKindName TVarChar    --вид ндс
-              ,NDS         TFloat
+              ,NDS         TFloat 
               ,OperDate TDateTime      --Дата документа
               ,InvNumber TVarChar      --№ документа
               ,UnitName TVarChar       --Подразделение
@@ -94,6 +94,7 @@ BEGIN
               , Movement.InvNumber
               , Movement.StatusId
               , MovementItem.Id         AS MovementItemId
+              , MovementItem.ParentId   AS ParentId
               , MovementItem.ObjectId
               , MovementItem.Amount
          FROM Movement
@@ -149,7 +150,6 @@ BEGIN
                                 , MovementItem.ObjectId
                                 , MovementItem.Amount
                            FROM Movement
-
                                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement.ID
                                                        AND MovementItem.isErased = FALSE
                                                        AND MovementItem.DescId = zc_MI_Master()
@@ -301,25 +301,25 @@ BEGIN
                              AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 */
         LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                  ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                  ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
-        LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = Movement.MovementItemId
+        LEFT JOIN MovementItem_Income_View AS MI_Income_View ON MI_Income_View.Id = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
 
         LEFT JOIN tmpMIFloat AS MIFloat_Price
-                                    ON MIFloat_Price.MovementItemId = Movement.MovementItemId
-                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                             ON MIFloat_Price.MovementItemId = Movement.MovementItemId
+                            AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
         LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
-                                    ON MIFloat_PriceSale.MovementItemId = Movement.MovementItemId
-                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                             ON MIFloat_PriceSale.MovementItemId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
+                            AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
 
         LEFT JOIN tmpMLObject AS MovementLinkObject_Unit
-                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
         LEFT JOIN tmpMLObject AS MovementLinkObject_To
-                                     ON MovementLinkObject_To.MovementId = Movement.Id
-                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                              ON MovementLinkObject_To.MovementId = Movement.Id
+                             AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = COALESCE(MovementLinkObject_Unit.ObjectId, MovementLinkObject_To.ObjectId)
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                              ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
@@ -329,13 +329,13 @@ BEGIN
                             AND ObjectLink_Juridical_Retail.DescId   = zc_ObjectLink_Juridical_Retail()
 
         LEFT JOIN tmpMLObject AS MovementLinkObject_From
-                                     ON MovementLinkObject_From.MovementId = Movement.Id
-                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              ON MovementLinkObject_From.MovementId = Movement.Id
+                             AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
         LEFT JOIN tmpMLObject AS MovementLinkObject_OrderKind
-                                     ON MovementLinkObject_OrderKind.MovementId = Movement.Id
-                                    AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
+                              ON MovementLinkObject_OrderKind.MovementId = Movement.Id
+                             AND MovementLinkObject_OrderKind.DescId = zc_MovementLinkObject_OrderKind()
         LEFT JOIN Object AS Object_OrderKind ON Object_OrderKind.Id = MovementLinkObject_OrderKind.ObjectId
 
         LEFT JOIN MovementString AS MovementString_Comment
@@ -349,7 +349,7 @@ BEGIN
                                      ON MIString_PartionGoods.MovementItemId = Movement.MovementItemId
                                     AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
         LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
-                                   ON MIDate_ExpirationDate.MovementItemId = Movement.MovementItemId
+                                   ON MIDate_ExpirationDate.MovementItemId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END
                                   AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
 
         LEFT JOIN MovementDate AS MovementDate_Payment
