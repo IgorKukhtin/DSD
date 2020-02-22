@@ -1605,7 +1605,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas">
-				<Form>Report_GoodsRemainsLightForm</Form>
+				<Form>Report_RetailRemainsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas">
@@ -2830,6 +2830,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PromoCodeDoctor.pas">
 				<Form>PromoCodeDoctorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalRemains.pas">
+				<Form>Report_JuridicalRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalRemainsDialog.pas">
+				<Form>Report_JuridicalRemainsDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

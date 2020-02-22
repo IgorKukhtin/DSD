@@ -635,6 +635,8 @@ type
     N221: TMenuItem;
     actReport_SendSUN_SUNv2: TdsdOpenForm;
     miReport_SendSUN_SUNv2: TMenuItem;
+    actReport_JuridicalRemains: TdsdOpenForm;
+    miReport_JuridicalRemains: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
