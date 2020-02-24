@@ -33,7 +33,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MemberId Integer, MemberName TVarChar
-             , MemberExpId Integer, MemberExpName TVarChar
+             , MemberExpId Integer, MemberExpName TVarChar, MemberExpName_calc TVarChar
              , ReestrKindId Integer, ReestrKindName TVarChar
              , Comment TVarChar
              , isError Boolean
@@ -92,13 +92,15 @@ BEGIN
                           FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                           WHERE lfSelect.Ord = 1
                          )
-        , tmpMovement AS (SELECT Movement.id
+        , tmpMovement AS (SELECT Movement.Id
+                               , Movement.OperDate
                           FROM tmpStatus
                                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
                                JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
                           WHERE inIsPartnerDate = FALSE
                          UNION ALL
                           SELECT MovementDate_OperDatePartner.MovementId  AS Id
+                               , Movement.OperDate
                           FROM MovementDate AS MovementDate_OperDatePartner
                                JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
                                JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
@@ -107,6 +109,34 @@ BEGIN
                             AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
                             AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                          )
+        -- Эспедитор из заявки  (найти заявку по PartnerId + OperDatePartner = OperDate из возврата, если вдруг несколько заявок - можно взять МАКС (экспедитор_ФИО))
+        , tmpPersonal_Calc AS (SELECT tmp.MovementId
+                                    , Object_Personal.ValueData AS PersonalName
+                               FROM (
+                                     SELECT tmpMovement.Id                             AS MovementId
+                                          , MAX (MovementLinkObject_Personal.ObjectId) AS PersonalId
+                                     FROM tmpMovement
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                        ON MovementLinkObject_From.MovementId = tmpMovement.Id
+                                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                     
+                                          INNER JOIN MovementDate AS MovementDate_OperDatePartner
+                                                                  ON MovementDate_OperDatePartner.ValueData = tmpMovement.OperDate
+                                                                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                          INNER JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_OrderExternal()
+                                     
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_From_Order
+                                                                        ON MovementLinkObject_From_Order.MovementId = MovementDate_OperDatePartner.MovementId
+                                                                       AND MovementLinkObject_From_Order.DescId = zc_MovementLinkObject_From()
+                                                                       AND MovementLinkObject_From_Order.ObjectId = MovementLinkObject_From.ObjectId
+                                          INNER JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                                                        ON MovementLinkObject_Personal.MovementId = MovementLinkObject_From_Order.MovementId
+                                                                       AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+                                     GROUP BY tmpMovement.Id
+                                     ) AS tmp
+                               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmp.PersonalId
+                               )
+
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -161,6 +191,7 @@ BEGIN
            , Object_Member.ValueData                    AS MemberName
            , Object_MemberExp.Id                        AS MemberExpId
            , Object_MemberExp.ValueData                 AS MemberExpName
+           , tmpPersonal_Calc.PersonalName :: TVarChar  AS MemberExpName_calc
            , Object_ReestrKind.Id             	        AS ReestrKindId
            , Object_ReestrKind.ValueData       	        AS ReestrKindName
            , MovementString_Comment.ValueData           AS Comment
@@ -381,6 +412,7 @@ BEGIN
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpPersonal.UnitId
 
+            LEFT JOIN tmpPersonal_Calc ON tmpPersonal_Calc.MovementId = Movement.Id
      /*WHERE vbIsXleb = FALSE OR (View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_30103() -- Хлеб
                                 AND vbIsXleb = TRUE)*/
     ;

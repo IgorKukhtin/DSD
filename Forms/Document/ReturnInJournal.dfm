@@ -452,6 +452,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object MemberExpName_calc: TcxGridDBColumn
+            Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072') '#1088#1072#1089#1095#1077#1090
+            DataBinding.FieldName = 'MemberExpName_calc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088' ('#1079#1072#1103#1074#1082#1072') '#1088#1072#1089#1095#1077#1090
+            Width = 103
+          end
           object CurrencyValue: TcxGridDBColumn
             Caption = #1050#1091#1088#1089
             DataBinding.FieldName = 'CurrencyValue'
@@ -1519,8 +1527,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 179
   end
   inherited BarManager: TdxBarManager
-    Left = 152
-    Top = 139
+    Left = 192
+    Top = 171
     DockControlHeights = (
       0
       0
