@@ -1,30 +1,27 @@
 inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocForm
-  Caption = 
-    #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080' '#1089' '#1080#1079#1084#1077#1085#1080#1074#1096#1080#1084#1089#1103' '#1086#1089#1090#1072#1090#1082#1086#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1075#1083#1080' '#1087 +
-    #1086#1074#1083#1080#1103#1090#1100
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1075#1083#1080' '#1087#1086#1074#1083#1080#1103#1090#1100' '#1085#1072' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1080
   ClientHeight = 359
-  ClientWidth = 824
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
+  ClientWidth = 551
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 840
+  ExplicitWidth = 567
   ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 78
-    Width = 824
+    Width = 551
     Height = 281
     TabOrder = 3
     ExplicitTop = 78
     ExplicitWidth = 824
     ExplicitHeight = 281
     ClientRectBottom = 281
-    ClientRectRight = 824
+    ClientRectRight = 551
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 824
       ExplicitHeight = 281
       inherited cxGrid: TcxGrid
-        Width = 824
+        Width = 551
         Height = 281
         ExplicitWidth = 824
         ExplicitHeight = 281
@@ -60,7 +57,7 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 74
           end
           object MovementDescId: TcxGridDBColumn
             DataBinding.FieldName = 'MovementDescId'
@@ -76,103 +73,30 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 175
           end
-          object FromId: TcxGridDBColumn
-            DataBinding.FieldName = 'FromId'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object InsertDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertDate'
+          object StatusName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 78
+            Width = 89
           end
-          object InsertName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
-            DataBinding.FieldName = 'InsertName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 101
-          end
-          object FromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 104
-          end
-          object ToId: TcxGridDBColumn
-            DataBinding.FieldName = 'ToId'
-            Visible = False
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object ToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 104
-          end
-          object Price: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00##'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 52
-          end
-          object Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-            DataBinding.FieldName = 'Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object AmountIn: TcxGridDBColumn
-            Caption = #1055#1088#1080#1093#1086#1076
-            DataBinding.FieldName = 'AmountIn'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 52
-          end
-          object AmountOut: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076
-            DataBinding.FieldName = 'AmountOut'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object Saldo: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082
-            DataBinding.FieldName = 'Saldo'
-            GroupSummaryAlignment = taCenter
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 44
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 824
+    Width = 551
     Height = 52
     ExplicitWidth = 824
     ExplicitHeight = 52
@@ -410,6 +334,36 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 136
@@ -461,7 +415,7 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
         end
         item
           Visible = True
-          ItemName = 'bbExecuteDialog'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -469,7 +423,7 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarButton1'
         end
         item
           Visible = True
@@ -486,6 +440,10 @@ inherited Report_InventoryErrorRemainsDocForm: TReport_InventoryErrorRemainsDocF
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object dxBarButton1: TdxBarButton
+      Action = MovementProtocolOpenForm
       Category = 0
     end
   end

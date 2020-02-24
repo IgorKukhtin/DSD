@@ -42,6 +42,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 72
           end
           object InvNumber: TcxGridDBColumn
@@ -49,6 +50,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object UnitName: TcxGridDBColumn
@@ -56,6 +58,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 211
           end
           object FullInvent: TcxGridDBColumn
@@ -63,6 +66,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             DataBinding.FieldName = 'FullInvent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object DeficitSumm: TcxGridDBColumn
@@ -72,6 +76,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 81
           end
           object ProficitSumm: TcxGridDBColumn
@@ -81,6 +86,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object Diff: TcxGridDBColumn
@@ -90,6 +96,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Properties.DisplayFormat = '+,0.00; -,0.00;;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object DiffSumm: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1089#1091#1084#1084#1077
@@ -98,6 +105,7 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
             Properties.DisplayFormat = '+,0.00; -,0.00;;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end

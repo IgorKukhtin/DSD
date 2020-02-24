@@ -11,11 +11,20 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbParentId Integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
 BEGIN
-  vbUserId:= inSession;
+   vbUserId:= inSession;
   
+   SELECT MLO_Unit.ObjectId, Movement.ParentId
+   INTO vbUnitId, vbParentId
+   FROM  Movement
+         INNER JOIN MovementLinkObject AS MLO_Unit
+                                       ON MLO_Unit.MovementId = Movement.Id
+                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+   WHERE Movement.Id = inMovementId;
+
    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
    THEN
@@ -25,14 +34,6 @@ BEGIN
          vbUnitKey := '0';
       END IF;
       vbUserUnitId := vbUnitKey::Integer;
-
-      SELECT MLO_Unit.ObjectId
-      INTO vbUnitId
-      FROM  Movement
-            INNER JOIN MovementLinkObject AS MLO_Unit
-                                          ON MLO_Unit.MovementId = Movement.Id
-                                         AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
-      WHERE Movement.Id = inMovementId;
 
       IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
       THEN
@@ -95,7 +96,14 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Смена не закрыта выполнение операций с инвентаризацией запрещено.';     
       END IF;             
    END IF;     
-  
+
+   IF COALESCE (vbParentId, 0) <> 0
+   THEN
+       IF NOT EXISTS(SELECT 1 FROM Movement WHERE Movement.ID = vbParentId AND StatusId = zc_Enum_Status_Complete())
+       THEN
+         RAISE EXCEPTION 'Ошибка. Документы сформированные по техническому переучету проводяться вместе с ним.';           
+       END IF;  
+   END IF;
 
   -- пересчитали Итоговые суммы
   -- PERFORM lpInsertUpdate_MovementFloat_TotalSummInventory (inMovementId);

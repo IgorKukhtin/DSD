@@ -39,14 +39,7 @@ type
     InvNumber: TcxGridDBColumn;
     MovementDescId: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
-    FromId: TcxGridDBColumn;
-    FromName: TcxGridDBColumn;
-    ToId: TcxGridDBColumn;
-    ToName: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    AmountIn: TcxGridDBColumn;
-    AmountOut: TcxGridDBColumn;
-    Saldo: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
     actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     actOpenDocument: TdsdOpenForm;
@@ -56,10 +49,12 @@ type
     spGet_MovementFormClass: TdsdStoredProc;
     actGet_MovementFormClass: TdsdExecStoredProc;
     mactOpenDocument: TMultiAction;
-    Summa: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     actRefreshIsPartion: TdsdDataSetRefresh;
+    StatusName: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
