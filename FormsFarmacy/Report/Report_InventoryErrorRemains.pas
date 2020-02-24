@@ -62,6 +62,8 @@ type
     colPrice: TcxGridDBColumn;
     cplRemainsDiff: TcxGridDBColumn;
     colRemainsDiff_Summa: TcxGridDBColumn;
+    actOpenDocForm: TdsdOpenForm;
+    dsdDBViewAddOn1: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

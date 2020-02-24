@@ -819,7 +819,8 @@ uses
   PromoCodeDoctor in '..\..\FormsFarmacy\Guides\PromoCodeDoctor.pas' {PromoCodeDoctorForm: TParentForm},
   Report_JuridicalRemains in '..\..\FormsFarmacy\Report\Report_JuridicalRemains.pas' {Report_JuridicalRemainsForm: TParentForm},
   Report_JuridicalRemainsDialog in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsDialog.pas' {Report_JuridicalRemainsDialogForm: TParentForm},
-  Report_Movement_Send_RemainsSunOut in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut.pas' {Report_Movement_Send_RemainsSunOutForm: TParentForm};
+  Report_Movement_Send_RemainsSunOut in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut.pas' {Report_Movement_Send_RemainsSunOutForm: TParentForm},
+  Report_InventoryErrorRemainsDoc in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDoc.pas' {Report_InventoryErrorRemainsDocForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

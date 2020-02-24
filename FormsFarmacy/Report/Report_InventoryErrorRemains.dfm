@@ -537,6 +537,55 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actOpenDocForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenDocForm'
+      FormName = 'TReport_InventoryErrorRemainsDocForm'
+      FormNameParam.Value = 'TReport_InventoryErrorRemainsDocForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = ListCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = ListCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 16
@@ -701,5 +750,22 @@ inherited Report_InventoryErrorRemainsForm: TReport_InventoryErrorRemainsForm
     DataSet = ListCDS
     Left = 280
     Top = 352
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+        Action = actOpenDocForm
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 432
+    Top = 344
   end
 end

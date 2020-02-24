@@ -10,8 +10,8 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbUnitId Integer;
-  DECLARE vbOperDate  TDateTime;
+  DECLARE vbInventoryID Integer;
+  DECLARE vbStatusID Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_TechnicalRediscount());
@@ -19,6 +19,33 @@ BEGIN
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId    := vbUserId);
+                                 
+    -- 5.1 Отменяем инвентаризацию
+    IF EXISTS(SELECT *
+              FROM Movement
+              WHERE Movement.DescId = zc_Movement_Inventory()
+                AND Movement.ParentId = inMovementId)
+    THEN
+        SELECT Movement.ID
+             , Movement.StatusId
+        INTO vbInventoryID
+           , vbStatusID
+        FROM Movement
+        WHERE Movement.DescId = zc_Movement_Inventory()
+          AND Movement.ParentId = inMovementId;
+
+        IF vbStatusID = zc_Enum_Status_Complete()
+        THEN
+          PERFORM gpUnComplete_Movement_Inventory (vbInventoryID, inSession);
+        END IF;
+
+        IF vbStatusID <> zc_Enum_Status_Erased()
+        THEN
+          PERFORM gpSetErased_Movement_Inventory (vbInventoryID, inSession);
+        END IF;
+
+    END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

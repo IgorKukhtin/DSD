@@ -10,11 +10,22 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbStatusID Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_TechnicalRediscount());
    
-
+    -- параметры документа
+    SELECT Movement.StatusId
+    INTO vbStatusID
+    FROM Movement
+    WHERE Movement.Id = inMovementId;  
+    
+    IF vbStatusId = zc_Enum_Status_Complete()
+    THEN
+      RAISE EXCEPTION 'Ошибка. Удаление документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+      
     -- Удаляем Документ
     PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
