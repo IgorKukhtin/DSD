@@ -1,8 +1,13 @@
  -- Function: gpInsertUpdate_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
                                                        , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar
+                                                       , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (Integer, TVarChar, TDateTime, TDateTime, TVarChar
+                                                       , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                       , TVarChar, TVarChar
                                                        , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
@@ -17,6 +22,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioAmountCurrencyKredit     TFloat    , -- Сумма Кредит (в валюте)
     IN inCurrencyPartnerValue     TFloat    , -- Курс для расчета суммы операции в ГРН
     IN inParPartnerValue          TFloat    , -- Номинал для расчета суммы операции в ГРН
+
+    IN inCountDebet               TFloat    , -- кол-во Дебет
+    IN inCountKredit              TFloat    , -- кол-во Кредит
+    IN inPrice                    TFloat    , -- цена 
+   OUT outSumma                   TFloat    , -- сумма расчет
+
     IN inMovementId_List          TVarChar  , -- список Ид док для затрат
     IN inComment                  TVarChar  , -- Комментарий
     IN inBusinessId               Integer   , -- Бизнес
@@ -38,6 +49,7 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbMovementItemId Integer;
    DECLARE vbAmount TFloat;
+   DECLARE vbCount TFloat;
    DECLARE vbIsInsert Boolean;
    DECLARE vbIndex Integer;
    DECLARE vbAmountCurrency TFloat;
@@ -47,7 +59,6 @@ BEGIN
 
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Service());
-
 
      -- если валюта выбрана
      IF COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
@@ -80,6 +91,13 @@ BEGIN
          ioAmountCurrencyKredit:= 0;
      END IF;
 
+   
+     -- проверка вводят или "кол-во и цену" или "сумму"
+     IF ((COALESCE (inCountDebet, 0) + COALESCE (inCountKredit, 0)) <> 0 OR (COALESCE (inPrice, 0)) <> 0 )
+      AND (COALESCE (ioAmountIn, 0) + COALESCE (ioAmountOut, 0) <> 0 OR COALESCE (ioAmountCurrencyDebet, 0) + COALESCE (ioAmountCurrencyKredit, 0) <> 0)
+     THEN
+        RAISE EXCEPTION 'Должны быть введены только количество и цена или сумма.';
+     END IF;
 
      -- проверка
      IF COALESCE (ioAmountCurrencyDebet, 0) = 0 AND COALESCE (ioAmountCurrencyKredit, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
@@ -87,10 +105,12 @@ BEGIN
         RAISE EXCEPTION 'Введите сумму в валюте.';
      END IF;
      -- проверка
-     IF COALESCE (ioAmountIn, 0) = 0 AND COALESCE (ioAmountOut, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) IN (0, zc_Enum_Currency_Basis())
+     IF (COALESCE (ioAmountIn, 0) = 0 AND COALESCE (ioAmountOut, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) IN (0, zc_Enum_Currency_Basis()))
+     AND ((COALESCE (inCountDebet, 0) + COALESCE (inCountKredit, 0)) = 0 AND COALESCE (inPrice, 0) = 0 )
      THEN
-        RAISE EXCEPTION 'Введите сумму.';
+        RAISE EXCEPTION 'Введите сумму или количество и цену';
      END IF;
+     
      -- проверка
      IF COALESCE (ioAmountIn, 0) <> 0 AND COALESCE (ioAmountOut, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
@@ -99,6 +119,18 @@ BEGIN
      IF COALESCE (ioAmountCurrencyDebet, 0) <> 0 AND COALESCE (ioAmountCurrencyKredit, 0) <> 0 THEN
         RAISE EXCEPTION 'Должна быть введена только одна сумма в валюте: <Дебет> или <Кредит>.';
      END IF;
+     
+     -- проверка 
+     IF COALESCE (inCountDebet, 0) <> 0 AND COALESCE (inCountKredit, 0) <> 0 THEN
+        RAISE EXCEPTION 'Должна быть введена только одно количество: <Дебет> или <Кредит>.';
+     END IF;
+    
+     -- проверка
+     IF (COALESCE (inCountDebet, 0) + COALESCE (inCountKredit, 0) <> 0 AND COALESCE (inPrice, 0) = 0)
+     THEN
+        RAISE EXCEPTION 'Должны быть введены цена и количество: <Дебет> или <Кредит>.';
+     END IF;
+ 
      -- проверка
      IF (COALESCE (inJuridicalId, 0) = 0)
      THEN
@@ -120,6 +152,17 @@ BEGIN
         vbAmount := -1 * ioAmountOut;
      END IF;
 
+    -- количество и цена
+     IF inCountDebet <> 0
+     THEN
+        vbCount := inCountDebet;
+        -- расчетная сумма
+        outSumma := inCountDebet * inPrice;
+     ELSE
+        vbCount := -1 * inCountKredit;
+        -- расчетная сумма
+        outSumma := inCountKredit * inPrice;
+     END IF;
 
      -- 1. Распроводим Документ
      IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Service())
@@ -174,6 +217,11 @@ BEGIN
 
      -- сохранили связь с <Для ОС>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), vbMovementItemId, inAssetId);
+
+     -- сохранили свойство <Цена>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPrice);
+     -- сохранили свойство <Количество>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), vbMovementItemId, vbCount);
 
      -- сохранили связь с <Типы условий договоров>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
@@ -244,6 +292,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.02.20         *
  01.08.17         *
  27.08.16         * add asset
  29.04.16         *

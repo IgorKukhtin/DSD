@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountIn TFloat, AmountOut TFloat 
              , AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
+             , CountDebet TFloat, CountKredit TFloat, Price TFloat, Summa_calc TFloat
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerName TVarChar
@@ -62,6 +63,11 @@ BEGIN
 
            , CAST (0 AS TFloat)               AS CurrencyPartnerValue
            , CAST (0 AS TFloat)               AS ParPartnerValue
+           
+           , CAST (0 AS TFloat)               AS CountDebet
+           , CAST (0 AS TFloat)               AS CountKredit
+           , CAST (0 AS TFloat)               AS Price
+           , CAST (0 AS TFloat)               AS Summa_calc
 
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
@@ -139,7 +145,12 @@ BEGIN
              
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
-             
+
+           , CASE WHEN MIFloat_Count.ValueData > 0 THEN MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountDebet
+           , CASE WHEN MIFloat_Count.ValueData < 0 THEN -1 * MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountKredit
+           , MIFloat_Price.ValueData :: TFloat AS Price
+           , (MIFloat_Price.ValueData * CASE WHEN MIFloat_Count.ValueData < 0 THEN -1 * MIFloat_Count.ValueData ELSE MIFloat_Count.ValueData END) :: TFloat AS Summa_calc
+
            , MIString_Comment.ValueData          AS Comment
 
            , Object_Juridical.Id                 AS JuridicalId
@@ -186,6 +197,8 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ParPartnerValue
                                     ON MovementFloat_ParPartnerValue.MovementId = Movement.Id
                                    AND MovementFloat_ParPartnerValue.DescId = zc_MovementFloat_ParPartnerValue()
+
+
                                    
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -221,7 +234,14 @@ BEGIN
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-            
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -263,6 +283,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 24.02.20         *
  01.08.17         *
  21.07.16         *
  30.04.16         *
