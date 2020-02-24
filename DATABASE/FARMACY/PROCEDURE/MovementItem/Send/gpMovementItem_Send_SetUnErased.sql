@@ -60,7 +60,7 @@ BEGIN
                                     ON MovementBoolean_SUN.MovementId = Movement.Id
                                    AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
 
-    WHERE Movement.Id = inMovementId;
+    WHERE Movement.Id = vbMovementId;
      
     IF vbisSUN = TRUE 
     THEN

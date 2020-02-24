@@ -25,7 +25,10 @@ BEGIN
      WHERE MI.Id = ioId;
 
      -- проверка
-     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId) AND (inAmount <> vbAmount)
+     IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean AS MovementBoolean_Deferred
+                   WHERE MovementBoolean_Deferred.MovementId = inMovementId
+                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), False) = TRUE 
+        AND (COALESCE(inAmount, 0) <> COALESCE(vbAmount, 0))
      THEN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
