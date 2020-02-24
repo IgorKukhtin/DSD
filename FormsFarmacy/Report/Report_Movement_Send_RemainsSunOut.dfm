@@ -1,5 +1,5 @@
-inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'> ('#1087#1088#1080#1093#1086#1076#1099')'
+inherited Report_Movement_Send_RemainsSunOutForm: TReport_Movement_Send_RemainsSunOutForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'> ('#1088#1072#1089#1093#1086#1076#1099')'
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -21,12 +21,13 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       ExplicitWidth = 960
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
+        Top = 184
         Width = 960
-        Height = 200
-        ExplicitLeft = -3
-        ExplicitTop = 2
+        Height = 151
+        Align = alBottom
+        ExplicitTop = 184
         ExplicitWidth = 960
-        ExplicitHeight = 200
+        ExplicitHeight = 151
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -458,7 +459,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
-          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -472,7 +472,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Width = 50
           end
           object UnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
+            Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -482,6 +482,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           object DriverName: TcxGridDBColumn
             Caption = #1042#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'DriverName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
@@ -491,6 +492,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           object GoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -1248,10 +1250,10 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 208
+        Top = 0
         Width = 960
-        Height = 127
-        Align = alBottom
+        Height = 176
+        Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
         object cxGridDBTableViewPartion: TcxGridDBTableView
@@ -1614,7 +1616,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
           OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
-          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -1631,6 +1632,20 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object chGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object chGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -1692,6 +1707,17 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
             Width = 55
+          end
+          object chPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
+            Width = 70
           end
           object chAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079#1091#1083#1100#1090'. '#1088#1072#1089#1093'.'
@@ -1851,18 +1877,6 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
             HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' 1 '#1084#1077#1089' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
             Width = 60
           end
-          object chPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
-            Width = 70
-          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableViewPartion
@@ -1879,13 +1893,12 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 200
+        Top = 176
         Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 217
       end
     end
   end
@@ -2576,8 +2589,8 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 91
-    Top = 256
+    Left = 83
+    Top = 280
   end
   inherited ActionList: TActionList
     Left = 103
@@ -2978,12 +2991,16 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     end
   end
   inherited MasterDS: TDataSource
-    Left = 112
-    Top = 200
+    Left = 176
+    Top = 216
   end
   inherited MasterCDS: TClientDataSet
-    Left = 56
-    Top = 200
+    IndexFieldNames = 'UnitId;GoodsId'
+    MasterFields = 'UnitId_to;GoodsId'
+    MasterSource = PartionDS
+    PacketRecords = 0
+    Left = 80
+    Top = 160
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Movement_Send_RemainsSun'
@@ -3013,8 +3030,8 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 216
-    Top = 176
+    Left = 280
+    Top = 280
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -3136,7 +3153,7 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 272
+    Left = 352
     Top = 184
   end
   inherited PopupMenu: TPopupMenu
@@ -3145,12 +3162,12 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Left = 408
-    Top = 168
+    Left = 400
+    Top = 232
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 464
-    Top = 216
+    Left = 440
+    Top = 304
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -3334,18 +3351,14 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
   object PartionCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
-    IndexFieldNames = 'UnitId_to;GoodsId'
-    MasterFields = 'UnitId;GoodsId'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
-    Left = 416
-    Top = 368
+    Left = 144
+    Top = 168
   end
   object PartionDS: TDataSource
     DataSet = PartionCDS
-    Left = 544
-    Top = 376
+    Left = 552
+    Top = 168
   end
   object DBViewAddOn_Result_child: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

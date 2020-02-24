@@ -834,6 +834,7 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsDialogForm'));
@@ -866,7 +867,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDialogForm');
     exit;
 
-    {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderDialogForm');
@@ -880,7 +881,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
-    exit;}
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
@@ -891,7 +892,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanUserForm');
     exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutDialogForm'));
@@ -933,13 +934,16 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
-    exit;
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
+    exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate0Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate0Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5Form'));

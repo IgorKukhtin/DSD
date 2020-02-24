@@ -545,6 +545,8 @@ BEGIN
                , Object_UnitFrom.ValueData AS FromName
                , tmp.UnitId_to
                , Object_UnitTo.ValueData   AS ToName
+               , Object_Goods.ObjectCode   AS GoodsCode
+               , Object_Goods.ValueData    AS GoodsName
                  -- сумма сроковых, без учета изменения
                , tmpRemains_Partion_sum.AmountSun_summ_save
                  -- сумма сроковых + notSold, которые будем распределять
@@ -588,6 +590,8 @@ BEGIN
                LEFT JOIN _tmpRemains_all_a AS _tmpRemains
                                            ON _tmpRemains.UnitId  = tmp.UnitId_from
                                           AND _tmpRemains.GoodsId = tmp.GoodsId
+               
+               LEFT JOIN  Object AS Object_Goods  ON Object_Goods.Id  = tmp.GoodsId
 
           ;
      RETURN NEXT Cursor2;
