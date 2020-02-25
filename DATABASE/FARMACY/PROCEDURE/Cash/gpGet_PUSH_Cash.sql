@@ -440,12 +440,16 @@ BEGIN
                                   AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))
                                   AND Movement.DescId = zc_Movement_PUSH()
                                   AND Movement.StatusId = zc_Enum_Status_Complete())
-                                  
-      , tmpMovementPUSH AS (SELECT Movement.Id                                                     AS ID
-                                 , gpGet_Movement_PUSH_Message(MovementBlob_Message.ValueData, 
-                                          MovementString_Function.ValueData, vbUnitId, vbUserId)   AS Message
-                            FROM Movement
 
+      , tmpMovementPUSH AS (SELECT Movement.Id                                                     AS ID
+                                 , PUSH_Message.Message                                            AS Message
+                                 , PUSH_Message.FormName                                           AS FormName
+                                 , PUSH_Message.Button                                             AS Button
+                                 , PUSH_Message.Params                                             AS Params
+                                 , PUSH_Message.TypeParams                                         AS TypeParams
+                                 , PUSH_Message.ValueParams                                        AS ValueParams
+                            FROM Movement
+                            
                                  LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
                                                         ON MovementDate_DateEndPUSH.MovementId = Movement.Id
                                                        AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
@@ -473,6 +477,11 @@ BEGIN
 
                                  LEFT JOIN tmpMovementItemUnit AS MovementItemUnit
                                                                ON MovementItemUnit.MovementId = Movement.Id
+
+                                 LEFT JOIN gpGet_Movement_PUSH_Message(MovementBlob_Message.ValueData,
+                                                                        MovementString_Function.ValueData, 
+                                                                        vbUnitId, 
+                                                                        vbUserId) AS PUSH_Message ON 1 = 1
 
                             WHERE Movement.OperDate <= CURRENT_TIMESTAMP
                               AND make_time(date_part('hour', Movement.OperDate)::integer, date_part('minute', Movement.OperDate)::integer, date_part('second', Movement.OperDate)::integer) <= CURRENT_TIME
@@ -504,10 +513,15 @@ BEGIN
                                                     AND MID_Viewed.ValueData < CURRENT_DATE + INTERVAL '1 DAY'), 0)))
 
 
-   INSERT INTO _PUSH (Id, Text)
+   INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
    SELECT
-          tmpMovementPUSH.Id 
-        , tmpMovementPUSH.Message
+          tmpMovementPUSH.Id
+        , tmpMovementPUSH.Message                                            AS Message
+        , tmpMovementPUSH.FormName                                           AS FormName
+        , tmpMovementPUSH.Button                                             AS Button
+        , tmpMovementPUSH.Params                                             AS Params
+        , tmpMovementPUSH.TypeParams                                         AS TypeParams
+        , tmpMovementPUSH.ValueParams                                        AS ValueParams
    FROM tmpMovementPUSH
    WHERE tmpMovementPUSH.Message <> '';
 
@@ -541,5 +555,4 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- 
-SELECT * FROM gpGet_PUSH_Cash('3')
+-- SELECT * FROM gpGet_PUSH_Cash('3')

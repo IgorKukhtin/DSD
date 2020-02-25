@@ -66,6 +66,9 @@ type
     UserName: TcxGridDBColumn;
     UserPassword: TcxGridDBColumn;
     KeyPassword: TcxGridDBColumn;
+    PasswordEHels: TcxGridDBColumn;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , UserName TVarChar
              , UserPassword TVarChar
              , KeyPassword TVarChar
+             , PasswordEHels TVarChar
               )
 AS
 $BODY$
@@ -52,6 +53,7 @@ BEGIN
        , ObjectString_UserName.ValueData
        , ObjectString_UserPassword.ValueData
        , ObjectString_KeyPassword.ValueData
+       , ObjectString_PasswordEHels.ValueData
        
    FROM Object AS Object_User
 
@@ -82,6 +84,10 @@ BEGIN
                 ON ObjectString_KeyPassword.DescId = zc_ObjectString_User_Helsi_KeyPassword() 
                AND ObjectString_KeyPassword.ObjectId = Object_User.Id
               
+         LEFT JOIN ObjectString AS ObjectString_PasswordEHels 
+                ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
+               AND ObjectString_PasswordEHels.ObjectId = Object_User.Id
+
    WHERE Object_User.DescId = zc_Object_User()
      AND COALESCE(ObjectString_UserName.ValueData, '') <> '';
   
@@ -98,5 +104,4 @@ ALTER FUNCTION gpSelect_Object_HelsiUser (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Object_HelsiUser ('3')
+-- SELECT * FROM gpSelect_Object_HelsiUser ('3')

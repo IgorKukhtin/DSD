@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
              , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
              , SummaTotal TFloat
+             , PasswordEHels TVarChar
               )
 AS
 $BODY$
@@ -36,7 +37,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 8905248;
+      vbUserId  := 3990942;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
@@ -159,6 +160,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
+                 , ObjectString_PasswordEHels.ValueData          AS UserPassword
             FROM  MovementItem
             
                   LEFT JOIN MovementItem AS MIAmount
@@ -200,6 +202,10 @@ BEGIN
                   
                   LEFT JOIN tmpAdditionalExpenses ON 1 = 1
 
+                  LEFT JOIN ObjectString AS ObjectString_PasswordEHels
+                         ON ObjectString_PasswordEHels.DescId = zc_ObjectString_User_Helsi_PasswordEHels() 
+                        AND ObjectString_PasswordEHels.ObjectId = vbUserId
+
             WHERE MovementItem.MovementId = vbMovementId
               AND MovementItem.ObjectId = vbUserId
               AND MovementItem.DescId = zc_MI_Master()
@@ -217,4 +223,4 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');

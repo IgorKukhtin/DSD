@@ -3,7 +3,7 @@ object HelsiUserForm: THelsiUserForm
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
   ClientHeight = 439
-  ClientWidth = 940
+  ClientWidth = 1051
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,15 +19,14 @@ object HelsiUserForm: THelsiUserForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 940
+    Width = 1051
     Height = 413
     Align = alClient
     PopupMenu = pmGrid
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 452
-    ExplicitHeight = 318
+    ExplicitWidth = 940
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,7 +39,6 @@ object HelsiUserForm: THelsiUserForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
@@ -109,6 +107,13 @@ object HelsiUserForm: THelsiUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 87
+      end
+      object PasswordEHels: TcxGridDBColumn
+        Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
+        DataBinding.FieldName = 'PasswordEHels'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 121
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -366,6 +371,18 @@ object HelsiUserForm: THelsiUserForm
         end>
       isShowModal = False
     end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_HelsiUser'
@@ -439,5 +456,31 @@ object HelsiUserForm: THelsiUserForm
       ImageIndex = 8
       ShortCut = 32776
     end
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_User_PasswordEHels'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPasswordEHels'
+        Value = ''
+        Component = ClientDataSet
+        ComponentItem = 'PasswordEHels'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 365
+    Top = 208
   end
 end

@@ -1,12 +1,18 @@
 -- Function: gpSelect_MovementItem_PUSH_WagesSUN1()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PUSH_WagesSUN1 (TBlob, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PUSH_WagesSUN1 (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH_WagesSUN1(
     IN inUnitID                Integer    , -- Подразделение
     IN inUserId                Integer      -- Сотрудник
 )
-RETURNS TBlob AS
+RETURNS TABLE (Message TBlob
+             , FormName TVarChar
+             , Button TVarChar
+             , Params TVarChar
+             , TypeParams TVarChar
+             , ValueParams TVarChar)
+AS
 $BODY$
    DECLARE vbWeek       Integer;
    DECLARE vbOparDate   TDateTime;
@@ -29,7 +35,7 @@ BEGIN
     vbSummaSUN1 := - 750;
     vbOparDate := CURRENT_DATE - INTERVAL '4 day';
   ELSE
-    RETURN '';
+    RETURN;
   END IF;
 
   IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = date_trunc('month', vbOparDate) AND Movement.DescId = zc_Movement_Wages())
@@ -40,7 +46,7 @@ BEGIN
       WHERE Movement.OperDate = date_trunc('month', vbOparDate)
         AND Movement.DescId = zc_Movement_Wages();
   ELSE
-    RETURN '';
+    RETURN;
   END IF;
 
   IF EXISTS(SELECT 1 FROM MovementItem WHERE MovementItem.DescId = zc_MI_Sign()
@@ -54,7 +60,7 @@ BEGIN
         AND MovementItem.MovementId = vbMovementId
         AND MovementItem.ObjectId = inUnitID;
   ELSE
-    RETURN '';
+    RETURN;
   END IF;
 
 
@@ -82,15 +88,33 @@ BEGIN
 
   IF date_part('DOW', CURRENT_DATE)::Integer = 4 AND vbSummaFact = vbSummaSUN1
   THEN
-    Return 'Коллеги, вам начислен штраф в размере 200 грн за несвоевременный сбор СУН1';
+    RETURN QUERY
+    SELECT 'Коллеги, вам начислен штраф в размере 200 грн за несвоевременный сбор СУН1'::TBlob,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           Null::TVarChar;
   ELSEIF  date_part('DOW', CURRENT_DATE)::Integer = 5 AND vbSummaFact = vbSummaSUN1
   THEN
-    Return'Коллеги, вам начислен штраф в размере 400 грн за несвоевременный сбор СУН1';
+    RETURN QUERY
+    SELECT 'Коллеги, вам начислен штраф в размере 400 грн за несвоевременный сбор СУН1'::TBlob,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           Null::TVarChar;
   ELSEIF  date_part('DOW', CURRENT_DATE)::Integer = 1 AND vbSummaFact = vbSummaSUN1
   THEN
-    Return 'Коллеги, вам начислен штраф в размере 750 грн за несвоевременный сбор СУН1';
+    RETURN QUERY
+    SELECT 'Коллеги, вам начислен штраф в размере 750 грн за несвоевременный сбор СУН1'::TBlob,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           ''::TVarChar,
+           Null::TVarChar;
   ELSE
-    RETURN '';
+    RETURN;
   END IF;
 
 END;
@@ -103,6 +127,4 @@ $BODY$
  19.02.20         *
 */
 
---
-
-SELECT * FROM gpSelect_MovementItem_PUSH_WagesSUN1(183292 , 3);
+-- SELECT * FROM gpSelect_MovementItem_PUSH_WagesSUN1(183292 , 3);

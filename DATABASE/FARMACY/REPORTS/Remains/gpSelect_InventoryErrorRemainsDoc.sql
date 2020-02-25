@@ -40,7 +40,17 @@ BEGIN
                                                               AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_Unit(), zc_MovementLinkObject_From() , zc_MovementLinkObject_To())
                                                               AND MovementLinkObject_Unit.ObjectId = inUnitId
                             WHERE Movement.DescId in (zc_Movement_Send(), zc_Movement_ReturnOut())
-                              AND Movement.OperDate >= inStartDate AND Movement.OperDate < vbEndDate)
+                              AND Movement.OperDate >= inStartDate AND Movement.OperDate < vbEndDate
+                            UNION ALL
+                            SELECT Movement.ID
+                            FROM Movement
+
+                                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                              AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_Unit(), zc_MovementLinkObject_From() , zc_MovementLinkObject_To())
+                                                              AND MovementLinkObject_Unit.ObjectId = inUnitId
+                            WHERE Movement.DescId = zc_Movement_Check()
+                              AND Movement.OperDate >= inStartDate AND Movement.OperDate < inStartDate + INTERVAL '1 DAY')
        , tmpMovement AS (SELECT DISTINCT Movement.ID,
                                 MovementItem.Amount
                          FROM tmpMovementAll AS Movement
@@ -66,13 +76,12 @@ BEGIN
 
        INNER JOIN Movement ON Movement.ID = tmpMovement.Id
 
-       INNER JOIN tmpDelayed ON tmpDelayed.ID = tmpMovement.Id
+       LEFT JOIN tmpDelayed ON tmpDelayed.ID = tmpMovement.Id
 
        INNER JOIN MovementDesc ON MovementDesc.id = Movement.DescId
        INNER JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-
-    ;
+    
+    WHERE COALESCE(tmpDelayed.ID, 0) <> 0 OR Movement.DescId = zc_Movement_Check();
 
 END;
 $BODY$
