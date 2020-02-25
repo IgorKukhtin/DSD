@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 218
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3413,6 +3413,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actHelsiUser: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
+      Hint = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
+      FormName = 'THelsiUserForm'
+      FormNameParam.Value = 'THelsiUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -3708,6 +3720,9 @@ inherited MainForm: TMainForm
       end
       object N140: TMenuItem
         Action = actMemberIncomeCheck
+      end
+      object N223: TMenuItem
+        Action = actHelsiUser
       end
       object N80: TMenuItem
         Caption = '-'
