@@ -1,28 +1,28 @@
-inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
-  Caption = #1057#1091#1084#1084#1072#1088#1085#1099#1077' '#1086#1089#1090#1072#1090#1082#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+inherited Report_JuridicalSalesForm: TReport_JuridicalSalesForm
+  Caption = #1057#1091#1084#1084#1072#1088#1085#1099#1077' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
   ClientHeight = 364
-  ClientWidth = 722
+  ClientWidth = 992
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 738
+  ExplicitWidth = 1008
   ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 722
+    Width = 992
     Height = 305
     TabOrder = 3
     ExplicitTop = 59
     ExplicitWidth = 722
     ExplicitHeight = 305
     ClientRectBottom = 305
-    ClientRectRight = 722
+    ClientRectRight = 992
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 722
       ExplicitHeight = 305
       inherited cxGrid: TcxGrid
-        Width = 722
+        Width = 992
         Height = 305
         ExplicitWidth = 722
         ExplicitHeight = 305
@@ -35,17 +35,14 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.00'
@@ -80,17 +77,14 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithOutVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = SummaWithVAT
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Column = Summa
             end
             item
               Format = ',0.00'
@@ -129,7 +123,7 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 250
+            Width = 232
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
@@ -142,76 +136,103 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
             Options.Editing = False
             Width = 80
           end
-          object SummaWithOutVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'SummaWithOutVAT'
+          object SummaSale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 132
-          end
-          object SummaWithVAT: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057')'
-            DataBinding.FieldName = 'SummaWithVAT'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 146
+            Width = 123
           end
           object Summa: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057')'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'. ('#1089' '#1053#1044#1057'), '#1075#1088#1085
             DataBinding.FieldName = 'Summa'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 134
+            Width = 137
+          end
+          object SummaWithVAT: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1074' '#1094#1077#1085#1072#1093' '#1087#1088#1080#1093#1086#1076#1072' ('#1089' '#1053#1044#1057'), '#1075#1088#1085
+            DataBinding.FieldName = 'SummaWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 118
+          end
+          object SummaProfit: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076' '#1089' '#1091#1095'. % '#1082#1086#1088#1088'., '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
+          end
+          object SummaProfitWithVAT: TcxGridDBColumn
+            Caption = #1044#1086#1093#1086#1076', '#1075#1088#1085
+            DataBinding.FieldName = 'SummaProfitWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 79
+          end
+          object PersentProfit: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072' ('#1089' '#1091#1095'. % '#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'PersentProfit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 95
+          end
+          object PersentProfitWithVAT: TcxGridDBColumn
+            Caption = '% '#1076#1086#1093#1086#1076#1072' '#1086#1090' '#1074#1072#1083#1072
+            DataBinding.FieldName = 'PersentProfitWithVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 92
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 722
+    Width = 992
     Height = 33
     ExplicitWidth = 722
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 114
+      EditValue = 43831d
       ExplicitLeft = 114
+      ExplicitWidth = 79
+      Width = 79
     end
     inherited deEnd: TcxDateEdit
-      Left = 732
-      Top = 15
-      Visible = False
-      ExplicitLeft = 732
-      ExplicitTop = 15
+      Left = 311
+      EditValue = 43831d
+      ExplicitLeft = 311
+      ExplicitWidth = 82
+      Width = 82
     end
     inherited cxLabel1: TcxLabel
       Left = 9
-      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086':'
       ExplicitLeft = 9
-      ExplicitWidth = 105
-    end
-    inherited cxLabel2: TcxLabel
-      Left = 664
-      Top = 16
-      Visible = False
-      ExplicitLeft = 664
-      ExplicitTop = 16
     end
     object cxLabel19: TcxLabel
-      Left = 217
+      Left = 409
       Top = 6
       Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100':'
     end
     object ceRetail: TcxButtonEdit
-      Left = 297
+      Left = 489
       Top = 5
       Properties.Buttons = <
         item
@@ -223,12 +244,12 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
       Width = 168
     end
     object cxLabel3: TcxLabel
-      Left = 474
+      Left = 666
       Top = 6
       Caption = #1070#1088'.'#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 526
+      Left = 718
       Top = 5
       Properties.Buttons = <
         item
@@ -359,8 +380,8 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_JuridicalRemainsDialogForm'
-      FormNameParam.Value = 'TReport_JuridicalRemainsDialogForm'
+      FormName = 'TReport_JuridicalSalesDialogForm'
+      FormNameParam.Value = 'TReport_JuridicalSalesDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -368,6 +389,14 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
           Name = 'StartDate'
           Value = 41395d
           Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 'NULL'
+          Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -433,7 +462,7 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
     Top = 168
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_JuridicalRemains'
+    StoredProcName = 'gpReport_JuridicalSales'
     Params = <
       item
         Name = 'inRetailId'
@@ -452,9 +481,17 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inRemainsDate'
+        Name = 'inStartDate'
         Value = 41395d
         Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -558,8 +595,8 @@ inherited Report_JuridicalRemainsForm: TReport_JuridicalRemainsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 8
+    Left = 336
+    Top = 40
   end
   object GuidesJuridical: TdsdGuides
     KeyField = 'Id'

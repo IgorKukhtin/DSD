@@ -641,6 +641,9 @@ type
     N222: TMenuItem;
     actHelsiUser: TdsdOpenForm;
     N223: TMenuItem;
+    actReport_JuridicalSales: TdsdOpenForm;
+    N224: TMenuItem;
+    miReport_JuridicalSales: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

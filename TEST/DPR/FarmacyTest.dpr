@@ -821,7 +821,9 @@ uses
   Report_JuridicalRemainsDialog in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsDialog.pas' {Report_JuridicalRemainsDialogForm: TParentForm},
   Report_Movement_Send_RemainsSunOut in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut.pas' {Report_Movement_Send_RemainsSunOutForm: TParentForm},
   Report_InventoryErrorRemainsDoc in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDoc.pas' {Report_InventoryErrorRemainsDocForm: TParentForm},
-  HelsiUser in '..\..\FormsFarmacy\Guides\HelsiUser.pas' {HelsiUserForm: TParentForm};
+  HelsiUser in '..\..\FormsFarmacy\Guides\HelsiUser.pas' {HelsiUserForm: TParentForm},
+  Report_JuridicalSalesDialog in '..\..\FormsFarmacy\Report\Report_JuridicalSalesDialog.pas' {Report_JuridicalSalesDialogForm: TParentForm},
+  Report_JuridicalSales in '..\..\FormsFarmacy\Report\Report_JuridicalSales.pas' {Report_JuridicalSalesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
