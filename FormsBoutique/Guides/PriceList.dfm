@@ -67,6 +67,7 @@ object PriceListForm: TPriceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 113
       end
       object Erased: TcxGridDBColumn

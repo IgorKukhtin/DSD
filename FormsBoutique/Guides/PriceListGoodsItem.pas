@@ -66,6 +66,7 @@ type
     actSetErased: TdsdUpdateErased;
     actSetUnErased: TdsdUpdateErased;
     isErased: TcxGridDBColumn;
+    CurrencyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

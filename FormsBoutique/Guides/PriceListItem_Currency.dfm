@@ -1,7 +1,7 @@
-object PriceListItemForm: TPriceListItemForm
+object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
   Left = 0
   Top = 0
-  Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1086#1089#1083#1077#1076#1085#1080#1093' '#1094#1077#1085
+  Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090' - '#1055#1088#1086#1089#1084#1086#1090#1088' / '#1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1074#1072#1083#1102#1090#1099
   ClientHeight = 398
   ClientWidth = 988
   Color = clBtnFace
@@ -244,10 +244,17 @@ object PriceListItemForm: TPriceListItemForm
       object CurrencyName_price: TcxGridDBColumn
         Caption = #1042#1072#1083'. '#1087#1088#1072#1081#1089
         DataBinding.FieldName = 'CurrencyName_price'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actChoiceCurrency
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1072#1083#1102#1090#1072' '#1087#1088#1072#1081#1089#1072
-        Options.Editing = False
         Width = 55
       end
       object ValuePrice: TcxGridDBColumn
@@ -259,6 +266,7 @@ object PriceListItemForm: TPriceListItemForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+        Options.Editing = False
         Width = 55
       end
       object GoodsGroupName: TcxGridDBColumn
@@ -1319,6 +1327,33 @@ object PriceListItemForm: TPriceListItemForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actChoiceCurrency: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'CurrencyForm'
+      FormName = 'TCurrencyForm'
+      FormNameParam.Value = 'TCurrencyForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyId_price'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CurrencyName_price'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -1457,72 +1492,24 @@ object PriceListItemForm: TPriceListItemForm
     Top = 24
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_ObjectHistory_PriceListItemLast'
+    StoredProcName = 'gpUpdate_OH_PriceListItem_Currency'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = ClientDataSet
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPriceListId'
-        Value = Null
-        Component = GuidesPriceList
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inCurrencyId'
         Value = Null
         Component = ClientDataSet
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'CurrencyId_price'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inOperDate'
-        Value = 'NULL'
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inValue'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'ValuePrice'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsLast'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outStartDate'
-        Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'StartDate'
-        DataType = ftDateTime
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outEndDate'
-        Value = 'NULL'
-        Component = ClientDataSet
-        ComponentItem = 'EndDate'
-        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

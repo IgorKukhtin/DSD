@@ -232,6 +232,8 @@ type
     miSalePodium: TMenuItem;
     actReport_MotionOLAP: TdsdOpenForm;
     miReport_MotionOLAP: TMenuItem;
+    actPriceListItem_Currency: TdsdOpenForm;
+    miPriceListItem_Currency: TMenuItem;
   private
     { Private declarations }
   public
