@@ -65,6 +65,8 @@ type
     BranchUser: TcxGridDBColumn;
     actPUSHMessage: TdsdShowPUSHMessage;
     spPUSHInfo: TdsdStoredProc;
+    actPrintOptima: TdsdPrintAction;
+    bbPrintOptima: TdxBarButton;
   private
     { Private declarations }
   public
