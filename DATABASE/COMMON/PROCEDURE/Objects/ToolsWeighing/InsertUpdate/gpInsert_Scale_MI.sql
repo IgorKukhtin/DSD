@@ -464,7 +464,7 @@ BEGIN
 
 
 -- !!! бпелеммн !!!
-IF inSession = '5' AND 1=1 AND inBranchCode < 1000 THEN
+IF inSession = '5' AND 1=0 AND inBranchCode < 1000 THEN
     RAISE EXCEPTION 'Admin - Test = OK  Amount = <%> Price = <%>'
                   , (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = vbId)
                   , (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId AND MIF.DescId = zc_MIFloat_Price())

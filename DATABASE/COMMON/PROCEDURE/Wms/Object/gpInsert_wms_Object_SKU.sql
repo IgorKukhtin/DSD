@@ -82,7 +82,7 @@ BEGIN
                    , tmpData.ObjectId
                    , 0 AS GroupId
               FROM lpSelect_wms_Object_SKU() AS tmpData
-            --WHERE tmpData.sku_id IN ('795513', '38391802')
+            --WHERE tmpData.sku_id IN ('4152083', '4152082')
              ) AS tmp
      -- WHERE tmp.RowNum = 1
         ORDER BY 4

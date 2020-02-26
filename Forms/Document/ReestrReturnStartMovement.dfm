@@ -4,7 +4,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
   ClientWidth = 937
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 953
-  ExplicitHeight = 442
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,19 +12,19 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     Width = 937
     Height = 321
     ExplicitTop = 83
-    ExplicitWidth = 927
+    ExplicitWidth = 937
     ExplicitHeight = 321
     ClientRectBottom = 321
     ClientRectRight = 937
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 927
+      ExplicitWidth = 937
       ExplicitHeight = 297
       inherited cxGrid: TcxGrid
         Top = 67
         Width = 937
         Height = 230
         ExplicitTop = 67
-        ExplicitWidth = 927
+        ExplicitWidth = 937
         ExplicitHeight = 230
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -326,7 +326,6 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 927
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           Navigator.Buttons.Append.Visible = False
@@ -441,7 +440,6 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
         HotZone.Visible = False
         AlignSplitter = salTop
         Control = cxGrid1
-        ExplicitWidth = 927
       end
     end
   end
@@ -449,7 +447,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
     Width = 937
     Height = 57
     TabOrder = 3
-    ExplicitWidth = 927
+    ExplicitWidth = 937
     ExplicitHeight = 57
     inherited edInvNumber: TcxTextEdit
       Left = 165
@@ -601,6 +599,9 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actRefreshStart: TdsdDataSetRefresh [1]
       Category = 'DSDLib'
@@ -704,6 +705,9 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     inherited actMISetUnErased: TdsdUpdateErased
       ShortCut = 0
@@ -860,7 +864,7 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BarCode'
@@ -1066,6 +1070,9 @@ inherited ReestrReturnStartMovementForm: TReestrReturnStartMovementForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource

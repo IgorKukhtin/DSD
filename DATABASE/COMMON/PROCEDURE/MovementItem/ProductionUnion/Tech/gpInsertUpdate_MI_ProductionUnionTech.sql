@@ -41,8 +41,8 @@ BEGIN
    -- !!!Проверка закрытия периода только для <Технолог Днепр>!!!
    IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND RoleId = 439522) -- Технолог Днепр
    THEN
-       IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) > inOperDate
-        OR (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) > COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId), zc_DateEnd())
+       IF  (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) - INTERVAL '2 DAY' > inOperDate
+        OR (SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet) - INTERVAL '2 DAY' > COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = ioMovementId), zc_DateEnd())
        THEN
            RAISE EXCEPTION 'Ошибка.Период закрыт до <%>.', DATE ((SELECT gpGet.OperDate FROM gpGet_Scale_OperDate (FALSE, 1, inSession) AS gpGet));
        END IF;

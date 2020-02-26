@@ -37,7 +37,7 @@ type
     // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
-    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String; inFromId_calc:Integer): Boolean;
     function gpGet_Scale_Transport(var execParams:TParams;inBarCode:String): Boolean;
     // Scale
     function gpGet_Scale_GoodsRetail(var execParamsMovement:TParams;var execParams:TParams;inBarCode:String): Boolean;
@@ -1092,7 +1092,7 @@ begin
     end;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String): Boolean;
+function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String; inFromId_calc : Integer): Boolean;
 var MovementDescId_old:Integer;
 begin
     with spSelect do
@@ -1101,6 +1101,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inFromId',ftInteger, ptInput, inFromId_calc);
        Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try

@@ -575,6 +575,7 @@ BEGIN
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
                                                     WHEN _tmpItem.isPartionDate_From = TRUE
+                                                     AND _tmpItem.PartionGoodsDate_From <> zc_DateEnd()
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_From
@@ -673,6 +674,7 @@ BEGIN
                                                         THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
 
                                                     WHEN _tmpItem.isPartionDate_To = TRUE
+                                                     AND _tmpItem.PartionGoodsDate_To <> zc_DateEnd()
                                                      AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                            , zc_Enum_InfoMoneyDestination_30200()) -- Доходы + Мясное сырье
                                                         THEN lpInsertFind_Object_PartionGoods (inOperDate             := _tmpItem.PartionGoodsDate_To

@@ -283,8 +283,6 @@ type
     function GetPanelPartnerCaption(execParams:TParams):String;
     procedure Create_Scale;
     procedure Initialize_Scale;
-    procedure RefreshDataSet;
-    procedure WriteParamsMovement;
     procedure Initialize_afterSave_all;
     procedure Initialize_afterSave_MI;
     procedure myActiveControl;
@@ -295,6 +293,9 @@ type
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
     function Save_Movement_PersonalLoss(execParams:TParams):Boolean;
     function fGetScale_CurrentWeight:Double;
+
+    procedure RefreshDataSet;
+    procedure WriteParamsMovement;
   end;
 
 var
@@ -401,9 +402,11 @@ begin
      then exit;
 
      //Проверка
-     if ((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-      or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice))
-         and(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
+     if {((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+      or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
+      or (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Loss)
+        )
+        and}(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
          and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
      then begin
          if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
@@ -816,7 +819,7 @@ begin
      if ParamsMovement.ParamByName('OrderExternalId').AsInteger<>0
      then
          // Диалог для параметров товара из списка заявки + в нем сохранение MovementItem
-         if GuideGoodsMovementForm.Execute (ParamsMovement, isModeSave) = TRUE
+         if GuideGoodsMovementForm.Execute (ParamsMovement, isModeSave, FALSE) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -831,7 +834,7 @@ begin
           or((ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
              and((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)))
          then
-              if GuideGoodsPartnerForm.Execute (ParamsMovement, isModeSave) = TRUE
+              if GuideGoodsPartnerForm.Execute (ParamsMovement, isModeSave, FALSE) = TRUE
               then begin
                          Result:=true;
                          RefreshDataSet;
@@ -840,7 +843,7 @@ begin
               else
          else
          // Диалог для параметров товара из списка всех товаров + в нем сохранение MovementItem
-         if GuideGoodsForm.Execute (ParamsMovement, isModeSave) = TRUE
+         if GuideGoodsForm.Execute (ParamsMovement, isModeSave, FALSE) = TRUE
          then begin
                     Result:=true;
                     RefreshDataSet;
@@ -1274,9 +1277,9 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
 begin
-     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     {if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
       or(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_SendOnPrice)
-     then pSetSubjectDoc;
+     then} pSetSubjectDoc;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainForm.EditBarCodeTransportPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);

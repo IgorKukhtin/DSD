@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Scale_Sticker(
     IN inBranchCode            Integer,      --
     IN inSession               TVarChar      -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, Comment TVarChar
              , GoodsGroupNameFull TVarChar
              , TradeMarkName_goods TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsName_original TVarChar
@@ -108,6 +108,7 @@ BEGIN
                                    AND ObjectLink_StickerFile_Juridical.ChildObjectId IS NULL -- !!!обязательно БЕЗ Покупателя!!!
                                 )
             , tmpSticker AS (SELECT Object_StickerProperty.Id
+                                  , Object_StickerProperty.ValueData         AS Comment
                                   , ObjectLink_Sticker_Goods.ChildObjectId   AS GoodsId
                                   , Object_StickerGroup.ValueData            AS StickerGroupName
                                   , Object_StickerType.ValueData             AS StickerTypeName
@@ -206,6 +207,7 @@ BEGIN
                             )
        -- Результат - по заявке
        SELECT tmpSticker.Id
+            , tmpSticker.Comment
             , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
             , tmpGoods.TradeMarkName_goods
             , tmpGoods.GoodsId

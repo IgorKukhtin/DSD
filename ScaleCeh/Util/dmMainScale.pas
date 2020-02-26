@@ -9,7 +9,7 @@ type
   public
     // !!!Scale + ScaleCeh!!!
     function gpGet_Scale_Partner(var execParams:TParams;inPartnerCode:Integer): Boolean;
-    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc:Integer): Boolean;
     function gpUpdate_Scale_Partner_print(PartnerId : Integer; isMovement,isAccount,isTransport,isQuality,isPack,isSpec,isTax : Boolean; CountMovement,CountAccount,CountTransport,CountQuality,CountPack,CountSpec,CountTax : Integer): Boolean;
     function gpGet_Scale_PartnerParams(var execParams:TParams): Boolean;
     function gpGet_Scale_PSW_delete (inPSW: String): String;
@@ -64,7 +64,7 @@ begin
   Result:=false;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String): Boolean;
+function TDMMainScaleForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc:Integer): Boolean;
 begin
   Result:=false;
 end;

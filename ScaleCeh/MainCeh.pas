@@ -268,6 +268,7 @@ type
     SubjectDocPanel: TPanel;
     SubjectDocLabel: TLabel;
     EditSubjectDoc: TcxButtonEdit;
+    testButton3: TButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -346,9 +347,11 @@ type
     procedure EditCountPackEnter(Sender: TObject);
     procedure EditSubjectDocPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure testButton3Click(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
+    lTimerWeight_zero : Boolean;
     tmpWeight_test : Double;
     fEnterKey13:Boolean;
     fSaveAll:Boolean;
@@ -405,7 +408,8 @@ uses UnilWin,DMMainScaleCeh, DMMainScale, UtilConst, DialogMovementDesc, UtilPri
     ,GuideMovementCeh, DialogNumberValue,DialogStringValue, DialogDateValue, DialogPrint, DialogMessage
     ,GuideWorkProgress, GuideArticleLoss, GuideGoodsLine, DialogDateReport, GuideSubjectDoc
     ,IdIPWatch, LookAndFillSettings
-    ,DialogBoxLight, DialogGoodsSeparate;
+    ,DialogBoxLight, DialogGoodsSeparate
+    ,CommonData;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -426,9 +430,10 @@ var
      oldStorageLineName: String;
 begin
      //
-     lTimerWeight_1:= 0;
-     lTimerWeight_2:= 0;
-     lTimerWeight_3:= 0;
+     //lTimerWeight_1:= 0;
+     //lTimerWeight_2:= 0;
+     //lTimerWeight_3:= 0;
+     //lTimerWeight_zero:= false;
      //
      // Сначала сохраним
      oldStorageLineId  := ParamsMI.ParamByName('StorageLineId').AsInteger;
@@ -646,8 +651,8 @@ begin
                    end;
      end;
      //Проверка
-     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-         and(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
+     if {(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+         and}(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
          and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
      then begin
          if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
@@ -706,7 +711,7 @@ begin
      end;
 
      // потушили все
-     Set_LightOff_all;
+     //!!!Set_LightOff_all;
      //!!!Сохранили документ!!!
      if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
      begin
@@ -1468,8 +1473,8 @@ end;
 procedure TMainCehForm.EditSubjectDocPropertiesButtonClick(Sender: TObject;
   AButtonIndex: Integer);
 begin
-     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-     then pSetSubjectDoc;
+     {if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+     then} pSetSubjectDoc;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.EditArticleLossPropertiesButtonClick(Sender: TObject;AButtonIndex: Integer);
@@ -2340,8 +2345,9 @@ begin
   //rename Columns
   if SettingMain.isModeSorting = TRUE then
   begin
-    testButton1.Visible:= true;
-    testButton2.Visible:= true;
+    testButton1.Visible:= gc_User.Session = '5';
+    testButton2.Visible:= gc_User.Session = '5';
+    testButton3.Visible:= gc_User.Session = '5';
     //
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsCode')       .Index].Visible:= FALSE;
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count')           .Index].Index  := 0;
@@ -2597,6 +2603,13 @@ begin
      Timer_GetWeight.Enabled:= FALSE;
 end;
 //------------------------------------------------------------------------------------------------
+procedure TMainCehForm.testButton3Click(Sender: TObject);
+begin
+     lTimerWeight_zero:= true;
+     // Отключили предыдущий
+     Set_LightOff_all;
+end;
+//------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOff_all : Boolean;
 begin
      Set_LightOff(1);
@@ -2764,7 +2777,7 @@ begin
         // показали
         SetParams_OperCount;
         //
-        if tmpCurrentWeight <= 0.001 then exit;
+        //if tmpCurrentWeight <= 0.001 then exit;
         //
         // если это только первый
         if lTimerWeight_1 <> tmpCurrentWeight then begin lTimerWeight_1:= tmpCurrentWeight; lTimerWeight_2:=0; lTimerWeight_3:= 0; end
@@ -2772,13 +2785,14 @@ begin
              if lTimerWeight_2 <> tmpCurrentWeight then begin lTimerWeight_2:= tmpCurrentWeight; lTimerWeight_3:= 0;end
              else begin
                  // Отключили предыдущий
-                 Set_LightOff_all;
+                 //!!!!Set_LightOff_all;
                  //
                  // третий - последний
                  lTimerWeight_3:= tmpCurrentWeight;
                  //
                  ParamsMI.ParamByName('RealWeight').AsFloat:=tmpCurrentWeight;
-
+                 //
+{
 //*****
      if (System.Pos('ves=',ParamStr(1))>0)
       or(System.Pos('ves=',ParamStr(2))>0)
@@ -2800,10 +2814,22 @@ begin
                ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
                SetParams_OperCount;
                PanelWeight_Scale.Caption:=FloatToStr(tmpWeight_test);
-      end;
+      end;            }
 //*****
-                 // попробуем сохранить
-                 Save_MI;
+                 // в первый раз после zero - получили с 3-х попыток вес и потом ждем zero
+                 if lTimerWeight_zero = true
+                 then begin // установили что ждем zero
+                            lTimerWeight_zero:= false;
+                            // попробуем сохранить
+                            Save_MI;
+                       end;
+                 // если с 3-х попыток пришел zero
+                 if tmpCurrentWeight = 0
+                 then begin
+                           lTimerWeight_zero:= true;
+                           // Отключили предыдущий
+                           Set_LightOff_all;
+                 end;
                  //
                  Result:= true;
 
@@ -2812,9 +2838,9 @@ begin
         if lTimerWeight_3 > 0 then
         begin
              // все начинается сначала
-             lTimerWeight_1:= 0;
-             lTimerWeight_2:= 0;
-             lTimerWeight_3:= 0;
+           //  lTimerWeight_1:= 0;
+           //  lTimerWeight_2:= 0;
+           //  lTimerWeight_3:= 0;
         end;
      end;
 end;

@@ -1,9 +1,11 @@
 -- Function: gpGet_Scale_OrderExternal()
 
-DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
     IN inOperDate       TDateTime   ,
+    IN inFromId         Integer   , --
     IN inBranchCode     Integer   , --
     IN inBarCode        TVarChar    ,
     IN inSession        TVarChar      -- сессия пользователя
@@ -208,6 +210,11 @@ BEGIN
 
                                              THEN MovementLinkObject_Unit.ObjectId
 
+                                        -- Для Мясного сырья - замена
+                                        WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                                         AND inBranchCode BETWEEN 201 AND 210
+                                             THEN MovementLinkObject_From.ObjectId
+
                                         -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                         ELSE MovementLinkObject_From.ObjectId
 
@@ -223,6 +230,12 @@ BEGIN
                                                    WHERE MLO.MovementId = tmpMovement.Id
                                                      AND MLO.DescId     = zc_MovementLinkObject_Juridical()
                                                    LIMIT 1)
+
+                                        -- Для Мясного сырья - замена
+                                        WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                                         AND inBranchCode BETWEEN 201 AND 210
+                                             THEN inFromId
+
                                         -- Для Склад специй + Склад запчастей
                                         WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
                                          AND inBranchCode BETWEEN 301 AND 310
@@ -304,8 +317,45 @@ BEGIN
                                  LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_From ON tmpUnit_Branch_From.UnitId = MovementLinkObject_From.ObjectId
                                  LEFT JOIN tmpUnit_Branch AS tmpUnit_Branch_To   ON tmpUnit_Branch_To.UnitId   = MovementLinkObject_To.ObjectId
 
-                                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-                                 LEFT JOIN Object AS Object_To   ON Object_To.Id   = MovementLinkObject_To.ObjectId
+                                 LEFT JOIN Object AS Object_From ON Object_From.Id = CASE -- Для заявки поставщику
+                                                                                          WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+
+                                                                                               THEN MovementLinkObject_Unit.ObjectId
+
+                                                                                          -- Для Мясного сырья - замена
+                                                                                          WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                                                                                           AND inBranchCode BETWEEN 201 AND 210
+                                                                                               THEN inFromId
+
+                                                                                          -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
+                                                                                          ELSE MovementLinkObject_From.ObjectId
+
+                                                                                     END
+                                 LEFT JOIN Object AS Object_To   ON Object_To.Id   = CASE -- Для заявки поставщику
+                                                                                          WHEN tmpMovement.DescId = zc_Movement_OrderIncome()
+                                                                                               THEN (SELECT OL.ObjectId
+                                                                                                     FROM MovementLinkObject AS MLO
+                                                                                                          INNER JOIN ObjectLink AS OL ON OL.ChildObjectId = MLO.ObjectId AND OL.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                                                          INNER JOIN Object ON Object.Id = OL.ObjectId AND Object.isErased = FALSE
+                                                                                                     WHERE MLO.MovementId = tmpMovement.Id
+                                                                                                       AND MLO.DescId     = zc_MovementLinkObject_Juridical()
+                                                                                                     LIMIT 1)
+
+                                                                                          -- Для Мясного сырья - замена
+                                                                                          WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
+                                                                                           AND inBranchCode BETWEEN 201 AND 210
+                                                                                               THEN MovementLinkObject_From.ObjectId
+
+                                                                                          -- Для Склад специй + Склад запчастей
+                                                                                          WHEN MovementLinkObject_From.ObjectId = MovementLinkObject_To.ObjectId
+                                                                                           AND inBranchCode BETWEEN 301 AND 310
+                                                                                           AND tmpMovement.DescId = zc_Movement_OrderInternal()
+                                                                                               THEN 8455 -- Склад специй
+
+                                                                                          -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
+                                                                                          ELSE MovementLinkObject_To.ObjectId
+
+                                                                                     END
                            )
            , tmpMovement_find AS (SELECT tmpMovement.Id
                                        , MovementLinkMovement_Order.MovementId AS MovementId_get
@@ -561,7 +611,8 @@ BEGIN
             , CASE WHEN tmpJuridicalPrint.isPack = TRUE OR tmpJuridicalPrint.isSpec = TRUE THEN COALESCE (tmpJuridicalPrint.isMovement, FALSE) ELSE TRUE END :: Boolean AS isMovement
             , CASE WHEN tmpJuridicalPrint.CountMovement > 0 THEN tmpJuridicalPrint.CountMovement ELSE 2 END :: TFloat AS CountMovement
             , COALESCE (tmpJuridicalPrint.isAccount,   FALSE) :: Boolean AS isAccount,   COALESCE (tmpJuridicalPrint.CountAccount, 0)   :: TFloat AS CountAccount
-            , COALESCE (tmpJuridicalPrint.isTransport, FALSE) :: Boolean AS isTransport, COALESCE (tmpJuridicalPrint.CountTransport, 0) :: TFloat AS CountTransport
+            , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() THEN TRUE ELSE COALESCE (tmpJuridicalPrint.isTransport, FALSE) END  :: Boolean AS isTransport
+            , CASE WHEN Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm() THEN 1    ELSE COALESCE (tmpJuridicalPrint.CountTransport, 0)  END  :: TFloat  AS CountTransport
             , COALESCE (tmpJuridicalPrint.isQuality,   FALSE) :: Boolean AS isQuality  , COALESCE (tmpJuridicalPrint.CountQuality, 0)   :: TFloat AS CountQuality
             , COALESCE (tmpJuridicalPrint.isPack,      FALSE) :: Boolean AS isPack     , COALESCE (tmpJuridicalPrint.CountPack, 0)      :: TFloat AS CountPack
             , COALESCE (tmpJuridicalPrint.isSpec,      FALSE) :: Boolean AS isSpec     , COALESCE (tmpJuridicalPrint.CountSpec, 0)      :: TFloat AS CountSpec

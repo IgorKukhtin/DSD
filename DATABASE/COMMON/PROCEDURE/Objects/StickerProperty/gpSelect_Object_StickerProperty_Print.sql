@@ -192,10 +192,10 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-       WITH 
+       WITH
        tmpLanguageParam AS (SELECT ObjectString_Value1.ValueData  AS Value1   -- Склад:
                                  , ObjectString_Value2.ValueData  AS Value2   -- Умови та термін зберігання:
-                                 , ObjectString_Value3.ValueData  AS Value3   -- за відносної вологості повітря від 
+                                 , ObjectString_Value3.ValueData  AS Value3   -- за відносної вологості повітря від
                                  , ObjectString_Value4.ValueData  AS Value4   -- до
                                  , ObjectString_Value5.ValueData  AS Value5   -- за температури від
                                  , ObjectString_Value6.ValueData  AS Value6   -- до
@@ -205,10 +205,10 @@ BEGIN
                                  , ObjectString_Value16.ValueData AS Value16  -- гр
                                  , ObjectString_Value9.ValueData  AS Value9   -- білки не менше
                                  , ObjectString_Value10.ValueData AS Value10  -- гр
-                                 , ObjectString_Value11.ValueData AS Value11  -- жири не більше 
+                                 , ObjectString_Value11.ValueData AS Value11  -- жири не більше
                                  , ObjectString_Value12.ValueData AS Value12  -- гр
-                                 , ObjectString_Value13.ValueData AS Value13  -- кКал 
-                                 , ObjectString_Value14.ValueData AS Value14  -- діб. 
+                                 , ObjectString_Value13.ValueData AS Value13  -- кКал
+                                 , ObjectString_Value14.ValueData AS Value14  -- діб.
                                  , ObjectString_Value17.ValueData AS Value17  -- кДж
                             FROM ObjectLink AS ObjectLink_StickerFile_Language
                                  LEFT JOIN ObjectString AS ObjectString_Value1
@@ -321,33 +321,70 @@ BEGIN
 -- [frxDBDHeader."Info"]
 
               -- Level1
-            , (REPEAT (' ', vbAddLeft1)
+            , (CASE WHEN inIsLength = TRUE
+                    THEN LENGTH (REPEAT (' ', vbAddLeft1)
+                              || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                           THEN COALESCE (Object_StickerGroup.ValueData, '')
+                                      || ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
+
+                                      ELSE COALESCE (Object_StickerGroup.ValueData, '')
+                                 || ' ' || COALESCE (Object_StickerType.ValueData, '')
+                                 || ' ' || COALESCE (Object_StickerTag.ValueData, '')
+
+                                 END
+                                ) :: TVarChar || ' - (' || vbParam1 :: TVarChar || ')'
+                    ELSE ''
+               END
+            || REPEAT (' ', vbAddLeft1)
             || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
                          THEN COALESCE (Object_StickerGroup.ValueData, '')
-                    || ' ' || COALESCE (Object_StickerTag.ValueData, '')
- 
+                    || ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
+
                     ELSE COALESCE (Object_StickerGroup.ValueData, '')
                || ' ' || COALESCE (Object_StickerType.ValueData, '')
                || ' ' || COALESCE (Object_StickerTag.ValueData, '')
- 
+
                END) :: TVarChar AS Level1
 
               -- Level2
-            , (REPEAT (' ', vbAddLeft2)
+            , (CASE WHEN inIsLength = TRUE
+                    THEN LENGTH (REPEAT (' ', vbAddLeft2)
+                              || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                           THEN COALESCE (Object_StickerType.ValueData, '')
+                                    --|| ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
+                                      || ' ' || COALESCE (Object_StickerSort.ValueData, '')
+                                 || CHR (13) || REPEAT (' ', vbAddLeft2)
+                                             || COALESCE (Object_StickerNorm.ValueData, '')
+
+                                      WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
+                                           THEN COALESCE (Object_StickerSort.ValueData, '')
+                                 || CHR (13) || REPEAT (' ', vbAddLeft2)
+                                             || COALESCE (Object_StickerNorm.ValueData, '')
+
+                                      ELSE COALESCE (Object_StickerSort.ValueData, '')
+                                 || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
+
+                                 END
+                                ) :: TVarChar || ' - (' || vbParam2 :: TVarChar || ')'
+                    ELSE ''
+               END
+            || REPEAT (' ', vbAddLeft2)
             || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
-                         THEN COALESCE (Object_StickerType.ValueData, '')
+                  --     THEN COALESCE (Object_StickerTag.ValueData,  '') -- !!!
+                  --|| ' ' || COALESCE (Object_StickerType.ValueData, '') -- !!!
+                         THEN COALESCE (Object_StickerType.ValueData, '') -- !!!
                     || ' ' || COALESCE (Object_StickerSort.ValueData, '')
                || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
- 
+
                     WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
                          THEN COALESCE (Object_StickerSort.ValueData, '')
                || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
- 
+
                     ELSE COALESCE (Object_StickerSort.ValueData, '')
                || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
- 
+
                END) :: TVarChar AS Level2
 
               -- Вид продукта (Группа)
@@ -403,7 +440,7 @@ BEGIN
                                  ELSE '' END
                               -- білки не менше
                               ||tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
-                              -- жири не більше 
+                              -- жири не більше
                               ||tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
                               -- кКал
                               ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
@@ -431,14 +468,14 @@ BEGIN
             , inDateProduction    :: TDateTime AS DateProduction
             , inNumPack           :: TFloat    AS NumPack
             , inNumTech           :: TFloat    AS NumTech
-            
+
             , vbBranchCode        :: Integer   AS BranchCode
 
        FROM Object AS Object_StickerProperty
              LEFT JOIN Object AS Object_StickerFile ON Object_StickerFile.Id = vbStickerFileId
 
              LEFT JOIN tmpLanguageParam ON 1 = 1
-             
+
              LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
                                   ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
                                  AND ObjectLink_StickerProperty_Sticker.DescId = zc_ObjectLink_StickerProperty_Sticker()
@@ -485,21 +522,21 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Value7
                                    ON ObjectFloat_Value7.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value7.DescId = zc_ObjectFloat_StickerProperty_Value7()
-             -- Т мін - второй срок 
+             -- Т мін - второй срок
              LEFT JOIN ObjectFloat AS ObjectFloat_Value8
-                                   ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id 
+                                   ON ObjectFloat_Value8.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value8.DescId = zc_ObjectFloat_StickerProperty_Value8()
              -- Т макс - второй срок
              LEFT JOIN ObjectFloat AS ObjectFloat_Value9
-                                   ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id 
+                                   ON ObjectFloat_Value9.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value9.DescId = zc_ObjectFloat_StickerProperty_Value9()
              -- кількість діб - второй срок
              LEFT JOIN ObjectFloat AS ObjectFloat_Value10
-                                   ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id 
+                                   ON ObjectFloat_Value10.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value10.DescId = zc_ObjectFloat_StickerProperty_Value10()
              -- вложенность
              LEFT JOIN ObjectFloat AS ObjectFloat_Value11
-                                   ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id 
+                                   ON ObjectFloat_Value11.ObjectId = Object_StickerProperty.Id
                                   AND ObjectFloat_Value11.DescId = zc_ObjectFloat_StickerProperty_Value11()
 
              LEFT JOIN ObjectBoolean AS ObjectBoolean_Fix

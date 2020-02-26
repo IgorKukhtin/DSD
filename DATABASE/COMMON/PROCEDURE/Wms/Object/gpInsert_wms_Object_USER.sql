@@ -41,22 +41,28 @@ BEGIN
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpMember AS (SELECT Object_Member.DescId, Object_Member.Id AS id, Object_Member.ValueData AS fio
+        WITH tmpMember AS (SELECT DISTINCT Object_Member.DescId, Object_Member.Id AS id, Object_Member.ValueData AS fio
                            FROM Object AS Object_Member
                                 INNER JOIN ObjectLink AS ObjectLink_User_Member
                                                       ON ObjectLink_User_Member.ChildObjectId = Object_Member.Id
                                                      AND ObjectLink_User_Member.DescId        = zc_ObjectLink_User_Member()
                                 INNER JOIN Object AS Object_User
-                                                  ON Object_User.Id = ObjectLink_User_Member.ObjectId
+                                                  ON Object_User.Id       = ObjectLink_User_Member.ObjectId
                                                  AND Object_User.isErased = FALSE
-                                                 AND Object_User.Id IN (SELECT ObjectLink_UserRole_View.UserId
-                                                                        FROM ObjectLink_UserRole_View
-                                                                        WHERE ObjectLink_UserRole_View.RoleId IN (428386 -- Руководитель склад ГП Днепр
-                                                                                                                , 428382 -- Кладовщик Днепр
-                                                                                                                 )
-                                                                       )
+                                               --AND Object_User.Id IN (SELECT ObjectLink_UserRole_View.UserId
+                                               --                       FROM ObjectLink_UserRole_View
+                                               --                       WHERE ObjectLink_UserRole_View.RoleId IN (428386 -- Руководитель склад ГП Днепр
+                                               --                                                               , 428382 -- Кладовщик Днепр
+                                               --                                                                )
+                                               --                      )
+                                LEFT JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.UserId = Object_User.Id
                            WHERE Object_Member.DescId   = zc_Object_Member()
                              AND Object_Member.isErased = FALSE
+                             AND (ObjectLink_UserRole_View.UserId IS NULL
+                               OR ObjectLink_UserRole_View.RoleId IN (428386 -- Руководитель склад ГП Днепр
+                                                                    , 428382 -- Кладовщик Днепр
+                                                                     )
+                                 )
                           )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

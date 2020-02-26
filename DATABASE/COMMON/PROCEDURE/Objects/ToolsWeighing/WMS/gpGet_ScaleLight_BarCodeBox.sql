@@ -35,7 +35,8 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
 
 
-    IF CHAR_LENGTH (inBoxBarCode) >= 13 
+    IF CHAR_LENGTH (inBoxBarCode) >= 8
+       OR (zfConvert_StringToFloat(inBoxBarCode) = 0 AND CHAR_LENGTH (TRIM (inBoxBarCode)) > 5)
     THEN
         vbBoxBarCode:= TRIM (inBoxBarCode);
     ELSEIF zfConvert_StringToNumber(inBoxBarCode) > 0

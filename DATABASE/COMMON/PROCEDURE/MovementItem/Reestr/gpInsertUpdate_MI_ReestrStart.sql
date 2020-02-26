@@ -130,7 +130,7 @@ BEGIN
                                    FROM Movement
                                    WHERE Movement.InvNumber = TRIM (inBarCode)
                                      AND Movement.DescId    IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
-                                     AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '8 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
+                                     AND Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '70 DAY' AND CURRENT_DATE + INTERVAL '8 DAY'
                                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                                   );
          END IF;

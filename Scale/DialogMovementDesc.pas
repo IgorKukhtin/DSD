@@ -63,6 +63,8 @@ type
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
+
+    function fGetUnit_OrderInternal : Integer;
   public
     function Execute(BarCode: String): boolean; virtual;
     function Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
@@ -73,7 +75,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,GuidePartner;
+uses dmMainScale,GuidePartner,GuideUnit;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
@@ -517,8 +519,8 @@ begin
                     ParamByName('GoodsPropertyCode').AsInteger:= 0;
                     ParamByName('GoodsPropertyName').asString := '';
 
-                    if (SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310)
-                    or (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)
+                    if {(SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310)
+                    or} (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)
                     then begin
                               ParamByName('OrderExternalId').AsInteger        := 0;
                               ParamByName('OrderExternal_DescId').AsInteger   := 0;
@@ -544,9 +546,24 @@ begin
     CDS.Locate('Number',IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger),[]);
 end;
 {------------------------------------------------------------------------}
+function TDialogMovementDescForm.fGetUnit_OrderInternal : Integer;
+var execParams:TParams;
+begin
+     if GetArrayList_Value_byName (Default_Array,'isGet_Unit') <> AnsiUpperCase('TRUE') then exit;
+     //
+     Create_ParamsUnit_OrderInternal(execParams);
+     //
+     if GuideUnitForm.Execute(execParams)
+     then
+         Result:=execParams.ParamByName('UnitId').AsInteger;
+     //
+     execParams.Free;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TDialogMovementDescForm.EditBarCodeExit(Sender: TObject);
 var Number:Integer;
     fOK:Boolean;
+    FromId_calc:Integer;
 begin
     if isEditBarCode=false then exit;
 
@@ -554,15 +571,26 @@ begin
     //
     if (Length(trim(EditBarCode.Text))>2) and (SettingMain.isCeh = FALSE)
     then begin
-               //Проверка <Контрольная сумма>
-               if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
-               then begin
-                  EditBarCode.Text:='';
-                  ActiveControl:=EditBarCode;
-                  exit;
-               end;
+              //Проверка <Контрольная сумма>
+              if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
+              then begin
+                 EditBarCode.Text:='';
+                 ActiveControl:=EditBarCode;
+                 exit;
+              end;
+              //
+              // если надо - сначала уточникм подразделение
+              if GetArrayList_Value_byName (Default_Array,'isGet_Unit') = AnsiUpperCase('TRUE') then
+              begin
+                    FromId_calc:= fGetUnit_OrderInternal;
+                    if FromId_calc = 0 then
+                    begin
+                         ShowMessage('Ошибка.Подразделение не выбрано.');
+                         exit;
+                    end;
+              end;
               //поиск по номеру или ш-к
-              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text);
+              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc);
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.'+#10+#13+'Значение <Код операции/№ "основания"/Штрих код "основания"> не найдено.');

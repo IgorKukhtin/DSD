@@ -98,7 +98,8 @@ uses
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
-  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm};
+  GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
+  GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm};
 
 {$R *.res}
 
@@ -122,6 +123,7 @@ begin
          Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TDMMainScaleForm, DMMainScaleForm);
   Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+  Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   //
          // !!!важно первым!!!
          Application.CreateForm(TMainForm, MainForm);
@@ -148,6 +150,7 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   end
   else
 
@@ -190,6 +193,7 @@ begin
          Application.CreateForm(TDialogPrintForm, DialogPrintForm);
          Application.CreateForm(TDialogStickerTareForm, DialogStickerTareForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   end;
   //
   Application.Run;

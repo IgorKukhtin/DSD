@@ -446,6 +446,7 @@ AS  (SELECT
                       INNER JOIN MovementItemContainer ON MovementItemContainer.MovementDescId = SettingDesc.MovementDescId
                                                       AND MovementItemContainer.DescId         = zc_MIContainer_Count()
                                                       AND MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                      AND COALESCE (MovementItemContainer.AccountId, 0) <> zc_Enum_Account_110101()
                       LEFT OUTER JOIN ContainerLinkObject AS CLO_PartionGoods_master ON CLO_PartionGoods_master.ContainerId = MovementItemContainer.ContainerId
                                                                                     AND CLO_PartionGoods_master.DescId      = zc_ContainerLinkObject_PartionGoods()
                       LEFT OUTER JOIN ObjectLink AS OL_GoodsKindComplete_master ON OL_GoodsKindComplete_master.ObjectId = CLO_PartionGoods_master.ObjectId
@@ -1764,6 +1765,7 @@ AS  (SELECT
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Transport AS tmpMovement_PersonalComplete
                                           ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId
+                                         AND tmpMovement_PersonalComplete.PositionId = Setting.PositionId
                                          AND tmpMovement_PersonalComplete.HoursWork  <> 0
          LEFT JOIN Object AS Object_Unit_car ON Object_Unit_car.Id = tmpMovement_PersonalComplete.UnitId_car
          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup

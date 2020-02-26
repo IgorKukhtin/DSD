@@ -114,6 +114,7 @@ type
   procedure Create_ParamsArticleLoss(var Params:TParams);
   procedure Create_ParamsGoodsLine(var Params:TParams);
   procedure Create_ParamsSubjectDoc(var Params:TParams);
+  procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
 
   // создает TParam с названием поля _Name и типом _DataType и добавляет к TParams
   procedure ParamAdd(var execParams:TParams;_Name:String;_DataType:TFieldType);
@@ -575,6 +576,15 @@ begin
      ParamAdd(Params,'SubjectDocCode', ftInteger); //
      ParamAdd(Params,'SubjectDocName', ftString);  //
 end;
+{------------------------------------------------------------------------}
+procedure Create_ParamsUnit_OrderInternal(var Params:TParams);
+begin
+     Params:=nil;
+     ParamAdd(Params,'UnitId', ftInteger);   //
+     ParamAdd(Params,'UnitCode', ftInteger); //
+     ParamAdd(Params,'UnitName', ftString);  //
+end;
+{------------------------------------------------------------------------}
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}

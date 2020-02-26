@@ -40,11 +40,14 @@ BEGIN
    -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
    vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
-   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
+   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId)
+                 OR vbUserId = 343013 -- Нагорная Я.Г.
+                   ;
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND Object_RoleAccessKeyGuide_View.UserId = vbUserId)
               OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (447972)) -- Просмотр СБ
-              OR vbUserId = 80830
+              OR vbUserId = 80830  -- Кисличная Т.А.
+              OR vbUserId = 343013 -- Нагорная Я.Г.
                 ;
 
    -- определяется уровень доступа

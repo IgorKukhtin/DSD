@@ -86,6 +86,7 @@ type
     actPrint: TdsdPrintAction;
     PanelIsPreview: TPanel;
     cbPreviewPrint: TcxCheckBox;
+    Comment: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;

@@ -143,6 +143,8 @@ BEGIN
 
            UNION SELECT 'isCalc_sht'             AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
+           UNION SELECT 'isGet_Unit'             AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+
            UNION SELECT 'UnitId1'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId2'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId3'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
@@ -152,7 +154,6 @@ BEGIN
            UNION SELECT 'UnitId1_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId2_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
-           UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
            UNION SELECT 'BranchId'               AS Name WHERE inIsCeh = FALSE

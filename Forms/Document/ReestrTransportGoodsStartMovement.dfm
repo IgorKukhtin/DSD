@@ -4,7 +4,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
   ClientWidth = 937
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 953
-  ExplicitHeight = 442
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -849,14 +849,14 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      Caption = 'ReturnJournalChoice'
+      Caption = 'TransportGoodsJournal'
       FormName = 'TTransportGoodsJournalForm'
       FormNameParam.Value = 'TTransportGoodsJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BarCode'

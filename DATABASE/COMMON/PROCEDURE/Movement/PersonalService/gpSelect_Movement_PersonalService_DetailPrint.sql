@@ -481,7 +481,7 @@ BEGIN
                             WHERE tmpMI.PersonalId IS NULL
                            )
           , tmpAll AS (SELECT tmpMI.MovementItemId
-                            , tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId , tmpMI.PersonalServiceListId
+                            , tmpMI.Amount, tmpMI.PersonalId, tmpMI.UnitId, tmpMI.PositionId, tmpMI.MemberId, tmpMI.PersonalServiceListId
                             , tmpMI.isMain
                             , tmpMI.Comment
                             , tmpMI.Amount
@@ -543,51 +543,47 @@ BEGIN
                         FROM tmpPersonal
                         WHERE tmpPersonal.Ord = 1
                       )
-                             
-   , tmpMaster AS (SELECT tmpAll.MovementItemId                AS Id
-                        , tmpAll.isMain
-                        , tmpAll.PersonalId
-                        , tmpAll.UnitId
-                        , tmpAll.PositionId
+
+   , tmpMaster AS (SELECT tmpAll.PositionId
                         , tmpAll.MemberId
-            
+
             --            , tmpAll.Amount           :: TFloat AS Amount
             --            , tmpAll.SummToPay        :: TFloat AS AmountToPay
-            
-                        , (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
+
+                        , SUM (tmpAll.SummService /*+ COALESCE (tmpMIContainer.SummNalog, 0)*/
                          -- + tmpAll.SummAdd
                          --+ tmpAll.SummHoliday
                           ) :: TFloat AS SummService
-                        , tmpAll.SummHoliday            :: TFloat AS SummHoliday
-                        , tmpAll.SummHosp               :: TFloat AS SummHosp
-                        , tmpAll.SummHospOth            :: TFloat AS SummHospOth
-                        , tmpAll.SummCompensation       :: TFloat AS SummCompensation
-                        , tmpAll.SummCard               :: TFloat AS SummCard
-                        , tmpAll.SummCardSecond         :: TFloat AS SummCardSecond
-                        , tmpAll.SummCardSecondCash     :: TFloat AS SummCardSecondCash
-                        , tmpMIContainer.SummNalog      :: TFloat AS SummNalog
-                        , tmpMIContainer.SummNalogRet   :: TFloat AS SummNalogRet
-            --            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc
-                        , tmpAll.SummMinus              :: TFloat AS SummMinus
-                        , tmpAll.SummFine               :: TFloat AS SummFine
-                        , tmpAll.SummFineOth            :: TFloat AS SummFineOth
-                        , (tmpAll.SummAdd + tmpAll.SummAddOth)   :: TFloat AS SummAdd
-            --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
-            --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
-                        , tmpAll.SummChild              :: TFloat AS SummChild
-                        , tmpAll.SummMinusExt           :: TFloat AS SummMinusExt
-            
-                        , tmpAll.SummTransportAdd       :: TFloat AS SummTransportAdd
-                        , tmpAll.SummTransport          :: TFloat AS SummTransport
-                        , tmpAll.SummTransportTaxi      :: TFloat AS SummTransportTaxi
-                        , tmpAll.SummPhone              :: TFloat AS SummPhone
-            
-                        , tmpAll.Comment
-            
+                        , SUM (tmpAll.SummHoliday)            :: TFloat AS SummHoliday
+                        , SUM (tmpAll.SummHosp)               :: TFloat AS SummHosp
+                        , SUM (tmpAll.SummHospOth)            :: TFloat AS SummHospOth
+                        , SUM (tmpAll.SummCompensation)       :: TFloat AS SummCompensation
+                        , SUM (tmpAll.SummCard)               :: TFloat AS SummCard
+                        , SUM (tmpAll.SummCardSecond)         :: TFloat AS SummCardSecond
+                        , SUM (tmpAll.SummCardSecondCash)     :: TFloat AS SummCardSecondCash
+                        , SUM (tmpMIContainer.SummNalog)      :: TFloat AS SummNalog
+                        , SUM (tmpMIContainer.SummNalogRet)   :: TFloat AS SummNalogRet
+            --            , SUM (tmpAll.SummCardRecalc)       :: TFloat AS SummCardRecalc
+                        , SUM (tmpAll.SummMinus)              :: TFloat AS SummMinus
+                        , SUM (tmpAll.SummFine)               :: TFloat AS SummFine
+                        , SUM (tmpAll.SummFineOth)            :: TFloat AS SummFineOth
+                        , SUM (tmpAll.SummAdd + tmpAll.SummAddOth)   :: TFloat AS SummAdd
+            --            , SUM (tmpAll.SummSocialIn)         :: TFloat AS SummSocialIn
+            --            , SUM (tmpAll.SummSocialAdd)        :: TFloat AS SummSocialAdd
+                        , SUM (tmpAll.SummChild)              :: TFloat AS SummChild
+                        , SUM (tmpAll.SummMinusExt)           :: TFloat AS SummMinusExt
+
+                        , SUM (tmpAll.SummTransportAdd)       :: TFloat AS SummTransportAdd
+                        , SUM (tmpAll.SummTransport)          :: TFloat AS SummTransport
+                        , SUM (tmpAll.SummTransportTaxi)      :: TFloat AS SummTransportTaxi
+                        , SUM (tmpAll.SummPhone)              :: TFloat AS SummPhone
+
+                        , MAX (tmpAll.Comment)               :: TVarChar AS Comment
+
                    FROM tmpAll
                         LEFT JOIN tmpMIContainer ON tmpMIContainer.MovementItemId = tmpAll.MovementItemId
-                                                    AND tmpMIContainer.MemberId    = tmpAll.MemberId
-                                                    AND tmpMIContainer.PositionId = tmpAll.PositionId
+                                                AND tmpMIContainer.MemberId       = tmpAll.MemberId
+                                                AND tmpMIContainer.PositionId     = tmpAll.PositionId
                    WHERE 0 <> tmpAll.SummToPay
                             + tmpAll.SummNalog    - COALESCE (tmpMIContainer.SummNalog, 0)
                             - tmpAll.SummNalogRet + COALESCE (tmpMIContainer.SummNalogRet, 0)
@@ -612,23 +608,24 @@ BEGIN
                       OR 0 <> tmpAll.SummAddOth
                       -- OR 0 <> tmpAll.SummNalog
                       -- OR 0 <> tmpAll.SummNalogRet
-                   )
-   
-   
-   
+                   GROUP BY tmpAll.PositionId
+                          , tmpAll.MemberId
+                )
+
+
+
      -- чайд
      , tmpMI_Child AS (SELECT MovementItem.Id                          AS Id
                             , MovementItem.ParentId                    AS ParentId
-                            , MovementItem.ObjectId                    AS MemberId
                             , MovementItem.Amount                      AS Amount
- 
+
                             , MILinkObject_PositionLevel.ObjectId      AS PositionLevelId
                             , MILinkObject_StaffList.ObjectId          AS StaffListId
                             , MILinkObject_ModelService.ObjectId       AS ModelServiceId
                             , MILinkObject_StaffListSummKind.ObjectId  AS StaffListSummKindId
                           -- , MILinkObject_StorageLine.ObjectId        AS StorageLineId
 
-                      FROM MovementItem 
+                      FROM MovementItem
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_PositionLevel
                                                             ON MILinkObject_PositionLevel.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel()
@@ -648,24 +645,25 @@ BEGIN
                          AND MovementItem.DescId = zc_MI_Child()
                          AND MovementItem.isErased = FALSE
                       )
-     , tmpChild_TotalSumm AS (SELECT tmpMI_Child.ParentId
+     , tmpChild_TotalSumm AS (SELECT tmpMI.MemberId, tmpMI.PositionId
                                    , SUM (tmpMI_Child.Amount) AS Amount
                               FROM tmpMI_Child
-                              GROUP BY tmpMI_Child.ParentId
+                                   LEFT JOIN tmpMI ON tmpMI.MovementItemId = tmpMI_Child.ParentId
+                              GROUP BY tmpMI.MemberId, tmpMI.PositionId
                               )
-     , tmpChild AS (SELECT tmpMI_Child.ParentId
-                         , tmpMI_Child.MemberId                
+     , tmpChild AS (SELECT tmpMI.MemberId
+                         , tmpMI.PositionId
                          , tmpMI_Child.PositionLevelId
                          , tmpMI_Child.StaffListId
                          , tmpMI_Child.ModelServiceId
                          , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END   AS StaffListSummKindId -- доплата (тип доплаты)
-                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END                                AS Price        -- расценка 
+                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END                                AS Price        -- расценка
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)            AS Price_Dop    -- расценка за смену
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_Price.ValueData ELSE 0 END)     AS Price_Day    -- расценка за день
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)         AS DayCount_Dop -- кол. смен - доплата
                          --, SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN MIFloat_DayCount.ValueData ELSE 0 END)  AS DayCount     -- кол. смен
                          , SUM (CASE WHEN COALESCE (MIFloat_HoursDay.ValueData,0) <> 0 THEN MIFloat_WorkTimeHoursOne.ValueData / COALESCE (MIFloat_HoursDay.ValueData,0) ELSE 0 END) AS DayCount     -- кол. смен (часы, деленные на норму часов за 1 рабочий день)
-                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN tmpMI_Child.Amount ELSE 0 END)                               AS Amount       -- начислено 
+                         , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN tmpMI_Child.Amount ELSE 0 END)                               AS Amount       -- начислено
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN ( 12109, 12110)  THEN tmpMI_Child.Amount ELSE 0 END)               AS Amount_Dop   -- начислено за смену
                          , SUM (CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) NOT IN (0, 12109, 12110) THEN tmpMI_Child.Amount ELSE 0 END)          AS Amount_Day   -- начислено за день
                          , SUM (MIFloat_MemberCount.ValueData)            AS MemberCount
@@ -676,6 +674,7 @@ BEGIN
                          , SUM (MIFloat_PersonalCount.ValueData)          AS PersonalCount
                          , SUM (MIFloat_GrossOne.ValueData)               AS GrossOne                     -- выработка на человека
                     FROM tmpMI_Child
+                         LEFT JOIN tmpMI ON tmpMI.MovementItemId = tmpMI_Child.ParentId
                          LEFT JOIN MovementItemFloat AS MIFloat_MemberCount
                                                      ON MIFloat_MemberCount.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_MemberCount.DescId = zc_MIFloat_MemberCount()
@@ -685,44 +684,44 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHoursOne
                                                      ON MIFloat_WorkTimeHoursOne.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_WorkTimeHoursOne.DescId = zc_MIFloat_WorkTimeHoursOne()
-             
+
                          LEFT JOIN MovementItemFloat AS MIFloat_WorkTimeHours
                                                      ON MIFloat_WorkTimeHours.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_WorkTimeHours.DescId = zc_MIFloat_WorkTimeHours()
-             
+
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
                          LEFT JOIN MovementItemFloat AS MIFloat_HoursPlan
                                                      ON MIFloat_HoursPlan.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_HoursPlan.DescId = zc_MIFloat_HoursPlan()
-             
+
                          LEFT JOIN MovementItemFloat AS MIFloat_HoursDay
                                                      ON MIFloat_HoursDay.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_HoursDay.DescId = zc_MIFloat_HoursDay()
-             
+
                          LEFT JOIN MovementItemFloat AS MIFloat_PersonalCount
                                                      ON MIFloat_PersonalCount.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_PersonalCount.DescId = zc_MIFloat_PersonalCount()
                          LEFT JOIN MovementItemFloat AS MIFloat_GrossOne
                                                      ON MIFloat_GrossOne.MovementItemId = tmpMI_Child.Id
                                                     AND MIFloat_GrossOne.DescId = zc_MIFloat_GrossOne()
-                       GROUP BY tmpMI_Child.ParentId
-                         , tmpMI_Child.MemberId                
-                         , tmpMI_Child.PositionLevelId
-                         , tmpMI_Child.StaffListId
-                         , tmpMI_Child.ModelServiceId
-                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END
-                         , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END
+                       GROUP BY tmpMI.MemberId
+                              , tmpMI.PositionId
+                              , tmpMI_Child.PositionLevelId
+                              , tmpMI_Child.StaffListId
+                              , tmpMI_Child.ModelServiceId
+                              , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) IN (12109, 12110) THEN tmpMI_Child.StaffListSummKindId ELSE 0 END
+                              , CASE WHEN COALESCE (tmpMI_Child.StaffListSummKindId, 0) = 0 THEN MIFloat_Price.ValueData ELSE 0 END
                         )
-   
+
        -- Результат
        SELECT 0 :: Integer                            AS Id
             , Object_Personal.Id                      AS PersonalId
             , Object_Personal.ObjectCode              AS PersonalCode
             , Object_Personal.ValueData               AS PersonalName
             , ObjectString_Member_INN.ValueData       AS INN
-            , COALESCE (tmpAll.isMain, FALSE) :: Boolean AS isMain
+          --, COALESCE (tmpAll.isMain, FALSE) :: Boolean AS isMain
             , COALESCE (ObjectBoolean_Member_Official.ValueData, FALSE) :: Boolean AS isOfficial
 
             , Object_Unit.Id                          AS UnitId
@@ -764,7 +763,7 @@ BEGIN
             , (tmpAll.SummService + COALESCE (tmpAll.SummAdd, 0) + COALESCE (tmpAll.SummNalogRet, 0)
                                   + COALESCE (tmpAll.SummHoliday, 0) + COALESCE (tmpAll.SummHosp, 0) + COALESCE (tmpAll.SummHospOth, 0) + COALESCE (tmpAll.SummCompensation, 0)
                                   - COALESCE (tmpAll.SummMinus, 0) - COALESCE (tmpAll.SummFine, 0) - COALESCE (tmpAll.SummFineOth, 0) - COALESCE (tmpAll.SummNalog, 0)) :: TFloat AS TotalSumm
-            
+
             , tmpChild_TotalSumm.Amount     :: TFloat AS TotalSummChild
             -- чайлд
             , Object_PositionLevel.Id                 AS PositionLevelId
@@ -778,13 +777,13 @@ BEGIN
 
             --, Object_StorageLine.Id                    AS StorageLineId
             --, Object_StorageLine.ValueData             AS StorageLineName
-            
-            , tmpChild.Price               :: TFloat -- расценка 
+
+            , tmpChild.Price               :: TFloat -- расценка
             , tmpChild.Price_Dop           :: TFloat -- расценка за смену
             , tmpChild.Price_Day           :: TFloat -- расценка за день
             , tmpChild.DayCount_Dop        :: TFloat -- кол. смен - доплата
             , CAST (tmpChild.DayCount AS NUMERIC (16,2)) :: TFloat -- кол. смен
-            , tmpChild.Amount :: TFloat AS Amount_Child -- начислено 
+            , tmpChild.Amount :: TFloat AS Amount_Child -- начислено
             , tmpChild.Amount_Dop          :: TFloat -- начислено за смену
             , tmpChild.Amount_Day          :: TFloat -- начислено за день
             , tmpChild.MemberCount         :: TFloat
@@ -795,12 +794,14 @@ BEGIN
             , tmpChild.PersonalCount       :: TFloat
             , tmpChild.GrossOne            :: TFloat
        FROM tmpMaster AS tmpAll
-            LEFT JOIN tmpChild ON tmpChild.ParentId = tmpAll.Id
+            LEFT JOIN tmpChild ON tmpChild.MemberId   = tmpAll.MemberId
+                              AND tmpChild.PositionId = tmpAll.PositionId
 
-            LEFT JOIN tmpChild_TotalSumm ON tmpChild_TotalSumm.ParentId = tmpAll.Id
+            LEFT JOIN tmpChild_TotalSumm ON tmpChild_TotalSumm.MemberId   = tmpAll.MemberId
+                                        AND tmpChild_TotalSumm.PositionId = tmpAll.PositionId
 
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.PersonalId
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpAll.UnitId
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpAll.MemberId -- tmpAll.PersonalId
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = NULL -- tmpAll.UnitId
             LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpAll.PositionId
             LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpAll.MemberId
 
@@ -817,8 +818,8 @@ BEGIN
             LEFT JOIN Object AS Object_ModelService      ON Object_ModelService.Id      = tmpChild.ModelServiceId
             LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = tmpChild.StaffListSummKindId
             --LEFT JOIN Object AS Object_StorageLine       ON Object_StorageLine.Id       = tmpChild.StorageLineId
-       --where tmpAll.PersonalId = 2250371  
-       ORDER BY 
+       --where tmpAll.PersonalId = 2250371
+       ORDER BY
                 Object_Position.ValueData , Object_Personal.ValueData
               , Object_ModelService.ValueData
               , Object_PositionLevel.ValueData

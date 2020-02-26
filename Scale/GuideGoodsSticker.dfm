@@ -226,6 +226,13 @@ object GuideGoodsStickerForm: TGuideGoodsStickerForm
           VisibleForCustomization = False
           Width = 50
         end
+        object Comment: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          DataBinding.FieldName = 'Comment'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
         object StickerFileName: TcxGridDBColumn
           Caption = #1064#1040#1041#1051#1054#1053
           DataBinding.FieldName = 'StickerFileName'

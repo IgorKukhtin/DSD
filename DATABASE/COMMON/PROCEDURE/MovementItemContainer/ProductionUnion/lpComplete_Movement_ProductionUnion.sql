@@ -535,6 +535,7 @@ BEGIN
                                                                                          )
                                                -- Производство ПФ-ГП
                                                WHEN vbIsPartionDate_Unit_To = TRUE
+                                                AND _tmpItem_pr.PartionGoodsDate <> zc_DateEnd()
                                                 AND _tmpItem_pr.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                          , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                          , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье
@@ -610,6 +611,7 @@ END IF;
                                                     -- Упаковка Мяса (тоже ПФ-ГП)
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
                                                      AND vbUnitId_From <> vbUnitId_To
+                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
                                                      -- и это НЕ группа - ЦЕХ колбаса+дел-сы
                                                      -- AND NOT EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
                                                      -- AND EXISTS (SELECT 1 FROM _tmpItem_pr WHERE _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent AND _tmpItem_pr.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100())
@@ -619,6 +621,7 @@ END IF;
                                                                                               )
                                                     -- Производство ПФ-ГП
                                                     WHEN vbIsPartionDate_Unit_From = TRUE
+                                                     AND _tmpItemChild.PartionGoodsDate <> zc_DateEnd()
                                                      AND _tmpItemChild.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Общефирменные + Ирна
                                                                                                 , zc_Enum_InfoMoneyDestination_30100()  -- Доходы + Продукция
                                                                                                 , zc_Enum_InfoMoneyDestination_30200()  -- Доходы + Мясное сырье

@@ -74,11 +74,11 @@
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
 			<DCC_RangeChecking>true</DCC_RangeChecking>
 			<Icon_MainIcon>0201.ico</Icon_MainIcon>
-			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.44;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-			<VerInfo_Build>44</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.1.4.47;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<VerInfo_Build>47</VerInfo_Build>
 			<VerInfo_MinorVer>1</VerInfo_MinorVer>
 			<VerInfo_Release>4</VerInfo_Release>
-			<Debugger_RunParams>Scale_BAZA.ini ves=1.2345</Debugger_RunParams>
+			<Debugger_RunParams>Scale_SORT.ini ves=3.04</Debugger_RunParams>
 			<DCC_ExeOutput>..\BIN\</DCC_ExeOutput>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -248,6 +248,9 @@
 			<DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
 			<DCCReference Include="..\Scale\GuideSubjectDoc.pas">
 				<Form>GuideSubjectDocForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Scale\GuideUnit.pas">
+				<Form>GuideUnitForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

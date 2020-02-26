@@ -85,6 +85,7 @@ type
     Weight: TcxGridDBColumn;
     WeightTare: TcxGridDBColumn;
     CountForWeight: TcxGridDBColumn;
+    bbSaveDialog: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -136,6 +137,7 @@ type
     procedure EditPriceKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure bbSaveDialogClick(Sender: TObject);
   private
     fCloseOK : Boolean;
     fModeSave : Boolean;
@@ -153,7 +155,7 @@ type
     procedure InitializePriceList(execParams:TParams);
   public
     //GoodsWeight:Double;
-    function Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
+    function Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
   end;
 
 var
@@ -169,11 +171,17 @@ begin
      then begin cxDBGridDBTableView.DataController.Filter.Clear;cxDBGridDBTableView.DataController.Filter.Active:=false;end
 end;
 {------------------------------------------------------------------------------}
-function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave : Boolean) : Boolean;
+function TGuideGoodsForm.Execute (execParamsMovement : TParams; isModeSave, isDialog : Boolean) : Boolean;
 begin
      fModeSave:= isModeSave;
      fCloseOK:=false;
-
+     //
+     bbSaveDialog.Visible:= isModeSave
+                        and (ParamsMovement.ParamByName('OrderExternalId').asInteger > 0)
+                        and (SettingMain.BranchCode >= 301)
+                        and (SettingMain.BranchCode <= 310)
+                           ;
+     //
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
      fEnterGoodsKindCode:=false;
@@ -243,8 +251,8 @@ begin
   // Показали вес с весов - получили его перед открытием
   PanelGoodsWieghtValue.Caption:=FloatToStr(ParamsMI.ParamByName('RealWeight_Get').AsFloat);
 
-  InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
-  InitializePriceList(ParamsMovement);
+  InitializeGoodsKind(execParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
+  InitializePriceList(execParamsMovement);
   //
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible:= rgGoodsKind.Items.Count > 1; // (execParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ReturnIn)or(execParamsMovement.ParamByName('OrderExternalId').AsInteger<>0);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName_max').Index].VisibleForCustomization:= (rgGoodsKind.Items.Count > 1) and (execParamsMovement.ParamByName('OrderExternalId').AsInteger = 0);
@@ -299,12 +307,12 @@ begin
             else EditTareCount.Text:= GetArrayList_Value_byName(Default_Array,'TareCount');
 
             EditTareWeightCode.Text:= IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
-            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
+            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,execParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code);
             EditPriceListCode.Text:=  IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
 
             if rgGoodsKind.Items.Count>1
             then begin EditGoodsKindCode.Text:=ParamsMI.ParamByName('GoodsKindCode').AsString;
-                       rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode').AsInteger);
+                       rgGoodsKind.ItemIndex:=GetArrayList_lpIndex_GoodsKind(GoodsKind_Array,execParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,ParamsMI.ParamByName('GoodsKindCode').AsInteger);
                  end;
 
             {if (CDS.RecordCount=1)
@@ -338,15 +346,15 @@ begin
 
             EditTareCount.Text:=         GetArrayList_Value_byName(Default_Array,'TareCount');
             EditTareWeightCode.Text:=    IntToStr(TareWeight_Array[GetArrayList_Index_byNumber(TareWeight_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'TareWeightNumber')))].Code);
-            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,ParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
+            EditChangePercentAmountCode.Text:= IntToStr(ChangePercentAmount_Array[GetArrayList_Index_byValue(ChangePercentAmount_Array,execParamsMovement.ParamByName('ChangePercentAmount').AsString)].Code); //IntToStr(ChangePercent_Array[GetArrayList_Index_byNumber(ChangePercent_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'ChangePercentNumber')))].Code);
             EditPriceListCode.Text:=     IntToStr(PriceList_Array[GetArrayList_Index_byNumber(PriceList_Array,StrToInt(GetArrayList_Value_byName(Default_Array,'PriceListNumber')))].Code);
 
-            //InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
-            //InitializePriceList(ParamsMovement);
+            //InitializeGoodsKind(execParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
+            //InitializePriceList(execParamsMovement);
 
             CDS.Filter:='';
             CDS.Filtered:=false;
-            if ParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
+            if execParamsMovement.ParamByName('OrderExternalId').asInteger<>0 then CDS.Filtered:=true;
             ActiveControl:=EditGoodsCode;
   end;
 
@@ -355,7 +363,7 @@ begin
      Application.ProcessMessages;
      fStartWrite:=false;
 
-     result:=ShowModal=mrOk;
+     if isDialog = false then result:=ShowModal=mrOk;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.InitializeGoodsKind(GoodsKindWeighingGroupId:Integer);
@@ -395,6 +403,12 @@ end;
 procedure TGuideGoodsForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);
 var findTareCode:Integer;
 begin
+    if (Key=VK_F2)and bbSaveDialog.Visible then
+    begin
+         bbSaveDialogClick(Self);
+         exit;
+    end;
+    //
     if Key=13 then
     begin
       if (ActiveControl=EditGoodsCode) then EditGoodsCodeExit(EditGoodsCode);
@@ -834,7 +848,11 @@ begin
       and(CDS.RecordCount = 1)
         )
      then exit;
-
+     //
+     if (trim(EditGoodsCode.Text) = '')
+     and(trim(EditGoodsName.Text) = '')
+     then begin ActiveControl:=EditGoodsCode; exit;end;
+     //
      try StrToFloat(EditWeightValue.Text)
      except ActiveControl:=EditWeightValue;
             exit;
@@ -1300,6 +1318,54 @@ begin Close;end;
 procedure TGuideGoodsForm.actSaveExecute(Sender: TObject);
 begin
      if Checked then begin fCloseOK:=true; Close; ModalResult:= mrOK; end;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.bbSaveDialogClick(Sender: TObject);
+begin
+     if ParamsMovement.ParamByName('OrderExternalId').asInteger = 0
+     then begin
+       ShowMessage ('Ошибка.Операция разрешена после выбора заявки с производства.');
+       exit;
+     end;
+     //
+     if not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
+     then begin
+       ShowMessage ('Ошибка.Операция разрешена только для Склада специй.');
+       exit;
+     end;
+     //
+     if MessageDlg('Действительно Сохранить?'
+      + #10 + #13
+      + ' ('+CDS.FieldByName('GoodsCode').AsString+') ' + CDS.FieldByName('GoodsName').AsString
+       + #10 + #13
+      + 'кол-во = ' + CDS.FieldByName('Amount_Order').AsString
+        ,mtConfirmation,mbYesNoCancel,0) <> 6
+     then exit;
+
+     //
+     ActiveControl:=EditGoodsCode;
+     actChoiceExecute(self);
+     if CDS.FieldByName('Amount_Order').AsFloat > 0 then
+     begin EditWeightValue.Text:= FloatToStr(CDS.FieldByName('Amount_Order').AsFloat);
+           ParamsMI.ParamByName('RealWeight').AsFloat:=CDS.FieldByName('Amount_Order').AsFloat
+     end;
+     //ActiveControl:=EditWeightValue;
+     //
+     if Checked then
+     begin
+          MainForm.RefreshDataSet;
+          MainForm.WriteParamsMovement;
+          //
+          MainForm.EditCountPack.Text:='';
+          MainForm.EditHeadCount.Text:='';
+          MainForm.EditBarCode.Text:='';
+          MainForm.EditBoxCount.Text:=GetArrayList_Value_byName(Default_Array,'BoxCount');
+          //
+          //очистили предыдущие и откроем диалог для ввода всех параметров товара
+          EmptyValuesParams(ParamsMI);
+          //
+          Execute (ParamsMovement , TRUE, TRUE);
+     end;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.FormCloseQuery(Sender: TObject;  var CanClose: Boolean);

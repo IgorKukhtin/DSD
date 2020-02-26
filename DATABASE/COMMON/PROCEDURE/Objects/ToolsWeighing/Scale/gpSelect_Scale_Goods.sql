@@ -46,10 +46,11 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
-    DECLARE vbRetailId    Integer;
-    DECLARE vbFromId      Integer;
-    DECLARE vbToId        Integer;
-    DECLARE vbGoodsId     Integer;
+    DECLARE vbRetailId     Integer;
+    DECLARE vbFromId_group Integer;
+    DECLARE vbFromId       Integer;
+    DECLARE vbToId         Integer;
+    DECLARE vbGoodsId      Integer;
     DECLARE vbOperDate_price TDateTime;
     DECLARE vbPriceListId Integer;
 BEGIN
@@ -74,7 +75,41 @@ BEGIN
 
    IF inOrderExternalId > 0
    THEN
-        -- параметры из документа
+        -- параметры из документа - Movement
+        vbFromId_group:= (SELECT CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
+                                        OR ObjectLink_Unit_Parent_1.ChildObjectId = 8439
+                                        OR ObjectLink_Unit_Parent_2.ChildObjectId = 8439
+                                        OR ObjectLink_Unit_Parent_3.ChildObjectId = 8439
+                                        OR ObjectLink_Unit_Parent_4.ChildObjectId = 8439
+                                        OR ObjectLink_Unit_Parent_5.ChildObjectId = 8439
+                                           THEN 8439 -- Участок мясного сырья
+                                      ELSE ObjectLink_Unit_Parent_0.ChildObjectId
+                                 END
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_0
+                                                    ON ObjectLink_Unit_Parent_0.ObjectId = MovementLinkObject_From.ObjectId
+                                                   AND ObjectLink_Unit_Parent_0.DescId   = zc_ObjectLink_Unit_Parent()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_1
+                                                    ON ObjectLink_Unit_Parent_1.ObjectId = ObjectLink_Unit_Parent_0.ChildObjectId
+                                                   AND ObjectLink_Unit_Parent_1.DescId   = zc_ObjectLink_Unit_Parent()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_2
+                                                    ON ObjectLink_Unit_Parent_2.ObjectId = ObjectLink_Unit_Parent_1.ChildObjectId
+                                                   AND ObjectLink_Unit_Parent_2.DescId   = zc_ObjectLink_Unit_Parent()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_3
+                                                    ON ObjectLink_Unit_Parent_3.ObjectId = ObjectLink_Unit_Parent_2.ChildObjectId
+                                                   AND ObjectLink_Unit_Parent_3.DescId   = zc_ObjectLink_Unit_Parent()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_4
+                                                    ON ObjectLink_Unit_Parent_4.ObjectId = ObjectLink_Unit_Parent_3.ChildObjectId
+                                                   AND ObjectLink_Unit_Parent_4.DescId   = zc_ObjectLink_Unit_Parent()
+                               LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_5
+                                                    ON ObjectLink_Unit_Parent_5.ObjectId = ObjectLink_Unit_Parent_4.ChildObjectId
+                                                   AND ObjectLink_Unit_Parent_5.DescId   = zc_ObjectLink_Unit_Parent()
+                          WHERE Movement.Id = inMovementId
+                         );
+        -- параметры из документа - Order
         SELECT COALESCE (MovementLinkObject_Retail.ObjectId, 0)        AS RetailId
              , COALESCE (MovementLinkObject_From.ObjectId, 0)          AS FromId
                INTO vbRetailId, vbFromId
@@ -125,12 +160,20 @@ BEGIN
                                  SELECT inOrderExternalId AS MovementId, Movement.DescId AS MovementDescId FROM Movement WHERE Movement.Id = inOrderExternalId AND vbRetailId = 0
                                 )
                , tmpMI_Order2 AS (SELECT COALESCE (MILinkObject_Goods.ObjectId, MovementItem.ObjectId) AS GoodsId
-                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
-                                      , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
-                                      , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
-                                      , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
-                                      , COALESCE (MIFloat_PromoMovement.ValueData, 0)                        AS MovementId_Promo
-                                      , FALSE AS isTare
+                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
+                                       , CASE WHEN MILinkObject_Receipt.ObjectId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                                                   THEN vbFromId
+                                              WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                   THEN 8455 -- Склад специй
+                                              ELSE 8439 -- Участок мясного сырья
+                                         END AS UnitId_order
+                                       , View_InfoMoney.InfoMoneyDestinationId 
+                                       , View_InfoMoney.InfoMoneyId
+                                       , MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)   AS Amount
+                                       , COALESCE (MIFloat_Price.ValueData, 0)                                AS Price
+                                       , CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
+                                       , COALESCE (MIFloat_PromoMovement.ValueData, 0)                        AS MovementId_Promo
+                                       , FALSE AS isTare
                                  FROM tmpMovement
                                       INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -142,6 +185,9 @@ BEGIN
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                                                       ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
                                       LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                   ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
@@ -154,6 +200,14 @@ BEGIN
                                       LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                                   ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                                  AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                           ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                           ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
                                  WHERE MovementItem.Amount <> 0 OR COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
                                 )
                , tmpMI_Order AS (SELECT tmpMI_Order2.GoodsId
@@ -164,20 +218,20 @@ BEGIN
                                       , tmpMI_Order2.MovementId_Promo
                                       , tmpMI_Order2.isTare
                                  FROM tmpMI_Order2
-                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                                           ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI_Order2.GoodsId
-                                                          AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
-                                      LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                 WHERE View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
-                                                                               , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
-                                                                               , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
-                                                                               , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
-                                                                                )
-                                    OR View_InfoMoney.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
-                                                                    , zc_Enum_InfoMoney_10106() -- Сыр
-                                                                     )
-                                    OR inBranchCode NOT BETWEEN 301 AND 310
+                                 WHERE (tmpMI_Order2.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                              , zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты
+                                                                              , zc_Enum_InfoMoneyDestination_20200() -- Прочие ТМЦ
+                                                                              , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                                                              , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы
+                                                                               )
+                                     OR tmpMI_Order2.InfoMoneyId IN (zc_Enum_InfoMoney_10105() -- Прочее мясное сырье
+                                                                   , zc_Enum_InfoMoney_10106() -- Сыр
+                                                                    )
+                                     OR inBranchCode NOT BETWEEN 301 AND 310
+                                       )
+                                   AND (tmpMI_Order2.UnitId_order = vbFromId_group
+                                     OR inBranchCode NOT BETWEEN 201 AND 210
+                                       )
                                 UNION ALL
                                  SELECT Object_Goods.Id AS GoodsId
                                       , CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END  AS GoodsKindId

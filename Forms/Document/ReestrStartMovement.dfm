@@ -4,7 +4,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
   ClientWidth = 943
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 959
-  ExplicitHeight = 423
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -959,7 +959,7 @@ inherited ReestrStartMovementForm: TReestrStartMovementForm
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'Key'
+          Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'BarCode'

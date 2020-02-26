@@ -20,6 +20,7 @@ $BODY$
     DECLARE Cursor2 refcursor;
 
     DECLARE vbMovementId Integer;
+    DECLARE vbFromId_group Integer;
     DECLARE vbDiffTax TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -31,13 +32,48 @@ BEGIN
      SELECT Movement.Id
             INTO vbMovementId
      FROM MovementLinkMovement
-          inner join Movement on Movement.Id = MovementLinkMovement.MovementId
+          INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                              AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_SendOnPrice())
                              AND Movement.StatusId <> zc_Enum_Status_Erased()
      WHERE MovementLinkMovement.MovementChildId = inMovementId
-       AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+       AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Order()
 
      ;
+
+     -- параметры из документа - inMovementId_Weighing
+     vbFromId_group:= (SELECT CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_1.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_2.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_3.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_4.ChildObjectId = 8439
+                                     OR ObjectLink_Unit_Parent_5.ChildObjectId = 8439
+                                        THEN 8439 -- Участок мясного сырья
+                                   ELSE ObjectLink_Unit_Parent_0.ChildObjectId
+                              END
+                       FROM Movement
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_0
+                                                 ON ObjectLink_Unit_Parent_0.ObjectId = MovementLinkObject_From.ObjectId
+                                                AND ObjectLink_Unit_Parent_0.DescId   = zc_ObjectLink_Unit_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_1
+                                                 ON ObjectLink_Unit_Parent_1.ObjectId = ObjectLink_Unit_Parent_0.ChildObjectId
+                                                AND ObjectLink_Unit_Parent_1.DescId   = zc_ObjectLink_Unit_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_2
+                                                 ON ObjectLink_Unit_Parent_2.ObjectId = ObjectLink_Unit_Parent_1.ChildObjectId
+                                                AND ObjectLink_Unit_Parent_2.DescId   = zc_ObjectLink_Unit_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_3
+                                                 ON ObjectLink_Unit_Parent_3.ObjectId = ObjectLink_Unit_Parent_2.ChildObjectId
+                                                AND ObjectLink_Unit_Parent_3.DescId   = zc_ObjectLink_Unit_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_4
+                                                 ON ObjectLink_Unit_Parent_4.ObjectId = ObjectLink_Unit_Parent_3.ChildObjectId
+                                                AND ObjectLink_Unit_Parent_4.DescId   = zc_ObjectLink_Unit_Parent()
+                            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_5
+                                                 ON ObjectLink_Unit_Parent_5.ObjectId = ObjectLink_Unit_Parent_4.ChildObjectId
+                                                AND ObjectLink_Unit_Parent_5.DescId   = zc_ObjectLink_Unit_Parent()
+                       WHERE Movement.Id = inMovementId_Weighing
+                      );
 
      -- % отклонения
      vbDiffTax := (WITH tmpBranch AS (SELECT COALESCE (OL_Branch.ChildObjectId, zc_Branch_Basis()) AS BranchId
@@ -174,10 +210,26 @@ BEGIN
                                LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
                                                            AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                               LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                                                ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                    ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                               LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                    ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                               LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
                           WHERE MovementItem.MovementId = inMovementId
                             AND MovementItem.isErased   = FALSE
                             AND MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
+                            AND vbFromId_group = CASE WHEN MILinkObject_Receipt.ObjectId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                                                           THEN 0
+                                                      WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                           THEN 8455 -- Склад специй
+                                                      ELSE 8439 -- Участок мясного сырья
+                                                 END
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
@@ -333,10 +385,9 @@ BEGIN
                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
         WHERE (inIsDiff = FALSE OR (tmpResult1.Amount + tmpResult1.Amount_Weighing) < (tmpResult1.Amount_Order + tmpResult1.AmountSecond_Order))
-           AND (inIsDiffTax = FALSE OR ((tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0 )OR (tmpResult1.AmountTax <= CountDiff_M AND CountDiff_M <> 0 )))
-        
-        
-
+          AND (inIsDiffTax = FALSE OR ((tmpResult1.AmountTax <= CountDiff_B AND CountDiff_B <> 0)
+                                    OR (tmpResult1.AmountTax <= CountDiff_M AND CountDiff_M <> 0)
+                                      ))
       ;
 
     RETURN NEXT Cursor2;

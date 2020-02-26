@@ -59,7 +59,7 @@ BEGIN
 
      -- Проверка - кроме админа ? - не меняются основные параметры
      IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = ioId AND Movement.InvNumber = inInvNumber AND Movement.OperDate = inOperDate AND  Movement.DescId = zc_Movement_Reestr())
-        -- AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
+        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId IN (zc_Enum_Role_Admin()) AND UserId = vbUserId)
      THEN
          RAISE EXCEPTION 'Ошибка.Нет прав менять дату документа <%> <%> <%>.', zfConvert_DateToString (inOperDate), inInvNumber, ioId;
      END IF;

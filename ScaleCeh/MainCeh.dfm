@@ -2015,6 +2015,16 @@ object MainCehForm: TMainCehForm
         Visible = False
         OnClick = testButton2Click
       end
+      object testButton3: TButton
+        Left = 85
+        Top = 2
+        Width = 34
+        Height = 25
+        Caption = '3'
+        TabOrder = 2
+        Visible = False
+        OnClick = testButton3Click
+      end
     end
   end
   object PanelInfo: TPanel
@@ -2363,7 +2373,6 @@ object MainCehForm: TMainCehForm
       Height = 37
       Align = alTop
       TabOrder = 4
-      ExplicitTop = 533
       object PanelSkewer2: TPanel
         Left = 1
         Top = 1
@@ -2659,7 +2668,6 @@ object MainCehForm: TMainCehForm
       Height = 38
       Align = alTop
       TabOrder = 7
-      ExplicitTop = 570
       object LabelWeightOther: TLabel
         Left = 1
         Top = 1
@@ -2782,7 +2790,6 @@ object MainCehForm: TMainCehForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 11
-      ExplicitTop = 571
       object SubjectDocLabel: TLabel
         Left = 0
         Top = 0
