@@ -4,7 +4,7 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
   ClientWidth = 800
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 816
-  ExplicitHeight = 519
+  ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,17 +13,17 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1051
+    ExplicitWidth = 800
     ExplicitHeight = 421
     ClientRectBottom = 421
     ClientRectRight = 800
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1051
+      ExplicitWidth = 800
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
         Width = 800
         Height = 421
-        ExplicitWidth = 1051
+        ExplicitWidth = 800
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -184,7 +184,7 @@ inherited Report_SendSUNLossForm: TReport_SendSUNLossForm
   inherited Panel: TPanel
     Width = 800
     Height = 33
-    ExplicitWidth = 1051
+    ExplicitWidth = 800
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 119
