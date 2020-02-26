@@ -558,8 +558,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           StoredProc = spSelectPrintGroupPersonal
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088#1072' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 20
       DataSets = <
         item
@@ -569,7 +569,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
         end>
       Params = <
         item
@@ -585,9 +585,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturn'
-      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
-      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
+      ReportName = 'PrintMovement_ReestrTransportGoods'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -636,8 +635,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           Action = actPrintPeriodGroupPersonal
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 19
     end
     object actPrintPeriodGroupPersonal: TdsdPrintAction [5]
@@ -658,7 +657,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
         end>
       Params = <
         item
@@ -691,9 +690,9 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturnStartPeriod'
+      ReportName = 'PrintMovement_ReestrTransportGoodsStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrReturnStartPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoodsStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -738,8 +737,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1077#1077#1089#1090#1088#1072' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -763,9 +762,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturn'
-      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072' '#1074#1086#1079#1074#1088#1072#1090#1086#1074
-      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
+      ReportName = 'PrintMovement_ReestrTransportGoods'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -794,8 +792,8 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         item
           Action = actPrintPeriod
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       ImageIndex = 16
     end
     object actGoodsKindChoice: TOpenChoiceForm [19]
@@ -903,7 +901,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
         end
         item
           Name = 'ReestrKindName'
-          Value = #1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072
+          Value = #1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -1056,9 +1054,9 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturnStartPeriod'
+      ReportName = 'PrintMovement_ReestrTransportGoodsStartPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrReturnStartPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoodsStartPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1216,7 +1214,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
     end
     object bbPrintPeriodGroupPersonal: TdxBarButton
       Action = macPrintPeriodGroupPersonal
-      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1055#1086#1083#1091#1095#1077#1085#1086' '#1086#1090' '#1082#1083#1080#1077#1085#1090#1072'>'
+      Caption = #1055#1077#1095#1072#1090#1100' '#1087#1086' '#1058#1055' - '#1042#1057#1045' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1089' '#1074#1080#1079#1086#1081' <'#1042#1099#1074#1077#1079#1077#1085#1086' '#1089#1086' '#1089#1082#1083#1072#1076#1072'>'
       Category = 0
     end
   end

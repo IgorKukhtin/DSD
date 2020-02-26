@@ -150,22 +150,22 @@ inherited LossForm: TLossForm
             Width = 62
           end
           object PriceIn: TcxGridDBColumn [7]
-            Caption = #1062#1077#1085#1072' '#1087#1088#1080#1093#1086#1076
+            Caption = #1059#1089#1088#1077#1076'. '#1094#1077#1085#1072' '#1079#1072#1082#1091#1087'. ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'PriceIn'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 77
           end
           object SummIn: TcxGridDBColumn [8]
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'SummIn'
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 87
           end
           inherited colIsErased: TcxGridDBColumn
             GroupSummaryAlignment = taCenter

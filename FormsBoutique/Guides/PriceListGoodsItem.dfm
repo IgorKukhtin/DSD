@@ -49,13 +49,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Caption = #1044#1072#1090#1072' '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 124
       end
       object EndDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 126
       end
       object Price: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -63,9 +63,17 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 130
+      end
+      object CurrencyName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072
+        DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 108
       end
       object isErased: TcxGridDBColumn
         DataBinding.FieldName = 'isErased'

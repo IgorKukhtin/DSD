@@ -39,6 +39,8 @@ RETURNS TABLE (Id Integer , ObjectId Integer
                 , FabrikaName          TVarChar
                 --, GoodsSizeName        TVarChar
                 , CurrencyName         TVarChar
+                , CurrencyId_price     Integer
+                , CurrencyName_price   TVarChar
                 , OperPriceList        TFloat
                 , OperPrice            TFloat
                 , Remains              TFloat
@@ -75,6 +77,7 @@ BEGIN
      WITH 
       tmpPrice AS (SELECT ObjectHistory_PriceListItem.Id                   AS PriceListItemId
                         , ObjectHistory_PriceListItem.ObjectId             AS PriceListItemObjectId
+                        , ObjectHistoryLink_Currency.ObjectId              AS CurrencyId
                         , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
                         , ObjectHistory_PriceListItem.StartDate            AS StartDate
                         , ObjectHistory_PriceListItem.EndDate              AS EndDate
@@ -93,6 +96,10 @@ BEGIN
                                                      ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                     AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
  
+                        LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                    ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                   AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
                    WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                      AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
                      AND (ObjectHistoryFloat_PriceListItem_Value.ValueData <> 0 OR ObjectHistory_PriceListItem.StartDate <> zc_DateStart())
@@ -266,6 +273,8 @@ BEGIN
            , tmpPartionGoods.PeriodYear           AS PeriodYear
            , Object_Fabrika.ValueData             AS FabrikaName
            , Object_Currency.ValueData            AS CurrencyName
+           , Object_CurrencyPrice.Id              AS CurrencyId_price
+           , Object_CurrencyPrice.ValueData       AS CurrencyName_price
 
            , tmpPartionGoods.OperPriceList   :: TFloat
            , tmpPartionGoods.OperPrice       :: TFloat
@@ -318,7 +327,8 @@ BEGIN
            LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = tmpPartionGoods.CompositionGroupId
 
            LEFT JOIN tmpPrice ON tmpPrice.GoodsId = tmpPartionGoods.GoodsId
-          
+           LEFT JOIN Object AS Object_CurrencyPrice ON Object_CurrencyPrice.Id    = tmpPrice.CurrencyId
+
            LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                   ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpPartionGoods.GoodsId
                                  AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()

@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_Reestr()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrTransportGoodsPeriod_Print (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReestrTransportGoodsPeriod_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReestrTransportGoodsPeriod_Print(
@@ -66,7 +65,7 @@ BEGIN
             , inEndDate   AS EndDate
             , Object_ReestrKind.ValueData AS ReestrKindName
             , Object_User.ValueData       AS UserName
-            , CASE WHEN inReestrKindId = zc_Enum_ReestrKind_RemakeBuh() THEN TRUE ELSE FALSE END isPartnerIn
+            , CASE WHEN inReestrKindId = zc_Enum_ReestrKind_PartnerIn() THEN TRUE ELSE FALSE END isPartnerIn
        FROM Object AS Object_ReestrKind
             LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId
        WHERE Object_ReestrKind.Id = inReestrKindId;
@@ -78,7 +77,7 @@ BEGIN
        -- выбираем строки реестров по выбранной визе и пользователю (или всем пользователям)
        tmpMI AS (  SELECT MIDate.MovementItemId 
                         , MILinkObject.ObjectId AS MemberId
-                        , MovementFloat_MovementItemId.MovementId AS MovementId_ReturnIn
+                        , MovementFloat_MovementItemId.MovementId AS MovementId_TransportGoods
                    FROM MovementItemDate AS MIDate
                         INNER JOIN MovementItemLinkObject AS MILinkObject
                                                           ON MILinkObject.MovementItemId = MIDate.MovementItemId
@@ -92,10 +91,10 @@ BEGIN
                    )
 
        SELECT 
-             Movement_ReturnIn.InvNumber            AS InvNumber_ReturnIn
-           , Movement_ReturnIn.OperDate             AS OperDate_ReturnIn
-           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           , Object_From.ValueData                  AS FromName
+             Movement_TransportGoods.InvNumber            AS InvNumber
+           , Movement_TransportGoods.OperDate             AS OperDate
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_TransportGoods.OperDate) :: TDateTime AS OperDatePartner
+           , Object_To.ValueData                  AS ToName
 
            , CASE WHEN Object_Personal.Id <> Object_PersonalTrade.Id
                   THEN Object_Personal.ValueData || ' / ' || Object_PersonalTrade.ValueData
@@ -121,7 +120,7 @@ BEGIN
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_PartnerInTo.ValueData      AS Member_PartnerInTo
-           , Object_Buh.ValueData            AS Member_Buh
+           , Object_Buh.ValueData              AS Member_Buh
           
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
@@ -146,37 +145,43 @@ BEGIN
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
             --
-            LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.id = tmpMI.MovementId_ReturnIn
+            LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.id = tmpMI.MovementId_TransportGoods
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId = Movement_ReturnIn.Id
+                                   ON MovementDate_OperDatePartner.MovementId = Movement_TransportGoods.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                         ON MovementLinkObject_ReestrKind.MovementId = Movement_ReturnIn.Id
+                                         ON MovementLinkObject_ReestrKind.MovementId = Movement_TransportGoods.Id
                                         AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
             LEFT JOIN Object AS Object_ReestrKind ON Object_ReestrKind.Id = MovementLinkObject_ReestrKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement_ReturnIn.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_TransportGoods
+                                           ON MovementLinkMovement_TransportGoods.MovementChildId = Movement_TransportGoods.Id
+                                          AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
+
+            LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MovementLinkMovement_TransportGoods.MovementId
+                                               AND Movement_Sale.StatusId = zc_Enum_Status_Complete()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = MovementLinkMovement_TransportGoods.MovementId
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
-                                    ON MovementFloat_TotalCountKg.MovementId = Movement_ReturnIn.Id
+                                    ON MovementFloat_TotalCountKg.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId = Movement_ReturnIn.Id
+                                    ON MovementFloat_TotalSumm.MovementId = Movement_Sale.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement_ReturnIn.Id
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement_Sale.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Personal
-                                 ON ObjectLink_Partner_Personal.ObjectId = Object_From.Id
+                                 ON ObjectLink_Partner_Personal.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Personal.DescId = zc_ObjectLink_Partner_Personal()
             LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                  ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_Personal.ChildObjectId
@@ -184,7 +189,7 @@ BEGIN
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectLink_Personal_Member.ChildObjectId -- ObjectLink_Partner_Personal.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTrade
-                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_From.Id
+                                 ON ObjectLink_Partner_PersonalTrade.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_PersonalTrade.DescId = zc_ObjectLink_Partner_PersonalTrade()
             LEFT JOIN ObjectLink AS ObjectLink_PersonalTrade_Member
                                  ON ObjectLink_PersonalTrade_Member.ObjectId = ObjectLink_Partner_PersonalTrade.ChildObjectId
@@ -196,7 +201,7 @@ BEGIN
        WHERE (Object_Personal.Id      = vbMemberId        OR vbMemberId        = 0)
          AND (Object_PersonalTrade.Id = vbMemberTradeId   OR vbMemberTradeId   = 0)
          
-       ORDER BY Object_From.ValueData
+       ORDER BY Object_To.ValueData
               , MovementDate_OperDatePartner.ValueData
       ;
 

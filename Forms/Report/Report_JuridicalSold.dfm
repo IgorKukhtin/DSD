@@ -691,6 +691,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 70
           end
+          object PartnerTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1058#1058
+            DataBinding.FieldName = 'PartnerTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object PaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'

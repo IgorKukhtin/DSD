@@ -11,11 +11,29 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbParentId Integer;
+  DECLARE vbStatusId Integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= inSession; -- lpCheckRight(inSession, zc_Enum_Process_UnComplete_Inventory());
+
+     SELECT MLO_Unit.ObjectId, Movement.ParentId, Movement.StatusId
+     INTO vbUnitId, vbParentId, vbStatusId
+     FROM  Movement
+           INNER JOIN MovementLinkObject AS MLO_Unit
+                                         ON MLO_Unit.MovementId = Movement.Id
+                                        AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+     WHERE Movement.Id = inMovementId;
+
+     IF COALESCE (vbParentId, 0) <> 0 AND vbStatusId = zc_Enum_Status_Complete()
+     THEN
+         IF EXISTS(SELECT 1 FROM Movement WHERE Movement.ID = vbParentId AND StatusId = zc_Enum_Status_Complete())
+         THEN
+           RAISE EXCEPTION 'Ошибка. Документы сформированные по техническому переучету распроводяться вместе с ним.';           
+         END IF;  
+     END IF;
 
       -- Разрешаем только сотрудникам с правами админа    
      IF (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId) = zc_Enum_Status_Complete()
@@ -35,14 +53,6 @@ BEGIN
            vbUnitKey := '0';
         END IF;
         vbUserUnitId := vbUnitKey::Integer;
-
-        SELECT MLO_Unit.ObjectId
-        INTO vbUnitId
-        FROM  Movement
-              INNER JOIN MovementLinkObject AS MLO_Unit
-                                            ON MLO_Unit.MovementId = Movement.Id
-                                           AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
-        WHERE Movement.Id = inMovementId;
 
         IF COALESCE (vbUnitId, 0) <> COALESCE (vbUserUnitId, 0)
         THEN

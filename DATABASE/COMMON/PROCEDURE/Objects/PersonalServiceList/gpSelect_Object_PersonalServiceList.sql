@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , MemberBookkeeperId Integer, MemberBookkeeperName TVarChar
              , Compensation TFloat, CompensationName TVarChar
              , isSecond Boolean
+             , isRecalc Boolean
              , isErased Boolean
               )
 AS
@@ -75,6 +76,7 @@ BEGIN
               END)                                            :: TVarChar AS CompensationName
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean   AS isSecond
+           , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean   AS isRecalc
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -82,6 +84,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Second 
                                    ON ObjectBoolean_Second.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Second.DescId = zc_ObjectBoolean_PersonalServiceList_Second()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_Recalc 
+                                   ON ObjectBoolean_Recalc.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_Recalc.DescId = zc_ObjectBoolean_PersonalServiceList_Recalc()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -139,7 +144,8 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.01.20          * add isRecalc
  27.01.20          * add Compensation
  16.12.15          * add MemberHeadManager, MemberManager, MemberBookkeeper
  26.08.15          * add Member

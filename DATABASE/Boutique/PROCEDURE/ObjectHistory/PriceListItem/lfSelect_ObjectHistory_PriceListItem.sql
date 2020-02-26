@@ -6,7 +6,10 @@ CREATE OR REPLACE FUNCTION lfSelect_ObjectHistory_PriceListItem(
     IN inPriceListId        Integer   , -- ключ 
     IN inOperDate           TDateTime   -- Дата действия
 )                              
-RETURNS TABLE (Id Integer, GoodsId Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat)
+RETURNS TABLE (Id Integer, CurrencyId Integer, GoodsId Integer
+             , StartDate TDateTime, EndDate TDateTime
+             , ValuePrice TFloat
+             )
 AS
 $BODY$
 BEGIN
@@ -15,6 +18,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
+           , ObjectHistoryLink_Currency.ObjectId          AS CurrencyId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
 
            , ObjectHistory_PriceListItem.StartDate
@@ -33,6 +37,11 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+            LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                        ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectHistoryLink_Currency.ObjectId
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId

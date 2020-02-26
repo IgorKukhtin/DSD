@@ -1131,7 +1131,10 @@ uses
   ReestrTransportGoodsStartMovement in '..\..\Forms\Document\ReestrTransportGoodsStartMovement.pas' {ReestrTransportGoodsStartMovementForm: TParentForm},
   ReestrTransportGoodsUpdateMovement in '..\..\Forms\Document\ReestrTransportGoodsUpdateMovement.pas' {ReestrTransportGoodsUpdateMovementForm: TParentForm},
   SubjectDoc in '..\..\Forms\Guides\SubjectDoc.pas' {SubjectDocForm: TParentForm},
-  SubjectDocEdit in '..\..\Forms\Guides\SubjectDocEdit.pas' {SubjectDocEditForm: TParentForm};
+  SubjectDocEdit in '..\..\Forms\Guides\SubjectDocEdit.pas' {SubjectDocEditForm: TParentForm},
+  MemberBankAccount in '..\..\Forms\Guides\MemberBankAccount.pas' {MemberBankAccountForm: TParentForm},
+  MemberBankAccountEdit in '..\..\Forms\Guides\MemberBankAccountEdit.pas' {MemberBankAccountEditForm: TParentForm},
+  OrderInternalStewJournal in '..\..\Forms\Document\OrderInternalStewJournal.pas' {OrderInternalStewJournalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

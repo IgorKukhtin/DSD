@@ -22,7 +22,9 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                PermanentDiscountID Integer, PermanentDiscountPercent TFloat,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
-               PartnerMedicalID Integer, PartnerMedicalName TVarChar
+               PartnerMedicalID Integer, PartnerMedicalName TVarChar,
+               isPromoCodeDoctor boolean, isTechnicalRediscount Boolean
+
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -173,6 +175,10 @@ BEGIN
                                                         AND ObjectString_CashSettings_ShareFromPriceCode.DescId = zc_ObjectString_CashSettings_ShareFromPriceCode()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
+       , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
+                                FROM Movement AS Promo
+                                     INNER JOIN MovementItem PromoUnit ON Promo.id = PromoUnit.movementid AND promounit.descid = zc_MI_Child()
+                                WHERE Promo.id = 16904771 AND promounit.amount > 0 AND PromoUnit.objectid = vbUnitId)
 
    SELECT
          Object_Unit.Id                                      AS Id
@@ -233,6 +239,8 @@ BEGIN
        , COALESCE (ObjectFloat_SPKind_Tax.ValueData, 0) :: TFLoat AS Tax 
        , Object_PartnerMedical.ID                          AS PartnerMedicalID
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
+       , COALESCE(tmpPromoCodeDoctor.ID, 0) <> 0           AS isPromoCodeDoctor
+       , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
 
    FROM Object AS Object_Unit
 
@@ -242,6 +250,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_NotCashListDiff
                                 ON ObjectBoolean_NotCashListDiff.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_NotCashListDiff.DescId = zc_ObjectBoolean_Unit_NotCashListDiff()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
+                                ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
 
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                              ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -327,6 +338,8 @@ BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Unit_PartnerMedical ON ObjectLink_Unit_PartnerMedical.DescId = zc_ObjectLink_Unit_PartnerMedical()
                                                               AND ObjectLink_Unit_PartnerMedical.ObjectId = Object_Unit.Id
         LEFT JOIN Object AS Object_PartnerMedical ON Object_PartnerMedical.Id = ObjectLink_Unit_PartnerMedical.ChildObjectId
+        
+        LEFT JOIN tmpPromoCodeDoctor ON 1 = 1
 
    WHERE Object_Unit.Id = vbUnitId
    --LIMIT 1
@@ -357,4 +370,5 @@ LANGUAGE plpgsql VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')
+-- 
+SELECT * FROM gpSelect_Cash_UnitConfig('3000497773', '3')

@@ -51,7 +51,7 @@ BEGIN
           , COALESCE(MovementFloat_Replays.ValueData, 1)::Integer      AS Replays  
           , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
 
-          , MovementBlob_Message.ValueData                             AS Message
+          , COALESCE(MovementString_Function.ValueData , MovementBlob_Message.ValueData)::TBlob AS Message
 
           , Object_Insert.ValueData                                    AS InsertName
           , MovementDate_Insert.ValueData                              AS InsertDate
@@ -84,6 +84,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Daily
                                       ON MovementBoolean_Daily.MovementId = Movement.Id
                                      AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
+
+            LEFT JOIN MovementString AS MovementString_Function
+                                     ON MovementString_Function.MovementId = Movement.Id
+                                    AND MovementString_Function.DescId = zc_MovementString_Function()
 
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id

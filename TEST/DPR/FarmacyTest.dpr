@@ -495,7 +495,7 @@ uses
   IFIN_J1201009 in '..\..\SOURCE\MeDOC\IFIN_J1201009.pas',
   MEDOC_TLB in '..\..\SOURCE\MeDOC\MEDOC_TLB.pas',
   ReportMovementCheckGrowthAndFalling in '..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFalling.pas' {ReportMovementCheckGrowthAndFallingForm: TParentForm},
-  Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_GoodsRemainsLightForm: TParentForm},
+  Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_RetailRemainsForm: TParentForm},
   Report_GoodsRemainsLightDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas' {Report_GoodsRemainsLightDialogForm: TParentForm},
   ReportMovementCheckGrowthAndFallingDialog in '..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFallingDialog.pas' {ReportMovementCheckGrowthAndFallingDialogForm: TParentForm},
   ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
@@ -812,7 +812,18 @@ uses
   Report_SUNSaleDatesDialog in '..\..\FormsFarmacy\Report\Report_SUNSaleDatesDialog.pas' {Report_SUNSaleDatesDialogForm: TParentForm},
   Report_SUNSaleDates in '..\..\FormsFarmacy\Report\Report_SUNSaleDates.pas' {Report_SUNSaleDatesForm: TParentForm},
   TechnicalRediscount in '..\..\FormsFarmacy\Document\TechnicalRediscount.pas' {TechnicalRediscountForm: TParentForm},
-  TechnicalRediscountJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas' {TechnicalRediscountJournalForm: TParentForm};
+  TechnicalRediscountJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas' {TechnicalRediscountJournalForm: TParentForm},
+  TechnicalRediscountCashier in '..\..\FormsFarmacy\Document\TechnicalRediscountCashier.pas' {TechnicalRediscountCashierForm: TParentForm},
+  TechnicalRediscountCashierJournal in '..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas' {TechnicalRediscountCashierJournalForm: TParentForm},
+  Report_SendSUN_SUNv2 in '..\..\FormsFarmacy\Report\Report_SendSUN_SUNv2.pas' {Report_SendSUN_SUNv2Form: TParentForm},
+  PromoCodeDoctor in '..\..\FormsFarmacy\Guides\PromoCodeDoctor.pas' {PromoCodeDoctorForm: TParentForm},
+  Report_JuridicalRemains in '..\..\FormsFarmacy\Report\Report_JuridicalRemains.pas' {Report_JuridicalRemainsForm: TParentForm},
+  Report_JuridicalRemainsDialog in '..\..\FormsFarmacy\Report\Report_JuridicalRemainsDialog.pas' {Report_JuridicalRemainsDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSunOut in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut.pas' {Report_Movement_Send_RemainsSunOutForm: TParentForm},
+  Report_InventoryErrorRemainsDoc in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDoc.pas' {Report_InventoryErrorRemainsDocForm: TParentForm},
+  HelsiUser in '..\..\FormsFarmacy\Guides\HelsiUser.pas' {HelsiUserForm: TParentForm},
+  Report_JuridicalSalesDialog in '..\..\FormsFarmacy\Report\Report_JuridicalSalesDialog.pas' {Report_JuridicalSalesDialogForm: TParentForm},
+  Report_JuridicalSales in '..\..\FormsFarmacy\Report\Report_JuridicalSales.pas' {Report_JuridicalSalesForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

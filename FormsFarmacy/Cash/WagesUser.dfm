@@ -14,19 +14,19 @@ inherited WagesUserForm: TWagesUserForm
     Width = 655
     Height = 322
     TabOrder = 0
-    ExplicitTop = 107
+    ExplicitTop = 127
     ExplicitWidth = 655
-    ExplicitHeight = 342
+    ExplicitHeight = 322
     ClientRectBottom = 322
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
-      ExplicitHeight = 342
+      ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 655
         Height = 207
         ExplicitWidth = 655
-        ExplicitHeight = 227
+        ExplicitHeight = 207
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -85,7 +85,6 @@ inherited WagesUserForm: TWagesUserForm
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 227
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -411,6 +410,18 @@ inherited WagesUserForm: TWagesUserForm
       Top = 56
       Caption = #1064#1090#1088#1072#1092' '#1057#1059#1053'1'
     end
+    object edPasswordEHels: TcxTextEdit
+      Left = 156
+      Top = 77
+      Properties.ReadOnly = True
+      TabOrder = 23
+      Width = 125
+    end
+    object cxLabel19: TcxLabel
+      Left = 14
+      Top = 78
+      Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 235
@@ -694,6 +705,13 @@ inherited WagesUserForm: TWagesUserForm
         Value = Null
         Component = ceSummaTotal
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PasswordEHels'
+        Value = Null
+        Component = edPasswordEHels
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

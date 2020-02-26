@@ -167,6 +167,10 @@ type
     cxLabel30: TcxLabel;
     edLoyaltySMSumma: TcxTextEdit;
     cxLabel31: TcxLabel;
+    spSetPromoCode: TdsdStoredProc;
+    actSetPromoCodeDoctor: TdsdExecStoredProc;
+    actChoicePromoCodeDoctor: TOpenChoiceForm;
+    dxBarButton11: TdxBarButton;
   private
     { Private declarations }
   public

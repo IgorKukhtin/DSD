@@ -3,7 +3,7 @@ inherited ReturnOutForm: TReturnOutForm
   ClientHeight = 526
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 565
+  ExplicitHeight = 564
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -686,6 +686,45 @@ inherited ReturnOutForm: TReturnOutForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrintOptima: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -733,7 +772,7 @@ inherited ReturnOutForm: TReturnOutForm
         item
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [14]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1062,6 +1101,14 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOptima'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTTN'
         end
         item
@@ -1147,6 +1194,10 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object dxBarButton4: TdxBarButton
       Action = spUpdateisDeferredNo
+      Category = 0
+    end
+    object bbPrintOptima: TdxBarButton
+      Action = actPrintOptima
       Category = 0
     end
   end
@@ -2172,8 +2223,8 @@ inherited ReturnOutForm: TReturnOutForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 544
-    Top = 80
+    Left = 248
+    Top = 104
   end
   object GuidesJuridicalActualAddress: TdsdGuides
     KeyField = 'Id'
@@ -2205,19 +2256,20 @@ inherited ReturnOutForm: TReturnOutForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesTo
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'inJuridicalName'
         Value = Null
-        Component = GuidesJuridical
+        Component = GuidesTo
         ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 904
-    Top = 80
+    Left = 480
+    Top = 96
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ReturnOut'

@@ -456,9 +456,9 @@ inherited ReestrTransportGoodsJournalForm: TReestrTransportGoodsJournalForm
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturn'
+      ReportName = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103' '#1056#1077#1077#1089#1090#1088#1072
-      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

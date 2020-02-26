@@ -678,11 +678,14 @@ end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItem_CurrencyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItem_CurrencyForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
 
@@ -693,9 +696,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemEditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

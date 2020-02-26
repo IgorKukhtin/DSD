@@ -25,6 +25,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       inherited cxGrid: TcxGrid
         Width = 1076
         Height = 253
+        ExplicitLeft = 48
+        ExplicitTop = -3
         ExplicitWidth = 1076
         ExplicitHeight = 253
         inherited cxGridDBTableView: TcxGridDBTableView

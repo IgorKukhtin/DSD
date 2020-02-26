@@ -16,17 +16,17 @@ inherited LossJournalForm: TLossJournalForm
     Width = 817
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 821
+    ExplicitWidth = 817
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 817
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 821
+      ExplicitWidth = 817
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 817
         Height = 478
-        ExplicitWidth = 821
+        ExplicitWidth = 817
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -62,7 +62,6 @@ inherited LossJournalForm: TLossJournalForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
-          OptionsView.HeaderHeight = 40
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -114,7 +113,7 @@ inherited LossJournalForm: TLossJournalForm
             Width = 241
           end
           object TotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1074' '#1087#1088#1080#1093#1086#1076'. '#1094#1077#1085#1072#1093
+            Caption = #1057#1091#1084#1084#1072' '#1079#1072#1082#1091#1087#1082#1080' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'TotalSumm'
             PropertiesClassName = 'TcxCalcEditProperties'
             Properties.DisplayFormat = ',0.00'
@@ -146,7 +145,7 @@ inherited LossJournalForm: TLossJournalForm
   end
   inherited Panel: TPanel
     Width = 817
-    ExplicitWidth = 821
+    ExplicitWidth = 817
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end

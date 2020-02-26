@@ -325,7 +325,8 @@ uses
   SalePodium in '..\..\FormsBoutique\Document\SalePodium.pas' {SalePodiumForm: TParentForm},
   SalePodiumJournal in '..\..\FormsBoutique\Document\SalePodiumJournal.pas' {SalePodiumJournalForm: TParentForm},
   Report_MotionOLAP in '..\..\FormsBoutique\Report\Report_MotionOLAP.pas' {Report_MotionOLAPForm: TParentForm},
-  Report_MotionOLAPDialog in '..\..\FormsBoutique\Report\Report_MotionOLAPDialog.pas' {Report_MotionOLAPDialogForm: TParentForm};
+  Report_MotionOLAPDialog in '..\..\FormsBoutique\Report\Report_MotionOLAPDialog.pas' {Report_MotionOLAPDialogForm: TParentForm},
+  PriceListItem_Currency in '..\..\FormsBoutique\Guides\PriceListItem_Currency.pas' {PriceListItem_CurrencyForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -60,7 +60,13 @@ BEGIN
 
             -- проверим что есть остатки
             outMessageText:= 'Ошибка.Товары "Под заказ" еще не оприходованы: '
-                                || (WITH tmpFrom AS (SELECT MI.ObjectId AS GoodsId, SUM (MI.Amount) AS Amount FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.Amount > 0 AND MI.isErased = FALSE GROUP BY MI.ObjectId)
+                                || (WITH tmpFrom AS (SELECT MI.ObjectId AS GoodsId, SUM (MI.Amount) AS Amount 
+                                                     FROM MovementItem AS MI 
+                                                     WHERE MI.MovementId = inMovementId 
+                                                       AND MI.DescId = zc_MI_Master()
+                                                       AND MI.Amount > 0 
+                                                       AND MI.isErased = FALSE 
+                                                     GROUP BY MI.ObjectId)
                                        , tmpTo AS (SELECT tmpFrom.GoodsId, SUM (Container.Amount) AS Amount
                                                    FROM tmpFrom
                                                         INNER JOIN Container ON Container.DescId = zc_Container_Count()

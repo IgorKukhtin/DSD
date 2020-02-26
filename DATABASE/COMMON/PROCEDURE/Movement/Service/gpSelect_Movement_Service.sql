@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , AmountIn TFloat, AmountOut TFloat
              , AmountCurrencyDebet TFloat, AmountCurrencyKredit TFloat
+             , CountDebet TFloat, CountKredit TFloat, Price TFloat, Summa_calc TFloat
              , CurrencyPartnerValue TFloat, ParPartnerValue TFloat
              , CurrencyPartnerName TVarChar
              , Comment TVarChar
@@ -64,7 +65,7 @@ BEGIN
                               JOIN Movement ON Movement.Id     = MovementFloat.ValueData :: Integer
                                            AND Movement.DescId = zc_Movement_Service()
                                            AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                           AND Movement.StatusId = tmpStatus.StatusId
+                                           --AND Movement.StatusId = tmpStatus.StatusId
                               JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                   
                          WHERE MovementFloat.DescId = zc_MovementFloat_MovementId()
@@ -124,6 +125,11 @@ BEGIN
                   ELSE 0
              END                                  :: TFloat AS AmountCurrencyKredit
              
+           , CASE WHEN MIFloat_Count.ValueData > 0 THEN MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountDebet
+           , CASE WHEN MIFloat_Count.ValueData < 0 THEN -1* MIFloat_Count.ValueData ELSE 0 END :: TFloat AS CountKredit
+           , MIFloat_Price.ValueData :: TFloat AS Price
+           , (MIFloat_Price.ValueData * CASE WHEN MIFloat_Count.ValueData < 0 THEN -1 * MIFloat_Count.ValueData ELSE MIFloat_Count.ValueData END) :: TFloat AS Summa_calc
+
            , MovementFloat_CurrencyPartnerValue.ValueData   AS CurrencyPartnerValue
            , MovementFloat_ParPartnerValue.ValueData        AS ParPartnerValue
            , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
@@ -210,6 +216,13 @@ BEGIN
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
             LEFT JOIN MovementLinkMovement AS MLM_Invoice
                                            ON MLM_Invoice.MovementId = Movement.Id
                                           AND MLM_Invoice.DescId = zc_MovementLinkMovement_Invoice()
@@ -218,8 +231,6 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner_Invoice
                                      ON MovementString_InvNumberPartner_Invoice.MovementId =  Movement_Invoice.Id
                                     AND MovementString_InvNumberPartner_Invoice.DescId = zc_MovementString_InvNumberPartner()
-
-
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -251,6 +262,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 24.02.20         *
  28.01.19         * add inSettingsServiceId
  01.08.17         *
  06.10.16         * add inJuridicalBasisId

@@ -67,6 +67,8 @@ type
     UpdateName: TcxGridDBColumn;
     UpdateDate: TcxGridDBColumn;
     isDeferred: TcxGridDBColumn;
+    actPrintOptima: TdsdPrintAction;
+    bbPrintOptima: TdxBarButton;
   private
     { Private declarations }
   public

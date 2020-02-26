@@ -46,6 +46,21 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountCurrencyKredit
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = CountDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = CountKredit
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Summa_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -67,6 +82,21 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountCurrencyKredit
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = CountDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = CountKredit
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Summa_calc
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -161,6 +191,50 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 54
+          end
+          object CountDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090', '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'CountDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object CountKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090', '#1082#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'CountKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object Summa_calc: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095'. '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summa_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object JuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'

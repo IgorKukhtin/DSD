@@ -151,7 +151,8 @@ BEGIN
                 THEN MI_ReturnOut.AmountSumm
                 ELSE ROUND(MI_ReturnOut.AmountSumm/(1+(ObjectFloat_NDSKind_NDS.ValueData/100)),2)
             END AS Summa  
-          
+
+          , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
         FROM
             MovementItem_ReturnOut_View AS MI_ReturnOut
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -185,6 +186,12 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                   ON ObjectString_Goods_Maker.ObjectId = MILinkObject_Goods.ObjectId 
                                  AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
+
+        -- условия хранения
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
+                             ON ObjectLink_Goods_ConditionsKeep.ObjectId = MI_ReturnOut.GoodsId
+                            AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
+        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
 
         WHERE MI_ReturnOut.MovementId = inMovementId
           AND MI_ReturnOut.isErased = FALSE;

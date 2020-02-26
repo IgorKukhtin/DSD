@@ -26,8 +26,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         Top = 83
         Width = 1001
         Height = 199
-        ExplicitLeft = 8
-        ExplicitTop = 80
+        ExplicitTop = 83
         ExplicitWidth = 1001
         ExplicitHeight = 199
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -558,8 +557,6 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
   inherited Panel: TPanel
     Width = 1001
     Height = 97
-    ExplicitLeft = -8
-    ExplicitTop = 4
     ExplicitWidth = 1001
     ExplicitHeight = 97
     inherited deStart: TcxDateEdit
@@ -710,7 +707,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
         end>
       Params = <
         item
@@ -749,9 +746,9 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturnPeriod'
+      ReportName = 'PrintMovement_ReestrTransportGoodsPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrReturnPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoodsPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -778,7 +775,7 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'PersonalName_Group;FromName;OperDatePartner'
+          IndexFieldNames = 'PersonalName_Group;ToName;OperDatePartner'
         end>
       Params = <
         item
@@ -794,9 +791,9 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturn'
+      ReportName = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
-      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1062,9 +1059,9 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturnPeriod'
+      ReportName = 'PrintMovement_ReestrTransportGoodsPeriod'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088' '#1079#1072' '#1087#1077#1088#1080#1086#1076
-      ReportNameParam.Value = 'PrintMovement_ReestrReturnPeriod'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoodsPeriod'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -1106,9 +1103,9 @@ inherited ReestrTransportGoodsUpdateMovementForm: TReestrTransportGoodsUpdateMov
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_ReestrReturn'
+      ReportName = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.Name = #1056#1077#1077#1089#1090#1088
-      ReportNameParam.Value = 'PrintMovement_ReestrReturn'
+      ReportNameParam.Value = 'PrintMovement_ReestrTransportGoods'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','

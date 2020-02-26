@@ -7,7 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_PriceListGoodsItem(
     IN inGoodsId            Integer   , -- Товар
     IN inSession            TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (Id Integer, StartDate TDateTime, EndDate TDateTime, ValuePrice TFloat, isErased Boolean)
+RETURNS TABLE (Id Integer
+             , CurrencyId Integer, CurrencyName TVarChar
+             , StartDate TDateTime, EndDate TDateTime
+             , ValuePrice TFloat
+             , isErased Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -21,9 +25,12 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
+           , Object_Currency.Id                 AS CurrencyId
+           , Object_Currency.ValueData          AS CurrencyName
            , CASE WHEN ObjectHistory_PriceListItem.StartDate = zc_DateStart() OR ObjectHistory_PriceListItem.StartDate < '01.01.1980' THEN NULL ELSE ObjectHistory_PriceListItem.StartDate END :: TDateTime AS StartDate
            , CASE WHEN ObjectHistory_PriceListItem.EndDate   = zc_DateEnd() THEN NULL ELSE ObjectHistory_PriceListItem.EndDate END :: TDateTime AS EndDate
            , ObjectHistoryFloat_Value.ValueData AS ValuePrice
+
            , FALSE AS isErased
        FROM ObjectLink AS ObjectLink_PriceList
             INNER JOIN ObjectLink AS ObjectLink_Goods
@@ -38,6 +45,11 @@ BEGIN
                                          ON ObjectHistoryFloat_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
 
+            LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                        ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectHistoryLink_Currency.ObjectId
+
        WHERE ObjectLink_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceList.ChildObjectId = inPriceListId
          -- AND ObjectHistoryFloat_Value.ValueData <> 0
@@ -50,6 +62,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.02.20         * add Currency
  25.07.13                        *
 */
 

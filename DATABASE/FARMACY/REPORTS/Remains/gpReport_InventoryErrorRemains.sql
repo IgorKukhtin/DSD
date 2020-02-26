@@ -152,7 +152,7 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
-            WHERE MovementFloat_Diff.ValueData  <> tmpMovement_calc.Diff
+--            WHERE MovementFloat_Diff.ValueData  <> tmpMovement_calc.Diff
             ;
      RETURN NEXT cur1;
 

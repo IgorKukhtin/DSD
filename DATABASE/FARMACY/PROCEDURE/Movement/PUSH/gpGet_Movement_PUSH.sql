@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , Replays Integer
              , Daily Boolean
              , Message TBlob
+             , Function TVarChar
              )
 AS
 $BODY$
@@ -40,8 +41,9 @@ BEGIN
           , Object_Status.Name              	             AS StatusName
           , date_trunc('day', CURRENT_TIMESTAMP + INTERVAL '1 DAY')::TDateTime  AS DateEndPUSH
           , 1::Integer                                       AS Replays
-          , False::Boolean                                   AS Message
+          , False::Boolean                                   AS Daily
           , Null::TBlob                                      AS Message
+          , Null::TVarChar                                   AS Function
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -56,6 +58,7 @@ BEGIN
           , MovementFloat_Replays.ValueData::Integer         AS Replays  
           , COALESCE(MovementBoolean_Daily.ValueData, False) AS Daily
           , MovementBlob_Message.ValueData                   AS Message
+          , MovementString_Function.ValueData                AS Function  
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -83,6 +86,10 @@ BEGIN
                                       ON MovementBoolean_Daily.MovementId = Movement.Id
                                      AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
 
+            LEFT JOIN MovementString AS MovementString_Function
+                                     ON MovementString_Function.MovementId = Movement.Id
+                                    AND MovementString_Function.DescId = zc_MovementString_Function()
+
         WHERE Movement.Id =  inMovementId;
     END IF;
 
@@ -95,6 +102,7 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 19.02.12         *
  11.05.19         *
  10.03.19         *
 */

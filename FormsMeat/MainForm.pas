@@ -1080,6 +1080,10 @@ type
     N211: TMenuItem;
     actSubjectDoc: TdsdOpenForm;
     miSubjectDoc: TMenuItem;
+    actMemberBankAccount: TdsdOpenForm;
+    miMemberBankAccount: TMenuItem;
+    actOrderInternalStew: TdsdOpenForm;
+    miOrderInternalStew: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

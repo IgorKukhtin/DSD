@@ -25,6 +25,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Price_zavod TFloat, Price_branch TFloat
              , OperDate TDateTime
              , isCalculated Boolean
+             , SubjectDocName TVarChar
              )
 AS
 $BODY$
@@ -106,6 +107,7 @@ BEGIN
 
          , tmpOperationGroup.OperDate
          , tmpOperationGroup.isCalculated
+         , tmpOperationGroup.SubjectDocName 
 
      FROM (SELECT tmpContainer.UnitId
                 , tmpContainer.UnitId_by
@@ -121,6 +123,7 @@ BEGIN
                 , SUM (CASE WHEN COALESCE (Object_Account_View.AccountDirectionId, 0) =  zc_Enum_AccountDirection_60200() THEN tmpContainer.Summ ELSE 0 END) AS Summ_60000
                 , SUM (tmpContainer.Count)  AS Count
                 , tmpContainer.isCalculated
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') :: TVarChar AS SubjectDocName
 
            FROM (SELECT CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END AS ContainerId
                       , MIContainer.WhereObjectId_analyzer AS UnitId
@@ -133,6 +136,7 @@ BEGIN
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ()  THEN MIContainer.Amount ELSE 0 END * CASE WHEN MIContainer.isActive = TRUE THEN 1 ELSE -1 END) AS Summ
                       , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN COALESCE (MIFloat_Count.ValueData,0) ELSE 0 END)                                          AS Count
                       , COALESCE (MIBoolean_Calculated.ValueData, FALSE) ::Boolean AS isCalculated
+                      , Object_SubjectDoc.ValueData          AS SubjectDocName
                  FROM _tmpUnit
                       INNER JOIN MovementItemContainer AS MIContainer
                                                        ON MIContainer.WhereObjectId_analyzer = _tmpUnit.UnitId
@@ -145,6 +149,12 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                   ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_Count.DescId = zc_MIFloat_Count()
+ 
+                      LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                                   ON MovementLinkObject_SubjectDoc.MovementId = MIContainer.MovementId
+                                                  AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+                      LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
                       -- LEFT JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                  -- WHERE _tmpGoods.GoodsId > 0 OR inGoodsGroupId = 0
                  GROUP BY CASE WHEN vbIsGroup = TRUE THEN 0 ELSE MIContainer.ContainerId END
@@ -155,6 +165,7 @@ BEGIN
                         , CASE WHEN vbIsGroup = TRUE THEN zc_DateStart() ELSE MIContainer.OperDate END
                         , COALESCE (MIContainer.AccountId, 0)
                         , COALESCE (MIBoolean_Calculated.ValueData, FALSE)
+                        , Object_SubjectDoc.ValueData
                ) AS tmpContainer
                INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = tmpContainer.GoodsId
                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
@@ -205,6 +216,7 @@ ALTER FUNCTION gpReport_GoodsMI_Production (TDateTime, TDateTime, Integer, Boole
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.02.20         * add SubjectDocName
  06.08.15                                        * all
  21.08.14         *
 */

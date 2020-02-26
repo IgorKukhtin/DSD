@@ -26,6 +26,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
            , Object_From.ValueData                              AS FromName
            , Object_To.ValueData                                AS ToName
+           , Object_SubjectDoc.ValueData                        AS SubjectDocName
        
        FROM Movement
    
@@ -42,6 +43,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
+                                         ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
+                                        AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
+            LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId IN (zc_Movement_ProductionUnion())

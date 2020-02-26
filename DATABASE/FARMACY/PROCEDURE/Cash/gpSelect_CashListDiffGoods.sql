@@ -61,6 +61,7 @@ BEGIN
 
                          WHERE Movement_Income.DescId = zc_Movement_Income()
                            AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
+                           AND Movement_Income.OperDate >= CURRENT_DATE - INTERVAL '6 MONTH'
                            AND MI_Income.ObjectId = inGoodsID
                          GROUP BY MI_Income.ObjectId, MovementLinkObject_To.ObjectId
                       )
@@ -136,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
+ 20.02.20                                                      *
  06.06.19                                                      *
  10.02.19                                                      *
  19.11.18                                                      *

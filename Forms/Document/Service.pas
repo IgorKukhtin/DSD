@@ -75,6 +75,14 @@ type
     cxLabel17: TcxLabel;
     ceAmountCurrencyDebet: TcxCurrencyEdit;
     ceAmountCurrencyKredit: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
+    ceCountDebet: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    cePrice: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    ceCountKredit: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
+    ceSumma: TcxCurrencyEdit;
   private
     { Private declarations }
   public

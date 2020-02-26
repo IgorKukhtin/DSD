@@ -1605,7 +1605,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas">
-				<Form>Report_GoodsRemainsLightForm</Form>
+				<Form>Report_RetailRemainsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas">
@@ -2814,6 +2814,50 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\TechnicalRediscountJournal.pas">
 				<Form>TechnicalRediscountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\TechnicalRediscountCashier.pas">
+				<Form>TechnicalRediscountCashierForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\TechnicalRediscountCashierJournal.pas">
+				<Form>TechnicalRediscountCashierJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_SendSUN_SUNv2.pas">
+				<Form>Report_SendSUN_SUNv2Form</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PromoCodeDoctor.pas">
+				<Form>PromoCodeDoctorForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalRemains.pas">
+				<Form>Report_JuridicalRemainsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalRemainsDialog.pas">
+				<Form>Report_JuridicalRemainsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut.pas">
+				<Form>Report_Movement_Send_RemainsSunOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDoc.pas">
+				<Form>Report_InventoryErrorRemainsDocForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\HelsiUser.pas">
+				<Form>HelsiUserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalSalesDialog.pas">
+				<Form>Report_JuridicalSalesDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_JuridicalSales.pas">
+				<Form>Report_JuridicalSalesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

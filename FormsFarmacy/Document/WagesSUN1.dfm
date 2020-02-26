@@ -77,7 +77,6 @@ inherited WagesSUN1Form: TWagesSUN1Form
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 76
           end
           object SummaWeek2: TcxGridDBColumn [2]
@@ -87,7 +86,6 @@ inherited WagesSUN1Form: TWagesSUN1Form
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 72
           end
           object SummaWeek3: TcxGridDBColumn [3]
@@ -97,7 +95,6 @@ inherited WagesSUN1Form: TWagesSUN1Form
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 76
           end
           object SummaWeek4: TcxGridDBColumn [4]
@@ -107,7 +104,6 @@ inherited WagesSUN1Form: TWagesSUN1Form
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 77
           end
           object SummaWeek5: TcxGridDBColumn [5]
@@ -117,7 +113,6 @@ inherited WagesSUN1Form: TWagesSUN1Form
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 73
           end
           object SummaSUN1: TcxGridDBColumn [6]
@@ -730,64 +725,55 @@ inherited WagesSUN1Form: TWagesSUN1Form
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummaCleaning'
+        Name = 'inSummaWeek1'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SummaCleaning'
+        ComponentItem = 'SummaWeek1'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummaSP'
+        Name = 'inSummaWeek2'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SummaSP'
+        ComponentItem = 'SummaWeek2'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummaOther'
+        Name = 'inSummaWeek3'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SummaOther'
+        ComponentItem = 'SummaWeek3'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inSummaValidationResults'
+        Name = 'inSummaWeek4'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'SummaValidationResults'
+        ComponentItem = 'SummaWeek4'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisIssuedBy'
+        Name = 'inSummaWeek5'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'isIssuedBy'
-        DataType = ftBoolean
+        ComponentItem = 'SummaWeek5'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inComment'
+        Name = 'outSummaSUN1'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummaTotal'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'SummaTotal'
+        ComponentItem = 'SummaSUN1'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

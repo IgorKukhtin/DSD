@@ -834,6 +834,29 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSalesForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSalesForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSalesDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSalesDialogForm');
+    exit;
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_InventoryErrorRemainsDocForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDocForm');
+    exit;
+
+    {
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsDialogForm');
+    exit;
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUN_SUNv2Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUN_SUNv2Form');
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesForm');
@@ -857,7 +880,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_InventoryErrorRemainsDialogForm');
     exit;
 
-    {    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_StockTiming_RemainderDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_StockTiming_RemainderDialogForm');
@@ -871,7 +894,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PercentageOverdueSUNForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PercentageOverdueSUNForm');
-    exit;}
+    exit;
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanAllForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanAllForm');
@@ -882,7 +905,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IlliquidReductionPlanUserForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_IlliquidReductionPlanUserForm');
     exit;
-   {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_ReturnOutForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_ReturnOutDialogForm'));
@@ -924,13 +947,16 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunDialogForm');
-    exit;
 
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
+    exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate0Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsPartionDate0Form');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsPartionDate5Form'));
@@ -1474,6 +1500,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountCashierJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountCashierJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountCashierForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountCashierForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
@@ -1627,6 +1658,10 @@ end;
 
 procedure TLoadFormTest.LoadPromoFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeDoctorForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeDoctorForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
@@ -2289,7 +2324,12 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-{
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
+    TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
+     exit;
+
+
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
   Exit;
@@ -2340,11 +2380,10 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceGroupSettingsTopForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceGroupSettingsTopForm');
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalSettingsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TJuridicalSettingsForm');
-     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
     TdsdFormStorageFactory.GetStorage.Load('TActionForm');
 

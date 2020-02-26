@@ -357,6 +357,56 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       Category = 'Edit'
       FormName = 'TReturnOutForm'
     end
+    object actPrintOptima: TdsdPrintAction [5]
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1087#1090#1080#1084#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103'_'#1085#1072#1082#1083#1072#1076#1085#1072#1103'('#1054#1087#1090#1080#1084#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actUnComplete: TdsdChangeMovementStatus
       Category = 'Complete'
     end
@@ -850,6 +900,14 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintOptima'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTax_Us'
         end
         item
@@ -919,6 +977,10 @@ inherited ReturnOutPharmacyJournalForm: TReturnOutPharmacyJournalForm
       Action = mactEditPartnerData
       Category = 0
       Visible = ivNever
+    end
+    object bbPrintOptima: TdxBarButton
+      Action = actPrintOptima
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

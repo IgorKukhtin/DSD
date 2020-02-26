@@ -241,6 +241,15 @@ object PriceListItemForm: TPriceListItemForm
         Options.Editing = False
         Width = 55
       end
+      object CurrencyName_price: TcxGridDBColumn
+        Caption = #1042#1072#1083'. '#1087#1088#1072#1081#1089
+        DataBinding.FieldName = 'CurrencyName_price'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' '#1087#1088#1072#1081#1089#1072
+        Options.Editing = False
+        Width = 55
+      end
       object ValuePrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1043#1056#1053
         DataBinding.FieldName = 'ValuePrice'

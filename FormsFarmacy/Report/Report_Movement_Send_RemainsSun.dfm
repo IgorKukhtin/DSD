@@ -1,11 +1,10 @@
 inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'> ('#1087#1088#1080#1093#1086#1076#1099')'
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -187
   ExplicitWidth = 976
-  ExplicitHeight = 708
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -23,9 +22,11 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       ExplicitHeight = 433
       inherited cxGrid: TcxGrid
         Width = 960
-        Height = 223
+        Height = 200
+        ExplicitLeft = -3
+        ExplicitTop = 2
         ExplicitWidth = 960
-        ExplicitHeight = 223
+        ExplicitHeight = 200
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -1247,9 +1248,9 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 231
+        Top = 208
         Width = 960
-        Height = 104
+        Height = 127
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
@@ -1878,12 +1879,13 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 223
+        Top = 200
         Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 217
       end
     end
   end
@@ -2573,7 +2575,13 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 91
+    Top = 256
+  end
   inherited ActionList: TActionList
+    Left = 103
+    Top = 287
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3130,6 +3138,9 @@ inherited Report_Movement_Send_RemainsSunForm: TReport_Movement_Send_RemainsSunF
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 272
     Top = 184
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil

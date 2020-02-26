@@ -354,9 +354,15 @@ BEGIN
                                         WHEN ObjectDate_Value.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- ћеньше 1 мес€ца
                                         WHEN ObjectDate_Value.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- ћеньше 6 мес€ца
                                         WHEN ObjectDate_Value.ValueData > vbDate_6   THEN zc_Enum_PartionDateKind_Good()  END  AS PartionDateKindId                              -- ¬остановлен с просрочки
-                            FROM (SELECT DISTINCT tmpMIContainerAll.ContainerId FROM tmpMIContainerAll) AS tmp
+                            FROM (SELECT tmpMIContainerAll.ContainerId 
+                                       , max(Container.Id)              AS PDContainerId
+                                  FROM tmpMIContainerAll 
+                                       LEFT JOIN Container ON Container.ParentId = tmpMIContainerAll.ContainerId
+                                                          AND Container.DescId = zc_Container_CountPartionDate()
+                                                          AND Container.Amount > 0
+                                  GROUP BY tmpMIContainerAll.ContainerId) AS tmp
                                  LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                               ON CLO_PartionGoods.ContainerId = tmp.ContainerId
+                                                               ON CLO_PartionGoods.ContainerId = tmp.PDContainerId
                                                               AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                  LEFT OUTER JOIN ObjectDate AS ObjectDate_Value
                                                             ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId

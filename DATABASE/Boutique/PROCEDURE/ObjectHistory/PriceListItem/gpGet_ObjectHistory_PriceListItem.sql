@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_ObjectHistory_PriceListItem(
     IN inSession            TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id Integer
+             , CurrencyId Integer, CurrencyName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsNameFull TVarChar
              , StartDate TDateTime, EndDate TDateTime
@@ -28,9 +29,11 @@ BEGIN
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
+           , Object_Currency.Id                           AS CurrencyId
+           , Object_Currency.ValueData                    AS CurrencyName
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
-           , Object_Goods.ObjectCode        AS GoodsCode
-           , Object_Goods.ValueData         AS GoodsName
+           , Object_Goods.ObjectCode                      AS GoodsCode
+           , Object_Goods.ValueData                       AS GoodsName
 
            , (Object_GroupNameFull.ValueData ||' - '||Object_Label.ValueData||' - '||Object_Goods.ObjectCode||' - ' || Object_Goods.ValueData) ::TVarChar  AS GoodsNameFull
            
@@ -51,6 +54,11 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                          ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                         AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+            LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                        ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectHistoryLink_Currency.ObjectId
 
             LEFT JOIN ObjectString AS Object_GroupNameFull
                                    ON Object_GroupNameFull.ObjectId = Object_Goods.Id
@@ -73,6 +81,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.02.20         * add Currency
  26.04.18         * add inId, GoodsNameFull
  27.01.15                                        *
 */

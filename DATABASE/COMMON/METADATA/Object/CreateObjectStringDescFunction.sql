@@ -971,6 +971,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_User_Helsi_KeyPassword() RETURNS Inte
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_User_Helsi_KeyPassword', zc_Object_User(), 'Пароль к файловому ключу' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_KeyPassword');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Helsi_PasswordEHels() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_PasswordEHels'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_User_Helsi_PasswordEHels', zc_Object_User(), 'Пароль Е-Хелс' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Helsi_PasswordEHels');
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_Analog() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Analog'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_Analog', zc_Object_Goods(), 'Перечень аналогов товара' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_Analog');
@@ -1064,6 +1068,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 25.02.20                                                                                                         * zc_ObjectString_User_Helsi_PasswordEHels
  29.01.20         * zc_ObjectString_Buyer_DateBirth
                     zc_ObjectString_Buyer_Sex
  26.12.19                                                                                                         * zc_ObjectString_Buyer_ 

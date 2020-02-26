@@ -240,7 +240,6 @@ inherited CheckForm: TCheckForm
   inherited DataPanel: TPanel
     Width = 804
     Height = 216
-    ExplicitLeft = -1
     ExplicitWidth = 804
     ExplicitHeight = 216
     inherited edInvNumber: TcxTextEdit
@@ -1744,6 +1743,40 @@ inherited CheckForm: TCheckForm
       ImageIndex = 36
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1076#1083#1103' '#1053#1058#1047'"?'
     end
+    object actSetPromoCodeDoctor: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoicePromoCodeDoctor
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetPromoCode
+      StoredProcList = <
+        item
+          StoredProc = spSetPromoCode
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1074#1088#1072#1095#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1084#1086#1082#1086#1076' '#1074#1088#1072#1095#1072
+      ImageIndex = 74
+    end
+    object actChoicePromoCodeDoctor: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoicePromoCodeDoctor'
+      FormName = 'TPromoCodeDoctorForm'
+      FormNameParam.Value = 'TPromoCodeDoctorForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PromoCodeId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1867,6 +1900,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton11'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1951,6 +1988,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton10: TdxBarButton
       Action = actUpdateNotMCS
+      Category = 0
+    end
+    object dxBarButton11: TdxBarButton
+      Action = actSetPromoCodeDoctor
       Category = 0
     end
   end
@@ -2041,6 +2082,11 @@ inherited CheckForm: TCheckForm
         Name = 'Amount'
         Value = 0c
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoCodeId'
+        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 56
@@ -3175,5 +3221,30 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 394
     Top = 256
+  end
+  object spSetPromoCode: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_SetPromoCode'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoCodeId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'PromoCodeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 402
+    Top = 400
   end
 end

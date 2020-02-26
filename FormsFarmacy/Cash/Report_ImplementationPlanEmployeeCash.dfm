@@ -366,12 +366,13 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
         end
       end
       object cxUnitCategory: TcxGrid
-        Left = 649
+        Left = 691
         Top = 1
         Width = 328
         Height = 137
         Align = alLeft
         TabOrder = 1
+        ExplicitLeft = 649
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnitCategory
@@ -419,7 +420,7 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
       object cxResult: TcxGrid
         Left = 401
         Top = 1
-        Width = 248
+        Width = 290
         Height = 137
         Align = alLeft
         TabOrder = 2
@@ -441,6 +442,16 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 77
+          end
+          object cxGridDBColumn8: TcxGridDBColumn
+            Caption = #1054#1073#1097#1080#1081'  % '#1074#1099#1087'. '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074'.'
+            DataBinding.FieldName = 'TotalExecutionAllLine'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderHint = #1054#1073#1097#1080#1081' % '#1074#1099#1087#1086#1083#1085#1077#1085#1080#1103' '#1087#1086#1089#1090#1088#1086#1095#1085#1099#1081' '#1087#1088#1080' 100% '#1087#1088#1080#1089#1091#1090#1089#1090#1074#1080#1080' '#1074' '#1072#1087#1090#1077#1082#1077'.'
+            Options.Editing = False
+            Width = 74
           end
           object cxGridDBColumn6: TcxGridDBColumn
             Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1087#1088#1077#1084#1080#1080':'
@@ -859,6 +870,11 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
       FieldName = 'TotalExecutionLine'
       Calculated = True
     end
+    object cdsResultTotalExecutionAllLine: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'TotalExecutionAllLine'
+      Calculated = True
+    end
     object cdsResultAwarding: TStringField
       FieldName = 'Awarding'
       Size = 3
@@ -888,6 +904,7 @@ object Report_ImplementationPlanEmployeeCashForm: TReport_ImplementationPlanEmpl
     TextEdit = edFilter
     DataSet = ClientDataSet
     Column = colGoodsName
+    CheckBoxList = <>
     Left = 568
     Top = 199
   end

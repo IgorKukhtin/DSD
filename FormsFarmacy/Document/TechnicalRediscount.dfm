@@ -1,43 +1,34 @@
 inherited TechnicalRediscountForm: TTechnicalRediscountForm
   Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
   ClientHeight = 479
-  ClientWidth = 706
+  ClientWidth = 915
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
-  ExplicitWidth = 722
+  ExplicitWidth = 931
   ExplicitHeight = 518
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 115
-    Width = 706
+    Width = 915
     Height = 364
     ExplicitTop = 115
-    ExplicitWidth = 706
+    ExplicitWidth = 915
     ExplicitHeight = 364
     ClientRectBottom = 364
-    ClientRectRight = 706
+    ClientRectRight = 915
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 706
+      ExplicitWidth = 915
       ExplicitHeight = 340
       inherited cxGrid: TcxGrid
-        Width = 706
+        Width = 915
         Height = 332
-        ExplicitWidth = 706
+        ExplicitWidth = 915
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summ
             end
             item
               Format = ',0.####'
@@ -45,33 +36,71 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; '
+              Kind = skSum
+              Column = DiffSumm
+            end
+            item
+              Format = ',0.####;-,0.####; '
+              Kind = skSum
+              Column = Remains_Amount
+            end
+            item
+              Format = ',0.####;-,0.####; '
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.####;-,0.####; '
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = ',0.####;-,0.####; '
+              Kind = skSum
+              Column = Deficit
+            end
+            item
+              Format = ',0.####;-,0.####; '
+              Kind = skSum
+              Column = Proficit
+            end
+            item
+              Format = ',0.##;-,0.##; '
+              Kind = skSum
+              Column = Remains_Summ
+            end
+            item
+              Format = ',0.##;-,0.##; '
               Kind = skSum
             end
             item
-              Format = ',0.####'
+              Format = ',0.##;-,0.##; '
               Kind = skSum
-              Column = Summ
+              Column = DeficitSumm
+            end
+            item
+              Format = ',0.##;-,0.##; '
+              Kind = skSum
+              Column = ProficitSumm
+            end
+            item
+              Format = ',0.####;-,0.####; '
+              Kind = skSum
+              Column = Remains_FactAmount
+            end
+            item
+              Format = ',0.##;-,0.##; '
+              Kind = skSum
+              Column = Remains_FactSumm
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
-          OptionsView.ColumnAutoWidth = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -87,7 +116,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 65
           end
           object GoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
@@ -95,7 +124,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 293
+            Width = 265
           end
           object Price: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -105,35 +134,116 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 84
+            Width = 62
+          end
+          object Remains_Amount: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains_Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 92
+          end
+          object Remains_Summ: TcxGridDBColumn
+            Caption = 'C'#1091#1084#1084#1072' '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'Remains_Summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
           end
           object Amount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.000'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 86
+            Width = 68
           end
-          object Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summ'
+          object DiffSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1079#1085#1080#1094#1099
+            DataBinding.FieldName = 'DiffSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.##;-,0.##; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 70
+          end
+          object Remains_FactAmount: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Remains_FactAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Remains_FactSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1092#1072#1082#1090'. '#1086#1089#1090#1072#1090#1082#1072
+            DataBinding.FieldName = 'Remains_FactSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object Deficit: TcxGridDBColumn
+            Caption = #1053#1077#1076#1086#1089#1090#1072#1095#1072
+            DataBinding.FieldName = 'Deficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+          end
+          object DeficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1077#1076#1086#1089#1090#1072#1095#1080
+            DataBinding.FieldName = 'DeficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
+          object Proficit: TcxGridDBColumn
+            Caption = #1048#1079#1083#1080#1096#1077#1082
+            DataBinding.FieldName = 'Proficit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object ProficitSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1080#1079#1083#1080#1096#1082#1072
+            DataBinding.FieldName = 'ProficitSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 332
-        Width = 706
+        Width = 915
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -142,10 +252,10 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 706
+    Width = 915
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 706
+    ExplicitWidth = 915
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -158,7 +268,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     inherited edOperDate: TcxDateEdit
       Left = 108
       EditValue = 42767d
-      Properties.DisplayFormat = 'mmmm yyyy'
+      Properties.DisplayFormat = '01.02.2017'
       Properties.ReadOnly = True
       ExplicitLeft = 108
     end
@@ -274,22 +384,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
-    object actFormationUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      PostDataSetBeforeExecute = False
-      StoredProc = spFormationUnit
-      StoredProcList = <
-        item
-          StoredProc = spFormationUnit
-        end>
-      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
-      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
-      ImageIndex = 10
-      QuestionBeforeExecute = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
-    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_TechnicalRediscount'
@@ -341,10 +435,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -379,8 +469,11 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       ImageIndex = 41
     end
     object dxBarButton1: TdxBarButton
-      Action = actFormationUnit
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
       Category = 0
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
+      Visible = ivAlways
+      ImageIndex = 10
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -650,15 +743,125 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
     Top = 312
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem_TechnicalRediscount'
     Left = 550
     Top = 224
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem_TechnicalRediscount'
     Left = 654
     Top = 248
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_TechnicalRediscount'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inRemains_Amount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains_Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDiffSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DiffSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRemains_FactAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains_FactAmount'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outRemains_FactSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Remains_FactSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDeficit'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Deficit'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDeficitSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'DeficitSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outProficit'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Proficit'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outProficitSumm'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'ProficitSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 320
@@ -823,32 +1026,5 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       end>
     Left = 352
     Top = 16
-  end
-  object spFormationUnit: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TechnicalRediscount_FormationUnit'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inOperDate'
-        Value = 42767d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    NeedResetData = True
-    ParamKeyField = 'ioId'
-    Left = 314
-    Top = 352
   end
 end

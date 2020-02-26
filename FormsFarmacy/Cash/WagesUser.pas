@@ -67,6 +67,8 @@ type
     cxLabel17: TcxLabel;
     ceSUN1: TcxCurrencyEdit;
     cxLabel18: TcxLabel;
+    edPasswordEHels: TcxTextEdit;
+    cxLabel19: TcxLabel;
   private
     { Private declarations }
   public

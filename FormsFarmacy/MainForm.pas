@@ -631,6 +631,19 @@ type
     N219: TMenuItem;
     actTechnicalRediscount: TdsdOpenForm;
     N220: TMenuItem;
+    actTechnicalRediscountCashier: TdsdOpenForm;
+    N221: TMenuItem;
+    actReport_SendSUN_SUNv2: TdsdOpenForm;
+    miReport_SendSUN_SUNv2: TMenuItem;
+    actReport_JuridicalRemains: TdsdOpenForm;
+    miReport_JuridicalRemains: TMenuItem;
+    actReport_Movement_Send_RemainsSunOut: TdsdOpenForm;
+    N222: TMenuItem;
+    actHelsiUser: TdsdOpenForm;
+    N223: TMenuItem;
+    actReport_JuridicalSales: TdsdOpenForm;
+    N224: TMenuItem;
+    miReport_JuridicalSales: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
