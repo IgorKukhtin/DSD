@@ -4044,12 +4044,9 @@ inherited MainForm: TMainForm
       Caption = #1057#1059#1053
       object N189: TMenuItem
         Action = actReport_BalanceGoodsSUN
-        Caption = #1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
-        Hint = #1041#1072#1083#1072#1085#1089' '#1090#1086#1074#1072#1088#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object miReport_CheckSUN: TMenuItem
         Action = actReport_CheckSUN
-        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053' v.1'
       end
       object miReport_Movement_Send_RemainsSun: TMenuItem
         Action = actReport_Movement_Send_RemainsSun
