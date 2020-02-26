@@ -1084,6 +1084,12 @@ type
     miMemberBankAccount: TMenuItem;
     actOrderInternalStew: TdsdOpenForm;
     miOrderInternalStew: TMenuItem;
+    actReestrRemakeInTTN: TdsdOpenForm;
+    actReestrRemakeBuhTTN: TdsdOpenForm;
+    actReestrRemakeTTN: TdsdOpenForm;
+    N212: TMenuItem;
+    N213: TMenuItem;
+    N214: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

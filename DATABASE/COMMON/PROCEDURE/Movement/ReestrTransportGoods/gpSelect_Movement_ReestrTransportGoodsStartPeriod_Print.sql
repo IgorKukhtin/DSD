@@ -58,11 +58,6 @@ BEGIN
                                                    ON MovementFloat_MovementItemId.ValueData ::integer = MovementItem.Id
                                                   AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                            
-/*                           INNER JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
-                                                         ON MovementLinkObject_ReestrKind.MovementId = MovementFloat_MovementItemId.MovementId
-                                                        AND MovementLinkObject_ReestrKind.DescId = zc_MovementLinkObject_ReestrKind()
-                                                        AND MovementLinkObject_ReestrKind.ObjectId = zc_Enum_ReestrKind_PartnerOut()  -- вывезено со склада
-      */
                          WHERE Movement.DescId = zc_Movement_ReestrTransportGoods() 
                            AND (((Movement.OperDate BETWEEN inStartDate AND inEndDate) AND (inisShowAll = False)) OR (inisShowAll = True))  
                            AND Movement.StatusId <> zc_Enum_Status_Erased()
@@ -93,12 +88,19 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
 
            , COALESCE (MIDate_Insert.ValueData, NULL)   ::TDateTime      AS Date_Insert
-           , COALESCE (MIDate_PartnerIn.ValueData, NULL) ::TDateTime      AS Date_PartnerIn
+           , COALESCE (MIDate_PartnerIn.ValueData, NULL) ::TDateTime     AS Date_PartnerIn
+           , COALESCE (MIDate_RemakeIn.ValueData, NULL) ::TDateTime      AS Date_RemakeIn
+           , COALESCE (MIDate_RemakeBuh.ValueData, NULL) ::TDateTime     AS Date_RemakeBuh
+           , COALESCE (MIDate_Remake.ValueData, NULL) ::TDateTime        AS Date_Remake
            , COALESCE (MIDate_Buh.ValueData, NULL)      ::TDateTime      AS Date_Buh
 
            , CASE WHEN MIDate_Insert.DescId IS NOT NULL THEN Object_ObjectMember.ValueData ELSE '' END :: TVarChar AS Member_Insert -- т.к. в "пустышках" - "криво" формируется это свойство
            , Object_PartnerInTo.ValueData      AS Member_PartnerInTo
-           , Object_Buh.ValueData             AS Member_Buh
+           , Object_RemakeInTo.ValueData       AS Member_RemakeInTo
+           , Object_RemakeInFrom.ValueData     AS Member_RemakeInFrom
+           , Object_RemakeBuh.ValueData        AS Member_RemakeBuh
+           , Object_Remake.ValueData           AS Member_Remake
+           , Object_Buh.ValueData              AS Member_Buh
           
        FROM tmpMI
             LEFT JOIN Object AS Object_ObjectMember ON Object_ObjectMember.Id = tmpMI.MemberId
@@ -112,6 +114,15 @@ BEGIN
             LEFT JOIN MovementItemDate AS MIDate_Buh
                                        ON MIDate_Buh.MovementItemId = tmpMI.MovementItemId
                                       AND MIDate_Buh.DescId = zc_MIDate_Buh()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeIn
+                                       ON MIDate_RemakeIn.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_RemakeIn.DescId = zc_MIDate_RemakeIn()
+            LEFT JOIN MovementItemDate AS MIDate_RemakeBuh
+                                       ON MIDate_RemakeBuh.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_RemakeBuh.DescId = zc_MIDate_RemakeBuh()
+            LEFT JOIN MovementItemDate AS MIDate_Remake
+                                       ON MIDate_Remake.MovementItemId = tmpMI.MovementItemId
+                                      AND MIDate_Remake.DescId = zc_MIDate_Remake()
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartnerInTo
                                              ON MILinkObject_PartnerInTo.MovementItemId = tmpMI.MovementItemId
@@ -122,6 +133,27 @@ BEGIN
                                              ON MILinkObject_Buh.MovementItemId = tmpMI.MovementItemId
                                             AND MILinkObject_Buh.DescId = zc_MILinkObject_Buh()
             LEFT JOIN Object AS Object_Buh ON Object_Buh.Id = MILinkObject_Buh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInTo
+                                             ON MILinkObject_RemakeInTo.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_RemakeInTo.DescId = zc_MILinkObject_RemakeInTo()
+            LEFT JOIN Object AS Object_RemakeInTo ON Object_RemakeInTo.Id = MILinkObject_RemakeInTo.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeInFrom
+                                             ON MILinkObject_RemakeInFrom.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_RemakeInFrom.DescId = zc_MILinkObject_RemakeInFrom()
+            LEFT JOIN Object AS Object_RemakeInFrom ON Object_RemakeInFrom.Id = MILinkObject_RemakeInFrom.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_RemakeBuh
+                                             ON MILinkObject_RemakeBuh.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_RemakeBuh.DescId = zc_MILinkObject_RemakeBuh()
+            LEFT JOIN Object AS Object_RemakeBuh ON Object_RemakeBuh.Id = MILinkObject_RemakeBuh.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Remake
+                                             ON MILinkObject_Remake.MovementItemId = tmpMI.MovementItemId
+                                            AND MILinkObject_Remake.DescId = zc_MILinkObject_Remake()
+            LEFT JOIN Object AS Object_Remake ON Object_Remake.Id = MILinkObject_Remake.ObjectId
+
             --
             LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.id = tmpMI.MovementId_TransportGoods
 
