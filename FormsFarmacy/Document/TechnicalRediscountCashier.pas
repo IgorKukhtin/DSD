@@ -13,7 +13,7 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, cxCheckBox;
 
 type
   TTechnicalRediscountCashierForm = class(TAncestorDocumentForm)
@@ -42,6 +42,10 @@ type
     ProficitSumm: TcxGridDBColumn;
     Remains_FactAmount: TcxGridDBColumn;
     Remains_FactSumm: TcxGridDBColumn;
+    cbisRedCheck: TcxCheckBox;
+    CommentTRName: TcxGridDBColumn;
+    Explanation: TcxGridDBColumn;
+    actChoiceCommentTR: TOpenChoiceForm;
   private
     { Private declarations }
   public

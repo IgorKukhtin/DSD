@@ -1779,7 +1779,9 @@ begin
         TimerPUSH.Interval := 1000;
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
-          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString) then
+          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString,
+            PUSHDS.FieldByName('FormName').AsString, PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params').AsString,
+            PUSHDS.FieldByName('TypeParams').AsString, PUSHDS.FieldByName('ValueParams').AsString) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value := PUSHDS.FieldByName('Id').AsInteger;

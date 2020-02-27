@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean, isSent Boolean, isReceived Boolean, isOverdueSUN Boolean
+             , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean
+             , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -127,6 +128,7 @@ BEGIN
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                    AND Movement.OperDate < CURRENT_DATE
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
+           , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -212,6 +214,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
                                       ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                      AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+            LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                      ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                     AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
@@ -262,6 +267,7 @@ BEGIN
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
          AND (inisSUN = FALSE OR inisSUN = TRUE AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR 
                                                      COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE)) 
+         AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
          AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased()
            OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased()
              )
@@ -290,3 +296,4 @@ $BODY$
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')
 -- select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'True' , inisSUNAll := 'True', inSession := '3');
+

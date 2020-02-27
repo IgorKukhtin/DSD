@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -700,7 +700,7 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 14
-      Width = 156
+      Width = 172
     end
     object cbDefSun: TcxCheckBox
       Left = 667
@@ -1745,6 +1745,12 @@ inherited SendForm: TSendForm
       item
         Name = 'LossID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 344

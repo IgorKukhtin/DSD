@@ -823,7 +823,9 @@ uses
   Report_InventoryErrorRemainsDoc in '..\..\FormsFarmacy\Report\Report_InventoryErrorRemainsDoc.pas' {Report_InventoryErrorRemainsDocForm: TParentForm},
   HelsiUser in '..\..\FormsFarmacy\Guides\HelsiUser.pas' {HelsiUserForm: TParentForm},
   Report_JuridicalSalesDialog in '..\..\FormsFarmacy\Report\Report_JuridicalSalesDialog.pas' {Report_JuridicalSalesDialogForm: TParentForm},
-  Report_JuridicalSales in '..\..\FormsFarmacy\Report\Report_JuridicalSales.pas' {Report_JuridicalSalesForm: TParentForm};
+  Report_JuridicalSales in '..\..\FormsFarmacy\Report\Report_JuridicalSales.pas' {Report_JuridicalSalesForm: TParentForm},
+  CommentTR in '..\..\FormsFarmacy\Guides\CommentTR.pas' {CommentTRForm: TParentForm},
+  CommentTREdit in '..\..\FormsFarmacy\Guides\CommentTREdit.pas' {CommentTREditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

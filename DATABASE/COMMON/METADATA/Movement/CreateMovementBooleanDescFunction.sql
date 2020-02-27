@@ -206,9 +206,14 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Beginning() RETURNS integer AS $BO
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Beginning', 'Генерация скидак с начало акции'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Beginning');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_RedCheck() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_RedCheck'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_RedCheck', 'Красный чек'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_RedCheck');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 26.02.20                                                                                    * zc_MovementBoolean_RedCheck
  28.12.19                                                                                    * zc_MovementBoolean_Beginning
  09.12.19         * zc_MovementBoolean_SUN_v2
  20.09.19                                                                                    * zc_MovementBoolean_NotDisplaySUN

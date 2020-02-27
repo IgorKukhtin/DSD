@@ -60,6 +60,14 @@ inherited TechnicalRediscountCashierJournalForm: TTechnicalRediscountCashierJour
             HeaderAlignmentVert = vaCenter
             Width = 298
           end
+          object isRedCheck: TcxGridDBColumn
+            Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
+            DataBinding.FieldName = 'isRedCheck'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object colTotalDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1077
             DataBinding.FieldName = 'TotalDiff'
@@ -86,7 +94,7 @@ inherited TechnicalRediscountCashierJournalForm: TTechnicalRediscountCashierJour
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 235
+            Width = 185
           end
         end
       end
