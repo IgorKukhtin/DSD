@@ -879,6 +879,23 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCommentTRID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentTRID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isExplanation'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Explanation'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outDiffSumm'
         Value = Null
         Component = MasterCDS

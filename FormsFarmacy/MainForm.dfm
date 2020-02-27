@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 218
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4009,12 +4009,6 @@ inherited MainForm: TMainForm
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
       end
-      object N217: TMenuItem
-        Action = actReport_SendSUNDelay
-        Caption = 
-          #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
-          #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
-      end
       object N178: TMenuItem
         Caption = '-'
       end
@@ -4071,6 +4065,12 @@ inherited MainForm: TMainForm
       object miReport_SendSUN_SUNv2: TMenuItem
         Action = actReport_SendSUN_SUNv2
         Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2'
+      end
+      object N217: TMenuItem
+        Action = actReport_SendSUNDelay
+        Caption = 
+          #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
+          #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
       end
       object N202: TMenuItem
         Caption = '-'

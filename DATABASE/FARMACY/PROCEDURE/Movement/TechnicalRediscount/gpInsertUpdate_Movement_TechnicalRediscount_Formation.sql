@@ -35,13 +35,17 @@ BEGIN
           WITH
            tmpMovement AS (SELECT Movement.Id
                                 , MovementLinkObject_Unit.ObjectId AS UnitId
-                                      FROM Movement 
+                           FROM Movement 
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                                          ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                                         AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
                            WHERE Movement.OperDate >= vbDateStart AND Movement.OperDate <= vbDateEnd
                              AND Movement.DescId = zc_Movement_TechnicalRediscount() 
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                             AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
                            )
          , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
                        FROM Object AS Object_Unit
