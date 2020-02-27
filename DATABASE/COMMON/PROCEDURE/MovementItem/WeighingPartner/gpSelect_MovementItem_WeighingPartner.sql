@@ -243,7 +243,6 @@ BEGIN
                   , COALESCE (MIFloat_CountTare6.ValueData, 0)                                             AS CountTare6
                   , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare6.ValueData, 0) ELSE 0 END AS WeightTare6
 
-                  
                   , COALESCE (MIFloat_CountPack.ValueData, 0)           AS CountPack
                   , 0 AS CountPack_mi
                   , COALESCE (MIFloat_HeadCount.ValueData, 0)           AS HeadCount
