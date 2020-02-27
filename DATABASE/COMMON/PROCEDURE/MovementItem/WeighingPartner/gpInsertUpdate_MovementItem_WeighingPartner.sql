@@ -4,7 +4,14 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WeighingPartner (Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -16,6 +23,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WeighingPartner(
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inCountTare           TFloat    , -- Количество тары
     IN inWeightTare          TFloat    , -- Вес тары
+
+    IN inCountTare1          TFloat    , -- Количество ящ. вида1
+    IN inWeightTare1         TFloat    , -- Вес ящ. вида1
+    IN inCountTare2          TFloat    , -- Количество ящ. вида2
+    IN inWeightTare2         TFloat    , -- Вес ящ. вида2
+    IN inCountTare3          TFloat    , -- Количество ящ. вида3
+    IN inWeightTare3         TFloat    , -- Вес ящ. вида3
+    IN inCountTare4          TFloat    , -- Количество ящ. вида4
+    IN inWeightTare4         TFloat    , -- Вес ящ. вида4
+    IN inCountTare5          TFloat    , -- Количество ящ. вида5
+    IN inWeightTare5         TFloat    , -- Вес ящ. вида5
+    IN inCountTare6          TFloat    , -- Количество ящ. вида6
+    IN inWeightTare6         TFloat    , -- Вес ящ. вида6
+        
     IN inCountPack           TFloat    , -- Количество упаковок
     IN inHeadCount           TFloat    , -- Количество голов
     IN inBoxCount            TFloat    , -- Количество Ящик(гофро)
@@ -89,6 +110,31 @@ BEGIN
      -- сохранили свойство <По сканеру>
      PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_BarCode(), ioId, inIsBarCode);
 
+     -- сохранили свойство <Количество ящ. вида1>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare1(), ioId, inCountTare1);
+     -- сохранили свойство <Вес ящ. вида1>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare1(), ioId, inWeightTare1);
+     -- сохранили свойство <Количество ящ. вида2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare2(), ioId, inCountTare2);
+     -- сохранили свойство <Вес ящ. вида2>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare2(), ioId, inWeightTare2);
+     -- сохранили свойство <Количество ящ. вида3>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare3(), ioId, inCountTare3);
+     -- сохранили свойство <Вес ящ. вида3>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare3(), ioId, inWeightTare3);
+     -- сохранили свойство <Количество ящ. вида4>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare4(), ioId, inCountTare4);
+     -- сохранили свойство <Вес ящ. вида4>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare4(), ioId, inWeightTare4);
+     -- сохранили свойство <Количество ящ. вида5>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare5(), ioId, inCountTare5);
+     -- сохранили свойство <Вес ящ. вида5>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare5(), ioId, inWeightTare5);
+     -- сохранили свойство <Количество ящ. вида6>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountTare6(), ioId, inCountTare6);
+     -- сохранили свойство <Вес ящ. вида6>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTare6(), ioId, inWeightTare6);
+
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Цена за количество>
@@ -118,6 +164,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.02.20         *
  13.11.15                                        *
  13.10.14                                        * all
  13.03.14         *

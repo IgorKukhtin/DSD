@@ -158,10 +158,12 @@ BEGIN
         vbCount := inCountDebet;
         -- расчетная сумма
         outSumma := inCountDebet * inPrice;
+        vbAmount := inCountDebet * inPrice;
      ELSE
         vbCount := -1 * inCountKredit;
         -- расчетная сумма
         outSumma := inCountKredit * inPrice;
+        vbAmount := -1 * inCountKredit * inPrice;
      END IF;
 
      -- 1. Распроводим Документ
