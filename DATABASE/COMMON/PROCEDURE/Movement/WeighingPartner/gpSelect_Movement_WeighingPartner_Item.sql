@@ -246,21 +246,21 @@ BEGIN
              , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
 
              , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
-             , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
-             , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
+             , COALESCE (MIFloat_CountTare.ValueData, 0)    ::TFloat       AS CountTare
+             , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat    AS WeightTare
 
-             , COALESCE (MIFloat_CountTare1.ValueData, 0)                                             AS CountTare1
-             , COALESCE (MIFloat_CountTare2.ValueData, 0)                                             AS CountTare2
-             , COALESCE (MIFloat_CountTare3.ValueData, 0)                                             AS CountTare3
-             , COALESCE (MIFloat_CountTare4.ValueData, 0)                                             AS CountTare4
-             , COALESCE (MIFloat_CountTare5.ValueData, 0)                                             AS CountTare5
-             , COALESCE (MIFloat_CountTare6.ValueData, 0)                                             AS CountTare6
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare1.ValueData, 0) ELSE 0 END AS WeightTare1
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare2.ValueData, 0) ELSE 0 END AS WeightTare2
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare3.ValueData, 0) ELSE 0 END AS WeightTare3
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare4.ValueData, 0) ELSE 0 END AS WeightTare4
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare5.ValueData, 0) ELSE 0 END AS WeightTare5
-             , CASE WHEN inShowAll = TRUE THEN COALESCE (MIFloat_WeightTare6.ValueData, 0) ELSE 0 END AS WeightTare6
+             , COALESCE (MIFloat_CountTare1.ValueData, 0)  ::TFloat  AS CountTare1
+             , COALESCE (MIFloat_CountTare2.ValueData, 0)  ::TFloat  AS CountTare2
+             , COALESCE (MIFloat_CountTare3.ValueData, 0)  ::TFloat  AS CountTare3
+             , COALESCE (MIFloat_CountTare4.ValueData, 0)  ::TFloat  AS CountTare4
+             , COALESCE (MIFloat_CountTare5.ValueData, 0)  ::TFloat  AS CountTare5
+             , COALESCE (MIFloat_CountTare6.ValueData, 0)  ::TFloat  AS CountTare6
+             , (COALESCE (MIFloat_CountTare1.ValueData, 0) * COALESCE (MIFloat_WeightTare1.ValueData, 0)) ::TFloat  AS WeightTare1
+             , (COALESCE (MIFloat_CountTare2.ValueData, 0) * COALESCE (MIFloat_WeightTare2.ValueData, 0)) ::TFloat  AS WeightTare2
+             , (COALESCE (MIFloat_CountTare3.ValueData, 0) * COALESCE (MIFloat_WeightTare3.ValueData, 0)) ::TFloat  AS WeightTare3
+             , (COALESCE (MIFloat_CountTare4.ValueData, 0) * COALESCE (MIFloat_WeightTare4.ValueData, 0)) ::TFloat  AS WeightTare4
+             , (COALESCE (MIFloat_CountTare5.ValueData, 0) * COALESCE (MIFloat_WeightTare5.ValueData, 0)) ::TFloat  AS WeightTare5
+             , (COALESCE (MIFloat_CountTare6.ValueData, 0) * COALESCE (MIFloat_WeightTare6.ValueData, 0)) ::TFloat  AS WeightTare6
                   
              , MIFloat_HeadCount.ValueData                  AS HeadCount
              , MIFloat_BoxCount.ValueData                   AS BoxCount
