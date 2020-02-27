@@ -102,6 +102,7 @@ BEGIN
           , ObjectHistory_ToDetails.NumberVAT          AS NumberVAT_To
           , ObjectHistory_ToDetails.BankAccount        AS BankAccount_To
           , ObjectHistory_ToDetails.Phone              AS Phone_To
+          , ObjectHistory_ToDetails.Phone              AS License
           , tmpBankAccount_To.BankName  ::TVarChar AS BankName_To
           , tmpBankAccount_To.MFO       ::TVarChar AS MFO_To
 

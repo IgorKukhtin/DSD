@@ -182,6 +182,23 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object AVGIncomePriceWarning: TcxGridDBColumn
+            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Caption = '>25%'
+            DataBinding.FieldName = 'AVGIncomePriceWarning'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = '> 25%'
+                ImageIndex = 10
+                Value = True
+              end>
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
+            Options.Editing = False
+            Width = 29
+          end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -203,7 +220,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 222
+            Width = 210
           end
           object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -211,7 +228,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 52
+            Width = 45
           end
           object PartnerGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -219,7 +236,20 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 127
+            Width = 124
+          end
+          object MakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
+            HeaderAlignmentVert = vaCenter
+            Width = 61
+          end
+          object ExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object OrderAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' '#1079#1072#1103#1074#1082#1077
@@ -249,7 +279,7 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 41
           end
           object OrderPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1074' '#1079#1072#1103#1074#1082#1077
@@ -260,7 +290,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 48
           end
           object isSummDiff: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1087#1086' '#1094#1077#1085#1077
@@ -279,7 +309,7 @@
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 53
+            Width = 44
           end
           object OrderSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1074' '#1079#1072#1103#1074#1082#1077
@@ -290,7 +320,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 40
           end
           object PersentDiff: TcxGridDBColumn
             Caption = '% '#1086#1090#1082#1083#1086#1085'.'
@@ -324,6 +354,17 @@
             Options.Editing = False
             Width = 62
           end
+          object SamplePrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
+            DataBinding.FieldName = 'SamplePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
+            Width = 75
+          end
           object SalePrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083'. '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'SalePrice'
@@ -354,23 +395,6 @@
             Options.Editing = False
             Width = 56
           end
-          object AVGIncomePriceWarning: TcxGridDBColumn
-            AlternateCaption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
-            Caption = '>25%'
-            DataBinding.FieldName = 'AVGIncomePriceWarning'
-            PropertiesClassName = 'TcxImageComboBoxProperties'
-            Properties.Images = dmMain.ImageList
-            Properties.Items = <
-              item
-                Description = '> 25%'
-                ImageIndex = 10
-                Value = True
-              end>
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1073#1086#1083#1077#1077' 25 %'
-            Options.Editing = False
-            Width = 42
-          end
           object AVGIncomePrice: TcxGridDBColumn
             Caption = #1057#1088'. '#1094#1077#1085#1072' '#1079#1072' '#1084#1077#1089#1103#1094
             DataBinding.FieldName = 'AVGIncomePrice'
@@ -380,17 +404,6 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 56
-          end
-          object SamplePrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
-            DataBinding.FieldName = 'SamplePrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1057#1069#1052#1055#1051' '#1074'  '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
-            Width = 75
           end
           object SampleSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1057#1069#1052#1055#1051' '#1074' '#1087#1088#1072#1081#1089'. '#1094#1077#1085#1072#1093' '#1089' '#1053#1044#1057
@@ -435,19 +448,6 @@
             HeaderHint = #1054#1087#1090'.-'#1074#1110#1076#1087'. '#1094#1110#1085#1072' '#1079#1072' '#1091#1087'. (11)'
             Options.Editing = False
             Width = 76
-          end
-          object ExpirationDate: TcxGridDBColumn
-            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
-            DataBinding.FieldName = 'ExpirationDate'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object MakerName: TcxGridDBColumn
-            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'MakerName'
-            HeaderAlignmentVert = vaCenter
-            Width = 86
           end
           object Goods_PercentMarkup: TcxGridDBColumn
             Caption = '% '#1085#1072#1094#1077#1085#1082#1080' ('#1087#1086' '#1089#1077#1090#1080')'
@@ -3598,8 +3598,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 392
-    Top = 216
+    Left = 416
+    Top = 112
   end
   object spLinkCheck: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income_LinkCheck'
