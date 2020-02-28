@@ -241,6 +241,7 @@ BEGIN
                                          , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
                                          , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
                                          , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
+                                         , inisCode             :=   TRUE                            -- не изменять код товара--
                                          , inSession            :=   (-1 * vbUserId)    :: TVarChar  -- сессия пользователя
                                           );
 

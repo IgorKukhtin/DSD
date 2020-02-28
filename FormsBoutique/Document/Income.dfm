@@ -2,7 +2,7 @@ object IncomeForm: TIncomeForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072'>'
-  ClientHeight = 482
+  ClientHeight = 445
   ClientWidth = 967
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -223,12 +223,12 @@ object IncomeForm: TIncomeForm
     Left = 0
     Top = 123
     Width = 967
-    Height = 359
+    Height = 322
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 359
+    ClientRectBottom = 322
     ClientRectRight = 967
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
@@ -238,7 +238,7 @@ object IncomeForm: TIncomeForm
         Left = 0
         Top = 0
         Width = 967
-        Height = 335
+        Height = 298
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -682,6 +682,13 @@ object IncomeForm: TIncomeForm
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsId'
+        Value = 'Null'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 102
     Top = 183
@@ -794,6 +801,10 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertActionFixCode'
+        end
+        item
+          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -847,7 +858,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_PriceWithoutPersent_List'
         end
         item
           Visible = True
@@ -1002,13 +1013,17 @@ object IncomeForm: TIncomeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1094#1077#1085#1091' '#1074#1093'. '#1080' '#1087#1088#1086#1076#1072#1078#1080
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_PriceWithoutPersent_List: TdxBarButton
       Action = macUpdate_PriceWithoutPersent_List
       Category = 0
       ImageIndex = 56
     end
-    object dxBarButton3: TdxBarButton
+    object bbStartLoad: TdxBarButton
       Action = actStartLoad
+      Category = 0
+    end
+    object bbInsertActionFixCode: TdxBarButton
+      Action = macInsertActionFixCode
       Category = 0
     end
   end
@@ -1779,9 +1794,21 @@ object IncomeForm: TIncomeForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCode'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = 'Null'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
-      DataSource = MasterDS
       DataSetRefresh = actRefreshMI
       IdFieldName = 'Id'
     end
@@ -1896,6 +1923,19 @@ object IncomeForm: TIncomeForm
           Value = Null
           Component = edChangePercent
           DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCode'
+          Value = 'FALSE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = 'Null'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -2116,6 +2156,107 @@ object IncomeForm: TIncomeForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1089#1082#1080#1076#1082#1091
       ImageIndex = 74
     end
+    object macInsertActionFixCode: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenPartionGoodsChoice
+        end
+        item
+          Action = actInsertActionFixCode
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
+      ImageIndex = 0
+    end
+    object actInsertActionFixCode: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
+      ImageIndex = 0
+      FormName = 'TIncomeItemEditForm'
+      FormNameParam.Value = 'TIncomeItemEditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isMask'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inChangePercent'
+          Value = 0.000000000000000000
+          Component = edChangePercent
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCode'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsCode'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Code'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefreshMI
+      IdFieldName = 'Id'
+    end
     object actUpdatePrice: TdsdExecStoredProc
       Category = 'UpdatePrice'
       MoveParams = <>
@@ -2279,6 +2420,59 @@ object IncomeForm: TIncomeForm
       QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1086#1089#1090#1072#1090#1082#1072' '#1074' '#1090#1077#1082#1091#1097#1091#1102' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102'?'
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1086#1089#1090#1072#1090#1082#1080
       ImageIndex = 41
+    end
+    object actOpenPartionGoodsChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1090#1086#1074#1072#1088
+      FormName = 'TPartionGoodsChoiceForm'
+      FormNameParam.Value = 'TPartionGoodsChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'MasterUnitId'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = Null
+          Component = GuidesTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Code'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   object MasterDS: TDataSource
