@@ -35,7 +35,6 @@ BEGIN
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
     vbUserId:= lpGetUserBySession (inSession);
 
-
     -- Контрагент
     vbPartnerId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MLO.ObjectId ELSE MLO_Partner.ObjectId END 
                    FROM Movement 

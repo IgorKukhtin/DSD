@@ -4896,8 +4896,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>
-    Left = 812
-    Top = 56
+    Left = 788
+    Top = 64
   end
   object spTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -4997,7 +4997,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end>
     Left = 816
-    Top = 11
+    Top = 65531
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

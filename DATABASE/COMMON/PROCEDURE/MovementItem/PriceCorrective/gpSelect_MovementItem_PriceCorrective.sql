@@ -4,17 +4,18 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, TDateTim
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
-    IN inMovementId  Integer      , -- ключ Документа
+    IN inMovementId         Integer      , -- ключ Документа
     IN inMovementId_Parent  Integer      , -- ключ Документа
-    IN inOperDate    TDateTime    , -- Дата документа
-    IN inShowAll     Boolean      , --
-    IN inisErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inOperDate           TDateTime    , -- Дата документа
+    IN inShowAll            Boolean      , --
+    IN inisErased           Boolean      , --
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Price TFloat, CountForPrice TFloat
+             , Amount TFloat, Price TFloat
              , PriceFrom TFloat, PriceTo TFloat
+             , CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AmountSumm TFloat, isErased Boolean
              )

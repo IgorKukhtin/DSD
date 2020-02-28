@@ -159,6 +159,16 @@ type
     IsErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     cxSplitter1: TcxSplitter;
+    actUpdateAuto: TdsdExecStoredProc;
+    spUpdateAuto: TdsdStoredProc;
+    cxLabel22: TcxLabel;
+    edStartDateTax: TcxDateEdit;
+    actOpenReportForm: TdsdOpenForm;
+    actOpenReportCheckForm: TdsdOpenForm;
+    actOpenReportCheckAmountForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    bbOpenReportCheckForm: TdxBarButton;
+    bbOpenReportCheckAmountForm: TdxBarButton;
   private
     { Private declarations }
   public

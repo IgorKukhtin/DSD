@@ -1534,10 +1534,10 @@ end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveJournalForm');
 end;
