@@ -121,6 +121,20 @@ AS
        AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- ЕПІЦЕНТР К ТОВ, Рідо Груп, 
+      SELECT
+             zc_Movement_Sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale32490244' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32490244', '41744911', '39775097')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 -- Ашан Україна Гіпермаркет ТОВ + РІАЛ ІСТЕЙТ Ф.К.А.У.
       SELECT
              zc_Movement_Sale()
@@ -285,14 +299,14 @@ AS
                                       , '39117799' -- Нордон
                                       , '41805811' -- Гловер
                                       , '40145541' -- Амиата
-                                      , '39775097' -- Легион-2015
+                                      --, '39775097' -- Легион-2015
                                       , '41299013' -- Ф.К.С. ТОВ
                                       , '41360805' -- ФРЕЯ 2017 ТОВ
                                       , '41201250' -- Левайс
                                       , '41200660' -- Релайз
                                       , '42599711' -- Пангеон
-                                      , '32490244' -- ЕПІЦЕНТР К ТОВ 
-                                      , '41744911' -- РИДО ГРУП
+                                      --, '32490244' -- ЕПІЦЕНТР К ТОВ 
+                                      --, '41744911' -- РИДО ГРУП
                                       , '42668161' -- Стало Трейдап
                                        )  -- добвавили из др.группу ритейл
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
