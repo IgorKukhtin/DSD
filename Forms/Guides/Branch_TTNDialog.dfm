@@ -53,6 +53,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 4
     Width = 267
   end
@@ -69,6 +70,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 267
   end
@@ -85,6 +87,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 8
     Width = 267
   end
@@ -101,6 +104,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 10
     Width = 267
   end
@@ -112,7 +116,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 11
     Width = 267
   end
@@ -174,6 +178,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inPersonalDriverId'
@@ -181,6 +186,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMember1Id'
@@ -188,6 +194,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMember2Id'
@@ -195,6 +202,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember2
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMember3Id'
@@ -202,6 +210,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember3
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inMember4Id'
@@ -209,6 +218,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember4
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'inCarId'
@@ -216,6 +226,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideCar
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 120
@@ -227,6 +238,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverId'
@@ -234,30 +246,35 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member1Id'
         Value = Null
         Component = GuideMember1
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member2Id'
         Value = Null
         Component = GuideMember2
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member3Id'
         Value = Null
         Component = GuideMember3
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member4Id'
         Value = Null
         Component = GuideMember4
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'PersonalDriverName'
@@ -266,6 +283,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member1Name'
@@ -273,6 +291,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember1
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member2Name'
@@ -280,6 +299,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember2
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member3Name'
@@ -287,6 +307,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember3
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'Member4Name'
@@ -294,12 +315,14 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember4
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarId'
         Value = Null
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarName'
@@ -307,6 +330,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 272
     Top = 40
@@ -333,10 +357,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -344,6 +369,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuidePersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -352,6 +378,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 177
     Top = 19
@@ -359,10 +386,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   object GuideMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember1
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -370,6 +398,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember1
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -378,6 +407,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 168
     Top = 67
@@ -385,10 +415,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   object GuideMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember2
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -396,6 +427,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember2
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -404,6 +436,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 190
     Top = 123
@@ -411,10 +444,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   object GuideMember3: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember3
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -422,6 +456,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember3
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -430,6 +465,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 158
@@ -437,10 +473,11 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
   object GuideMember4: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember4
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TMember_ChoiceForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -448,6 +485,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideMember4
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -456,6 +494,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 198
     Top = 197
@@ -465,6 +504,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
     LookupControl = edCar
     FormNameParam.Value = 'TCarForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -473,6 +513,7 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Value = ''
         Component = GuideCar
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -480,12 +521,14 @@ object Branch_TTNDialogForm: TBranch_TTNDialogForm
         Component = GuideCar
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end
       item
         Name = 'CarModelName'
         Value = ''
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 144
     Top = 266

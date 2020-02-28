@@ -20,7 +20,7 @@ inherited ReturnInForm: TReturnInForm
       ExplicitHeight = 458
       inherited cxGrid: TcxGrid
         Width = 1252
-        Height = 342
+        Height = 320
         ExplicitWidth = 1252
         ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -348,9 +348,9 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 350
+        Top = 328
         Width = 1252
-        Height = 108
+        Height = 130
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -681,20 +681,18 @@ inherited ReturnInForm: TReturnInForm
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 342
+        Top = 320
         Width = 1252
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
+        ExplicitTop = 342
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object l: TcxGrid
         Left = 0
         Top = 0
@@ -5961,7 +5959,7 @@ inherited ReturnInForm: TReturnInForm
       end>
     PackSize = 1
     Left = 576
-    Top = 496
+    Top = 464
   end
   object GuidesMemberExp: TdsdGuides
     KeyField = 'Id'
