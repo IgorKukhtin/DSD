@@ -762,6 +762,14 @@ end if;
              RAISE EXCEPTION 'Ошибка.Нельзя сохранить данный тип документа.';
          END IF;
 
+        -- сохранили связь с документом <Заявки сторонние>
+        IF vbMovementDescId = zc_Movement_Send() AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
+        THEN
+            PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_begin
+                                                       , (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
+                                                        );
+        END IF;
+
         -- дописали св-во - SubjectDoc
         IF EXISTS (SELECT 1 FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SubjectDoc() AND MLO.ObjectId > 0)
         THEN

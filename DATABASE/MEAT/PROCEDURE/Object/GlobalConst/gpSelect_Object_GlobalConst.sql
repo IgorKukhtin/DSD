@@ -37,8 +37,8 @@ BEGIN
      END IF;
 
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!
-PERFORM pg_terminate_backend(a.pid)
-      -- , pg_cancel_backend(pId)
+PERFORM  pg_terminate_backend(a.pid)
+       , pg_cancel_backend(a.pId)
 FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_Movement_Sale%'     AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '3 MIN')
                                                       OR (a.query ILIKE 'select * from gpExecSql(%' AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '5 MIN'))
 ;

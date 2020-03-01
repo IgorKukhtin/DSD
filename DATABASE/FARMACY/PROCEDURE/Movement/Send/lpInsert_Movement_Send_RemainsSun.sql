@@ -99,15 +99,22 @@ BEGIN
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
 
 
--- if  inUserId = 3 then
+/* if  inUserId = 3 then
      -- Удаляем Документ
---     PERFORM lpSetErased_Movement (inMovementId := 17719180
---                                 , inUserId     := inUserId);
---     PERFORM lpSetErased_Movement (inMovementId := 17718989
---                                 , inUserId     := inUserId);
---     update Movement set OperDate = OperDate - INTERVAL '1 Year' where Id = 17719180;
---     update Movement set OperDate = OperDate - INTERVAL '1 Year' where Id = 17718989;
--- end if;
+     PERFORM lpSetErased_Movement (inMovementId := 17720082 
+                                 , inUserId     := inUserId);
+     update Movement set OperDate = OperDate - INTERVAL '1 Year' where Id = 17720082 ;
+
+     PERFORM lpSetErased_Movement (inMovementId := Movement.Id
+                                 , inUserId     := inUserId)
+     from Movement
+         JOIN MovementBoolean AS MovementBoolean_SUN
+                              ON MovementBoolean_SUN.MovementId = Movement.Id
+                             AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                             AND MovementBoolean_SUN.ValueData = true
+     where Movement.OperDate >= '12.02.2020'
+        and Movement.DescId = zc_Movement_Send();
+ end if;*/
 
      -- !!!
      vbSumm_limit:= CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
@@ -319,7 +326,7 @@ BEGIN
                    -- сумма разрешенного прихода
                  , CASE WHEN koeff_in <= 2  THEN tmpData.Summ_calc - tmpData.Summ_in  ELSE 0 END AS Summ_in_calc
             FROM tmpData
-          --WHERE 1=0
+            WHERE 1=0
            ;
 
      END IF;
@@ -2392,8 +2399,8 @@ BEGIN
 
 -- if  inUserId = 3 then
 --    RAISE EXCEPTION '<ok>  %  %'
---      , (SELECT _tmpResult_Partion.Amount   FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from =377610 AND  _tmpResult_Partion.UnitId_to = 377595 and _tmpResult_Partion.goodsId = 37573)
---      , (SELECT _tmpResult_Partion.Amount   FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from =377610 AND  _tmpResult_Partion.UnitId_to = 377595 and _tmpResult_Partion.goodsId = 37573)
+--      , (SELECT _tmpResult_Partion.Amount   FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from =183292 AND  _tmpResult_Partion.UnitId_to = 375626 and _tmpResult_Partion.goodsId = 270005)
+--      , (SELECT _tmpResult_Partion.Amount   FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from =183292 AND  _tmpResult_Partion.UnitId_to = 375626 and _tmpResult_Partion.goodsId = 270005)
 --      ;
 -- end if;
 

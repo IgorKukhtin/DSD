@@ -141,6 +141,13 @@ BEGIN
            UNION SELECT 'WeightSkewer1'          AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'WeightSkewer2'          AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
+           UNION SELECT 'WeightTare1'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare2'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare3'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare4'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare5'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'WeightTare6'            AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+
            UNION SELECT 'isCalc_sht'             AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
            UNION SELECT 'isGet_Unit'             AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE

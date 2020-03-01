@@ -455,7 +455,7 @@ BEGIN
              -- Работают по СУН - только отправка
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_out
                                      ON OB_Unit_SUN_out.ObjectId  = tmpObject_Price.UnitId
-                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_out()
+                                    AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_v2_out()
                                     AND OB_Unit_SUN_out.ValueData = TRUE
              LEFT JOIN tmpRemains AS tmpRemains
                                   ON tmpRemains.UnitId  = tmpObject_Price.UnitId
@@ -728,7 +728,7 @@ BEGIN
         FROM tmpNotSold
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
                                      ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
-                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_in()
+                                    AND OB_Unit_SUN_in.DescId    = zc_ObjectBoolean_Unit_SUN_v2_in()
                                     AND OB_Unit_SUN_in.ValueData = TRUE
              -- !!!Перемещение SUN - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-2
              LEFT JOIN tmpMI_SUN_out ON tmpMI_SUN_out.UnitId_from = tmpNotSold.UnitId

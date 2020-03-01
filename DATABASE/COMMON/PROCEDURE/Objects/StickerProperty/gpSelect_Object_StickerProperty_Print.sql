@@ -34,7 +34,7 @@ RETURNS TABLE (Id Integer, Code Integer, Comment TVarChar
              , isFix Boolean
              , Value1 TFloat, Value2 TFloat, Value3 TFloat, Value4 TFloat, Value5 TFloat, Value6 TFloat, Value7 TFloat, Value8 TFloat, Value9 TFloat, Value10 TFloat, Value11 TFloat
              , BarCode TVarChar
-             , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat
+             , Sticker_Value1 TFloat, Sticker_Value2 TFloat, Sticker_Value3 TFloat, Sticker_Value4 TFloat, Sticker_Value5 TFloat, Sticker_Value6 TFloat, Sticker_Value7 TFloat, Sticker_Value8 TFloat
 
              , Level1           TVarChar
              , Level2           TVarChar
@@ -309,6 +309,9 @@ BEGIN
             , Sticker_Value3.ValueData           AS Sticker_Value3
             , Sticker_Value4.ValueData           AS Sticker_Value4
             , Sticker_Value5.ValueData           AS Sticker_Value5
+            , Sticker_Value6.ValueData           AS Sticker_Value6
+            , Sticker_Value7.ValueData           AS Sticker_Value7
+            , Sticker_Value8.ValueData           AS Sticker_Value8
 
 -- [frxDBDHeader."StickerGroupName"] [frxDBDHeader."StickerTypeName"] [frxDBDHeader."StickerTagName"]
 -- [frxDBDHeader."StickerSortName"] [frxDBDHeader."StickerNormName"]
@@ -324,10 +327,15 @@ BEGIN
             , (CASE WHEN inIsLength = TRUE
                     THEN LENGTH (REPEAT (' ', vbAddLeft1)
                               || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
-                                           THEN COALESCE (Object_StickerGroup.ValueData, '')
-                                      || ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
-
-                                      ELSE COALESCE (Object_StickerGroup.ValueData, '')
+                                           THEN CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                                          THEN -- Вид продукта (Группа)
+                                                               COALESCE (Object_StickerGroup.ValueData, '')
+                                                          ELSE -- Вид продукта (Группа) + Название продукта
+                                                               COALESCE (Object_StickerGroup.ValueData, '')
+                                                     || ' ' || COALESCE (Object_StickerTag.ValueData, '')
+                                                END
+                                      ELSE -- Вид продукта (Группа) + Способ изготовления продукта + Название продукта
+                                           COALESCE (Object_StickerGroup.ValueData, '')
                                  || ' ' || COALESCE (Object_StickerType.ValueData, '')
                                  || ' ' || COALESCE (Object_StickerTag.ValueData, '')
 
@@ -337,10 +345,16 @@ BEGIN
                END
             || REPEAT (' ', vbAddLeft1)
             || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
-                         THEN COALESCE (Object_StickerGroup.ValueData, '')
-                    || ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
+                         THEN CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                        THEN -- Вид продукта (Группа)
+                                             COALESCE (Object_StickerGroup.ValueData, '')
+                                        ELSE -- Вид продукта (Группа) + Название продукта
+                                             COALESCE (Object_StickerGroup.ValueData, '')
+                                   || ' ' || COALESCE (Object_StickerTag.ValueData, '')
+                              END
 
-                    ELSE COALESCE (Object_StickerGroup.ValueData, '')
+                    ELSE -- Вид продукта (Группа) + Способ изготовления продукта + Название продукта
+                         COALESCE (Object_StickerGroup.ValueData, '')
                || ' ' || COALESCE (Object_StickerType.ValueData, '')
                || ' ' || COALESCE (Object_StickerTag.ValueData, '')
 
@@ -349,19 +363,29 @@ BEGIN
               -- Level2
             , (CASE WHEN inIsLength = TRUE
                     THEN LENGTH (REPEAT (' ', vbAddLeft2)
-                              || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
-                                           THEN COALESCE (Object_StickerType.ValueData, '')
-                                    --|| ' ' || COALESCE (Object_StickerTag.ValueData, '') -- !!!
+                              || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                           THEN -- Название продукта + Способ изготовления продукта + Сортность продукта + ТУ или ДСТУ
+                                                COALESCE (Object_StickerTag.ValueData, '')
+                                      || ' ' || COALESCE (Object_StickerType.ValueData, '')
+                                      || ' ' || COALESCE (Object_StickerSort.ValueData, '')
+                                 || CHR (13) || REPEAT (' ', vbAddLeft2)
+                                             || COALESCE (Object_StickerNorm.ValueData, '')
+
+                                      WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                                           THEN -- Способ изготовления продукта + Сортность продукта + ТУ или ДСТУ
+                                                COALESCE (Object_StickerType.ValueData, '')
                                       || ' ' || COALESCE (Object_StickerSort.ValueData, '')
                                  || CHR (13) || REPEAT (' ', vbAddLeft2)
                                              || COALESCE (Object_StickerNorm.ValueData, '')
 
                                       WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
-                                           THEN COALESCE (Object_StickerSort.ValueData, '')
+                                           THEN -- Сортность продукта + ТУ или ДСТУ
+                                                COALESCE (Object_StickerSort.ValueData, '')
                                  || CHR (13) || REPEAT (' ', vbAddLeft2)
                                              || COALESCE (Object_StickerNorm.ValueData, '')
 
-                                      ELSE COALESCE (Object_StickerSort.ValueData, '')
+                                      ELSE -- Сортность продукта + ТУ или ДСТУ
+                                           COALESCE (Object_StickerSort.ValueData, '')
                                  || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
 
                                  END
@@ -369,20 +393,29 @@ BEGIN
                     ELSE ''
                END
             || REPEAT (' ', vbAddLeft2)
-            || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
-                  --     THEN COALESCE (Object_StickerTag.ValueData,  '') -- !!!
-                  --|| ' ' || COALESCE (Object_StickerType.ValueData, '') -- !!!
-                         THEN COALESCE (Object_StickerType.ValueData, '') -- !!!
+            || CASE WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                         THEN -- Название продукта + Способ изготовления продукта + Сортность продукта + ТУ или ДСТУ
+                              COALESCE (Object_StickerTag.ValueData, '')
+                    || ' ' || COALESCE (Object_StickerType.ValueData, '')
+                    || ' ' || COALESCE (Object_StickerSort.ValueData, '')
+               || CHR (13) || REPEAT (' ', vbAddLeft2)
+                           || COALESCE (Object_StickerNorm.ValueData, '')
+
+                    WHEN LENGTH (COALESCE (Object_StickerGroup.ValueData, '') || ' ' || COALESCE (Object_StickerType.ValueData, '') || ' ' || COALESCE (Object_StickerTag.ValueData, '')) > vbParam1
+                         THEN -- Способ изготовления продукта + Сортность продукта + ТУ или ДСТУ
+                              COALESCE (Object_StickerType.ValueData, '')
                     || ' ' || COALESCE (Object_StickerSort.ValueData, '')
                || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
 
                     WHEN LENGTH (COALESCE (Object_StickerSort.ValueData, '') || ' ' || COALESCE (Object_StickerNorm.ValueData, '')) > vbParam2
-                         THEN COALESCE (Object_StickerSort.ValueData, '')
+                         THEN -- Сортность продукта + ТУ или ДСТУ
+                              COALESCE (Object_StickerSort.ValueData, '')
                || CHR (13) || REPEAT (' ', vbAddLeft2)
                            || COALESCE (Object_StickerNorm.ValueData, '')
 
-                    ELSE COALESCE (Object_StickerSort.ValueData, '')
+                    ELSE -- Сортность продукта + ТУ или ДСТУ
+                         COALESCE (Object_StickerSort.ValueData, '')
                || ' ' || COALESCE (Object_StickerNorm.ValueData, '')
 
                END) :: TVarChar AS Level2
@@ -438,10 +471,32 @@ BEGIN
                               || CASE WHEN Sticker_Value1.ValueData <> 0 THEN
                                  tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
                                  ELSE '' END
-                              -- білки не менше
-                              ||tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
-                              -- жири не більше
-                              ||tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
+
+                              -- білки OR білки не менше
+                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                                          THEN SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
+                                     ELSE tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
+                                END ||', '
+                              -- жири OR жири не більше
+                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                                          THEN SUBSTRING (tmpLanguageParam.Value11 FROM 1 FOR 4) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12
+                                     ELSE tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12
+                                END ||''
+                              -- з них насичені (жири)
+                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
+                                          THEN ', з них насичені' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value6.ValueData, 0)) || tmpLanguageParam.Value12
+                                     ELSE ''
+                                END ||''
+                              --  цукри 
+                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
+                                          THEN ',  цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
+                                     ELSE ''
+                                END ||''
+                              --  сіль  
+                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
+                                          THEN ',  сіль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
+                                     ELSE ''
+                                END ||''
                               -- кКал
                               ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
                               -- кДж
@@ -604,6 +659,16 @@ BEGIN
              LEFT JOIN ObjectFloat AS Sticker_Value5
                                    ON Sticker_Value5.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
                                   AND Sticker_Value5.DescId = zc_ObjectFloat_Sticker_Value5()
+
+             LEFT JOIN ObjectFloat AS Sticker_Value6
+                                   ON Sticker_Value6.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                  AND Sticker_Value6.DescId = zc_ObjectFloat_Sticker_Value6()
+             LEFT JOIN ObjectFloat AS Sticker_Value7
+                                   ON Sticker_Value7.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                  AND Sticker_Value7.DescId = zc_ObjectFloat_Sticker_Value7()
+             LEFT JOIN ObjectFloat AS Sticker_Value8
+                                   ON Sticker_Value8.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                  AND Sticker_Value8.DescId = zc_ObjectFloat_Sticker_Value8()
 
           WHERE Object_StickerProperty.Id = inObjectId
             AND Object_StickerProperty.DescId = zc_Object_StickerProperty()
