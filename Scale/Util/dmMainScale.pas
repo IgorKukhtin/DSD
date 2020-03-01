@@ -1489,8 +1489,16 @@ begin
        SettingMain.WeightSkewer1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer1'));
        SettingMain.WeightSkewer2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightSkewer2'));
   end
-  else
+  else begin
        SettingMain.Exception_WeightDiff:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'Exception_WeightDiff'));
+       //
+       SettingMain.WeightTare1:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare1'));
+       SettingMain.WeightTare2:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare2'));
+       SettingMain.WeightTare3:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare3'));
+       SettingMain.WeightTare4:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare4'));
+       SettingMain.WeightTare5:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare5'));
+       SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
+  end;
   //
   Result:=true;
 end;

@@ -63,6 +63,13 @@ type
     WeightSkewer2:Double;   // only ScaleCeh
     Exception_WeightDiff:Double; // only Scale
 
+    WeightTare1:Double;   // only Scale
+    WeightTare2:Double;   // only Scale
+    WeightTare3:Double;   // only Scale
+    WeightTare4:Double;   // only Scale
+    WeightTare5:Double;   // only Scale
+    WeightTare6:Double;   // only Scale
+
     UnitId1, UnitId2, UnitId3, UnitId4, UnitId5:Integer;
     UnitName1, UnitName2, UnitName3, UnitName4, UnitName5 :String;
 
@@ -433,6 +440,12 @@ begin
      ParamAdd(Params,'PartionGoods',ftString);       //
      ParamAdd(Params,'isBarCode',ftBoolean);         //
      ParamAdd(Params,'MovementId_Promo',ftInteger);  //
+     ParamAdd(Params,'CountTare1',ftFloat);          // Количество тары вида1
+     ParamAdd(Params,'CountTare2',ftFloat);          // Количество тары вида2
+     ParamAdd(Params,'CountTare3',ftFloat);          // Количество тары вида3
+     ParamAdd(Params,'CountTare4',ftFloat);          // Количество тары вида4
+     ParamAdd(Params,'CountTare5',ftFloat);          // Количество тары вида5
+     ParamAdd(Params,'CountTare6',ftFloat);          // Количество тары вида6
      end
      else
      begin

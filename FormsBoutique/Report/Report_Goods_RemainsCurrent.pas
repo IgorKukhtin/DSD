@@ -130,6 +130,9 @@ type
     bbPart_isOlapNo_list: TdxBarButton;
     actDelete_PartionGoods_ReportOLAP: TdsdExecStoredProc;
     bbDelete_PartionGoods_ReportOLAP: TdxBarButton;
+    OperPrice_grn: TcxGridDBColumn;
+    OperPriceList_curr: TcxGridDBColumn;
+    TotalSummPriceList_curr: TcxGridDBColumn;
   private
     { Private declarations }
   public

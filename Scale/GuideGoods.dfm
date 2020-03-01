@@ -402,9 +402,9 @@ object GuideGoodsForm: TGuideGoodsForm
       TabOrder = 2
       object rgTareWeight: TRadioGroup
         Left = 0
-        Top = 82
+        Top = 104
         Width = 230
-        Height = 89
+        Height = 77
         Align = alClient
         Caption = #1058#1072#1088#1072' '#1074#1077#1089
         Color = clBtnFace
@@ -418,6 +418,8 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareWeightClick
+        ExplicitTop = 82
+        ExplicitHeight = 89
       end
       object PanelTare: TPanel
         Left = 0
@@ -471,17 +473,17 @@ object GuideGoodsForm: TGuideGoodsForm
       end
       object infoPanelChangePercentAmount: TPanel
         Left = 0
-        Top = 171
+        Top = 181
         Width = 230
-        Height = 85
+        Height = 75
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 3
         object rgChangePercentAmount: TRadioGroup
           Left = 0
-          Top = 41
+          Top = 38
           Width = 230
-          Height = 44
+          Height = 37
           Align = alClient
           Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
           Color = clBtnFace
@@ -495,13 +497,13 @@ object GuideGoodsForm: TGuideGoodsForm
           Left = 0
           Top = 0
           Width = 230
-          Height = 41
+          Height = 38
           Align = alTop
           Caption = #1050#1086#1076' '#1089#1082#1080#1076#1082#1080
           TabOrder = 0
           object EditChangePercentAmountCode: TEdit
             Left = 5
-            Top = 17
+            Top = 14
             Width = 100
             Height = 22
             TabOrder = 0
@@ -530,6 +532,673 @@ object GuideGoodsForm: TGuideGoodsForm
           Text = 'EditTareWeightEnter'
           OnEnter = EditTareCountEnter
           OnExit = EditTareWeightEnterExit
+        end
+      end
+      object infoPanelTareFix: TPanel
+        Left = 0
+        Top = 82
+        Width = 230
+        Height = 22
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 4
+        object infoPanelTare1: TPanel
+          Left = 0
+          Top = 0
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 0
+          object PanelTare1: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare1: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 1.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitLeft = 5
+              ExplicitTop = 1
+            end
+            object EditTare1: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare1KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare1: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 49
+            object LabelWeightTare1: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare1: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare1'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 21
+            end
+          end
+        end
+        object infoPanelTare0: TPanel
+          Left = 0
+          Top = 132
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 1
+          ExplicitTop = 110
+          object PanelTare0: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare0: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 0.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitLeft = 5
+              ExplicitTop = 5
+              ExplicitWidth = 100
+            end
+            object EditTare0: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare0KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare0: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 34
+            object LabelWeightTare0: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare0: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare0'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 20
+            end
+          end
+        end
+        object infoPanelTare2: TPanel
+          Left = 0
+          Top = 22
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 2
+          object PanelTare2: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare2: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 2.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 81
+            end
+            object EditTare2: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare2KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare2: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 34
+            object LabelWeightTare2: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare2: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare2'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 20
+            end
+          end
+        end
+        object infoPanelTare5: TPanel
+          Left = 0
+          Top = 88
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 3
+          object PanelTare5: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare5: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 5.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitLeft = 5
+              ExplicitTop = -2
+            end
+            object EditTare5: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare5KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare5: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 34
+            object LabelWeightTare5: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare5: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare5'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 20
+            end
+          end
+        end
+        object infoPanelTare4: TPanel
+          Left = 0
+          Top = 66
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 4
+          object PanelTare4: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare4: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 4.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 81
+            end
+            object EditTare4: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare4KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare4: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 34
+            object LabelWeightTare4: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare4: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare4'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 20
+            end
+          end
+        end
+        object infoPanelTare3: TPanel
+          Left = 0
+          Top = 44
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 5
+          object PanelTare3: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare3: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 3.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitLeft = 5
+              ExplicitTop = 1
+              ExplicitWidth = 100
+            end
+            object EditTare3: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare3KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare3: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            ExplicitHeight = 34
+            object LabelWeightTare3: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare3: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare3'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+              ExplicitHeight = 20
+            end
+          end
+        end
+        object infoPanelTare6: TPanel
+          Left = 0
+          Top = 110
+          Width = 230
+          Height = 22
+          Align = alTop
+          TabOrder = 6
+          object PanelTare6: TPanel
+            Left = 1
+            Top = 1
+            Width = 120
+            Height = 20
+            Align = alLeft
+            BevelOuter = bvNone
+            TabOrder = 0
+            object LabelTare6: TLabel
+              Left = 0
+              Top = 0
+              Width = 120
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' 6.0 '#1082#1075
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitLeft = 5
+              ExplicitTop = 1
+              ExplicitWidth = 100
+            end
+            object EditTare6: TcxCurrencyEdit
+              Left = 5
+              Top = 12
+              Properties.Alignment.Horz = taRightJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.AssignedValues.DisplayFormat = True
+              Properties.DecimalPlaces = 0
+              Properties.OnChange = EditTare1PropertiesChange
+              TabOrder = 0
+              OnEnter = EditTareCountEnter
+              OnExit = EditTare1Exit
+              OnKeyDown = EditTare6KeyDown
+              Width = 100
+            end
+          end
+          object infoPanelWeightTare6: TPanel
+            Left = 121
+            Top = 1
+            Width = 108
+            Height = 20
+            Align = alClient
+            BevelOuter = bvNone
+            TabOrder = 1
+            ExplicitLeft = 101
+            ExplicitWidth = 128
+            object LabelWeightTare6: TLabel
+              Left = 0
+              Top = 0
+              Width = 108
+              Height = 14
+              Align = alTop
+              Alignment = taCenter
+              Caption = #1042#1077#1089
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clBlack
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = []
+              ParentFont = False
+              ExplicitWidth = 19
+            end
+            object PanelWeightTare6: TPanel
+              Left = 0
+              Top = 14
+              Width = 108
+              Height = 6
+              Align = alClient
+              BevelOuter = bvNone
+              Caption = 'PanelWeightTare6'
+              Font.Charset = RUSSIAN_CHARSET
+              Font.Color = clNavy
+              Font.Height = -11
+              Font.Name = 'Arial'
+              Font.Style = [fsBold]
+              ParentFont = False
+              TabOrder = 0
+              ExplicitWidth = 128
+            end
+          end
         end
       end
     end
@@ -661,7 +1330,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alTop
         Caption = #1042#1074#1086#1076' '#1050#1054#1051#1048#1063#1045#1057#1058#1042#1054
         TabOrder = 3
-        OnClick = gbWeightValueClick
         object EditWeightValue: TcxCurrencyEdit
           Left = 5
           Top = 18

@@ -86,6 +86,56 @@ type
     WeightTare: TcxGridDBColumn;
     CountForWeight: TcxGridDBColumn;
     bbSaveDialog: TSpeedButton;
+    infoPanelTareFix: TPanel;
+    infoPanelTare1: TPanel;
+    PanelTare1: TPanel;
+    LabelTare1: TLabel;
+    EditTare1: TcxCurrencyEdit;
+    infoPanelWeightTare1: TPanel;
+    LabelWeightTare1: TLabel;
+    PanelWeightTare1: TPanel;
+    infoPanelTare0: TPanel;
+    PanelTare0: TPanel;
+    LabelTare0: TLabel;
+    EditTare0: TcxCurrencyEdit;
+    infoPanelWeightTare0: TPanel;
+    LabelWeightTare0: TLabel;
+    PanelWeightTare0: TPanel;
+    infoPanelTare2: TPanel;
+    PanelTare2: TPanel;
+    LabelTare2: TLabel;
+    EditTare2: TcxCurrencyEdit;
+    infoPanelWeightTare2: TPanel;
+    LabelWeightTare2: TLabel;
+    PanelWeightTare2: TPanel;
+    infoPanelTare5: TPanel;
+    PanelTare5: TPanel;
+    LabelTare5: TLabel;
+    EditTare5: TcxCurrencyEdit;
+    infoPanelWeightTare5: TPanel;
+    LabelWeightTare5: TLabel;
+    PanelWeightTare5: TPanel;
+    infoPanelTare4: TPanel;
+    PanelTare4: TPanel;
+    LabelTare4: TLabel;
+    EditTare4: TcxCurrencyEdit;
+    infoPanelWeightTare4: TPanel;
+    LabelWeightTare4: TLabel;
+    PanelWeightTare4: TPanel;
+    infoPanelTare3: TPanel;
+    PanelTare3: TPanel;
+    LabelTare3: TLabel;
+    EditTare3: TcxCurrencyEdit;
+    infoPanelWeightTare3: TPanel;
+    LabelWeightTare3: TLabel;
+    PanelWeightTare3: TPanel;
+    infoPanelTare6: TPanel;
+    PanelTare6: TPanel;
+    LabelTare6: TLabel;
+    EditTare6: TcxCurrencyEdit;
+    infoPanelWeightTare6: TPanel;
+    LabelWeightTare6: TLabel;
+    PanelWeightTare6: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure EditGoodsNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -133,11 +183,26 @@ type
     procedure actChoiceExecute(Sender: TObject);
     procedure actExitExecute(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
-    procedure gbWeightValueClick(Sender: TObject);
     procedure EditPriceKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure bbSaveDialogClick(Sender: TObject);
+    procedure EditTare1PropertiesChange(Sender: TObject);
+    procedure EditTare1Exit(Sender: TObject);
+    procedure EditTare1KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare3KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare4KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare5KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare6KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure EditTare0KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     fCloseOK : Boolean;
     fModeSave : Boolean;
@@ -279,7 +344,15 @@ begin
            cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount_WeighingWeight').Index].Caption:= 'Расход (кол-во)';
        end;
   end;
-
+  //
+  EditTare1.Text:='';PanelWeightTare1.Caption:='';
+  EditTare2.Text:='';PanelWeightTare2.Caption:='';
+  EditTare3.Text:='';PanelWeightTare3.Caption:='';
+  EditTare4.Text:='';PanelWeightTare4.Caption:='';
+  EditTare5.Text:='';PanelWeightTare5.Caption:='';
+  EditTare6.Text:='';PanelWeightTare6.Caption:='';
+  EditTare0.Text:='';PanelWeightTare0.Caption:='';
+  //
   if ParamsMI.ParamByName('GoodsId').AsInteger<>0
   then begin
             CDS.Filter:='GoodsId = '+ParamsMI.ParamByName('GoodsId').AsString;
@@ -325,7 +398,10 @@ begin
             else if  (ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
                   and(CDS.FieldByName('Weight').AsFloat > 0)
                   and(SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
-                 then ActiveControl:=EditTareCount
+                 then
+                      if infoPanelTareFix.Visible
+                      then ActiveControl:=EditTare1
+                      else ActiveControl:=EditTareCount
                  else
                       if ((CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                      //or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
@@ -333,7 +409,9 @@ begin
                        or (CDS.FieldByName('MeasureId').AsInteger = zc_Measure_Sh)
                          )
                       then ActiveControl:=EditWeightValue
-                      else ActiveControl:=EditTareCount
+                      else if infoPanelTareFix.Visible
+                           then ActiveControl:=EditTare1
+                           else ActiveControl:=EditTareCount
   end
   else begin
             EditGoodsCode.Text:='';
@@ -425,51 +503,115 @@ begin
            and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
            and(CDS.FieldByName('Weight').AsFloat > 0)
            and(SettingMain.isCalc_sht = TRUE)
-           then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+           then if rgGoodsKind.Items.Count > 1
+                then ActiveControl:=EditGoodsKindCode
+                else
+                     if infoPanelTareFix.Visible
+                     then ActiveControl:=EditTare1
+                     else ActiveControl:=EditTareCount
            else
                 if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                 or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                  and(SettingMain.isCalc_sht = FALSE))
                 then ActiveControl:=EditWeightValue
-                else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                else if rgGoodsKind.Items.Count > 1
+                     then ActiveControl:=EditGoodsKindCode
+                     else
+                          if infoPanelTareFix.Visible
+                          then ActiveControl:=EditTare1
+                          else ActiveControl:=EditTareCount
       else
       if (ActiveControl=EditWeightValue)or(ActiveControl=EditPrice)
       then if (gbPrice.Visible = TRUE)and (ActiveControl<>EditPrice)
            then ActiveControl:=EditPrice
-           else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+           else if rgGoodsKind.Items.Count > 1
+                then ActiveControl:=EditGoodsKindCode
+                else
+                     if infoPanelTareFix.Visible
+                     then ActiveControl:=EditTare1
+                     else ActiveControl:=EditTareCount
 
       else if (ActiveControl=EditGoodsCode)
            then if (Length(trim(EditGoodsCode.Text))>0)and(CDS.RecordCount>=1)
                 then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                      and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
                      and(CDS.FieldByName('Weight').AsFloat > 0)
-                     then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                     then if rgGoodsKind.Items.Count > 1
+                          then ActiveControl:=EditGoodsKindCode
+                          else
+                               if infoPanelTareFix.Visible
+                               then ActiveControl:=EditTare1
+                               else ActiveControl:=EditTareCount
                      else
                           if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
                           then ActiveControl:=EditWeightValue
-                          else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                          else if rgGoodsKind.Items.Count > 1
+                               then ActiveControl:=EditGoodsKindCode
+                               else
+                                    if infoPanelTareFix.Visible
+                                    then ActiveControl:=EditTare1
+                                    else ActiveControl:=EditTareCount
                 else ActiveControl:=EditGoodsName
 
            else if (ActiveControl=EditGoodsName)and(CDS.RecordCount=1)
                 then if (SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                      and(ParamsMI.ParamByName('RealWeight_Get').AsFloat > 0)
                      and(CDS.FieldByName('Weight').AsFloat > 0)
-                     then if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                     then if rgGoodsKind.Items.Count > 1
+                          then ActiveControl:=EditGoodsKindCode
+                          else
+                               if infoPanelTareFix.Visible
+                               then ActiveControl:=EditTare1
+                               else ActiveControl:=EditTareCount
                      else
                           if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg)
                           or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)
                            and(SettingMain.isCalc_sht = FALSE))
                           then ActiveControl:=EditWeightValue
-                          else if rgGoodsKind.Items.Count > 1  then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount
+                          else if rgGoodsKind.Items.Count > 1
+                               then ActiveControl:=EditGoodsKindCode
+                               else
+                                    if infoPanelTareFix.Visible
+                                    then ActiveControl:=EditTare1
+                                    else ActiveControl:=EditTareCount
 
                 else if (ActiveControl=EditGoodsName)
                      then if CDS.RecordCount>1 then ActiveControl:=cxDBGrid else ActiveControl:=EditGoodsCode
                      else if (ActiveControl=cxDBGrid)and(CDS.RecordCount>0)
                           then actChoiceExecute(cxDBGrid)
 
-      else if ActiveControl=EditGoodsKindCode then ActiveControl:=EditTareCount
+      else if ActiveControl=EditGoodsKindCode then if infoPanelTareFix.Visible
+                                                   then ActiveControl:=EditTare1
+                                                   else ActiveControl:=EditTareCount
            else if ActiveControl=EditTareCount then ActiveControl:=EditTareWeightCode
+                else
+                     if ActiveControl=EditTare1 then
+                     if infoPanelTare2.Visible then ActiveControl:=EditTare2
+                     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare2 then
+                          if infoPanelTare3.Visible then ActiveControl:=EditTare3
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare3 then
+                          if infoPanelTare4.Visible then ActiveControl:=EditTare4
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare4 then
+                          if infoPanelTare5.Visible then ActiveControl:=EditTare5
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare5 then
+                          if infoPanelTare6.Visible then ActiveControl:=EditTare6
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare6 then
+                          if infoPanelTare0.Visible then ActiveControl:=EditTare0
+
+                     else if ActiveControl=EditTare0 then
+                          ActiveControl:=EditChangePercentAmountCode
+
                 else if ActiveControl=EditTareWeightCode then if (rgTareWeight.ItemIndex=rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
                                                         then ActiveControl:=EditTareWeightEnter
                                                         else ActiveControl:=EditChangePercentAmountCode
@@ -499,11 +641,6 @@ begin
                      else begin fCloseOK:= true; actExitExecute(Self); end;
                 end;
 end;
-procedure TGuideGoodsForm.gbWeightValueClick(Sender: TObject);
-begin
-
-end;
-
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.CDSFilterRecord(DataSet: TDataSet;var Accept: Boolean);
 var
@@ -593,7 +730,17 @@ begin
         try ParamByName('CountTare').AsFloat:=StrToFloat(EditTareCount.Text);
         except ParamByName('CountTare').AsFloat:=0;
         end;
+        // Вес 1-ой тары - Fix
+        if infoPanelTare0.Visible then
+        begin
+               try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
+               except ParamsMI.ParamByName('WeightTare').AsFloat:=0;
+               end;
+               //change Количество тары
+               ParamsMI.ParamByName('CountTare').AsFloat:=1;
+        end
         // Вес 1-ой тары
+        else
         if  (GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'))
          and(gbTareWeightEnter.Visible)
          and(rgTareWeight.ItemIndex = rgTareWeight.Items.Count-1)
@@ -881,13 +1028,82 @@ begin
     if Key=13
     then if (gbPrice.Visible = TRUE)
          then ActiveControl:=EditPrice
-         else if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
+         else if rgGoodsKind.Items.Count>1
+              then ActiveControl:=EditGoodsKindCode
+              else if infoPanelTareFix.Visible
+                   then ActiveControl:=EditTare1
+                   else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
     if Key=13
-    then if rgGoodsKind.Items.Count>1 then ActiveControl:=EditGoodsKindCode else ActiveControl:=EditTareCount;
+    then if rgGoodsKind.Items.Count>1
+    then ActiveControl:=EditGoodsKindCode
+    else if infoPanelTareFix.Visible
+         then ActiveControl:=EditTare1
+         else ActiveControl:=EditTareCount;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare2.Visible then ActiveControl:=EditTare2
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare2KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare3.Visible then ActiveControl:=EditTare3
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare3KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare4.Visible then ActiveControl:=EditTare4
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare4KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare5.Visible then ActiveControl:=EditTare5
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare5KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare6.Visible then ActiveControl:=EditTare6
+     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare6KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     if infoPanelTare0.Visible then ActiveControl:=EditTare0
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare0KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if Key=13
+    then
+     ActiveControl:=EditChangePercentAmountCode
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditGoodsKindCodeChange(Sender: TObject);
@@ -996,6 +1212,58 @@ begin
     fStartWrite:=fStartWrite_old;
 end;
 {------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare1PropertiesChange(Sender: TObject);
+begin
+     //1
+     try ParamsMI.ParamByName('CountTare1').AsFloat:=StrToFloat(EditTare1.Text);
+     except
+           ParamsMI.ParamByName('CountTare1').AsFloat:=0;
+     end;
+     PanelWeightTare1.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare1').AsFloat * SettingMain.WeightTare1);
+     //2
+     try ParamsMI.ParamByName('CountTare2').AsFloat:=StrToFloat(EditTare2.Text);
+     except
+           ParamsMI.ParamByName('CountTare2').AsFloat:=0;
+     end;
+     PanelWeightTare2.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare2').AsFloat * SettingMain.WeightTare2);
+     //3
+     try ParamsMI.ParamByName('CountTare3').AsFloat:=StrToFloat(EditTare3.Text);
+     except
+           ParamsMI.ParamByName('CountTare3').AsFloat:=0;
+     end;
+     PanelWeightTare3.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare3').AsFloat * SettingMain.WeightTare3);
+     //4
+     try ParamsMI.ParamByName('CountTare4').AsFloat:=StrToFloat(EditTare4.Text);
+     except
+           ParamsMI.ParamByName('CountTare4').AsFloat:=0;
+     end;
+     PanelWeightTare4.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare4').AsFloat * SettingMain.WeightTare4);
+     //5
+     try ParamsMI.ParamByName('CountTare5').AsFloat:=StrToFloat(EditTare5.Text);
+     except
+           ParamsMI.ParamByName('CountTare5').AsFloat:=0;
+     end;
+     PanelWeightTare5.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare5').AsFloat * SettingMain.WeightTare5);
+     //6
+     try ParamsMI.ParamByName('CountTare6').AsFloat:=StrToFloat(EditTare6.Text);
+     except
+           ParamsMI.ParamByName('CountTare6').AsFloat:=0;
+     end;
+     PanelWeightTare6.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare6').AsFloat * SettingMain.WeightTare6);
+     //
+     //0
+     if infoPanelTare0.Visible then
+     begin
+            try ParamsMI.ParamByName('WeightTare').AsFloat:=StrToFloat(EditTare0.Text);
+            except ParamsMI.ParamByName('WeightTare').AsFloat:=0;
+            end;
+            //change Количество тары
+            ParamsMI.ParamByName('CountTare').AsFloat:=1;
+            //
+            PanelWeightTare0.Caption:=FormatFloat(fmtWeight, ParamsMI.ParamByName('CountTare').AsFloat * ParamsMI.ParamByName('WeightTare').AsFloat);
+     end;
+end;
+{------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountEnter(Sender: TObject);
 var Key:Word;
 begin
@@ -1015,7 +1283,14 @@ begin
       end;
       if (ActiveControl=EditGoodsKindCode)
       then begin
-           if rgGoodsKind.Items.Count=1 then begin ActiveControl:=EditTareCount;exit;end;
+           if rgGoodsKind.Items.Count=1 then
+           begin
+                if infoPanelTareFix.Visible
+                then ActiveControl:=EditTare1
+                else ActiveControl:=EditTareCount;
+                //
+                exit;
+           end;
            //
            ActiveControl:=EditGoodsKindCode;
            //
@@ -1058,7 +1333,9 @@ begin
      try TareCount:=StrToInt(trim(EditTareCount.Text));except TareCount:=0;end;
      //
      if (TareCount>Length(TareCount_Array))
-     then ActiveControl:=EditTareCount;
+     then if infoPanelTareFix.Visible
+          then ActiveControl:=EditTare1
+          else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareCountKeyPress(Sender: TObject;var Key: Char);
@@ -1115,7 +1392,8 @@ end;
 procedure TGuideGoodsForm.rgTareWeightClick(Sender: TObject);
 begin
     EditTareWeightCode.Text:=IntToStr(TareWeight_Array[rgTareWeight.ItemIndex].Code);
-    ActiveControl:=EditTareWeightCode;
+    if PanelTare.Visible
+    then ActiveControl:=EditTareWeightCode;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditTareWeightEnterExit(Sender: TObject);
@@ -1127,8 +1405,26 @@ begin
      //
      try TareWeight:=StrToFloat(trim(EditTareWeightEnter.Text));except TareWeight:=-1;end;
      //
-     if TareWeight<0
+     if (TareWeight<0)and(gbTareWeightEnter.Visible)
      then ActiveControl:=EditTareWeightEnter;
+end;
+{------------------------------------------------------------------------------}
+procedure TGuideGoodsForm.EditTare1Exit(Sender: TObject);
+begin
+     if (ParamsMI.ParamByName('CountTare1').AsFloat < 0)//and(infoPanelTare1.Visible)
+     then ActiveControl:=EditTare1;
+     if (ParamsMI.ParamByName('CountTare2').AsFloat < 0)//and(infoPanelTare2.Visible)
+     then ActiveControl:=EditTare2;
+     if (ParamsMI.ParamByName('CountTare3').AsFloat < 0)//and(infoPanelTare3.Visible)
+     then ActiveControl:=EditTare3;
+     if (ParamsMI.ParamByName('CountTare4').AsFloat < 0)//and(infoPanelTare4.Visible)
+     then ActiveControl:=EditTare4;
+     if (ParamsMI.ParamByName('CountTare5').AsFloat < 0)//and(infoPanelTare5.Visible)
+     then ActiveControl:=EditTare5;
+     if (ParamsMI.ParamByName('CountTare6').AsFloat < 0)//and(infoPanelTare6.Visible)
+     then ActiveControl:=EditTare6;
+     if (ParamsMI.ParamByName('WeightTare').AsFloat < 0)//and(infoPanelTare0.Visible)
+     then ActiveControl:=EditTare0;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditChangePercentAmountCodeChange(Sender: TObject);
@@ -1303,13 +1599,17 @@ begin
      and(CDS.FieldByName('Weight').AsFloat > 0)
      then if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
           then ActiveControl:=EditGoodsKindCode
-          else ActiveControl:=EditTareCount
+          else if infoPanelTareFix.Visible
+               then ActiveControl:=EditTare1
+               else ActiveControl:=EditTareCount
      else
           if (CDS.FieldByName('MeasureId').AsInteger <> zc_Measure_Kg) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310))
           then ActiveControl:=EditWeightValue
           else if (ParamsMovement.ParamByName('OrderExternalId').asInteger=0)and(rgGoodsKind.Items.Count>1)
                then ActiveControl:=EditGoodsKindCode
-               else ActiveControl:=EditTareCount;
+               else if infoPanelTareFix.Visible
+                    then ActiveControl:=EditTare1
+                    else ActiveControl:=EditTareCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.actExitExecute(Sender: TObject);
@@ -1391,9 +1691,42 @@ procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
   fStartWrite:=true;
-
+  //
+  // tare-main
+  PanelTare.Visible:= SettingMain.WeightTare1 = 0;
+  rgTareWeight.Visible:= SettingMain.WeightTare1 = 0;
   //вес тары (ручной режим)
-  gbTareWeightEnter.Visible:=GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE');
+  gbTareWeightEnter.Visible:=(SettingMain.WeightTare1 = 0)and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
+  // tare-fix
+  infoPanelTareFix.Visible:= SettingMain.WeightTare1 > 0;
+  infoPanelTare1.Visible:= SettingMain.WeightTare1 > 0;infoPanelTare1.Height:=35;
+  infoPanelTare2.Visible:= SettingMain.WeightTare2 > 0;infoPanelTare2.Height:=35;
+  infoPanelTare3.Visible:= SettingMain.WeightTare3 > 0;infoPanelTare3.Height:=35;
+  infoPanelTare4.Visible:= SettingMain.WeightTare4 > 0;infoPanelTare4.Height:=35;
+  infoPanelTare5.Visible:= SettingMain.WeightTare5 > 0;infoPanelTare5.Height:=35;
+  infoPanelTare6.Visible:= SettingMain.WeightTare6 > 0;infoPanelTare6.Height:=35;
+  //вес тары (ручной режим)
+  infoPanelTare0.Visible:=(SettingMain.WeightTare1 > 0)and(GetArrayList_Value_byName(Default_Array,'isTareWeightEnter')=AnsiUpperCase('TRUE'));
+  infoPanelTare0.Height:=35;
+  //
+       if infoPanelTare6.Visible then infoPanelTareFix.Height:=35*6
+  else if infoPanelTare5.Visible then infoPanelTareFix.Height:=35*5
+  else if infoPanelTare4.Visible then infoPanelTareFix.Height:=35*4
+  else if infoPanelTare3.Visible then infoPanelTareFix.Height:=35*3
+  else if infoPanelTare2.Visible then infoPanelTareFix.Height:=35*2
+  else if infoPanelTare1.Visible then infoPanelTareFix.Height:=35*1;
+  if infoPanelTare0.Visible then infoPanelTareFix.Height:=infoPanelTareFix.Height + 35;
+  infoPanelTareFix.Height:=infoPanelTareFix.Height + 5;
+  //
+  LabelTare1.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare1)+' кг';
+  LabelTare2.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare2)+' кг';
+  LabelTare3.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare3)+' кг';
+  LabelTare4.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare4)+' кг';
+  LabelTare5.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare5)+' кг';
+  LabelTare6.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare6)+' кг';
+  LabelTare0.Caption:= 'Ручной Вес тары, кг';
+  //
+  //
   //вес тары
   for i := 0 to Length(TareWeight_Array)-1 do
     if TareWeight_Array[i].Number>=1000
