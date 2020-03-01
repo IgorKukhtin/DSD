@@ -1254,10 +1254,20 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaSUN1() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaSUN1', 'Штрафах по СУН1 '  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaSUN1');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaTechnicalRediscount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaTechnicalRediscount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaTechnicalRediscount', 'Штрафах по техническому переучету'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaTechnicalRediscount');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaManual() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaManual'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaManual', 'Сумма, установленная вручную' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaManual');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 01.03.20                                                                                                     * zc_MIFloat_SummaManual
+ 28.02.20                                                                                                     * zc_MIFloat_SummaTechnicalRediscount
  10.02.20                                                                                                     * zc_MIFloat_SummaWeek.., zc_MIFloat_SummaSUN1
  27.01.20         * zc_MIFloat_SummCompensation
                     zc_MIFloat_SummCompensationRecalc

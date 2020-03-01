@@ -1586,6 +1586,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesSUN1Form'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesSUN1Form');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesTechnicalRediscountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesTechnicalRediscountUnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWagesTechnicalRediscountUnitForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWagesUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWagesUserForm');

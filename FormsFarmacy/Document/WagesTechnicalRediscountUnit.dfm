@@ -1,40 +1,50 @@
-inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099'>'
+inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
+  Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
   ClientHeight = 535
-  ClientWidth = 937
-  AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 953
+  ClientWidth = 887
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 903
   ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 937
+    Width = 887
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 937
+    ExplicitWidth = 887
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 937
+    ClientRectRight = 887
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 937
+      ExplicitWidth = 887
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 937
+        Width = 887
         Height = 478
-        ExplicitWidth = 937
+        ExplicitWidth = 887
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
           DataController.Filter.TranslateIn = True
           DataController.Filter.TranslateLike = True
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = colSummWages
+            end
+            item
+              Format = ',0.##;-,0.##; ;'
+              Kind = skSum
+              Column = colTotalDiffSumm
+            end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -58,15 +68,7 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 298
-          end
-          object isRedCheck: TcxGridDBColumn
-            Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
-            DataBinding.FieldName = 'isRedCheck'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 64
+            Width = 247
           end
           object colTotalDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1077
@@ -88,21 +90,35 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
+          object colSummWages: TcxGridDBColumn
+            Caption = #1042' '#1079#1072#1088#1087#1083#1072#1090#1091
+            DataBinding.FieldName = 'SummWages'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
           object colComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 235
+            Width = 185
+          end
+          object colColor_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 937
-    ExplicitWidth = 937
+    Width = 887
+    Visible = False
+    ExplicitWidth = 887
     inherited deStart: TcxDateEdit
       EditValue = 42005d
     end
@@ -121,13 +137,13 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 0
-      FormName = 'TTechnicalRediscountForm'
+      FormName = 'TTechnicalRediscountCashierForm'
     end
     inherited actInsertMask: TdsdInsertUpdateAction
       Enabled = False
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTechnicalRediscountForm'
+      FormName = 'TTechnicalRediscountCashierForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -233,118 +249,17 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actTechnicalRediscount_Formation: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actExecTechnicalRediscount_Formation
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084'?'
-      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1093' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1093' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
-      ImageIndex = 10
-    end
-    object actExecuteDialogData: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actExecuteDialogData'
-      FormName = 'TDataDialogForm'
-      FormNameParam.Value = 'TDataDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actExecTechnicalRediscount_Formation: TdsdExecStoredProc
+    object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spTechnicalRediscount_Formation
+      StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spTechnicalRediscount_Formation
+          StoredProc = spInsertUpdateMIMaster
         end>
-      Caption = 'actExecTechnicalRediscount_Formation'
-    end
-    object actChoiceUnitTreeForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'actChoiceUnitTreeForm'
-      FormName = 'TUnitTreeForm'
-      FormNameParam.Value = 'TUnitTreeForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'UnitId'
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actAddRedCheck: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actOpenTechnicalRediscount
-      BeforeAction = actChoiceUnitTreeForm
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertRedCheck
-      StoredProcList = <
-        item
-          StoredProc = spInsertRedCheck
-        end>
-      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
-      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"'
-      ImageIndex = 54
-      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' "'#1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'"?'
-    end
-    object actOpenTechnicalRediscount: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      AfterAction = actRefresh
-      Caption = 'actOpenTechnicalRediscount'
-      FormName = 'TTechnicalRediscountForm'
-      FormNameParam.Value = 'TTechnicalRediscountForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'MovementId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ShowAll'
-          Value = 'False'
-          DataType = ftBoolean
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inOperDate'
-          Value = 'NULL'
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = False
+      Caption = 'actUpdateMainDS'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -355,36 +270,14 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TechnicalRediscount'
+    StoredProcName = 'gpSelect_Movement_WagesTechnicalRediscountUnit'
     Params = <
       item
-        Name = 'instartdate'
+        Name = 'inId'
         Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inenddate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 'False'
-        DataType = ftBoolean
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 136
@@ -410,18 +303,6 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
           ItemName = 'dxBarStatic'
         end
         item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -440,23 +321,11 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbAddRedCheck'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -480,8 +349,11 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end>
     end
     object bbPrint: TdxBarButton
-      Action = actTechnicalRediscount_Formation
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1093' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
       Category = 0
+      Hint = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1093' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1074' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103#1084
+      Visible = ivAlways
+      ImageIndex = 10
     end
     object bbPrint1: TdxBarButton
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
@@ -497,12 +369,14 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       Visible = ivAlways
       ImageIndex = 16
     end
-    object bbAddRedCheck: TdxBarButton
-      Action = actAddRedCheck
-      Category = 0
-    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        ColorColumn = colSummWages
+        BackGroundValueColumn = colColor_Calc
+        ColorValueList = <>
+      end>
     Left = 320
     Top = 224
   end
@@ -525,7 +399,7 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_TechnicalRediscount'
+    StoredProcName = 'gpComplete_Movement_TechnicalRediscountCashier'
     Params = <
       item
         Name = 'inmovementid'
@@ -595,27 +469,17 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameTechnicalRediscount'
+        Name = 'ReportNameTechnicalRediscountCashier'
         Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameTechnicalRediscountTax'
+        Name = 'ReportNameTechnicalRediscountCashierTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MovementId'
-        Value = Null
         MultiSelectSeparator = ','
       end>
     Left = 400
@@ -639,7 +503,7 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TechnicalRediscount_Print'
+    StoredProcName = 'gpSelect_Movement_TechnicalRediscountCashier_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -662,37 +526,48 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Left = 535
     Top = 248
   end
-  object spTechnicalRediscount_Formation: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TechnicalRediscount_Formation'
-    DataSets = <>
-    OutputType = otResult
-    Params = <>
-    PackSize = 1
-    Left = 560
-    Top = 336
-  end
-  object spInsertRedCheck: TdsdStoredProc
-    StoredProcName = 'gpInsert_Movement_TechnicalRediscount_RedCheck'
+  object spInsertUpdateMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_WagesTechnicalRediscountUnit'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inUnitId'
+        Name = 'ioId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
-        ComponentItem = 'UnitId'
+        ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outMovementId'
+        Name = 'inUnitID'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'MovementId'
+        Component = MasterCDS
+        ComponentItem = 'UnitID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummWages'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummWages'
+        DataType = ftFloat
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 560
-    Top = 392
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 536
+    Top = 344
   end
 end

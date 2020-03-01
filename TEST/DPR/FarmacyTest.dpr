@@ -825,7 +825,9 @@ uses
   Report_JuridicalSalesDialog in '..\..\FormsFarmacy\Report\Report_JuridicalSalesDialog.pas' {Report_JuridicalSalesDialogForm: TParentForm},
   Report_JuridicalSales in '..\..\FormsFarmacy\Report\Report_JuridicalSales.pas' {Report_JuridicalSalesForm: TParentForm},
   CommentTR in '..\..\FormsFarmacy\Guides\CommentTR.pas' {CommentTRForm: TParentForm},
-  CommentTREdit in '..\..\FormsFarmacy\Guides\CommentTREdit.pas' {CommentTREditForm: TParentForm};
+  CommentTREdit in '..\..\FormsFarmacy\Guides\CommentTREdit.pas' {CommentTREditForm: TParentForm},
+  WagesTechnicalRediscount in '..\..\FormsFarmacy\Document\WagesTechnicalRediscount.pas' {WagesTechnicalRediscountForm: TParentForm},
+  WagesTechnicalRediscountUnit in '..\..\FormsFarmacy\Document\WagesTechnicalRediscountUnit.pas' {WagesTechnicalRediscountUnitForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

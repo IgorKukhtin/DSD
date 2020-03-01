@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 515
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1160,6 +1160,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
       ImageIndex = 43
     end
+    object actUpdate_Unit_TechnicalRediscount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_TechnicalRediscount
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_TechnicalRediscount
+        end>
+      Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1327,6 +1340,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton3'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1445,6 +1462,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object bbUpdate_Unit_isSUN_v2_out: TdxBarButton
       Action = actUpdate_Unit_isSUN_v2_out
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' V.2) ('#1044#1072'/'#1053#1077#1090')'
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actUpdate_Unit_TechnicalRediscount
       Category = 0
     end
   end
@@ -2135,5 +2156,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 48
     Top = 403
+  end
+  object spUpdate_Unit_TechnicalRediscount: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_TechnicalRediscount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTechnicalRediscount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTechnicalRediscount'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisTechnicalRediscount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isTechnicalRediscount'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 411
   end
 end

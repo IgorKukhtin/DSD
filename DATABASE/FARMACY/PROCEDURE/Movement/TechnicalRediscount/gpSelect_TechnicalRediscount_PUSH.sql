@@ -16,14 +16,8 @@ RETURNS TABLE (Message TBlob
 AS
 $BODY$
    DECLARE vbWeek       Integer;
-   DECLARE vbOperDate   TDateTime;
    DECLARE vbId         Integer;
 BEGIN
-
-  IF inUserId <> 3
-  THEN
-    RETURN;
-  END IF;
 
   IF COALESCE((SELECT ObjectBoolean_Unit_TechnicalRediscount.ValueData
                FROM ObjectBoolean AS ObjectBoolean_Unit_TechnicalRediscount
@@ -33,30 +27,23 @@ BEGIN
     RETURN;
   END IF;
 
-  IF date_part('DAY',  CURRENT_DATE)::Integer <= 15
-  THEN
-      vbOperDate := date_trunc('month', CURRENT_DATE);
-  ELSE
-      vbOperDate := date_trunc('month', CURRENT_DATE) + INTERVAL '15 DAY';
-  END IF;
-
   IF EXISTS(SELECT Movement.Id
             FROM Movement
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                             AND MovementLinkObject_Unit.ObjectId = inUnitID
-            WHERE Movement.OperDate = vbOperDate
+                 INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                              AND MovementLinkObject_Unit.ObjectId = inUnitID
+            WHERE Movement.OperDate = CURRENT_DATE
               AND Movement.DescId = zc_Movement_TechnicalRediscount())
   THEN
       SELECT Movement.Id
       INTO vbId
       FROM Movement
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                        ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                       AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                       AND MovementLinkObject_Unit.ObjectId = inUnitID
-      WHERE Movement.OperDate = vbOperDate
+           INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                        AND MovementLinkObject_Unit.ObjectId = inUnitID
+      WHERE Movement.OperDate = CURRENT_DATE
         AND Movement.DescId = zc_Movement_TechnicalRediscount();
   ELSE
     RETURN;

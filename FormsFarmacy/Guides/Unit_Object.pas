@@ -119,6 +119,9 @@ type
     bbUpdate_Unit_isSUN_v2_out: TdxBarButton;
     TimeWork: TcxGridDBColumn;
     isTechnicalRediscount: TcxGridDBColumn;
+    spUpdate_Unit_TechnicalRediscount: TdsdStoredProc;
+    actUpdate_Unit_TechnicalRediscount: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

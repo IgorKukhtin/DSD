@@ -111,6 +111,8 @@ type
     Color_Testing: TcxGridDBBandedColumn;
     actWagesSUN1: TdsdOpenForm;
     dxBarButton16: TdxBarButton;
+    actWagesTechnicalRediscount: TdsdOpenForm;
+    dxBarButton17: TdxBarButton;
   private
     { Private declarations }
   public

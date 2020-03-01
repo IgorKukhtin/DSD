@@ -1,4 +1,4 @@
-unit WagesAdditionalExpenses;
+unit WagesTechnicalRediscount;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dsdExportToXLSAction, cxMemo, cxBlobEdit;
 
 type
-  TWagesAdditionalExpensesForm = class(TAncestorDocumentForm)
+  TWagesTechnicalRediscountForm = class(TAncestorDocumentForm)
     bbPrintCheck: TdxBarButton;
     bbGet_SP_Prior: TdxBarButton;
     dxBarButton1: TdxBarButton;
@@ -42,21 +42,15 @@ type
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
     UnitName: TcxGridDBColumn;
-    SummaCleaning: TcxGridDBColumn;
-    SummaSP: TcxGridDBColumn;
-    SummaOther: TcxGridDBColumn;
-    SummaTotal: TcxGridDBColumn;
+    SummaTechnicalRediscount: TcxGridDBColumn;
     isIssuedBy: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     MIDateIssuedBy: TcxGridDBColumn;
     actCopySumm: TdsdExecStoredProc;
     spCopySumm: TdsdStoredProc;
     dxBarButton11: TdxBarButton;
-    SummaValidationResults: TcxGridDBColumn;
-    SummaSUN1: TcxGridDBColumn;
-    actWagesTechnicalRediscount: TdsdOpenForm;
-    dxBarButton12: TdxBarButton;
-    SummaTechnicalRediscount: TcxGridDBColumn;
+    dxBarSubItem1: TdxBarSubItem;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
   private
     { Private declarations }
   public
@@ -68,6 +62,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWagesAdditionalExpensesForm);
+  RegisterClass(TWagesTechnicalRediscountForm);
 
 end.
