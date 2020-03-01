@@ -49,7 +49,8 @@ BEGIN
       tmpMovReturn  AS (SELECT tmp.Id
                              , tmp.PartnerId
                              , tmp.OperDatePartner
-                        FROM (SELECT Movement.Id
+                        FROM (-- zc_Movement_ReturnIn
+                              SELECT Movement.Id
                                    , MovementLinkObject_From.ObjectId AS PartnerId
                                    , NULL                             AS OperDatePartner
                               FROM MovementDate AS MD_OperDatePartner
@@ -78,7 +79,9 @@ BEGIN
                                 -- AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                 /*AND (_tmpKN_err_06062016.JuridicalId > 0
                                   OR vbTaxKind_null = FALSE)*/
+
                              UNION ALL
+                              -- zc_Movement_TransferDebtIn
                               SELECT Movement.Id
                                    , COALESCE (MovementLinkObject_Partner.ObjectId, 0)  AS PartnerId
                                    , Movement.OperDate                    AS OperDatePartner
@@ -95,20 +98,51 @@ BEGIN
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
                                 AND (MovementLinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
                                 AND (MovementLinkObject_From.ObjectId = inJuridicalId OR inJuridicalId = 0)
+
                              UNION ALL
+                              -- zc_Movement_PriceCorrective
+                              SELECT Movement.Id
+                                   , COALESCE (MovementLinkObject_Partner.ObjectId, 0)  AS PartnerId
+                                   , Movement.OperDate                    AS OperDatePartner
+                              FROM Movement
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                                ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                               AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                              WHERE inMovementId = 0
+                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                AND Movement.DescId = zc_Movement_PriceCorrective()
+                                AND Movement.StatusId = zc_Enum_Status_Complete()
+                                AND (MovementLinkObject_Partner.ObjectId = inPartnerId OR inPartnerId = 0)
+                                AND (MovementLinkObject_From.ObjectId = inJuridicalId OR inJuridicalId = 0)
+
+                             UNION ALL
+                              -- current
                               SELECT Movement.Id                      AS Id
                                    , COALESCE (MovementLinkObject_From.ObjectId, 0) AS PartnerId
-                                   , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MD_OperDatePartner.ValueData ELSE Movement.OperDate END AS OperDatePartner
+                                   , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
+                                               THEN MD_OperDatePartner.ValueData
+                                          WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                                               THEN Movement.OperDate
+                                          ELSE Movement.OperDate
+                                     END AS OperDatePartner
                               FROM Movement
                                    LEFT JOIN MovementDate AS MD_OperDatePartner
                                                           ON MD_OperDatePartner.MovementId = Movement.Id
                                                          AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
-                                                               AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_PartnerFrom() END
+                                                               AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
+                                                                                                              THEN zc_MovementLinkObject_From()
+                                                                                                         WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                                                                                                              THEN zc_MovementLinkObject_Partner()
+                                                                                                         ELSE zc_MovementLinkObject_PartnerFrom()
+                                                                                                    END
                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                                                 ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
-                                                               AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                               AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
                               WHERE Movement.Id = inMovementId
                                 /*AND (COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, 0) IN (0, zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                   OR vbTaxKind_null = FALSE)*/
@@ -167,7 +201,7 @@ BEGIN
                                                    ON MI_Master.Id         = MI_Return.ParentId
                                                   AND MI_Master.isErased   = FALSE
                            INNER JOIN Movement AS Movement_Return ON Movement_Return.Id       = MI_Return.MovementId
-                                                                 AND Movement_Return.DescId   IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                                                 AND Movement_Return.DescId   IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtIn())
                                                                  AND Movement_Return.StatusId = zc_Enum_Status_Complete()
                            LEFT JOIN MovementDate AS MD_OperDatePartner
                                                   ON MD_OperDatePartner.MovementId = Movement_Return.Id

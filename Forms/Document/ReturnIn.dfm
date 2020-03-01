@@ -3,7 +3,7 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 648
   ClientWidth = 1252
   ExplicitWidth = 1268
-  ExplicitHeight = 686
+  ExplicitHeight = 683
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,7 +22,7 @@ inherited ReturnInForm: TReturnInForm
         Width = 1252
         Height = 320
         ExplicitWidth = 1252
-        ExplicitHeight = 342
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -687,7 +687,6 @@ inherited ReturnInForm: TReturnInForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 342
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
@@ -1469,7 +1468,7 @@ inherited ReturnInForm: TReturnInForm
   object cxLabel22: TcxLabel [13]
     Left = 761
     Top = 45
-    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1087#1088#1086#1076#1072#1078
   end
   object cbList: TcxCheckBox [14]
     Left = 497
@@ -5438,8 +5437,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 891
-    Top = 44
+    Left = 899
+    Top = 12
   end
   object spGetReportNameTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -5756,7 +5755,7 @@ inherited ReturnInForm: TReturnInForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDateTax'
+        Name = 'inStartDateSale'
         Value = 42181d
         Component = edStartDateTax
         DataType = ftDateTime

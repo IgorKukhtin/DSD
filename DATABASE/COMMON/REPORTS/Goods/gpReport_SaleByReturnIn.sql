@@ -245,7 +245,7 @@ IF inBranchId <> 0
                                                                 AND MI_Child.isErased = FALSE
                                                                -- AND MI_Child.DescId = zc_MI_Child()
                              INNER JOIN Movement ON Movement.Id       = MI_Child.MovementId
-                                                AND Movement.DescId  IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                                AND Movement.DescId  IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtIn())
                                                 AND Movement.StatusId = zc_Enum_Status_Complete()
                         GROUP BY tmpMI.MovementItemId
                        )

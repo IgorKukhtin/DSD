@@ -3,7 +3,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   ClientHeight = 637
   ClientWidth = 1242
   ExplicitWidth = 1258
-  ExplicitHeight = 675
+  ExplicitHeight = 672
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1162,7 +1162,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
   object cxLabel22: TcxLabel [14]
     Left = 788
     Top = 45
-    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1087#1088#1086#1076#1072#1078
   end
   object edStartDateTax: TcxDateEdit [15]
     Left = 788
@@ -5336,7 +5336,7 @@ inherited ReturnIn_PartnerForm: TReturnIn_PartnerForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDateTax'
+        Name = 'inStartDateSale'
         Value = 42181d
         Component = edStartDateTax
         DataType = ftDateTime

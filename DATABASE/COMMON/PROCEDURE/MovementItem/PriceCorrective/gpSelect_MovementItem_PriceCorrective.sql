@@ -43,8 +43,9 @@ BEGIN
          END IF;
      END IF;
 
+
      --
-     IF inShowAll THEN
+     IF inShowAll = TRUE THEN
 
      -- Результат
      RETURN QUERY
@@ -141,6 +142,7 @@ BEGIN
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
@@ -187,6 +189,7 @@ BEGIN
                   FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                        JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                         AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = tmpIsErased.isErased
                        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
                        LEFT JOIN MovementItemFloat AS MIFloat_Price

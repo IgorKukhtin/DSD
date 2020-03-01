@@ -169,6 +169,10 @@ type
     bbOpenReportForm: TdxBarButton;
     bbOpenReportCheckForm: TdxBarButton;
     bbOpenReportCheckAmountForm: TdxBarButton;
+    bbUpdateAuto: TdxBarButton;
+    actTaxCorrective: TdsdExecStoredProc;
+    spTaxCorrective: TdsdStoredProc;
+    bbTaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public

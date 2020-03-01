@@ -1,14 +1,15 @@
 -- Function: gpInsertUpdate_MovementItem_PriceCorrective()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceCorrective(integer, integer, integer, tfloat, tfloat, tfloat, integer, integer);
-
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceCorrective(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PriceCorrective(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа Перевод долга (расход)>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice               TFloat    , -- Цена
+    IN inPrice               TFloat    , -- Цена -  на сколько корректируется("+"уменьшается или "-"увеличивается) 
+    IN inPriceFrom           TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -31,11 +32,17 @@ BEGIN
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
+     -- сохранили свойство <Цена продажи (корр.)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceFrom(), ioId, inPriceFrom);
+
+     -- сохранили свойство <Цена продажи (новая)>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTo(), ioId, inPriceFrom - inPrice);
+
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0

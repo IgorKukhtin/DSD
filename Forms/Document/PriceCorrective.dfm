@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 660
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 698
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -148,7 +148,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1086#1088#1088'.)'
-            Options.Editing = False
             Width = 74
           end
           object PriceTo: TcxGridDBColumn
@@ -1100,7 +1099,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   object cxLabel22: TcxLabel [3]
     Left = 568
     Top = 86
-    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1087#1088#1086#1076#1072#1078
   end
   object edStartDateTax: TcxDateEdit [4]
     Left = 568
@@ -1411,6 +1410,25 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actTaxCorrective: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spTaxCorrective
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
+      ImageIndex = 41
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089 +
+        ' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
+        #1080#1074#1103#1079#1082#1086#1081')>.'
     end
     object actCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1778,7 +1796,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           Name = 'inPrice'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Price'
+          ComponentItem = 'PriceFrom'
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -2077,6 +2095,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbCorrective'
         end
         item
@@ -2098,6 +2124,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateAuto'
         end
         item
           Visible = True
@@ -2216,6 +2250,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           ItemName = 'dxBarStatic'
         end>
     end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint
     end
@@ -2226,6 +2263,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object bbPrintTaxCorrective_Us: TdxBarButton [6]
       Action = mactPrint_TaxCorrective_Us
       Category = 0
+    end
+    inherited bbStatic: TdxBarStatic
+      ShowCaption = False
     end
     object bbCorrective: TdxBarButton
       Action = actCorrective
@@ -2269,6 +2309,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbOpenReportCheckAmountForm: TdxBarButton
       Action = actOpenReportCheckAmountForm
+      Category = 0
+    end
+    object bbUpdateAuto: TdxBarButton
+      Action = actUpdateAuto
+      Category = 0
+    end
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrective
       Category = 0
     end
   end
@@ -2801,6 +2849,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPriceFrom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceFrom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioCountForPrice'
         Value = Null
         Component = MasterCDS
@@ -2865,6 +2922,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPriceFrom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PriceFrom'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3326,7 +3392,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end>
     PackSize = 1
     Left = 368
-    Top = 380
+    Top = 372
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
@@ -3655,7 +3721,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end>
     Left = 648
-    Top = 56
+    Top = 32
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Checked'
@@ -3820,7 +3886,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inStartDateTax'
+        Name = 'inStartDateSale'
         Value = 42181d
         Component = edStartDateTax
         DataType = ftDateTime
@@ -3838,5 +3904,74 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     PackSize = 1
     Left = 40
     Top = 420
+  end
+  object spTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = GuidesDocumentTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = GuidesDocumentTaxKind
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 'NULL'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsTaxLink'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = GuidesDocumentTaxKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = GuidesDocumentTaxKind
+        ComponentItem = 'TextValue'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 384
   end
 end
