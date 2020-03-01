@@ -695,12 +695,12 @@ inherited SendForm: TSendForm
       Left = 477
       Top = 88
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.1)'
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 14
-      Width = 133
+      Width = 172
     end
     object cbDefSun: TcxCheckBox
       Left = 667
@@ -748,7 +748,7 @@ inherited SendForm: TSendForm
       Left = 477
       Top = 106
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.2)'
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
@@ -1745,6 +1745,12 @@ inherited SendForm: TSendForm
       item
         Name = 'LossID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 344

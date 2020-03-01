@@ -60,6 +60,14 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 298
           end
+          object isRedCheck: TcxGridDBColumn
+            Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
+            DataBinding.FieldName = 'isRedCheck'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object colTotalDiff: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072' '#1074' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1077
             DataBinding.FieldName = 'TotalDiff'
@@ -271,6 +279,73 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end>
       Caption = 'actExecTechnicalRediscount_Formation'
     end
+    object actChoiceUnitTreeForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceUnitTreeForm'
+      FormName = 'TUnitTreeForm'
+      FormNameParam.Value = 'TUnitTreeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actAddRedCheck: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actOpenTechnicalRediscount
+      BeforeAction = actChoiceUnitTreeForm
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertRedCheck
+      StoredProcList = <
+        item
+          StoredProc = spInsertRedCheck
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' '#1082#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1083#1084' '#1082#1088#1072#1089#1085#1099#1081' '#1095#1077#1082#1084
+      ImageIndex = 54
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1089' '#1087#1088#1080#1079#1085#1072#1082#1086#1084' '#1082#1088#1072#1089#1085#1099#1081' '#1095#1077#1082'?'
+    end
+    object actOpenTechnicalRediscount: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      Caption = 'actOpenTechnicalRediscount'
+      FormName = 'TTechnicalRediscountForm'
+      FormNameParam.Value = 'TTechnicalRediscountForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -365,6 +440,14 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbAddRedCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -413,6 +496,10 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       Hint = #1055#1077#1095#1072#1090#1100
       Visible = ivAlways
       ImageIndex = 16
+    end
+    object bbAddRedCheck: TdxBarButton
+      Action = actAddRedCheck
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -520,6 +607,16 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 400
     Top = 200
@@ -572,6 +669,30 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     Params = <>
     PackSize = 1
     Left = 560
-    Top = 376
+    Top = 336
+  end
+  object spInsertRedCheck: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_TechnicalRediscount_RedCheck'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 560
+    Top = 392
   end
 end

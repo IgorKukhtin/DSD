@@ -294,12 +294,14 @@ end;
 
 procedure TLoadFormTest.LoadBranchFormTest;
 begin
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_TTNDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranch_TTNDialogForm');
 end;
@@ -1493,10 +1495,10 @@ end;
 
 procedure TLoadFormTest.LoadTransportGoodsFormTest;
 begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportGoodsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportGoodsJournalForm');
 end;
@@ -1532,8 +1534,10 @@ end;
 
 procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveJournalForm');
 end;
@@ -3340,13 +3344,13 @@ end;
 
  procedure TLoadFormTest.LoadWeighingPartnerFormTest;
  begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerDialogForm');
   exit;

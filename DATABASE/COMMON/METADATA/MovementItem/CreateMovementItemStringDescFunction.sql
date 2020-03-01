@@ -141,10 +141,15 @@ CREATE OR REPLACE FUNCTION zc_MIString_ComingValueDayUser() RETURNS Integer AS $
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_ComingValueDayUser', 'Время прихода на работу (отметка сотрудника)' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ComingValueDayUser');
 
+CREATE OR REPLACE FUNCTION zc_MIString_Explanation() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Explanation'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_Explanation', 'Пояснение' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Explanation');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 27.02.20                                                                                      * zc_MIString_Explanation
  31.07.19         * zc_MIString_ProgramIdSP
                     zc_MIString_NumeratorUnitSP
                     zc_MIString_DenumeratorUnitSP

@@ -24,7 +24,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxSplitter;
 
 type
   TPriceCorrectiveForm = class(TAncestorDocumentForm)
@@ -121,6 +121,54 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    DetailDS: TDataSource;
+    DetailCDS: TClientDataSet;
+    spSelect_MI_Child: TdsdStoredProc;
+    spUpdateMIChild: TdsdStoredProc;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    isError: TcxGridDBColumn;
+    childGoodsCode: TcxGridDBColumn;
+    childGoodsName: TcxGridDBColumn;
+    childGoodsKindName: TcxGridDBColumn;
+    childAmount: TcxGridDBColumn;
+    childAmountPartner: TcxGridDBColumn;
+    childPrice: TcxGridDBColumn;
+    ChangePercent_Sale: TcxGridDBColumn;
+    MovementPromo_Sale: TcxGridDBColumn;
+    DescName_Sale: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    InvNumberPartner: TcxGridDBColumn;
+    InvNumber_Master: TcxGridDBColumn;
+    InvNumberPartner_Master: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    OperDatePartner: TcxGridDBColumn;
+    OperDate_Master: TcxGridDBColumn;
+    ContractCode_Sale: TcxGridDBColumn;
+    ContractName_Sale: TcxGridDBColumn;
+    ContractCode_Tax: TcxGridDBColumn;
+    ContractName_Tax: TcxGridDBColumn;
+    DocumentTaxKindName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    ToCode: TcxGridDBColumn;
+    ToName: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    MovementId_sale: TcxGridDBColumn;
+    MovementItemId_sale: TcxGridDBColumn;
+    IsErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    actUpdateAuto: TdsdExecStoredProc;
+    spUpdateAuto: TdsdStoredProc;
+    cxLabel22: TcxLabel;
+    edStartDateTax: TcxDateEdit;
+    actOpenReportForm: TdsdOpenForm;
+    actOpenReportCheckForm: TdsdOpenForm;
+    actOpenReportCheckAmountForm: TdsdOpenForm;
+    bbOpenReportForm: TdxBarButton;
+    bbOpenReportCheckForm: TdxBarButton;
+    bbOpenReportCheckAmountForm: TdxBarButton;
   private
     { Private declarations }
   public

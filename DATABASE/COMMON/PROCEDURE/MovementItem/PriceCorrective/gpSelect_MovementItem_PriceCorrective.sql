@@ -4,16 +4,18 @@ DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, TDateTim
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
-    IN inMovementId  Integer      , -- ключ Документа
+    IN inMovementId         Integer      , -- ключ Документа
     IN inMovementId_Parent  Integer      , -- ключ Документа
-    IN inOperDate    TDateTime    , -- Дата документа
-    IN inShowAll     Boolean      , --
-    IN inisErased    Boolean      , --
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inOperDate           TDateTime    , -- Дата документа
+    IN inShowAll            Boolean      , --
+    IN inisErased           Boolean      , --
+    IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
-             , Amount TFloat, Price TFloat, CountForPrice TFloat
+             , Amount TFloat, Price TFloat
+             , PriceFrom TFloat, PriceTo TFloat
+             , CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AmountSumm TFloat, isErased Boolean
              )
@@ -61,6 +63,8 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            --, CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS Price
+           , CAST (NULL AS TFloat)      AS PriceFrom
+           , CAST (NULL AS TFloat)      AS PriceTo
            , CAST (NULL AS TFloat)      AS CountForPrice
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -117,7 +121,11 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
            , MovementItem.Amount			AS Amount
-           , MIFloat_Price.ValueData 			AS Price
+
+           , MIFloat_Price.ValueData                  ::TFloat AS Price
+           , COALESCE (MIFloat_PriceFrom.ValueData,0) ::TFloat AS PriceFrom
+           , COALESCE (MIFloat_PriceTo.ValueData,0)   ::TFloat AS PriceTo
+
            , MIFloat_CountForPrice.ValueData 	        AS CountForPrice
 
            , Object_GoodsKind.Id        		AS GoodsKindId
@@ -142,6 +150,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                        ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceTo
+                                        ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -163,6 +178,8 @@ BEGIN
                       , MovementItem.ObjectId			AS GoodsId
                       , MovementItem.Amount			AS Amount
                       , MIFloat_Price.ValueData 	        AS Price
+                      , COALESCE (MIFloat_PriceFrom.ValueData,0) ::TFloat AS PriceFrom
+                      , COALESCE (MIFloat_PriceTo.ValueData,0)   ::TFloat AS PriceTo
                       , MIFloat_CountForPrice.ValueData         AS CountForPrice
                       , MILinkObject_GoodsKind.ObjectId         AS GoodsKindId
                       , MovementItem.isErased                   AS isErased
@@ -175,6 +192,13 @@ BEGIN
                        LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                       LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                                   ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+                       LEFT JOIN MovementItemFloat AS MIFloat_PriceTo
+                                                   ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+
                        LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                    ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                   AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -220,6 +244,8 @@ BEGIN
                           , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE 0 /*tmpMI_Parent_find.Amount*/ END AS Amount
                           , COALESCE (tmpMI.GoodsKindId, tmpMI_Parent_find.GoodsKindId) AS GoodsKindId
                           , COALESCE (tmpMI.Price, tmpMI_Parent_find.Price)             AS Price
+                          , COALESCE (tmpMI.PriceFrom, 0)                               AS PriceFrom
+                          , COALESCE (tmpMI.PriceTo, 0)                                 AS PriceTo
                           , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
                           , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
                      FROM tmpMI
@@ -235,6 +261,8 @@ BEGIN
 
            , tmpResult.Amount         :: TFloat AS Amount
            , tmpResult.Price          :: TFloat AS Price
+           , tmpResult.PriceFrom      :: TFloat AS PriceFrom
+           , tmpResult.PriceTo        :: TFloat AS PriceTo
            , tmpResult.CountForPrice  :: TFloat AS CountForPrice
 
            , Object_GoodsKind.Id        	AS GoodsKindId

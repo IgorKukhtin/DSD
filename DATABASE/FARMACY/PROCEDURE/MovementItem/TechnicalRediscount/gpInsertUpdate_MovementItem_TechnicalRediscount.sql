@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , --
     IN inRemains_Amount      TFloat    , --
+    IN inCommentTRID         Integer   , -- Комментарий
+    IN isExplanation         TVarChar  , -- Количество
    OUT outDiffSumm           TFloat    , --
    OUT outRemains_FactAmount TFloat    , --
    OUT outRemains_FactSumm   TFloat    , --
@@ -55,7 +57,20 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
      END IF;
 
-     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, vbUserId);
+     IF COALESCE(inCommentTRID, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не выбран <Комментарий к строке технического переучета>.';
+     END IF;
+
+     IF COALESCE(isExplanation, '') = '' AND EXISTS (SELECT 1 FROM ObjectBoolean
+                                                     WHERE ObjectBoolean.ObjectId = inCommentTRID
+                                                       AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentTR_Explanation()
+                                                       AND ObjectBoolean.ValueData = TRUE)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не заполнено <Пояснение>.';
+     END IF;
+
+     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, vbUserId);
 
      outDiffSumm           := inAmount * inPrice;
      outRemains_FactAmount := inRemains_Amount + inAmount;

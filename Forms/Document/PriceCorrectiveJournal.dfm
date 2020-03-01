@@ -132,11 +132,19 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 78
           end
-          inherited colOperDate: TcxGridDBColumn [3]
+          object isError: TcxGridDBColumn [3]
+            Caption = #1054#1096#1080#1073#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
+          end
+          inherited colOperDate: TcxGridDBColumn [4]
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
-          inherited colInvNumber: TcxGridDBColumn [4]
+          inherited colInvNumber: TcxGridDBColumn [5]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 45

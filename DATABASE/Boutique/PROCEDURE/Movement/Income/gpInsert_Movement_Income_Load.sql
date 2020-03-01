@@ -222,6 +222,7 @@ BEGIN
                                         , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
                                         , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
                                         , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
+                                        , inisCode             :=   FALSE                           -- не изменять код товара--
                                         , inSession            :=   inSession  -- сессия пользователя
                                          );      
 

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumber_Tax TVarChar, OperDate_Tax TDateTime
-             , Checked Boolean
+             , Checked Boolean, isError Boolean
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -59,7 +59,8 @@ BEGIN
            , MovementString_InvNumberPartner_Tax.ValueData  AS InvNumber_Tax
            , Movement_Parent.OperDate                   AS OperDate_Tax
            
-           , COALESCE (MovementBoolean_Checked.ValueData,   FALSE) :: Boolean AS Checked
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked
+           , COALESCE (MovementBoolean_Error.ValueData, FALSE)   :: Boolean AS isError
 
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -115,6 +116,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Error
+                                      ON MovementBoolean_Error.MovementId = Movement.Id
+                                     AND MovementBoolean_Error.DescId = zc_MovementBoolean_Error()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId = Movement.Id
@@ -206,6 +211,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.02.20         * add isError
  26.03.19         * add Checked
  02.02.18         *
  06.10.16         * add inJuridicalBasisId
@@ -215,4 +221,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PriceCorrective (inStartDate:= '01.01.2016', inEndDate:= '02.02.2016', inJuridicalBasisId:= 0, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_PriceCorrective (inStartDate:= '01.02.2020', inEndDate:= '10.02.2020', inJuridicalBasisId:= 0, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

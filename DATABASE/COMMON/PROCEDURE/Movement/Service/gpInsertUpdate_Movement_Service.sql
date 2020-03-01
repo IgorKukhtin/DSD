@@ -98,7 +98,13 @@ BEGIN
      THEN
         RAISE EXCEPTION 'Должны быть введены только количество и цена или сумма.';
      END IF;
-
+     
+     -- при вводе кол и суммы валюта должна быть ГРН
+     IF ((COALESCE (inCountDebet, 0) <> 0 OR  COALESCE (inCountKredit, 0) <> 0) AND COALESCE (inPrice, 0) <> 0) AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
+     THEN
+         RAISE EXCEPTION 'Ввод в валюте не предусмотрен для количества и цены.';
+     END IF;
+     
      -- проверка
      IF COALESCE (ioAmountCurrencyDebet, 0) = 0 AND COALESCE (ioAmountCurrencyKredit, 0) = 0 AND COALESCE (inCurrencyPartnerId, 0) NOT IN (0, zc_Enum_Currency_Basis())
      THEN
@@ -145,23 +151,28 @@ BEGIN
 
 
      -- расчет сумма в ГРН
-     IF ioAmountIn <> 0
-     THEN
-        vbAmount := ioAmountIn;
-     ELSE
-        vbAmount := -1 * ioAmountOut;
-     END IF;
-
-    -- количество и цена
-     IF inCountDebet <> 0
-     THEN
-        vbCount := inCountDebet;
-        -- расчетная сумма
-        outSumma := inCountDebet * inPrice;
-     ELSE
-        vbCount := -1 * inCountKredit;
-        -- расчетная сумма
-        outSumma := inCountKredit * inPrice;
+     IF (COALESCE (inCountDebet, 0) <> 0 OR  COALESCE (inCountKredit, 0) <> 0) AND COALESCE (inPrice, 0) <> 0
+     THEN   -- количество и цена
+         IF inCountDebet <> 0
+         THEN
+            vbCount := inCountDebet;
+            -- расчетная сумма
+            outSumma := inCountDebet * inPrice;
+            vbAmount := inCountDebet * inPrice;
+         ELSE
+            vbCount := -1 * inCountKredit;
+            -- расчетная сумма
+            outSumma := inCountKredit * inPrice;
+            vbAmount := -1 * inCountKredit * inPrice;
+         END IF;
+     ELSE 
+         -- расчет сумма в ГРН
+         IF ioAmountIn <> 0
+         THEN
+            vbAmount := ioAmountIn;
+         ELSE
+            vbAmount := -1 * ioAmountOut;
+         END IF;
      END IF;
 
      -- 1. Распроводим Документ
@@ -221,7 +232,7 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPrice);
      -- сохранили свойство <Количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), vbMovementItemId, vbCount);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), vbMovementItemId, COALESCE (vbCount,0));
 
      -- сохранили связь с <Типы условий договоров>
      -- PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);

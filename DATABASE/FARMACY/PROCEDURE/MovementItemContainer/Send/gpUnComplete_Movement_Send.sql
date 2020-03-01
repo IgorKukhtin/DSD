@@ -13,10 +13,12 @@ $BODY$
   DECLARE vbUnit_From Integer;
   DECLARE vbUnit_To   Integer;
   DECLARE vbOperDate  TDateTime;
+  DECLARE vbStatusID   Integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
   DECLARE vbisSUN Boolean;
   DECLARE vbisDefSUN Boolean;
+  DECLARE vbisNotDisplaySUN Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Send());
@@ -36,16 +38,20 @@ BEGIN
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
         Movement.OperDate,
+        Movement.StatusId,
         Movement_From.ObjectId AS Unit_From,
         Movement_To.ObjectId AS Unit_To,
         COALESCE (MovementBoolean_SUN.ValueData, FALSE), 
-        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE), 
+        COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)
     INTO
         vbOperDate,
+        vbStatusID,
         vbUnit_From,
         vbUnit_To,
         vbisSUN,
-        vbisDefSUN
+        vbisDefSUN,
+        vbisNotDisplaySUN
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -59,6 +65,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                   ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
+                                  ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
+                                 AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
     WHERE Movement.Id = inMovementId;
     
     IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE
@@ -88,6 +97,11 @@ BEGIN
       IF COALESCE (vbUnit_From, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnit_To, 0) <> COALESCE (vbUserUnitId, 0) 
       THEN 
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
+      END IF;     
+      
+      IF vbStatusID = zc_Enum_Status_Erased() AND vbisNotDisplaySUN = TRUE
+      THEN 
+        RAISE EXCEPTION 'Ошибка. Изменить статус на Не проведен в перемещениях СУН с признаком Не отображать для сбора запрещено.';     
       END IF;     
     END IF;     
 

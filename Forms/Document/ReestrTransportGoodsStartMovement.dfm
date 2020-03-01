@@ -4,7 +4,7 @@ inherited ReestrTransportGoodsStartMovementForm: TReestrTransportGoodsStartMovem
   ClientWidth = 937
   AddOnFormData.RefreshAction = actRefreshStart
   ExplicitWidth = 953
-  ExplicitHeight = 439
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

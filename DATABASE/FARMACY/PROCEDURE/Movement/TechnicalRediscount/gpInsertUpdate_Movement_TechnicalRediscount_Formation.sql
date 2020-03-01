@@ -9,34 +9,43 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbOperDate TDateTime;
+   DECLARE vbDateStart TDateTime;
+   DECLARE vbDateEnd TDateTime;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TechnicalRediscount());
 
   IF date_part('DAY',  CURRENT_DATE)::Integer <= 15
   THEN
-      vbOperDate := date_trunc('month', CURRENT_DATE);
+      vbDateStart := date_trunc('month', CURRENT_DATE);
+      vbDateEnd := date_trunc('month', CURRENT_DATE);
   ELSE
-      vbOperDate := date_trunc('month', CURRENT_DATE) + INTERVAL '15 DAY';   
+      vbDateStart := date_trunc('month', CURRENT_DATE) + INTERVAL '15 DAY';   
+      vbDateEnd := date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' + INTERVAL '1 DAY';   
   END IF;
 
-  PERFORM gpInsertUpdate_Movement_TechnicalRediscount (ioId := 0,
-                                                       inInvNumber := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar),
-                                                       inOperDate := vbOperDate,
-                                                       inUnitID := UnitList.UnitId,
-                                                       inComment := '',
-                                                       inSession := inSession)
+  PERFORM gpInsertUpdate_Movement_TechnicalRediscount (ioId          := 0,
+                                                       inInvNumber   := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar),
+                                                       inOperDate    := CURRENT_DATE,
+                                                       inUnitID      := UnitList.UnitId,
+                                                       inComment     := '',
+                                                       inisRedCheck  := FALSE,
+                                                       inSession     := inSession)
   FROM (
           WITH
            tmpMovement AS (SELECT Movement.Id
                                 , MovementLinkObject_Unit.ObjectId AS UnitId
-                                      FROM Movement 
+                           FROM Movement 
                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                             AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                           WHERE Movement.OperDate = vbOperDate
+                                LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                                          ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                                         AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+                           WHERE Movement.OperDate >= vbDateStart AND Movement.OperDate <= vbDateEnd
                              AND Movement.DescId = zc_Movement_TechnicalRediscount() 
+                             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                             AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
                            )
          , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
                        FROM Object AS Object_Unit
@@ -63,4 +72,4 @@ $BODY$
  15.02.20                                                       *
 */
 
---SELECT * FROM gpInsertUpdate_Movement_TechnicalRediscount_Formation (inSession := '3')
+-- SELECT * FROM gpInsertUpdate_Movement_TechnicalRediscount_Formation (inSession := '3')

@@ -182,7 +182,7 @@ type
     actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
     macUpdate_PriceWithoutPersent: TMultiAction;
     macUpdate_PriceWithoutPersent_List: TMultiAction;
-    bb: TdxBarButton;
+    bbUpdate_PriceWithoutPersent_List: TdxBarButton;
     actPersentDialog1: TExecuteDialog;
     cxLabel8: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
@@ -192,7 +192,11 @@ type
     actGetImportSettingId: TdsdExecStoredProc;
     actDoLoad: TExecuteImportSettingsAction;
     actStartLoad: TMultiAction;
-    dxBarButton3: TdxBarButton;
+    bbStartLoad: TdxBarButton;
+    bbInsertActionFixCode: TdxBarButton;
+    actInsertActionFixCode: TdsdInsertUpdateAction;
+    macInsertActionFixCode: TMultiAction;
+    actOpenPartionGoodsChoice: TOpenChoiceForm;
   private
   public
   end;

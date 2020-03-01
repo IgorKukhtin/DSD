@@ -49,6 +49,8 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , GoodsCode Integer, GoodsName TVarChar, GoodsGroupNameFull TVarChar
              , MIAmount TFloat,  AmountPartner TFloat
              , RealWeight TFloat,CountTare TFloat, WeightTare TFloat
+             , CountTare1   TFloat, CountTare2   TFloat, CountTare3   TFloat, CountTare4   TFloat, CountTare5   TFloat, CountTare6   TFloat
+             , WeightTare1  TFloat, WeightTare2  TFloat, WeightTare3  TFloat, WeightTare4  TFloat, WeightTare5  TFloat, WeightTare6  TFloat
              , HeadCount TFloat, BoxCount TFloat, BoxNumber TFloat
              , LevelNumber TFloat, ChangePercentAmount TFloat, ChangePercent_mi TFloat
              , Price TFloat, CountForPrice TFloat
@@ -244,9 +246,22 @@ BEGIN
              , COALESCE (MIFloat_AmountPartner.ValueData, 0)::TFloat AS AmountPartner
 
              , COALESCE (MIFloat_RealWeight.ValueData, 0)   ::TFloat       AS RealWeight
-             , COALESCE (MIFloat_CountTare.ValueData, 0) ::TFloat          AS CountTare
-             , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat          AS WeightTare
+             , COALESCE (MIFloat_CountTare.ValueData, 0)    ::TFloat       AS CountTare
+             , (COALESCE (MIFloat_CountTare.ValueData, 0) * COALESCE (MIFloat_WeightTare.ValueData, 0)) ::TFloat    AS WeightTare
 
+             , COALESCE (MIFloat_CountTare1.ValueData, 0)  ::TFloat  AS CountTare1
+             , COALESCE (MIFloat_CountTare2.ValueData, 0)  ::TFloat  AS CountTare2
+             , COALESCE (MIFloat_CountTare3.ValueData, 0)  ::TFloat  AS CountTare3
+             , COALESCE (MIFloat_CountTare4.ValueData, 0)  ::TFloat  AS CountTare4
+             , COALESCE (MIFloat_CountTare5.ValueData, 0)  ::TFloat  AS CountTare5
+             , COALESCE (MIFloat_CountTare6.ValueData, 0)  ::TFloat  AS CountTare6
+             , (COALESCE (MIFloat_CountTare1.ValueData, 0) * COALESCE (MIFloat_WeightTare1.ValueData, 0)) ::TFloat  AS WeightTare1
+             , (COALESCE (MIFloat_CountTare2.ValueData, 0) * COALESCE (MIFloat_WeightTare2.ValueData, 0)) ::TFloat  AS WeightTare2
+             , (COALESCE (MIFloat_CountTare3.ValueData, 0) * COALESCE (MIFloat_WeightTare3.ValueData, 0)) ::TFloat  AS WeightTare3
+             , (COALESCE (MIFloat_CountTare4.ValueData, 0) * COALESCE (MIFloat_WeightTare4.ValueData, 0)) ::TFloat  AS WeightTare4
+             , (COALESCE (MIFloat_CountTare5.ValueData, 0) * COALESCE (MIFloat_WeightTare5.ValueData, 0)) ::TFloat  AS WeightTare5
+             , (COALESCE (MIFloat_CountTare6.ValueData, 0) * COALESCE (MIFloat_WeightTare6.ValueData, 0)) ::TFloat  AS WeightTare6
+                  
              , MIFloat_HeadCount.ValueData                  AS HeadCount
              , MIFloat_BoxCount.ValueData                   AS BoxCount
 
@@ -524,7 +539,6 @@ BEGIN
                                        AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
             LEFT JOIN Movement_Promo_View ON Movement_Promo_View.Id = MIFloat_PromoMovement.ValueData :: Integer
 
-
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -537,6 +551,43 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                         ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
                                        AND MIFloat_WeightTare.DescId = zc_MIFloat_WeightTare()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare1
+                                        ON MIFloat_CountTare1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare1.DescId = zc_MIFloat_CountTare1()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare1
+                                        ON MIFloat_WeightTare1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare1.DescId = zc_MIFloat_WeightTare1()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare2
+                                        ON MIFloat_CountTare2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare2.DescId = zc_MIFloat_CountTare2()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare2
+                                        ON MIFloat_WeightTare2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare2.DescId = zc_MIFloat_WeightTare2()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare3
+                                        ON MIFloat_CountTare3.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare3.DescId = zc_MIFloat_CountTare3()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare3
+                                        ON MIFloat_WeightTare3.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare3.DescId = zc_MIFloat_WeightTare3()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare4
+                                        ON MIFloat_CountTare4.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare4.DescId = zc_MIFloat_CountTare4()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare4
+                                        ON MIFloat_WeightTare4.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare4.DescId = zc_MIFloat_WeightTare4()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare5
+                                        ON MIFloat_CountTare5.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare5.DescId = zc_MIFloat_CountTare5()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare5
+                                        ON MIFloat_WeightTare5.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare5.DescId = zc_MIFloat_WeightTare5()
+            LEFT JOIN MovementItemFloat AS MIFloat_CountTare6
+                                        ON MIFloat_CountTare6.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountTare6.DescId = zc_MIFloat_CountTare6()
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightTare6
+                                        ON MIFloat_WeightTare6.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightTare6.DescId = zc_MIFloat_WeightTare6()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id

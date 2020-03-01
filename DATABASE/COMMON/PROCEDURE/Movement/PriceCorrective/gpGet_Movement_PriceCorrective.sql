@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , StartDateTax TDateTime
              , Comment TVarChar
              )
 AS
@@ -62,6 +63,7 @@ BEGIN
              , CAST ('' as TVarChar) 	                AS ContractName
              , 0                     			AS DocumentTaxKindId
              , CAST ('' as TVarChar) 			AS DocumentTaxKindName
+             , (DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
              , CAST ('' as TVarChar) 		        AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
@@ -107,8 +109,8 @@ BEGIN
            , Object_From.ValueData             	    AS FromName
            , Object_To.Id                      	    AS ToId
            , Object_To.ValueData               	    AS ToName
-           , Object_Partner.Id                     	AS PartnerId
-           , Object_Partner.ValueData              	AS PartnerName
+           , Object_Partner.Id                      AS PartnerId
+           , Object_Partner.ValueData               AS PartnerName
            , Object_PaidKind.Id                	    AS PaidKindId
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
@@ -116,6 +118,7 @@ BEGIN
 
            , Object_TaxKind.Id                	    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
+           , (DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH') :: TDateTime AS StartDateTax
            , MovementString_Comment.ValueData       AS Comment
 
        FROM Movement

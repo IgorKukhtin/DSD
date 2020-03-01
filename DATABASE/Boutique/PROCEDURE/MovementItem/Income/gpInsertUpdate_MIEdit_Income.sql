@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_MIEdit_Income()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_IncomeLoad (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MIEdit_Income (Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar ,TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
  INOUT ioId                    Integer   , --  люч объекта <Ёлемент документа>
@@ -20,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inPriceJur              TFloat    , -- ÷ена вх.без скидки
     IN inCountForPrice         TFloat    , -- ÷ена за количество
     IN inOperPriceList         TFloat    , -- ÷ена по прайсу
+    IN inisCode                Boolean   , -- не измен€ть код товара
     IN inSession               TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
@@ -306,6 +308,7 @@ BEGIN
                                          , inGoodsInfoId   := vbGoodsInfoId
                                          , inLineFabricaId := vbLineFabricaId
                                          , inLabelId       := vbLabelId
+                                         , inisCode        := inisCode
                                          , inSession       := inSession
                                          ) AS tmp;
 

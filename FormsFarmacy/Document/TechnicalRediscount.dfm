@@ -178,6 +178,28 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             Options.Editing = False
             Width = 70
           end
+          object CommentTRName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'CommentTRName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceCommentTR
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 105
+          end
+          object Explanation: TcxGridDBColumn
+            Caption = #1055#1086#1103#1089#1085#1077#1085#1080#1077
+            DataBinding.FieldName = 'Explanation'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 117
+          end
           object Remains_FactAmount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains_FactAmount'
@@ -317,6 +339,14 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       TabOrder = 9
       Width = 426
     end
+    object cbisRedCheck: TcxCheckBox
+      Left = 548
+      Top = 1
+      Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
+      Properties.ReadOnly = True
+      TabOrder = 10
+      Width = 100
+    end
   end
   inherited ActionList: TActionList
     Left = 215
@@ -383,6 +413,41 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         end>
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
+    end
+    object actChoiceCommentTR: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'ChoiceCommentTR'
+      FormName = 'TCommentTRForm'
+      FormNameParam.Value = 'TCommentTRForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentTRId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentTRName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentTRCode'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentTRCode'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -623,6 +688,13 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRedCheck'
+        Value = Null
+        Component = cbisRedCheck
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -803,6 +875,23 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Component = MasterCDS
         ComponentItem = 'Remains_Amount'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCommentTRID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'CommentTRID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isExplanation'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Explanation'
+        DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLoad (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                       Integer   ,    -- Ключ объекта <Товар> 
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inGoodsInfoId              Integer   ,    -- Описание
     IN inLineFabricaID            Integer   ,    -- Линия
     IN inLabelId                  Integer   ,    -- Название в ценнике
+    IN inisCode                   Boolean   , -- не изменять код товара
     IN inSession                  TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -49,19 +51,22 @@ BEGIN
        -- Проверка
        IF COALESCE (ioCode, 0) <= 0 THEN RAISE EXCEPTION 'Ошибка.Ошибочно передано "предварительное" значение кода : <%>', ioCode; END IF;
 
-       -- Определили
-       IF zc_Enum_GlobalConst_isTerry() = TRUE
+       --если inisCode = TRUE - код товара остается прежним
+       IF inisCode = FALSE
        THEN
-           ioCode:= NEXTVAL ('Object_Goods_seq');
-       ELSE
-           -- !!!для магазина PODIUM!!!
-           IF (inSession :: Integer) > 0 THEN ioCode:= lfGet_ObjectCode(0, zc_Object_Goods()); END IF;
+           -- Определили
+           IF zc_Enum_GlobalConst_isTerry() = TRUE
+           THEN
+               ioCode:= NEXTVAL ('Object_Goods_seq');
+           ELSE
+               -- !!!для магазина PODIUM!!!
+               IF (inSession :: Integer) > 0 THEN ioCode:= lfGet_ObjectCode(0, zc_Object_Goods()); END IF;
+           END IF;
        END IF;
        
 
    END IF; 
    
-
    -- !!!замена!!!
    IF zc_Enum_GlobalConst_isTerry() = FALSE
    THEN

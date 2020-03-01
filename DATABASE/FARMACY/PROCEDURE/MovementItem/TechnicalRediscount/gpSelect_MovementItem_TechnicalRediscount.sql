@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TechnicalRediscount(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, DiffSumm TFloat
+             , CommentTRId Integer, CommentTRCode Integer, CommentTRName TVarChar, Explanation TVarChar
              , Price TFloat
              , isErased Boolean
              , Remains_Amount TFloat, Remains_Summ TFloat
@@ -80,6 +81,12 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)) :: TFloat AS DiffSumm
+
+              , Object_CommentTR.Id                                                 AS CommentTRId
+              , Object_CommentTR.ObjectCode                                         AS CommentTRCode
+              , Object_CommentTR.ValueData                                          AS CommentTRName
+              , MIString_Explanation.ValueData                                      AS Explanation
+
               , COALESCE(MIFloat_Price.ValueData, 0)::TFloat                        AS Price
 
               , MovementItem.isErased                                               AS isErased
@@ -123,6 +130,16 @@ BEGIN
                                             ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
                                            AND vbStatusId = zc_Enum_Status_Complete()
+
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                 ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                LEFT JOIN Object AS Object_CommentTR
+                                 ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+                LEFT JOIN MovementItemString AS MIString_Explanation
+                                             ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                            AND MIString_Explanation.DescId = zc_MIString_Explanation()
             ;
     ELSEIF inShowAll = TRUE
     THEN
@@ -201,6 +218,12 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS DiffSumm
+
+              , Object_CommentTR.Id                                                 AS CommentTRId
+              , Object_CommentTR.ObjectCode                                         AS CommentTRCode
+              , Object_CommentTR.ValueData                                          AS CommentTRName
+              , MIString_Explanation.ValueData                                      AS Explanation
+
               , COALESCE(MIFloat_Price.ValueData, tmpPrice.Price)::TFloat           AS Price
 
               , COALESCE(MovementItem.isErased, FALSE)::Boolean                     AS isErased
@@ -250,10 +273,19 @@ BEGIN
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
                                            AND vbStatusId = zc_Enum_Status_Complete()
 
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                 ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                LEFT JOIN Object AS Object_CommentTR
+                                 ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+                LEFT JOIN MovementItemString AS MIString_Explanation
+                                             ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                            AND MIString_Explanation.DescId = zc_MIString_Explanation()
             ;
 
     ELSEIF vbOperDate > CURRENT_DATE
-    THEN 
+    THEN
         -- ÐÅÇÓËÜÒÀÒ
         RETURN QUERY
             WITH tmpMovementItem AS (SELECT MovementItem.Id                                                     AS Id
@@ -294,7 +326,7 @@ BEGIN
                                            , Container.Amount                                                      AS Amount
                                         FROM tmpMovementItem
                                             LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
-                                                                     AND Container.DescID = zc_Container_Count() 
+                                                                     AND Container.DescID = zc_Container_Count()
                                                                      AND Container.WhereObjectId = vbUnitId
                                         GROUP BY
                                             Container.Id
@@ -332,6 +364,12 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS DiffSumm
+
+              , Object_CommentTR.Id                                                 AS CommentTRId
+              , Object_CommentTR.ObjectCode                                         AS CommentTRCode
+              , Object_CommentTR.ValueData                                          AS CommentTRName
+              , MIString_Explanation.ValueData                                      AS Explanation
+
               , COALESCE(MIFloat_Price.ValueData, tmpPrice.Price)::TFloat           AS Price
 
               , MovementItem.isErased                                               AS isErased
@@ -381,6 +419,15 @@ BEGIN
                                             ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
                                            AND vbStatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                 ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                LEFT JOIN Object AS Object_CommentTR
+                                 ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+                LEFT JOIN MovementItemString AS MIString_Explanation
+                                             ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                            AND MIString_Explanation.DescId = zc_MIString_Explanation()
             ;
 
     ELSE
@@ -424,7 +471,7 @@ BEGIN
                                            , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
                                         FROM tmpMovementItem
                                             LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
-                                                                     AND Container.DescID = zc_Container_Count() 
+                                                                     AND Container.DescID = zc_Container_Count()
                                                                      AND Container.WhereObjectId = vbUnitId
                                             LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
                                                                                  AND MovementItemContainer.Operdate >= vbOperDate
@@ -464,6 +511,12 @@ BEGIN
               , MovementItem.Amount                                                 AS Amount
 
               , (MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)) :: TFloat AS DiffSumm
+
+              , Object_CommentTR.Id                                                 AS CommentTRId
+              , Object_CommentTR.ObjectCode                                         AS CommentTRCode
+              , Object_CommentTR.ValueData                                          AS CommentTRName
+              , MIString_Explanation.ValueData                                      AS Explanation
+
               , COALESCE(MIFloat_Price.ValueData, tmpPrice.Price)::TFloat           AS Price
 
               , MovementItem.isErased                                               AS isErased
@@ -513,6 +566,15 @@ BEGIN
                                             ON MIFloat_Remains.MovementItemId = MovementItem.Id
                                            AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
                                            AND vbStatusId = zc_Enum_Status_Complete()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                                 ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+                LEFT JOIN Object AS Object_CommentTR
+                                 ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+                LEFT JOIN MovementItemString AS MIString_Explanation
+                                             ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                            AND MIString_Explanation.DescId = zc_MIString_Explanation()
             ;
 
     END IF;
@@ -530,3 +592,5 @@ ALTER FUNCTION gpSelect_MovementItem_TechnicalRediscount (Integer, Boolean, Bool
 
 -- òåñò
 -- select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 17785885 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+
+

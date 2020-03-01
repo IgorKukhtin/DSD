@@ -1505,6 +1505,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountCashierJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTechnicalRediscountCashierForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTechnicalRediscountCashierForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentTRForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentTRForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCommentTREditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCommentTREditForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

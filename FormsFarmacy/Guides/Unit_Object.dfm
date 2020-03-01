@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 516
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -163,7 +163,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 56
           end
           object isSUN: TcxGridDBColumn
-            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V.1)'
             DataBinding.FieldName = 'isSUN'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -181,7 +181,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 70
           end
           object isSUN_in: TcxGridDBColumn
-            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1087#1088#1080#1077#1084')'
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1087#1088#1080#1077#1084') (V.1)'
             DataBinding.FieldName = 'isSUN_in'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -190,7 +190,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 70
           end
           object isSUN_out: TcxGridDBColumn
-            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1086#1090#1087#1088#1072#1074#1082#1072')'
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1086#1090#1087#1088#1072#1074#1082#1072') (V.1)'
             DataBinding.FieldName = 'isSUN_out'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -217,7 +217,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 70
           end
           object isSUN_NotSold: TcxGridDBColumn
-            Caption = #1054#1090#1082#1083'. '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053
+            Caption = #1054#1090#1082#1083'. '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' (V.1)'
             DataBinding.FieldName = 'isSUN_NotSold'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -235,7 +235,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 85
           end
           object SunIncome: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1076#1085'. '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053')'
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053') (V.1)'
             DataBinding.FieldName = 'SunIncome'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

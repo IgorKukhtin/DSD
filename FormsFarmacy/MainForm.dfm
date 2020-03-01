@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 218
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4009,9 +4009,6 @@ inherited MainForm: TMainForm
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
       end
-      object N217: TMenuItem
-        Action = actReport_SendSUNDelay
-      end
       object N178: TMenuItem
         Caption = '-'
       end
@@ -4047,21 +4044,33 @@ inherited MainForm: TMainForm
       end
       object miReport_Movement_Send_RemainsSun: TMenuItem
         Action = actReport_Movement_Send_RemainsSun
+        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1087#1088#1080#1093#1086#1076#1099')'
       end
       object N222: TMenuItem
         Action = actReport_Movement_Send_RemainsSunOut
+        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1088#1072#1089#1093#1086#1076#1099')'
       end
       object miReport_GoodsSendSUN_over: TMenuItem
         Action = actReport_Send_RemainsSun_over
+        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1 ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
       end
       object miReport_CheckSendSUN_InOut: TMenuItem
         Action = actReport_CheckSendSUN_InOut
+        Caption = #1054#1090#1095#1077#1090' '#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object miReport_GoodsSendSUN: TMenuItem
         Action = actReport_GoodsSendSUN
+        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object miReport_SendSUN_SUNv2: TMenuItem
         Action = actReport_SendSUN_SUNv2
+        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2'
+      end
+      object N217: TMenuItem
+        Action = actReport_SendSUNDelay
+        Caption = 
+          #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
+          #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
       end
       object N202: TMenuItem
         Caption = '-'
@@ -4077,6 +4086,8 @@ inherited MainForm: TMainForm
       end
       object N204: TMenuItem
         Action = actPercentageOverdueSUN
+        Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053' v.1'
+        Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object N203: TMenuItem
         Caption = '-'
@@ -4098,9 +4109,12 @@ inherited MainForm: TMainForm
       end
       object N218: TMenuItem
         Action = actReport_CheckSUN
+        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053' v.1'
       end
       object N219: TMenuItem
         Action = actReport_SUNSaleDates
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
+        Hint = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
       end
     end
     object N40: TMenuItem [7]

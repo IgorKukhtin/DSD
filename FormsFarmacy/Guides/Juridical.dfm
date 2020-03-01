@@ -3,7 +3,7 @@ inherited JuridicalForm: TJuridicalForm
   ClientWidth = 761
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 777
-  ExplicitHeight = 347
+  ExplicitHeight = 346
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

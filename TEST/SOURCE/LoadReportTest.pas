@@ -355,12 +355,12 @@ begin
    LoadReportFromFile('PrintMovement_ReestrReturn', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturn.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrReturnStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrReturnStartPeriod.fr3');
-   }
+
    LoadReportFromFile('PrintMovement_ReestrTransportGoods', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoods.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsStartPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsStartPeriod.fr3');
    LoadReportFromFile('PrintMovement_ReestrTransportGoodsPeriod', ReportPath + '\Товарный Учет\PrintMovement_ReestrTransportGoodsPeriod.fr3');
    exit;
-   {
+
    LoadReportFromFile('PrintMovement_Reestr', ReportPath + '\Товарный Учет\PrintMovement_Reestr.fr3');
 
    LoadReportFromFile('PrintMovement_ReestrDriver', ReportPath + '\Товарный Учет\PrintMovement_ReestrDriver.fr3');
@@ -439,8 +439,10 @@ begin
 
   LoadReportFromFile('PrintMovement_SalePack21', ReportPath + '\Товарный Учет\PrintMovement_SalePack21.fr3');
   LoadReportFromFile('PrintMovement_Sale32294926', ReportPath + '\Товарный Учет\PrintMovement_Sale32294926.fr3');
+  }
+  LoadReportFromFile('PrintMovement_Sale32490244', ReportPath + '\Товарный Учет\PrintMovement_Sale32490244.fr3');
    exit;
-
+  {
   LoadReportFromFile('PrintMovement_SalePack22', ReportPath + '\Товарный Учет\PrintMovement_SalePack22.fr3');
 
   LoadReportFromFile('PrintMovement_ReturnIn_By_TaxCorrective', ReportPath + '\Товарный Учет\PrintMovement_ReturnIn_By_TaxCorrective.fr3');
@@ -488,7 +490,7 @@ begin
   LoadReportFromFile('PrintMovement_SaleJuridicalInvoice', ReportPath + '\Товарный Учет\PrintMovement_SaleJuridicalInvoice.fr3');
 
   TStrArrAdd(['35275230','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249'
-             ,'32049199', '31929492', '22447463', '36003603', '39118745', '2902403938']);
+             ,'32049199', '31929492', '22447463', '36003603', '39118745', '2902403938', '32294926']);
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
   exit;

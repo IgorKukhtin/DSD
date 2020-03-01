@@ -152,7 +152,7 @@ BEGIN
          END IF;
      END IF;
 
-     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId1 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName1)
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId1 AND Object.DescId = zc_Object_Member() AND Object.ValueData = inMemberName1)
      THEN
          -- нашли <отримав водій/експедитор>
          inMemberId1:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName1) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
@@ -167,7 +167,7 @@ BEGIN
          END IF;
      END IF;
 
-     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId2 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName2)
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId2 AND Object.DescId = zc_Object_Member() AND Object.ValueData = inMemberName2)
      THEN
          -- нашли <Бухгалтер (відповідальна особа вантажовідправника)>
          inMemberId2:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName2) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
@@ -182,7 +182,7 @@ BEGIN
          END IF;
      END IF;
 
-     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId3 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName3)
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId3 AND Object.DescId = zc_Object_Member() AND Object.ValueData = inMemberName3)
      THEN
          -- нашли <Відпуск дозволив>
          inMemberId3:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName3) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
@@ -212,7 +212,7 @@ BEGIN
      END IF;
      -- END IF;
 
-     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId5 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName5)
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId5 AND Object.DescId = zc_Object_Member() AND Object.ValueData = inMemberName5)
      THEN
          -- нашли <Прийняв водій/експедитор>
          inMemberId5:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName5) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
@@ -227,7 +227,7 @@ BEGIN
          END IF;
      END IF;
 
-     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId6 AND Object.DescId = zc_Object_Personal() AND Object.ValueData = inMemberName6)
+     IF NOT EXISTS (SELECT Object.Id FROM Object WHERE Object.Id = inMemberId6 AND Object.DescId = zc_Object_Member() AND Object.ValueData = inMemberName6)
      THEN
          -- нашли <Здав водій/експедитор>
          inMemberId6:= (SELECT Object_MemberExternal.Id FROM Object AS Object_MemberExternal WHERE Object_MemberExternal.ValueData = TRIM (inMemberName6) AND Object_MemberExternal.DescId = zc_Object_MemberExternal());
@@ -284,6 +284,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.02.20         * zc_Object_Member - вместо zc_Object_Personal
  17.03.16         *
  30.03.15                                        *
 */

@@ -90,6 +90,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 273
   end
@@ -103,7 +104,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 0
-    Width = 489
+    Width = 275
   end
   object edCompositionName: TcxButtonEdit
     Left = 8
@@ -255,6 +256,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Properties.ReadOnly = True
     TabOrder = 29
     Width = 210
+  end
+  object cbisCode: TcxCheckBox
+    Left = 289
+    Top = 26
+    Caption = #1053#1077' '#1080#1079#1084#1077#1085#1103#1090#1100' '#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
+    Properties.ReadOnly = True
+    TabOrder = 30
+    Width = 168
   end
   object ActionList: TActionList
     Left = 24
@@ -448,6 +457,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCode'
+        Value = Null
+        Component = cbisCode
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 452
@@ -468,6 +485,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsId'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'MovementId'
         Value = Null
         ParamType = ptInputOutput
@@ -476,6 +499,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'isMask'
         Value = Null
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isCode'
+        Value = Null
+        Component = cbisCode
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -501,6 +532,14 @@ object IncomeItemEditForm: TIncomeItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'GoodsGroupId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -869,7 +908,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 81
-    Top = 54
+    Top = 102
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -980,7 +1019,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
         MultiSelectSeparator = ','
       end>
     Left = 129
-    Top = 102
+    Top = 134
   end
   object GuidesGoodsInfo: TdsdGuides
     KeyField = 'Id'
@@ -1049,8 +1088,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 209
-    Top = 149
+    Left = 185
+    Top = 181
   end
   object GuidesLineFabrica: TdsdGuides
     KeyField = 'Id'
@@ -1119,8 +1158,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 89
-    Top = 189
+    Left = 129
+    Top = 229
   end
   object GuidesMeasure: TdsdGuides
     KeyField = 'Id'
@@ -1259,8 +1298,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 177
-    Top = 237
+    Left = 65
+    Top = 61
   end
   object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'

@@ -45,6 +45,12 @@ type
     actExecuteDialogData: TExecuteDialog;
     actExecTechnicalRediscount_Formation: TdsdExecStoredProc;
     spTechnicalRediscount_Formation: TdsdStoredProc;
+    isRedCheck: TcxGridDBColumn;
+    actChoiceUnitTreeForm: TOpenChoiceForm;
+    actAddRedCheck: TdsdExecStoredProc;
+    spInsertRedCheck: TdsdStoredProc;
+    actOpenTechnicalRediscount: TdsdOpenForm;
+    bbAddRedCheck: TdxBarButton;
   private
     { Private declarations }
   public

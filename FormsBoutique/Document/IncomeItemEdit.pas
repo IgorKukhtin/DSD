@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxCheckBox;
 
 type
   TIncomeItemEditForm = class(TParentForm)
@@ -76,6 +76,7 @@ type
     edGoodsCode: TcxCurrencyEdit;
     spUpdate_PriceWithoutPersent: TdsdStoredProc;
     actUpdate_PriceWithoutPersent: TdsdExecStoredProc;
+    cbisCode: TcxCheckBox;
   private
     { Private declarations }
   public

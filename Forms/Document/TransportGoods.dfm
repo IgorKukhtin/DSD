@@ -326,7 +326,7 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
-    Top = 349
+    Top = 325
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 104
@@ -1063,11 +1063,11 @@
   object GuidePersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1129,11 +1129,11 @@
   object GuideMember1: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember1
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1158,11 +1158,11 @@
   object GuideMember2: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember2
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1249,11 +1249,11 @@
   object GuideMember3: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember3
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -1278,11 +1278,11 @@
   object GuideMember4: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMember4
-    FormNameParam.Value = 'TMemberPlace_ObjectForm'
+    FormNameParam.Value = 'TMember_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TMemberPlace_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TMember_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

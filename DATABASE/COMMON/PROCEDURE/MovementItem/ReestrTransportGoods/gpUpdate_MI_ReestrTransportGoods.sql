@@ -205,6 +205,38 @@ BEGIN
        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartnerInTo(), vbId_mi, vbMemberId_user);
     END IF;
 
+    -- <Получено для переделки>
+    IF inReestrKindId = zc_Enum_ReestrKind_RemakeIn()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeIn(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInTo(), vbId_mi, vbMemberId_user);
+       -- сохранили связь с <кто сдал документ для визы "Получено для переделки">
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeInFrom(), vbId_mi, inMemberId);
+    END IF;
+    
+
+    -- <Бухгалтерия для исправления>
+    IF inReestrKindId = zc_Enum_ReestrKind_RemakeBuh()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_RemakeBuh(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RemakeBuh(), vbId_mi, vbMemberId_user);
+    END IF;
+
+
+    -- <Документ исправлен>
+    IF inReestrKindId = zc_Enum_ReestrKind_Remake()
+    THEN 
+       -- сохранили <когда сформирована виза>
+       PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Remake(), vbId_mi, CURRENT_TIMESTAMP);
+       -- сохранили связь с <кто сформировал визу>
+       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Remake(), vbId_mi, vbMemberId_user);
+    END IF;
+
+
     -- <Бухгалтерия>
     IF inReestrKindId = zc_Enum_ReestrKind_Buh()
     THEN 

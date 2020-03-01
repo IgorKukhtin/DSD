@@ -1,28 +1,28 @@
 inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
-  ClientHeight = 542
+  ClientHeight = 660
   ClientWidth = 1042
   ExplicitWidth = 1058
-  ExplicitHeight = 580
+  ExplicitHeight = 698
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 166
     Width = 1042
-    Height = 376
+    Height = 494
     ExplicitTop = 166
     ExplicitWidth = 1042
-    ExplicitHeight = 376
-    ClientRectBottom = 376
+    ExplicitHeight = 494
+    ClientRectBottom = 494
     ClientRectRight = 1042
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1042
-      ExplicitHeight = 352
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
         Width = 1042
-        Height = 352
+        Height = 332
         ExplicitWidth = 1042
-        ExplicitHeight = 352
+        ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -139,10 +139,33 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object PriceFrom: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'PriceFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1086#1088#1088'.)'
+            Options.Editing = False
+            Width = 74
+          end
+          object PriceTo: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1085#1086#1074#1072#1103')'
+            DataBinding.FieldName = 'PriceTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1085#1086#1074#1072#1103')'
+            Options.Editing = False
+            Width = 85
+          end
           object CountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -155,9 +178,350 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 100
           end
         end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 340
+        Width = 1042
+        Height = 130
+        Align = alBottom
+        PopupMenu = PopupMenu
+        TabOrder = 1
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DetailDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = childAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = childAmountPartner
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = childAmount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = childAmountPartner
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object isError: TcxGridDBColumn
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object childGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object childGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 209
+          end
+          object childGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object childAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1080#1074#1103#1079#1082#1072')'
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object childAmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object childPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object ChangePercent_Sale: TcxGridDBColumn
+            Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+            DataBinding.FieldName = 'ChangePercent_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object MovementPromo_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
+            DataBinding.FieldName = 'MovementPromo_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object DescName_Sale: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DescName_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'InvNumber'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object InvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object InvNumber_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object InvNumberPartner_Master: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object OperDate_Master: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'OperDate_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ContractCode_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractCode_Sale'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 71
+          end
+          object ContractName_Sale: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ContractName_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object ContractCode_Tax: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractCode_Tax'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
+          object ContractName_Tax: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1083#1086#1075'.)'
+            DataBinding.FieldName = 'ContractName_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object DocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 160
+          end
+          object FromName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'FromName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object ToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ToCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object ToName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object MovementId_sale: TcxGridDBColumn
+            Caption = 'Id1'
+            DataBinding.FieldName = 'MovementId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object MovementItemId_sale: TcxGridDBColumn
+            Caption = 'Id2'
+            DataBinding.FieldName = 'MovementItemId_sale'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object IsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+      object cxSplitter1: TcxSplitter
+        Left = 0
+        Top = 332
+        Width = 1042
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid1
       end
     end
     object cxTabSheetTaxCorrective: TcxTabSheet
@@ -167,7 +531,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Left = 0
         Top = 0
         Width = 1042
-        Height = 352
+        Height = 470
         Align = alClient
         TabOrder = 0
         object cxGridTaxCorrectiveDBTableView: TcxGridDBTableView
@@ -726,12 +1090,26 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
   end
   object edIsChecked: TcxCheckBox [2]
-    Left = 568
+    Left = 753
     Top = 103
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 6
     Width = 118
+  end
+  object cxLabel22: TcxLabel [3]
+    Left = 568
+    Top = 86
+    Caption = #1053#1072#1095'. '#1076#1072#1090#1072' '#1085#1072#1083#1086#1075'.'
+  end
+  object edStartDateTax: TcxDateEdit [4]
+    Left = 568
+    Top = 103
+    EditValue = 44008d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 8
+    Width = 96
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -763,6 +1141,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelect_MI_Child
         end
         item
           StoredProc = spSelectTaxCorrective
@@ -1280,6 +1661,338 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 58
     end
+    object actUpdateAuto: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAuto
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAuto
+        end
+        item
+          StoredProc = spSelect_MI_Child
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>'
+      ImageIndex = 7
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1082' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084' <'#1055#1088#1086#1076#1072#1078#1072'>.'
+    end
+    object actOpenReportForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 25
+      FormName = 'TReport_Goods_SalebyReturnInForm'
+      FormNameParam.Value = 'TReport_Goods_SalebyReturnInForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 44008d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPaidKindName'
+          Value = ''
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractId'
+          Value = ''
+          Component = GuidesContract
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inContractName'
+          Value = ''
+          Component = GuidesContract
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inGoodsKindName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportCheckForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1088#1080#1074#1103#1079#1082#1080' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      ImageIndex = 24
+      FormName = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.Value = 'TReport_Check_ReturnInToSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 44008d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actOpenReportCheckAmountForm: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1072' '#1074' '#1087#1088#1080#1074#1103#1079#1082#1077' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1082' '#1087#1088#1086#1076#1072#1078#1072#1084'>'
+      ImageIndex = 26
+      FormName = 'TReport_CheckAmount_ReturnInToSaleForm'
+      FormNameParam.Value = 'TReport_CheckAmount_ReturnInToSaleForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 44008d
+          Component = edStartDateTax
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 42181d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerId'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inPartnerName'
+          Value = ''
+          Component = GuidesPartner
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inJuridicalName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inInvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 42132d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1416,6 +2129,22 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenReportForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenReportCheckAmountForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbOpenTax'
         end
         item
@@ -1528,6 +2257,18 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object bbChecked: TdxBarButton
       Action = actChecked
+      Category = 0
+    end
+    object bbOpenReportForm: TdxBarButton
+      Action = actOpenReportForm
+      Category = 0
+    end
+    object bbOpenReportCheckForm: TdxBarButton
+      Action = actOpenReportCheckForm
+      Category = 0
+    end
+    object bbOpenReportCheckAmountForm: TdxBarButton
+      Action = actOpenReportCheckAmountForm
       Category = 0
     end
   end
@@ -1812,6 +2553,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'StartDateTax'
+        Value = 44008d
+        Component = edStartDateTax
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2004,8 +2752,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PriceCorrective_SetUnErased'
-    Left = 718
-    Top = 464
+    Left = 686
+    Top = 408
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PriceCorrective'
@@ -2907,7 +3655,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end>
     Left = 648
-    Top = 48
+    Top = 56
   end
   object spChecked: TdsdStoredProc
     StoredProcName = 'gpUpdateMovement_Checked'
@@ -2933,5 +3681,162 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     PackSize = 1
     Left = 272
     Top = 427
+  end
+  object dsdDBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = -1
+      end>
+    SearchAsFilter = False
+    Left = 414
+    Top = 569
+  end
+  object DetailDS: TDataSource
+    DataSet = DetailCDS
+    Left = 136
+    Top = 584
+  end
+  object DetailCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'ParentId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 96
+    Top = 592
+  end
+  object spSelect_MI_Child: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItemChild_PriceCorrective'
+    DataSet = DetailCDS
+    DataSets = <
+      item
+        DataSet = DetailCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 232
+    Top = 592
+  end
+  object spUpdateMIChild: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_ReturnIn_Child'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Sale'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemId_sale'
+        Value = Null
+        Component = DetailCDS
+        ComponentItem = 'MovementItemId_sale'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 576
+  end
+  object spUpdateAuto: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ReturnIn_Auto'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDateTax'
+        Value = 42181d
+        Component = edStartDateTax
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMessageText'
+        Value = Null
+        Component = actShowMessage
+        ComponentItem = 'MessageText'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 40
+    Top = 420
   end
 end
