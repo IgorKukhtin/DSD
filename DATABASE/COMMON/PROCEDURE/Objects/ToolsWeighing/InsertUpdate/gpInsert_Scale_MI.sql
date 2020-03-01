@@ -1,6 +1,7 @@
 -- Function: gpInsert_Scale_MI()
 
-DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Scale_MI (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inId                    Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +12,18 @@ CREATE OR REPLACE FUNCTION gpInsert_Scale_MI(
     IN inChangePercentAmount   TFloat    , -- % скидки для кол-ва
     IN inCountTare             TFloat    , -- Количество тары
     IN inWeightTare            TFloat    , -- Вес 1-ой тары
+    IN inCountTare1            TFloat    , -- Количество ящ. вида1
+    IN inWeightTare1           TFloat    , -- Вес ящ. вида1
+    IN inCountTare2            TFloat    , -- Количество ящ. вида2
+    IN inWeightTare2           TFloat    , -- Вес ящ. вида2
+    IN inCountTare3            TFloat    , -- Количество ящ. вида3
+    IN inWeightTare3           TFloat    , -- Вес ящ. вида3
+    IN inCountTare4            TFloat    , -- Количество ящ. вида4
+    IN inWeightTare4           TFloat    , -- Вес ящ. вида4
+    IN inCountTare5            TFloat    , -- Количество ящ. вида5
+    IN inWeightTare5           TFloat    , -- Вес ящ. вида5
+    IN inCountTare6            TFloat    , -- Количество ящ. вида6
+    IN inWeightTare6           TFloat    , -- Вес ящ. вида6
     IN inPrice                 TFloat    , -- Цена
     IN inPrice_Return          TFloat    , -- Цена
     IN inCountForPrice         TFloat    , -- Цена за количество
@@ -295,8 +308,9 @@ BEGIN
      -- определили Вес 1 ед. продукции + упаковка AND Вес упаковки для 1-ой ед. продукции
      SELECT ObjectFloat_WeightPackage.ValueData, ObjectFloat_WeightTotal.ValueData
           , CASE WHEN ObjectFloat_WeightTotal.ValueData <> 0 AND ObjectFloat_WeightPackage.ValueData <> 0 AND ObjectFloat_WeightTotal.ValueData > ObjectFloat_WeightPackage.ValueData
-                      THEN (inRealWeight - inCountTare * inWeightTare) / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
-                 ELSE (inRealWeight - inCountTare * inWeightTare)
+                      THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                         / (1 - ObjectFloat_WeightPackage.ValueData / ObjectFloat_WeightTotal.ValueData)
+                 ELSE (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
             END
             INTO vbWeightPack, vbWeightTotal, vbAmount_byPack
      FROM Object_GoodsByGoodsKind_View
@@ -352,21 +366,23 @@ BEGIN
                                                                                        WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
                                                                                         AND vbAmount_byPack <> 0
                                                                                             THEN vbAmount_byPack
-                                                                                       ELSE inRealWeight - inCountTare * inWeightTare
+                                                                                       ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
                                                                                   END
                                                        , inAmountPartner       := CASE -- !!!только Для Сканирования Метро!!!
                                                                                        /*WHEN vbRetailId IN (310828) -- Метро
-                                                                                            THEN CEIL ((inRealWeight - inCountTare * inWeightTare) * 100) / 100
+                                                                                            THEN CEIL ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6) * 100) / 100
                                                                                        */
                                                                                        WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
                                                                                             THEN vbAmount_byWeightTare_goods
                                                                                        WHEN inIsBarCode = TRUE
-                                                                                            THEN (inRealWeight - inCountTare * inWeightTare)
+                                                                                            THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                        WHEN inChangePercentAmount = 0
-                                                                                            THEN (inRealWeight - inCountTare * inWeightTare)
+                                                                                            THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
                                                                                        WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
-                                                                                            THEN CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
-                                                                                       ELSE CAST ((inRealWeight - inCountTare * inWeightTare) * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+                                                                                            THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                                     * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+                                                                                       ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                                                                                * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
                                                                                   END
                                                        , inRealWeight          := inRealWeight
                                                        , inChangePercentAmount := CASE WHEN inIsBarCode = TRUE
@@ -375,6 +391,18 @@ BEGIN
                                                                                   END
                                                        , inCountTare           := inCountTare
                                                        , inWeightTare          := inWeightTare
+                                                       , inCountTare1          := inCountTare1
+                                                       , inWeightTare1         := inWeightTare1
+                                                       , inCountTare2          := inCountTare2
+                                                       , inWeightTare2         := inWeightTare2
+                                                       , inCountTare3          := inCountTare3
+                                                       , inWeightTare3         := inWeightTare3
+                                                       , inCountTare4          := inCountTare4
+                                                       , inWeightTare4         := inWeightTare4
+                                                       , inCountTare5          := inCountTare5
+                                                       , inWeightTare5         := inWeightTare5
+                                                       , inCountTare6          := inCountTare6
+                                                       , inWeightTare6         := inWeightTare6
                                                        , inCountPack           := CASE WHEN inIsBarCode = TRUE AND vbWeightTotal <> 0
                                                                                             THEN vbAmount_byPack / vbWeightTotal
                                                                                        ELSE inCount

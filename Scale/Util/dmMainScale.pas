@@ -539,6 +539,18 @@ begin
        Params.AddParam('inChangePercentAmount', ftFloat, ptInput, execParamsMI.ParamByName('ChangePercentAmount').AsFloat);
        Params.AddParam('inCountTare', ftFloat, ptInput, execParamsMI.ParamByName('CountTare').AsFloat);
        Params.AddParam('inWeightTare', ftFloat, ptInput, execParamsMI.ParamByName('WeightTare').AsFloat);
+       Params.AddParam('inCountTare1', ftFloat, ptInput, execParamsMI.ParamByName('CountTare1').AsFloat);
+       Params.AddParam('inWeightTare1', ftFloat, ptInput, SettingMain.WeightTare1);
+       Params.AddParam('inCountTare2', ftFloat, ptInput, execParamsMI.ParamByName('CountTare2').AsFloat);
+       Params.AddParam('inWeightTare2', ftFloat, ptInput, SettingMain.WeightTare2);
+       Params.AddParam('inCountTare3', ftFloat, ptInput, execParamsMI.ParamByName('CountTare3').AsFloat);
+       Params.AddParam('inWeightTare3', ftFloat, ptInput, SettingMain.WeightTare3);
+       Params.AddParam('inCountTare4', ftFloat, ptInput, execParamsMI.ParamByName('CountTare4').AsFloat);
+       Params.AddParam('inWeightTare4', ftFloat, ptInput, SettingMain.WeightTare4);
+       Params.AddParam('inCountTare5', ftFloat, ptInput, execParamsMI.ParamByName('CountTare5').AsFloat);
+       Params.AddParam('inWeightTare5', ftFloat, ptInput, SettingMain.WeightTare5);
+       Params.AddParam('inCountTare6', ftFloat, ptInput, execParamsMI.ParamByName('CountTare6').AsFloat);
+       Params.AddParam('inWeightTare6', ftFloat, ptInput, SettingMain.WeightTare6);
        Params.AddParam('inPrice', ftFloat, ptInput, execParamsMI.ParamByName('Price').AsFloat);
        Params.AddParam('inPrice_Return', ftFloat, ptInput, execParamsMI.ParamByName('Price_Return').AsFloat);
        Params.AddParam('inCountForPrice', ftFloat, ptInput, execParamsMI.ParamByName('CountForPrice').AsFloat);

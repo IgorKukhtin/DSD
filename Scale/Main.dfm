@@ -939,6 +939,41 @@ object MainForm: TMainForm
             Format = ',0.####'
             Kind = skSum
             Column = HeadCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTareTotal
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare3
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare4
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare5
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare6
           end>
         DataController.Summary.FooterSummaryItems = <
           item
@@ -980,6 +1015,41 @@ object MainForm: TMainForm
             Format = ',0.####'
             Kind = skSum
             Column = HeadCount
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTareTotal
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare1
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare2
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare3
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare4
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare5
+          end
+          item
+            Format = ',0.####'
+            Kind = skSum
+            Column = CountTare6
           end>
         DataController.Summary.SummaryGroups = <>
         OptionsCustomize.ColumnHiding = True
@@ -1145,17 +1215,6 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
-        object RealWeight: TcxGridDBColumn
-          Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
-          DataBinding.FieldName = 'RealWeight'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DecimalPlaces = 4
-          Properties.DisplayFormat = ',0.####;-,0.####; ;'
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 55
-        end
         object Count: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1087#1072#1082#1077#1090#1086#1074
           DataBinding.FieldName = 'Count'
@@ -1167,9 +1226,9 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
-        object WeightTareTotal: TcxGridDBColumn
-          Caption = #1042#1077#1089' '#1090#1072#1088#1099
-          DataBinding.FieldName = 'WeightTareTotal'
+        object RealWeight: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1085#1072' '#1058#1072#1073#1083#1086
+          DataBinding.FieldName = 'RealWeight'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1178,16 +1237,25 @@ object MainForm: TMainForm
           Options.Editing = False
           Width = 55
         end
-        object WeightTare: TcxGridDBColumn
-          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099
-          DataBinding.FieldName = 'WeightTare'
+        object CountTareTotal: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1048#1090#1086#1075
+          DataBinding.FieldName = 'CountTareTotal'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1048#1090#1086#1075#1086
+          Width = 50
+        end
+        object WeightTareTotal: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1090#1072#1088#1099' '#1048#1090#1086#1075
+          DataBinding.FieldName = 'WeightTareTotal'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4
           Properties.DisplayFormat = ',0.####;-,0.####; ;'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1090#1072#1088#1099' '#1048#1090#1086#1075#1086
           Options.Editing = False
-          Width = 50
+          Width = 55
         end
         object CountTare: TcxGridDBColumn
           Caption = #1050#1086#1083'. '#1090#1072#1088#1099
@@ -1198,6 +1266,153 @@ object MainForm: TMainForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Options.Editing = False
+          Width = 50
+        end
+        object WeightTare: TcxGridDBColumn
+          Caption = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099
+          DataBinding.FieldName = 'WeightTare'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 50
+        end
+        object CountTare1: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.1'
+          DataBinding.FieldName = 'CountTare1'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Width = 50
+        end
+        object CountTare2: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.3'
+          DataBinding.FieldName = 'CountTare2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 2'
+          Width = 50
+        end
+        object CountTare3: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.3'
+          DataBinding.FieldName = 'CountTare3'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 3'
+          Width = 50
+        end
+        object CountTare4: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.4'
+          DataBinding.FieldName = 'CountTare4'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Width = 50
+        end
+        object CountTare5: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.5'
+          DataBinding.FieldName = 'CountTare5'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Width = 50
+        end
+        object CountTare6: TcxGridDBColumn
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.6'
+          DataBinding.FieldName = 'CountTare6'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Width = 50
+        end
+        object WeightTare1: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.1'
+          DataBinding.FieldName = 'WeightTare1'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 1'
+          Width = 50
+        end
+        object WeightTare2: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.2'
+          DataBinding.FieldName = 'WeightTare2'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 2'
+          Width = 50
+        end
+        object WeightTare3: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.3'
+          DataBinding.FieldName = 'WeightTare3'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 3'
+          Width = 50
+        end
+        object WeightTare4: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.4'
+          DataBinding.FieldName = 'WeightTare4'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 41'
+          Width = 50
+        end
+        object WeightTare5: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.5'
+          DataBinding.FieldName = 'WeightTare5'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 5'
+          Width = 50
+        end
+        object WeightTare6: TcxGridDBColumn
+          Caption = #1042#1077#1089' 1 '#1090#1072#1088#1099' '#1074'.6'
+          DataBinding.FieldName = 'WeightTare6'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DecimalPlaces = 4
+          Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          Visible = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderHint = #1042#1077#1089' '#1086#1076#1085#1086#1081' '#1090#1072#1088#1099' '#1074#1080#1076' 6'
           Width = 50
         end
         object LevelNumber: TcxGridDBColumn

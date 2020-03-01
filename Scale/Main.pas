@@ -233,6 +233,19 @@ type
     bbReestrStartTTN: TSpeedButton;
     bbReestrPartnerInTTN: TSpeedButton;
     actReestrPartnerInTTN: TdsdOpenForm;
+    CountTare1: TcxGridDBColumn;
+    CountTare2: TcxGridDBColumn;
+    CountTare3: TcxGridDBColumn;
+    CountTare4: TcxGridDBColumn;
+    CountTare5: TcxGridDBColumn;
+    CountTare6: TcxGridDBColumn;
+    WeightTare1: TcxGridDBColumn;
+    WeightTare2: TcxGridDBColumn;
+    WeightTare3: TcxGridDBColumn;
+    WeightTare4: TcxGridDBColumn;
+    WeightTare5: TcxGridDBColumn;
+    WeightTare6: TcxGridDBColumn;
+    CountTareTotal: TcxGridDBColumn;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -1094,7 +1107,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.CDSAfterOpen(DataSet: TDataSet);
 var bm: TBookmark;
-    AmountPartnerWeight,AmountWeight,RealWeight,WeightTare: Double;
+    AmountPartnerWeight,AmountWeight,RealWeight,WeightTare,CountTare : Double;
     ErasedCount:Integer;
 begin
   with DataSet do
@@ -1106,6 +1119,7 @@ begin
        AmountWeight:=0;
        RealWeight:=0;
        WeightTare:=0;
+       CountTare:=0;
        ErasedCount:=0;
        while not EOF do begin
           if FieldByName('isErased').AsBoolean=false then
@@ -1114,6 +1128,7 @@ begin
             AmountWeight:=AmountWeight+FieldByName('AmountWeight').AsFloat;
             RealWeight:=RealWeight+FieldByName('RealWeightWeight').AsFloat;
             WeightTare:=WeightTare+FieldByName('WeightTareTotal').AsFloat;
+            CountTare:=CountTare+FieldByName('CountTareTotal').AsFloat;
           end
           else ErasedCount:= ErasedCount+1;
           //
@@ -1127,7 +1142,7 @@ begin
     PanelAmountPartnerWeight.Caption:=FormatFloat(',0.000#'+' Í„.',AmountPartnerWeight);
     PanelAmountWeight.Caption:=FormatFloat(',0.000#'+' Í„.',AmountWeight);
     PanelRealWeight.Caption:=FormatFloat(',0.000#'+' Í„.',RealWeight);
-    PanelWeightTare.Caption:=FormatFloat(',0.000#'+' Í„.',WeightTare);
+    PanelWeightTare.Caption:=FormatFloat(',0.####'+' ¯Ú.',CountTare) + ' / ' + FormatFloat(',0.000#'+' Í„.',WeightTare);
     PanelErasedCount.Caption:=IntToStr(ErasedCount);
 end;
 //------------------------------------------------------------------------------------------------
@@ -1433,9 +1448,22 @@ begin
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('AmountPartner').Index].Visible       := FALSE;
      //DataBinding.FieldName = 'Amount'
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTareTotal').Index].Visible      := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTareTotal').Index].Visible     := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare').Index].Visible           := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare1').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare1').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare2').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare2').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare3').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare3').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare4').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare4').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare5').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare5').Index].Visible          := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('WeightTare6').Index].Visible         := FALSE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountTare6').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('UpdateDate').Index].Visible          := FALSE;
      cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isErased').Index].Visible            := FALSE;
   end;

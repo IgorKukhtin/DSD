@@ -588,29 +588,29 @@ begin
                 else
                      if ActiveControl=EditTare1 then
                      if infoPanelTare2.Visible then ActiveControl:=EditTare2
-                     else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                     else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare2 then
                           if infoPanelTare3.Visible then ActiveControl:=EditTare3
-                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare3 then
                           if infoPanelTare4.Visible then ActiveControl:=EditTare4
-                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare4 then
                           if infoPanelTare5.Visible then ActiveControl:=EditTare5
-                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare5 then
                           if infoPanelTare6.Visible then ActiveControl:=EditTare6
-                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                          else if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
                      else if ActiveControl=EditTare6 then
-                          if infoPanelTare0.Visible then ActiveControl:=EditTare0
+                          if infoPanelTare0.Visible then ActiveControl:=EditTare0 else ActiveControl:=EditChangePercentAmountCode
 
-                     else if ActiveControl=EditTare0 then
-                          ActiveControl:=EditChangePercentAmountCode
+                     else if ActiveControl=EditTare0
+                          then ActiveControl:=EditChangePercentAmountCode
 
                 else if ActiveControl=EditTareWeightCode then if (rgTareWeight.ItemIndex=rgTareWeight.Items.Count-1)and(gbTareWeightEnter.Visible)
                                                         then ActiveControl:=EditTareWeightEnter
@@ -1716,7 +1716,7 @@ begin
   else if infoPanelTare2.Visible then infoPanelTareFix.Height:=35*2
   else if infoPanelTare1.Visible then infoPanelTareFix.Height:=35*1;
   if infoPanelTare0.Visible then infoPanelTareFix.Height:=infoPanelTareFix.Height + 35;
-  infoPanelTareFix.Height:=infoPanelTareFix.Height + 5;
+  infoPanelTareFix.Height:=infoPanelTareFix.Height + 4;
   //
   LabelTare1.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare1)+' кг';
   LabelTare2.Caption:= 'Тара по '+FloatToStr(SettingMain.WeightTare2)+' кг';
