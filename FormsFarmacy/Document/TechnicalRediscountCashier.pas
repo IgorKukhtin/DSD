@@ -46,6 +46,8 @@ type
     CommentTRName: TcxGridDBColumn;
     Explanation: TcxGridDBColumn;
     actChoiceCommentTR: TOpenChoiceForm;
+    actChoiceGoods: TOpenChoiceForm;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

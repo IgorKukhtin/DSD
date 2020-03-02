@@ -36,7 +36,7 @@ BEGIN
       */
       -- сохранили свойство <>
       PERFORM lpInsertUpdate_MovementItemString (zc_MIString_GUID(), vbId, vbGUID);
-      PERFORM lpInsertUpdate_MovementItem_PromoCode_GUID (ioId, outGUID, vbUserId);
+      PERFORM lpInsertUpdate_MovementItem_PromoCode_GUID (vbId, vbGUID, vbUserId);
   
       -- сохранили связь с <>
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), vbId, vbUserId);
