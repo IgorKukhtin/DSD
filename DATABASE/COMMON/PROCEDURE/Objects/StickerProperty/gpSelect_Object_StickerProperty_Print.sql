@@ -467,9 +467,10 @@ BEGIN
 
                               -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
                               || tmpLanguageParam.Value8 ||': '
+
                               -- вуглеводи не більше
-                              || CASE WHEN Sticker_Value1.ValueData <> 0 THEN
-                                 tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
+                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData = 0 --  з них насичені (жири) 
+                                           THEN tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
                                  ELSE '' END
 
                               -- білки OR білки не менше
@@ -487,9 +488,13 @@ BEGIN
                                           THEN ', з них насичені' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value6.ValueData, 0)) || tmpLanguageParam.Value12
                                      ELSE ''
                                 END ||''
+                              -- вуглеводи
+                              || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                                           THEN ', вуглеводи' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16
+                                 ELSE '' END
                               --  цукри 
                               ||CASE WHEN Sticker_Value6.ValueData > 0 --  
-                                          THEN ',  цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
+                                          THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
                                      ELSE ''
                                 END ||''
                               --  сіль  

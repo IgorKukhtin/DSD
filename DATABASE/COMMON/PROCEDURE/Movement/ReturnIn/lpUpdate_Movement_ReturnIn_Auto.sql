@@ -188,7 +188,7 @@ BEGIN
               , tmpMI_ReturnIn AS (SELECT tmpMI_sale.MovementId_sale
                                         , tmpMI_sale.GoodsId
                                         , tmpMI_sale.GoodsKindId
-                                        , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIF_PriceFrom.ValueData ELSE MIF_Price.ValueData END AS Price_find
+                                        , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceFrom.ValueData ELSE MIFloat_Price.ValueData END AS Price_find
                                         , SUM (MovementItem.Amount) AS Amount_return
                                    FROM tmpMI_sale
                                         -- !!!обязательно по документу!!!
@@ -209,15 +209,15 @@ BEGIN
                                                                     ON MIFloat_Price.MovementItemId = MovementItem.ParentId -- !!!из  "главного"!!!
                                                                    AND MIFloat_Price.DescId         = zc_MIFloat_Price()
                                                                    -- AND MIFloat_Price.ValueData      = tmpMI_sale.Price_original
-                                        LEFT JOIN MovementItemFloat AS MIF_PriceFrom
-                                                                    ON MIF_PriceFrom.MovementItemId = MI.Id
-                                                                   AND MIF_PriceFrom.DescId         = zc_MIFloat_PriceFrom()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
+                                                                    ON MIFloat_PriceFrom.MovementItemId = MovementItem.ParentId
+                                                                   AND MIFloat_PriceFrom.DescId         = zc_MIFloat_PriceFrom()
 
                                    WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = tmpMI_sale.GoodsKindId
                                    GROUP BY tmpMI_sale.MovementId_sale
                                           , tmpMI_sale.GoodsId
                                           , tmpMI_sale.GoodsKindId
-                                          , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIF_PriceFrom.ValueData ELSE MIF_Price.ValueData END
+                                          , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceFrom.ValueData ELSE MIFloat_Price.ValueData END
                                   )
                 -- продажа МИНУС уже проведенный возврат от пок.
               , tmpResult AS (SELECT tmpMI_sale.MovementItemId

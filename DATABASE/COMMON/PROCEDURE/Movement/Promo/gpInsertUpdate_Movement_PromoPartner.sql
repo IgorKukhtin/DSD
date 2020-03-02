@@ -227,24 +227,37 @@ BEGIN
     IF EXISTS(SELECT 1 
               FROM
                   Movement_PromoPartner_View AS Movement_PromoPartner
-                  LEFT OUTER JOIN(
-                                    SELECT
-                                        PartnerId
-                                    FROM 
-                                        lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
-                                    WHERE
-                                        Movement_PromoPriceList.PriceListId in (zc_PriceList_Basis(),outPriceListId)
+                  LEFT OUTER JOIN (SELECT Movement_PromoPriceList.PartnerId
+                                   FROM lpGet_Movement_PromoPriceList (inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                                   WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
                                  ) AS Movement_PromoPriceList
-                                   ON Movement_PromoPartner.PartnerId = Movement_PromoPriceList.PartnerId
-              WHERE
-                  Movement_PromoPartner.ParentId = inParentId
-                  AND
-                  Movement_PromoPartner.isErased = FALSE
-                  AND
-                  Movement_PromoPriceList.PartnerId is null
+                                   ON Movement_PromoPriceList.PartnerId = Movement_PromoPartner.PartnerId
+              WHERE Movement_PromoPartner.ParentId    = inParentId
+                AND Movement_PromoPartner.isErased    = FALSE
+                AND Movement_PromoPriceList.PartnerId IS NULL
              )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе есть партнер с прайслистом не равным установленному в акции.';
+        RAISE EXCEPTION 'Ошибка. В документе есть партнер с прайс-листом не равным установленному в акции <%> <%>.'
+                      , (SELECT lfGet_Object_ValueData_sh (Movement_PromoPriceList.PartnerId)
+                         FROM lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                         WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
+                           AND Movement_PromoPriceList.PartnerId NOT IN (SELECT Movement_PromoPartner.PartnerId
+                                                                         FROM Movement_PromoPartner_View AS Movement_PromoPartner
+                                                                         WHERE Movement_PromoPartner.ParentId    = inParentId
+                                                                           AND Movement_PromoPartner.isErased    = FALSE
+                                                                           AND Movement_PromoPriceList.PartnerId IS NULL)
+                         LIMIT 1
+                        )
+                      , (SELECT COUNT(*)
+                         FROM lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                         WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
+                           AND Movement_PromoPriceList.PartnerId NOT IN (SELECT Movement_PromoPartner.PartnerId
+                                                                         FROM Movement_PromoPartner_View AS Movement_PromoPartner
+                                                                         WHERE Movement_PromoPartner.ParentId    = inParentId
+                                                                           AND Movement_PromoPartner.isErased    = FALSE
+                                                                           AND Movement_PromoPriceList.PartnerId IS NULL)
+                        )
+             ;
     END IF;
     
     -- сохранили связь с <Контракт>
