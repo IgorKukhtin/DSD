@@ -11,9 +11,9 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountPartner(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-
-   DECLARE vbIsPack  Boolean;
+   DECLARE vbUserId     Integer;
+   DECLARE vbIsPack     Boolean;
+   DECLARE vbIsTushenka Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -21,6 +21,8 @@ BEGIN
 
     -- расчет, временно захардкодил
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
+    -- расчет, временно захардкодил - To = ЦЕХ Тушенка
+    vbIsTushenka:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 2790412); -- ЦЕХ Тушенка
 
 
     -- таблица -
@@ -40,16 +42,20 @@ BEGIN
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                   WHERE ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
+                                                   WHERE ((Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30101()            -- Доходы + Продукция + Готовая продукция 
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Продукция + запечена...
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                           )
-                                                         AND vbIsPack = FALSE)
+                                                         AND vbIsPack = FALSE AND vbIsTushenka = FALSE)
                                                    OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                           )
-                                                         AND vbIsPack = TRUE)
+                                                         AND vbIsPack = TRUE AND vbIsTushenka = FALSE)
+                                                      
+                                                      OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
+                                                          )
+                                                         AND vbIsPack = FALSE AND vbIsTushenka = TRUE)
                                                   )
                     , tmpOrder_all AS (SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId

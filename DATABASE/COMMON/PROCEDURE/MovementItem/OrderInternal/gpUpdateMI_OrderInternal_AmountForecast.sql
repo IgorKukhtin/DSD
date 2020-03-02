@@ -12,10 +12,11 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountForecast(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId     Integer;
 
-   DECLARE vbIsPack  Boolean;
-   DECLARE vbIsBasis Boolean;
+   DECLARE vbIsPack     Boolean;
+   DECLARE vbIsBasis    Boolean;
+   DECLARE vbIsTushenka Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
@@ -25,7 +26,9 @@ BEGIN
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
     -- расчет, временно захардкодил
     vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)); -- ЦЕХ колбаса+дел-сы
- 
+     -- расчет, временно захардкодил - To = ЦЕХ Тушенка
+    vbIsTushenka:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 2790412); -- ЦЕХ Тушенка
+
 
     
     -- !!!НАШЛИ!!!
@@ -56,11 +59,16 @@ BEGIN
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
                                                                             AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                                                   WHERE ((Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция + Готовая продукция and Тушенка and Хлеб
+                                                   WHERE ((Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200() -- Доходы + Мясное сырье : запечена...
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
                                                           )
-                                                         AND vbIsPack = FALSE AND vbIsBasis = FALSE)
+                                                         AND vbIsPack = FALSE AND vbIsBasis = FALSE AND vbIsTushenka = FALSE)
+
+                                                   OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
+                                                       )
+                                                      AND vbIsPack = FALSE AND vbIsBasis = FALSE AND vbIsTushenka = TRUE)
+
                                                    OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
@@ -399,6 +407,8 @@ BEGIN
                                               , MILinkObject_GoodsKind.ObjectId
                                        HAVING SUM (COALESCE (MovementItem.Amount, 0)) <> 0   
                                       )
+                                      
+                                      
                                     , tmpMI AS
                                       (SELECT MovementItem.Id                               AS MovementItemId 
                                             , MovementItem.ObjectId                         AS GoodsId
