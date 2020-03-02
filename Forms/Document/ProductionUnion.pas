@@ -87,6 +87,7 @@ type
     spSelectPrintNoGroup: TdsdStoredProc;
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
+    cbisPeresort: TcxCheckBox;
   private
     { Private declarations }
   public

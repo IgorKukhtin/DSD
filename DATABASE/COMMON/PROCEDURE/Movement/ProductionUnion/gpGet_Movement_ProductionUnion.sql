@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order TVarChar
+             , isPeresort Boolean
                )
 AS
 $BODY$
@@ -58,7 +59,8 @@ BEGIN
              , CAST ('' AS TVarChar) 				AS InvNumber_ProductionFull
 
              , 0                                                AS MovementId_Order
-             , '' :: TVarChar                                   AS InvNumber_Order 
+             , '' :: TVarChar                                   AS InvNumber_Order
+             , FALSE  :: Boolean                                AS isPeresort
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -86,6 +88,8 @@ BEGIN
 
          , Movement_Order.Id                        AS MovementId_Order
          , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar) :: TVarChar AS InvNumber_Order
+         
+         , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
      FROM Movement
           LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -107,6 +111,10 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                     ON MovementBoolean_isAuto.MovementId = Movement.Id
                                    AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_Peresort
+                                    ON MovementBoolean_Peresort.MovementId = Movement.Id
+                                   AND MovementBoolean_Peresort.DescId = zc_MovementBoolean_Peresort()
 
           LEFT JOIN MovementDate AS MovementDate_Insert
                                  ON MovementDate_Insert.MovementId = Movement.Id

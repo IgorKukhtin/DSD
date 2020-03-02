@@ -5,7 +5,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1042
-  ExplicitHeight = 376
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +24,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
       inherited cxGrid: TcxGrid
         Width = 1026
         Height = 261
+        ExplicitLeft = 3
+        ExplicitTop = 40
         ExplicitWidth = 1026
         ExplicitHeight = 261
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -837,6 +839,15 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Visible = False
             VisibleForCustomization = False
             Width = 55
+          end
+          object isPeresort: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072
+            DataBinding.FieldName = 'isPeresort'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' '#1044#1072'/'#1053#1077#1090
+            Options.Editing = False
+            Width = 40
           end
         end
       end
