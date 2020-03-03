@@ -68,6 +68,10 @@ BEGIN
              PERFORM lpAddObject_Goods_Temp_Error('gpInsertUpdate_Object_Goods_MinimumLot', text_var1::TVarChar, vbUserId);
         END;
     END IF;
+    
+    -- сохранили протокол
+    PERFORM lpInsert_ObjectProtocol (vbGoodsId, vbUserId);
+
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
@@ -75,6 +79,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 03.03.20         * add Protocol - Любе нужно видеть когда есть изменения
  21.10.19                                                                      * 
  08.02.18         *
  15.08.15                                                          *
