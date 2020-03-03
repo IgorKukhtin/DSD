@@ -69,6 +69,8 @@ type
     cxLabel18: TcxLabel;
     edPasswordEHels: TcxTextEdit;
     cxLabel19: TcxLabel;
+    ceSummaTechnicalRediscount: TcxCurrencyEdit;
+    cxLabel20: TcxLabel;
   private
     { Private declarations }
   public

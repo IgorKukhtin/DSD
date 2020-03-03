@@ -10,21 +10,21 @@ inherited WagesUserForm: TWagesUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 127
+    Top = 131
     Width = 655
-    Height = 322
+    Height = 318
     TabOrder = 0
     ExplicitTop = 127
     ExplicitWidth = 655
     ExplicitHeight = 322
-    ClientRectBottom = 322
+    ClientRectBottom = 318
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
       ExplicitHeight = 322
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 207
+        Height = 203
         ExplicitWidth = 655
         ExplicitHeight = 207
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -79,12 +79,13 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 207
+        Top = 203
         Width = 655
         Height = 115
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 207
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -254,7 +255,7 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 655
-    Height = 101
+    Height = 105
     Align = alTop
     ShowCaption = False
     TabOrder = 1
@@ -421,6 +422,19 @@ inherited WagesUserForm: TWagesUserForm
       Left = 14
       Top = 78
       Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
+    end
+    object ceSummaTechnicalRediscount: TcxCurrencyEdit
+      Left = 436
+      Top = 77
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      TabOrder = 25
+      Width = 65
+    end
+    object cxLabel20: TcxLabel
+      Left = 335
+      Top = 78
+      Caption = #1058#1077#1093#1085#1080#1095'. '#1087#1077#1088#1077#1091#1095#1077#1090
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -697,6 +711,13 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'SummaSUN1'
         Value = Null
         Component = ceSUN1
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaTechnicalRediscount'
+        Value = Null
+        Component = ceSummaTechnicalRediscount
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
