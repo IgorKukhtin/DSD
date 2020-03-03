@@ -1,24 +1,24 @@
 inherited ProductionUnionForm: TProductionUnionForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077'>'
-  ClientWidth = 1020
-  ExplicitWidth = 1036
+  ClientWidth = 1000
+  ExplicitWidth = 1016
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 122
-    Width = 1020
+    Width = 1000
     Height = 552
     TabOrder = 2
     ExplicitTop = 122
     ExplicitWidth = 1020
     ExplicitHeight = 552
     ClientRectBottom = 552
-    ClientRectRight = 1020
+    ClientRectRight = 1000
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 528
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1000
         Height = 220
         ExplicitWidth = 1020
         ExplicitHeight = 220
@@ -300,7 +300,7 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxGridChild: TcxGrid
         Top = 225
-        Width = 1020
+        Width = 1000
         ExplicitTop = 225
         ExplicitWidth = 1020
         inherited cxGridDBTableViewChild: TcxGridDBTableView
@@ -450,14 +450,14 @@ inherited ProductionUnionForm: TProductionUnionForm
       end
       inherited cxBottomSplitter: TcxSplitter
         Top = 220
-        Width = 1020
+        Width = 1000
         ExplicitTop = 220
         ExplicitWidth = 1020
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1000
     Height = 96
     ExplicitWidth = 1020
     ExplicitHeight = 96
@@ -537,7 +537,7 @@ inherited ProductionUnionForm: TProductionUnionForm
   end
   object edIsAuto: TcxCheckBox [2]
     Left = 216
-    Top = 61
+    Top = 65
     Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
     Properties.ReadOnly = True
     TabOrder = 6
@@ -556,9 +556,17 @@ inherited ProductionUnionForm: TProductionUnionForm
     TabOrder = 7
     Width = 145
   end
+  object cbisPeresort: TcxCheckBox [4]
+    Left = 216
+    Top = 45
+    Caption = #1055#1077#1088#1077#1089#1086#1088#1090#1080#1094#1072' ('#1076#1072'/'#1085#1077#1090')'
+    Properties.ReadOnly = True
+    TabOrder = 8
+    Width = 192
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 931
-    Top = 32
+    Left = 827
+    Top = 40
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -1111,6 +1119,13 @@ inherited ProductionUnionForm: TProductionUnionForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPeresort'
+        Value = Null
+        Component = cbisPeresort
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 176
@@ -1378,7 +1393,8 @@ inherited ProductionUnionForm: TProductionUnionForm
   inherited GuidesTo: TdsdGuides
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormName = 'TStoragePlace_ObjectForm'
-    Left = 720
+    Left = 704
+    Top = 0
   end
   inherited GuidesFrom: TdsdGuides
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -1696,8 +1712,8 @@ inherited ProductionUnionForm: TProductionUnionForm
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 345
-    Top = 24
+    Left = 369
+    Top = 120
   end
   object spSelectPrintNoGroup: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Send_Print'

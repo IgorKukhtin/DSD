@@ -1444,10 +1444,10 @@ begin
 end;
 procedure TLoadFormTest.LoadProductionUnionFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
- }
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
@@ -1464,6 +1464,7 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
@@ -1938,11 +1939,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SupplyBalanceDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SupplyBalanceDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
 
@@ -2029,9 +2030,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxDialogForm');
   exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
 
@@ -3369,11 +3372,10 @@ end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
  begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-  exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   {

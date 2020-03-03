@@ -37,7 +37,7 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
      END IF;
 
-     SELECT Movement.OperDate
+/*     SELECT Movement.OperDate
      INTO vbOperDate
      FROM Movement
      WHERE Movement.ID = inMovementId;
@@ -56,7 +56,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
      END IF;
-
+*/
      IF COALESCE(inCommentTRID, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка. Не выбран <Комментарий к строке технического переучета>.';

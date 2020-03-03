@@ -11,17 +11,17 @@ inherited SendForm: TSendForm
     Width = 1172
     Height = 476
     ExplicitTop = 126
-    ExplicitWidth = 1050
+    ExplicitWidth = 1172
     ExplicitHeight = 476
     ClientRectBottom = 476
     ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
+      ExplicitWidth = 1172
       ExplicitHeight = 452
       inherited cxGrid: TcxGrid
         Width = 1172
         Height = 452
-        ExplicitWidth = 1050
+        ExplicitWidth = 1172
         ExplicitHeight = 452
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -357,7 +357,7 @@ inherited SendForm: TSendForm
     Width = 1172
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1050
+    ExplicitWidth = 1172
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -884,6 +884,82 @@ inherited SendForm: TSendForm
         end>
       isShowModal = True
     end
+    object actPrintSaleOrder: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_SaleOrder
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrder
+        end>
+      Caption = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintSaleOrderTax: TdsdPrintAction
+      Category = 'Print'
+      MoveParams = <>
+      StoredProc = spSelectPrint_SaleOrderTax
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_SaleOrderTax
+        end>
+      Caption = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      Hint = #1047#1072#1103#1074#1082#1072'/'#1086#1090#1075#1088#1091#1079#1082#1072' '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1085#1072' %'
+      ImageIndex = 18
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupNameFull;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_Sale_Order'
+      ReportNameParam.Value = 'PrintMovement_Sale_Order'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -1016,6 +1092,18 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSaleOrder'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintSaleOrderTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -1033,6 +1121,14 @@ inherited SendForm: TSendForm
     end
     object bbPrintNoGroup: TdxBarButton
       Action = actPrintNoGroup
+      Category = 0
+    end
+    object bbPrintSaleOrder: TdxBarButton
+      Action = actPrintSaleOrder
+      Category = 0
+    end
+    object bbPrintSaleOrderTax: TdxBarButton
+      Action = actPrintSaleOrderTax
       Category = 0
     end
   end
@@ -2082,5 +2178,93 @@ inherited SendForm: TSendForm
       end>
     Left = 768
     Top = 56
+  end
+  object spSelectPrint_SaleOrder: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 967
+    Top = 224
+  end
+  object spSelectPrint_SaleOrderTax: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Order_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Weighing'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiff'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsDiffTax'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 999
+    Top = 280
   end
 end

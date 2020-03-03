@@ -5114,8 +5114,8 @@ inherited SaleJournalForm: TSaleJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 615
-    Top = 216
+    Left = 623
+    Top = 240
   end
   object spGetReportNameQuality: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Quality_ReportName'

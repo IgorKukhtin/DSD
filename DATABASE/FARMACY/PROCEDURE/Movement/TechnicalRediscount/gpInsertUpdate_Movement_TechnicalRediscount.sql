@@ -16,7 +16,13 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TechnicalRediscount());
+     IF COALESCE(ioId, 0) = 0
+     THEN
+        vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TechnicalRediscount());
+     ELSE
+        vbUserId:= lpGetUserBySession (inSession);
+     END IF;
+     
      
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_TechnicalRediscount (ioId               := ioId

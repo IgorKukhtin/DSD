@@ -51,6 +51,8 @@ type
     dxBarSubItem1: TdxBarSubItem;
     actUpdate: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
+    SummWages: TcxGridDBColumn;
+    Color_Calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

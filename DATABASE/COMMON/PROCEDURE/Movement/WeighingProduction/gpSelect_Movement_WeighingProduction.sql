@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
+             , MovementId_Order Integer, InvNumberOrder TVarChar
              , MovementDescNumber Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
              , PartionGoods TVarChar
@@ -44,6 +45,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
@@ -63,6 +65,9 @@ BEGIN
  
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
+
+             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+             , Movement_Order.InvNumber       :: TVarChar AS InvNumberOrder
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
@@ -172,6 +177,11 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
        WHERE Movement.DescId = zc_Movement_WeighingProduction()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -183,6 +193,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 03.03.20         * Add Order
  05.10.16         * add inJuridicalBasisId
  14.06.16         * DocumentKind
  12.06.15                                        * all
@@ -190,4 +201,4 @@ $BODY$
 */
 
 -- ÚÂÒÚ
---  SELECT * FROM gpSelect_Movement_WeighingProduction (inStartDate:= '01.05.2015', inEndDate:= '01.05.2015', inIsErased:= FALSE, inJuridicalBasisId :=0, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_WeighingProduction (inStartDate:= '01.02.2020', inEndDate:= '01.02.2020', inIsErased:= FALSE, inJuridicalBasisId :=0, inSession:= zfCalc_UserAdmin())

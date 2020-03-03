@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction_Item(
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , MovementId_parent Integer, OperDate_parent TDateTime, InvNumber_parent TVarChar
-             , StartWeighing TDateTime, EndWeighing TDateTime 
+             , StartWeighing TDateTime, EndWeighing TDateTime
+             , MovementId_Order Integer, InvNumberOrder TVarChar 
              , MovementDescNumber Integer, MovementDescName TVarChar
              , SubjectDocId Integer, SubjectDocName TVarChar
              , WeighingNumber TFloat
@@ -79,6 +80,7 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
+
        SELECT  Movement.Id
              , zfConvert_StringToNumber (Movement.InvNumber)  AS InvNumber
              , Movement.OperDate
@@ -98,6 +100,9 @@ BEGIN
  
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
+
+             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+             , Movement_Order.InvNumber       :: TVarChar AS InvNumberOrder
 
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.ItemName                      AS MovementDescName
@@ -256,6 +261,11 @@ BEGIN
                                          ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                         AND MovementLinkObject_SubjectDoc.DescId = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
 
             --- строки
             INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id

@@ -152,16 +152,24 @@ BEGIN
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                 WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-
+                              UNION
+                                SELECT Movement.Id AS MovementId
+                                FROM MovementLinkMovement AS MLM_Order
+                                    INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
+                                                       AND Movement.DescId = zc_Movement_WeighingProduction()
+                                                       AND Movement.StatusId = zc_Enum_Status_unComplete()
+                                                       AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
+                                WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
+                                  AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                                 ) AS tmp
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                                           ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                           ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                             ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -409,6 +417,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.03.20         *
  26.04.18         *
  09.07.15         *
 */

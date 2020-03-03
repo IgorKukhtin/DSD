@@ -509,9 +509,16 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummCompensationRecalc() RETURN
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummCompensationRecalc', 'Компенсация (ввод)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummCompensationRecalc');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummaManual() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummaManual'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummaManual', 'Сумма, установленная вручную' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummaManual');
+
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 03.03.20                                                                                     * zc_MovementFloat_SummaManual
  27.01.20         * zc_MovementFloat_TotalSummCompensation
                     zc_MovementFloat_TotalSummCompensationRecalc
  21.01.20                                                                                     * zc_MovementFloat_LoyaltySMID, zc_MovementFloat_LoyaltySMSumma

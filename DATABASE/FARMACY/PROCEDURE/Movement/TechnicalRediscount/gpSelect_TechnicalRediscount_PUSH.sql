@@ -49,27 +49,13 @@ BEGIN
     RETURN;
   END IF;
 
-  IF date_part('DAY', CURRENT_DATE)::Integer in (1, 16)
-  THEN
-    RETURN QUERY
-    SELECT 'Коллеги, создан тех переучет для корректировок'::TBlob,
-           'TTechnicalRediscountCashierForm'::TVarChar,
-           'Технический переучет'::TVarChar,
-           'Id'::TVarChar,
-           'ftInteger'::TVarChar,
-           vbId::TVarChar;
-  ELSEIF  date_part('DOW', CURRENT_DATE)::Integer in (15, date_part('DOW', CURRENT_DATE)::Integer)
-  THEN
-    RETURN QUERY
-    SELECT 'Колеги, сегодня последний день для внесения корректировок в тех переучет'::TBlob,
-           'TTechnicalRediscountCashierForm'::TVarChar,
-           'Технический переучет'::TVarChar,
-           'Id'::TVarChar,
-           'ftInteger'::TVarChar,
-           vbId::TVarChar;
-  ELSE
-    RETURN;
-  END IF;
+  RETURN QUERY
+  SELECT 'Коллеги, создан тех переучет для корректировок'::TBlob,
+         'TTechnicalRediscountCashierForm'::TVarChar,
+         'Технический переучет'::TVarChar,
+         'Id'::TVarChar,
+         'ftInteger'::TVarChar,
+         vbId::TVarChar;
 
 END;
 $BODY$

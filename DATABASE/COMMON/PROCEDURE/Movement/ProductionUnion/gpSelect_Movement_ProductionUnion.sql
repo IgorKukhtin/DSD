@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isAuto Boolean, InsertDate TDateTime
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
              , MovementId_Order Integer, InvNumber_Order_Full TVarChar
+             , isPeresort Boolean
               )
 AS
 $BODY$
@@ -78,6 +79,8 @@ BEGIN
 
            , Movement_Order.Id                      AS MovementId_Order
            , ('№ ' || Movement_Order.InvNumber || ' от ' || Movement_Order.OperDate  :: Date :: TVarChar ) :: TVarChar  AS InvNumber_Order_Full
+           
+           , COALESCE (MovementBoolean_Peresort.ValueData, FALSE) :: Boolean AS isPeresort
 
      FROM (SELECT Movement.id
              FROM tmpStatus

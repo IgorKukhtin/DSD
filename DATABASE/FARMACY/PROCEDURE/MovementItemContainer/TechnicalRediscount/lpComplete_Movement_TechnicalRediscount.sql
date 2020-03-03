@@ -12,19 +12,24 @@ $BODY$
 DECLARE
   vbUnitId Integer;
   vbOperDate TDateTime;
-
+  vbisRedCheck Boolean;
 BEGIN
 
 
     -- вытягиваем дату и подразделение и ...
-    SELECT DATE_TRUNC ('DAY', Movement.OperDate)  AS OperDate     -- при рассчете остатка добавил 1 день для условия >=
-         , MLO_Unit.ObjectId                                        AS UnitId
+    SELECT DATE_TRUNC ('DAY', Movement.OperDate)                AS OperDate    
+         , MLO_Unit.ObjectId                                    AS UnitId
+         , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
     INTO vbOperDate
        , vbUnitId
+       , vbisRedCheck
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
                                       AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                   ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                  AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
     WHERE Movement.Id = inMovementId;
 
     IF date_part('DAY',  vbOperDate)::Integer <= 15

@@ -83,6 +83,12 @@ type
     cxLabel9: TcxLabel;
     edSubjectDoc: TcxButtonEdit;
     GuidesSubjectDoc: TdsdGuides;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    spSelectPrint_SaleOrderTax: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
+    actPrintSaleOrderTax: TdsdPrintAction;
+    bbPrintSaleOrder: TdxBarButton;
+    bbPrintSaleOrderTax: TdxBarButton;
   private
     { Private declarations }
   public

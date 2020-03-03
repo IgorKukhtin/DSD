@@ -49,6 +49,12 @@ type
     bbPrintGroup: TdxBarButton;
     spSelectPrintNoGroup: TdsdStoredProc;
     InvNumber_SendFull: TcxGridDBColumn;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    spSelectPrint_SaleOrderTax: TdsdStoredProc;
+    actPrintSaleOrder: TdsdPrintAction;
+    actPrintSaleOrderTax: TdsdPrintAction;
+    bbPrintSaleOrder: TdxBarButton;
+    bbPrintSaleOrderTax: TdxBarButton;
   private
     { Private declarations }
   public

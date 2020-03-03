@@ -12,7 +12,6 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
-   DECLARE vbOperDate TDateTime;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -30,30 +29,23 @@ BEGIN
      RETURN;
    END IF;
 
-   IF date_part('DAY',  CURRENT_DATE)::Integer <= 15
-   THEN
-       vbOperDate := date_trunc('month', CURRENT_DATE);
-   ELSE
-       vbOperDate := date_trunc('month', CURRENT_DATE) + INTERVAL '15 DAY';   
-   END IF;
-
    IF EXISTS(SELECT Movement.Id
              FROM Movement 
                   LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                ON MovementLinkObject_Unit.MovementId = Movement.Id
                                               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-             WHERE Movement.OperDate = vbOperDate
-               AND Movement.DescId = zc_Movement_TechnicalRediscount()   
+             WHERE Movement.DescId = zc_Movement_TechnicalRediscount()   
+               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                AND MovementLinkObject_Unit.ObjectId = vbUnitId)
    THEN
-      SELECT Movement.Id
+      SELECT Max(Movement.Id) AS Id
       INTO outMovementId
       FROM Movement 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-      WHERE Movement.OperDate = vbOperDate
-        AND Movement.DescId = zc_Movement_TechnicalRediscount()  
+      WHERE Movement.DescId = zc_Movement_TechnicalRediscount()   
+        AND Movement.StatusId = zc_Enum_Status_UnComplete()
         AND MovementLinkObject_Unit.ObjectId = vbUnitId;  
    END IF;
 

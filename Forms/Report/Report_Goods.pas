@@ -105,6 +105,7 @@ type
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
+    isPeresort: TcxGridDBColumn;
   private
     { Private declarations }
   public

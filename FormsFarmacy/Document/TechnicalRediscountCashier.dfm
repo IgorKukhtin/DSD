@@ -289,8 +289,8 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 108
-      EditValue = 42767d
-      Properties.DisplayFormat = '01.02.2017'
+      EditValue = nil
+      Properties.AssignedValues.DisplayFormat = True
       Properties.ReadOnly = True
       ExplicitLeft = 108
     end
@@ -338,7 +338,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     object edComment: TcxTextEdit
       Left = 223
       Top = 62
-      Properties.ReadOnly = True
+      Properties.ReadOnly = False
       TabOrder = 8
       Width = 426
     end
@@ -430,6 +430,10 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       ReportName = #1055#1088#1086#1076#1072#1078#1072
       ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072
     end
+    inherited actAddMask: TdsdExecStoredProc
+      AfterAction = actChoiceGoods
+      BeforeAction = actChoiceGoods
+    end
     object actChoiceCommentTR: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -461,6 +465,25 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
           Component = MasterCDS
           ComponentItem = 'CommentTRCode'
           DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actChoiceGoods: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceGoods'
+      FormName = 'TGoodsLiteForm'
+      FormNameParam.Value = 'TGoodsLiteForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'GoodsId'
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -512,6 +535,10 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -551,6 +578,10 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1073#1077#1079' '#1087#1088#1086#1076#1072#1078
       Visible = ivAlways
       ImageIndex = 10
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actAddMask
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -605,9 +636,8 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'GoodsId'
         Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -639,6 +669,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
@@ -669,29 +700,6 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Component = GuidesUnit
         ComponentItem = 'TextValue'
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'DayCount'
-        Value = Null
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProcGoods'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ProcUnit'
-        Value = Null
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'Penalty'
-        Value = Null
-        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -747,37 +755,18 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inDayCount'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProcGoods'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inProcUnit'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPenalty'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inComment'
         Value = Null
         Component = edComment
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisRedCheck'
+        Value = Null
+        Component = cbisRedCheck
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -969,6 +958,37 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     Top = 288
   end
   inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_TechnicalRediscountMasc'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = '0'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     Left = 552
     Top = 312
   end

@@ -33,6 +33,14 @@ BEGIN
           vbUnitKey := '0';
        END IF;   
        vbUnitId := vbUnitKey::Integer;
+       
+        IF COALESCE((SELECT ObjectBoolean_Unit_TechnicalRediscount.ValueData
+                     FROM ObjectBoolean AS ObjectBoolean_Unit_TechnicalRediscount
+                     WHERE ObjectBoolean_Unit_TechnicalRediscount.ObjectId = vbUnitId
+                       AND ObjectBoolean_Unit_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()), False) = TRUE
+        THEN
+            RAISE EXCEPTION 'Ошибка. Не Доступно!';
+        END IF;       
      ELSE
        vbUnitId := 0;
      END IF;
@@ -149,3 +157,4 @@ ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, Boolean, TVarC
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Inventory (inStartDate:= '01.12.2019', inEndDate:= '31.12.2019', inIsErased:= FALSE, inSession:= '2')
+
