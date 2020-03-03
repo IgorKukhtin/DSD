@@ -4044,8 +4044,8 @@
       end>
   end
   inherited spGetTotalSumm: TdsdStoredProc
-    Left = 420
-    Top = 268
+    Left = 404
+    Top = 236
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -4078,8 +4078,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 360
+    Left = 311
+    Top = 384
   end
   object spGetReporNameBill: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
@@ -4481,8 +4481,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 319
-    Top = 272
+    Left = 327
+    Top = 224
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -5520,8 +5520,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 671
-    Top = 288
+    Left = 663
+    Top = 312
   end
   object spGetReportNameQuality: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Quality_ReportName'
