@@ -402,7 +402,7 @@ object GuideGoodsForm: TGuideGoodsForm
       TabOrder = 2
       object rgTareWeight: TRadioGroup
         Left = 0
-        Top = 104
+        Top = 504
         Width = 230
         Height = 77
         Align = alClient
@@ -418,8 +418,7 @@ object GuideGoodsForm: TGuideGoodsForm
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareWeightClick
-        ExplicitTop = 82
-        ExplicitHeight = 89
+        ExplicitTop = 104
       end
       object PanelTare: TPanel
         Left = 0
@@ -538,7 +537,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Left = 0
         Top = 82
         Width = 230
-        Height = 22
+        Height = 422
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 4
@@ -571,8 +570,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = 5
-              ExplicitTop = 1
+              ExplicitWidth = 81
             end
             object EditTare1: TcxCurrencyEdit
               Left = 5
@@ -597,9 +595,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 49
             object LabelWeightTare1: TLabel
               Left = 0
               Top = 0
@@ -631,8 +626,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 21
             end
           end
         end
@@ -643,7 +636,6 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 22
           Align = alTop
           TabOrder = 1
-          ExplicitTop = 110
           object PanelTare0: TPanel
             Left = 1
             Top = 1
@@ -666,9 +658,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = 5
-              ExplicitTop = 5
-              ExplicitWidth = 100
+              ExplicitWidth = 81
             end
             object EditTare0: TcxCurrencyEdit
               Left = 5
@@ -676,7 +666,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Properties.Alignment.Horz = taRightJustify
               Properties.Alignment.Vert = taVCenter
               Properties.AssignedValues.DisplayFormat = True
-              Properties.DecimalPlaces = 0
+              Properties.DecimalPlaces = 4
               Properties.OnChange = EditTare1PropertiesChange
               TabOrder = 0
               OnEnter = EditTareCountEnter
@@ -693,9 +683,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 34
             object LabelWeightTare0: TLabel
               Left = 0
               Top = 0
@@ -727,8 +714,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 20
             end
           end
         end
@@ -786,9 +771,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 34
             object LabelWeightTare2: TLabel
               Left = 0
               Top = 0
@@ -820,8 +802,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 20
             end
           end
         end
@@ -854,8 +834,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = 5
-              ExplicitTop = -2
+              ExplicitWidth = 81
             end
             object EditTare5: TcxCurrencyEdit
               Left = 5
@@ -880,9 +859,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 34
             object LabelWeightTare5: TLabel
               Left = 0
               Top = 0
@@ -914,8 +890,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 20
             end
           end
         end
@@ -973,9 +947,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 34
             object LabelWeightTare4: TLabel
               Left = 0
               Top = 0
@@ -1007,8 +978,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 20
             end
           end
         end
@@ -1041,9 +1010,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = 5
-              ExplicitTop = 1
-              ExplicitWidth = 100
+              ExplicitWidth = 81
             end
             object EditTare3: TcxCurrencyEdit
               Left = 5
@@ -1068,9 +1035,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
-            ExplicitHeight = 34
             object LabelWeightTare3: TLabel
               Left = 0
               Top = 0
@@ -1102,8 +1066,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
-              ExplicitHeight = 20
             end
           end
         end
@@ -1136,9 +1098,7 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Name = 'Arial'
               Font.Style = []
               ParentFont = False
-              ExplicitLeft = 5
-              ExplicitTop = 1
-              ExplicitWidth = 100
+              ExplicitWidth = 81
             end
             object EditTare6: TcxCurrencyEdit
               Left = 5
@@ -1163,8 +1123,6 @@ object GuideGoodsForm: TGuideGoodsForm
             Align = alClient
             BevelOuter = bvNone
             TabOrder = 1
-            ExplicitLeft = 101
-            ExplicitWidth = 128
             object LabelWeightTare6: TLabel
               Left = 0
               Top = 0
@@ -1196,7 +1154,6 @@ object GuideGoodsForm: TGuideGoodsForm
               Font.Style = [fsBold]
               ParentFont = False
               TabOrder = 0
-              ExplicitWidth = 128
             end
           end
         end

@@ -20,8 +20,8 @@ BEGIN
      -- меняем статус документа + сохранили протокол
      SELECT tmp.outPrinted, tmp.outMessageText
             INTO outPrinted, outMessageText
-     FROM lpComplete_Movement_OrderExternal (inMovementId                   := inMovementId
-                                           , inUserId               := vbUserId
+     FROM lpComplete_Movement_OrderExternal (inMovementId:= inMovementId
+                                           , inUserId    := vbUserId
                                             ) AS tmp;
 
 

@@ -237,25 +237,38 @@ BEGIN
                 AND Movement_PromoPriceList.PartnerId IS NULL
              )
     THEN
-        RAISE EXCEPTION 'Ошибка. В документе есть партнер с прайс-листом не равным установленному в акции <%> <%>.'
+        RAISE EXCEPTION 'Ошибка. В документе есть партнер с прайс-листом не равным установленному в акции <%> <%> <%>.'
                       , (SELECT lfGet_Object_ValueData_sh (Movement_PromoPriceList.PartnerId)
                          FROM lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
-                         WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
-                           AND Movement_PromoPriceList.PartnerId NOT IN (SELECT Movement_PromoPartner.PartnerId
-                                                                         FROM Movement_PromoPartner_View AS Movement_PromoPartner
-                                                                         WHERE Movement_PromoPartner.ParentId    = inParentId
-                                                                           AND Movement_PromoPartner.isErased    = FALSE
-                                                                           AND Movement_PromoPriceList.PartnerId IS NULL)
+                         WHERE COALESCE (Movement_PromoPriceList.PriceListId, 0) NOT IN (zc_PriceList_Basis(), outPriceListId)
+                           AND Movement_PromoPriceList.PartnerId IN (SELECT Movement_PromoPartner.PartnerId
+                                                                     FROM Movement_PromoPartner_View AS Movement_PromoPartner
+                                                                     WHERE Movement_PromoPartner.ParentId = inParentId
+                                                                       AND Movement_PromoPartner.isErased = FALSE)
+                         ORDER BY Movement_PromoPriceList.PartnerId
+                         LIMIT 1
+                        )
+                      , (SELECT lfGet_Object_ValueData_sh (Movement_PromoPriceList.PriceListId)
+                         FROM lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                         WHERE COALESCE (Movement_PromoPriceList.PriceListId, 0) NOT IN (zc_PriceList_Basis(), outPriceListId)
+                           AND Movement_PromoPriceList.PartnerId IN (SELECT Movement_PromoPartner.PartnerId
+                                                                     FROM Movement_PromoPartner_View AS Movement_PromoPartner
+                                                                     WHERE Movement_PromoPartner.ParentId = inParentId
+                                                                       AND Movement_PromoPartner.isErased = FALSE)
+                         ORDER BY Movement_PromoPriceList.PartnerId
                          LIMIT 1
                         )
                       , (SELECT COUNT(*)
-                         FROM lpGet_Movement_PromoPriceList(inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
-                         WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
-                           AND Movement_PromoPriceList.PartnerId NOT IN (SELECT Movement_PromoPartner.PartnerId
-                                                                         FROM Movement_PromoPartner_View AS Movement_PromoPartner
-                                                                         WHERE Movement_PromoPartner.ParentId    = inParentId
-                                                                           AND Movement_PromoPartner.isErased    = FALSE
-                                                                           AND Movement_PromoPriceList.PartnerId IS NULL)
+                         FROM
+                             Movement_PromoPartner_View AS Movement_PromoPartner
+                             LEFT OUTER JOIN (SELECT Movement_PromoPriceList.PartnerId
+                                              FROM lpGet_Movement_PromoPriceList (inMovementId := inParentId, inUserId := vbUserId) AS Movement_PromoPriceList
+                                              WHERE Movement_PromoPriceList.PriceListId IN (zc_PriceList_Basis(), outPriceListId)
+                                            ) AS Movement_PromoPriceList
+                                              ON Movement_PromoPriceList.PartnerId = Movement_PromoPartner.PartnerId
+                         WHERE Movement_PromoPartner.ParentId    = inParentId
+                           AND Movement_PromoPartner.isErased    = FALSE
+                           AND Movement_PromoPriceList.PartnerId IS NULL
                         )
              ;
     END IF;

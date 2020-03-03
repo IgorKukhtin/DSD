@@ -40,7 +40,7 @@ BEGIN
      END IF;
 
 
-     IF inShowAll THEN
+     IF inShowAll = TRUE THEN
 
      -- Результат такой
      RETURN QUERY
@@ -134,6 +134,7 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) AS PartionDate
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -145,6 +146,12 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                     ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                    AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -159,6 +166,7 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , ObjectDate_PartionGoods_Value.ValueData
                           )
        -- Результат
        SELECT
@@ -228,6 +236,8 @@ BEGIN
                                                                        THEN tmpGoods.GoodsKindId
                                                                   ELSE 0
                                                               END
+                                AND (tmpRemains.PartionDate = zc_DateEnd()
+                                    )
        WHERE tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -302,6 +312,10 @@ BEGIN
                                                                         THEN tmpMI.GoodsKindId
                                                                    ELSE 0
                                                               END
+                                AND (tmpRemains.PartionDate = COALESCE (tmpMI.PartionGoodsDate, zc_DateEnd())
+                                --OR PartionGoodsDate IS NULL
+                                --OR tmpRemains.PartionDate = zc_DateEnd()
+                                    )
             ;
      ELSE
 
@@ -319,6 +333,7 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) AS PartionDate
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -330,6 +345,12 @@ BEGIN
                                 LEFT JOIN ContainerLinkObject AS CLO_Account
                                                               ON CLO_Account.ContainerId = CLO_Unit.ContainerId
                                                              AND CLO_Account.DescId = zc_ContainerLinkObject_Account()
+                                LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
+                                                              ON CLO_PartionGoods.ContainerId = CLO_Unit.ContainerId
+                                                             AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
+                                LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                     ON ObjectDate_PartionGoods_Value.ObjectId = CLO_PartionGoods.ObjectId
+                                                    AND ObjectDate_PartionGoods_Value.DescId   = zc_ObjectDate_PartionGoods_Value()
                                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                      ON ObjectLink_Goods_InfoMoney.ObjectId = Container.ObjectId
                                                     AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
@@ -344,6 +365,7 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                  , ObjectDate_PartionGoods_Value.ValueData
                           )
        -- Результат
        SELECT
@@ -447,6 +469,10 @@ BEGIN
                                                                         THEN Object_GoodsKind.Id
                                                                    ELSE 0
                                                               END
+                                AND (tmpRemains.PartionDate = COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd())
+                               -- OR PartionGoodsDate IS NULL
+                               -- OR tmpRemains.PartionDate = zc_DateEnd()
+                                    )
             ;
 
      END IF;

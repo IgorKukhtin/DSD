@@ -39,7 +39,6 @@ BEGIN
      -- !!!обязательно!!! очистили таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem;
 
-
      -- Эти параметры нужны для формирования Аналитик в проводках
      WITH tmpMember AS (SELECT lfSelect.MemberId, lfSelect.UnitId
                         FROM lfSelect_Object_Member_findPersonal (inUserId :: TVarChar) AS lfSelect
@@ -246,23 +245,24 @@ BEGIN
                        WHERE Movement.Id = inMovementId
                          AND Movement.StatusId = zc_Enum_Status_UnComplete()
                       )
-, tmpContainer_all AS (SELECT tmpMI.MovementItemId
+        , tmpContainer_find
+                   AS (SELECT tmpMI.MovementItemId
                             , tmpMI.GoodsId
                             , tmpMI.OperCount   AS Amount
                             , Container.Id      AS ContainerId
                             , Container.Amount  AS Amount_container
-                            , SUM (Container.Amount) OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()), Container.Id) AS AmountSUM --
-                            , ROW_NUMBER() OVER (PARTITION BY tmpMI.GoodsId ORDER BY COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) DESC, Container.Id DESC) AS Ord       -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                            , COALESCE (ObjectDate_Value.ValueData, zc_DateStart()) AS PartionDate
                             , CLO_PartionGoods.ObjectId AS PartionGoodsId
                        FROM tmpMI
                             INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                 AND Container.DescId   = zc_Container_Count()
-                                                AND Container.Amount   > 0
-                            INNER JOIN ContainerLinkObject AS CLO_Member
+                                              --AND Container.Amount   > 0
+                            LEFT JOIN ContainerLinkObject AS CLO_Member
                                                            ON CLO_Member.ContainerId = Container.Id
                                                           AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                          AND CLO_Member.ObjectId    = vbMemberId
-                                                          AND vbMemberId             > 0
+                            LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                          ON CLO_Unit.ContainerId = Container.Id
+                                                         AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                             INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                            ON CLO_PartionGoods.ContainerId = Container.Id
                                                           AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -272,6 +272,33 @@ BEGIN
                                                             , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
                                                             , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
                                                              )
+                         AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
+                           OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
+                             )
+                      )
+        , tmpContainer_calc
+                   AS (SELECT tmpContainer_find.ContainerId
+                            , tmpContainer_find.Amount_container - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) AS Amount_container
+                       FROM tmpContainer_find
+                            LEFT JOIN MovementItemContainer AS MIContainer
+                                                            ON MIContainer.ContainerId = tmpContainer_find.ContainerId
+                                                           AND MIContainer.DescId      = zc_MIContainer_Count()
+                                                           AND MIContainer.OperDate    >= vbOperDate
+                       GROUP BY tmpContainer_find.ContainerId
+                              , tmpContainer_find.Amount_container
+                       HAVING tmpContainer_find.Amount_container - COALESCE (SUM (COALESCE (MIContainer.Amount, 0)), 0) > 0
+                      )
+        , tmpContainer_all
+                   AS (SELECT tmpContainer_find.MovementItemId
+                            , tmpContainer_find.GoodsId
+                            , tmpContainer_find.Amount
+                            , tmpContainer_find.ContainerId
+                            , tmpContainer_calc.Amount_container
+                            , SUM (tmpContainer_calc.Amount_container) OVER (PARTITION BY tmpContainer_find.GoodsId ORDER BY tmpContainer_find.PartionDate ASC, tmpContainer_find.ContainerId ASC) AS AmountSUM --
+                            , ROW_NUMBER() OVER (PARTITION BY tmpContainer_find.GoodsId ORDER BY tmpContainer_find.PartionDate DESC, tmpContainer_find.ContainerId DESC) AS Ord       -- !!!Надо отловить ПОСЛЕДНИЙ!!!
+                            , tmpContainer_find.PartionGoodsId
+                       FROM tmpContainer_find
+                            INNER JOIN tmpContainer_calc ON tmpContainer_calc.ContainerId = tmpContainer_find.ContainerId
                       )
     , tmpContainer AS (SELECT DD.ContainerId
                             , DD.GoodsId
@@ -313,6 +340,13 @@ BEGIN
         FROM tmpMI
              LEFT JOIN tmpContainer ON tmpContainer.MovementItemId = tmpMI.MovementItemId
        ;
+
+/*     IF inUserId = 5
+     THEN
+          RAISE EXCEPTION 'Ошибка. PartionGoodsId_Item = <%>'
+              , (SELECT _tmpItem.PartionGoodsId_Item FROM _tmpItem WHERE _tmpItem.MovementItemId = 165388198)
+               ;
+     END IF;*/
 
      -- Проверка - т.к.для этих УП-статей могли искать партии - надо что б товар был уникальным
      IF EXISTS (SELECT _tmpItem.GoodsId FROM (SELECT DISTINCT _tmpItem.MovementItemId, _tmpItem.GoodsId

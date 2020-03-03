@@ -64,8 +64,10 @@ end;
 
 procedure TUpdaterTest.UpdateMainProgram;
 begin
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
-  SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\midas.dll')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\midas.dll');
+  if FileExists(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe')
+  then SaveFile(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0)) + '\' + gc_ProgramName);
 end;
 

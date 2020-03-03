@@ -22,7 +22,7 @@ implementation
 
 uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms,
      MessagesUnit, dsdDB, DB, Storage, UtilConst, Classes, ShellApi, Windows,
-     StrUtils, CommonData;
+     StrUtils, CommonData, LocalWorkUnit;
 { TUpdater }
 
 class procedure TUpdater.AutomaticCheckConnect;
@@ -423,7 +423,8 @@ begin
   FileWriteString(ParamStr(0)+'.uTMP', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName(ParamStr(0))));
 
   //3.
-  if not FileExists(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe') then
+  if (not FileExists(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe')) or (GetFileSizeByName(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe') = 0)
+  then
      FileWriteString(ExtractFilePath(ParamStr(0)) + 'Upgrader4.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Upgrader4.exe')));
 
   //4.
