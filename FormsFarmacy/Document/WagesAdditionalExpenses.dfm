@@ -118,6 +118,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object SummaTechnicalRediscount: TcxGridDBColumn [6]

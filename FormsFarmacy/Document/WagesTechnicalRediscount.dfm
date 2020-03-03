@@ -1,28 +1,28 @@
 inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
   Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
   ClientHeight = 540
-  ClientWidth = 535
+  ClientWidth = 621
   AddOnFormData.AddOnFormRefresh.ParentList = 'WagesTechnicalRediscount'
-  ExplicitWidth = 551
+  ExplicitWidth = 637
   ExplicitHeight = 579
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 535
+    Width = 621
     Height = 463
     ExplicitTop = 77
-    ExplicitWidth = 535
+    ExplicitWidth = 621
     ExplicitHeight = 463
     ClientRectBottom = 463
-    ClientRectRight = 535
+    ClientRectRight = 621
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 535
+      ExplicitWidth = 621
       ExplicitHeight = 439
       inherited cxGrid: TcxGrid
-        Width = 535
+        Width = 621
         Height = 439
-        ExplicitWidth = 535
+        ExplicitWidth = 621
         ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -50,6 +50,11 @@ inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummWages
             end>
           OptionsBehavior.IncSearch = True
           OptionsData.Deleting = False
@@ -78,7 +83,16 @@ inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
             Options.Editing = False
             Width = 94
           end
-          object isIssuedBy: TcxGridDBColumn [2]
+          object SummWages: TcxGridDBColumn [2]
+            Caption = #1042' '#1079#1072#1088#1087#1083#1072#1090#1091
+            DataBinding.FieldName = 'SummWages'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
+          object isIssuedBy: TcxGridDBColumn [3]
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
@@ -86,7 +100,7 @@ inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
             Options.Editing = False
             Width = 62
           end
-          object MIDateIssuedBy: TcxGridDBColumn [3]
+          object MIDateIssuedBy: TcxGridDBColumn [4]
             Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'MIDateIssuedBy'
             HeaderAlignmentHorz = taCenter
@@ -98,15 +112,20 @@ inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
+          object Color_Calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Visible = False
+            Options.Editing = False
+          end
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 535
+    Width = 621
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 535
+    ExplicitWidth = 621
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -446,14 +465,19 @@ inherited WagesTechnicalRediscountForm: TWagesTechnicalRediscountForm
       item
         Action = actUpdate
       end>
+    ColorRuleList = <
+      item
+        ColorColumn = SummWages
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
-        Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 2
       end>
     SearchAsFilter = False
     Left = 334

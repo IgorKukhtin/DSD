@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_WagesAdditionalExpenses ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -27,7 +27,8 @@ BEGIN
       vbSummaSUN1 := (SELECT MIFloat_SummaSUN1.ValueData
                       FROM MovementItemFloat AS MIFloat_SummaSUN1
                       WHERE MIFloat_SummaSUN1.MovementItemId = ioId
-                        AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1());
+                        AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaSUN1(),
+                                                         zc_MIFloat_SummaTechnicalRediscount()));
     ELSE
       vbSummaSUN1 := 0;
     END IF;

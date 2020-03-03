@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
+             , SummaSUN1 TFloat, SummaTechnicalRediscount TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
               )
@@ -97,6 +98,7 @@ BEGIN
                                                , MIFloat_SummaOther.ValueData        AS SummaOther
                                                , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                                                , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
+                                               , MIFloat_SummaTechnicalRediscount.ValueData AS SummaTechnicalRediscount
                                                , MovementItem.Amount                 AS SummaTotal
                                          FROM  MovementItem
 
@@ -119,6 +121,10 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaSUN1
                                                                             ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
+                                                                            ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
 
                                          WHERE MovementItem.MovementId = vbMovementId
                                            AND MovementItem.ObjectId = vbUnitId
@@ -159,6 +165,7 @@ BEGIN
                  , tmpAdditionalExpenses.SummaOther             AS SummaOther
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
+                 , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
                  , ObjectString_PasswordEHels.ValueData          AS UserPassword
             FROM  MovementItem

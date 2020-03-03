@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_WagesTechnicalRediscountUnit()
+-- Function: gpSelect_MovementItem_WagesTechnicalRediscountUnit()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_WagesTechnicalRediscountUnit (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_WagesTechnicalRediscountUnit (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_WagesTechnicalRediscountUnit(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesTechnicalRediscountUnit(
     IN inId          INTEGER,
     IN inSession     TVarChar    --ñåññèÿ ïîëüçîâàòåëÿ
 )
@@ -43,12 +43,12 @@ BEGIN
 
            , MovementFloat_TotalDiff.ValueData                    AS TotalDiff
            , MovementFloat_TotalDiffSumm.ValueData                AS TotalDiffSumm
-           , COALESCE (MIFloat_SummaManual.ValueData,
+           , COALESCE (MovementFloat_SummaManual.ValueData,
                   MovementFloat_TotalDiffSumm.ValueData)::TFloat  AS SummWages
 
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
-           , CASE WHEN MIFloat_SummaManual.ValueData IS NULL
-                  THEN zc_Color_Black() ELSE zc_Color_Yelow() END AS Color_Calc
+           , CASE WHEN MovementFloat_SummaManual.ValueData IS NULL
+                  THEN zc_Color_White() ELSE zc_Color_Yelow() END AS Color_Calc
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -60,7 +60,7 @@ BEGIN
 
              WHERE Movement.OperDate BETWEEN date_trunc('month', vbStartDate) AND date_trunc('month', vbStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                AND Movement.DescId = zc_Movement_TechnicalRediscount()
-               AND Movement.StatusId = zc_Enum_Status_UnComplete()
+               AND Movement.StatusId = zc_Enum_Status_Complete()
                AND MovementLinkObject_Unit.ObjectId  = vbUnitId) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.Id = tmpMovement.Id
@@ -74,9 +74,9 @@ BEGIN
             LEFT OUTER JOIN MovementFloat AS MovementFloat_TotalDiffSumm
                                           ON MovementFloat_TotalDiffSumm.MovementId = Movement.Id
                                          AND MovementFloat_TotalDiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
-            LEFT OUTER JOIN MovementFloat AS MIFloat_SummaManual
-                                          ON MIFloat_SummaManual.MovementId = Movement.Id
-                                         AND MIFloat_SummaManual.DescId = zc_MIFloat_SummaManual()
+            LEFT OUTER JOIN MovementFloat AS MovementFloat_SummaManual
+                                          ON MovementFloat_SummaManual.MovementId = Movement.Id
+                                         AND MovementFloat_SummaManual.DescId = zc_MovementFloat_SummaManual()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -91,7 +91,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_WagesTechnicalRediscountUnit (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_WagesTechnicalRediscountUnit (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
@@ -100,4 +100,5 @@ ALTER FUNCTION gpSelect_Movement_WagesTechnicalRediscountUnit (Integer, TVarChar
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_WagesTechnicalRediscountUnit (inId:= 316075544,  inSession := '3');
+--
+SELECT * FROM gpSelect_MovementItem_WagesTechnicalRediscountUnit (inId:= 316075544,  inSession := '3');

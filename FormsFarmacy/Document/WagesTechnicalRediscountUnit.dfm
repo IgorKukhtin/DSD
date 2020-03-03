@@ -52,15 +52,18 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn [1]
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 64
           end
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Options.Editing = False
             Width = 66
           end
           object colUnitName: TcxGridDBColumn
@@ -68,6 +71,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 247
           end
           object colTotalDiff: TcxGridDBColumn
@@ -78,6 +82,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 94
           end
           object colTotalDiffSumm: TcxGridDBColumn
@@ -88,6 +93,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 87
           end
           object colSummWages: TcxGridDBColumn
@@ -110,6 +116,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
           object colColor_Calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_Calc'
             Visible = False
+            Options.Editing = False
           end
         end
       end
@@ -135,6 +142,15 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
   end
   inherited ActionList: TActionList
     Left = 471
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
+    end
     inherited actInsert: TdsdInsertUpdateAction
       ShortCut = 0
       FormName = 'TTechnicalRediscountCashierForm'
@@ -261,6 +277,21 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
       Caption = 'actUpdateMainDS'
       DataSource = MasterDS
     end
+    object actClearSummWages: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearSummWages
+      StoredProcList = <
+        item
+          StoredProc = spClearSummWages
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074' '#1088#1091#1095#1085#1091#1102
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074' '#1088#1091#1095#1085#1091#1102
+      ImageIndex = 52
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1091#1102' '#1074' '#1088#1091#1095#1085#1091#1102'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -270,7 +301,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_WagesTechnicalRediscountUnit'
+    StoredProcName = 'gpSelect_MovementItem_WagesTechnicalRediscountUnit'
     Params = <
       item
         Name = 'inId'
@@ -333,6 +364,10 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -369,6 +404,10 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
       Visible = ivAlways
       ImageIndex = 16
     end
+    object dxBarButton2: TdxBarButton
+      Action = actClearSummWages
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     ColorRuleList = <
@@ -376,6 +415,15 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
         ColorColumn = colSummWages
         BackGroundValueColumn = colColor_Calc
         ColorValueList = <>
+      end>
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'SummWages'
+        Param.DataType = ftFloat
+        Param.MultiSelectSeparator = ','
+        DataSummaryItemIndex = 0
       end>
     Left = 320
     Top = 224
@@ -469,9 +517,9 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ReportNameTechnicalRediscountCashier'
+        Name = 'SummWages'
         Value = Null
-        DataType = ftString
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -527,31 +575,15 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
     Top = 248
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_WagesTechnicalRediscountUnit'
+    StoredProcName = 'gpInsertUpdate_Movement_TechnicalRediscount_SummaWages'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inId'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInputOutput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitID'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'UnitID'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -563,11 +595,61 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummWages'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummWages'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     NeedResetData = True
     ParamKeyField = 'inMovementId'
     Left = 536
     Top = 344
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementItem_WagesTechnicalRediscount_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItenId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummWages'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 380
+  end
+  object spClearSummWages: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TechnicalRediscount_ClearSummWages'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 396
   end
 end

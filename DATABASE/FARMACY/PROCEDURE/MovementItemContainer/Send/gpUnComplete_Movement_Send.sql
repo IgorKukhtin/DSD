@@ -70,7 +70,8 @@ BEGIN
                                  AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
     WHERE Movement.Id = inMovementId;
     
-    IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE
+    IF vbisSUN = TRUE AND vbOperDate < CURRENT_DATE 
+       AND  NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN 
       RAISE EXCEPTION 'Ошибка. Работа с просроченными перемещениями СУН запрещена!.';     
     END IF;     

@@ -45,6 +45,10 @@ type
     actUpdateMainDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     colColor_Calc: TcxGridDBColumn;
+    spGetTotalSumm: TdsdStoredProc;
+    actClearSummWages: TdsdExecStoredProc;
+    spClearSummWages: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

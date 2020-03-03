@@ -12,14 +12,39 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbInventoryID Integer;
   DECLARE vbStatusID Integer;
+  DECLARE vbUnitId Integer;
+  DECLARE vbOperDate TDateTime;
+  DECLARE vbisRedCheck Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_TechnicalRediscount());
+
+    -- вытягиваем дату и подразделение и ...
+    SELECT DATE_TRUNC ('DAY', Movement.OperDate)                AS OperDate    
+         , MLO_Unit.ObjectId                                    AS UnitId
+         , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
+    INTO vbOperDate
+       , vbUnitId
+       , vbisRedCheck
+    FROM Movement
+         INNER JOIN MovementLinkObject AS MLO_Unit
+                                       ON MLO_Unit.MovementId = Movement.Id
+                                      AND MLO_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
+                                   ON MovementBoolean_RedCheck.MovementId = Movement.Id
+                                  AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+    WHERE Movement.Id = inMovementId;
 
     -- Распроводим Документ
     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                  , inUserId    := vbUserId);
                                  
+    -- Прописываем в зарплату
+    IF vbisRedCheck = FALSE
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, inSession);
+    END IF;
+
     -- 5.1 Отменяем инвентаризацию
     IF EXISTS(SELECT *
               FROM Movement
