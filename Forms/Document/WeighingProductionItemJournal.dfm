@@ -288,6 +288,14 @@ object WeighingProductionItemJournalForm: TWeighingProductionItemJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
+      object InvNumberOrder: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'InvNumberOrder'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
       object WeighingNumber: TcxGridDBColumn
         Caption = #8470' '#1074#1079#1074#1077#1096'.'
         DataBinding.FieldName = 'WeighingNumber'

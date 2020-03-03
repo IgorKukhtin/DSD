@@ -3,7 +3,7 @@ object WeighingProductionForm: TWeighingProductionForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 462
-  ClientWidth = 1250
+  ClientWidth = 1309
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,26 +21,27 @@ object WeighingProductionForm: TWeighingProductionForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1250
+    Width = 1309
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1250
     object edInvNumber: TcxTextEdit
-      Left = 8
+      Left = 113
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 95
+      Width = 75
     end
     object cxLabel1: TcxLabel
-      Left = 8
+      Left = 113
       Top = 5
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 193
+      Left = 277
       Top = 23
       EditValue = 42182d
       Enabled = False
@@ -50,12 +51,12 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 96
     end
     object cxLabel2: TcxLabel
-      Left = 193
+      Left = 277
       Top = 5
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
     end
     object edFrom: TcxButtonEdit
-      Left = 293
+      Left = 379
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -64,10 +65,10 @@ object WeighingProductionForm: TWeighingProductionForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 212
+      Width = 176
     end
     object edTo: TcxButtonEdit
-      Left = 511
+      Left = 560
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -76,47 +77,50 @@ object WeighingProductionForm: TWeighingProductionForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 242
+      Width = 231
     end
     object cxLabel3: TcxLabel
-      Left = 298
+      Left = 379
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 511
+      Left = 560
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
-      Left = 511
+      Left = 560
       Top = 45
       Caption = #1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080'('#1074#1079#1074#1077#1096'.)'
     end
     object cxLabel6: TcxLabel
-      Left = 293
+      Left = 379
       Top = 45
-      Caption = #1053#1072#1095'.'#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1053#1072#1095'.'#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Caption = #1053#1072#1095'.'#1074#1079#1074#1077#1096'.'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edStartWeighing: TcxDateEdit
-      Left = 293
+      Left = 379
       Top = 62
       EditValue = 42182d
       Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 5
-      Width = 102
+      Width = 83
     end
     object edMovementDescNumber: TcxTextEdit
-      Left = 511
+      Left = 560
       Top = 62
       Enabled = False
       TabOrder = 4
       Width = 118
     end
     object cxLabel7: TcxLabel
-      Left = 634
+      Left = 683
       Top = 45
       Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
@@ -146,30 +150,33 @@ object WeighingProductionForm: TWeighingProductionForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 14
-      Width = 95
+      Width = 179
     end
     object cxLabel9: TcxLabel
-      Left = 401
+      Left = 472
       Top = 45
-      Caption = #1054#1082#1086#1085'. '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1054#1082#1086#1085'. '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Caption = #1054#1082#1086#1085'. '#1074#1079#1074#1077#1096'.'
+      ParentShowHint = False
+      ShowHint = True
     end
     object edEndWeighing: TcxDateEdit
-      Left = 401
+      Left = 472
       Top = 62
       EditValue = 42182d
       Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 16
-      Width = 105
+      Width = 83
     end
     object cxLabel8: TcxLabel
-      Left = 759
+      Left = 795
       Top = 5
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
     end
     object edUser: TcxButtonEdit
-      Left = 759
+      Left = 795
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -181,12 +188,12 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 146
     end
     object cxLabel14: TcxLabel
-      Left = 109
+      Left = 192
       Top = 45
       Caption = #8470' '#1076#1086#1082'.('#1075#1083#1072#1074#1085')'
     end
     object edInvNumber_parent: TcxTextEdit
-      Left = 109
+      Left = 192
       Top = 62
       Enabled = False
       Properties.ReadOnly = True
@@ -194,17 +201,17 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 80
     end
     object cxLabel12: TcxLabel
-      Left = 193
+      Left = 277
       Top = 45
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. ('#1075#1083#1072#1074#1085')'
     end
     object cxLabel10: TcxLabel
-      Left = 109
+      Left = 192
       Top = 5
       Caption = #8470' '#1074#1079#1074#1077#1096'.'
     end
     object edWeighingNumber: TcxCurrencyEdit
-      Left = 109
+      Left = 192
       Top = 23
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
@@ -216,7 +223,7 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 80
     end
     object edisIncome: TcxCheckBox
-      Left = 923
+      Left = 953
       Top = 48
       Caption = #1055#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
       Properties.ReadOnly = True
@@ -224,36 +231,58 @@ object WeighingProductionForm: TWeighingProductionForm
       Width = 157
     end
     object edIsAuto: TcxCheckBox
-      Left = 923
+      Left = 953
       Top = 68
       Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080
       Properties.ReadOnly = True
       TabOrder = 25
       Width = 157
     end
+    object cxLabel17: TcxLabel
+      Left = 9
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077
+    end
+    object edInvNumberOrder: TcxButtonEdit
+      Left = 9
+      Top = 22
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 27
+      Width = 99
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 1250
+    Width = 1309
     Height = 336
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1250
     ClientRectBottom = 336
-    ClientRectRight = 1250
+    ClientRectRight = 1309
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1250
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1250
+        Width = 1309
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1250
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -561,7 +590,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
   end
   object edOperDate_parent: TcxDateEdit
-    Left = 193
+    Left = 277
     Top = 62
     EditValue = 42182d
     Enabled = False
@@ -572,12 +601,12 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 96
   end
   object cxLabel18: TcxLabel
-    Left = 759
+    Left = 795
     Top = 45
     Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
   end
   object edPartionGoods: TcxTextEdit
-    Left = 759
+    Left = 795
     Top = 62
     Enabled = False
     Properties.ReadOnly = True
@@ -585,12 +614,12 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 146
   end
   object cxLabel13: TcxLabel
-    Left = 910
+    Left = 946
     Top = 5
     Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object edDocumentKind: TcxButtonEdit
-    Left = 910
+    Left = 946
     Top = 23
     Enabled = False
     Properties.Buttons = <
@@ -603,7 +632,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 170
   end
   object edMovementDescName: TcxButtonEdit
-    Left = 631
+    Left = 680
     Top = 62
     Enabled = False
     Properties.Buttons = <
@@ -613,15 +642,15 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     Properties.ReadOnly = True
     TabOrder = 8
-    Width = 122
+    Width = 111
   end
   object cxLabel15: TcxLabel
-    Left = 1086
+    Left = 1122
     Top = 5
     Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
   end
   object edGoodsTypeKind: TcxButtonEdit
-    Left = 1086
+    Left = 1122
     Top = 23
     Enabled = False
     Properties.Buttons = <
@@ -634,12 +663,12 @@ object WeighingProductionForm: TWeighingProductionForm
     Width = 160
   end
   object cxLabel16: TcxLabel
-    Left = 1086
+    Left = 1122
     Top = 45
     Caption = #1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
   end
   object edBarCodeBox: TcxButtonEdit
-    Left = 1086
+    Left = 1122
     Top = 62
     Enabled = False
     Properties.Buttons = <
@@ -1374,8 +1403,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 440
-    Top = 16
+    Left = 424
+    Top = 88
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1404,7 +1433,7 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 584
+    Left = 672
     Top = 8
   end
   object PopupMenu: TPopupMenu
@@ -1545,6 +1574,21 @@ object WeighingProductionForm: TWeighingProductionForm
         Value = ''
         Component = edEndWeighing
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Order'
+        Value = Null
+        Component = OrderChoiceGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberOrder'
+        Value = Null
+        Component = OrderChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -1779,8 +1823,8 @@ object WeighingProductionForm: TWeighingProductionForm
     FormNameParam.MultiSelectSeparator = ','
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 31
-    Top = 24
+    Left = 55
+    Top = 88
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_WeighingProduction'
@@ -1804,8 +1848,8 @@ object WeighingProductionForm: TWeighingProductionForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 52
-    Top = 32
+    Left = 140
+    Top = 16
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
@@ -2087,5 +2131,65 @@ object WeighingProductionForm: TWeighingProductionForm
     PackSize = 1
     Left = 999
     Top = 288
+  end
+  object OrderChoiceGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberOrder
+    Key = '0'
+    FormNameParam.Value = 'TOrderExternal_SendOnPriceJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TOrderExternal_SendOnPriceJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = OrderChoiceGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = OrderChoiceGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerId'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MasterPartnerName'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 42184d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateEnd'
+        Value = 42184d
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    Left = 44
+    Top = 16
   end
 end

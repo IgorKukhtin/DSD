@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumber_Parent TVarChar, MovementId_parent Integer, OperDate_Parent TDateTime
              , isProductionIn Boolean, isAuto Boolean
              , StartWeighing TDateTime, EndWeighing TDateTime
+             , MovementId_Order Integer, InvNumberOrder TVarChar
              , MovementDescNumber Integer
              , MovementDesc Integer, MovementDescName TVarChar
              , WeighingNumber TFloat
@@ -48,6 +49,9 @@ BEGIN
              , CAST (CURRENT_DATE AS TDateTime) AS StartWeighing
              , CAST (CURRENT_DATE AS TDateTime) AS EndWeighing
 
+             , 0                     AS MovementId_Order
+             , CAST ('' AS TVarChar) AS InvNumberOrder
+             
              , 0                     AS MovementDescNumber
              , 0                     AS MovementDesc
              , CAST ('' AS TVarChar) AS MovementDescName
@@ -95,6 +99,9 @@ BEGIN
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
+             , MovementLinkMovement_Order.MovementChildId AS MovementId_Order
+             , Movement_Order.InvNumber       :: TVarChar AS InvNumberOrder
+               
              , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
              , MovementDesc.Id                            AS MovementDesc
              , MovementDesc.ItemName                      AS MovementDescName
@@ -195,6 +202,11 @@ BEGIN
                                         AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = MovementLinkObject_SubjectDoc.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                           ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_WeighingProduction();
      END IF;
@@ -205,6 +217,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 03.03.20         * Add Order
  24.11.16         *
  14.06.16         *
  13.03.14         *

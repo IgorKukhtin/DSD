@@ -160,6 +160,9 @@ type
     spSelectPrintBarCode: TdsdStoredProc;
     actPrintBarCode: TdsdPrintAction;
     bbPrintBarCode: TdxBarButton;
+    cxLabel17: TcxLabel;
+    edInvNumberOrder: TcxButtonEdit;
+    OrderChoiceGuides: TdsdGuides;
   private
   public
   end;

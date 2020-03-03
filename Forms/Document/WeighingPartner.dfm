@@ -2802,7 +2802,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 44
+    Left = 52
     Top = 8
   end
   object HeaderSaver3: THeaderSaver
