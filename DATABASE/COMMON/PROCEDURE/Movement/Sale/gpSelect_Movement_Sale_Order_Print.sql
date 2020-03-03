@@ -161,7 +161,6 @@ BEGIN
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                 WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
-
                                 ) AS tmp
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
@@ -170,7 +169,7 @@ BEGIN
                                                            ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                             ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
