@@ -51,6 +51,9 @@ type
     spInsertRedCheck: TdsdStoredProc;
     actOpenTechnicalRediscount: TdsdOpenForm;
     bbAddRedCheck: TdxBarButton;
+    actInsertTechnicalRediscount: TdsdExecStoredProc;
+    spInsertTechnicalRediscount: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

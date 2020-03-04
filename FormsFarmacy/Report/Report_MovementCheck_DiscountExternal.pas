@@ -41,6 +41,7 @@ type
     SummChangePercent: TcxGridDBColumn;
     DiscountCardName: TcxGridDBColumn;
     DiscountExternalName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -346,6 +346,22 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end>
       isShowModal = False
     end
+    object actInsertTechnicalRediscount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actOpenTechnicalRediscount
+      BeforeAction = actChoiceUnitTreeForm
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertTechnicalRediscount
+      StoredProcList = <
+        item
+          StoredProc = spInsertTechnicalRediscount
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      Hint = #1057#1086#1079#1076#1072#1090#1100' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102
+      ImageIndex = 8
+      QuestionBeforeExecute = #1057#1086#1079#1076#1072#1090#1100' '#1089#1083#1077#1076#1091#1102#1097#1080#1081' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1087#1086' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1102'? '
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -448,6 +464,14 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -457,10 +481,6 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
         item
           Visible = True
           ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -499,6 +519,10 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
     end
     object bbAddRedCheck: TdxBarButton
       Action = actAddRedCheck
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actInsertTechnicalRediscount
       Category = 0
     end
   end
@@ -693,6 +717,30 @@ inherited TechnicalRediscountJournalForm: TTechnicalRediscountJournalForm
       end>
     PackSize = 1
     Left = 560
+    Top = 392
+  end
+  object spInsertTechnicalRediscount: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_TechnicalRediscount_Add'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 696
     Top = 392
   end
 end

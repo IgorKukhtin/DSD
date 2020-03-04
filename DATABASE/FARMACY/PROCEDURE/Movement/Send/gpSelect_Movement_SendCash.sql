@@ -29,6 +29,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDateDiff TFloat
              , UpdateDateDiff TFloat
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
+             , DriverId Integer, DriverName TVarChar
+             , NumberSeats Integer
               )
 
 AS
@@ -142,6 +144,11 @@ BEGIN
            , Movement_ReportUnLiquid.InvNumber             AS InvNumber_Report
            , ('№ ' || Movement_ReportUnLiquid.InvNumber ||' от '||TO_CHAR(Movement_ReportUnLiquid.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS ReportInvNumber_full
 
+           , Object_Driver.Id                     AS DriverId
+           , Object_Driver.ValueData  :: TVarChar AS DriverName
+           
+           , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
+
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
        FROM (SELECT Movement.id
@@ -236,6 +243,10 @@ BEGIN
                                     ON MovementFloat_MCSDay.MovementId =  Movement.Id
                                    AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
 
+            LEFT JOIN MovementFloat AS MovementFloat_NumberSeats
+                                    ON MovementFloat_NumberSeats.MovementId =  Movement.Id
+                                   AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
@@ -262,6 +273,10 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Driver
+                                         ON MovementLinkObject_Driver.MovementId = Movement.Id
+                                        AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
+            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)

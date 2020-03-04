@@ -63,7 +63,7 @@ inherited MainForm: TMainForm
     object actReport_SendSUN_SUNv2: TdsdOpenForm [0]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' / '#1057#1059#1053' v2'
+      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2'
       FormName = 'TReport_SendSUN_SUNv2Form'
       FormNameParam.Value = 'TReport_SendSUN_SUNv2Form'
       FormNameParam.DataType = ftString
@@ -109,7 +109,7 @@ inherited MainForm: TMainForm
     object actReport_Movement_Send_RemainsSunOut: TdsdOpenForm [4]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' ('#1088#1072#1089#1093#1086#1076#1099')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1088#1072#1089#1093#1086#1076#1099')'
       FormName = 'TReport_Movement_Send_RemainsSunOutForm'
       FormNameParam.Value = 'TReport_Movement_Send_RemainsSunOutForm'
       FormNameParam.DataType = ftString
@@ -154,7 +154,7 @@ inherited MainForm: TMainForm
     object actReport_GoodsSendSUN: TdsdOpenForm [8]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' / '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       FormName = 'TReport_GoodsSendSUNForm'
       FormNameParam.Value = 'TReport_GoodsSendSUNForm'
       FormNameParam.DataType = ftString
@@ -189,7 +189,7 @@ inherited MainForm: TMainForm
     object actReport_Send_RemainsSun_over: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
+      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1 ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
       FormName = 'TReport_Send_RemainsSun_overForm'
       FormNameParam.Value = 'TReport_Send_RemainsSun_overForm'
       FormNameParam.DataType = ftString
@@ -269,7 +269,7 @@ inherited MainForm: TMainForm
     object actReport_Movement_Send_RemainsSun: TdsdOpenForm [18]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' ('#1087#1088#1080#1093#1086#1076#1099')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1087#1088#1080#1093#1086#1076#1099')'
       FormName = 'TReport_Movement_Send_RemainsSunForm'
       FormNameParam.Value = 'TReport_Movement_Send_RemainsSunForm'
       FormNameParam.DataType = ftString
@@ -368,7 +368,7 @@ inherited MainForm: TMainForm
     object actReport_CheckSUN: TdsdOpenForm [21]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053' v.1'
       FormName = 'TReport_CheckSUNForm'
       FormNameParam.Value = 'TReport_CheckSUNForm'
       FormNameParam.DataType = ftString
@@ -390,7 +390,7 @@ inherited MainForm: TMainForm
     object actReport_CheckSendSUN_InOut: TdsdOpenForm [23]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1095#1077#1090' '#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       Hint = #1054#1090#1095#1077#1090' <'#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'>'
       FormName = 'TReport_CheckSendSUN_InOutForm'
       FormNameParam.Value = 'TReport_CheckSendSUN_InOutForm'
@@ -3246,7 +3246,7 @@ inherited MainForm: TMainForm
     object actPercentageOverdueSUN: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
+      Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053' v.1'
       Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
       FormName = 'TReport_PercentageOverdueSUNForm'
       FormNameParam.Value = 'TReport_PercentageOverdueSUNForm'
@@ -3377,11 +3377,11 @@ inherited MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
       Caption = 
-        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' ' +
-        #1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
+        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
+        #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
       Hint = 
-        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080' ' +
-        #1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
+        #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
+        #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
       FormName = 'TReport_SendSUNDelayForm'
       FormNameParam.Value = 'TReport_SendSUNDelayForm'
       FormNameParam.DataType = ftString
@@ -3392,8 +3392,8 @@ inherited MainForm: TMainForm
     object actReport_SUNSaleDates: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053
-      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1 ('#1076#1083#1103' '#1076#1077#1083#1100#1090#1099')'
+      Hint = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1 ('#1076#1083#1103' '#1076#1077#1083#1100#1090#1099')'
       FormName = 'TReport_SUNSaleDatesForm'
       FormNameParam.Value = 'TReport_SUNSaleDatesForm'
       FormNameParam.DataType = ftString
@@ -3432,6 +3432,18 @@ inherited MainForm: TMainForm
       Hint = #1054#1090#1095#1077#1090' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1087#1072#1088#1086#1083#1080' '#1045#1093#1077#1083#1089' ('#1057#1055')'
       FormName = 'THelsiUserForm'
       FormNameParam.Value = 'THelsiUserForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_EntryGoodsMovement: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      MoveParams = <>
+      Caption = #1042#1093#1086#1078#1076#1077#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1042#1093#1086#1078#1076#1077#1085#1080#1077' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1072' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      FormName = 'TReport_EntryGoodsMovementForm'
+      FormNameParam.Value = 'TReport_EntryGoodsMovementForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -4044,33 +4056,24 @@ inherited MainForm: TMainForm
       end
       object miReport_Movement_Send_RemainsSun: TMenuItem
         Action = actReport_Movement_Send_RemainsSun
-        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1087#1088#1080#1093#1086#1076#1099')'
       end
       object N222: TMenuItem
         Action = actReport_Movement_Send_RemainsSunOut
-        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053' v.1 ('#1088#1072#1089#1093#1086#1076#1099')'
       end
       object miReport_GoodsSendSUN_over: TMenuItem
         Action = actReport_Send_RemainsSun_over
-        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1 ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
       end
       object miReport_CheckSendSUN_InOut: TMenuItem
         Action = actReport_CheckSendSUN_InOut
-        Caption = #1054#1090#1095#1077#1090' '#1057#1082#1074#1086#1079#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object miReport_GoodsSendSUN: TMenuItem
         Action = actReport_GoodsSendSUN
-        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1054#1090#1083#1086#1078#1077#1085#1085#1086#1077' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object miReport_SendSUN_SUNv2: TMenuItem
         Action = actReport_SendSUN_SUNv2
-        Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2'
       end
       object N217: TMenuItem
         Action = actReport_SendSUNDelay
-        Caption = 
-          #1054#1090#1095#1077#1090' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088' '#1087#1086' '#1057#1059#1053' v.1 '#1080' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1081' '#1085#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077 +
-          #1085#1080#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077
       end
       object N202: TMenuItem
         Caption = '-'
@@ -4086,7 +4089,6 @@ inherited MainForm: TMainForm
       end
       object N204: TMenuItem
         Action = actPercentageOverdueSUN
-        Caption = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053' v.1'
         Hint = #1054#1090#1095#1077#1090' '#1087#1088#1086#1094#1077#1085#1090' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053' v.1'
       end
       object N203: TMenuItem
@@ -4109,12 +4111,9 @@ inherited MainForm: TMainForm
       end
       object N218: TMenuItem
         Action = actReport_CheckSUN
-        Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053' v.1'
       end
       object N219: TMenuItem
         Action = actReport_SUNSaleDates
-        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
-        Hint = #1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053' v.1'
       end
     end
     object N40: TMenuItem [7]
@@ -4465,61 +4464,64 @@ inherited MainForm: TMainForm
       object N215: TMenuItem [17]
         Action = actReport_InventoryErrorRemains
       end
-      object N7: TMenuItem [18]
+      object N225: TMenuItem [18]
+        Action = actReport_EntryGoodsMovement
+      end
+      object N7: TMenuItem [19]
         Caption = '-'
       end
-      object miSaveData: TMenuItem [19]
+      object miSaveData: TMenuItem [20]
         Action = actSaveData
       end
-      object miPriceGroupSettings: TMenuItem [20]
+      object miPriceGroupSettings: TMenuItem [21]
         Action = actPriceGroupSettings
       end
-      object N102: TMenuItem [21]
+      object N102: TMenuItem [22]
         Action = actPriceGroupSettingsTOP
       end
-      object miJuridicalSettings: TMenuItem [22]
+      object miJuridicalSettings: TMenuItem [23]
         Action = actJuridicalSettings
       end
-      object N9: TMenuItem [23]
+      object N9: TMenuItem [24]
         Caption = '-'
       end
-      object miImportType: TMenuItem [24]
+      object miImportType: TMenuItem [25]
         Action = actImportType
       end
-      object miImportSettings: TMenuItem [25]
+      object miImportSettings: TMenuItem [26]
         Action = actImportSettings
       end
-      object miImportExportLink: TMenuItem [26]
+      object miImportExportLink: TMenuItem [27]
         Action = actImportExportLink
       end
-      object miGlobalConst: TMenuItem [27]
+      object miGlobalConst: TMenuItem [28]
         Action = actGlobalConst
       end
-      object FarmacyCash1: TMenuItem [29]
+      object FarmacyCash1: TMenuItem [30]
         Action = actUnitForFarmacyCash
       end
-      object N10: TMenuItem [31]
+      object N10: TMenuItem [32]
         Caption = '-'
       end
-      object miReprice: TMenuItem [32]
+      object miReprice: TMenuItem [33]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
         OnClick = miRepriceClick
       end
-      object miRepriceChange: TMenuItem [33]
+      object miRepriceChange: TMenuItem [34]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
         OnClick = miRepriceChangeClick
       end
-      object miReprice_test: TMenuItem [34]
+      object miReprice_test: TMenuItem [35]
         Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
         OnClick = miReprice_testClick
       end
-      object miExportSalesForSupp: TMenuItem [35]
+      object miExportSalesForSupp: TMenuItem [36]
         Action = actExportSalesForSuppClick
       end
-      object N173: TMenuItem [36]
+      object N173: TMenuItem [37]
         Action = actRepriceUnitSheduler
       end
-      object miRecalcMCSSheduler: TMenuItem [37]
+      object miRecalcMCSSheduler: TMenuItem [38]
         Action = actRecalcMCSSheduler
       end
     end
@@ -4584,5 +4586,1087 @@ inherited MainForm: TMainForm
     StoreDefs = True
     Left = 216
     Top = 8
+  end
+  object MainMenu1: TMainMenu
+    Images = dmMain.ImageList
+    Left = 488
+    Top = 88
+    object MenuItem1: TMenuItem
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      object MenuItem2: TMenuItem
+        Action = actGoods
+      end
+      object MenuItem3: TMenuItem
+        Action = actGoods_NDS_diff
+      end
+      object MenuItem4: TMenuItem
+        Action = actGoods_BarCode
+      end
+      object MenuItem5: TMenuItem
+        Action = actGoodsRetail
+      end
+      object MenuItem6: TMenuItem
+        Caption = #1058#1086#1074#1072#1088#1099' '#1042#1057#1045
+        Hint = #1058#1086#1074#1072#1088#1099
+        object MenuItem7: TMenuItem
+          Action = actGoodsAll
+        end
+        object MenuItem8: TMenuItem
+          Action = actGoodsAllRetail
+        end
+        object MenuItem9: TMenuItem
+          Action = actGoodsAllJuridical
+        end
+        object MenuItem10: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem11: TMenuItem
+          Action = actGoodsAll_Tab
+        end
+        object MenuItem12: TMenuItem
+          Action = actGoodsAllRetail_Tab
+        end
+        object MenuItem13: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem14: TMenuItem
+          Action = actGoodsMainTab_Error
+        end
+        object MenuItem15: TMenuItem
+          Action = actGoodsRetailTab_Error
+        end
+      end
+      object MenuItem16: TMenuItem
+        Action = actAdditionalGoods
+      end
+      object MenuItem17: TMenuItem
+        Caption = #1050#1086#1076#1099' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
+        object MenuItem18: TMenuItem
+          Action = actGoodsPartnerCode
+        end
+        object MenuItem19: TMenuItem
+          Action = actGoodsPartnerCodeMaster
+        end
+      end
+      object MenuItem20: TMenuItem
+        Action = actGoodsCategory
+      end
+      object MenuItem21: TMenuItem
+        Action = actGoodsReprice
+      end
+      object MenuItem22: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem23: TMenuItem
+        Caption = #1057#1086#1094'. '#1087#1088#1086#1077#1082#1090
+        object MenuItem24: TMenuItem
+          Action = actGoodsSP
+        end
+        object MenuItem25: TMenuItem
+          Action = actKindOutSP
+        end
+        object MenuItem26: TMenuItem
+          Action = actBrandSP
+        end
+        object MenuItem27: TMenuItem
+          Action = actIntenalSP
+        end
+        object MenuItem28: TMenuItem
+          Action = actPartnerMedical
+        end
+        object MenuItem29: TMenuItem
+          Action = actMedicSP
+        end
+        object MenuItem30: TMenuItem
+          Action = actMemberSP
+        end
+        object MenuItem31: TMenuItem
+          Action = actSPKind
+        end
+        object MenuItem32: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem33: TMenuItem
+          Action = actReport_CheckSP
+        end
+        object MenuItem34: TMenuItem
+          Action = actReport_SaleSP
+        end
+        object MenuItem35: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem36: TMenuItem
+          Action = actInvoice
+        end
+        object MenuItem37: TMenuItem
+          Action = actGoodsSPJournal
+        end
+      end
+      object MenuItem38: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem39: TMenuItem
+        Action = actUnit
+      end
+      object MenuItem40: TMenuItem
+        Action = actUnit_Object
+      end
+      object MenuItem41: TMenuItem
+        Action = actUnit_JuridicalArea
+      end
+      object MenuItem42: TMenuItem
+        Action = actUnit_byReportBadm
+      end
+      object MenuItem43: TMenuItem
+        Action = actUnit_MCS
+      end
+      object MenuItem44: TMenuItem
+        Action = actRetail
+      end
+      object MenuItem45: TMenuItem
+        Action = actProvinceCity
+      end
+      object MenuItem46: TMenuItem
+        Action = actArea
+      end
+      object MenuItem47: TMenuItem
+        Action = actJuridicalArea
+      end
+      object MenuItem48: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem49: TMenuItem
+        Action = actJuridical
+      end
+      object MenuItem50: TMenuItem
+        Action = actContract
+      end
+      object MenuItem51: TMenuItem
+        Action = actContactPerson
+      end
+      object MenuItem52: TMenuItem
+        Action = actClientsByBank
+      end
+      object MenuItem53: TMenuItem
+        Action = actMaker
+      end
+      object MenuItem54: TMenuItem
+        Action = actOrderShedule
+      end
+      object MenuItem55: TMenuItem
+        Action = actPlanIventory
+      end
+      object MenuItem56: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem57: TMenuItem
+        Action = actBank
+      end
+      object MenuItem58: TMenuItem
+        Action = actBankAccount
+      end
+      object MenuItem59: TMenuItem
+        Action = actReturnType
+      end
+      object MenuItem60: TMenuItem
+        Action = actPrice
+      end
+      object MenuItem61: TMenuItem
+        Action = actMCS_Lite
+      end
+      object MenuItem62: TMenuItem
+        Action = actPriceOnDate
+      end
+      object MenuItem63: TMenuItem
+        Action = actAlternativeGroup
+      end
+      object MenuItem64: TMenuItem
+        Action = actPaidType
+      end
+      object MenuItem65: TMenuItem
+        Action = actReportSoldParamsFormOpen
+      end
+      object MenuItem66: TMenuItem
+        Action = actReasonDifferences
+      end
+      object MenuItem67: TMenuItem
+        Caption = #1062#1077#1085#1099' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        object MenuItem68: TMenuItem
+          Action = actPriceChange
+        end
+        object MenuItem69: TMenuItem
+          Action = actPriceChangeOnDate
+        end
+      end
+      object MenuItem70: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem71: TMenuItem
+        Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+        object MenuItem72: TMenuItem
+          Action = actDiscountExternalTools
+        end
+        object MenuItem73: TMenuItem
+          Action = actDiscountExternalJuridical
+        end
+        object MenuItem74: TMenuItem
+          Action = actDiscountExternal
+        end
+        object MenuItem75: TMenuItem
+          Action = actDiscountCard
+        end
+        object MenuItem76: TMenuItem
+          Action = actBarCode
+        end
+      end
+      object MenuItem77: TMenuItem
+        Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1099' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080
+        object MenuItem78: TMenuItem
+          Action = actLoyaltyJournal
+        end
+        object MenuItem79: TMenuItem
+          Action = actLoyaltySaveMoneyJournal
+        end
+        object MenuItem80: TMenuItem
+          Action = actPermanentDiscount
+        end
+        object MenuItem81: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem82: TMenuItem
+          Action = actBuyer
+        end
+      end
+    end
+    object MenuItem83: TMenuItem
+      Caption = #1055#1077#1088#1089#1086#1085#1072#1083
+      object MenuItem84: TMenuItem
+        Action = actEducation
+      end
+      object MenuItem85: TMenuItem
+        Action = actPosition
+      end
+      object MenuItem86: TMenuItem
+        Action = actPersonal
+      end
+      object MenuItem87: TMenuItem
+        Action = actPersonalGroup
+      end
+      object MenuItem88: TMenuItem
+        Action = actMember
+      end
+      object MenuItem89: TMenuItem
+        Action = actMemberIncomeCheck
+      end
+      object MenuItem90: TMenuItem
+        Action = actHelsiUser
+      end
+      object MenuItem91: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem92: TMenuItem
+        Action = actCalendar
+      end
+      object MenuItem93: TMenuItem
+        Action = actWorkTimeKind
+      end
+      object MenuItem94: TMenuItem
+        Action = actSheetWorkTime
+      end
+      object MenuItem95: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem96: TMenuItem
+        Action = actReport_Wage
+      end
+      object MenuItem97: TMenuItem
+        Action = actEmployeeSchedule
+      end
+      object MenuItem98: TMenuItem
+        Action = actReport_TestingUser
+      end
+      object MenuItem99: TMenuItem
+        Action = actReport_KPU
+      end
+      object MenuItem100: TMenuItem
+        Action = actPUSH
+      end
+      object MenuItem101: TMenuItem
+        Action = actWages
+      end
+    end
+    object MenuItem102: TMenuItem
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      object MenuItem103: TMenuItem
+        Action = actImportGroup
+      end
+      object MenuItem104: TMenuItem
+        Action = actMovementLoad
+      end
+      object MenuItem105: TMenuItem
+        Action = actPriceListLoad
+      end
+      object MenuItem106: TMenuItem
+        Action = actGoodsBarCodeLoad
+      end
+      object MenuItem107: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem108: TMenuItem
+        Action = actPriceListLoad_Add
+      end
+    end
+    object MenuItem109: TMenuItem
+      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      object MenuItem110: TMenuItem
+        Action = actIncome
+      end
+      object MenuItem111: TMenuItem
+        Action = actIncomePharmacy
+      end
+      object MenuItem112: TMenuItem
+        Action = actReturnOut
+      end
+      object MenuItem113: TMenuItem
+        Action = actReturnOutPharmacy
+      end
+      object MenuItem114: TMenuItem
+        Action = actCheck
+      end
+      object MenuItem115: TMenuItem
+        Action = actSaleJournal
+      end
+      object MenuItem116: TMenuItem
+        Action = actReturnInJournal
+      end
+      object MenuItem117: TMenuItem
+        Action = actRepriceJournal
+      end
+      object MenuItem118: TMenuItem
+        Action = actRepriceChangeJournal
+      end
+      object MenuItem119: TMenuItem
+        Action = actListDiff
+      end
+      object MenuItem120: TMenuItem
+        Action = actUnnamedEnterprises
+      end
+      object MenuItem121: TMenuItem
+        Action = actReportUnLiquid_Movement
+      end
+      object MenuItem122: TMenuItem
+        Action = actReport_GoodsPartionDate
+      end
+      object MenuItem123: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem124: TMenuItem
+        Action = actSendOnPrice
+      end
+      object MenuItem125: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem126: TMenuItem
+        Action = actOrderExternal
+      end
+      object MenuItem127: TMenuItem
+        Action = actOrderInternal
+      end
+      object MenuItem128: TMenuItem
+        Action = actOrderInternalLite
+      end
+      object MenuItem129: TMenuItem
+        Action = actPriceList
+      end
+      object MenuItem130: TMenuItem
+        Action = actTechnicalRediscount
+      end
+      object MenuItem131: TMenuItem
+        Action = actTechnicalRediscountCashier
+      end
+      object MenuItem132: TMenuItem
+        Action = actInventoryJournal
+      end
+      object MenuItem133: TMenuItem
+        Action = actLossJournal
+      end
+      object MenuItem134: TMenuItem
+        Action = actSendJournal
+      end
+      object MenuItem135: TMenuItem
+        Action = actSendMenegerJournal
+      end
+      object MenuItem136: TMenuItem
+        Action = actSendPartionDate
+      end
+      object MenuItem137: TMenuItem
+        Action = actOver
+      end
+      object MenuItem138: TMenuItem
+        Action = actCreateOrderFromMCS
+      end
+    end
+    object MenuItem139: TMenuItem
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      object MenuItem140: TMenuItem
+        Action = actBankAccountDocument
+      end
+      object MenuItem141: TMenuItem
+        Action = actBankLoad
+      end
+      object MenuItem142: TMenuItem
+        Action = actPaymentJournal
+      end
+      object MenuItem143: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem144: TMenuItem
+        Action = actLossDebt
+      end
+      object MenuItem145: TMenuItem
+        Action = actChangeIncomePaymentJournal
+      end
+      object MenuItem146: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem147: TMenuItem
+        Action = actReport_Payment_Plan
+      end
+      object MenuItem148: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem149: TMenuItem
+        Action = actReport_JuridicalSold
+      end
+      object MenuItem150: TMenuItem
+        Action = actReport_JuridicalCollation
+      end
+      object MenuItem151: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem152: TMenuItem
+        Action = actReport_JuridicalRemains
+      end
+      object MenuItem153: TMenuItem
+        Action = actReport_JuridicalSales
+      end
+    end
+    object MenuItem154: TMenuItem
+      Caption = #1054#1090#1095#1077#1090#1099
+      object MenuItem155: TMenuItem
+        Action = actBalance
+      end
+      object MenuItem156: TMenuItem
+        Action = actReportGoodsOrder
+      end
+      object MenuItem157: TMenuItem
+        Action = actSearchGoods
+      end
+      object MenuItem158: TMenuItem
+        Action = actChoiceGoodsFromRemains
+      end
+      object MenuItem159: TMenuItem
+        Action = actReport_Movement_ByPartionGoodsForm
+      end
+      object MenuItem160: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem161: TMenuItem
+        Action = actReport_GoodRemains
+      end
+      object MenuItem162: TMenuItem
+        Action = actReport_GoodsRemainsLight
+      end
+      object MenuItem163: TMenuItem
+        Action = actReport_GoodsRemainsCurrent
+      end
+      object MenuItem164: TMenuItem
+        Action = actReportMovementCheckForm
+      end
+      object MenuItem165: TMenuItem
+        Action = actReportMovementCheckFarmForm
+      end
+      object MenuItem166: TMenuItem
+        Action = actReportMovementCheckFLForm
+      end
+      object MenuItem167: TMenuItem
+        Action = actReport_Profitability
+      end
+      object MenuItem168: TMenuItem
+        Action = actReportMovementCheckLight
+      end
+      object MenuItem169: TMenuItem
+        Action = actReport_Check_Assortment
+      end
+      object MenuItem170: TMenuItem
+        Action = actReport_OverOrder
+      end
+      object MenuItem171: TMenuItem
+        Action = actReport_MovementCheckErrorForm
+      end
+      object MenuItem172: TMenuItem
+        Action = actReportMovementIncomeForm
+      end
+      object MenuItem173: TMenuItem
+        Action = actReportMovementIncomeFarmForm
+      end
+      object MenuItem174: TMenuItem
+        Action = actReport_GoodsPartionMoveForm
+      end
+      object MenuItem175: TMenuItem
+        Action = actReport_GoodsPartionHistoryForm
+      end
+      object MenuItem176: TMenuItem
+        Action = actReport_SoldForm
+      end
+      object MenuItem177: TMenuItem
+        Action = actReport_Sold_DayForm
+      end
+      object MenuItem178: TMenuItem
+        Action = actReport_Sold_DayUserForm
+      end
+      object MenuItem179: TMenuItem
+        Action = actReport_LiquidForm
+      end
+      object MenuItem180: TMenuItem
+        Action = actReport_Movement_ReturnOut
+      end
+      object MenuItem181: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem182: TMenuItem
+        Action = actReport_Movement_ListDiff
+      end
+      object MenuItem183: TMenuItem
+        Caption = #1056#1086#1076#1078#1077#1088#1089
+        object MenuItem184: TMenuItem
+          Action = actReportRogersMovementCheck
+        end
+        object MenuItem185: TMenuItem
+          Action = actRepriceRogersJournal
+        end
+      end
+      object MenuItem186: TMenuItem
+        Action = actReport_PriceProtocol
+      end
+      object MenuItem187: TMenuItem
+        Action = actReport_PromoDoctors
+      end
+      object MenuItem188: TMenuItem
+        Action = actReport_PromoEntrances
+      end
+    end
+    object MenuItem189: TMenuItem
+      Caption = #1057#1059#1053
+      object MenuItem190: TMenuItem
+        Action = actReport_BalanceGoodsSUN
+      end
+      object MenuItem191: TMenuItem
+        Action = actReport_CheckSUN
+      end
+      object MenuItem192: TMenuItem
+        Action = actReport_Movement_Send_RemainsSun
+      end
+      object MenuItem193: TMenuItem
+        Action = actReport_Movement_Send_RemainsSunOut
+      end
+      object MenuItem194: TMenuItem
+        Action = actReport_Send_RemainsSun_over
+      end
+      object MenuItem195: TMenuItem
+        Action = actReport_CheckSendSUN_InOut
+      end
+      object MenuItem196: TMenuItem
+        Action = actReport_GoodsSendSUN
+      end
+      object MenuItem197: TMenuItem
+        Action = actReport_SendSUN_SUNv2
+      end
+      object MenuItem198: TMenuItem
+        Action = actReport_SendSUNDelay
+      end
+      object MenuItem199: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem200: TMenuItem
+        Action = actReport_CheckPartionDate
+      end
+      object MenuItem201: TMenuItem
+        Action = actReport_GoodsPartionDate5
+      end
+      object MenuItem202: TMenuItem
+        Action = actReport_GoodsPartionDate0
+      end
+      object MenuItem203: TMenuItem
+        Action = actPercentageOverdueSUN
+      end
+      object MenuItem204: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem205: TMenuItem
+        Action = actReport_MovementCheckUnLiquid
+      end
+      object MenuItem206: TMenuItem
+        Action = actReport_GoodsNotSalePast
+      end
+      object MenuItem207: TMenuItem
+        Action = actReport_RemainsOverGoods
+      end
+      object MenuItem208: TMenuItem
+        Action = actReport_RemainsOverGoods_To
+      end
+      object MenuItem209: TMenuItem
+        Action = actOverSettings
+      end
+      object MenuItem210: TMenuItem
+        Action = actReport_CheckSUN
+      end
+      object MenuItem211: TMenuItem
+        Action = actReport_SUNSaleDates
+      end
+    end
+    object MenuItem212: TMenuItem
+      Caption = #1041#1040#1048
+      Hint = #1041#1083#1086#1082' '#1072#1085#1072#1083#1080#1090#1080#1095#1077#1089#1082#1080#1093' '#1080#1089#1089#1083#1077#1076#1086#1074#1072#1085#1080#1081
+      object MenuItem213: TMenuItem
+        Action = actReport_ProfitForm
+      end
+      object MenuItem214: TMenuItem
+        Action = actReport_PriceInterventionForm
+      end
+      object MenuItem215: TMenuItem
+        Action = actReport_PriceIntervention2
+      end
+      object MenuItem216: TMenuItem
+        Action = actReportMovementCheckMiddleForm
+      end
+      object MenuItem217: TMenuItem
+        Action = actReport_CheckMiddle_Detail
+      end
+      object MenuItem218: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem219: TMenuItem
+        Action = actReport_MovementPriceList_Cross
+      end
+      object MenuItem220: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem221: TMenuItem
+        Action = actReportMovementCheckGrowthAndFalling
+      end
+      object MenuItem222: TMenuItem
+        Action = actReport_Check_UKTZED
+      end
+      object MenuItem223: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem224: TMenuItem
+        Action = actMarginCategory_Movement
+      end
+      object MenuItem225: TMenuItem
+        Action = actReport_Liquidity
+      end
+      object MenuItem226: TMenuItem
+        Action = actReport_Check_PriceChange
+      end
+      object MenuItem227: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem228: TMenuItem
+        Action = actMarginCategoryJournal2
+      end
+    end
+    object MenuItem229: TMenuItem
+      Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075
+      object MenuItem230: TMenuItem
+        Action = actReport_MovementCheck_Cross
+      end
+      object MenuItem231: TMenuItem
+        Action = actReport_MovementCheckFarm_Cross
+      end
+      object MenuItem232: TMenuItem
+        Action = actReport_MovementIncome_Promo
+      end
+      object MenuItem233: TMenuItem
+        Action = actReport_MovementCheck_Promo
+      end
+      object MenuItem234: TMenuItem
+        Action = actReport_CheckPromo
+      end
+      object MenuItem235: TMenuItem
+        Action = actReport_CheckPromoFarm
+      end
+      object MenuItem236: TMenuItem
+        Action = actReport_Analysis_Remains_Selling
+      end
+      object MenuItem237: TMenuItem
+        Action = actReport_IncomeConsumptionBalance
+      end
+      object MenuItem238: TMenuItem
+        Action = actReport_ImplementationPlanEmployeeAll
+      end
+      object MenuItem239: TMenuItem
+        Action = actReport_ImplementationPlanEmployee
+      end
+      object MenuItem240: TMenuItem
+        Action = actReport_IlliquidReductionPlanAll
+      end
+      object MenuItem241: TMenuItem
+        Action = actReport_IlliquidReductionPlanUser
+      end
+      object MenuItem242: TMenuItem
+        Action = actReport_IncomeSample
+      end
+      object MenuItem243: TMenuItem
+        Action = actReport_DiscountExternal
+      end
+      object MenuItem244: TMenuItem
+        Action = actReport_StockTiming_RemainderForm
+      end
+      object MenuItem245: TMenuItem
+        Action = actReport_Check_GoodsPriceChange
+      end
+      object MenuItem246: TMenuItem
+        Action = acttReport_GoodsPartionDate_Promo
+      end
+      object MenuItem247: TMenuItem
+        Action = actOrderInternalPromo
+      end
+      object MenuItem248: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem249: TMenuItem
+        Action = actPromo
+      end
+      object MenuItem250: TMenuItem
+        Action = actPromoUnit
+      end
+      object MenuItem251: TMenuItem
+        Action = actReportPromoParams
+      end
+      object MenuItem252: TMenuItem
+        Action = actReport_Check_Rating
+      end
+      object MenuItem253: TMenuItem
+        Action = actIlliquidUnitJournal
+      end
+      object MenuItem254: TMenuItem
+        Action = actReport_SendSUNLoss
+      end
+      object MenuItem255: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem256: TMenuItem
+        Caption = #1055#1088#1086#1084#1086' '#1082#1086#1076#1099
+        Hint = #1055#1088#1086#1084#1086' '#1082#1086#1076#1099
+        object MenuItem257: TMenuItem
+          Action = actPromoCode
+        end
+        object MenuItem258: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem259: TMenuItem
+          Action = actPromoCodeMovement
+        end
+      end
+      object MenuItem260: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem261: TMenuItem
+        Action = actReport_MinPrice_onGoods
+      end
+      object MenuItem262: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem263: TMenuItem
+        Action = actReport_UploadBaDMForm
+      end
+      object MenuItem264: TMenuItem
+        Action = actReport_UploadOptimaForm
+      end
+      object MenuItem265: TMenuItem
+        Action = actReport_Badm
+      end
+    end
+    object MenuItem266: TMenuItem
+      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      object MenuItem267: TMenuItem
+        Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+        object MenuItem268: TMenuItem
+          Action = actNDSKind
+        end
+        object MenuItem269: TMenuItem
+          Action = actOrderKind
+        end
+        object MenuItem270: TMenuItem
+          Action = actMeasure
+        end
+        object MenuItem271: TMenuItem
+          Action = actConditionsKeep
+        end
+        object MenuItem272: TMenuItem
+          Action = actDiffKind
+        end
+        object MenuItem273: TMenuItem
+          Action = actPartionDateKind
+        end
+        object MenuItem274: TMenuItem
+          Action = actRetailCostCredit
+        end
+        object MenuItem275: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem276: TMenuItem
+          Action = actCashRegister
+        end
+        object MenuItem277: TMenuItem
+          Action = actBankPOSTerminal
+        end
+        object MenuItem278: TMenuItem
+          Action = actUnitBankPOSTerminal
+        end
+        object MenuItem279: TMenuItem
+          Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+          object MenuItem280: TMenuItem
+            Action = actAccountGroup
+          end
+          object MenuItem281: TMenuItem
+            Action = actAccountDirection
+          end
+          object MenuItem282: TMenuItem
+            Action = actAccount
+          end
+          object MenuItem283: TMenuItem
+            Caption = '-'
+          end
+          object MenuItem284: TMenuItem
+            Action = actInfoMoneyGroup
+          end
+          object MenuItem285: TMenuItem
+            Action = actInfoMoneyDestination
+          end
+          object MenuItem286: TMenuItem
+            Action = actInfoMoney
+          end
+          object MenuItem287: TMenuItem
+            Caption = '-'
+          end
+          object MenuItem288: TMenuItem
+            Action = actProfitLossGroup
+          end
+          object MenuItem289: TMenuItem
+            Action = actProfitLossDirection
+          end
+          object MenuItem290: TMenuItem
+            Action = actProfitLoss
+          end
+        end
+        object MenuItem291: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem292: TMenuItem
+          Action = actColor
+        end
+        object MenuItem293: TMenuItem
+          Action = actForms
+        end
+        object MenuItem294: TMenuItem
+          Action = actMovementDesc
+        end
+        object MenuItem295: TMenuItem
+          Action = actTestFormOpen
+        end
+        object MenuItem296: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem297: TMenuItem
+          Action = actFiscal
+        end
+        object MenuItem298: TMenuItem
+          Action = actJackdawsChecks
+        end
+        object MenuItem299: TMenuItem
+          Action = actDriver
+        end
+        object MenuItem300: TMenuItem
+          Action = actUnitLincDriver
+        end
+        object MenuItem301: TMenuItem
+          Action = actPayrollType
+        end
+        object MenuItem302: TMenuItem
+          Action = actCashSettings
+        end
+      end
+      object MenuItem303: TMenuItem
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
+        object MenuItem304: TMenuItem
+          Action = actMarginCategory
+        end
+        object MenuItem305: TMenuItem
+          Action = actMarginCategoryItem
+        end
+        object MenuItem306: TMenuItem
+          Action = actMarginCategoryLink
+        end
+        object MenuItem307: TMenuItem
+          Action = actMarginCategory_Cross
+        end
+        object MenuItem308: TMenuItem
+          Action = actMarginCategory_All
+        end
+      end
+      object MenuItem309: TMenuItem
+        Action = actTaxUnit
+      end
+      object MenuItem310: TMenuItem
+        Action = actUser
+      end
+      object MenuItem311: TMenuItem
+        Action = actRole
+      end
+      object MenuItem312: TMenuItem
+        Action = actRoleUnion
+      end
+      object MenuItem313: TMenuItem
+        Action = actLog_CashRemains
+      end
+      object MenuItem314: TMenuItem
+        Action = actCheckNoCashRegister
+      end
+      object MenuItem315: TMenuItem
+        Action = actCheckUnComplete
+      end
+      object MenuItem316: TMenuItem
+        Action = actSetDefault
+      end
+      object MenuItem317: TMenuItem
+        Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1086#1095#1090#1099
+        object MenuItem318: TMenuItem
+          Action = actEmailSettings
+        end
+        object MenuItem319: TMenuItem
+          Action = actEmailKind
+        end
+        object MenuItem320: TMenuItem
+          Action = actEmailTools
+        end
+        object MenuItem321: TMenuItem
+          Action = actEmail
+        end
+      end
+      object MenuItem322: TMenuItem
+        Action = actGoodsMain
+      end
+      object MenuItem323: TMenuItem
+        Action = actGoodsOnUnit_ForSite
+      end
+      object MenuItem324: TMenuItem
+        Action = actConfirmedKind
+      end
+      object MenuItem325: TMenuItem
+        Action = actReport_GoodsRemains_AnotherRetail
+      end
+      object MenuItem326: TMenuItem
+        Action = actGoodsInventory
+      end
+      object MenuItem327: TMenuItem
+        Action = actCreditLimitDistributor
+      end
+      object MenuItem328: TMenuItem
+        Action = actReport_InventoryErrorRemains
+      end
+      object MenuItem329: TMenuItem
+        Action = actReport_EntryGoodsMovement
+      end
+      object MenuItem330: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem331: TMenuItem
+        Action = actSaveData
+      end
+      object MenuItem332: TMenuItem
+        Action = actPriceGroupSettings
+      end
+      object MenuItem333: TMenuItem
+        Action = actPriceGroupSettingsTOP
+      end
+      object MenuItem334: TMenuItem
+        Action = actJuridicalSettings
+      end
+      object MenuItem335: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem336: TMenuItem
+        Action = actImportType
+      end
+      object MenuItem337: TMenuItem
+        Action = actImportSettings
+      end
+      object MenuItem338: TMenuItem
+        Action = actImportExportLink
+      end
+      object MenuItem339: TMenuItem
+        Action = actGlobalConst
+      end
+      object MenuItem340: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem341: TMenuItem
+        Action = actUnitForFarmacyCash
+      end
+      object MenuItem342: TMenuItem
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+        object MenuItem343: TMenuItem
+          Action = actProtocol
+        end
+        object MenuItem344: TMenuItem
+          Action = actProtocolMovement
+        end
+        object MenuItem345: TMenuItem
+          Action = actProtocolUser
+        end
+      end
+      object MenuItem346: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem347: TMenuItem
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072
+        OnClick = miRepriceClick
+      end
+      object MenuItem348: TMenuItem
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1094#1077#1085' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+        OnClick = miRepriceChangeClick
+      end
+      object MenuItem349: TMenuItem
+        Caption = #1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' ('#1090#1077#1089#1090')'
+        OnClick = miReprice_testClick
+      end
+      object MenuItem350: TMenuItem
+        Action = actExportSalesForSuppClick
+      end
+      object MenuItem351: TMenuItem
+        Action = actRepriceUnitSheduler
+      end
+      object MenuItem352: TMenuItem
+        Action = actRecalcMCSSheduler
+      end
+      object MenuItem353: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem354: TMenuItem
+        Action = actLookAndFeel
+      end
+      object MenuItem355: TMenuItem
+        Action = actAbout
+      end
+      object MenuItem356: TMenuItem
+        Action = actUpdateProgram
+      end
+    end
+    object MenuItem357: TMenuItem
+      Action = actExit
+    end
   end
 end

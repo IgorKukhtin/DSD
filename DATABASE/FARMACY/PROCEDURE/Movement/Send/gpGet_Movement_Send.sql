@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isSent Boolean
              , isReceived Boolean
              , isNotDisplaySUN Boolean
+             , NumberSeats Integer
               )
 AS
 $BODY$
@@ -64,6 +65,7 @@ BEGIN
              , FALSE                                            AS isSent
              , FALSE                                            AS isReceived
              , FALSE                                            AS NotDisplaySUN
+             , CAST (0 AS Integer)                              AS NumberSeats
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
      ELSE
@@ -97,6 +99,7 @@ BEGIN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
+           , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -169,6 +172,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MCSDay
                                     ON MovementFloat_MCSDay.MovementId =  Movement.Id
                                    AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
+
+            LEFT JOIN MovementFloat AS MovementFloat_NumberSeats
+                                    ON MovementFloat_NumberSeats.MovementId =  Movement.Id
+                                   AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Send();

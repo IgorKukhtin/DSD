@@ -12,17 +12,17 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
     Width = 1072
     Height = 318
     ExplicitTop = 77
-    ExplicitWidth = 837
+    ExplicitWidth = 1072
     ExplicitHeight = 318
     ClientRectBottom = 318
     ClientRectRight = 1072
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 837
+      ExplicitWidth = 1072
       ExplicitHeight = 318
       inherited cxGrid: TcxGrid
         Width = 1072
         Height = 318
-        ExplicitWidth = 837
+        ExplicitWidth = 1072
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -230,6 +230,14 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
             Options.Editing = False
             Width = 113
           end
+          object FromName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
         end
       end
     end
@@ -237,7 +245,7 @@ inherited Report_MovementCheck_DiscountExternalForm: TReport_MovementCheck_Disco
   inherited Panel: TPanel
     Width = 1072
     Height = 51
-    ExplicitWidth = 837
+    ExplicitWidth = 1072
     ExplicitHeight = 51
     inherited deStart: TcxDateEdit
       EditValue = 42491d

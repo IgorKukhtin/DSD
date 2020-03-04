@@ -827,7 +827,9 @@ uses
   CommentTR in '..\..\FormsFarmacy\Guides\CommentTR.pas' {CommentTRForm: TParentForm},
   CommentTREdit in '..\..\FormsFarmacy\Guides\CommentTREdit.pas' {CommentTREditForm: TParentForm},
   WagesTechnicalRediscount in '..\..\FormsFarmacy\Document\WagesTechnicalRediscount.pas' {WagesTechnicalRediscountForm: TParentForm},
-  WagesTechnicalRediscountUnit in '..\..\FormsFarmacy\Document\WagesTechnicalRediscountUnit.pas' {WagesTechnicalRediscountUnitForm: TParentForm};
+  WagesTechnicalRediscountUnit in '..\..\FormsFarmacy\Document\WagesTechnicalRediscountUnit.pas' {WagesTechnicalRediscountUnitForm: TParentForm},
+  Report_EntryGoodsMovementDialog in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovementDialog.pas' {Report_EntryGoodsMovementDialogForm: TParentForm},
+  Report_EntryGoodsMovement in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovement.pas' {Report_EntryGoodsMovementForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

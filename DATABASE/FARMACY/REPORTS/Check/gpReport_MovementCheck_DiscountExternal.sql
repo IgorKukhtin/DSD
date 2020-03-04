@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , SummSale TFloat
              , ChangePercent TFloat
              , SummChangePercent TFloat
+             , FromName TVarChar
               )
 AS
 $BODY$
@@ -74,14 +75,15 @@ BEGIN
            , MovementItem.GoodsId
            , MovementItem.GoodsCode
            , MovementItem.GoodsName
-           , MovementItem.Amount
+           , (-1.0 * MovementItemContainer.Amount) :: TFloat
            , MovementItem.Price
-           , MovementItem.AmountSumm
+           , (MovementItem.AmountSumm * (-1.0 * MovementItemContainer.Amount)/ MovementItem.Amount) :: TFloat
            , MovementItem.NDS
            , MovementItem.PriceSale
-           , (MovementItem.PriceSale * MovementItem.Amount) :: TFloat AS SummSale
+           , (MovementItem.PriceSale * (-1.0 * MovementItemContainer.Amount)) :: TFloat AS SummSale
            , MovementItem.ChangePercent
-           , MovementItem.SummChangePercent
+           ,( MovementItem.SummChangePercent * (-1.0 * MovementItemContainer.Amount)/ MovementItem.Amount) :: TFloat
+           , Object_From.ValueData                      AS FromName
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -142,7 +144,28 @@ BEGIN
 
              LEFT JOIN MovementItem_Check_View AS MovementItem
                                                ON MovementItem.MovementId = Movement_Check.Id
+                                               
+             LEFT JOIN MovementItemContainer ON MovementItemContainer.MovementItemId = MovementItem.ID
 
+             LEFT JOIN ContainerLinkObject AS CLI_MI
+                                           ON CLI_MI.ContainerId = MovementItemContainer.ContainerId
+                                          AND CLI_MI.DescId = zc_ContainerLinkObject_PartionMovementItem()
+             LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+             -- элемент прихода
+             LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+             -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                         ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+             -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+             LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                  -- AND 1=0
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
              ;
 
 
@@ -157,4 +180,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('27.10.2019')::TDateTime , inEndDate := ('29.10.2019')::TDateTime , inUnitId := 377605 , inDiscountExternalId := 4521216 ,  inSession := '3');
+-- select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('29.10.2020')::TDateTime , inUnitId := 377605 , inDiscountExternalId := 4521216 ,  inSession := '3');

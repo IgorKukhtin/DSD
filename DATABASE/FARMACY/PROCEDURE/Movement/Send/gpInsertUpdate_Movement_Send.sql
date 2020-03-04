@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTi
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -14,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inComment             TVarChar  , -- Примечание
     IN inChecked             Boolean   , -- Проверен
     IN inisComplete          Boolean   , -- Собрано фармацевтом
+    IN inNumberSeats         Integer   , -- Количество мест
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -91,6 +94,7 @@ BEGIN
                                          , inComment          := inComment
                                          , inChecked          := inChecked
                                          , inisComplete       := inisComplete
+                                         , inNumberSeats      := inNumberSeats
                                          , inUserId           := vbUserId
                                           );
 

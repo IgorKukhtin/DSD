@@ -834,6 +834,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_EntryGoodsMovementDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_EntryGoodsMovementDialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_EntryGoodsMovementForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_EntryGoodsMovementForm');
+    exit;
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSalesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSalesForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSalesDialogForm'));
@@ -2158,17 +2163,17 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
 
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
-}  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));

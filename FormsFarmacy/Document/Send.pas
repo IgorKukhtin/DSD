@@ -78,7 +78,7 @@ type
     MultiAction1: TMultiAction;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
-    edPeriod: TcxCurrencyEdit;
+    edNumberSeats: TcxCurrencyEdit;
     edDay: TcxCurrencyEdit;
     ceChecked: TcxCheckBox;
     ChoiceReasonDifferences: TOpenChoiceForm;
@@ -160,6 +160,8 @@ type
     spCreateLoss: TdsdStoredProc;
     actExecCreateLoss: TdsdExecStoredProc;
     actOpenLossForm: TdsdOpenForm;
+    cxCurrencyEdit1: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

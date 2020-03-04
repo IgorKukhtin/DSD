@@ -84,6 +84,7 @@ type
     actExecUnCompleteView: TdsdExecStoredProc;
     spUnCompleteView: TdsdStoredProc;
     dxBarButton3: TdxBarButton;
+    NumberSeats: TcxGridDBColumn;
   private
     { Private declarations }
   public

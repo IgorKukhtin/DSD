@@ -1,8 +1,10 @@
  -- Function: gpReport_EntryGoodsMovement()
 
-DROP FUNCTION IF EXISTS gpReport_EntryGoodsMovement (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_EntryGoodsMovement (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_EntryGoodsMovement(
+    IN inStartDate        TDateTime,  -- Дата начала
+    IN inEndDate          TDateTime,  -- Дата окончания
     IN inUnitId           Integer  ,  -- Подразделение
     IN inGoodsId          Integer  ,  -- Товар
     IN inSession          TVarChar    -- сессия пользователя
@@ -11,6 +13,7 @@ RETURNS TABLE (ID  Integer
              , InvNumber  TVarChar
              , OperDate TDateTime
              , StatusName TVarChar
+             , DescId Integer
              , MovementName TVarChar
              , UnitName TVarChar
              , Amount TFloat
@@ -32,20 +35,22 @@ BEGIN
          , Movement.OperDate
          , (Object_Status.ValueData||CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE
                                                AND Movement.DescId not in (zc_Movement_Check()) THEN ' Отложен' ELSE '' END)::TVarChar
+         , Movement.DescId
          , MovementDesc.ItemName
          , Object_Unit.ValueData
          , MovementItem.Amount
     FROM MovementItem
 
        INNER JOIN Movement ON Movement.ID = MovementItem.movementid
-                          AND Movement.DescId not in (zc_Movement_Reprice())
+--                          AND Movement.DescId not in (zc_Movement_Reprice())
+                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        INNER JOIN MovementDesc ON MovementDesc.id = Movement.DescId
        INNER JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
        INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement.Id
                                     AND MovementLinkObject_Unit.DescId in (zc_MovementLinkObject_Unit(), zc_MovementLinkObject_From() , zc_MovementLinkObject_To())
-                                    AND MovementLinkObject_Unit.ObjectId = inUnitId
+                                    AND (MovementLinkObject_Unit.ObjectId = inUnitId OR COALESCE (inUnitId, 0) = 0)
        INNER JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
        LEFT JOIN MovementBoolean AS MovementBoolean_Deferred

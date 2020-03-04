@@ -2876,6 +2876,14 @@
 				<Form>WagesTechnicalRediscountUnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_EntryGoodsMovementDialog.pas">
+				<Form>Report_EntryGoodsMovementDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_EntryGoodsMovement.pas">
+				<Form>Report_EntryGoodsMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

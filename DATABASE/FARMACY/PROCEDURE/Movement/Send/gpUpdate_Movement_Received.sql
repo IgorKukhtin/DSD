@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbisDefSUN   Boolean;
    DECLARE vbisSent     Boolean;
    DECLARE vbisReceived Boolean;
+   DECLARE vbNumberSeats Integer;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -37,9 +38,10 @@ BEGIN
         , COALESCE (MovementBoolean_Deferred.ValueData, FALSE)::Boolean AS isDeferred
         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
         , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
-        , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean AS isSent
+        , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean     AS isSent
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
-   INTO vbStatusId, vbUnitIdTo, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived
+        , MovementFloat_NumberSeats.ValueData::Integer                  AS NumberSeats
+   INTO vbStatusId, vbUnitIdTo, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats
    FROM Movement
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
@@ -65,6 +67,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+
+            LEFT JOIN MovementFloat AS MovementFloat_NumberSeats
+                                    ON MovementFloat_NumberSeats.MovementId =  Movement.Id
+                                   AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
 
    WHERE Movement.Id = inMovementId;
 
@@ -93,6 +99,11 @@ BEGIN
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
       RAISE EXCEPTION 'Ошибка. Отмена признака <Получено-да> вам запрещена, обратитесь к системному администратору';
+   END IF;
+
+   IF inisReceived = FALSE AND COALESCE (vbNumberSeats, 0) = 0 AND CURRENT_DATE >= '11.03.2020'::TDateTime
+   THEN
+      RAISE EXCEPTION 'Ошибка. Не заполнено <Количество мест>';
    END IF;
 
    -- сохранили признак

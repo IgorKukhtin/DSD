@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UpdateDateDiff TFloat
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
              , DriverId Integer, DriverName TVarChar
+             , NumberSeats Integer
               )
 
 AS
@@ -146,6 +147,8 @@ BEGIN
            
            , Object_Driver.Id                     AS DriverId
            , Object_Driver.ValueData  :: TVarChar AS DriverName
+           
+           , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -237,6 +240,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MCSDay
                                     ON MovementFloat_MCSDay.MovementId =  Movement.Id
                                    AND MovementFloat_MCSDay.DescId = zc_MovementFloat_MCSDay()
+
+            LEFT JOIN MovementFloat AS MovementFloat_NumberSeats
+                                    ON MovementFloat_NumberSeats.MovementId =  Movement.Id
+                                   AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

@@ -689,7 +689,7 @@ inherited SendForm: TSendForm
         end>
       Properties.ReadOnly = True
       TabOrder = 13
-      Width = 270
+      Width = 199
     end
     object cbSun: TcxCheckBox
       Left = 477
@@ -755,6 +755,20 @@ inherited SendForm: TSendForm
       TabOrder = 19
       Width = 189
     end
+    object cxCurrencyEdit1: TcxCurrencyEdit
+      Left = 804
+      Top = 23
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 20
+      Width = 37
+    end
+    object cxLabel9: TcxLabel
+      Left = 400
+      Top = 45
+      Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
+    end
   end
   object cxLabel7: TcxLabel [2]
     Left = 195
@@ -782,14 +796,14 @@ inherited SendForm: TSendForm
     Top = 45
     Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
   end
-  object edPeriod: TcxCurrencyEdit [6]
-    Left = 804
-    Top = 23
+  object edNumberSeats: TcxCurrencyEdit [6]
+    Left = 400
+    Top = 63
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 10
-    Width = 37
+    Width = 65
   end
   object edDay: TcxCurrencyEdit [7]
     Left = 804
@@ -1861,7 +1875,7 @@ inherited SendForm: TSendForm
       item
         Name = 'MCSPeriod'
         Value = Null
-        Component = edPeriod
+        Component = edNumberSeats
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1964,6 +1978,12 @@ inherited SendForm: TSendForm
         Component = cbSun_v2
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NumberSeats'
+        Value = Null
+        Component = edNumberSeats
+        MultiSelectSeparator = ','
       end>
     Left = 216
     Top = 248
@@ -2034,6 +2054,13 @@ inherited SendForm: TSendForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNumberSeats'
+        Value = Null
+        Component = edNumberSeats
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2086,6 +2113,7 @@ inherited SendForm: TSendForm
         Control = edisComplete
       end
       item
+        Control = edNumberSeats
       end
       item
       end
