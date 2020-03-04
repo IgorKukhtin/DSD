@@ -3,10 +3,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   ClientHeight = 555
   ClientWidth = 982
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -209
-  ExplicitTop = -133
   ExplicitWidth = 998
-  ExplicitHeight = 590
+  ExplicitHeight = 593
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -243,6 +241,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 105
+          end
+          object JuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095'.)'
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
           end
           object CurrencyName_BankAccount: TcxGridDBColumn
             Caption = #1042#1072#1083#1102#1090#1072' '#1088'.'#1089#1095'.'
@@ -665,14 +671,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 42005d
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 42005d
+      EditValue = 43831d
       Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
@@ -688,13 +694,13 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 475
-      Top = 6
+      Left = 215
+      Top = 31
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 475
-      Top = 29
+      Left = 298
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -702,11 +708,11 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end>
       Properties.ReadOnly = True
       TabOrder = 5
-      Width = 350
+      Width = 263
     end
     object ceBankAccount: TcxButtonEdit
-      Left = 209
-      Top = 29
+      Left = 298
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -714,21 +720,21 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end>
       Properties.ReadOnly = True
       TabOrder = 6
-      Width = 260
+      Width = 263
     end
     object cxLabel4: TcxLabel
       Left = 209
       Top = 6
-      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090':'
     end
     object cxLabel10: TcxLabel
-      Left = 837
-      Top = 6
+      Left = 596
+      Top = 31
       Caption = #1042#1072#1083#1102#1090#1072':'
     end
     object edCurrency: TcxButtonEdit
-      Left = 837
-      Top = 29
+      Left = 645
+      Top = 32
       Properties.Buttons = <
         item
           Default = True
@@ -736,7 +742,24 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         end>
       Properties.ReadOnly = True
       TabOrder = 9
-      Width = 68
+      Width = 151
+    end
+    object cxLabel27: TcxLabel
+      Left = 567
+      Top = 6
+      Caption = #1055#1088#1077#1076#1087#1088#1080#1103#1090#1080#1077':'
+    end
+    object edJuridicalBasis: TcxButtonEdit
+      Left = 645
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 151
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -746,7 +769,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1012,7 +1035,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'BankAccountId'
           Value = ''
-          Component = BankAccountGuides
+          Component = GuidesBankAccount
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptInput
@@ -1021,7 +1044,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'BankAccountName'
           Value = ''
-          Component = BankAccountGuides
+          Component = GuidesBankAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1030,7 +1053,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'AccountId'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1038,7 +1061,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'AccountName'
           Value = ''
-          Component = AccountGuides
+          Component = GuidesAccount
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1047,7 +1070,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'CurrencyId'
           Value = ''
-          Component = CurrencyGuides
+          Component = GuidesCurrency
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1055,7 +1078,24 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         item
           Name = 'CurrencyName'
           Value = ''
-          Component = CurrencyGuides
+          Component = GuidesCurrency
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisId'
+          Value = Null
+          Component = GuidesJuridicalBasis
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'JuridicalBasisName'
+          Value = Null
+          Component = GuidesJuridicalBasis
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -1093,9 +1133,17 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1103,7 +1151,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'inBankAccountId'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1111,7 +1159,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'inCurrencyId'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1219,13 +1267,16 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         Component = PeriodChoice
       end
       item
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
       end
       item
-        Component = AccountGuides
+        Component = GuidesAccount
       end
       item
-        Component = CurrencyGuides
+        Component = GuidesCurrency
+      end
+      item
+        Component = GuidesJuridicalBasis
       end>
     Top = 228
   end
@@ -1323,7 +1374,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
+    Left = 320
     Top = 232
   end
   object FormParams: TdsdFormParams
@@ -1397,7 +1448,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Left = 240
     Top = 232
   end
-  object AccountGuides: TdsdGuides
+  object GuidesAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
     FormNameParam.Value = 'TAccount_ObjectForm'
@@ -1409,7 +1460,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'Key'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1417,16 +1468,16 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 584
+    Left = 456
     Top = 8
   end
-  object BankAccountGuides: TdsdGuides
+  object GuidesBankAccount: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBankAccount
     FormNameParam.Value = 'TBankAccount_ObjectForm'
@@ -1438,7 +1489,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'Key'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1446,7 +1497,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1459,8 +1510,8 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 308
-    Top = 5
+    Left = 380
+    Top = 29
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpReport_BankAccount'
@@ -1489,7 +1540,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1497,7 +1548,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'inBankAccountId'
         Value = ''
-        Component = BankAccountGuides
+        Component = GuidesBankAccount
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1505,7 +1556,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'inCurrencyId'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1527,7 +1578,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
     Left = 724
     Top = 334
   end
-  object CurrencyGuides: TdsdGuides
+  object GuidesCurrency: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
     FormNameParam.Value = 'TCurrency_ObjectForm'
@@ -1539,7 +1590,7 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'Key'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1548,13 +1599,66 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = CurrencyGuides
+        Component = GuidesCurrency
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 856
-    Top = 24
+    Left = 696
+    Top = 32
+  end
+  object GuidesJuridicalBasis: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridicalBasis
+    Key = '0'
+    FormNameParam.Value = 'TJuridical_BasisForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TJuridical_BasisForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 783
+  end
+  object spGet_UseJuridicalBankAccount: TdsdStoredProc
+    StoredProcName = 'gpGet_UserJuridicalBankAccount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 911
+    Top = 26
   end
 end

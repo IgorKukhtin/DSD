@@ -276,8 +276,10 @@ begin
   exit;
 
   LoadReportFromFile('Отчет УП Баланс', ReportPath + '\Отчеты (УП)\Отчет УП Баланс.fr3');
-
+  }
   LoadReportFromFile('Отчет УП Баланс (Дебет Кредит)', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит).fr3');
+  exit;
+  {
   LoadReportFromFile('Отчет УП Баланс (Дебет Кредит) свернуто', ReportPath + '\Отчеты (УП)\Отчет УП Баланс (Дебет Кредит) свернуто.fr3');
   exit;
 

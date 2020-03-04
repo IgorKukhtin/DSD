@@ -9,7 +9,7 @@ uses
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
   cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
-  dxSkinsDefaultPainters, cxCheckBox;
+  dxSkinsDefaultPainters, cxCheckBox, dsdAction, Vcl.ActnList;
 
 type
   TReport_BankAccountDialogForm = class(TParentForm)
@@ -25,13 +25,21 @@ type
     cxLabel7: TcxLabel;
     cxLabel1: TcxLabel;
     ceBankAccount: TcxButtonEdit;
-    BankAccountGuides: TdsdGuides;
+    GuidesBankAccount: TdsdGuides;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actGet_UseJuridicalBankAccount: TdsdExecStoredProc;
+    actRefreshStart: TdsdDataSetRefresh;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    GuidesJuridicalBasis: TdsdGuides;
+    spGet_UseJuridicalBankAccount: TdsdStoredProc;
   private
     { Private declarations }
   public

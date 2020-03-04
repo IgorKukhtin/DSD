@@ -47,11 +47,11 @@ type
     MoneyPlaceName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edAccount: TcxButtonEdit;
-    AccountGuides: TdsdGuides;
+    GuidesAccount: TdsdGuides;
     BankName: TcxGridDBColumn;
     ceBankAccount: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    BankAccountGuides: TdsdGuides;
+    GuidesBankAccount: TdsdGuides;
     ContractInvNumber: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     StartAmountD: TcxGridDBColumn;
@@ -64,7 +64,7 @@ type
     EndAmountK_Currency: TcxGridDBColumn;
     cxLabel10: TcxLabel;
     edCurrency: TcxButtonEdit;
-    CurrencyGuides: TdsdGuides;
+    GuidesCurrency: TdsdGuides;
     CurrencyName: TcxGridDBColumn;
     spSelectPrint: TdsdStoredProc;
     PrintItemsCDS: TClientDataSet;
@@ -87,6 +87,10 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     Summ_pl: TcxGridDBColumn;
+    cxLabel27: TcxLabel;
+    edJuridicalBasis: TcxButtonEdit;
+    GuidesJuridicalBasis: TdsdGuides;
+    spGet_UseJuridicalBankAccount: TdsdStoredProc;
   private
     { Private declarations }
   public

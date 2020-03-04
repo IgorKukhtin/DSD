@@ -1,17 +1,21 @@
 -- Function: gpReport_BankAccount
 
-DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_BankAccount(
     IN inStartDate        TDateTime , --
     IN inEndDate          TDateTime , --
+    IN inJuridicalBasisId Integer   , -- гл. юр.лицо
     IN inAccountId        Integer,    -- Счет
     IN inBankAccountId    Integer,    -- Счет банк
     IN inCurrencyId       Integer   , -- Валюта
     IN inIsDetail         Boolean   , -- 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar, CurrencyName_BankAccount TVarChar, CurrencyName TVarChar
+RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
+             , JuridicalName TVarChar
+             , CurrencyName_BankAccount TVarChar, CurrencyName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyName_all TVarChar
              , AccountName TVarChar
              , MoneyPlaceName TVarChar, ItemName TVarChar
@@ -33,10 +37,53 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar,
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbMemberId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
+     vbUserId:= lpGetUserBySession (inSession);
+
+     -- проверка доступа
+     vbMemberId := (SELECT ObjectLink_User_Member.ChildObjectId AS MemberId
+                    FROM ObjectLink AS ObjectLink_User_Member
+                    WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                    );
+
+     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;
+        INSERT INTO _tmpJuridical (JuridicalId)
+              SELECT BankAccount_Juridical.ChildObjectId AS JuridicalId
+              FROM ObjectLink AS ObjectLink_MemberBankAccount_Member
+                  INNER JOIN Object AS Object_MemberBankAccount
+                                    ON Object_MemberBankAccount.Id = ObjectLink_MemberBankAccount_Member.ObjectId
+                                   AND Object_MemberBankAccount.DescId = zc_Object_MemberBankAccount()
+                                   AND Object_MemberBankAccount.isErased = FALSE
+
+                  INNER JOIN ObjectLink AS ObjectLink_MemberBankAccount_BankAccount
+                                        ON ObjectLink_MemberBankAccount_BankAccount.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                       AND ObjectLink_MemberBankAccount_BankAccount.DescId = zc_ObjectLink_MemberBankAccount_BankAccount()
+       
+                  INNER JOIN ObjectLink AS BankAccount_Juridical
+                                        ON BankAccount_Juridical.ObjectId = ObjectLink_MemberBankAccount_BankAccount.ChildObjectId
+                                       AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_All 
+                                          ON ObjectBoolean_All.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                         AND ObjectBoolean_All.DescId = zc_ObjectBoolean_MemberBankAccount_All()
+                                         AND COALESCE (ObjectBoolean_All.ValueData, FALSE) = FALSE
+              WHERE ObjectLink_MemberBankAccount_Member.DescId = zc_ObjectLink_MemberBankAccount_Member()
+                AND ObjectLink_MemberBankAccount_Member.ChildObjectId = vbMemberId;
+
+     IF COALESCE (inJuridicalBasisId = 0) AND COALESCE ((SELECT COUNT (*) FROM _tmpJuridical), 0) <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов всем юр.лицам';
+     END IF;
+     IF COALESCE (inJuridicalBasisId <> 0) AND NOT EXISTS (SELECT 1 FROM _tmpJuridical WHERE _tmpJuridical.JuridicalId = inJuridicalBasisId) AND COALESCE ((SELECT COUNT (*) FROM _tmpJuridical), 0) <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов по юр.лицу <%> ', lfGet_Object_ValueData (inJuridicalBasisId);
+     END IF;
+     --
 
      -- Результат
   RETURN QUERY
@@ -46,33 +93,22 @@ BEGIN
                          WHERE AccountGroupId = zc_Enum_AccountGroup_40000() 
                             OR AccountDirectionId = zc_Enum_AccountDirection_110300()
                         ) -- Денежные средства OR Транзит + расчетный счет
-                        
-        , tmpContainer AS (SELECT Container.Id                            AS ContainerId
-                                , Container_Currency.Id                   AS ContainerId_Currency
-                                , Container.ObjectId                      AS AccountId
-                                , COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) AS BankAccountId
-                                , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
-                                , Container.Amount                        AS Amount
-                                , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
-                           FROM tmpAccount
-                                INNER JOIN Container ON Container.ObjectId = tmpAccount.AccountId AND Container.DescId = zc_Container_Summ()
-                                LEFT JOIN ContainerLinkObject AS CLO_BankAccount ON CLO_BankAccount.ContainerId = Container.Id AND CLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
-                                LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = Container.Id AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
-                                LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
-                           WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
-                            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-                            AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
-                            AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
-                          )
-        , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
-       
+
+        --
         , tmpBankAccount AS (SELECT Object_BankAccount.Id          AS Id
                                   , Object_BankAccount.ValueData   AS Name
                                   , Object_Bank.ValueData          AS BankName
+                                  , Object_Currency.Id             AS CurrencyId
                                   , Object_Currency.ValueData      AS CurrencyName
+                                  , Object_Juridical.Id            AS JuridicalId
+                                  , Object_Juridical.ValueData     AS JuridicalName
                       
                              FROM Object AS Object_BankAccount
+                                   LEFT JOIN ObjectLink AS BankAccount_Juridical
+                                                        ON BankAccount_Juridical.ObjectId = Object_BankAccount.Id
+                                                       AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+                                   LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = BankAccount_Juridical.ChildObjectId
+
                                    LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                                         ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                                        AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
@@ -82,9 +118,38 @@ BEGIN
                                                         ON BankAccount_Currency.ObjectId = Object_BankAccount.Id
                                                        AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
                                    LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = BankAccount_Currency.ChildObjectId
-                                   
+
                              WHERE Object_BankAccount.DescId = zc_Object_BankAccount()
-                            ) 
+                               AND (BankAccount_Juridical.ChildObjectId = inJuridicalBasisId OR inJuridicalBasisId = 0)
+                            )
+
+        , tmpContainer AS (SELECT Container.Id                            AS ContainerId
+                                , Container_Currency.Id                   AS ContainerId_Currency
+                                , Container.ObjectId                      AS AccountId
+                                , COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) AS BankAccountId
+                                , COALESCE (CLO_Currency.ObjectId, 0)     AS CurrencyId
+                                , Container.Amount                        AS Amount
+                                , COALESCE (Container_Currency.Amount, 0) AS Amount_Currency
+                           FROM tmpAccount
+                                INNER JOIN Container ON Container.ObjectId = tmpAccount.AccountId AND Container.DescId = zc_Container_Summ()
+                                
+                                LEFT JOIN ContainerLinkObject AS CLO_BankAccount ON CLO_BankAccount.ContainerId = Container.Id AND CLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
+                                LEFT JOIN ContainerLinkObject AS CLO_Juridical ON CLO_Juridical.ContainerId = Container.Id AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                
+                                INNER JOIN tmpBankAccount ON tmpBankAccount.Id = COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) -- ограничиваем по гл. юр.лицу
+                                
+                                LEFT JOIN ContainerLinkObject AS CLO_Currency ON CLO_Currency.ContainerId = Container.Id AND CLO_Currency.DescId = zc_ContainerLinkObject_Currency()
+                                LEFT JOIN Container AS Container_Currency ON Container_Currency.ParentId = Container.Id AND Container_Currency.DescId = zc_Container_SummCurrency()
+
+                           WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
+                            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+                            AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
+                            AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
+                            AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount) -- ограничиваем по гл. юр.лицу)
+                          )
+
+        , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
+
         , tmpInfoMoney AS (SELECT Object_InfoMoneyGroup.ValueData                          AS InfoMoneyGroupName
                                 , Object_InfoMoneyDestination.ValueData                    AS InfoMoneyDestinationName
                                 , Object_InfoMoney.Id                                      AS InfoMoneyId
@@ -109,6 +174,7 @@ BEGIN
                          
                           WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney()
                           )
+
         , tmpContract AS (SELECT Object_Contract.Id                            AS ContractId
                                , Object_Contract.ObjectCode                    AS ContractCode  
                                , Object_Contract.ValueData                     AS InvNumber
@@ -121,11 +187,13 @@ BEGIN
                         
                           WHERE Object_Contract.DescId = zc_Object_Contract()
                          )
+
      --
      SELECT
         Operation.ContainerId,
         tmpBankAccount.BankName                                                                     AS BankName,
         COALESCE (tmpBankAccount.Name, Object_Juridical.ValueData) :: TVarChar                      AS BankAccountName,
+        tmpBankAccount.JuridicalName                               :: TVarChar                      AS JuridicalName,
         tmpBankAccount.CurrencyName                                                                 AS CurrencyName_BankAccount,
         Object_Currency.ValueData                                                                   AS CurrencyName,
         tmpInfoMoney.InfoMoneyGroupName                                                             AS InfoMoneyGroupName,
@@ -441,11 +509,9 @@ BEGIN
          OR Operation.Summ_Currency <> 0 OR Operation.Summ_pl <> 0
            );
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -457,4 +523,5 @@ ALTER FUNCTION gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Int
 */
 
 -- тест
--- SELECT * FROM gpReport_BankAccount (inStartDate:= '01.01.2019', inEndDate:= '01.01.2019', inAccountId:= 0, inBankAccountId:=0, inCurrencyId:= 0, inIsDetail:= TRUE, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');
+-- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inJuridicalBasisId := zc_Juridical_Basis(), inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');

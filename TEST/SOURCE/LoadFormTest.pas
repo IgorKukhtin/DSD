@@ -2030,11 +2030,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxDialogForm');
   exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsDialogForm');
 
@@ -2085,11 +2085,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInUnitNewForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInUnitNewForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
-   exit;
-  {
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldDialogForm');
 
@@ -2178,11 +2178,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionSeparateUnionDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionSeparateUnionDialogForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_ProductionUnionMDForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_ProductionUnionMDForm');
 
@@ -2212,12 +2212,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersDialogForm'));

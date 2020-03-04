@@ -74,7 +74,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     cxLabel27: TcxLabel;
     edJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
+    GuidesJuridicalBasis: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     spUpdateContract: TdsdStoredProc;
@@ -87,6 +87,7 @@ type
     actUpdateMoneyPlace: TdsdDataSetRefresh;
     macUpdateMoneyPlace: TMultiAction;
     bbUpdateMoneyPlace: TdxBarButton;
+    spGet_UseJuridicalBankAccount: TdsdStoredProc;
   private
     { Private declarations }
   public

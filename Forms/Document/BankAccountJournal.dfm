@@ -367,7 +367,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object JuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086' ('#1088'.'#1089#1095#1077#1090')'
             DataBinding.FieldName = 'JuridicalName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1009,10 +1008,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserJuridicalBasis
+      StoredProc = spGet_UseJuridicalBankAccount
       StoredProcList = <
         item
-          StoredProc = spGet_UserJuridicalBasis
+          StoredProc = spGet_UseJuridicalBankAccount
         end
         item
           StoredProc = spSelect
@@ -1065,7 +1064,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'inJuridicalBasisId'
         Value = Null
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1241,7 +1240,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Component = PeriodChoice
       end
       item
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
       end>
   end
   inherited spMovementComplete: TdsdStoredProc
@@ -1312,6 +1311,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -1410,7 +1417,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Left = 792
     Top = 153
   end
-  object JuridicalBasisGuides: TdsdGuides
+  object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
     Key = '0'
@@ -1423,7 +1430,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'Key'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1431,7 +1438,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1447,21 +1454,21 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       item
         Name = 'JuridicalBasisId'
         Value = '0'
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
         Name = 'JuridicalBasisName'
         Value = ''
-        Component = JuridicalBasisGuides
+        Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 824
-    Top = 48
+    Left = 840
+    Top = 64
   end
   object spUpdateContract: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_BankAccount_Contract'
@@ -1526,5 +1533,29 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     PackSize = 1
     Left = 896
     Top = 217
+  end
+  object spGet_UseJuridicalBankAccount: TdsdStoredProc
+    StoredProcName = 'gpGet_UserJuridicalBankAccount'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 743
+    Top = 42
   end
 end
