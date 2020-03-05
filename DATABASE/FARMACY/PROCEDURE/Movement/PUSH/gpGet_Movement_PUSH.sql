@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer
              , DateEndPUSH TDateTime
              , Replays Integer
              , Daily Boolean
+             , isPoll Boolean
              , Message TBlob
              , Function TVarChar
              )
@@ -42,6 +43,7 @@ BEGIN
           , date_trunc('day', CURRENT_TIMESTAMP + INTERVAL '1 DAY')::TDateTime  AS DateEndPUSH
           , 1::Integer                                       AS Replays
           , False::Boolean                                   AS Daily
+          , False::Boolean                                   AS isPoll
           , Null::TBlob                                      AS Message
           , Null::TVarChar                                   AS Function
 
@@ -57,6 +59,7 @@ BEGIN
           , MovementDate_DateEndPUSH.ValueData               AS DateEndPUSH
           , MovementFloat_Replays.ValueData::Integer         AS Replays  
           , COALESCE(MovementBoolean_Daily.ValueData, False) AS Daily
+          , COALESCE(MovementBoolean_Poll.ValueData, False)  AS isPoll
           , MovementBlob_Message.ValueData                   AS Message
           , MovementString_Function.ValueData                AS Function  
 
@@ -86,6 +89,10 @@ BEGIN
                                       ON MovementBoolean_Daily.MovementId = Movement.Id
                                      AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Poll
+                                      ON MovementBoolean_Poll.MovementId = Movement.Id
+                                     AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
+
             LEFT JOIN MovementString AS MovementString_Function
                                      ON MovementString_Function.MovementId = Movement.Id
                                     AND MovementString_Function.DescId = zc_MovementString_Function()
@@ -102,7 +109,8 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
- 19.02.12         *
+ 05.03.20        *
+ 19.02.20         *
  11.05.19         *
  10.03.19         *
 */

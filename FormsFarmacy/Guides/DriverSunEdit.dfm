@@ -2,7 +2,7 @@ object DriverSunEditForm: TDriverSunEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1086#1076#1080#1090#1077#1083#1103' '#1057#1059#1053'>'
-  ClientHeight = 234
+  ClientHeight = 206
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,11 +25,11 @@ object DriverSunEditForm: TDriverSunEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 55
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+    Caption = #1048#1084#1103
   end
   object cxButton1: TcxButton
     Left = 33
-    Top = 195
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object DriverSunEditForm: TDriverSunEditForm
   end
   object cxButton2: TcxButton
     Left = 177
-    Top = 195
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -62,22 +62,13 @@ object DriverSunEditForm: TDriverSunEditForm
   object cxLabel5: TcxLabel
     Left = 10
     Top = 101
-    Caption = 'e-mail '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1088#1077#1077#1089#1090#1088#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
+    Caption = #1058#1077#1083#1077#1092#1086#1085
   end
-  object edEmail: TcxTextEdit
+  object edPhone: TcxTextEdit
     Left = 10
     Top = 121
     TabOrder = 7
     Width = 273
-  end
-  object cbAllLetters: TcxCheckBox
-    Left = 10
-    Top = 155
-    Caption = #1042#1089#1077' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1074#1086#1076#1080#1090#1077#1083#1102
-    ParentShowHint = False
-    ShowHint = True
-    TabOrder = 8
-    Width = 270
   end
   object ActionList: TActionList
     Left = 208
@@ -140,18 +131,10 @@ object DriverSunEditForm: TDriverSunEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inEmail'
+        Name = 'inPhone'
         Value = Null
-        Component = edEmail
+        Component = edPhone
         DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisAllLetters'
-        Value = Null
-        Component = cbAllLetters
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -197,17 +180,10 @@ object DriverSunEditForm: TDriverSunEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Email'
+        Name = 'Phone'
         Value = Null
-        Component = edEmail
+        Component = edPhone
         DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isAllLetters'
-        Value = Null
-        Component = cbAllLetters
-        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

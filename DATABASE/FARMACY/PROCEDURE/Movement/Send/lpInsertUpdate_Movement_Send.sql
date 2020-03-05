@@ -2,8 +2,9 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Integer);
---DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Send (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar, Boolean, Boolean, Integer, Integer, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
@@ -16,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Send(
     IN inChecked             Boolean   , -- Проверен
     IN inisComplete          Boolean   , -- Собрано фармацевтом
     IN inNumberSeats         Integer   , -- Количество мест
+    IN inDriverSunId         Integer   , -- Водитель получивший товар
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -63,6 +65,8 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (ioId);
 
+     -- сохранили связь с <Водитель получивший товар>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DriverSun(), ioId, inDriverSunId);
 
     -- !!!протокол через свойства конкретного объекта!!!
      IF vbIsInsert = FALSE

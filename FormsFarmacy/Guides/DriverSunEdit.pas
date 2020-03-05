@@ -39,8 +39,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel5: TcxLabel;
-    edEmail: TcxTextEdit;
-    cbAllLetters: TcxCheckBox;
+    edPhone: TcxTextEdit;
   private
     { Private declarations }
   public

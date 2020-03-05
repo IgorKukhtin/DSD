@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , DateEndPUSH TVarChar
              , Replays Integer
              , Daily Boolean
+             , isPoll Boolean
              , Message TBlob
 
              , InsertName TVarChar, InsertDate TDateTime
@@ -50,6 +51,7 @@ BEGIN
             'DD.MM.YYYY HH24:MI:SS')::TVarChar                         AS DateEndPUSH
           , COALESCE(MovementFloat_Replays.ValueData, 1)::Integer      AS Replays  
           , COALESCE(MovementBoolean_Daily.ValueData, False)           AS Daily
+          , COALESCE(MovementBoolean_Poll.ValueData, False)            AS isPoll
 
           , COALESCE(MovementString_Function.ValueData , MovementBlob_Message.ValueData)::TBlob AS Message
 
@@ -85,6 +87,10 @@ BEGIN
                                       ON MovementBoolean_Daily.MovementId = Movement.Id
                                      AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_Poll
+                                      ON MovementBoolean_Poll.MovementId = Movement.Id
+                                     AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
+
             LEFT JOIN MovementString AS MovementString_Function
                                      ON MovementString_Function.MovementId = Movement.Id
                                     AND MovementString_Function.DescId = zc_MovementString_Function()
@@ -110,6 +116,7 @@ ALTER FUNCTION gpSelect_Movement_PUSH (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 05.03.20        *
  11.05.19         *
  10.03.19         *
 */

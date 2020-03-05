@@ -58,7 +58,6 @@ type
     bbProtocolOpenForm: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    isAllLetters: TcxGridDBColumn;
   private
     { Private declarations }
   public

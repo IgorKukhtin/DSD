@@ -176,6 +176,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Styles.Footer = dmMain.cxRemainsCashContentStyle
             Width = 70
           end
           object CommentTRName: TcxGridDBColumn

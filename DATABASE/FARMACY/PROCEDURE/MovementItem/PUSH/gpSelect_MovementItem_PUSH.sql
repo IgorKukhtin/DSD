@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH(
 )
 RETURNS TABLE (Id Integer, Views Integer, UserId Integer, UserCode Integer, UserName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
-             , DateViewed TDateTime
+             , DateViewed TDateTime, Result TVarChar
              , isErased Boolean
               )
 AS
@@ -33,6 +33,7 @@ BEGIN
            , Object_Unit.ObjectCode                              AS UnitCode
            , Object_Unit.ValueData                               AS UnitName
            , MovementItemDate_Viewed.ValueData                   AS DateViewed
+           , MIString_Result.ValueData                           AS Result
 
            , MovementItem.IsErased    AS isErased
       FROM MovementItem
@@ -49,6 +50,10 @@ BEGIN
                                            ON MovementItemDate_Viewed.MovementItemId = MovementItem.Id
                                           AND MovementItemDate_Viewed.DescId = zc_MIDate_Viewed()
                 
+                LEFT JOIN MovementItemString AS MIString_Result
+                                            ON MIString_Result.MovementItemId = MovementItem.Id
+                                           AND MIString_Result.DescId = zc_MIString_Result()
+
       WHERE MovementItem.MovementID = inMovementId
         AND MovementItem.DescId = zc_MI_Master();
 
@@ -59,6 +64,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ÿ‡·ÎËÈ Œ.¬.
+ 05.03.20        *
  10.05.19         *
  21.03.19         *
 */

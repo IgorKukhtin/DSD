@@ -138,8 +138,8 @@ type
     chDateInsert: TcxGridDBColumn;
     AccommodationName: TcxGridDBColumn;
     cxLabel8: TcxLabel;
-    edDriver: TcxButtonEdit;
-    GuidesDriver: TdsdGuides;
+    edDriverSun: TcxButtonEdit;
+    GuidesDriverSun: TdsdGuides;
     spUpdate_Movement_Received: TdsdStoredProc;
     spUpdate_Movement_Sent: TdsdStoredProc;
     actSetReceived: TMultiAction;

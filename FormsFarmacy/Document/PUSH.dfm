@@ -8,13 +8,13 @@ inherited PUSHForm: TPUSHForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 195
+    Top = 206
     Width = 707
-    Height = 305
+    Height = 294
     ExplicitTop = 195
     ExplicitWidth = 707
     ExplicitHeight = 305
-    ClientRectBottom = 305
+    ClientRectBottom = 294
     ClientRectRight = 707
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
@@ -22,7 +22,7 @@ inherited PUSHForm: TPUSHForm
       ExplicitHeight = 281
       inherited cxGrid: TcxGrid
         Width = 707
-        Height = 281
+        Height = 270
         ExplicitWidth = 707
         ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -69,6 +69,14 @@ inherited PUSHForm: TPUSHForm
             Options.Editing = False
             Width = 171
           end
+          object Result: TcxGridDBColumn
+            Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090' '#1086#1087#1088#1086#1089#1072
+            DataBinding.FieldName = 'Result'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 78
+          end
           object DateViewed: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1080' '#1074#1088#1077#1084#1103' '#1087#1088#1086#1089#1084#1086#1090#1088#1072
             DataBinding.FieldName = 'DateViewed'
@@ -85,14 +93,16 @@ inherited PUSHForm: TPUSHForm
     object tsChild: TcxTabSheet
       Caption = #1044#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       ImageIndex = 1
+      ExplicitHeight = 281
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
         Width = 707
-        Height = 281
+        Height = 270
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+        ExplicitHeight = 281
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -158,10 +168,10 @@ inherited PUSHForm: TPUSHForm
   end
   inherited DataPanel: TPanel
     Width = 707
-    Height = 169
+    Height = 180
     TabOrder = 3
     ExplicitWidth = 707
-    ExplicitHeight = 169
+    ExplicitHeight = 180
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 54
@@ -179,20 +189,20 @@ inherited PUSHForm: TPUSHForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 8
-      Top = 110
+      Top = 122
       Properties.Kind = ckDateTime
       TabOrder = 4
       ExplicitLeft = 8
-      ExplicitTop = 110
+      ExplicitTop = 122
       ExplicitWidth = 152
       Width = 152
     end
     inherited cxLabel2: TcxLabel
       Left = 8
-      Top = 93
+      Top = 105
       Caption = #1044#1072#1090#1072' '#1080' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072
       ExplicitLeft = 8
-      ExplicitTop = 93
+      ExplicitTop = 105
       ExplicitWidth = 111
     end
     inherited cxLabel15: TcxLabel
@@ -216,12 +226,12 @@ inherited PUSHForm: TPUSHForm
       Lines.Strings = (
         'edMessage')
       TabOrder = 6
-      Height = 129
+      Height = 140
       Width = 532
     end
     object edDateEndPUSH: TcxDateEdit
       Left = 10
-      Top = 146
+      Top = 158
       EditValue = 42132d
       Properties.Kind = ckDateTime
       TabOrder = 5
@@ -229,7 +239,7 @@ inherited PUSHForm: TPUSHForm
     end
     object cxLabel4: TcxLabel
       Left = 9
-      Top = 129
+      Top = 141
       Caption = #1050#1086#1085#1094#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
     end
     object cxLabel5: TcxLabel
@@ -255,14 +265,21 @@ inherited PUSHForm: TPUSHForm
     end
     object edFunction: TcxTextEdit
       Left = 368
-      Top = 146
+      Top = 158
       TabOrder = 13
       Width = 330
     end
     object cxLabel6: TcxLabel
       Left = 166
-      Top = 147
+      Top = 159
       Caption = #1060#1091#1085#1082#1094#1080#1103' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1090#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
+    end
+    object chbPoll: TcxCheckBox
+      Left = 8
+      Top = 90
+      Caption = #1054#1087#1088#1086#1089
+      TabOrder = 15
+      Width = 67
     end
   end
   inherited ActionList: TActionList
@@ -627,6 +644,13 @@ inherited PUSHForm: TPUSHForm
         Component = edFunction
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isPoll'
+        Value = Null
+        Component = chbPoll
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -696,6 +720,14 @@ inherited PUSHForm: TPUSHForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPoll'
+        Value = Null
+        Component = chbPoll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -740,6 +772,12 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edFunction
+      end
+      item
+        Control = chbPoll
+      end
+      item
+        Control = edDateEndPUSH
       end>
     Left = 208
     Top = 233

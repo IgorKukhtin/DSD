@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InsertDateDiff TFloat
              , UpdateDateDiff TFloat
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
-             , DriverId Integer, DriverName TVarChar
+             , DriverSunId Integer, DriverSunName TVarChar
              , NumberSeats Integer
               )
 
@@ -145,8 +145,8 @@ BEGIN
            , Movement_ReportUnLiquid.InvNumber             AS InvNumber_Report
            , ('№ ' || Movement_ReportUnLiquid.InvNumber ||' от '||TO_CHAR(Movement_ReportUnLiquid.OperDate , 'DD.MM.YYYY') ) :: TVarChar AS ReportInvNumber_full
            
-           , Object_Driver.Id                     AS DriverId
-           , Object_Driver.ValueData  :: TVarChar AS DriverName
+           , Object_DriverSun.Id                     AS DriverSunId
+           , Object_DriverSun.ValueData  :: TVarChar AS DriverSunName
            
            , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
 
@@ -271,10 +271,10 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Driver
-                                         ON MovementLinkObject_Driver.MovementId = Movement.Id
-                                        AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
-            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DriverSun
+                                         ON MovementLinkObject_DriverSun.MovementId = Movement.Id
+                                        AND MovementLinkObject_DriverSun.DescId = zc_MovementLinkObject_DriverSun()
+            LEFT JOIN Object AS Object_DriverSun ON Object_DriverSun.Id = MovementLinkObject_DriverSun.ObjectId 
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
@@ -295,6 +295,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 05.03.20                                                                                      * zc_MovementLinkObject_DriverSun
  09.12.19         * isSUN_v2 вместо isSUN_over 
  23.09.19         * zc_MovementLinkObject_Driver
  06.08.19                                                                                      * zc_MovementBoolean_Received

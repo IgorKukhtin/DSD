@@ -3,7 +3,7 @@ object DriverSunForm: TDriverSunForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1086#1076#1080#1090#1077#1083#1080' '#1057#1059#1053'>'
   ClientHeight = 331
-  ClientWidth = 592
+  ClientWidth = 524
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,12 +20,13 @@ object DriverSunForm: TDriverSunForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 592
+    Width = 524
     Height = 305
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 592
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,14 +45,6 @@ object DriverSunForm: TDriverSunForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object isAllLetters: TcxGridDBColumn
-        Caption = #1042#1089#1077' '#1087#1077#1088#1077#1084'.'
-        DataBinding.FieldName = 'isAllLetters'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 62
-      end
       object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -61,19 +54,19 @@ object DriverSunForm: TDriverSunForm
         Width = 44
       end
       object Name: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1048#1084#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 188
+        Width = 226
       end
-      object EMail: TcxGridDBColumn
-        Caption = 'e-mail '#1076#1083#1103' '#1086#1090#1087#1088#1072#1074#1082#1080' '#1088#1077#1077#1089#1090#1088#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081
-        DataBinding.FieldName = 'EMail'
+      object Phone: TcxGridDBColumn
+        Caption = #1058#1077#1083#1077#1092#1086#1085
+        DataBinding.FieldName = 'Phone'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 276
+        Width = 220
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

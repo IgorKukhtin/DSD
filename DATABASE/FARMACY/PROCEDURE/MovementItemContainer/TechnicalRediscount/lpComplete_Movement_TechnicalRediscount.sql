@@ -28,6 +28,7 @@ BEGIN
     INTO vbOperDate
        , vbUnitId
        , vbInvNumber
+       , vbisRedCheck
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
