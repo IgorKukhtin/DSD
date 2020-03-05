@@ -1538,6 +1538,14 @@ inherited Report_BankAccountForm: TReport_BankAccountForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inJuridicalBasisId'
+        Value = Null
+        Component = GuidesJuridicalBasis
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = GuidesAccount
