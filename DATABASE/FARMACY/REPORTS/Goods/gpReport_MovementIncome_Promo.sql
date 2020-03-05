@@ -18,6 +18,7 @@ RETURNS TABLE (MovementId Integer      --ИД Документа
              , MakerName  TVarChar     --Производитель
              , NDSKindName TVarChar    --вид ндс
              , NDS         TFloat      -- % ндс
+             , MorionCode Integer      -- Код мориона
              , OperDate TDateTime      --Дата документа
              , InvNumber TVarChar      --№ документа
              , UnitID Integer          --ID Подразделение
@@ -354,6 +355,7 @@ BEGIN
                       , Object.ValueData                         AS Name
                       , Object_NDSKind.ValueData                 AS NDSKindName
                       , ObjectFloat_NDSKind_NDS.ValueData        AS NDS
+                      , Object_Goods_Main.MorionCode             AS MorionCode
                  FROM (SELECT DISTINCT tmpMovMI.GoodsId FROM tmpMovMI) AS tmp
                       LEFT JOIN Object ON Object.Id = tmp.GoodsId
   
@@ -365,6 +367,8 @@ BEGIN
                       LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                             ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId 
                                            AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                      LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = Object.Id
+                      LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
                  )
   , tmpMakerReport AS (SELECT DISTINCT ObjectLink_Juridical.ChildObjectId AS JuridicalId
                        FROM Object AS Object_MakerReport
@@ -393,6 +397,7 @@ BEGIN
             , MILinkObject_Goods.MakerName
             , tmpGoods.NDSKindName
             , tmpGoods.NDS
+            , tmpGoods.MorionCode
 
             , tmpMovMI.OperDate
             , tmpMovMI.InvNumber

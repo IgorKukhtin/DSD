@@ -447,6 +447,7 @@ begin
     'select '#13#10 +
     '  Code AS "Код", '#13#10 +
     '  Name AS "Название", '#13#10 +
+    '  MorionCode AS "Код мориона", '#13#10 +
     '  NDS AS "НДС", '#13#10 +
     '  PriceWithVAT AS "Цена прихода с НДС", '#13#10 +
     '  Price AS "Цена прихода (без НДС)", '#13#10 +
@@ -475,13 +476,13 @@ begin
 
   with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
   begin
-    Column := grtvMaker.Columns[6];
+    Column := grtvMaker.Columns[7];
     Format := '0.###';
     Kind := skSum;
   end;
   with TcxGridDBTableSummaryItem(grtvMaker.DataController.Summary.FooterSummaryItems.Add) do
   begin
-    Column := grtvMaker.Columns[7];
+    Column := grtvMaker.Columns[8];
     Format := '0.###';
     Kind := skSum;
   end;

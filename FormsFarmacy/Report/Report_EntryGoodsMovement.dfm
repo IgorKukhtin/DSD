@@ -229,6 +229,82 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actGet_MovementFormClass: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_MovementFormClass
+      StoredProcList = <
+        item
+          StoredProc = spGet_MovementFormClass
+        end>
+      Caption = 'actGet_MovementFormClass'
+    end
+    object mactOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGet_MovementFormClass
+        end
+        item
+          Action = actOpenDocument
+        end>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 1
+    end
+    object actOpenDocument: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormNameParam.Name = 'FormClass'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormClass'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptInput
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object MovementProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 296
@@ -313,12 +389,26 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = MovementProtocolOpenForm
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = mactOpenDocument
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Top = 104
@@ -430,8 +520,39 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
         Value = Null
         Component = deEnd
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormClass'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 264
+  end
+  object spGet_MovementFormClass: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementFormClass'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outFormClass'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormClass'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 296
+    Top = 216
   end
 end

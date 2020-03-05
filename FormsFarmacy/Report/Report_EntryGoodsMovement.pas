@@ -33,6 +33,12 @@ type
     Amount: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actGet_MovementFormClass: TdsdExecStoredProc;
+    spGet_MovementFormClass: TdsdStoredProc;
+    mactOpenDocument: TMultiAction;
+    actOpenDocument: TdsdOpenForm;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public
