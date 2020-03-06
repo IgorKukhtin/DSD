@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Wages_Summa()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Wages_Summa(INTEGER, INTEGER, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Wages_Summa(
     IN inHolidaysHospital    TFloat    , -- Отпуск / Больничный
     IN inMarketing           TFloat    , -- Маркетинг
     IN inDirector            TFloat    , -- Директор. премии / штрафы
+    IN inIlliquidAssets      TFloat    , -- Неликвиды
     IN inAmountCard          TFloat    , -- На карту
     IN inisIssuedBy          Boolean   , -- Выдана
    OUT outAmountHand         TFloat    , -- На руки
@@ -37,11 +38,17 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
     
+    IF COALESCE(inIlliquidAssets, 0) > 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Сумма нелеквидав должна быть меньше или равна нулю.';    
+    END IF;
+    
     IF EXISTS(SELECT 1 FROM MovementItem WHERE ID = ioId AND MovementItem.DescId = zc_MI_Sign())
     THEN
       IF COALESCE(inHolidaysHospital, 0) <> 0 OR
          COALESCE(inMarketing, 0) <> 0 OR
-         COALESCE(inDirector, 0) <> 0 OR
+         COALESCE(inDirector, 0) <> 0  OR
+         COALESCE(inIlliquidAssets, 0) <> 0 OR
          COALESCE(inAmountCard, 0) <> 0
       THEN
         RAISE EXCEPTION 'Ошибка. Для дополнительных расходов можно изменять только признак "Выдано".';      
@@ -82,6 +89,10 @@ BEGIN
                                           ON MIFloat_Director.MovementItemId = MovementItem.Id
                                          AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
+              LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                          ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                         AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
+
               LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                           ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                          AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -95,6 +106,7 @@ BEGIN
           AND (COALESCE (MIFloat_HolidaysHospital.ValueData, 0) <> COALESCE (inHolidaysHospital, 0)
             OR COALESCE (MIFloat_Marketing.ValueData, 0) <>  COALESCE (inMarketing, 0)
             OR COALESCE (MIFloat_Director.ValueData, 0) <>  COALESCE (inDirector, 0)
+            OR COALESCE (MIFloat_IlliquidAssets.ValueData, 0) <>  COALESCE (inIlliquidAssets, 0)
             OR COALESCE (MIF_AmountCard.ValueData, 0) <>  COALESCE (inAmountCard, 0)))
       THEN
         RAISE EXCEPTION 'Ошибка. Зарплата выдана. Изменение сумм запрещено.';            
@@ -106,6 +118,8 @@ BEGIN
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Marketing(), ioId, inMarketing);
        -- сохранили свойство <Директор. премии / штрафы>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Director(), ioId, inDirector);
+       -- сохранили свойство < Неликвиды >
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaIlliquidAssets(), ioId, inIlliquidAssets);
 
        -- сохранили свойство <На карту>
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountCard(), ioId, inAmountCard);
@@ -163,7 +177,8 @@ BEGIN
       SELECT (MovementItem.Amount + 
               COALESCE (MIFloat_HolidaysHospital.ValueData, 0) + 
               COALESCE (MIFloat_Marketing.ValueData, 0) +
-              COALESCE (MIFloat_Director.ValueData, 0) - 
+              COALESCE (MIFloat_Director.ValueData, 0) +
+              COALESCE (MIFloat_IlliquidAssets.ValueData, 0) - 
               COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
       INTO outAmountHand
       FROM  MovementItem
@@ -179,6 +194,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Director
                                         ON MIFloat_Director.MovementItemId = MovementItem.Id
                                        AND MIFloat_Director.DescId = zc_MIFloat_Director()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                        ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                       AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
             LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                         ON MIF_AmountCard.MovementItemId = MovementItem.Id

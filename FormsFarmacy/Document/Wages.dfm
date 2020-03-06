@@ -72,6 +72,11 @@ inherited WagesForm: TWagesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = HolidaysHospital
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = IlliquidAssets
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -193,7 +198,7 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 62
             Position.BandIndex = 1
             Position.ColIndex = 0
             Position.RowIndex = 0
@@ -205,7 +210,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 68
+            Width = 61
             Position.BandIndex = 1
             Position.ColIndex = 1
             Position.RowIndex = 0
@@ -217,7 +222,7 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 63
             Position.BandIndex = 1
             Position.ColIndex = 2
             Position.RowIndex = 0
@@ -229,9 +234,21 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 62
             Position.BandIndex = 1
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object IlliquidAssets: TcxGridDBBandedColumn
+            Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099
+            DataBinding.FieldName = 'IlliquidAssets'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+            Position.BandIndex = 1
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object AmountCard: TcxGridDBBandedColumn
@@ -241,9 +258,9 @@ inherited WagesForm: TWagesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 68
+            Width = 60
             Position.BandIndex = 1
-            Position.ColIndex = 4
+            Position.ColIndex = 5
             Position.RowIndex = 0
           end
           object AmountHand: TcxGridDBBandedColumn
@@ -254,9 +271,9 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 62
             Position.BandIndex = 1
-            Position.ColIndex = 5
+            Position.ColIndex = 6
             Position.RowIndex = 0
           end
           object isIssuedBy: TcxGridDBBandedColumn
@@ -264,9 +281,9 @@ inherited WagesForm: TWagesForm
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 62
             Position.BandIndex = 1
-            Position.ColIndex = 6
+            Position.ColIndex = 7
             Position.RowIndex = 0
           end
           object DateIssuedBy: TcxGridDBBandedColumn
@@ -275,9 +292,9 @@ inherited WagesForm: TWagesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 105
+            Width = 94
             Position.BandIndex = 1
-            Position.ColIndex = 7
+            Position.ColIndex = 8
             Position.RowIndex = 0
           end
           object Color_Calc: TcxGridDBBandedColumn
@@ -1616,6 +1633,14 @@ inherited WagesForm: TWagesForm
         Component = MasterCDS
         ComponentItem = 'Director'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIlliquidAssets'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'IlliquidAssets'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

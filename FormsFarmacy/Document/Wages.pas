@@ -113,6 +113,7 @@ type
     dxBarButton16: TdxBarButton;
     actWagesTechnicalRediscount: TdsdOpenForm;
     dxBarButton17: TdxBarButton;
+    IlliquidAssets: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -71,6 +71,8 @@ type
     cxLabel19: TcxLabel;
     ceSummaTechnicalRediscount: TcxCurrencyEdit;
     cxLabel20: TcxLabel;
+    ceIlliquidAssets: TcxCurrencyEdit;
+    cxLabel21: TcxLabel;
   private
     { Private declarations }
   public

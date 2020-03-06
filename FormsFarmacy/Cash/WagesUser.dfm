@@ -14,19 +14,19 @@ inherited WagesUserForm: TWagesUserForm
     Width = 655
     Height = 318
     TabOrder = 0
-    ExplicitTop = 127
+    ExplicitTop = 131
     ExplicitWidth = 655
-    ExplicitHeight = 322
+    ExplicitHeight = 318
     ClientRectBottom = 318
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
-      ExplicitHeight = 322
+      ExplicitHeight = 318
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 203
+        Height = 192
         ExplicitWidth = 655
-        ExplicitHeight = 207
+        ExplicitHeight = 203
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,13 +79,12 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 203
+        Top = 192
         Width = 655
-        Height = 115
+        Height = 126
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 207
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -102,7 +101,7 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel4: TcxLabel
-          Left = 15
+          Left = 8
           Top = 6
           Caption = #1048#1090#1086#1075#1086' '#1085#1072#1095#1080#1089#1083#1077#1085#1086':'
           ParentFont = False
@@ -115,7 +114,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceCard: TcxCurrencyEdit
           Left = 478
-          Top = 39
+          Top = 61
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -130,7 +129,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object cxLabel1: TcxLabel
           Left = 327
-          Top = 39
+          Top = 61
           Caption = #1047'/'#1055' '#1085#1072' '#1082#1072#1088#1090#1091' :'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -142,7 +141,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceOnHand: TcxCurrencyEdit
           Left = 478
-          Top = 72
+          Top = 88
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -157,7 +156,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object cxLabel3: TcxLabel
           Left = 327
-          Top = 72
+          Top = 88
           Caption = #1048#1090#1086#1075#1086' '#1085#1072' '#1088#1091#1082#1080':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -169,7 +168,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceMarketing: TcxCurrencyEdit
           Left = 157
-          Top = 72
+          Top = 61
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -183,8 +182,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel5: TcxLabel
-          Left = 15
-          Top = 72
+          Left = 8
+          Top = 61
           Caption = #1052#1072#1088#1082#1077#1090#1080#1085#1075':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -196,7 +195,7 @@ inherited WagesUserForm: TWagesUserForm
         end
         object ceHolidaysHospital: TcxCurrencyEdit
           Left = 157
-          Top = 39
+          Top = 34
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -210,8 +209,8 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel6: TcxLabel
-          Left = 15
-          Top = 39
+          Left = 8
+          Top = 34
           Caption = #1041#1086#1083#1100#1085'. '#1086#1090#1087#1091#1089#1082':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
@@ -222,8 +221,8 @@ inherited WagesUserForm: TWagesUserForm
           Style.IsFontAssigned = True
         end
         object ceDirector: TcxCurrencyEdit
-          Left = 478
-          Top = 6
+          Left = 157
+          Top = 88
           ParentFont = False
           Properties.DecimalPlaces = 2
           Properties.DisplayFormat = ',0.00;-,0.00;;'
@@ -237,9 +236,36 @@ inherited WagesUserForm: TWagesUserForm
           Width = 156
         end
         object cxLabel7: TcxLabel
-          Left = 327
-          Top = 6
+          Left = 8
+          Top = 88
           Caption = #1044#1080#1088#1077#1082#1090#1086#1088' '#1076#1086#1087'. '#1091#1076'.:'
+          ParentFont = False
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+        end
+        object ceIlliquidAssets: TcxCurrencyEdit
+          Left = 478
+          Top = 6
+          ParentFont = False
+          Properties.DecimalPlaces = 2
+          Properties.DisplayFormat = ',0.00;-,0.00;;'
+          Style.Font.Charset = DEFAULT_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -16
+          Style.Font.Name = 'Tahoma'
+          Style.Font.Style = []
+          Style.IsFontAssigned = True
+          TabOrder = 12
+          Width = 156
+        end
+        object cxLabel21: TcxLabel
+          Left = 329
+          Top = 6
+          Caption = #1053#1077#1083#1080#1082#1074#1080#1076#1099':'
           ParentFont = False
           Style.Font.Charset = DEFAULT_CHARSET
           Style.Font.Color = clWindowText
@@ -733,6 +759,13 @@ inherited WagesUserForm: TWagesUserForm
         Value = Null
         Component = edPasswordEHels
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'IlliquidAssets'
+        Value = Null
+        Component = ceIlliquidAssets
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

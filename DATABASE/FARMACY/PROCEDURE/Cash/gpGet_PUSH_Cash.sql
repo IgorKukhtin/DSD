@@ -15,6 +15,7 @@ $BODY$
    DECLARE vbRetailId Integer;
    DECLARE vbMovementID Integer;
    DECLARE vbEmployeeShow Boolean;
+   DECLARE vbPositionCode Integer;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -33,6 +34,15 @@ BEGIN
                                              AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                    WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
                      AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical());
+
+    vbPositionCode := (SELECT Object_Position.ObjectCode
+                       FROM ObjectLink AS ObjectLink_User_Member
+                            LEFT JOIN ObjectLink AS ObjectLink_Member_Position
+                                                 ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                                AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                            LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Member_Position.ChildObjectId
+                       WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member());
 
     CREATE TEMP TABLE _PUSH (Id  Integer
                            , Text TBlob
@@ -451,7 +461,7 @@ BEGIN
                                  , PUSH_Message.TypeParams                                         AS TypeParams
                                  , PUSH_Message.ValueParams                                        AS ValueParams
                             FROM Movement
-                            
+
                                  LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
                                                         ON MovementDate_DateEndPUSH.MovementId = Movement.Id
                                                        AND MovementDate_DateEndPUSH.DescId = zc_MovementDate_DateEndPUSH()
@@ -472,6 +482,15 @@ BEGIN
                                                            ON MovementBoolean_Poll.MovementId = Movement.Id
                                                           AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
 
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_Pharmacist
+                                                           ON MovementBoolean_Pharmacist.MovementId = Movement.Id
+                                                          AND MovementBoolean_Pharmacist.DescId = zc_MovementBoolean_Pharmacist()
+
+                                 LEFT JOIN MovementLinkObject AS MLO_Retail
+                                                              ON MLO_Retail.MovementId = Movement.Id
+                                                             AND MLO_Retail.DescId = zc_MovementLinkObject_Retail()
+                                 LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = MLO_Retail.ObjectId  
+
                                  LEFT JOIN MovementString AS MovementString_Function
                                                           ON MovementString_Function.MovementId = Movement.Id
                                                          AND MovementString_Function.DescId = zc_MovementString_Function()
@@ -485,8 +504,8 @@ BEGIN
                                                                ON MovementItemUnit.MovementId = Movement.Id
 
                                  LEFT JOIN gpGet_Movement_PUSH_Message(MovementBlob_Message.ValueData,
-                                                                        MovementString_Function.ValueData, 
-                                                                        vbUnitId, 
+                                                                        MovementString_Function.ValueData,
+                                                                        vbUnitId,
                                                                         vbUserId) AS PUSH_Message ON 1 = 1
 
                             WHERE Movement.OperDate <= CURRENT_TIMESTAMP
@@ -494,6 +513,8 @@ BEGIN
                               AND CURRENT_TIMESTAMP < COALESCE(MovementDate_DateEndPUSH.ValueData, date_trunc('day', Movement.OperDate + INTERVAL '1 DAY'))
                               AND Movement.DescId = zc_Movement_PUSH()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND (COALESCE(MovementBoolean_Pharmacist.ValueData, False) = FALSE OR vbPositionCode = 1)
+                              AND (COALESCE (MLO_Retail.ObjectId, 0) = 0 OR MLO_Retail.ObjectId = vbRetailId)
                               AND (COALESCE(MovementItemUnit.MovementId, 0) = 0 OR COALESCE(MovementItem_Child.ObjectId, 0) = vbUnitId)
                               AND (COALESCE (MovementBoolean_Daily.ValueData, FALSE) = FALSE
                                    AND COALESCE(MovementFloat_Replays.ValueData, 1) >
