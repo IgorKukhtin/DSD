@@ -57,6 +57,7 @@ SELECT COUNT(*) FROM MovementItemContainer  -- 379 637 136 -- SELECT MAX (Id) FR
                                             -- 444 269 521                                                -- 9 985 067 045
 SELECT COUNT(*) FROM MovementItem  --  91 517 138 -- !!! - 2 147 483 647
                                    -- 102 238 286
+                                   -- 165 376 714
 SELECT COUNT(*) FROM MovementItemFloat  -- 314 383 191
                                         -- 351 191 292
 SELECT COUNT(*) FROM Object       -- 1 078 770
