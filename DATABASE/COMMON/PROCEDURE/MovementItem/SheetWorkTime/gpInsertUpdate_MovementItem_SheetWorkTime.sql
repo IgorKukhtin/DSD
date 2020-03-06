@@ -26,12 +26,16 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbIsInsert Boolean;
 
+   DECLARE vbEndDate   TDateTime;
+
    DECLARE vbValue TFloat;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- последнее число месяца
+    vbEndDate := DATE_TRUNC ('MONTH', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
     -- Проверка
     IF NOT EXISTS (SELECT 1
@@ -52,8 +56,8 @@ BEGIN
     -- Проверка
     IF NOT EXISTS (SELECT 1
                    FROM Object_Personal_View
-                   WHERE Object_Personal_View.DateIn     <= inOperDate
-                     AND Object_Personal_View.DateOut    >= inOperDate
+                   WHERE Object_Personal_View.DateIn     <= vbEndDate
+                     AND Object_Personal_View.DateOut    >= vbEndDate
                      AND Object_Personal_View.UnitId     = inUnitId
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
@@ -65,7 +69,7 @@ BEGIN
                       , lfGet_Object_ValueData_sh (inUnitId)
                       , (SELECT zfConvert_DateToString (MAX (Object_Personal_View.DateOut))
                          FROM Object_Personal_View
-                         WHERE Object_Personal_View.DateOut    < inOperDate
+                         WHERE Object_Personal_View.DateOut    <= vbEndDate
                            AND Object_Personal_View.UnitId     = inUnitId
                            AND Object_Personal_View.MemberId   = inMemberId
                            AND Object_Personal_View.PositionId = inPositionId
@@ -225,6 +229,17 @@ BEGIN
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, vbUserId, vbIsInsert);
+
+if inSession = '5' 
+then
+    RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%>'
+                      , zfConvert_DateToString (inOperDate)
+                      , inUnitId
+                      , inMemberId
+                      , inPositionId
+                      , zfConvert_DateToString (vbEndDate)
+                       ;
+end if;
 
 
 END;

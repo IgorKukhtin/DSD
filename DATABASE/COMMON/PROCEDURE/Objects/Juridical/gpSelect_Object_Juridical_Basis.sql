@@ -73,10 +73,9 @@ BEGIN
                           ON Object_Juridical.isErased = tmpIsErased.isErased
                          AND Object_Juridical.DescId = zc_Object_Juridical()
                          
-        INNER JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                                 ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id 
-                                AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                                AND ObjectBoolean_isCorporate.ValueData = TRUE
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
 
         LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id 
@@ -100,7 +99,11 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
    WHERE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId = vbObjectId_Constraint
-          OR vbIsConstraint = FALSE)
+          OR vbIsConstraint = FALSE
+         )
+     AND (ObjectBoolean_isCorporate.ValueData = TRUE
+          OR Object_Juridical.Id = 15505 -- ƒ” Œ “Œ¬ 
+         )
    ;
   
 END;

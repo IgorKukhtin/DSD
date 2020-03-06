@@ -36,7 +36,7 @@ BEGIN
     -- первое число месяца
     vbStartDate := DATE_TRUNC ('MONTH', inOperDate);
     -- последнее число месяца
-    vbEndDate := vbStartDate + INTERVAL '1 MONTH';
+    vbEndDate := vbStartDate + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
 
 
     -- Проверка
@@ -58,8 +58,8 @@ BEGIN
     -- Проверка
     IF NOT EXISTS (SELECT 1
                    FROM Object_Personal_View
-                   WHERE Object_Personal_View.DateIn     <= vbStartDate
-                     AND Object_Personal_View.DateOut    >= vbStartDate
+                   WHERE Object_Personal_View.DateIn     <= vbEndDate
+                     AND Object_Personal_View.DateOut    >= vbEndDate
                      AND Object_Personal_View.UnitId     = inUnitId
                      AND Object_Personal_View.MemberId   = inMemberId
                      AND Object_Personal_View.PositionId = inPositionId
@@ -71,7 +71,7 @@ BEGIN
                       , lfGet_Object_ValueData_sh (inUnitId)
                       , (SELECT zfConvert_DateToString (MAX (Object_Personal_View.DateOut))
                          FROM Object_Personal_View
-                         WHERE Object_Personal_View.DateOut    < vbStartDate
+                         WHERE Object_Personal_View.DateOut    <= vbEndDate
                            AND Object_Personal_View.UnitId     = inUnitId
                            AND Object_Personal_View.MemberId   = inMemberId
                            AND Object_Personal_View.PositionId = inPositionId
@@ -86,7 +86,7 @@ BEGIN
             INNER JOIN Movement AS Movement_SheetWorkTime
                                 ON Movement_SheetWorkTime.Id = MI_SheetWorkTime.MovementId 
                                AND Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() 
-                               AND Movement_SheetWorkTime.OperDate >= vbStartDate AND Movement_SheetWorkTime.OperDate < vbEndDate
+                               AND Movement_SheetWorkTime.OperDate >= vbStartDate AND Movement_SheetWorkTime.OperDate <= vbEndDate
 
             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit 
                                           ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -147,7 +147,7 @@ BEGIN
                               LEFT OUTER JOIN MovementItemLinkObject AS MIObject_StorageLine
                                                                      ON MIObject_StorageLine.MovementItemId = MI_SheetWorkTime.Id 
                                                                     AND MIObject_StorageLine.DescId = zc_MILinkObject_StorageLine() 
-                         WHERE Movement.OperDate >= vbStartDate AND Movement.OperDate < vbEndDate
+                         WHERE Movement.OperDate >= vbStartDate AND Movement.OperDate <= vbEndDate
                            AND Movement.DescId = zc_Movement_SheetWorkTime()
                            AND COALESCE (MIObject_Position.ObjectId, 0)      = COALESCE (inOldPositionId, 0)
                            AND COALESCE (MIObject_PositionLevel.ObjectId, 0) = COALESCE (inOldPositionLevelId, 0)
@@ -180,6 +180,17 @@ BEGIN
 
      END IF;                   
 
+if inSession = '5' 
+then
+    RAISE EXCEPTION 'Admin.<%> <%> <%> <%> <%> <%>'
+                      , zfConvert_DateToString (inOperDate)
+                      , inUnitId
+                      , inMemberId
+                      , inPositionId
+                      , zfConvert_DateToString (vbStartDate)
+                      , zfConvert_DateToString (vbEndDate)
+                       ;
+end if;
 
 END;
 $BODY$

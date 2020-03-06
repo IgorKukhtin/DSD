@@ -801,10 +801,6 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertActionFixCode'
-        end
-        item
-          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -891,6 +887,14 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbGoodsPrintList_Print'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertActionFixCode'
         end
         item
           Visible = True
@@ -1338,8 +1342,8 @@ object IncomeForm: TIncomeForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_IncomePODIUM'
-      ReportNameParam.Value = 'PrintMovement_IncomePODIUM'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -1457,8 +1461,8 @@ object IncomeForm: TIncomeForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_IncomePODIUM'
-      ReportNameParam.Value = 'PrintMovement_IncomePODIUM'
+      ReportName = 'PrintMovement_Income'
+      ReportNameParam.Value = 'PrintMovement_Income'
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
       PrinterNameParam.Value = ''
@@ -2168,7 +2172,7 @@ object IncomeForm: TIncomeForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088' '#1073#1077#1079' '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1082#1086#1076#1072'>'
-      ImageIndex = 0
+      ImageIndex = 27
     end
     object actInsertActionFixCode: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -2424,6 +2428,7 @@ object IncomeForm: TIncomeForm
     object actOpenPartionGoodsChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = #1042#1099#1073#1088#1072#1090#1100' '#1090#1086#1074#1072#1088
       FormName = 'TPartionGoodsChoiceForm'
       FormNameParam.Value = 'TPartionGoodsChoiceForm'

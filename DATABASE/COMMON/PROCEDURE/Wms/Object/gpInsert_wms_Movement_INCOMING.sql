@@ -50,7 +50,8 @@ BEGIN
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpMI AS (SELECT wms_MI_Incoming.sku_id
+        WITH tmpTest AS (SELECT * FROM lpSelect_Object_wms_SKU_test())
+           , tmpMI AS (SELECT wms_MI_Incoming.sku_id
                               -- дата документа
                             , wms_MI_Incoming.OperDate
                               -- Дата производства
@@ -64,7 +65,8 @@ BEGIN
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
                          -- AND wms_MI_Incoming.StatusId_wms IS NULL
-                         AND wms_MI_Incoming.sku_id :: TVarChar IN ('795292', '795293', '38391802', '800562', '800563')
+                       --AND wms_MI_Incoming.sku_id :: TVarChar IN ('795292', '795293', '38391802', '800562', '800563')
+                         AND wms_MI_Incoming.sku_id :: TVarChar IN (SELECT tmpTest.sku_id :: TVarChar FROM tmpTest)
                       )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

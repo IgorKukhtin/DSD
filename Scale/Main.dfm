@@ -1291,7 +1291,7 @@ object MainForm: TMainForm
           Width = 50
         end
         object CountTare2: TcxGridDBColumn
-          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.3'
+          Caption = #1050#1086#1083'. '#1090#1072#1088#1099' '#1074'.2'
           DataBinding.FieldName = 'CountTare2'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 4

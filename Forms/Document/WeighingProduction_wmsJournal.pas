@@ -111,6 +111,7 @@ type
     BoxName: TcxGridDBColumn;
     sku_id: TcxGridDBColumn;
     sku_code: TcxGridDBColumn;
+    GoodsCode: TcxGridDBColumn;
   private
   public
   end;

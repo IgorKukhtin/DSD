@@ -1039,7 +1039,8 @@ END IF;*/
      vbMovementItemId_check:= (SELECT MIN (_tmpItem.MovementItemId)
                                FROM _tmpItem
                                WHERE _tmpItem.OperCount_Partner > 0
-                                 AND _tmpItem.OperSumm_Partner  = 0
+                               --AND _tmpItem.OperSumm_Partner  = 0
+                                 AND _tmpItem.Price_original    = 0
                                  AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
                                                                            , zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                                                            , zc_Enum_InfoMoneyDestination_20600() -- Прочие материалы

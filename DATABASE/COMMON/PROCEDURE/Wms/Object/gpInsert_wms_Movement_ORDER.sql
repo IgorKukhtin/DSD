@@ -67,6 +67,9 @@ BEGIN
                                             --  , 310827 -- 7;"дистриб`ютор";f
                                                  )
                              )
+            -- 
+          , tmpTest AS (SELECT * FROM lpSelect_Object_wms_SKU_test())
+          -- 
         , tmpMovement_all AS (SELECT Movement.Id                                       AS MovementId
                                    , Movement.OperDate                                 AS OperDate
                                    , Movement.InvNumber                                AS InvNumber
@@ -78,9 +81,17 @@ BEGIN
                                    , MovementItem.ObjectId                             AS GoodsId
                                    , MILO_GoodsKind.ObjectId                           AS GoodsKindId
                                    , OL_Goods_Measure.ChildObjectId                    AS MeasureId
-                                   , MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) AS Amount
+                                     -- !!!test
+                                   , CASE WHEN tmpTest.MovementId > 0
+                                           AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 100
+                                          THEN 4
+                                          WHEN tmpTest.MovementId > 0
+                                           AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 10
+                                          THEN CEIL((MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)) / 10)
+                                          ELSE MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)
+                                     END AS Amount
                                  --, 1 AS Amount
-                                     -- расчетная Категорию -некоторым ставим лучшую 
+                                     -- расчетная Категория - некоторым ставим лучшую 
                                    , CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                            AND tmpPartnerTag.PartnerTagId > 0
                                                THEN zc_Enum_GoodsTypeKind_Sh()
@@ -127,11 +138,14 @@ BEGIN
                                                               ON MIF_AmountSecond.MovementItemId = MovementItem.Id
                                                              AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                   LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerTagId = OL_Partner_PartnerTag.ChildObjectId
+                                  JOIN tmpTest ON tmpTest.MovementId  = Movement.Id
+                                              AND tmpTest.GoodsId     = MovementItem.ObjectId
+                                              AND tmpTest.GoodsKindId = MILO_GoodsKind.ObjectId
                              WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               AND Movement.InvNumber IN ('980741') -- 952893
+                               -- AND Movement.InvNumber IN ('980741') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
@@ -255,7 +269,7 @@ BEGIN
                                LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_all.GoodsKindId
                                                                    AND tmpMI_all.sku_id    = 0
                        -- WHERE Object_Goods.Id > 0
-                          WHERE tmpMI_all.sku_id = 795293 -- 800563
+                       -- WHERE tmpMI_all.sku_id = 795293 -- 800563
                          )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate

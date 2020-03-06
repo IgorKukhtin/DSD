@@ -353,6 +353,7 @@ type
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
     lTimerWeight_zero : Boolean;
     tmpWeight_test : Double;
+    fPrintModeSorting_test:Boolean;
     fEnterKey13:Boolean;
     fSaveAll:Boolean;
     ValueStep_obv: Integer;
@@ -913,10 +914,12 @@ begin
           RefreshDataSet;
           WriteParamsMovement;
           //печатаем стикер
-          Print_StickerWms(ParamsMovement.ParamByName('MovementDescId').AsInteger
-                         , ParamsMovement.ParamByName('MovementId').AsInteger
-                         , ParamsLight.ParamByName('MovementItemId').AsInteger
-                         , FALSE);
+          if fPrintModeSorting_test = FALSE
+          then
+              Print_StickerWms(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                             , ParamsMovement.ParamByName('MovementId').AsInteger
+                             , ParamsLight.ParamByName('MovementItemId').AsInteger
+                             , FALSE);
           //если ящик заполнен - надо новый + показали вес по линиям - ящики
           if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then GetParams_Light (1);
           if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then GetParams_Light (2);
@@ -2265,6 +2268,10 @@ begin
   ValueStep_obv:= 0;
 
   // определили IP
+  fPrintModeSorting_test:= (System.Pos('ves=',ParamStr(1))>0)
+                         or(System.Pos('ves=',ParamStr(2))>0)
+                         or(System.Pos('ves=',ParamStr(3))>0);
+  // определили IP
   with TIdIPWatch.Create(nil) do
   begin
         Active:=true;
@@ -2605,9 +2612,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.testButton3Click(Sender: TObject);
 begin
-     lTimerWeight_zero:= true;
-     // Отключили предыдущий
-     Set_LightOff_all;
+     fPrintModeSorting_test:= not fPrintModeSorting_test;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOff_all : Boolean;
@@ -2792,12 +2797,14 @@ begin
                  //
                  ParamsMI.ParamByName('RealWeight').AsFloat:=tmpCurrentWeight;
                  //
-{
-//*****
+
+//*****-test
      if (System.Pos('ves=',ParamStr(1))>0)
       or(System.Pos('ves=',ParamStr(2))>0)
       or(System.Pos('ves=',ParamStr(3))>0)
      then begin
+               lTimerWeight_zero:= true;
+               //
                if  (tmpWeight_test < ParamsLight.ParamByName('WeightMin').AsFloat)
                  or(tmpWeight_test > ParamsLight.ParamByName('WeightMax').AsFloat)
                then //Min
@@ -2814,8 +2821,8 @@ begin
                ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
                SetParams_OperCount;
                PanelWeight_Scale.Caption:=FloatToStr(tmpWeight_test);
-      end;            }
-//*****
+      end;
+//*****-test
                  // в первый раз после zero - получили с 3-х попыток вес и потом ждем zero
                  if lTimerWeight_zero = true
                  then begin // установили что ждем zero

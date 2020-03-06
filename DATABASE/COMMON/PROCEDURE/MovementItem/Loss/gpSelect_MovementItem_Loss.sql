@@ -24,6 +24,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbBranchId_Constraint Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbDescId_from Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Loss());
@@ -34,6 +35,7 @@ BEGIN
 
      -- определяется
      vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId AND Object.DescId = zc_Object_Unit() WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From());
+     vbDescId_from:= (SELECT Object.DescId FROM MovementLinkObject INNER JOIN Object ON Object.Id = MovementLinkObject.ObjectId WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_From());
      IF COALESCE (vbUnitId, 0) = 0
      THEN
          vbUnitId:= (SELECT MovementLinkObject.ObjectId FROM MovementLinkObject WHERE MovementLinkObject.MovementId = inMovementId AND MovementLinkObject.DescId = zc_MovementLinkObject_To());
@@ -134,7 +136,13 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                                , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) AS PartionDate
+                                , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                    , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                    , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                     )
+                                            THEN zc_DateEnd()
+                                       ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
+                                  END AS PartionDate
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -166,7 +174,13 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
-                                  , ObjectDate_PartionGoods_Value.ValueData
+                                  , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                      , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                      , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       )
+                                              THEN zc_DateEnd()
+                                         ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
+                                    END
                           )
        -- Результат
        SELECT
@@ -315,6 +329,7 @@ BEGIN
                                 AND (tmpRemains.PartionDate = COALESCE (tmpMI.PartionGoodsDate, zc_DateEnd())
                                 --OR PartionGoodsDate IS NULL
                                 --OR tmpRemains.PartionDate = zc_DateEnd()
+                                  OR vbDescId_from <> zc_Object_Unit()
                                     )
             ;
      ELSE
@@ -333,7 +348,13 @@ BEGIN
                                 , Container.ObjectId                          AS GoodsId
                                 , SUM (Container.Amount)                      AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
-                                , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd()) AS PartionDate
+                                , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                    , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                    , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                     )
+                                            THEN zc_DateEnd()
+                                       ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
+                                  END AS PartionDate
                            FROM tmpDescWhereObject
                                 INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                ON CLO_Unit.ObjectId = vbUnitId
@@ -365,7 +386,13 @@ BEGIN
                                     END
                                   , Container.ObjectId
                                   , COALESCE (CLO_GoodsKind.ObjectId, 0)
-                                  , ObjectDate_PartionGoods_Value.ValueData
+                                  , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100() -- Общефирменные + Запчасти и Ремонты
+                                                                                      , zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                                                      , zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                                                       )
+                                              THEN zc_DateEnd()
+                                         ELSE COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateEnd())
+                                    END
                           )
        -- Результат
        SELECT
@@ -472,6 +499,7 @@ BEGIN
                                 AND (tmpRemains.PartionDate = COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd())
                                -- OR PartionGoodsDate IS NULL
                                -- OR tmpRemains.PartionDate = zc_DateEnd()
+                                  OR vbDescId_from <> zc_Object_Unit()
                                     )
             ;
 
@@ -480,8 +508,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

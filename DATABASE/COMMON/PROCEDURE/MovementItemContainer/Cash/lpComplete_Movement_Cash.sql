@@ -313,7 +313,7 @@ BEGIN
                          THEN lpInsertFind_Object_ServiceDate (inOperDate:= MIDate_ServiceDate.ValueData)
                     ELSE 0
                END AS ServiceDateId
-
+ 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
 
              , CASE WHEN -- если Контрагент - "Павильоны" + это Бизнес у кассы - "Павильоны"
@@ -322,10 +322,10 @@ BEGIN
                          -- !!!меняется на НАЛ!!!
                          THEN zc_Enum_PaidKind_SecondForm()
 
-                    WHEN  _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
-                      AND ObjectLink_Contract_PaidKind.ChildObjectId > 0
+                  --WHEN  _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_70000() -- Инвестиции
+                  --  AND ObjectLink_Contract_PaidKind.ChildObjectId > 0
                          -- !!!меняется на БН!!!
-                         THEN ObjectLink_Contract_PaidKind.ChildObjectId
+                  --     THEN ObjectLink_Contract_PaidKind.ChildObjectId
 
                     ELSE _tmpItem.PaidKindId -- !!!НЕ Всегда НАЛ!!!
 
@@ -446,10 +446,20 @@ BEGIN
 
 
      -- !!!Курсовая разница!!!
-     IF /*EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.OperSumm < 0)
+     IF NOT EXISTS (SELECT 1
+                    FROM _tmpItem
+                         -- если это касса ГРН, тогда надо брать параметры из Master
+                         INNER JOIN _tmpItem AS _tmpItem_find ON _tmpItem_find.MovementItemId = _tmpItem.MovementItemId
+                                                             AND _tmpItem_find.IsMaster       = FALSE
+                                                             AND _tmpItem_find.ObjectDescId   = zc_Object_Cash()
+                                                             AND _tmpItem_find.CurrencyId     <> zc_Enum_Currency_Basis()
+                    WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.CurrencyId <> zc_Enum_Currency_Basis()
+                      AND _tmpItem.OperSumm > 0
+                   )
+   /*OR EXISTS (SELECT 1 FROM _tmpItem WHERE _tmpItem.IsMaster = TRUE AND _tmpItem.OperSumm < 0)
      OR EXISTS (SELECT 1 FROM _tmpItem INNER JOIN Object ON Object.Id = _tmpItem.ObjectId AND Object.DescId = zc_Object_Cash() WHERE _tmpItem.IsMaster = FALSE)
-     OR*/ 1=1
-                 
+     */ 
+        
      THEN
          vbSumm_diff:= (WITH tmpItem AS (SELECT _tmpItem.ObjectId AS CashId, _tmpItem.CurrencyId, _tmpItem.OperSumm, _tmpItem.OperSumm_Currency, _tmpItem.OperDate
                                          FROM _tmpItem

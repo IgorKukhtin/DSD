@@ -768,6 +768,13 @@ begin
              Result:=DMMainScaleForm.gpGet_Scale_GoodsRetail(ParamsMovement,ParamsMI,BarCode);
              if Result then
              begin
+                   ParamsMI.ParamByName('CountTare1').AsFloat:=0;
+                   ParamsMI.ParamByName('CountTare2').AsFloat:=0;
+                   ParamsMI.ParamByName('CountTare3').AsFloat:=0;
+                   ParamsMI.ParamByName('CountTare4').AsFloat:=0;
+                   ParamsMI.ParamByName('CountTare5').AsFloat:=0;
+                   ParamsMI.ParamByName('CountTare6').AsFloat:=0;
+                   //
                    ParamsMI.ParamByName('Count').AsFloat:=0;
                    ParamsMI.ParamByName('HeadCount').AsFloat:=0;
                    ParamsMI.ParamByName('PartionGoods').AsString:='';

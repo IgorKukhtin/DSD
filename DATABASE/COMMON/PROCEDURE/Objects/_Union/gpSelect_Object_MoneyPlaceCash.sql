@@ -256,7 +256,9 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = zc_Object_BankAccount()
           LEFT JOIN View_InfoMoney_40801 AS View_InfoMoney ON 1 = 1
           LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = Object_BankAccount_View.CurrencyId
-     WHERE Object_BankAccount_View.JuridicalId = zc_Juridical_Basis()
+     WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
+                                                 , 15505 -- дсйн рнб 
+                                                  )
        AND vbIsConstraint = FALSE
     UNION ALL
      SELECT Object_Member.Id

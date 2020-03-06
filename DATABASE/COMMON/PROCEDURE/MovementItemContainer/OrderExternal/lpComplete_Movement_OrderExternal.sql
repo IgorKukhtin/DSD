@@ -37,7 +37,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, OperCount_Second TFloat, OperCount_Weight TFloat, OperCount_Weight_Second TFloat, OperSumm_Partner TFloat
-                               , ChangePercent TFloat, PriceEDI TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+                               , ChangePercent TFloat, PriceEDI TFloat, Price TFloat, Price_original TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту или Сотуднику и для формирования Аналитик в проводках
@@ -114,7 +114,7 @@ BEGIN
      INSERT INTO _tmpItem (MovementItemId
                          , GoodsId, GoodsKindId
                          , OperCount, OperCount_Second, OperCount_Weight, OperCount_Weight_Second, OperSumm_Partner
-                         , ChangePercent, PriceEDI, Price, CountForPrice)
+                         , ChangePercent, PriceEDI, Price, Price_original, CountForPrice)
         SELECT
               _tmp.MovementItemId
             , _tmp.GoodsId
@@ -151,6 +151,7 @@ BEGIN
             , _tmp.ChangePercent
             , _tmp.PriceEDI
             , _tmp.Price
+            , _tmp.Price_original
             , _tmp.CountForPrice
         FROM
              (SELECT
@@ -161,6 +162,7 @@ BEGIN
                   , tmpMI.ChangePercent
                   , tmpMI.PriceEDI
                   , tmpMI.Price
+                  , tmpMI.Price_original
                   , tmpMI.CountForPrice
                     -- количество
                   , tmpMI.OperCount
@@ -197,6 +199,7 @@ BEGIN
                                                          )
                           ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
+                   , COALESCE (MIFloat_Price.ValueData, 0) AS Price_original
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
               FROM Movement
@@ -299,7 +302,8 @@ BEGIN
      END IF;
 
      -- проверка
-     IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) -- AND inUserId <> 5
+     IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price_original = 0) -- AND inUserId <> 5
+   --IF EXISTS (SELECT _tmpItem.Price FROM _tmpItem WHERE _tmpItem.Price = 0) -- AND inUserId <> 5
            -- филиал Киев
        -- AND 8379 <> COALESCE ((SELECT Object_RoleAccessKeyGuide_View.BranchId FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = inUserId AND Object_RoleAccessKeyGuide_View.BranchId <> 0 LIMIT 1), 0)
      THEN

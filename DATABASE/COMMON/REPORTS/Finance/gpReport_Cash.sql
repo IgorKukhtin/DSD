@@ -169,6 +169,7 @@ BEGIN
                          
         -- ƒЋя движение в валюте баланса   
         , tmpContainerBalance AS (SELECT MIContainer.MovementItemId
+                                       , MIContainer.ContainerId
                                        , tmpContainer.ObjectId
                                        , tmpContainer.CashId
                                        , tmpContainer.CurrencyId
@@ -191,6 +192,7 @@ BEGIN
                                          , tmpContainer.CurrencyId
                                          , MIContainer.isActive
                                          , MIContainer.MovementItemId
+                                         , MIContainer.ContainerId
                                          , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END
                                   )
           -- ¬—≈ св-ва
@@ -345,7 +347,7 @@ BEGIN
                  
                             UNION ALL
                             -- движение в валюте баланса
-                            SELECT 0                                         AS ContainerId,
+                            SELECT tmpContainer.ContainerId                  AS ContainerId,
                                    tmpContainer.ObjectId                     AS ObjectId,
                                    tmpContainer.CashId                       AS CashId,
                                    tmpContainer.CurrencyId                   AS CurrencyId,
@@ -372,7 +374,8 @@ BEGIN
                                    LEFT JOIN tmpContract_Balance   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
                                    LEFT JOIN tmpUnit_Balance       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
                                    LEFT JOIN tmpInfoMoney_Balance  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
-                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                            GROUP BY tmpContainer.ContainerId,
+                                     tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
                                      MILO_InfoMoney.ObjectId, 
                                      MILO_Unit.ObjectId,
                                      MILO_MoneyPlace.ObjectId, 

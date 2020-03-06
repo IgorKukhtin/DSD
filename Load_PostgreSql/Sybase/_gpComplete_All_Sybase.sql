@@ -19,6 +19,8 @@ BEGIN
      SELECT DescId, StatusId, OperDate INTO vbMovementDescId, vbStatusId, vbOperDate FROM Movement WHERE Id = inMovementId;
      -- !!!выход!!!
      IF vbStatusId <> zc_Enum_Status_Complete() THEN RETURN; END IF;
+     -- IF vbOperDate >= '01.03.2020' THEN RETURN; END IF;
+     
 
 
      /*IF NOT EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_Inventory())

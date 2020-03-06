@@ -123,7 +123,11 @@ begin
      then begin
             // в первый раз - gpGet
             Result:= DMMainScaleCehForm.gpGet_ScaleLight_Goods(ParamsLight_local, inGoodsId, inGoodsKindId);
-            if not Result then exit;
+            if not Result then
+            begin
+                 ShowMessage('Товар с данным кодом не найден или для него не определен вид ящика.');
+                 exit;
+            end;
             //
             is_Sh := FALSE;
             is_Nom:= FALSE;

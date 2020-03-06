@@ -11,6 +11,7 @@ RETURNS TABLE (ObjectId Integer
              , GoodsTypeKindId Integer, GoodsTypeKindCode Integer, GoodsTypeKindName TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureId Integer, MeasureName TVarChar
+             , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                -- Вес 1-ой ед.
              , WeightMin TFloat
              , WeightMax TFloat
@@ -71,6 +72,9 @@ BEGIN
                                    , ObjectLink_Goods_GoodsGroup.ChildObjectId   AS GoodsGroupId
                                    , Object_GoodsGroup.ValueData                 AS GoodsGroupName
                                    , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
+                                   , View_InfoMoney.InfoMoneyGroupId
+                                   , View_InfoMoney.InfoMoneyDestinationId
+                                   , View_InfoMoney.InfoMoneyId
                                    , tmp.*
                               FROM wms_Object_GoodsByGoodsKind AS tmp
                                    LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmp.GoodsId
@@ -98,6 +102,10 @@ BEGIN
                                    LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                                           ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmp.GoodsId
                                                          AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                        ON ObjectLink_Goods_InfoMoney.ObjectId = tmp.GoodsId
+                                                       AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                               WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 AND tmp.isErased = FALSE
                              )
                , tmpGoods AS (-- Штучный
@@ -134,6 +142,7 @@ BEGIN
              , Object_GoodsTypeKind.Id AS GoodsTypeKindId, Object_GoodsTypeKind.ObjectCode AS GoodsTypeKindCode, Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
              , tmpGoods.GoodsGroupId, tmpGoods.GoodsGroupName, tmpGoods.GoodsGroupNameFull
              , tmpGoods.MeasureId, tmpGoods.MeasureName
+             , tmpGoods.InfoMoneyGroupId, tmpGoods.InfoMoneyDestinationId, tmpGoods.InfoMoneyId
 
                -- Вес 1-ой ед.
              , tmpGoods.WeightMin

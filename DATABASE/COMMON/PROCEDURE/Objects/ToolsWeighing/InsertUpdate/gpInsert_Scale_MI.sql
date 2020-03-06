@@ -357,6 +357,53 @@ BEGIN
      END IF;
 
                                                                                             
+     -- проверка кол-во
+     IF (CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                   THEN vbAmount_byWeightTare_goods
+              WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+               AND vbAmount_byPack <> 0
+                   THEN vbAmount_byPack
+              ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+         END) < 0
+     OR (CASE -- !!!только Для Сканирования Метро!!!
+              WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                   THEN vbAmount_byWeightTare_goods
+              WHEN inIsBarCode = TRUE
+                   THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+              WHEN inChangePercentAmount = 0
+                   THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+              WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
+                   THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                            * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+              ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                       * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+         END) < 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.С учетом минуса тары, получился отицательный вес <%> <%>'
+                        , CASE WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                    THEN vbAmount_byWeightTare_goods
+                               WHEN inIsBarCode = TRUE AND zc_Measure_Kg() = (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inGoodsId AND DescId = zc_ObjectLink_Goods_Measure())
+                                AND vbAmount_byPack <> 0
+                                    THEN vbAmount_byPack
+                               ELSE inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6
+                          END
+                        , CASE -- !!!только Для Сканирования Метро!!!
+                               WHEN inBranchCode BETWEEN 301 AND 310 AND vbAmount_byWeightTare_goods > 0
+                                    THEN vbAmount_byWeightTare_goods
+                               WHEN inIsBarCode = TRUE
+                                    THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                               WHEN inChangePercentAmount = 0
+                                    THEN (inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                               WHEN vbRetailId IN (341640, 310854, 310855) -- Фоззі + Фозі + Варус
+                                    THEN CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                             * (1 - inChangePercentAmount/100) AS NUMERIC (16, 3))
+                               ELSE CAST ((inRealWeight - inCountTare * inWeightTare - inCountTare1 * inWeightTare1 - inCountTare2 * inWeightTare2 - inCountTare3 * inWeightTare3 - inCountTare4 * inWeightTare4 - inCountTare5 * inWeightTare5 - inCountTare6 * inWeightTare6)
+                                        * (1 - inChangePercentAmount/100) AS NUMERIC (16, 2))
+                          END
+                         ;
+     END IF;
+
+
      -- сохранили
      vbId:= gpInsertUpdate_MovementItem_WeighingPartner (ioId                  := 0
                                                        , inMovementId          := inMovementId

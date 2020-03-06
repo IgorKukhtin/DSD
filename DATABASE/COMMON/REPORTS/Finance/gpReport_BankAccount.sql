@@ -39,6 +39,8 @@ AS
 $BODY$
    DECLARE vbUserId   Integer;
    DECLARE vbMemberId Integer;
+   DECLARE vbIsExists Boolean;
+   DECLARE vbCount    Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_...());
@@ -51,41 +53,65 @@ BEGIN
                       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                     );
 
-     CREATE TEMP TABLE _tmpJuridical (JuridicalId Integer) ON COMMIT DROP;
-        INSERT INTO _tmpJuridical (JuridicalId)
-              SELECT BankAccount_Juridical.ChildObjectId AS JuridicalId
-              FROM ObjectLink AS ObjectLink_MemberBankAccount_Member
-                  INNER JOIN Object AS Object_MemberBankAccount
-                                    ON Object_MemberBankAccount.Id = ObjectLink_MemberBankAccount_Member.ObjectId
-                                   AND Object_MemberBankAccount.DescId = zc_Object_MemberBankAccount()
-                                   AND Object_MemberBankAccount.isErased = FALSE
+     --
+     vbIsExists:= EXISTS (SELECT BankAccount_Juridical.ChildObjectId AS JuridicalId
+                          FROM ObjectLink AS ObjectLink_MemberBankAccount_Member
+                              INNER JOIN Object AS Object_MemberBankAccount
+                                                ON Object_MemberBankAccount.Id = ObjectLink_MemberBankAccount_Member.ObjectId
+                                               AND Object_MemberBankAccount.DescId = zc_Object_MemberBankAccount()
+                                               AND Object_MemberBankAccount.isErased = FALSE
+            
+                              INNER JOIN ObjectLink AS ObjectLink_MemberBankAccount_BankAccount
+                                                    ON ObjectLink_MemberBankAccount_BankAccount.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                                   AND ObjectLink_MemberBankAccount_BankAccount.DescId = zc_ObjectLink_MemberBankAccount_BankAccount()
+                   
+                              INNER JOIN ObjectLink AS BankAccount_Juridical
+                                                    ON BankAccount_Juridical.ObjectId      = ObjectLink_MemberBankAccount_BankAccount.ChildObjectId
+                                                   AND BankAccount_Juridical.DescId        = zc_ObjectLink_BankAccount_Juridical()
+                                                   AND BankAccount_Juridical.ChildObjectId = inJuridicalBasisId
+                              LEFT JOIN ObjectBoolean AS ObjectBoolean_All 
+                                                      ON ObjectBoolean_All.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                                     AND ObjectBoolean_All.DescId = zc_ObjectBoolean_MemberBankAccount_All()
+                                                     AND COALESCE (ObjectBoolean_All.ValueData, FALSE) = FALSE
+                          WHERE ObjectLink_MemberBankAccount_Member.DescId = zc_ObjectLink_MemberBankAccount_Member()
+                            AND ObjectLink_MemberBankAccount_Member.ChildObjectId = vbMemberId
+                         );
+     --
+     vbCount:=COALESCE ((SELECT COUNT(*)
+                         FROM ObjectLink AS ObjectLink_MemberBankAccount_Member
+                             INNER JOIN Object AS Object_MemberBankAccount
+                                               ON Object_MemberBankAccount.Id = ObjectLink_MemberBankAccount_Member.ObjectId
+                                              AND Object_MemberBankAccount.DescId = zc_Object_MemberBankAccount()
+                                              AND Object_MemberBankAccount.isErased = FALSE
+                      
+                             INNER JOIN ObjectLink AS ObjectLink_MemberBankAccount_BankAccount
+                                                   ON ObjectLink_MemberBankAccount_BankAccount.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                                  AND ObjectLink_MemberBankAccount_BankAccount.DescId = zc_ObjectLink_MemberBankAccount_BankAccount()
+                        
+                             INNER JOIN ObjectLink AS BankAccount_Juridical
+                                                   ON BankAccount_Juridical.ObjectId      = ObjectLink_MemberBankAccount_BankAccount.ChildObjectId
+                                                  AND BankAccount_Juridical.DescId        = zc_ObjectLink_BankAccount_Juridical()
+                             LEFT JOIN ObjectBoolean AS ObjectBoolean_All 
+                                                     ON ObjectBoolean_All.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
+                                                    AND ObjectBoolean_All.DescId = zc_ObjectBoolean_MemberBankAccount_All()
+                                                    AND COALESCE (ObjectBoolean_All.ValueData, FALSE) = FALSE
+                         WHERE ObjectLink_MemberBankAccount_Member.DescId = zc_ObjectLink_MemberBankAccount_Member()
+                           AND ObjectLink_MemberBankAccount_Member.ChildObjectId = vbMemberId
+                        ), 0);
 
-                  INNER JOIN ObjectLink AS ObjectLink_MemberBankAccount_BankAccount
-                                        ON ObjectLink_MemberBankAccount_BankAccount.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
-                                       AND ObjectLink_MemberBankAccount_BankAccount.DescId = zc_ObjectLink_MemberBankAccount_BankAccount()
-       
-                  INNER JOIN ObjectLink AS BankAccount_Juridical
-                                        ON BankAccount_Juridical.ObjectId = ObjectLink_MemberBankAccount_BankAccount.ChildObjectId
-                                       AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
-
-                  LEFT JOIN ObjectBoolean AS ObjectBoolean_All 
-                                          ON ObjectBoolean_All.ObjectId = ObjectLink_MemberBankAccount_Member.ObjectId
-                                         AND ObjectBoolean_All.DescId = zc_ObjectBoolean_MemberBankAccount_All()
-                                         AND COALESCE (ObjectBoolean_All.ValueData, FALSE) = FALSE
-              WHERE ObjectLink_MemberBankAccount_Member.DescId = zc_ObjectLink_MemberBankAccount_Member()
-                AND ObjectLink_MemberBankAccount_Member.ChildObjectId = vbMemberId;
-
-     IF COALESCE (inJuridicalBasisId = 0) AND COALESCE ((SELECT COUNT (*) FROM _tmpJuridical), 0) <> 0
+     --
+     IF COALESCE (inJuridicalBasisId = 0) AND vbCount <> 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов всем юр.лицам';
-     END IF;
-     IF COALESCE (inJuridicalBasisId <> 0) AND NOT EXISTS (SELECT 1 FROM _tmpJuridical WHERE _tmpJuridical.JuridicalId = inJuridicalBasisId) AND COALESCE ((SELECT COUNT (*) FROM _tmpJuridical), 0) <> 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов по юр.лицу <%> ', lfGet_Object_ValueData (inJuridicalBasisId);
+         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов по всем Главным юр.лицам.';
      END IF;
      --
+     IF COALESCE (inJuridicalBasisId <> 0) AND vbIsExists = FALSE AND vbCount <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав на просмотрт документов по Главному юр.лицу <%>.', lfGet_Object_ValueData_sh (inJuridicalBasisId);
+     END IF;
 
-     -- Результат
+
+  -- Результат
   RETURN QUERY
      WITH tmpAccount AS (SELECT Object_Account_View.AccountId 
                               , Object_Account_View.AccountName_all

@@ -84,12 +84,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object edGoodsName: TcxButtonEdit
     Left = 8
     Top = 113
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = False
+    Properties.ReadOnly = True
     TabOrder = 2
     Width = 273
   end
@@ -230,7 +231,8 @@ object IncomeItemEditForm: TIncomeItemEditForm
   end
   object edJuridicalBasis: TcxButtonEdit
     Left = 10
-    Top = 296
+    Top = 293
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True

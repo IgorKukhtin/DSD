@@ -29,6 +29,7 @@ BEGIN
                                           , 8379   -- филиал Киев
                                            )*/
                           AND Object.isErased = FALSE
+                          AND Object.Id <> zc_Branch_Basis()
                        )
       -- список инвентаризаций по документам
     , tmpList_all AS (SELECT Movement.Id AS MovementId, Movement.OperDate, ObjectLink_ObjectFrom_Branch.ChildObjectId AS BranchId
@@ -109,7 +110,11 @@ BEGIN
       SELECT tmp.StartDate  :: TDateTime AS StartDate
            , tmp.EndDate    :: TDateTime AS EndDate
            , tmp.BranchId
-           , Object_Branch.ObjectCode AS BranchCode
+         --, Object_Branch.ObjectCode AS BranchCode
+           , CASE WHEN Object_Branch.ObjectCode = 1 THEN 1
+                    WHEN Object_Branch.ObjectCode IN (2, 12) THEN Object_Branch.ObjectCode  * 10
+                    ELSE Object_Branch.ObjectCode  * 100
+               END :: Integer AS BranchCode
            , Object_Branch.ValueData  AS BranchName
              -- показали любой товар из переоценки - информативно
            , (SELECT '(' || Object.ObjectCode :: TVarChar || ')' || Object.ValueData FROM tmpPrice LEFT JOIN Object ON Object.Id = tmpPrice.GoodsId WHERE tmpPrice.OperDate = tmp.EndDate /*AND tmpPrice.BranchId = tmp.BranchId*/ LIMIT 1) :: TVarChar AS GoodsName
@@ -143,7 +148,12 @@ BEGIN
             WHERE tmpList.OperDate <> inEndDate
            ) AS tmp
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = tmp.BranchId
-      ORDER BY tmp.StartDate, Object_Branch.ObjectCode
+      ORDER BY tmp.StartDate
+             , CASE WHEN Object_Branch.ObjectCode = 1 THEN 1
+                    WHEN Object_Branch.ObjectCode IN (2, 12) THEN 2
+                    ELSE 3
+               END
+             , Object_Branch.ObjectCode
     ;
 
 END;
