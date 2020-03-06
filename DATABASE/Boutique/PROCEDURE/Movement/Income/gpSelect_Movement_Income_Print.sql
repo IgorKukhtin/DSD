@@ -249,6 +249,7 @@ BEGIN
             , tmpData.isErased
        FROM tmpData
        WHERE zc_Enum_GlobalConst_isTerry() = TRUE
+         AND 1=0
      UNION
        SELECT 0 AS Id
             , 0 AS PartionId
@@ -272,7 +273,7 @@ BEGIN
             , SUM (tmpData.TotalSummPriceList) ::TFloat AS TotalSummPriceList
             , tmpData.isErased
        FROM tmpData
-       WHERE zc_Enum_GlobalConst_isTerry() = FALSE -- для Подиум
+       -- WHERE zc_Enum_GlobalConst_isTerry() = FALSE -- для Подиум
        GROUP BY tmpData.GoodsId
               , tmpData.GoodsCode
               , tmpData.GoodsName

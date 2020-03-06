@@ -72,7 +72,8 @@ BEGIN
      -- Получили - показывать ЛИ цену ВХ.
      vbIsOperPrice:= lpCheckOperPrice_visible (vbUserId);
      -- Получили - ...
-     vbPeriodYear_start:= EXTRACT (YEAR FROM CURRENT_DATE) - 5;
+   --vbPeriodYear_start:= EXTRACT (YEAR FROM CURRENT_DATE) - 5;
+     vbPeriodYear_start:= 2002;
 
 
      -- Определили курс на Дату документа
@@ -264,9 +265,9 @@ BEGIN
 
            LEFT JOIN tmpDiscount ON tmpDiscount.GoodsId = tmpContainer.GoodsId
 
-       WHERE tmpContainer.Amount      <> 0 
+       WHERE tmpContainer.Amount     <> 0 
           OR tmpContainer.AmountDebt <> 0
-          OR (Object_PartionGoods.PeriodYear > vbPeriodYear_start AND inIsShowAll = TRUE)
+          OR (Object_PartionGoods.PeriodYear >= vbPeriodYear_start AND inIsShowAll = TRUE)
           ;
 
 END;

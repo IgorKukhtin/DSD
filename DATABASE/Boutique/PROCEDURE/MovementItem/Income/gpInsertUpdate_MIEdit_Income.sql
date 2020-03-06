@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MIEdit_Income(
     IN inPriceJur              TFloat    , -- Цена вх.без скидки
     IN inCountForPrice         TFloat    , -- Цена за количество
     IN inOperPriceList         TFloat    , -- Цена по прайсу
-    IN inisCode                Boolean   , -- не изменять код товара
+    IN inIsCode                Boolean   , -- не изменять код товара
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS RECORD
@@ -103,7 +103,7 @@ BEGIN
          -- Поиск !!!без Группы!!!
          vbCompositionId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Composition() AND LOWER (Object.ValueData) = LOWER (inCompositionName) ORDER BY Object.Id LIMIT 1);   -- limit 1 так как ошибка  для inCompositionName = '100%шерсть'  возвращает 2 строки
          --
-         IF COALESCE (vbCompositionId,0) = 0
+         IF COALESCE (vbCompositionId, 0) = 0
          THEN
              -- Создание
              vbCompositionId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_Composition (ioId                 := 0
@@ -252,7 +252,31 @@ BEGIN
          END IF;
          
          -- нашли
-         vbGoodsId:= vbId_max;
+         IF inIsCode = TRUE
+         THEN
+              vbGoodsId:= (SELECT Object.Id
+                           FROM Object
+                                -- только Группа
+                                INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                      ON ObjectLink_Goods_GoodsGroup.ObjectId      = Object.Id
+                                                     AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                                     AND ObjectLink_Goods_GoodsGroup.ChildObjectId = inGoodsGroupId
+                           WHERE Object.DescId     = zc_Object_Goods()
+                             AND Object.ObjectCode = ioGoodsCode
+                          );
+              -- проверка
+              IF COALESCE (vbGoodsId, 0) = 0
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Код товара <%> в группе <%> не найден.', ioGoodsCode, lfGet_Object_ValueData_sh (inGoodsGroupId);
+              END IF;
+              -- !!!замена!!!
+              IF zc_Enum_GlobalConst_isTerry() = FALSE
+              THEN
+                  RAISE EXCEPTION 'Ошибка.Нет прав.';
+              END IF;
+         ELSE
+             vbGoodsId:= vbId_max;
+         END IF;
 
          -- Если НЕ нашли - продолжаем Поиск "свободных"
          IF COALESCE (vbGoodsId, 0) = 0
@@ -308,7 +332,6 @@ BEGIN
                                          , inGoodsInfoId   := vbGoodsInfoId
                                          , inLineFabricaId := vbLineFabricaId
                                          , inLabelId       := vbLabelId
-                                         , inisCode        := inisCode
                                          , inSession       := inSession
                                          ) AS tmp;
 
@@ -316,6 +339,11 @@ BEGIN
          -- если изменился - Группы товаров
          IF inGoodsGroupId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_GoodsGroup()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Группу.', ioGoodsCode;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), vbGoodsId, inGoodsGroupId);
              -- пересохранили - Полное название группы
@@ -325,13 +353,26 @@ BEGIN
          -- если изменился - Единицы измерения
          IF inMeasureId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Measure()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Единицу измерения.', ioGoodsCode;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), vbGoodsId, inMeasureId);
          END IF;
 
          -- если изменился - Состав товара
-         IF vbCompositionId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Composition()), 0)
+         IF inIsCode = FALSE AND vbCompositionId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Composition()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Состав с <%> на <%>.', ioGoodsCode
+                               , lfGet_Object_ValueData_sh ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_Composition()))
+                               , inCompositionName
+                               ;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Composition(), vbGoodsId, vbCompositionId);
          END IF;
@@ -339,6 +380,11 @@ BEGIN
          -- если изменился - Описание товара
          IF vbGoodsInfoId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId = zc_ObjectLink_Goods_GoodsInfo()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Описание.', ioGoodsCode;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsInfo(), vbGoodsId, vbGoodsInfoId);
          END IF;
@@ -346,6 +392,11 @@ BEGIN
          -- если изменился - Линия коллекции
          IF vbLineFabricaId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId =  zc_ObjectLink_Goods_LineFabrica()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Линию.', ioGoodsCode;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink ( zc_ObjectLink_Goods_LineFabrica(), vbGoodsId, vbLineFabricaId);
          END IF;
@@ -353,6 +404,11 @@ BEGIN
          -- если изменился - Название для ценника
          IF vbLabelId <> COALESCE ((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = vbGoodsId AND OL.DescId =  zc_ObjectLink_Goods_Label()), 0)
          THEN
+             -- проверка
+             IF inIsCode = TRUE
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Для кода товара <%> нельзя менять Название.', ioGoodsCode;
+             END IF;
              -- пересохранили
              PERFORM lpInsertUpdate_ObjectLink ( zc_ObjectLink_Goods_Label(), vbGoodsId, vbLabelId);
          END IF;
