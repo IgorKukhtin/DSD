@@ -546,7 +546,7 @@
 				<Form>Movement_PeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemEdit.pas">
+			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemPodiumEdit.pas">
 				<Form>IncomeItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

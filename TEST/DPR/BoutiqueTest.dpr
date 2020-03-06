@@ -166,7 +166,6 @@ uses
   dsdXMLTransform in '..\..\SOURCE\COMPONENT\dsdXMLTransform.pas',
   IncomeJournal in '..\..\FormsBoutique\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   Movement_PeriodDialog in '..\..\FormsBoutique\Document\Movement_PeriodDialog.pas' {Movement_PeriodDialogForm: TParentForm},
-  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
   ReturnOutJournal in '..\..\FormsBoutique\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   ReturnOut in '..\..\FormsBoutique\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   SendJournal in '..\..\FormsBoutique\Document\SendJournal.pas' {SendJournalForm: TParentForm},
@@ -321,7 +320,8 @@ uses
   MainForm in '..\..\FormsBoutique\MainForm.pas' {MainForm},
   dbProcedureBoutiqueTest in '..\SOURCEBoutique\dbProcedureBoutiqueTest.pas',
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
-  LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas';
+  LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
+  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -337,7 +337,7 @@ begin
   dsdProject := prBoutique;
 
   if FindCmdLineSwitch('realboutique', true)
-  then gc_AdminPassword := 'qsxqsxw1'
+  then gc_AdminPassword := '¿‰ÏËÌqsxqsxw1¿‰ÏËÌ'
   else gc_AdminPassword := '¿‰ÏËÌ';
 
   gc_ProgramName := 'Boutique.exe';

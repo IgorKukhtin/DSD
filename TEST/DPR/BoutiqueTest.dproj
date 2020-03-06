@@ -541,10 +541,6 @@
 				<Form>Movement_PeriodDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemEdit.pas">
-				<Form>IncomeItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1118,6 +1114,10 @@
 			<DCCReference Include="..\SOURCEBoutique\dbProcedureBoutiqueTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueFormTest.pas"/>
 			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
+			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemEdit.pas">
+				<Form>IncomeItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
