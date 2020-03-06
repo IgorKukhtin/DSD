@@ -1064,10 +1064,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_Sex() RETURNS Integer AS $BODY$
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Buyer_Sex', zc_object_Buyer(), 'Пол' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Sex');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_DriverSun_Phone() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DriverSun_Phone'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_DriverSun_Phone', zc_Object_DriverSun(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DriverSun_Phone');
+ 
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 05.03.20                                                                                                         * zc_ObjectString_DriverSun_Phone
  25.02.20                                                                                                         * zc_ObjectString_User_Helsi_PasswordEHels
  29.01.20         * zc_ObjectString_Buyer_DateBirth
                     zc_ObjectString_Buyer_Sex

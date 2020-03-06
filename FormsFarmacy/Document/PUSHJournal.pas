@@ -25,6 +25,7 @@ type
     colDateEndPUSH: TcxGridDBColumn;
     colReplays: TcxGridDBColumn;
     cjlDaily: TcxGridDBColumn;
+    colisPoll: TcxGridDBColumn;
   private
     { Private declarations }
   public

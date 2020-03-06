@@ -833,18 +833,17 @@ inherited SendForm: TSendForm
   object cxLabel8: TcxLabel [10]
     Left = 8
     Top = 87
-    Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1083#1091#1095#1080#1074#1096#1080#1081' '#1090#1086#1074#1072#1088
   end
-  object edDriver: TcxButtonEdit [11]
+  object edDriverSun: TcxButtonEdit [11]
     Left = 8
     Top = 103
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 15
     Width = 181
   end
@@ -1951,16 +1950,16 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DriverId'
+        Name = 'DriverSunId'
         Value = Null
-        Component = GuidesDriver
+        Component = GuidesDriverSun
         ComponentItem = 'Key'
         MultiSelectSeparator = ','
       end
       item
-        Name = 'DriverName'
+        Name = 'DriverSunName'
         Value = Null
-        Component = GuidesDriver
+        Component = GuidesDriverSun
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
@@ -2061,6 +2060,14 @@ inherited SendForm: TSendForm
         Component = edNumberSeats
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDriverSunId'
+        Value = Null
+        Component = GuidesDriverSun
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2116,6 +2123,7 @@ inherited SendForm: TSendForm
         Control = edNumberSeats
       end
       item
+        Control = edDriverSun
       end
       item
       end
@@ -3139,19 +3147,19 @@ inherited SendForm: TSendForm
     Left = 160
     Top = 408
   end
-  object GuidesDriver: TdsdGuides
+  object GuidesDriverSun: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edDriver
-    FormNameParam.Value = 'TDriverForm'
+    LookupControl = edDriverSun
+    FormNameParam.Value = 'TDriverSunForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TDriverForm'
+    FormName = 'TDriverSunForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesDriver
+        Component = GuidesDriverSun
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3159,7 +3167,7 @@ inherited SendForm: TSendForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesDriver
+        Component = GuidesDriverSun
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

@@ -47,6 +47,7 @@ type
     PriceSIP: TcxGridDBColumn;
     SummSIP: TcxGridDBColumn;
     GoodsGroupPromoName: TcxGridDBColumn;
+    MorionCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Boolean, Boolean, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -11,6 +11,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
     IN inDaily                 Boolean    , -- Повт. ежедневно
     IN inMessage               TBlob      , -- Сообщение
     IN inFunction              TVarChar   , -- Функция
+    IN inisPoll                Boolean    , -- Опрос
+    IN inisPharmacist          Boolean    , -- Только фармацевтам
+    IN inRetailId              Integer    , -- Только для торговая сети 
     IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -33,6 +36,15 @@ BEGIN
 
     -- сохранили свойство <Сообщение>
     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PUSHDaily(), ioId, inDaily);
+
+    -- сохранили свойство <Опрос>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Poll(), ioId, inisPoll);
+
+    -- сохранили свойство <Только фармацевтам>
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Pharmacist(), ioId, inisPharmacist);
+
+    -- сохранили свойство <Пользователь (Только для торговая сети )>
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Retail(), ioId, inRetailId);
 
     -- сохранили свойство <Функция>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Function(), ioId, inFunction);
@@ -70,8 +82,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
- 19.02.12         *
- 11.05.19         *
+ 05.03.20        *
+ 19.02.20        *
+ 11.05.19        *
  15.10.18        *
  11.09.18        *
 */

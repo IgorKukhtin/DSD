@@ -10,17 +10,18 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Sent(
 )
 RETURNS Boolean AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbUnitId     Integer;
-   DECLARE vbUnitKey    TVarChar;
-   DECLARE vbStatusId   Integer;
-   DECLARE vbUnitIdFrom Integer;
-   DECLARE vbisDeferred Boolean;
-   DECLARE vbisSUN      Boolean;
-   DECLARE vbisDefSUN   Boolean;
-   DECLARE vbisSent     Boolean;
-   DECLARE vbisReceived Boolean;
+   DECLARE vbUserId      Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbUnitKey     TVarChar;
+   DECLARE vbStatusId    Integer;
+   DECLARE vbUnitIdFrom  Integer;
+   DECLARE vbisDeferred  Boolean;
+   DECLARE vbisSUN       Boolean;
+   DECLARE vbisDefSUN    Boolean;
+   DECLARE vbisSent      Boolean;
+   DECLARE vbisReceived  Boolean;
    DECLARE vbNumberSeats Integer;
+   DECLARE vbDriverSunID Integer;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -41,7 +42,8 @@ BEGIN
         , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean     AS isSent
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
         , MovementFloat_NumberSeats.ValueData::Integer                  AS NumberSeats
-   INTO vbStatusId, vbUnitIdFrom, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats
+        , MovementLinkObject_DriverSun.ObjectId                         AS DriverSunID
+   INTO vbStatusId, vbUnitIdFrom, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats, vbDriverSunID
    FROM Movement
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -72,6 +74,9 @@ BEGIN
                                     ON MovementFloat_NumberSeats.MovementId =  Movement.Id
                                    AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DriverSun
+                                         ON MovementLinkObject_DriverSun.MovementId = Movement.Id
+                                        AND MovementLinkObject_DriverSun.DescId = zc_MovementLinkObject_DriverSun()
    WHERE Movement.Id = inMovementId;
 
    IF COALESCE(inisSent, NOT vbisSent) <> vbisSent
@@ -104,6 +109,11 @@ BEGIN
       NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
       RAISE EXCEPTION 'Ошибка. Отмена признака <Отправлено-да> вам запрещена, обратитесь к системному администратору';
+   END IF;
+
+   IF inisSent = FALSE AND COALESCE (vbDriverSunID, 0) = 0 AND CURRENT_DATE >= '11.03.2020'::TDateTime
+   THEN
+      RAISE EXCEPTION 'Ошибка. Не заполнен <Водитель получивший товар>';
    END IF;
 
    IF inisSent = FALSE AND COALESCE (vbNumberSeats, 0) = 0 AND CURRENT_DATE >= '11.03.2020'::TDateTime

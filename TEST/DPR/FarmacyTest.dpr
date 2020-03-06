@@ -829,7 +829,9 @@ uses
   WagesTechnicalRediscount in '..\..\FormsFarmacy\Document\WagesTechnicalRediscount.pas' {WagesTechnicalRediscountForm: TParentForm},
   WagesTechnicalRediscountUnit in '..\..\FormsFarmacy\Document\WagesTechnicalRediscountUnit.pas' {WagesTechnicalRediscountUnitForm: TParentForm},
   Report_EntryGoodsMovementDialog in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovementDialog.pas' {Report_EntryGoodsMovementDialogForm: TParentForm},
-  Report_EntryGoodsMovement in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovement.pas' {Report_EntryGoodsMovementForm: TParentForm};
+  Report_EntryGoodsMovement in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovement.pas' {Report_EntryGoodsMovementForm: TParentForm},
+  DriverSun in '..\..\FormsFarmacy\Guides\DriverSun.pas' {DriverSunForm: TParentForm},
+  DriverSunEdit in '..\..\FormsFarmacy\Guides\DriverSunEdit.pas' {DriverSunEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

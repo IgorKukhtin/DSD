@@ -436,12 +436,18 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_JuridicalCar() RETURNS Integer 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_JuridicalCar', 'Юр.лицо грузоотправитель' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_JuridicalCar');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_DriverSun() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DriverSun'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_DriverSun', 'Водитель получивший товар' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DriverSun');
+
+
 /*-------------------------------------------------------------------------------
 
                   РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ  !!!!!!!!!!!!!!!!!!!
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.03.19                                                                                      * zc_MovementLinkObject_DriverSun
  06.02.20         * zc_MovementLinkObject_SubjectDoc
  04.02.20         * zc_MovementLinkObject_JuridicalCar
  29.07.19         * zc_MovementLinkObject_OrderFinance

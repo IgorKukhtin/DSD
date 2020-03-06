@@ -46,6 +46,7 @@ type
     procedure LoadDiscountFormTest;
     procedure LoadDiffKindFormTest;
     procedure LoadDriverTest;
+    procedure LoadDriverSunTest;
     procedure LoadEnumFormTest;
     procedure LoadEmailFormTest;
     procedure LoadEmailSettingsFormTest;
@@ -269,6 +270,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TDriverEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitLincDriverForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitLincDriverForm');
+end;
+
+procedure TLoadFormTest.LoadDriverSunTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDriverSunForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDriverSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDriverSunEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDriverSunEditForm');
 end;
 
 procedure TLoadFormTest.LoadBankStatementFormTest;

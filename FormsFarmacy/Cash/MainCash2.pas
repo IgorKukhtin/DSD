@@ -1729,6 +1729,7 @@ begin
 end;
 
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
+  var cResult : string;
 
   procedure Load_PUSH(ARun : boolean);
   begin
@@ -1756,7 +1757,7 @@ begin
                   '1. Сделайте Х-отчет, убедитесь, что он пустой 0,00.'#13#10 +
                   '   Форс-Мажор РРО: звоним в любое время Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
                   '2. Сделайте нулевой чек, проверьте дату и время.'#13#10 +
-                  '3. Сделайте внесение 100,00 грн.');
+                  '3. Сделайте внесение 100,00 грн.', cResult);
       Load_PUSH(True);
     end else if UnitConfigCDS.Active and Assigned(UnitConfigCDS.FindField('TimePUSHFinal1')) and (
       not UnitConfigCDS.FieldByName('TimePUSHFinal1').IsNull and (TimeOf(FPUSHEnd) < TimeOf(UnitConfigCDS.FieldByName('TimePUSHFinal1').AsDateTime)) and
@@ -1770,7 +1771,7 @@ begin
                       '3. Сделайте z-отчет!!!'#13#10 +
                       '4. Убедитесь, что Ваш z-отчет отправился в бухгалтерию!!!'#13#10 +
                       '5. Форс-Мажор РРО: звоним в любое время : Татьяна (099-641-59-21), Юлия (0957767101)'#13#10 +
-                      '6. Сделайте запись в книге РРО!!!');
+                      '6. Сделайте запись в книге РРО!!!', cResult);
       FPUSHEnd := Now;
     end else if (CheckCDS.RecordCount = 0) and PUSHDS.Active and (PUSHDS.RecordCount > 0) then
     begin
@@ -1779,18 +1780,21 @@ begin
         TimerPUSH.Interval := 1000;
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
-          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString,
-            PUSHDS.FieldByName('FormName').AsString, PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params').AsString,
-            PUSHDS.FieldByName('TypeParams').AsString, PUSHDS.FieldByName('ValueParams').AsString) then
+          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult, PUSHDS.FieldByName('isPoll').AsBoolean,
+                                 PUSHDS.FieldByName('FormName').AsString, PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params').AsString,
+                                 PUSHDS.FieldByName('TypeParams').AsString, PUSHDS.FieldByName('ValueParams').AsString) then
           begin
             try
               spInsert_MovementItem_PUSH.ParamByName('inMovement').Value := PUSHDS.FieldByName('Id').AsInteger;
+              if PUSHDS.FieldByName('isPoll').AsBoolean then
+              spInsert_MovementItem_PUSH.ParamByName('inResult').Value := cResult
+              else spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
               spInsert_MovementItem_PUSH.Execute;
             except ON E:Exception do Add_Log('Marc_PUSH err=' + E.Message);
             end;
           end;
         end else if (Trim(PUSHDS.FieldByName('Text').AsString) <> '') or
-          (Trim(PUSHDS.FieldByName('FormName').AsString) <> '') then ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString,
+          (Trim(PUSHDS.FieldByName('FormName').AsString) <> '') then ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult, PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString, PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params').AsString,
             PUSHDS.FieldByName('TypeParams').AsString, PUSHDS.FieldByName('ValueParams').AsString);
       finally

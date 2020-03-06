@@ -26,7 +26,6 @@ object CommentTRForm: TCommentTRForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 452
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -418,7 +417,7 @@ object CommentTRForm: TCommentTRForm
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpSelect_Object_CommentTR_IsErased'
     DataSets = <>
     OutputType = otResult
     Params = <

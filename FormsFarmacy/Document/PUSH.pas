@@ -64,6 +64,12 @@ type
     DBViewAddOnChild: TdsdDBViewAddOn;
     edFunction: TcxTextEdit;
     cxLabel6: TcxLabel;
+    chbPoll: TcxCheckBox;
+    Result: TcxGridDBColumn;
+    edRetail: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    GuidesRetail: TdsdGuides;
+    chbPharmacist: TcxCheckBox;
   private
     { Private declarations }
   public

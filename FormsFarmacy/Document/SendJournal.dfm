@@ -210,9 +210,9 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 95
           end
-          object DriverName: TcxGridDBColumn
-            Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-            DataBinding.FieldName = 'DriverName'
+          object DriverSunName: TcxGridDBColumn
+            Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1083#1091#1095#1080#1074#1096#1080#1081' '#1090#1086#1074#1072#1088
+            DataBinding.FieldName = 'DriverSunName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072

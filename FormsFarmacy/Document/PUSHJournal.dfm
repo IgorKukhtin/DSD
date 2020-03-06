@@ -53,6 +53,14 @@ inherited PUSHJournalForm: TPUSHJournalForm
             Options.Editing = False
             Width = 71
           end
+          object colisPoll: TcxGridDBColumn [3]
+            Caption = #1054#1087#1088#1086#1089
+            DataBinding.FieldName = 'isPoll'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1088#1077#1084#1103' '#1085#1072#1095#1072#1083#1072' '#1086#1087#1086#1074#1077#1097#1077#1085#1080#1103
             HeaderAlignmentHorz = taCenter

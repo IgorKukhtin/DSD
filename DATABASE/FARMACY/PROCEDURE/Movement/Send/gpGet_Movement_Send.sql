@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
              , PartionDateKindId Integer, PartionDateKindName TVarChar
-             , DriverId Integer, DriverName TVarChar
+             , DriverSunId Integer, DriverSunName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
              , Checked Boolean
@@ -50,8 +50,8 @@ BEGIN
              , CAST ('' AS TVarChar) 			                AS ToName
              , 0                                                AS PartionDateKindId
              , CAST ('' AS TVarChar) 			                AS PartionDateKindName
-             , 0                     		                    AS DriverId
-             , CAST ('' AS TVarChar)   		                    AS DriverName
+             , 0                     		                    AS DriverSunId
+             , CAST ('' AS TVarChar)   		                    AS DriverSunName
              , CAST ('' AS TVarChar) 		                    AS Comment
              , FALSE                                            AS isAuto
              , CAST (0 AS TFloat)                               AS MCSPeriod
@@ -84,8 +84,8 @@ BEGIN
            , Object_To.ValueData                                AS ToName
            , Object_PartionDateKind.Id                          AS PartionDateKindId
            , Object_PartionDateKind.ValueData                   AS PartionDateKindName
-           , Object_Driver.Id                                   AS DriverId
-           , Object_Driver.ValueData                :: TVarChar AS DriverName
+           , Object_DriverSun.Id                                AS DriverSunId
+           , Object_DriverSun.ValueData             :: TVarChar AS DriverSunName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
            , COALESCE (MovementBoolean_isAuto.ValueData, FALSE) ::Boolean  AS isAuto
            , COALESCE (MovementFloat_MCSPeriod.ValueData,0)     ::TFloat   AS MCSPeriod
@@ -122,10 +122,10 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Driver
-                                         ON MovementLinkObject_Driver.MovementId = Movement.Id
-                                        AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
-            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DriverSun
+                                         ON MovementLinkObject_DriverSun.MovementId = Movement.Id
+                                        AND MovementLinkObject_DriverSun.DescId = zc_MovementLinkObject_DriverSun()
+            LEFT JOIN Object AS Object_DriverSun ON Object_DriverSun.Id = MovementLinkObject_DriverSun.ObjectId 
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
@@ -191,6 +191,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 05.03.20                                                                                     * zc_MovementLinkObject_DriverSun
  09.12.19         *
  23.09.19         * zc_MovementLinkObject_Driver
  06.08.19                                                                                     * zc_MovementBoolean_Received

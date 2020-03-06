@@ -19,6 +19,11 @@ BEGIN
             WHEN zc_Movement_Check() THEN zc_FormClass_Check()
             WHEN zc_Movement_Sale() THEN zc_FormClass_Sale()
             WHEN zc_Movement_SendPartionDate() THEN zc_FormClass_SendPartionDate()
+            WHEN zc_Movement_Reprice() THEN zc_FormClass_Reprice()
+            WHEN zc_Movement_OrderInternal() THEN  zc_FormClass_OrderInternal()
+            WHEN zc_Movement_OrderInternal() THEN  zc_FormClass_OrderInternal()
+            WHEN zc_Movement_Over() THEN  zc_FormClass_Over()
+            WHEN zc_Movement_OrderExternal() THEN  zc_FormClass_OrderExternal()
         END
     INTO
         outFormClass
@@ -31,10 +36,11 @@ ALTER FUNCTION gpGet_MovementFormClass (Integer,TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 05.03.20                                                                     *
  25.05.15                         *
  28.04.15                         *
 */
-
 -- тест
--- select * from gpGet_MovementFormClass(inMovementId := 14346050 ,  inSession := '3');
+-- select * from gpGet_MovementFormClass(inMovementId := 1591983  ,  inSession := '3');
+

@@ -4,7 +4,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientWidth = 821
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 837
-  ExplicitHeight = 649
+  ExplicitHeight = 650
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -785,9 +785,6 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -1032,6 +1029,12 @@ inherited OrderExternalForm: TOrderExternalForm
       item
         Name = 'Password'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 43831d
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 288
