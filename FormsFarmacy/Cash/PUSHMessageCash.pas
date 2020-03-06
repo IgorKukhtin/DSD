@@ -17,11 +17,14 @@ type
     pn2: TPanel;
     pn1: TPanel;
     btOpenForm: TcxButton;
+    bbYes: TcxButton;
+    bbNo: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure MemoKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btOpenFormClick(Sender: TObject);
   private
     { Private declarations }
+    FPoll : boolean;
     FFormName : string;
     FParams : string;
     FTypeParams : string;
@@ -31,6 +34,8 @@ type
   end;
 
   function ShowPUSHMessageCash(AMessage : string;
+                               var AResult : string;
+                               APoll : boolean = False;
                                AFormName : string = '';
                                AButton : string = '';
                                AParams : string = '';
@@ -89,10 +94,12 @@ end;
 procedure TPUSHMessageCashForm.MemoKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = VK_Return then ModalResult := mrOk;
+  if (Key = VK_Return) and not FPoll then ModalResult := mrOk;
 end;
 
 function ShowPUSHMessageCash(AMessage : string;
+                             var AResult : string;
+                             APoll : boolean = False;
                              AFormName : string = '';
                              AButton : string = '';
                              AParams : string = '';
@@ -101,6 +108,7 @@ function ShowPUSHMessageCash(AMessage : string;
   var PUSHMessageCashForm : TPUSHMessageCashForm;
 begin
 
+  AResult := '';
   if AMessage = '' then
   begin
     OpenForm(AFormName, AParams, ATypeParams, AValueParams);
@@ -111,10 +119,25 @@ begin
   PUSHMessageCashForm := TPUSHMessageCashForm.Create(Screen.ActiveControl);
   try
     PUSHMessageCashForm.Memo.Lines.Text := AMessage;
+    PUSHMessageCashForm.FPoll := APoll;
     PUSHMessageCashForm.FFormName := AFormName;
     PUSHMessageCashForm.FParams := AParams;
     PUSHMessageCashForm.FTypeParams := ATypeParams;
     PUSHMessageCashForm.FValueParams := AValueParams;
+
+    if APoll then
+    begin
+      PUSHMessageCashForm.Caption := 'Опрос';
+      PUSHMessageCashForm.bbOk.Visible := False;
+      PUSHMessageCashForm.bbOk.Visible := False;
+      PUSHMessageCashForm.bbCancel.Visible := False;
+      PUSHMessageCashForm.bbCancel.Visible := False;
+      PUSHMessageCashForm.bbCancel.Cancel := False;
+      PUSHMessageCashForm.bbYes.Visible := True;
+      PUSHMessageCashForm.bbNo.Visible := True;
+      PUSHMessageCashForm.Memo.Properties.Alignment := TAlignment.taCenter;
+      PUSHMessageCashForm.Memo.Style.Font.Size := PUSHMessageCashForm.Memo.Style.Font.Size + 2;
+    end;
 
     if AButton <> '' then
     begin
@@ -125,7 +148,12 @@ begin
       PUSHMessageCashForm.btOpenForm.Visible := True;
     end else PUSHMessageCashForm.btOpenForm.Visible := False;
 
-    Result := PUSHMessageCashForm.ShowModal = mrOk;
+    case PUSHMessageCashForm.ShowModal of
+      mrOk : Result := True;
+      mrYes : begin Result := True; AResult := 'Да'; end;
+      mrNo : begin Result := True; AResult := 'Нет'; end;
+      else Result := False;
+    end;
   finally
     PUSHMessageCashForm.Free;
   end;

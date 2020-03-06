@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -12,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PUSH(
     IN inMessage               TBlob      , -- Сообщение
     IN inFunction              TVarChar   , -- Функция
     IN inisPoll                Boolean    , -- Опрос
+    IN inisPharmacist          Boolean    , -- Только фармацевтам
+    IN inRetailId              Integer    , -- Только для торговая сети 
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -32,6 +34,8 @@ BEGIN
                                         , inMessage         := inMessage
                                         , inFunction        := inFunction
                                         , inisPoll          := inisPoll
+                                        , inisPharmacist    := inisPharmacist
+                                        , inRetailId        := inRetailId
                                         , inUserId          := vbUserId
                                         );
 END;

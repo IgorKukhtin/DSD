@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpGet_PUSH_Cash(TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (Id Integer, Text TBlob,
+RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
                FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar)
 AS
 $BODY$
@@ -36,6 +36,7 @@ BEGIN
 
     CREATE TEMP TABLE _PUSH (Id  Integer
                            , Text TBlob
+                           , isPoll boolean
                            , FormName TVarChar
                            , Button TVarChar
                            , Params TVarChar
@@ -443,6 +444,7 @@ BEGIN
 
       , tmpMovementPUSH AS (SELECT Movement.Id                                                     AS ID
                                  , PUSH_Message.Message                                            AS Message
+                                 , COALESCE(MovementBoolean_Poll.ValueData, False)                 AS isPoll
                                  , PUSH_Message.FormName                                           AS FormName
                                  , PUSH_Message.Button                                             AS Button
                                  , PUSH_Message.Params                                             AS Params
@@ -465,6 +467,10 @@ BEGIN
                                  LEFT JOIN MovementBoolean AS MovementBoolean_Daily
                                                            ON MovementBoolean_Daily.MovementId = Movement.Id
                                                           AND MovementBoolean_Daily.DescId = zc_MovementBoolean_PUSHDaily()
+
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_Poll
+                                                           ON MovementBoolean_Poll.MovementId = Movement.Id
+                                                          AND MovementBoolean_Poll.DescId = zc_MovementBoolean_Poll()
 
                                  LEFT JOIN MovementString AS MovementString_Function
                                                           ON MovementString_Function.MovementId = Movement.Id
@@ -513,10 +519,11 @@ BEGIN
                                                     AND MID_Viewed.ValueData < CURRENT_DATE + INTERVAL '1 DAY'), 0)))
 
 
-   INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
+   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams)
    SELECT
           tmpMovementPUSH.Id
         , tmpMovementPUSH.Message                                            AS Message
+        , tmpMovementPUSH.isPoll                                             AS isPoll
         , tmpMovementPUSH.FormName                                           AS FormName
         , tmpMovementPUSH.Button                                             AS Button
         , tmpMovementPUSH.Params                                             AS Params
@@ -527,13 +534,14 @@ BEGIN
 
 
    RETURN QUERY
-     SELECT _PUSH.Id                     AS Id
-          , _PUSH.Text                   AS Text
-          , _PUSH.FormName               AS FormName
-          , _PUSH.Button                 AS Button
-          , _PUSH.Params                 AS Params
-          , _PUSH.TypeParams             AS TypeParams
-          , _PUSH.ValueParams            AS ValueParams
+     SELECT _PUSH.Id                      AS Id
+          , _PUSH.Text                    AS Text
+          , COALESCE(_PUSH.isPoll, False) AS isPoll
+          , _PUSH.FormName                AS FormName
+          , _PUSH.Button                  AS Button
+          , _PUSH.Params                  AS Params
+          , _PUSH.TypeParams              AS TypeParams
+          , _PUSH.ValueParams             AS ValueParams
      FROM _PUSH;
 
 END;
@@ -544,6 +552,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Øàáëèé Î.Â.
+ 05.03.20                                                       *
  19.02.20                                                       *
  23.09.19                                                       *
  05.08.19                                                       *

@@ -247,7 +247,7 @@ begin
   end;
 
   if FAlwaysSold then exit;
-  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 60) , Price, NDS);
+  ProgrammingGoods(GoodsCode, Copy(GoodsName, 1, 40) , Price, NDS);
   result := SoldCode(GoodsCode, Amount, Price);
 end;
 

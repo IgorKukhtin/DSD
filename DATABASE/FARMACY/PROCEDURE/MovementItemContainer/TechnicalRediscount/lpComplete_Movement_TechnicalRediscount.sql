@@ -189,7 +189,7 @@ BEGIN
                                               AND MIInventory.ObjectId = MovementItem.ObjectId
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
-      AND COALESCE(MIInventory.Amount, 0) <> (COALESCE(MIFloat_Remains.ValueData, 0) + MovementItem.Amount)
+      AND (COALESCE(MIInventory.Amount, 0) <> (COALESCE(MIFloat_Remains.ValueData, 0) + MovementItem.Amount) OR MIInventory.Amount IS NULL)
       AND MovementItem.isErased   = FALSE;
 
      -- Удалили все лишнее в инвентаризации
@@ -205,7 +205,7 @@ BEGIN
     -- Прописываем в зарплату
     IF vbisRedCheck = FALSE
     THEN
-      PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, inSession);
+      PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;
 
 END;

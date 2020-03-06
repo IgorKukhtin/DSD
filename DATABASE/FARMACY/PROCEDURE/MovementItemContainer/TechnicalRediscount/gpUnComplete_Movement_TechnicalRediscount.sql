@@ -42,7 +42,7 @@ BEGIN
     -- Прописываем в зарплату
     IF vbisRedCheck = FALSE
     THEN
-      PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, inSession);
+      PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;
 
     -- 5.1 Отменяем инвентаризацию

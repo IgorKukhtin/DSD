@@ -5377,6 +5377,13 @@ inherited MainCashForm2: TMainCashForm2
         Value = Null
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inResult'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 752

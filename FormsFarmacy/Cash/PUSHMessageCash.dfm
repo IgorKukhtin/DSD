@@ -25,9 +25,12 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       Top = 1
       Align = alClient
       Lines.Strings = (
-        '')
+        'jhjghjkghkfgkf'
+        'gdfgdfshdsghsg'
+        'kfgkfjlkfh')
       ParentColor = True
       ParentFont = False
+      Properties.Alignment = taLeftJustify
       Properties.ReadOnly = True
       Properties.ScrollBars = ssVertical
       Style.Font.Charset = DEFAULT_CHARSET
@@ -69,7 +72,7 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       Cancel = True
       Caption = #1054#1090#1084#1077#1085#1072
       ModalResult = 8
-      TabOrder = 0
+      TabOrder = 3
     end
     object bbOk: TcxButton
       Left = 381
@@ -80,7 +83,7 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       Caption = 'Ok'
       Default = True
       ModalResult = 1
-      TabOrder = 1
+      TabOrder = 4
     end
     object btOpenForm: TcxButton
       Left = 10
@@ -89,9 +92,31 @@ object PUSHMessageCashForm: TPUSHMessageCashForm
       Height = 25
       Cancel = True
       Caption = #1050#1085#1086#1087#1082#1072
-      TabOrder = 2
+      TabOrder = 0
       Visible = False
       OnClick = btOpenFormClick
+    end
+    object bbYes: TcxButton
+      Left = 150
+      Top = 6
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = #1044#1072
+      ModalResult = 6
+      TabOrder = 1
+      Visible = False
+    end
+    object bbNo: TcxButton
+      Left = 332
+      Top = 6
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Caption = #1053#1077#1090
+      ModalResult = 7
+      TabOrder = 2
+      Visible = False
     end
   end
 end

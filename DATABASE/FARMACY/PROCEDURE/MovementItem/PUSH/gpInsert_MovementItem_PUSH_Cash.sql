@@ -1,9 +1,11 @@
 -- Function: gpInsert_MovementItem_PUSH_Cash()
 
-DROP FUNCTION IF EXISTS gpInsert_MovementItem_PUSH_Cash (Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsert_MovementItem_PUSH_Cash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MovementItem_PUSH_Cash (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_MovementItem_PUSH_Cash(
     IN inMovementId          Integer   , -- Ключ объекта <Элемент документа>
+    IN inResult              TVarChar  , -- Результат опроса
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -76,6 +78,9 @@ BEGIN
     
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbId, vbUnitId);    
           
+    -- сохранили <Результат>
+    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Result(), vbId, inResult);
+
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, True);
 
@@ -86,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 05.03.20        *
  13.03.19                                                                     *
  11.03.19                                                                     *
 */
