@@ -49,6 +49,7 @@ type
     actChoiceCommentTR: TOpenChoiceForm;
     actChoiceGoods: TOpenChoiceForm;
     dxBarButton2: TdxBarButton;
+    MinExpirationDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

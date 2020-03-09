@@ -261,6 +261,14 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object MinExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
         end
       end
       object cxSplitter1: TcxSplitter

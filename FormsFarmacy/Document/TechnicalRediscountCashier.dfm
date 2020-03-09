@@ -22,6 +22,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       inherited cxGrid: TcxGrid
         Width = 915
         Height = 332
+        ExplicitTop = -6
         ExplicitWidth = 915
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -260,6 +261,14 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+          end
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 85
           end
         end
       end
