@@ -29,15 +29,16 @@ BEGIN
      -- сохранили <Элемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
-     FROM lpInsertUpdate_MovementItem_TaxCorrective (ioId        := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inPrice              := inPrice
-                                          , ioCountForPrice      := ioCountForPrice
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inUserId             := vbUserId
-                                           ) AS tmp;
+     FROM lpInsertUpdate_MovementItem_TaxCorrective (ioId            := ioId
+                                                   , inMovementId    := inMovementId
+                                                   , inGoodsId       := inGoodsId
+                                                   , inAmount        := inAmount
+                                                   , inPrice         := inPrice
+                                                   , inPriceTax_calc := (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = @ioId AND MIF.DescId = zc_MIFloat_PriceTax_calc())
+                                                   , ioCountForPrice := ioCountForPrice
+                                                   , inGoodsKindId   := inGoodsKindId
+                                                   , inUserId        := vbUserId
+                                                    ) AS tmp;
 
      -- проверяем значения № пп НН, если изменено , устанавливаем свойство Авто = False
      outisAuto :=TRUE;

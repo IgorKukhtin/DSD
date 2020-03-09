@@ -46,13 +46,22 @@ BEGIN
        , tmpMICorrective AS
                     (SELECT MovementItem.ObjectId                         AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                          , COALESCE (MIFloat_Price.ValueData        , 0) AS Price
+                          , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                    , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                 THEN COALESCE (MIFloat_PriceTax_calc.ValueData, 0) 
+                                 ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                            END AS Price
                           , CASE WHEN MIBoolean_isAuto.ValueData = FALSE THEN COALESCE (MIFloat_NPP.ValueData, 0) ELSE 0 END AS LineNumTax
                           , COALESCE (MIBoolean_isAuto.ValueData, TRUE)   AS isAuto
+                          , MovementLinkObject_DocumentTaxKind.ObjectId   AS DocumentTaxKindId
                      FROM MovementItem
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                                      ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceTax_calc.DescId        = zc_MIFloat_PriceTax_calc()
+                                                     
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -62,6 +71,9 @@ BEGIN
                           LEFT JOIN MovementItemBoolean AS MIBoolean_isAuto
                                                         ON MIBoolean_isAuto.MovementItemId = MovementItem.Id
                                                        AND MIBoolean_isAuto.DescId = zc_MIBoolean_isAuto()
+                          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                       ON MovementLinkObject_DocumentTaxKind.MovementId = MovementItem.MovementId
+                                                      AND MovementLinkObject_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
                      WHERE MovementItem.MovementId = inMovementId
                        AND MovementItem.DescId     = zc_MI_Master()
                        AND MovementItem.isErased   = FALSE
@@ -72,11 +84,11 @@ BEGIN
                           , tmpMICorrective.GoodsKindId
                           , tmpMICorrective.Price
 
-                          , CASE WHEN (SELECT tmpMovement.DocumentTaxKindId FROM tmpMovement) IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
-                                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
-                                                                                                , zc_Enum_DocumentTaxKind_Goods()
-                                                                                                , zc_Enum_DocumentTaxKind_Change()
-                                                                                                 )
+                          , CASE WHEN tmpMICorrective.DocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                          , zc_Enum_DocumentTaxKind_Goods()
+                                                                          , zc_Enum_DocumentTaxKind_Change()
+                                                                           )
                                   AND tmpMICorrective.LineNumTax <> 0 
                                       THEN tmpMICorrective.LineNumTax
 
@@ -144,4 +156,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpSelect_TaxCorrectiveFromTax (inMovementId:= 3424196)
+-- SELECT * FROM lpSelect_TaxCorrectiveFromTax (inMovementId:= 16067441)

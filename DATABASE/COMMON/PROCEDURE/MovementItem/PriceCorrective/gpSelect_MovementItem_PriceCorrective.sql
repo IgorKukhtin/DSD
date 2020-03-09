@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar
              , Amount TFloat, Price TFloat
-             , PriceFrom TFloat, PriceTo TFloat
+             , PriceTax_calc TFloat, PriceTo TFloat
              , CountForPrice TFloat
              , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AmountSumm TFloat, isErased Boolean
@@ -64,7 +64,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS Amount
            --, CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS Price
-           , CAST (NULL AS TFloat)      AS PriceFrom
+           , CAST (NULL AS TFloat)      AS PriceTax_calc
            , CAST (NULL AS TFloat)      AS PriceTo
            , CAST (NULL AS TFloat)      AS CountForPrice
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -124,7 +124,7 @@ BEGIN
            , MovementItem.Amount			AS Amount
 
            , MIFloat_Price.ValueData                  ::TFloat AS Price
-           , COALESCE (MIFloat_PriceFrom.ValueData,0) ::TFloat AS PriceFrom
+           , COALESCE (MIFloat_PriceTax_calc.ValueData,0) ::TFloat AS PriceTax_calc
            , COALESCE (MIFloat_PriceTo.ValueData,0)   ::TFloat AS PriceTo
 
            , MIFloat_CountForPrice.ValueData 	        AS CountForPrice
@@ -152,9 +152,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                        ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+            LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                        ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
             LEFT JOIN MovementItemFloat AS MIFloat_PriceTo
                                         ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
                                        AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
@@ -180,7 +180,7 @@ BEGIN
                       , MovementItem.ObjectId			AS GoodsId
                       , MovementItem.Amount			AS Amount
                       , MIFloat_Price.ValueData 	        AS Price
-                      , COALESCE (MIFloat_PriceFrom.ValueData,0) ::TFloat AS PriceFrom
+                      , COALESCE (MIFloat_PriceTax_calc.ValueData,0) ::TFloat AS PriceTax_calc
                       , COALESCE (MIFloat_PriceTo.ValueData,0)   ::TFloat AS PriceTo
                       , MIFloat_CountForPrice.ValueData         AS CountForPrice
                       , MILinkObject_GoodsKind.ObjectId         AS GoodsKindId
@@ -195,9 +195,9 @@ BEGIN
                        LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                       LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                                   ON MIFloat_PriceFrom.MovementItemId = MovementItem.Id
-                                                  AND MIFloat_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+                       LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                                   ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
                        LEFT JOIN MovementItemFloat AS MIFloat_PriceTo
                                                    ON MIFloat_PriceTo.MovementItemId = MovementItem.Id
                                                   AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
@@ -247,7 +247,7 @@ BEGIN
                           , CASE WHEN tmpMI.Amount <> 0 THEN tmpMI.Amount ELSE 0 /*tmpMI_Parent_find.Amount*/ END AS Amount
                           , COALESCE (tmpMI.GoodsKindId, tmpMI_Parent_find.GoodsKindId) AS GoodsKindId
                           , COALESCE (tmpMI.Price, tmpMI_Parent_find.Price)             AS Price
-                          , COALESCE (tmpMI.PriceFrom, 0)                               AS PriceFrom
+                          , COALESCE (tmpMI.PriceTax_calc, 0)                           AS PriceTax_calc
                           , COALESCE (tmpMI.PriceTo, 0)                                 AS PriceTo
                           , COALESCE (tmpMI.CountForPrice, 1)                           AS CountForPrice
                           , COALESCE (tmpMI.isErased, FALSE)                            AS isErased
@@ -264,7 +264,7 @@ BEGIN
 
            , tmpResult.Amount         :: TFloat AS Amount
            , tmpResult.Price          :: TFloat AS Price
-           , tmpResult.PriceFrom      :: TFloat AS PriceFrom
+           , tmpResult.PriceTax_calc  :: TFloat AS PriceTax_calc
            , tmpResult.PriceTo        :: TFloat AS PriceTo
            , tmpResult.CountForPrice  :: TFloat AS CountForPrice
 

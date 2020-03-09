@@ -39,6 +39,7 @@ BEGIN
                                          , inGoodsId            := tmp.GoodsId
                                          , inAmount             := COALESCE (tmp.Amount, 0)
                                          , inPrice              := COALESCE (tmp.Price, 0)
+                                         , inPriceTax_calc      := 0
                                          , ioCountForPrice      := COALESCE (tmp.CountForPrice, 1)
                                          , inGoodsKindId        := tmp.GoodsKindId
                                          , inUserId             := vbUserId

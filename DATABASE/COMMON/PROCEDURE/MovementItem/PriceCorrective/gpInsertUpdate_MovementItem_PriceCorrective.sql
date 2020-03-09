@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_PriceCorrective()
 
--- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PriceCorrective (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PriceCorrective (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PriceCorrective (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PriceCorrective(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена -  на сколько корректируется("+"уменьшается или "-"увеличивается) 
-    IN inPriceFrom           TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
+    IN inPriceTax_calc       TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -32,7 +32,7 @@ BEGIN
                                           , inGoodsId            := inGoodsId
                                           , inAmount             := inAmount
                                           , inPrice              := inPrice
-                                          , inPriceFrom          := inPriceFrom
+                                          , inPriceTax_calc      := inPriceTax_calc
                                           , ioCountForPrice      := ioCountForPrice
                                           , inGoodsKindId        := inGoodsKindId
                                           , inUserId             := vbUserId

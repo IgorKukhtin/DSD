@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PriceCorrective(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена -  на сколько корректируется("+"уменьшается или "-"увеличивается) 
-    IN inPriceFrom           TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
+    IN inPriceTax_calc       TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -33,10 +33,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
      -- сохранили свойство <Цена продажи (корр.)>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceFrom(), ioId, inPriceFrom);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(), ioId, inPriceTax_calc);
 
      -- сохранили свойство <Цена продажи (новая)>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTo(), ioId, inPriceFrom - inPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTo(), ioId, inPriceTax_calc - inPrice);
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);

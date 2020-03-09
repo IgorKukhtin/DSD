@@ -82,6 +82,7 @@ BEGIN
                                                       , inGoodsId            := MovementItem.ObjectId
                                                       , inAmount             := MovementItem.Amount
                                                       , inPrice              := COALESCE (MIFloat_Price.ValueData, 0)
+                                                      , inPriceTax_calc      := COALESCE (MIFloat_PriceTax_calc.ValueData, 0)
                                                       , ioCountForPrice      := COALESCE (MIFloat_CountForPrice.ValueData, 0)
                                                       , inGoodsKindId        := MILinkObject_GoodsKind.ObjectId
                                                       , inUserId             := vbUserId
@@ -90,6 +91,9 @@ BEGIN
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
+          LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                      ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
+                                     AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()

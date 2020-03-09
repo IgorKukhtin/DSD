@@ -139,15 +139,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PriceFrom: TcxGridDBColumn
+          object PriceTax_calc: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'PriceFrom'
+            DataBinding.FieldName = 'PriceTax_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1082#1086#1088#1088'.)'
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1082#1086#1090#1086#1088#1072#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1091#1077#1090#1089#1103
             Width = 74
           end
           object PriceTo: TcxGridDBColumn
@@ -2849,10 +2849,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceFrom'
+        Name = 'inPriceTax_calc'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'PriceFrom'
+        ComponentItem = 'PriceTax_calc'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

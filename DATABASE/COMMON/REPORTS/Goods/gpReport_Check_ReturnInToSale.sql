@@ -199,7 +199,7 @@ BEGIN
                       , tmpMIReturn.PartnerId                              AS PartnerId
                       , tmpMIReturn.ContractId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)      AS GoodsKindId
-                      , COALESCE (MIFloat_PriceFrom.ValueData, MIFloat_Price.ValueData, 0) AS Price
+                      , COALESCE (MIFloat_PriceTax_calc.ValueData, MIFloat_Price.ValueData, 0) AS Price
 
                       , CASE WHEN MISale.isErased = TRUE OR Movement_Sale.StatusId <> zc_Enum_Status_Complete() THEN 0 ELSE MISale.ObjectId END AS GoodsId_Sale
                       , MovementLinkObject_To.ObjectId                     AS PartnerId_Sale
@@ -213,9 +213,9 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                ON MIFloat_Price.MovementItemId = tmpMIReturn.MI_Id
                                               AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                   LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                               ON MIFloat_PriceFrom.MovementItemId = tmpMIReturn.MI_Id
-                                              AND MIFloat_PriceFrom.DescId         = zc_MIFloat_PriceFrom()
+                   LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                               ON MIFloat_PriceTax_calc.MovementItemId = tmpMIReturn.MI_Id
+                                              AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
                    --SALE 
                    LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMIReturn.MovementId_sale
                    LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMIReturn.MovementItemId_sale

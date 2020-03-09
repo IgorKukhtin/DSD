@@ -43,6 +43,7 @@ BEGIN
                                                           , inGoodsId            := inDocumentTaxKindId
                                                           , inAmount             := 0
                                                           , inPrice              := 0
+                                                          , inPriceTax_calc      := 0
                                                           , ioCountForPrice      := 1
                                                           , inGoodsKindId        := NULL
                                                           , inUserId             := vbUserId

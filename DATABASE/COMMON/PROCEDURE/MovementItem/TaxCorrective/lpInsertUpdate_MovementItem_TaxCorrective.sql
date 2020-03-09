@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_TaxCorrective()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TaxCorrective(integer, integer, integer, tfloat, tfloat, tfloat, integer, integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TaxCorrective (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TaxCorrective (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TaxCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TaxCorrective(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
+    IN inPriceTax_calc       TFloat    , -- Цена продажи (корр.) - оригинальная, которая корректируется
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -27,6 +29,12 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
+     -- сохранили свойство <Цена продажи (корр.)>
+     IF inPriceTax_calc <> 0
+     THEN
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceTax_calc(), ioId, inPriceTax_calc);
+     END IF;
+
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
@@ -36,7 +44,7 @@ BEGIN
 
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0

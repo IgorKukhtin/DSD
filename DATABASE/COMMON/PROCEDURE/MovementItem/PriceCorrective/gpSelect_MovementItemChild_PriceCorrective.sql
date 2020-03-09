@@ -80,16 +80,16 @@ BEGIN
    , tmpMIParent_MIF AS (SELECT MIF.*
                          FROM MovementItemFloat AS MIF
                          WHERE MIF.MovementItemId IN (SELECT DISTINCT tmpMI_all.MI_ParentId FROM tmpMI_all)
-                           AND MIF.DescId         = zc_MIFloat_Price()
+                           AND MIF.DescId         = zc_MIFloat_PriceTax_calc()
                         )
    , tmpMI AS (SELECT tmpMI_all.*
                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                    , COALESCE (MIFloat_Price.ValueData, 0)         AS Price
+                    , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)  AS PriceTax_calc
                FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                     LEFT JOIN tmpMI_all ON tmpMI_all.isErased = tmpIsErased.isErased
-                    LEFT JOIN tmpMIParent_MIF AS MIFloat_Price
-                                              ON MIFloat_Price.MovementItemId = tmpMI_all.MI_ParentId
-                                             AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                    LEFT JOIN tmpMIParent_MIF AS MIFloat_PriceTax_calc
+                                              ON MIFloat_PriceTax_calc.MovementItemId = tmpMI_all.MI_ParentId
+                                             AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
                     LEFT JOIN tmpMIParent_MILO AS MILinkObject_GoodsKind
                                                ON MILinkObject_GoodsKind.MovementItemId = tmpMI_all.MI_ParentId
                                               AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
@@ -138,7 +138,7 @@ BEGIN
                    AND (MISale.isErased = TRUE
                      OR MISale.ObjectId                               <> tmpMI.GoodsId
                      OR (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis() AND MILinkObject_GoodsKind.ObjectId <> 0)
-                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
+                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.PriceTax_calc
                      OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
                      OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
                      OR (COALESCE (vbContractId, 0)                   <> COALESCE (MLO_Contract_Tax.ObjectId, 0) AND Movement_Tax.Id > 0)
@@ -151,7 +151,7 @@ BEGIN
             , CASE WHEN MISale.isErased = TRUE
                      OR MISale.ObjectId <> tmpMI.GoodsId
                      OR (COALESCE (MILinkObject_GoodsKind.ObjectId, 0) <> tmpMI.GoodsKindId AND tmpMI.GoodsKindId <> zc_GoodsKind_Basis() AND MILinkObject_GoodsKind.ObjectId <> 0)
-                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.Price
+                     OR COALESCE (MIFloat_Price.ValueData, 0)         <> tmpMI.PriceTax_calc
                      OR COALESCE (vbPartnerId, 0)                     <> COALESCE (Object_To.Id, 0)
                      OR COALESCE (vbContractId, 0)                    <> COALESCE (MLO_Contract_Sale.ObjectId, 0)
                      OR (COALESCE (vbContractId, 0)                   <> COALESCE (MLO_Contract_Tax.ObjectId, 0) AND Movement_Tax.Id > 0)

@@ -1329,6 +1329,7 @@ end if;
                                                        , inGoodsId      := _tmpMI.GoodsId
                                                        , inAmount       := _tmpMI.Amount
                                                        , inPrice        := _tmpMI.Price
+                                                       , inPriceTax_calc:= 0
                                                        , ioCountForPrice:= _tmpMI.CountForPrice
                                                        , inGoodsKindId  := _tmpMI.GoodsKindId
                                                        , inUserId       := inUserId)

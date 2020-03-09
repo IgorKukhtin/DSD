@@ -24,9 +24,18 @@ AS
 $BODY$
   DECLARE vbOperDate     TDateTime;
   DECLARE vbOperDate_rus TDateTime;
+   DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
+
+     -- определяются параметры для <Корректировка>
+     vbDocumentTaxKindId:= (SELECT MLO_DocumentTaxKind.ObjectId
+                            FROM MovementLinkObject AS MLO_DocumentTaxKind
+                            WHERE MLO_DocumentTaxKind.MovementId = inMovementId
+                              AND MLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                           );
+
 
      --
      IF inShowAll THEN
@@ -188,7 +197,7 @@ BEGIN
                    END AS TFloat)                   AS AmountSumm
 
            , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
-           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)   :: TFloat AS PriceTax_calc
+           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)    :: TFloat AS PriceTax_calc
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -254,10 +263,18 @@ BEGIN
             LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
                                            AND tmpMITax1.GoodsId     = Object_Goods.Id
                                            AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
-                                           AND tmpMITax1.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax1.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                       , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                            THEN MIFloat_PriceTax_calc.ValueData
+                                                                            ELSE MIFloat_Price.ValueData
+                                                                       END
             LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
                                            AND tmpMITax2.GoodsId     = Object_Goods.Id
-                                           AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax2.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                       , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                            THEN MIFloat_PriceTax_calc.ValueData
+                                                                            ELSE MIFloat_Price.ValueData
+                                                                       END
                                            AND tmpMITax1.GoodsId     IS NULL
             ;
      ELSE
@@ -309,7 +326,7 @@ BEGIN
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                   AS AmountSumm
            , COALESCE (MIFloat_SummTaxDiff_calc.ValueData, 0) :: TFloat AS SummTaxDiff_calc
-           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)   :: TFloat AS PriceTax_calc
+           , COALESCE (MIFloat_PriceTax_calc.ValueData, 0)    :: TFloat AS PriceTax_calc
            , MovementItem.isErased                  AS isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -372,10 +389,18 @@ BEGIN
             LEFT JOIN tmpMITax AS tmpMITax1 ON tmpMITax1.Kind        = 1
                                            AND tmpMITax1.GoodsId     = Object_Goods.Id
                                            AND tmpMITax1.GoodsKindId = Object_GoodsKind.Id
-                                           AND tmpMITax1.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax1.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                       , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                            THEN MIFloat_PriceTax_calc.ValueData
+                                                                            ELSE MIFloat_Price.ValueData
+                                                                       END
             LEFT JOIN tmpMITax AS tmpMITax2 ON tmpMITax2.Kind        = 2
                                            AND tmpMITax2.GoodsId     = Object_Goods.Id
-                                           AND tmpMITax2.Price       = MIFloat_Price.ValueData
+                                           AND tmpMITax2.Price       = CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                                                       , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                                                                            THEN MIFloat_PriceTax_calc.ValueData
+                                                                            ELSE MIFloat_Price.ValueData
+                                                                       END
                                            AND tmpMITax1.GoodsId     IS NULL
             ;
 

@@ -48,6 +48,36 @@ BEGIN
      --
      vbStep:= 1;
 
+     -- !!!проверка!!!
+     IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_PriceCorrective())
+        AND EXISTS (SELECT 1
+                    FROM MovementItem AS MI
+                         LEFT JOIN MovementItemFloat AS MIF_PriceTax_calc ON MIF_PriceTax_calc.MovementItemId = MI.Id AND MIF_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
+                    WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                      AND COALESCE (MIF_PriceTax_calc.ValueData, 0) = 0
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для товара <%> <%> не установлена <Цена продажи, которая корректируется>.'
+                       , lfGet_Object_ValueData ((SELECT MI.ObjectId
+                                                  FROM MovementItem AS MI
+                                                       LEFT JOIN MovementItemFloat AS MIF_PriceTax_calc ON MIF_PriceTax_calc.MovementItemId = MI.Id AND MIF_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
+                                                  WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                                                    AND COALESCE (MIF_PriceTax_calc.ValueData, 0) = 0
+                                                  ORDER BY MI.Id
+                                                  LIMIT 1
+                                                ))
+                       , lfGet_Object_ValueData_sh ((SELECT MILinkObject_GoodsKind.ObjectId
+                                                     FROM MovementItem AS MI
+                                                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                          LEFT JOIN MovementItemFloat AS MIF_PriceTax_calc ON MIF_PriceTax_calc.MovementItemId = MI.Id AND MIF_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
+                                                     WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.isErased = FALSE
+                                                       AND COALESCE (MIF_PriceTax_calc.ValueData, 0) = 0
+                                                     ORDER BY MI.Id
+                                                     LIMIT 1
+                                                   ))
+                        ;
+     END IF;
+
      -- !!!замена!!!
      inStartDateSale:= (SELECT CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) THEN inStartDateSale ELSE DATE_TRUNC ('MONTH', Movement.OperDate) - INTERVAL '4 MONTH' END FROM Movement WHERE Movement.Id = inMovementId);
 
@@ -66,7 +96,7 @@ BEGIN
             SELECT MI.Id, MI.ObjectId AS GoodsId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                  , CASE WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_PriceCorrective()) THEN 0 ELSE MI.Amount END AS OperCount
                  , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIF_AmountPartner.ValueData WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MI.Amount ELSE 0 END AS OperCount_Partner
-                 , COALESCE (CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIF_PriceFrom.ValueData ELSE MIF_Price.ValueData END, 0) AS Price_original
+                 , COALESCE (CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIF_PriceTax_calc.ValueData ELSE MIF_Price.ValueData END, 0) AS Price_original
                  , COALESCE (MIF_MovementId.ValueData, 0) AS MovementId_sale
                  , MI.isErased
             FROM MovementItem AS MI
@@ -74,7 +104,7 @@ BEGIN
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind ON MILinkObject_GoodsKind.MovementItemId = MI.Id AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                  LEFT JOIN MovementItemFloat AS MIF_AmountPartner ON MIF_AmountPartner.MovementItemId = MI.Id AND MIF_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                  LEFT JOIN MovementItemFloat AS MIF_Price ON MIF_Price.MovementItemId = MI.Id AND MIF_Price.DescId = zc_MIFloat_Price()
-                 LEFT JOIN MovementItemFloat AS MIF_PriceFrom ON MIF_PriceFrom.MovementItemId = MI.Id AND MIF_PriceFrom.DescId = zc_MIFloat_PriceFrom()
+                 LEFT JOIN MovementItemFloat AS MIF_PriceTax_calc ON MIF_PriceTax_calc.MovementItemId = MI.Id AND MIF_PriceTax_calc.DescId = zc_MIFloat_PriceTax_calc()
                  LEFT JOIN MovementItemFloat AS MIF_MovementId ON MIF_MovementId.MovementItemId = MI.Id AND MIF_MovementId.DescId = zc_MIFloat_MovementId()
             WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master()
               -- AND MI.isErased = FALSE
@@ -188,7 +218,7 @@ BEGIN
               , tmpMI_ReturnIn AS (SELECT tmpMI_sale.MovementId_sale
                                         , tmpMI_sale.GoodsId
                                         , tmpMI_sale.GoodsKindId
-                                        , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceFrom.ValueData ELSE MIFloat_Price.ValueData END AS Price_find
+                                        , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceTax_calc.ValueData ELSE MIFloat_Price.ValueData END AS Price_find
                                         , SUM (MovementItem.Amount) AS Amount_return
                                    FROM tmpMI_sale
                                         -- !!!обязательно по документу!!!
@@ -209,15 +239,15 @@ BEGIN
                                                                     ON MIFloat_Price.MovementItemId = MovementItem.ParentId -- !!!из  "главного"!!!
                                                                    AND MIFloat_Price.DescId         = zc_MIFloat_Price()
                                                                    -- AND MIFloat_Price.ValueData      = tmpMI_sale.Price_original
-                                        LEFT JOIN MovementItemFloat AS MIFloat_PriceFrom
-                                                                    ON MIFloat_PriceFrom.MovementItemId = MovementItem.ParentId
-                                                                   AND MIFloat_PriceFrom.DescId         = zc_MIFloat_PriceFrom()
+                                        LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                                                    ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.ParentId
+                                                                   AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
 
                                    WHERE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) = tmpMI_sale.GoodsKindId
                                    GROUP BY tmpMI_sale.MovementId_sale
                                           , tmpMI_sale.GoodsId
                                           , tmpMI_sale.GoodsKindId
-                                          , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceFrom.ValueData ELSE MIFloat_Price.ValueData END
+                                          , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MIFloat_PriceTax_calc.ValueData ELSE MIFloat_Price.ValueData END
                                   )
                 -- продажа МИНУС уже проведенный возврат от пок.
               , tmpResult AS (SELECT tmpMI_sale.MovementItemId
@@ -852,7 +882,7 @@ BEGIN
             -- || ' ' || DATE (vbEndDate) :: TVarChar
                      ;
 
-if inUserId = 5 AND 1=1
+if inUserId = 5 AND 1=0
 then
     RAISE EXCEPTION 'Admin - Errr _end   % %', outMessageText, (SELECT MAX (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar || ' _ ' || MIN (_tmpResult_ReturnIn_Auto.Amount) :: TVarChar FROM _tmpResult_ReturnIn_Auto);
     -- 'Повторите действие через 3 мин.'

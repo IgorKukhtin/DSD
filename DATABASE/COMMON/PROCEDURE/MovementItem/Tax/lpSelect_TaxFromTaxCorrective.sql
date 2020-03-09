@@ -27,16 +27,16 @@ BEGIN
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), MIFloat_Price.ValueData) AS LineCount1
                        , COUNT(*) OVER (PARTITION BY MovementItem.ObjectId, MIFloat_Price.ValueData)                                                AS LineCount2
                   FROM MovementItem
-                     LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                     LEFT JOIN MovementItemFloat AS MIFloat_NPP
-                                                 ON MIFloat_NPP.MovementItemId = MovementItem.Id
-                                                AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
+                       LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                       LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                       LEFT JOIN MovementItemFloat AS MIFloat_NPP
+                                                   ON MIFloat_NPP.MovementItemId = MovementItem.Id
+                                                  AND MIFloat_NPP.DescId = zc_MIFloat_NPP()
                   WHERE MovementItem.MovementId  = inMovementId
                     AND MovementItem.DescId      = zc_MI_Master()
                     AND MovementItem.isErased    = FALSE
