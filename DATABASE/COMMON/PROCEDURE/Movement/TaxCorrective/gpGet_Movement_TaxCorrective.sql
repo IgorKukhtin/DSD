@@ -370,6 +370,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, Boolean, TDateTime, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.03.20         *
  17.12.18         * InvNumberRegistered
  01.04.18         * 
  04.12.15         * add isPartner
