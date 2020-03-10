@@ -107,10 +107,15 @@ BEGIN
                                                         ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                                        AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
 
+                              LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                                        ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                                       AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+
                          WHERE Movement.OperDate BETWEEN date_trunc('month', inOperDate) AND date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.DescId = zc_Movement_TechnicalRediscount()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False), 0);
+                           AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
+                           AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False), 0);
 
      -- сохранили свойство <Штрафах по техническому переучету>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaTechnicalRediscount(), vbId, CASE WHEN vbSumma  > 0 THEN 0 ELSE vbSumma END);

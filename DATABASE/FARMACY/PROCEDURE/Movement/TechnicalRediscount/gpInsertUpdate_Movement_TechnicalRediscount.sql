@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат поставщику>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TechnicalRediscount(
     IN inUnitId              Integer   , -- Подразделение
     IN inComment             TVarChar  , -- Примечание
     IN inisRedCheck          Boolean  ,  -- Красный чек
+    IN inisAdjustment        Boolean  ,  -- Корректировка основного переучета
     IN inSession             TVarChar    -- сессия пользователя
 )                               
 RETURNS Integer AS
@@ -31,13 +32,14 @@ BEGIN
                                                         , inUnitId           := inUnitId
                                                         , inComment          := inComment
                                                         , inisRedCheck       := inisRedCheck
+                                                        , inisAdjustment     := inisAdjustment
                                                         , inUserId           := vbUserId
                                                          );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
   
-ALTER FUNCTION gpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Boolean, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.

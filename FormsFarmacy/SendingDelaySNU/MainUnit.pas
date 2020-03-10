@@ -114,6 +114,8 @@ begin
 end;
 
 procedure TMainForm.btnAllClick(Sender: TObject);
+var
+  Ini: TIniFile;
 begin
   try
     Add_Log('');
@@ -121,6 +123,13 @@ begin
     Add_Log('Oтправка сообщений  по задержке доставк');
 
     Application.ProcessMessages;
+
+    Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingDelaySNU.ini');
+    try
+      Ini.WriteDateTime('Options', 'Date', FDate);
+    finally
+      Ini.Free;
+    end;
 
   except
     on E: Exception do
@@ -146,7 +155,7 @@ begin
   if qryReport_Upload.IsEmpty then Exit;
   Add_Log('Начало формирования текста');
 
-  FMessageText := 'Перемещения СУН'#10;
+  FMessageText := 'Перемещения СУН:'#10;
 
   qryReport_Upload.First;
   while not qryReport_Upload.Eof do
@@ -160,9 +169,9 @@ begin
   end;
 
   case FIterval of
-    1 : FMessageText := FMessageText + 'получателю не было доставлено в течении 24 часов!';
-    2 : FMessageText := FMessageText + 'получателю не было доставлено в течении 48 часов!';
-    3 : FMessageText := FMessageText + 'получателю не было доставлено в течении 72 часов!'#10'Товар считается утерянным и переходит на баланс транспортного отдела';
+    1 : FMessageText := FMessageText + '<p><font size="4">получателю не было доставлено в течении 24 часов!</font></p>';
+    2 : FMessageText := FMessageText + '<p><font size="4">получателю не было доставлено в течении 48 часов!</font></p>';
+    3 : FMessageText := FMessageText + '<p><font size="4">получателю не было доставлено в течении 72 часов!'#10'Товар считается утерянным и переходит на баланс транспортного отдела</font></p>';
   end;
 
 end;
@@ -223,7 +232,6 @@ begin
     Ini.WriteString('Mail', 'Mail3', FMail3);
 
     FDate := Ini.ReadDateTime('Options', 'Date', Now);
-    Ini.WriteDateTime('Options', 'Date', FDate);
   finally
     Ini.free;
   end;

@@ -22,7 +22,6 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       inherited cxGrid: TcxGrid
         Width = 915
         Height = 332
-        ExplicitTop = -6
         ExplicitWidth = 915
         ExplicitHeight = 332
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -366,12 +365,20 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
       Width = 426
     end
     object cbisRedCheck: TcxCheckBox
-      Left = 548
+      Left = 338
       Top = 1
       Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 100
+      Width = 87
+    end
+    object cbAdjustment: TcxCheckBox
+      Left = 433
+      Top = 1
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
+      Properties.ReadOnly = True
+      TabOrder = 11
+      Width = 216
     end
   end
   inherited ActionList: TActionList
@@ -725,6 +732,13 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Component = cbisRedCheck
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAdjustment'
+        Value = Null
+        Component = cbAdjustment
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -779,6 +793,14 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAdjustment'
+        Value = Null
+        Component = cbAdjustment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -811,6 +833,7 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
         Control = edComment
       end
       item
+        Control = cbAdjustment
       end
       item
       end

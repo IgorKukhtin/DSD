@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TechnicalRediscount(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
              , TotalDiff TFloat, TotalDiffSumm TFloat
-             , Comment TVarChar, isRedCheck Boolean
+             , Comment TVarChar, isRedCheck Boolean, isAdjustment Boolean
              )
 AS
 $BODY$
@@ -60,6 +60,7 @@ BEGIN
 
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
+           , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
 
        FROM (SELECT Movement.Id
                   , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -91,6 +92,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                       ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                      AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                      ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                     AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
             ;
 
 END;
@@ -105,5 +109,4 @@ ALTER FUNCTION gpSelect_Movement_TechnicalRediscount (TDateTime, TDateTime, Bool
 */
 
 -- тест
---
-SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.01.2020', inEndDate:= '01.03.2020', inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_TechnicalRediscount (inStartDate:= '23.01.2020', inEndDate:= '01.03.2020', inIsErased:= FALSE, inSession:= '3')

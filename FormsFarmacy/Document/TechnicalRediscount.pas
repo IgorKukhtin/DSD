@@ -50,6 +50,7 @@ type
     actChoiceGoods: TOpenChoiceForm;
     dxBarButton2: TdxBarButton;
     MinExpirationDate: TcxGridDBColumn;
+    cbAdjustment: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TechnicalRediscount (Integer, TVarChar, TDateTime, Integer, TVarChar, Boolean, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TechnicalRediscount(
     IN inUnitId              Integer   , -- Подразделение
     IN inComment             TVarChar  , -- Примечание
     IN inisRedCheck          Boolean  ,  -- Красный чек
+    IN inisAdjustment        Boolean  ,  -- Корректировка основного переучета
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -34,6 +35,8 @@ BEGIN
 
      -- сохранили <Красный чек>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_RedCheck(), ioId, inisRedCheck);
+     -- сохранили <Корректировка основного переучета>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Adjustment(), ioId, inisAdjustment);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

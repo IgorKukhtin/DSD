@@ -218,10 +218,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_Pharmacist() RETURNS integer AS $B
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_Pharmacist', 'Только фармацевтам'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Pharmacist');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Adjustment() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Adjustment'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Adjustment', ' Корректировка'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Adjustment');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 10.03.20                                                                                    * zc_MovementBoolean_Adjustment
  06.03.20                                                                                    * zc_MovementBoolean_Pharmacist
  05.03.20                                                                                    * zc_MovementBoolean_Poll
  26.02.20                                                                                    * zc_MovementBoolean_RedCheck
