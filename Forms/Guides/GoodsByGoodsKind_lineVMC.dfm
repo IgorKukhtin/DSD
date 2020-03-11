@@ -95,6 +95,17 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             Options.Editing = False
             Width = 172
           end
+<<<<<<< HEAD
+=======
+          object GoodsTypeKindName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTypeKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+            Width = 55
+          end
+>>>>>>> origin/master
           object WmsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057'*'
             DataBinding.FieldName = 'WmsCode'

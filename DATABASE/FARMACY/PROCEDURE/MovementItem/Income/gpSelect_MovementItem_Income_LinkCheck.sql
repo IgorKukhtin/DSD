@@ -95,15 +95,23 @@ BEGIN
      ---
      vbMessageText := '';
      -- информация по товарам Цена которых менее 1,5 грн
-     vbMessageText := (SELECT STRING_AGG ('(' || tmp.GoodsCode ||') '||tmp.GoodsName, '; ' ORDER BY tmp.GoodsName)
-                       FROM gpSelect_MovementItem_Income (inMovementId := inMovementId  , inShowAll := FALSE , inIsErased := FALSE ,  inSession := inSession) as tmp
-                       WHERE tmp.Price <= 1.5
+     vbMessageText := (SELECT STRING_AGG ('(' || Object_Goods.ObjectCode ||') '||Object_Goods.ValueData, '; ' ORDER BY Object_Goods.ValueData)
+                       FROM MovementItem 
+                            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                                        AND MIFloat_Price.ValueData <= 1.5
+                            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                       WHERE MovementItem.MovementId = inMovementId
+                         AND MovementItem.isErased   = FALSE
+                         AND MovementItem.DescId     = zc_MI_Master()
                        ) :: Text;
 
      IF COALESCE (vbMessageText, '') <> ''
      THEN 
-         outMessageText :=  outMessageText ||' Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 1,5 грн. ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!! '||vbMessageText;
-     END IF; 
+         outMessageText :=  outMessageText ||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 1,5 грн.'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||'ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!!'||Chr(13)||Chr(10)||Chr(13)||Chr(10)||vbMessageText;
+     END IF;
+     
 
 END;
 $BODY$
@@ -114,5 +122,6 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  29.10.18         *
 */
--- select * from gpSelect_MovementItem_Income_LinkCheck (inMovementId := 11459485  ,  inSession := '3');  
+-- select * from gpSelect_MovementItem_Income_LinkCheck (inMovementId := 18094225  ,  inSession := '3');  
 -- vbJuridicalId = 183312
+--select * from gpSelect_MovementItem_Income_LinkCheck (inMovementId := 18094225  ,  inSession := '3'); 

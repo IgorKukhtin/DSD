@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsBrandName TVarChar
              , isCheck_basis Boolean, isCheck_main Boolean
-             , GoodsTypeKindId Integer
+             , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , CodeCalc TVarChar      -- Код ВМС
 
              , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
@@ -91,44 +91,55 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
               )
 AS
 $BODY$
+   DECLARE vbName_Sh  TVarChar;
+   DECLARE vbName_Nom TVarChar;
+   DECLARE vbName_Ves TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Account());
 
+     -- Штучный
+     vbName_Sh := (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_Enum_GoodsTypeKind_Sh());
+     -- Номинальный
+     vbName_Nom:= (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_Enum_GoodsTypeKind_Nom());
+     -- Весовой
+     vbName_Ves:= (SELECT Object.ValueData FROM Object WHERE Object.Id = zc_Enum_GoodsTypeKind_Ves());
+
+
      RETURN QUERY
      WITH
      tmpGoodsByGoodsKind AS (SELECT *
+                                  , zfCalc_Text_replace (zfCalc_Text_replace (tmp.GoodsName, CHR(39), '`'), '"', '`') AS GoodsName_repl
                              FROM gpSelect_Object_GoodsByGoodsKind_VMC (inRetail1Id, inRetail2Id , inRetail3Id, inRetail4Id, inRetail5Id, inRetail6Id, inSession) AS tmp
                             )
  
 --WmsNameCalc = tmpGoods.name + WmsCodeCalc
      , tmpGoodsByGoodsKind_line AS (-- Штучный
                                   SELECT *
-                                       , (tmpGoodsByGoodsKind.GoodsName|| '_'||tmpGoodsByGoodsKind.WmsCodeCalc_Sh ):: TVarChar AS WmsNameCalc
-                                       , tmpGoodsByGoodsKind.WmsCodeCalc_Sh   ::Integer                    AS sku_code
-                                       , tmpGoodsByGoodsKind.CodeCalc_Sh                                   AS CodeCalc
-                                       , zc_Enum_GoodsTypeKind_Sh()                                        AS GoodsTypeKindId
-
-                                  FROM tmpGoodsByGoodsKind
-                                  WHERE tmpGoodsByGoodsKind.isGoodsTypeKind_Sh  = TRUE
+                                       , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Sh) :: TVarChar AS WmsNameCalc
+                                       , tmp.WmsCodeCalc_Sh   ::Integer   AS sku_code
+                                       , tmp.CodeCalc_Sh                  AS CodeCalc
+                                       , zc_Enum_GoodsTypeKind_Sh()       AS GoodsTypeKindId
+                                  FROM tmpGoodsByGoodsKind AS tmp
+                                  WHERE tmp.isGoodsTypeKind_Sh  = TRUE
                                  UNION ALL
                                   -- Номинальный
                                   SELECT *
-                                       , (tmpGoodsByGoodsKind.GoodsName|| '_'||tmpGoodsByGoodsKind.WmsCodeCalc_Nom ):: TVarChar AS WmsNameCalc
-                                       , tmpGoodsByGoodsKind.WmsCodeCalc_Nom  ::Integer                     AS sku_code
-                                       , tmpGoodsByGoodsKind.CodeCalc_Nom                                   AS CodeCalc
-                                       , zc_Enum_GoodsTypeKind_Nom()                                        AS GoodsTypeKindId
-                                  FROM tmpGoodsByGoodsKind
-                                  WHERE tmpGoodsByGoodsKind.isGoodsTypeKind_Nom  = TRUE
+                                       , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Nom) :: TVarChar AS WmsNameCalc
+                                       , tmp.WmsCodeCalc_Nom  ::Integer   AS sku_code
+                                       , tmp.CodeCalc_Nom                 AS CodeCalc
+                                       , zc_Enum_GoodsTypeKind_Nom()      AS GoodsTypeKindId
+                                  FROM tmpGoodsByGoodsKind AS tmp
+                                  WHERE tmp.isGoodsTypeKind_Nom  = TRUE
                                  UNION ALL
                                   -- Весовой
                                   SELECT *
-                                       , (tmpGoodsByGoodsKind.GoodsName|| '_'||tmpGoodsByGoodsKind.WmsCodeCalc_Ves ):: TVarChar AS WmsNameCalc
-                                       , tmpGoodsByGoodsKind.WmsCodeCalc_Ves  ::Integer                     AS sku_code
-                                       , tmpGoodsByGoodsKind.CodeCalc_Ves                                   AS CodeCalc
-                                       , zc_Enum_GoodsTypeKind_Ves()                                        AS GoodsTypeKindId
-                                  FROM tmpGoodsByGoodsKind
-                                  WHERE tmpGoodsByGoodsKind.isGoodsTypeKind_Ves  = TRUE
+                                       , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Ves) :: TVarChar AS WmsNameCalc
+                                       , tmp.WmsCodeCalc_Ves  ::Integer   AS sku_code
+                                       , tmp.CodeCalc_Ves                 AS CodeCalc
+                                       , zc_Enum_GoodsTypeKind_Ves()      AS GoodsTypeKindId
+                                  FROM tmpGoodsByGoodsKind AS tmp
+                                  WHERE tmp.isGoodsTypeKind_Ves  = TRUE
                                  UNION ALL
                                   -- остальные товары (для показать все)
                                   SELECT *
@@ -137,7 +148,7 @@ BEGIN
                                        , '' :: TVarChar AS CodeCalc
                                        , 0              AS GoodsTypeKindId
                                   FROM tmpGoodsByGoodsKind
-                                  WHERE (tmpGoodsByGoodsKind.isGoodsTypeKind_Sh  <> TRUE
+                                  WHERE (tmpGoodsByGoodsKind.isGoodsTypeKind_Sh <> TRUE
                                     AND tmpGoodsByGoodsKind.isGoodsTypeKind_Ves <> TRUE
                                     AND tmpGoodsByGoodsKind.isGoodsTypeKind_Nom <> TRUE)
                                     AND inisShowAll = TRUE
@@ -217,6 +228,7 @@ BEGIN
            , tmpGoodsByGoodsKind.isCheck_main
 
            , tmpGoodsByGoodsKind.GoodsTypeKindId
+           , Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
 
            , tmpGoodsByGoodsKind.CodeCalc                           -- расчет: код на упак+вид+бренд+категория
 /*           , tmpGoodsByGoodsKind.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
@@ -309,6 +321,7 @@ BEGIN
             , tmpGoodsByGoodsKind.sku_code    :: Integer
 
        FROM tmpGoodsByGoodsKind_line AS tmpGoodsByGoodsKind
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = tmpGoodsByGoodsKind.GoodsTypeKindId  
       ;
 
 END;
