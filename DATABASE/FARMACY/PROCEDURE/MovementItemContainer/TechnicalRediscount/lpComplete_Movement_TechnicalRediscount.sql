@@ -52,36 +52,36 @@ BEGIN
                                   ON MovementString_Comment.MovementId = Movement.Id
                                  AND MovementString_Comment.DescId = zc_MovementString_Comment()
     WHERE Movement.Id = inMovementId;
-    
+
     IF vbComment = ''
     THEN
-        RAISE EXCEPTION 'Ошибка. Не заполнено примечание.';    
+        RAISE EXCEPTION 'Ошибка. Не заполнено примечание.';
     END IF;
-    
-    SELECT Object_CommentTR.ValueData                                                        AS CommentTR  
+
+    SELECT Object_CommentTR.ValueData                                                        AS CommentTR
          , SUM(CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END)        AS Amount
          , SUM(CASE WHEN MovementItem.Amount < 0 THEN -1.0 * MovementItem.Amount ELSE 0 END) AS Amount
     INTO vbCommentTR, vbAmountIn, vbAmountOut
     FROM MovementItem
-                                     
+
          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
                                           AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
          INNER JOIN Object AS Object_CommentTR
                            ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
-                                  
+
          INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
-                                  ON ObjectBoolean_CommentTR_Resort.ObjectId = Object_CommentTR.Id 
+                                  ON ObjectBoolean_CommentTR_Resort.ObjectId = Object_CommentTR.Id
                                  AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
                                  AND ObjectBoolean_CommentTR_Resort.ValueData = TRUE
-                                     
+
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE
     GROUP BY Object_CommentTR.ValueData
-    HAVING SUM(MovementItem.Amount) <> 0;    
+    HAVING SUM(MovementItem.Amount) <> 0;
 
-    IF (COALESCE(vbCommentTR,'') <> '') 
+    IF (COALESCE(vbCommentTR,'') <> '')
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию кол-во излишка <%> не равно кол-ву недостачи <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
     END IF;
@@ -155,6 +155,44 @@ BEGIN
 
                 LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.GoodsId) AS T1;
+
+      -- Контроль по сумме
+    SELECT Object_CommentTR.ValueData                                                        AS CommentTR
+         , Abs(SUM(MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)))             AS Amount
+         , COALESCE (ObjectFloat_DifferenceSum.ValueData, 0)                                 AS DifferenceSum
+    INTO vbCommentTR, vbAmountIn, vbAmountOut
+    FROM MovementItem
+
+         LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                     ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+         INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                           ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+         INNER JOIN Object AS Object_CommentTR
+                           ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+         INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_DifferenceSum
+                                  ON ObjectBoolean_CommentTR_DifferenceSum.ObjectId = Object_CommentTR.Id
+                                 AND ObjectBoolean_CommentTR_DifferenceSum.DescId = zc_ObjectBoolean_CommentTR_DifferenceSum()
+                                 AND ObjectBoolean_CommentTR_DifferenceSum.ValueData = TRUE
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_DifferenceSum
+                               ON ObjectFloat_DifferenceSum.ObjectId = Object_CommentTR.Id
+                              AND ObjectFloat_DifferenceSum.DescId = zc_ObjectFloat_CommentTR_DifferenceSum()
+
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.isErased   = FALSE
+    GROUP BY Object_CommentTR.ValueData
+           , COALESCE (ObjectFloat_DifferenceSum.ValueData, 0)
+    HAVING (Abs(SUM(MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0))) - COALESCE (ObjectFloat_DifferenceSum.ValueData, 0)) > 0;
+
+    IF (COALESCE(vbCommentTR,'') <> '')
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию разница суммы <%> превышает допустимую сумму <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
+    END IF;
 
       -- Пересчитываем количество
     PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff(inMovementId);

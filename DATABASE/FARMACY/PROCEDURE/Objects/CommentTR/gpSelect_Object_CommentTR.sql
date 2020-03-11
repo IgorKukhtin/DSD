@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CommentTR(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isExplanation Boolean
              , isResort Boolean
+             , isDifferenceSum Boolean
+             , DifferenceSum TFloat
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -15,12 +17,14 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Area()());
 
    RETURN QUERY 
-   SELECT Object_CommentTR.Id                           AS Id 
-        , Object_CommentTR.ObjectCode                   AS Code
-        , Object_CommentTR.ValueData                    AS Name
-        , ObjectBoolean_CommentTR_Explanation.ValueData AS Explanation
-        , ObjectBoolean_CommentTR_Resort.ValueData      AS Resort
-        , Object_CommentTR.isErased                  AS isErased
+   SELECT Object_CommentTR.Id                             AS Id 
+        , Object_CommentTR.ObjectCode                     AS Code
+        , Object_CommentTR.ValueData                      AS Name
+        , ObjectBoolean_CommentTR_Explanation.ValueData   AS isExplanation
+        , ObjectBoolean_CommentTR_Resort.ValueData        AS isResort
+        , ObjectBoolean_CommentTR_DifferenceSum.ValueData AS isDifferenceSum
+        , ObjectFloat_DifferenceSum.ValueData             AS DifferenceSum
+        , Object_CommentTR.isErased                       AS isErased
    FROM Object AS Object_CommentTR
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Explanation
@@ -30,6 +34,14 @@ $BODY$BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
                                 ON ObjectBoolean_CommentTR_Resort.ObjectId = Object_CommentTR.Id 
                                AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CommentTR_DifferenceSum
+                                ON ObjectBoolean_CommentTR_DifferenceSum.ObjectId = Object_CommentTR.Id 
+                               AND ObjectBoolean_CommentTR_DifferenceSum.DescId = zc_ObjectBoolean_CommentTR_DifferenceSum()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_DifferenceSum
+                              ON ObjectFloat_DifferenceSum.ObjectId = Object_CommentTR.Id 
+                             AND ObjectFloat_DifferenceSum.DescId = zc_ObjectFloat_CommentTR_DifferenceSum()
 
    WHERE Object_CommentTR.DescId = zc_Object_CommentTR();
   

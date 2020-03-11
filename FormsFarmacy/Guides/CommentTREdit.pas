@@ -41,6 +41,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     cbisExplanation: TcxCheckBox;
     cbisResort: TcxCheckBox;
+    cbisDifferenceSum: TcxCheckBox;
+    cxLabel9: TcxLabel;
+    edDifferenceSum: TcxCurrencyEdit;
   private
     { Private declarations }
   public
