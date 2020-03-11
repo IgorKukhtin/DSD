@@ -91,7 +91,7 @@ BEGIN
                                    , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
                                    , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
                                    , COALESCE (MIFloat_AmountForecastOrder.ValueData, 0)   AS AmountForecastOrder
-                                   , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 0 END AS KoeffLoss
+                                   , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN 1 - ObjectFloat_TaxLoss.ValueData / 100 ELSE 1 END AS KoeffLoss
                                    , CASE WHEN ObjectFloat_TaxLoss.ValueData > 0 THEN ObjectFloat_TaxLoss.ValueData           ELSE 0 END AS TaxLoss
                                    , COALESCE (MIFloat_CuterCount.ValueData, 0)            AS CuterCount
                                    , COALESCE (MIFloat_CuterCountSecond.ValueData, 0)      AS CuterCountSecond
@@ -580,6 +580,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.03.20         * KoeffLoss 
  19.06.15                                        * all
  31.03.15         * add GoodsGroupNameFull
  02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder
