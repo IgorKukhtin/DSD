@@ -45,7 +45,7 @@ type
     actExecuteDialogData: TExecuteDialog;
     actExecTechnicalRediscount_Formation: TdsdExecStoredProc;
     spTechnicalRediscount_Formation: TdsdStoredProc;
-    isRedCheck: TcxGridDBColumn;
+    colisRedCheck: TcxGridDBColumn;
     actChoiceUnitTreeForm: TOpenChoiceForm;
     actAddRedCheck: TdsdExecStoredProc;
     spInsertRedCheck: TdsdStoredProc;
@@ -54,6 +54,7 @@ type
     actInsertTechnicalRediscount: TdsdExecStoredProc;
     spInsertTechnicalRediscount: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    colisAdjustment: TcxGridDBColumn;
   private
     { Private declarations }
   public

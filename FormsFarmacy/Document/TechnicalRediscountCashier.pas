@@ -48,6 +48,8 @@ type
     actChoiceCommentTR: TOpenChoiceForm;
     actChoiceGoods: TOpenChoiceForm;
     dxBarButton2: TdxBarButton;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cbAdjustment: TcxCheckBox;
   private
     { Private declarations }
   public

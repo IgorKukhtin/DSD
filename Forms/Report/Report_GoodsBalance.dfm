@@ -280,6 +280,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_Basis
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount_in
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount_out
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -536,6 +546,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = GoodsName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount_in
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = Count_onCount_out
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1425,6 +1445,30 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object Count_onCount_in: TcxGridDBColumn
+        Caption = #1055#1088#1080#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055') '#1079#1072' '#1087#1077#1088'.'
+        DataBinding.FieldName = 'Count_onCount_in'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1080#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055') '#1079#1072' '#1087#1077#1088#1080#1086#1076
+        Width = 70
+      end
+      object Count_onCount_out: TcxGridDBColumn
+        Caption = #1056#1072#1089#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055') '#1079#1072' '#1087#1077#1088'.'
+        DataBinding.FieldName = 'Count_onCount_out'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1089#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055') '#1079#1072' '#1087#1077#1088#1080#1086#1076
         Width = 70
       end
       object CountStart_byCount: TcxGridDBColumn

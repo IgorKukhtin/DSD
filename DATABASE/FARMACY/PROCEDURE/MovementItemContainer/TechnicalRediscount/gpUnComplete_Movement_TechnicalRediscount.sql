@@ -15,17 +15,20 @@ $BODY$
   DECLARE vbUnitId Integer;
   DECLARE vbOperDate TDateTime;
   DECLARE vbisRedCheck Boolean;
+  DECLARE vbisAdjustment Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_TechnicalRediscount());
 
     -- вытягиваем дату и подразделение и ...
-    SELECT DATE_TRUNC ('DAY', Movement.OperDate)                AS OperDate    
-         , MLO_Unit.ObjectId                                    AS UnitId
-         , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
+    SELECT DATE_TRUNC ('DAY', Movement.OperDate)                  AS OperDate    
+         , MLO_Unit.ObjectId                                      AS UnitId
+         , COALESCE (MovementBoolean_RedCheck.ValueData, False)   AS isRedCheck
+         , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
     INTO vbOperDate
        , vbUnitId
        , vbisRedCheck
+       , vbisAdjustment
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
@@ -33,6 +36,9 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                    ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                   AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+         LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                   ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                  AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
     WHERE Movement.Id = inMovementId;
 
     -- Распроводим Документ
@@ -40,7 +46,7 @@ BEGIN
                                  , inUserId    := vbUserId);
                                  
     -- Прописываем в зарплату
-    IF vbisRedCheck = FALSE
+    IF vbisRedCheck = FALSE AND vbisAdjustment = FALSE
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;

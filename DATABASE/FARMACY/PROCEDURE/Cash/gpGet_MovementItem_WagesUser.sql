@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_MovementItem_WagesUser(
     IN inSession     TVarChar         -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat, AmountCard TFloat, AmountHand TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat, IlliquidAssets TFloat
+             , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
@@ -138,11 +139,13 @@ BEGIN
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIFloat_Director.ValueData         AS Director
+                 , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MIAmount.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
                     COALESCE (MIFloat_Marketing.ValueData, 0) +
-                    COALESCE (MIFloat_Director.ValueData, 0) -
+                    COALESCE (MIFloat_Director.ValueData, 0) +
+                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
 
@@ -200,6 +203,9 @@ BEGIN
                                               ON MIFloat_Director.MovementItemId = MovementItem.Id
                                              AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                              ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -230,4 +236,5 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');
+

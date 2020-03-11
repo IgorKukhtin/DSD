@@ -41,7 +41,8 @@ type
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
     colComment: TcxGridDBColumn;
-    isRedCheck: TcxGridDBColumn;
+    colisRedCheck: TcxGridDBColumn;
+    colisAdjustment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -92,6 +92,19 @@ BEGIN
          outMessageText :=  outMessageText ||' Товары, цена которых отл. >25%: '||vbMessageText;
      END IF;   
      
+     ---
+     vbMessageText := '';
+     -- информация по товарам Цена которых менее 1,5 грн
+     vbMessageText := (SELECT STRING_AGG ('(' || tmp.GoodsCode ||') '||tmp.GoodsName, '; ' ORDER BY tmp.GoodsName)
+                       FROM gpSelect_MovementItem_Income (inMovementId := inMovementId  , inShowAll := FALSE , inIsErased := FALSE ,  inSession := inSession) as tmp
+                       WHERE tmp.Price <= 1.5
+                       ) :: Text;
+
+     IF COALESCE (vbMessageText, '') <> ''
+     THEN 
+         outMessageText :=  outMessageText ||' Внимание!!! В приходной накладной есть товары с Ценой без НДС меньше чем 1,5 грн. ПРОВЕРЬТЕ - является ли этот товар СЭМПЛОВЫМ!!! '||vbMessageText;
+     END IF; 
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

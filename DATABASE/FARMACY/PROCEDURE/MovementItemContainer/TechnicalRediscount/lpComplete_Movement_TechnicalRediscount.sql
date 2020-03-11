@@ -17,18 +17,21 @@ DECLARE
   vbInvNumber TVarChar;
   vbInventoryNumber TVarChar;
   vbisRedCheck Boolean;
+  vbisAdjustment Boolean;
 BEGIN
 
 
     -- вытягиваем дату и подразделение и ...
     SELECT DATE_TRUNC ('DAY', Movement.OperDate)  AS OperDate     -- при рассчете остатка добавил 1 день для условия >=
-         , MLO_Unit.ObjectId                                        AS UnitId
+         , MLO_Unit.ObjectId                                      AS UnitId
          , Movement.InvNumber
-         , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
+         , COALESCE (MovementBoolean_RedCheck.ValueData, False)   AS isRedCheck
+         , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
     INTO vbOperDate
        , vbUnitId
        , vbInvNumber
        , vbisRedCheck
+       , vbisAdjustment
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
@@ -36,6 +39,9 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                    ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                   AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+         LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                   ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                  AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
     WHERE Movement.Id = inMovementId;
 
       -- Сохраняем остаток и цену
@@ -203,7 +209,7 @@ BEGIN
     PERFORM gpComplete_Movement_Inventory (vbInventoryID, inUserId::TVarChar);
 
     -- Прописываем в зарплату
-    IF vbisRedCheck = FALSE
+    IF vbisRedCheck = FALSE AND vbisAdjustment = FALSE
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesTechnicalRediscount(vbUnitId, vbOperDate, zfCalc_UserAdmin());
     END IF;

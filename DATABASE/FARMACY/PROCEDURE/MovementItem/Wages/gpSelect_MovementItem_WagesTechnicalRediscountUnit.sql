@@ -85,8 +85,12 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                       ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                      AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                      ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                     AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
 
-       WHERE COALESCE (MovementBoolean_RedCheck.ValueData, False) = False;
+       WHERE COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
+         AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False;
 
 END;
 $BODY$
@@ -100,5 +104,4 @@ ALTER FUNCTION gpSelect_MovementItem_WagesTechnicalRediscountUnit (Integer, TVar
 */
 
 -- тест
---
-SELECT * FROM gpSelect_MovementItem_WagesTechnicalRediscountUnit (inId:= 316075544,  inSession := '3');
+-- SELECT * FROM gpSelect_MovementItem_WagesTechnicalRediscountUnit (inId:= 316075544,  inSession := '3');

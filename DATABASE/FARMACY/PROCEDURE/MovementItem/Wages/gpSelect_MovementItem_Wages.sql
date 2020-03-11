@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Wages(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
-             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat
+             , HolidaysHospital TFloat, Marketing TFloat, Director TFloat, IlliquidAssets TFloat
              , AmountCard TFloat, AmountHand TFloat
              , MemberCode Integer, MemberName TVarChar, PositionName TVarChar
              , isManagerPharmacy boolean
@@ -95,6 +95,7 @@ BEGIN
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
                  , Null::TFloat                       AS Director
+                 , Null::TFloat                       AS IlliquidAssets
                  , NULL::TFloat                       AS AmountCard
                  , NULL::TFloat                       AS AmountHand
 
@@ -139,11 +140,13 @@ BEGIN
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIFloat_Director.ValueData         AS Director
+                 , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
                     COALESCE (MIFloat_Marketing.ValueData, 0) +
-                    COALESCE (MIFloat_Director.ValueData, 0) -
+                    COALESCE (MIFloat_Director.ValueData, 0) +
+                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
@@ -207,6 +210,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_Director
                                               ON MIFloat_Director.MovementItemId = MovementItem.Id
                                              AND MIFloat_Director.DescId = zc_MIFloat_Director()
+                                             
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                              ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
 
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
@@ -241,6 +248,7 @@ BEGIN
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
                  , Null::TFloat                       AS Director
+                 , Null::TFloat                       AS IlliquidAssets
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand
 
@@ -311,11 +319,13 @@ BEGIN
                  , MIFloat_HolidaysHospital.ValueData AS HolidaysHospital
                  , MIFloat_Marketing.ValueData        AS Marketing
                  , MIFloat_Director.ValueData         AS Director
+                 , MIFloat_IlliquidAssets.ValueData   AS IlliquidAssets
                  , MIF_AmountCard.ValueData           AS AmountCard
                  , (MovementItem.Amount +
                     COALESCE (MIFloat_HolidaysHospital.ValueData, 0) +
                     COALESCE (MIFloat_Marketing.ValueData, 0) +
-                    COALESCE (MIFloat_Director.ValueData, 0) -
+                    COALESCE (MIFloat_Director.ValueData, 0) +
+                    COALESCE (MIFloat_IlliquidAssets.ValueData, 0) -
                     COALESCE (MIF_AmountCard.ValueData, 0))::TFloat AS AmountHand
 
                  , Object_Member.ObjectCode           AS MemberCode
@@ -380,6 +390,10 @@ BEGIN
                                               ON MIFloat_Director.MovementItemId = MovementItem.Id
                                              AND MIFloat_Director.DescId = zc_MIFloat_Director()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_IlliquidAssets
+                                              ON MIFloat_IlliquidAssets.MovementItemId = MovementItem.Id
+                                             AND MIFloat_IlliquidAssets.DescId = zc_MIFloat_SummaIlliquidAssets()
+
                   LEFT JOIN MovementItemFloat AS MIF_AmountCard
                                               ON MIF_AmountCard.MovementItemId = MovementItem.Id
                                              AND MIF_AmountCard.DescId = zc_MIFloat_AmountCard()
@@ -413,6 +427,7 @@ BEGIN
                  , Null::TFloat                       AS HolidaysHospital
                  , Null::TFloat                       AS Marketing
                  , Null::TFloat                       AS Director
+                 , Null::TFloat                       AS IlliquidAssets
                  , Null::TFloat                       AS AmountCard
                  , tmpAdditionalExpenses.SummaTotal   AS AmountHand
 

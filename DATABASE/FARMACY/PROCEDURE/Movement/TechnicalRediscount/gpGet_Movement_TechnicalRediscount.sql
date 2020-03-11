@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TechnicalRediscount(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , UnitId Integer, UnitName TVarChar
              , TotalDiff TFloat, TotalDiffSumm TFloat
-             , Comment TVarChar, isRedCheck Boolean
+             , Comment TVarChar, isRedCheck Boolean, isAdjustment Boolean
              )
 AS
 $BODY$
@@ -34,6 +34,7 @@ BEGIN
              , Null :: TFloat                   AS TotalDiffSumm
              , CAST ('' as TVarChar)            AS Comment
              , False :: Boolean                 AS isRedCheck
+             , False :: Boolean                 AS isAdjustment
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY
@@ -49,6 +50,7 @@ BEGIN
            , MovementFloat_TotalDiffSumm.ValueData                AS TotalDiffSumm
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
            , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
+           , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -71,6 +73,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                       ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                      AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                      ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                     AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TechnicalRediscount();

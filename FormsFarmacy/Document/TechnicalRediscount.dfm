@@ -261,6 +261,14 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
+          object MinExpirationDate: TcxGridDBColumn
+            Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080
+            DataBinding.FieldName = 'ExpirationDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
+          end
         end
       end
       object cxSplitter1: TcxSplitter
@@ -341,12 +349,19 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Width = 426
     end
     object cbisRedCheck: TcxCheckBox
-      Left = 548
+      Left = 340
       Top = 1
       Caption = #1050#1088#1072#1089#1085#1099#1081' '#1095#1077#1082
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 100
+      Width = 92
+    end
+    object cbAdjustment: TcxCheckBox
+      Left = 433
+      Top = 1
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1086#1089#1085#1086#1074#1085#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072
+      TabOrder = 11
+      Width = 216
     end
   end
   inherited ActionList: TActionList
@@ -706,6 +721,13 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Component = cbisRedCheck
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isAdjustment'
+        Value = Null
+        Component = cbAdjustment
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 72
     Top = 224
@@ -760,6 +782,14 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAdjustment'
+        Value = Null
+        Component = cbAdjustment
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -792,6 +822,7 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Control = edComment
       end
       item
+        Control = cbAdjustment
       end
       item
       end

@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsBalance (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_GoodsBalance(
+CREATE OR REPLACE FUNCTION gpReport_GoodsBalance (
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inAccountGroupId     Integer,    --
@@ -112,6 +112,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountOut_byPF      TFloat -- Расход ПФ(ГП) за период на пр-во
              , Count_byCount      TFloat -- Расход ПФ(ГП) за весь период на пр-во
              , Count_onCount      TFloat -- Кол-во батонов в Расходе ПФ(ГП) за весь период
+             , Count_onCount_in   TFloat -- Кол-во батонов в ПРиходе ПФ(ГП) за текущий период
+             , Count_onCount_out  TFloat -- Кол-во батонов в расходе ПФ(ГП) за текущий период
              , CountStart_byCount TFloat -- Нач остаток батонов в ПФ(ГП)
              , CountEnd_byCount   TFloat -- Кон остаток батонов в ПФ(ГП)
              , Weight_byCount     TFloat -- вес 1 батона
@@ -657,7 +659,10 @@ BEGIN
         
                                          , -1 * SUM (CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.Amount                    ELSE 0 END) AS CountOut_byCount
                                          ,      SUM (CASE WHEN MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount
-        
+
+                                         ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END)AS Count_onCount_out
+                                         ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount_in
+                                                                                          
                                          ,      SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount                         ELSE 0 END) AS CountIn_byPF
                                          ,      SUM (CASE WHEN MIContainer.isActive = TRUE THEN COALESCE (MIFloat_CuterCount.ValueData, 0) ELSE 0 END) AS CuterCount
                                     FROM tmpContainer_Count
@@ -668,7 +673,7 @@ BEGIN
                                          LEFT JOIN MovementItemFloat AS MIFloat_Count
                                                                      ON MIFloat_Count.MovementItemId = MIContainer.MovementItemId
                                                                     AND MIFloat_Count.DescId         = zc_MIFloat_Count()
-                                                                    AND MIContainer.isActive         = FALSE
+                                                                    --AND MIContainer.isActive         = FALSE
                                          LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                                                      ON MIFloat_CuterCount.MovementItemId = MIContainer.MovementItemId
                                                                     AND MIFloat_CuterCount.DescId         = zc_MIFloat_CuterCount()
@@ -722,6 +727,8 @@ BEGIN
                                      , SUM (tmpMIContainer_Count_all.CountOut_byPF)    AS CountOut_byPF
                                      , SUM (tmpMIContainer_Count_all.CountOut_byCount) AS CountOut_byCount
                                      , SUM (tmpMIContainer_Count_all.Count_onCount)    AS CountOut_onCount
+                                     , SUM (tmpMIContainer_Count_all.Count_onCount_in) AS Count_onCount_in
+                                     , SUM (tmpMIContainer_Count_all.Count_onCount_out) AS Count_onCount_out
                                      , SUM (tmpMIContainer_Count_all.CountIn_byPF)     AS CountIn_byPF
                                      , SUM (tmpMIContainer_Count_all.CuterCount)       AS CuterCount
                                 FROM tmpMIContainer_Count_all
@@ -764,6 +771,8 @@ BEGIN
                               , SUM (tmpAll.CountOut_byPF)    AS CountOut_byPF
                               , SUM (tmpAll.CountOut_byCount) AS CountOut_byCount
                               , SUM (tmpAll.CountOut_onCount) AS CountOut_onCount
+                              , SUM (tmpAll.Count_onCount_in)  AS Count_onCount_in
+                              , SUM (tmpAll.Count_onCount_out) AS Count_onCount_out
 
                               , SUM (tmpAll.CountIn_calc)  AS CountIn_calc
                               , SUM (tmpAll.CountOut_calc) AS CountOut_calc
@@ -837,6 +846,8 @@ BEGIN
                                     , 0 AS CountOut_byPF
                                     , 0 AS CountOut_byCount
                                     , 0 AS CountOut_onCount
+                                    , 0 AS Count_onCount_in
+                                    , 0 AS Count_onCount_out
 
 --                                    , zc_DateEnd() AS PartionGoodsDate
 
@@ -884,6 +895,8 @@ BEGIN
                                     , tmpMIContainer_Count.CountOut_byPF    AS CountOut_byPF
                                     , tmpMIContainer_Count.CountOut_byCount AS CountOut_byCount
                                     , tmpMIContainer_Count.CountOut_onCount AS CountOut_onCount
+                                    , tmpMIContainer_Count.Count_onCount_in   AS Count_onCount_in
+                                    , tmpMIContainer_Count.Count_onCount_out  AS Count_onCount_out
 
 --                                    , zc_DateEnd() AS PartionGoodsDate
 
@@ -953,6 +966,8 @@ BEGIN
                                     , 0 AS CountOut_byPF
                                     , 0 AS CountOut_byCount
                                     , 0 AS CountOut_onCount
+                                    , 0 AS Count_onCount_in
+                                    , 0 AS Count_onCount_out
 
                                FROM tmpMIContainer_all
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_all.PartionGoodsId
@@ -1023,6 +1038,8 @@ BEGIN
                                     , 0 AS CountOut_byPF
                                     , 0 AS CountOut_byCount
                                     , 0 AS CountOut_onCount
+                                    , 0 AS Count_onCount_in
+                                    , 0 AS Count_onCount_out
 
                                FROM tmpMIContainer_GP
                                     LEFT JOIN tmpNorm_GP ON tmpNorm_GP.GoodsId_gp     = tmpMIContainer_GP.GoodsId_gp
@@ -1304,9 +1321,16 @@ BEGIN
         , tmpResult.CountOut_byPF    :: TFloat AS CountOut_byPF  -- Расход ПФ(ГП) за период на пр-во
         , tmpResult.CountOut_byCount :: TFloat AS Count_byCount  -- Расход ПФ(ГП) за весь период на пр-во
         , tmpResult.CountOut_onCount :: TFloat AS Count_onCount  -- Кол-во батонов в Расходе ПФ(ГП) за весь период
-        , CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountStart / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Нач остаток батонов в ПФ(ГП)
-        , CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountEnd   / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Кон остаток батонов в ПФ(ГП)
+        , tmpResult.Count_onCount_in  :: TFloat AS Count_onCount_in   -- Кол-во батонов в приходе ПФ(ГП) за текущий период
+        , tmpResult.Count_onCount_out :: TFloat AS Count_onCount_out  -- Кол-во батонов в расходе ПФ(ГП) за текущий период
+        --, CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountStart / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Нач остаток батонов в ПФ(ГП)
+        --, CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountEnd   / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
+        , CAST (CASE WHEN tmpResult.CountStart <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_in,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount  -- Нач остаток батонов в ПФ(ГП)
+        , CAST (CASE WHEN tmpResult.CountEnd   <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_out,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
+
         , CAST (CASE WHEN tmpResult.CountOut_onCount <> 0 THEN tmpResult.CountOut_byCount / tmpResult.CountOut_onCount ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Weight_byCount -- вес 1 батона
+
+
 
         , CAST (row_number() OVER () AS INTEGER)        AS LineNum
 
@@ -1472,3 +1496,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
+
+--select * from gpReport_GoodsBalance(inStartDate := ('09.02.2020')::TDateTime , inEndDate := ('29.02.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 867706 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');

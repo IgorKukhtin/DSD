@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
 --             , Remains_Save TFloat, Remains_SumSave TFloat
              , Deficit TFloat, DeficitSumm TFloat
              , Proficit TFloat, ProficitSumm TFloat
---             , ExpirationDate TDateTime
+             , ExpirationDate TDateTime
              )
 AS
 $BODY$
@@ -72,6 +72,45 @@ BEGIN
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND (MovementItem.isErased  = FALSE OR inIsErased = TRUE))
 
+               , REMAINS AS (SELECT
+                                    T0.GoodsId
+                                   ,SUM (T0.Amount) :: TFloat AS Amount
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
+                             FROM(
+                                        -- остатки
+                                        SELECT
+                                             Container.Id                                                          AS ContainerId
+                                           , Container.ObjectId                                                    AS GoodsId
+                                           , Sum(-1.0 *MovementItemContainer.Amount)                               AS Amount
+                                        FROM MovementItemContainer
+                                            LEFT OUTER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                        WHERE MovementItemContainer.DescID = zc_Container_Count()
+                                          AND MovementItemContainer.MovementId = (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId)
+                                        GROUP BY
+                                            Container.Id
+                                           ,Container.ObjectId
+
+                                    ) as T0
+
+                                     -- находим срок годности из прихода
+                                    LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
+                                                                  ON CLO_PartionMovementItem.Containerid = T0.ContainerId
+                                                                 AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                    LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_PartionMovementItem.ObjectId
+                                    -- элемент прихода
+                                    LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                    -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                    LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                               AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                    -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                    LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                    LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                      ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                GROUP BY T0.GoodsId
+                            )
             -- Результат
             SELECT
                 MovementItem.Id                                                     AS Id
@@ -115,12 +154,14 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, 0)
                 ) :: TFloat                                                         AS ProficitSumm
 
---              , REMAINS.minExpirationDate :: TDateTime
-
+              , REMAINS.minExpirationDate :: TDateTime
+              
            FROM tmpMovementItem AS MovementItem
 
                 LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.GoodsId
                 LEFT JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+
+                LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
 
                 LEFT JOIN MovementItemFloat AS MIFloat_Price
                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -168,7 +209,7 @@ BEGIN
                , REMAINS AS (SELECT
                                     T0.GoodsId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
---                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                              FROM(
                                         -- остатки
                                         SELECT
@@ -188,7 +229,7 @@ BEGIN
 
                                     ) as T0
 
-/*                                     -- находим срок годности из прихода
+                                     -- находим срок годности из прихода
                                     LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
                                                                   ON CLO_PartionMovementItem.Containerid = T0.ContainerId
                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -205,7 +246,7 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-*/                                GROUP BY T0.GoodsId
+                                GROUP BY T0.GoodsId
                                 HAVING SUM (T0.Amount) <> 0
                             )
 
@@ -253,7 +294,7 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
----              , REMAINS.minExpirationDate :: TDateTime
+              , REMAINS.minExpirationDate :: TDateTime
 
            FROM REMAINS
 
@@ -317,7 +358,7 @@ BEGIN
                , REMAINS AS (SELECT
                                     T0.GoodsId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
---                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
                              FROM(
                                         -- остатки
                                         SELECT
@@ -333,8 +374,7 @@ BEGIN
                                            ,Container.ObjectId
                                         HAVING Container.Amount <> 0
                                     ) as T0
-
-/*                                     -- находим срок годности из прихода
+                                     -- находим срок годности из прихода
                                     LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
                                                                   ON CLO_PartionMovementItem.Containerid = T0.ContainerId
                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -351,7 +391,7 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-*/                                GROUP BY T0.GoodsId
+                                GROUP BY T0.GoodsId
                                 HAVING SUM (T0.Amount) <> 0
                             )
 
@@ -401,7 +441,7 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
---              , REMAINS.minExpirationDate :: TDateTime
+              , REMAINS.minExpirationDate :: TDateTime
 
            FROM tmpMovementItem AS MovementItem
 
@@ -462,7 +502,7 @@ BEGIN
                , REMAINS AS (SELECT
                                     T0.GoodsId
                                    ,SUM (T0.Amount) :: TFloat AS Amount
---                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   -- min срок годности
+                                   ,MIN (COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) )  AS minExpirationDate   
                              FROM(
                                         -- остатки
                                         SELECT
@@ -481,7 +521,7 @@ BEGIN
                                         HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
                                     ) as T0
 
-/*                                     -- находим срок годности из прихода
+                                     -- находим срок годности из прихода
                                     LEFT JOIN ContainerlinkObject AS CLO_PartionMovementItem
                                                                   ON CLO_PartionMovementItem.Containerid = T0.ContainerId
                                                                  AND CLO_PartionMovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -498,7 +538,7 @@ BEGIN
                                     LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-*/                                GROUP BY T0.GoodsId
+                                GROUP BY T0.GoodsId
                                 HAVING SUM (T0.Amount) <> 0
                             )
 
@@ -548,7 +588,7 @@ BEGIN
                  END * COALESCE (MIFloat_Price.ValueData, tmpPrice.Price)
                 ) :: TFloat                                                         AS ProficitSumm
 
---              , REMAINS.minExpirationDate :: TDateTime
+              , REMAINS.minExpirationDate :: TDateTime
 
            FROM tmpMovementItem AS MovementItem
 
@@ -592,5 +632,4 @@ ALTER FUNCTION gpSelect_MovementItem_TechnicalRediscount (Integer, Boolean, Bool
 
 -- тест
 -- select * from gpSelect_MovementItem_TechnicalRediscount(inMovementId := 17785885 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
-
 

@@ -1262,10 +1262,15 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaManual() RETURNS Integer AS $BODY$BEG
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaManual', 'Сумма, установленная вручную' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaManual');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaIlliquidAssets() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaIlliquidAssets'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaIlliquidAssets', 'Неликвиды' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaIlliquidAssets');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 06.03.20                                                                                                     * zc_MIFloat_SummaIlliquidAssets
  01.03.20                                                                                                     * zc_MIFloat_SummaManual
  28.02.20                                                                                                     * zc_MIFloat_SummaTechnicalRediscount
  10.02.20                                                                                                     * zc_MIFloat_SummaWeek.., zc_MIFloat_SummaSUN1
