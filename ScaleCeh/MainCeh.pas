@@ -269,6 +269,9 @@ type
     SubjectDocLabel: TLabel;
     EditSubjectDoc: TcxButtonEdit;
     testButton3: TButton;
+    bbSale_Order_all: TSpeedButton;
+    bbSale_Order_diff: TSpeedButton;
+    bbSale_Order_diffTax: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -348,6 +351,9 @@ type
     procedure EditSubjectDocPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure testButton3Click(Sender: TObject);
+    procedure bbSale_Order_allClick(Sender: TObject);
+    procedure bbSale_Order_diffClick(Sender: TObject);
+    procedure bbSale_Order_diffTaxClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -2477,7 +2483,10 @@ begin
     then PanelMovement.Caption:='Новый <Документ>.'
     else PanelMovement.Caption:='Документ № <'+ParamByName('InvNumber').AsString+'>  от <'+DateToStr(ParamByName('OperDate_Movement').AsDateTime)+'>';
 
-    PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
+    if ParamByName('OrderExternalId').asInteger <> 0
+    then PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString
+                         + ' з. ' + ParamByName('OrderExternalName_master').asString
+    else PanelMovementDesc.Caption:=ParamByName('MovementDescName_master').asString;
     EditSubjectDoc.Text:=ParamByName('SubjectDocName').asString;
 
   end;
@@ -3062,6 +3071,21 @@ begin
      end;
      //
      PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbSale_Order_allClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,FALSE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbSale_Order_diffClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,TRUE,FALSE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbSale_Order_diffTaxClick(Sender: TObject);
+begin
+     with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,TRUE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.actExitExecute(Sender: TObject);

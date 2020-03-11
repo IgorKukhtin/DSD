@@ -35,6 +35,7 @@ type
     //
     // +++ScaleCeh+++
     function gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String; inFromId_calc:Integer): Boolean;
     function gpGet_ScaleCeh_GoodsSeparate(inOperDate: TDateTime; inMovementId, inGoodsId : Integer; inPartionGoods : String;
                                           inIsClose : Boolean;
                                       var TotalCount_in, TotalCount_isOpen, TotalCount_null, TotalCount_MO, TotalCount_OB, TotalCount_PR, TotalCount_P : Double;
@@ -276,6 +277,97 @@ begin
       end;
 
     Result:=true;
+end;
+{------------------------------------------------------------------------}
+function TDMMainScaleCehForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String; inFromId_calc : Integer): Boolean;
+var MovementDescId_old:Integer;
+begin
+    with spSelect do
+    begin
+       StoredProcName:='gpGet_Scale_OrderExternal';
+       OutputType:=otDataSet;
+       Params.Clear;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
+       Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
+       Params.AddParam('inFromId',ftInteger, ptInput, inFromId_calc);
+       Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
+       //try
+         Execute;
+         //
+         Result:=DataSet.RecordCount=1;
+       with execParams do
+       begin
+         MovementDescId_old:=ParamByName('MovementDescId').AsInteger;
+         //
+         ParamByName('MovementId_get').AsInteger:= DataSet.FieldByName('MovementId_get').asInteger;//документ взвешивани€ !!!только дл€ за€вки!!!, потом переноситс€ в MovementId
+         ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
+         if (MovementDescId_old <> DataSet.FieldByName('MovementDescId').asInteger) or (ParamByName('FromId').AsInteger = 0) then
+         begin
+              ParamByName('FromId').AsInteger:= DataSet.FieldByName('ToId').asInteger;
+              ParamByName('FromCode').AsInteger:= DataSet.FieldByName('ToCode').asInteger;
+              ParamByName('FromName').asString:= DataSet.FieldByName('ToName').asString;
+         end;
+         ParamByName('ToId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
+         ParamByName('ToCode').AsInteger:= DataSet.FieldByName('FromCode').asInteger;
+         ParamByName('ToName').asString:= DataSet.FieldByName('FromName').asString;
+       //ParamByName('PaidKindId').AsInteger:= DataSet.FieldByName('PaidKindId').asInteger;
+       //ParamByName('PaidKindName').asString:= DataSet.FieldByName('PaidKindName').asString;
+
+         //определ€етс€ только дл€ zc_Movement_SendOnPrice + zc_Movement_Loss + zc_Movement_Income
+         if  (DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_SendOnPrice)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Loss)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Income)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_Send)
+           or(DataSet.FieldByName('MovementDescId').asInteger = zc_Movement_ReturnIn)
+         then ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+
+       //ParamByName('calcPartnerId').AsInteger:= DataSet.FieldByName('PartnerId_calc').AsInteger;
+       //ParamByName('calcPartnerCode').AsInteger:= DataSet.FieldByName('PartnerCode_calc').AsInteger;
+       //ParamByName('calcPartnerName').asString:= DataSet.FieldByName('PartnerName_calc').asString;
+       //ParamByName('ChangePercent').asFloat:= DataSet.FieldByName('ChangePercent').asFloat;
+       //ParamByName('ChangePercentAmount').asFloat:= DataSet.FieldByName('ChangePercentAmount').asFloat;
+
+       //ParamByName('isEdiOrdspr').asBoolean:= DataSet.FieldByName('isEdiOrdspr').asBoolean;
+       //ParamByName('isEdiInvoice').asBoolean:= DataSet.FieldByName('isEdiInvoice').asBoolean;
+       //ParamByName('isEdiDesadv').asBoolean:= DataSet.FieldByName('isEdiDesadv').asBoolean;
+
+       //ParamByName('isMovement').asBoolean:= DataSet.FieldByName('isMovement').asBoolean;
+       //ParamByName('isAccount').asBoolean:= DataSet.FieldByName('isAccount').asBoolean;
+       //ParamByName('isTransport').asBoolean:= DataSet.FieldByName('isTransport').asBoolean;
+       //ParamByName('isQuality').asBoolean:= DataSet.FieldByName('isQuality').asBoolean;
+       //ParamByName('isPack').asBoolean:= DataSet.FieldByName('isPack').asBoolean;
+       //ParamByName('isSpec').asBoolean:= DataSet.FieldByName('isSpec').asBoolean;
+       //ParamByName('isTax').asBoolean:= DataSet.FieldByName('isTax').asBoolean;
+
+         ParamByName('OrderExternalId').AsInteger:= DataSet.FieldByName('MovementId').asInteger;
+         ParamByName('OrderExternal_DescId').AsInteger:= DataSet.FieldByName('MovementDescId_order').asInteger;
+         ParamByName('OrderExternal_BarCode').asString:= DataSet.FieldByName('BarCode').asString;
+         ParamByName('OrderExternal_InvNumber').asString:= DataSet.FieldByName('InvNumber').asString;
+         ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+
+       //ParamByName('ContractId').AsInteger    := DataSet.FieldByName('ContractId').asInteger;
+       //ParamByName('ContractCode').AsInteger  := DataSet.FieldByName('ContractCode').asInteger;
+       //ParamByName('ContractNumber').asString := DataSet.FieldByName('ContractNumber').asString;
+       //ParamByName('ContractTagName').asString:= DataSet.FieldByName('ContractTagName').asString;
+
+       //ParamByName('GoodsPropertyId').AsInteger:= DataSet.FieldByName('GoodsPropertyId').AsInteger;
+       //ParamByName('GoodsPropertyCode').AsInteger:= DataSet.FieldByName('GoodsPropertyCode').AsInteger;
+       //ParamByName('GoodsPropertyName').asString:= DataSet.FieldByName('GoodsPropertyName').asString;
+
+       //ParamByName('PriceListId').AsInteger   := DataSet.FieldByName('PriceListId').asInteger;
+       //ParamByName('PriceListCode').AsInteger := DataSet.FieldByName('PriceListCode').asInteger;
+       //ParamByName('PriceListName').asString  := DataSet.FieldByName('PriceListName').asString;
+       end;
+
+
+       {except
+         result.Code := Code;
+         result.Id   := 0;
+         result.Name := '';
+         ShowMessage('ќшибка получени€ - gpGet_Scale_OrderExternal');
+       end;}
+    end;
 end;
 {------------------------------------------------------------------------}
 function TDMMainScaleCehForm.gpGet_Scale_Movement_checkId(var execParamsMovement:TParams): Boolean;
@@ -535,6 +627,7 @@ begin
          Params.AddParam('inFromId', ftInteger, ptInput, execParamsMovement.ParamByName('FromId').AsInteger);
          Params.AddParam('inToId', ftInteger, ptInput, execParamsMovement.ParamByName('ToId').AsInteger);
          Params.AddParam('inSubjectDocId', ftInteger, ptInput, execParamsMovement.ParamByName('SubjectDocId').AsInteger);
+         Params.AddParam('inMovementId_Order', ftInteger, ptInput, execParamsMovement.ParamByName('OrderExternalId').AsInteger);
          Params.AddParam('inIsProductionIn', ftBoolean, ptInput, execParamsMovement.ParamByName('isSendOnPriceIn').AsBoolean);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          //try

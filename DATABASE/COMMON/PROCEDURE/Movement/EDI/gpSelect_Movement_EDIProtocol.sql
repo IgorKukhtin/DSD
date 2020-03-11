@@ -56,5 +56,4 @@ ALTER FUNCTION gpSelect_Movement_EDIProtocol (Integer, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= TRUE, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MI_EDI (inMovementId:= 25173, inShowAll:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_EDIProtocol (inMovementId:= 16092370, inSession:= zfCalc_UserAdmin())

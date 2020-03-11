@@ -38,7 +38,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
     object Panel1: TPanel
       Left = 0
       Top = 25
-      Width = 192
+      Width = 198
       Height = 46
       Align = alLeft
       Alignment = taLeftJustify
@@ -47,25 +47,26 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       object Panel5: TPanel
         Left = 0
         Top = 0
-        Width = 192
+        Width = 198
         Height = 46
         Align = alClient
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 0
+        ExplicitWidth = 192
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
-          Width = 190
+          Width = 196
           Height = 16
           Align = alTop
-          Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#8470' '#1086#1089#1085#1086#1074#1072#1085#1080#1103
+          Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#1064'/'#1050'/'#8470' '#1079#1072#1103#1074#1082#1080
           ExplicitWidth = 183
         end
         object EditBarCode: TEdit
           Left = 8
           Top = 19
-          Width = 176
+          Width = 184
           Height = 24
           TabOrder = 0
           Text = 'EditBarCode'
@@ -76,14 +77,16 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       end
     end
     object infoPanelPartner: TPanel
-      Left = 192
+      Left = 198
       Top = 25
-      Width = 475
+      Width = 469
       Height = 46
       Align = alClient
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitLeft = 192
+      ExplicitWidth = 475
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -123,16 +126,17 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       object Panel4: TPanel
         Left = 115
         Top = 0
-        Width = 360
+        Width = 354
         Height = 46
         Align = alClient
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
+        ExplicitWidth = 360
         object Label3: TLabel
           Left = 1
           Top = 1
-          Width = 358
+          Width = 352
           Height = 16
           Align = alTop
           Caption = '  '#1053#1072#1079#1074#1072#1085#1080#1077
@@ -141,7 +145,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         object PanelPartnerName: TPanel
           Left = 1
           Top = 17
-          Width = 358
+          Width = 352
           Height = 28
           Align = alClient
           Alignment = taLeftJustify
@@ -155,6 +159,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 358
         end
       end
     end

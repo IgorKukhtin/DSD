@@ -75,7 +75,7 @@ var
 
 implementation
 {$R *.dfm}
-uses dmMainScale,GuidePartner,GuideUnit;
+uses dmMainScale,dmMainScaleCeh,GuidePartner,GuideUnit;
 {------------------------------------------------------------------------}
 function TDialogMovementDescForm.Execute(BarCode: String): Boolean; //Проверка корректного ввода в Edit
 begin
@@ -569,7 +569,7 @@ begin
 
     if CDS.Filtered then CDS.Filtered:=false;
     //
-    if (Length(trim(EditBarCode.Text))>2) and (SettingMain.isCeh = FALSE)
+    if (Length(trim(EditBarCode.Text))>2) //and (SettingMain.isCeh = FALSE)
     then begin
               //Проверка <Контрольная сумма>
               if (Length(trim(EditBarCode.Text))>=13)and(CheckBarCode(trim(EditBarCode.Text)) = FALSE)
@@ -590,7 +590,9 @@ begin
                     end;
               end;
               //поиск по номеру или ш-к
-              isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc);
+              if SettingMain.isCeh = TRUE
+              then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc)
+              else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc);
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.'+#10+#13+'Значение <Код операции/№ "основания"/Штрих код "основания"> не найдено.');
@@ -705,7 +707,7 @@ end;
 procedure TDialogMovementDescForm.EditBarCodeChange(Sender: TObject);
 begin
     isEditBarCode:=true;
-    if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then EditBarCodeExit(Self);
+//    if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then ActiveControl:=DBGrid;{EditBarCodeExit(Self);}
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);

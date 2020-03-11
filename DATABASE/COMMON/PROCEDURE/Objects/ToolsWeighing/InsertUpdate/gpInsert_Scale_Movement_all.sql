@@ -1373,7 +1373,10 @@ end if;
 
                            , tmpMI.isBarCode_value
 
-                           , 0                                                   AS Amount_mi
+                           , CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() AND vbMovementId_find > 0
+                                       THEN tmpMI.Amount
+                                  ELSE 0
+                             END AS Amount_mi
                            , tmpMI.UnitId_to
                            , 0                                                   AS myId
 
@@ -1667,7 +1670,7 @@ end if;
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
-IF inSession = '5' AND 1=1 THEN
+IF inSession = '5' AND 1=0 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin

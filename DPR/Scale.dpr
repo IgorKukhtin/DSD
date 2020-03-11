@@ -99,7 +99,8 @@ uses
   IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
-  GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm};
+  GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
+  dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas';
 
 {$R *.res}
 

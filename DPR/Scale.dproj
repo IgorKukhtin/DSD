@@ -254,6 +254,7 @@
 			<DCCReference Include="..\Scale\GuideUnit.pas">
 				<Form>GuideUnitForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\Scale\Util\dmMainScaleCeh.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -87,7 +87,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 489
+        Left = 570
         Top = 2
         Width = 31
         Height = 29
@@ -393,6 +393,68 @@ object MainCehForm: TMainCehForm
         ParentShowHint = False
         ShowHint = True
         OnClick = bbInsertPartionGoodsClose_outClick
+      end
+      object bbSale_Order_all: TSpeedButton
+        Left = 436
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1042#1057#1045' - F8'
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          04000000000000010000120B0000120B00001000000000000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00300000000000
+          0003377777777777777308888888888888807F33333333333337088888888888
+          88807FFFFFFFFFFFFFF7000000000000000077777777777777770F8F8F8F8F8F
+          8F807F333333333333F708F8F8F8F8F8F9F07F333333333337370F8F8F8F8F8F
+          8F807FFFFFFFFFFFFFF7000000000000000077777777777777773330FFFFFFFF
+          03333337F3FFFF3F7F333330F0000F0F03333337F77773737F333330FFFFFFFF
+          03333337F3FF3FFF7F333330F00F000003333337F773777773333330FFFF0FF0
+          33333337F3F37F3733333330F08F0F0333333337F7337F7333333330FFFF0033
+          33333337FFFF7733333333300000033333333337777773333333}
+        NumGlyphs = 2
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbSale_Order_allClick
+      end
+      object bbSale_Order_diff: TSpeedButton
+        Left = 473
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' '#1052#1048#1053#1059#1057
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          8888888888888888888888000000000788888077777777777888788888888887
+          778878888889F9F7708878888888888777787FFFFFFFFFF7777887F0000000FF
+          7778887FF9FFF10FF7788887F898180777888888788988F8888888888F189880
+          8888888887777777888888888888888888888888888888888888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbSale_Order_diffClick
+      end
+      object bbSale_Order_diffTax: TSpeedButton
+        Left = 506
+        Top = 2
+        Width = 31
+        Height = 29
+        Hint = #1047#1072#1103#1074#1082#1072'/'#1054#1090#1075#1088#1091#1079#1082#1072' - % '#1054#1058#1050#1051#1054#1053#1045#1053#1048#1071' - F9'
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          0400000000008000000000000000000000001000000000000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
+          888888880000000888888888FFFFFFF888888888000000088888880000FFFFFF
+          88888077770FFFFFF88878888880FFFFFF887888888900000008788888888887
+          77787FFFFFFFFFF7777887F0000000FF7778887FFFFFFF0FF7788887F8888807
+          77888888788888F8888888888F88888088888888877777778888}
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = bbSale_Order_diffTaxClick
       end
     end
     object infoPanelTotalSumm: TPanel
@@ -2368,11 +2430,12 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelSkewer2: TPanel
       Left = 0
-      Top = 572
+      Top = 533
       Width = 222
       Height = 37
       Align = alTop
       TabOrder = 4
+      ExplicitTop = 572
       object PanelSkewer2: TPanel
         Left = 1
         Top = 1
@@ -2663,11 +2726,12 @@ object MainCehForm: TMainCehForm
     end
     object infoPanelWeightOther: TPanel
       Left = 0
-      Top = 609
+      Top = 570
       Width = 222
       Height = 38
       Align = alTop
       TabOrder = 7
+      ExplicitTop = 609
       object LabelWeightOther: TLabel
         Left = 1
         Top = 1
@@ -2783,13 +2847,14 @@ object MainCehForm: TMainCehForm
     end
     object SubjectDocPanel: TPanel
       Left = 0
-      Top = 533
+      Top = 534
       Width = 222
       Height = 39
-      Align = alTop
+      Align = alBottom
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 11
+      ExplicitTop = 533
       object SubjectDocLabel: TLabel
         Left = 0
         Top = 0

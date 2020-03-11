@@ -143,6 +143,7 @@ begin
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideUnitForm, GuideUnitForm);
   end
   else
 
@@ -177,6 +178,7 @@ begin
          Application.CreateForm(TDialogBoxLightForm, DialogBoxLightForm);
          Application.CreateForm(TDialogGoodsSeparateForm, DialogGoodsSeparateForm);
          Application.CreateForm(TGuideSubjectDocForm, GuideSubjectDocForm);
+         Application.CreateForm(TGuideUnitForm, GuideUnitForm);
 
   end;
   //

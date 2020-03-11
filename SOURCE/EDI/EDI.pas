@@ -46,7 +46,7 @@ type
     FDirectoryError: string;
     FisEDISaveLocal: boolean;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType;
-      spHeader, spList: TdsdStoredProc);
+      spHeader, spList: TdsdStoredProc; lFileName : String);
     function InsertUpdateComDoc(ЕлектроннийДокумент
       : IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc): integer;
     procedure FTPSetConnection;
@@ -2764,7 +2764,7 @@ begin
 end;
 
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType;
-  spHeader, spList: TdsdStoredProc);
+  spHeader, spList: TdsdStoredProc; lFileName : String);
 var
   MovementId, GoodsPropertyId: integer;
   isMetro : Boolean;
@@ -2798,7 +2798,7 @@ begin
     end;
     //
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
-    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='Загрузка ORDER из EDI завершена';
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='Загрузка ORDER из EDI завершена _'+lFileName+'_';
     FInsertEDIEvents.Execute;
 end;
 
@@ -3298,7 +3298,7 @@ begin
                   FIdFTP.Get(List[i], Stream);
                   ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
                   // загружаем в базенку
-                  InsertUpdateOrder(ORDER, spHeader, spList);
+                  InsertUpdateOrder(ORDER, spHeader, spList, List[i]);
                   //
                   //Пытаемся найти параметр
                   if Assigned(spHeader.Params.ParamByName('gIsDelete'))

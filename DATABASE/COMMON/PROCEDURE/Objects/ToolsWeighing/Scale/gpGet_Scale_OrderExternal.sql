@@ -1,9 +1,11 @@
 -- Function: gpGet_Scale_OrderExternal()
 
 -- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (Boolean, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
+    IN inIsCeh          Boolean   , -- ןנמדנאללא ScaleCeh - הא/םוע
     IN inOperDate       TDateTime   ,
     IN inFromId         Integer   , --
     IN inBranchCode     Integer   , --
@@ -419,7 +421,8 @@ BEGIN
                                            OR tmpMovement.DescId_From = zc_Object_ArticleLoss()
                                            OR tmpMovement.DescId_From = zc_Object_Unit()
                                        ) AS tmp
-                                       INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inBranchCode:= inBranchCode
+                                       INNER JOIN gpSelect_Object_ToolsWeighing_MovementDesc (inIsCeh     := inIsCeh
+                                                                                            , inBranchCode:= inBranchCode
                                                                                             , inSession   := inSession
                                                                                              )
                                                    AS tmpSelect ON tmpSelect.MovementDescId = tmp.MovementDescId
@@ -737,5 +740,4 @@ $BODY$
 */
 
 -- עוסע
--- SELECT * FROM gpGet_Scale_OrderExternal (inOperDate := ('01.07.2015')::TDateTime , inBranchCode := 1 , inBarCode := '2020018777013' ,  inSession := '5');
--- SELECT * FROM gpGet_Scale_OrderExternal(inOperDate := CURRENT_DATE , inBranchCode := 301 , inBarCode := '135', inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inBranchCode:= 301, inBarCode:= '135', inSession := '5');

@@ -1112,6 +1112,7 @@ begin
        StoredProcName:='gpGet_Scale_OrderExternal';
        OutputType:=otDataSet;
        Params.Clear;
+       Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inFromId',ftInteger, ptInput, inFromId_calc);
        Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);

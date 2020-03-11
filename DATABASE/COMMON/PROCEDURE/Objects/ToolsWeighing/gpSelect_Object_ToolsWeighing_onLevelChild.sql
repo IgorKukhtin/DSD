@@ -150,7 +150,7 @@ BEGIN
 
            UNION SELECT 'isCalc_sht'             AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
-           UNION SELECT 'isGet_Unit'             AS Name WHERE inIsCeh = FALSE AND vbIsSticker = FALSE
+           UNION SELECT 'isGet_Unit'             AS Name WHERE /*inIsCeh = FALSE AND*/ vbIsSticker = FALSE
 
            UNION SELECT 'UnitId1'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId2'                AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE

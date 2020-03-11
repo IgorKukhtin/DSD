@@ -2,7 +2,8 @@
 
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingProduction (Integer, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -13,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingProduction(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inDocumentKindId      Integer   , -- Тип документа
-    IN inSubjectDocId         Integer   , -- 
+    IN inSubjectDocId        Integer   , -- 
+    IN inMovementId_Order    Integer   , -- ключ Документа заявка
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inIsProductionIn      Boolean   , -- 
     IN inSession             TVarChar    -- сессия пользователя
@@ -81,12 +83,15 @@ BEGIN
      -- сохранили связь с <Основание для перемещения>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SubjectDoc(), ioId, inSubjectDocId);
 
-   -- !!!только при создании!!!
-   IF vbIsInsert = TRUE
-   THEN
-     -- сохранили связь с <Пользователь>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
-   END IF;
+     -- сохранили связь с документом <Заявки сторонние>
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inMovementId_Order);
+
+     -- !!!только при создании!!!
+     IF vbIsInsert = TRUE
+     THEN
+       -- сохранили связь с <Пользователь>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_User(), ioId, vbUserId);
+     END IF;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
