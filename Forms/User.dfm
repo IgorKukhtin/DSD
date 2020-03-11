@@ -31,7 +31,12 @@ object UserForm: TUserForm
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = 'C'#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = clMemberName
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -39,6 +44,7 @@ object UserForm: TUserForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -105,6 +111,24 @@ object UserForm: TUserForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 61
+      end
+      object isDateOut: TcxGridDBColumn
+        Caption = #1059#1074#1086#1083#1077#1085
+        DataBinding.FieldName = 'isDateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1059#1074#1086#1083#1077#1085' '#1044#1072'/'#1053#1077#1090
+        Options.Editing = False
+        Width = 33
+      end
+      object DateOut: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091#1074'.'
+        DataBinding.FieldName = 'DateOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        Options.Editing = False
+        Width = 63
       end
       object User_: TcxGridDBColumn
         DataBinding.FieldName = 'User_'
@@ -417,8 +441,8 @@ object UserForm: TUserForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
-    Top = 64
+    Left = 216
+    Top = 112
     DockControlHeights = (
       0
       0

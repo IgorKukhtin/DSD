@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean
              , BillNumberMobile Integer
              , isProjectMobile Boolean
              , UpdateMobileFrom TDateTime, UpdateMobileTo TDateTime
+             , isDateOut Boolean
+             , DateOut TDateTime
               )
 AS
 $BODY$
@@ -38,8 +40,11 @@ END IF;
    WITH tmpPersonal AS (SELECT lfSelect.MemberId
                              , lfSelect.UnitId
                              , lfSelect.PositionId
+                             , lfSelect.isDateOut
+                             , lfSelect.DateOut
                         FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                        )
+
    SELECT 
          Object_User.Id
        , Object_User.ObjectCode
@@ -69,6 +74,9 @@ END IF;
 
        , ObjectDate_User_UpdateMobileFrom.ValueData AS UpdateMobileFrom
        , ObjectDate_User_UpdateMobileTo.ValueData   AS UpdateMobileTo
+       
+       , COALESCE (tmpPersonal.isDateOut, FALSE) :: Boolean AS isDateOut
+       , CASE WHEN COALESCE (tmpPersonal.isDateOut, FALSE) = FALSE THEN NULL ELSE tmpPersonal.DateOut END :: TDateTime AS DateOut
    FROM Object AS Object_User
         LEFT JOIN ObjectString AS ObjectString_User_
                                ON ObjectString_User_.ObjectId = Object_User.Id
