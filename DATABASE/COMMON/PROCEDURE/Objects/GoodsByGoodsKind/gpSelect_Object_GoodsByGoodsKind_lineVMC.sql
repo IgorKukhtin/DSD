@@ -38,7 +38,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsBrandName TVarChar
              , isCheck_basis Boolean, isCheck_main Boolean
-             , GoodsTypeKindId Integer
+             , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , CodeCalc TVarChar      -- Код ВМС
 
              , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
@@ -217,6 +217,7 @@ BEGIN
            , tmpGoodsByGoodsKind.isCheck_main
 
            , tmpGoodsByGoodsKind.GoodsTypeKindId
+           , Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
 
            , tmpGoodsByGoodsKind.CodeCalc                           -- расчет: код на упак+вид+бренд+категория
 /*           , tmpGoodsByGoodsKind.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
@@ -309,6 +310,7 @@ BEGIN
             , tmpGoodsByGoodsKind.sku_code    :: Integer
 
        FROM tmpGoodsByGoodsKind_line AS tmpGoodsByGoodsKind
+            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = tmpGoodsByGoodsKind.GoodsTypeKindId  
       ;
 
 END;

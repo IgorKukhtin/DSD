@@ -100,7 +100,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             DataBinding.FieldName = 'GoodsTypeKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1064#1090#1091#1095#1085#1099#1081'"'
+            HeaderHint = #1042#1052#1057' - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
             Width = 55
           end
           object WmsCode: TcxGridDBColumn
@@ -1662,6 +1662,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 27
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macUpdateGoodsBrandList: TMultiAction
@@ -1702,6 +1703,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_Yes: TMultiAction
