@@ -13,6 +13,7 @@ $BODY$
 
    DECLARE vbPartnerId Integer;
    DECLARE vbOperDatePartner TDateTime;
+   DECLARE vbOperDate        TDateTime;
 
    DECLARE vbGoodsPropertyId Integer;
    DECLARE vbGoodsPropertyId_basis Integer;
@@ -34,7 +35,8 @@ BEGIN
 
 
      -- параметры из документа
-     SELECT tmp.OperDatePartner
+     SELECT tmp.OperDate
+          , tmp.OperDatePartner
           , tmp.PartnerId
           , tmp.GoodsPropertyId
           , tmp.GoodsPropertyId_basis
@@ -42,7 +44,7 @@ BEGIN
           , tmp.PaidKindId
           , tmp.ChangePercent
           , tmp.isDiscountPrice_juridical
-            INTO vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
+            INTO vbOperDate, vbOperDatePartner, vbPartnerId, vbGoodsPropertyId, vbGoodsPropertyId_basis, vbExportKindId, vbPaidKindId, vbChangePercent, vbIsDiscountPrice
      FROM (WITH tmpExportJuridical AS (SELECT DISTINCT tmp.PartnerId, tmp.ExportKindId FROM lpSelect_Object_ExportJuridical_list() AS tmp)
            SELECT Movement.OperDate AS OperDate
                 , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -1073,8 +1075,346 @@ BEGIN
      INSERT INTO _Result(RowData) VALUES ('</DOCUMENTS>');
      INSERT INTO _Result(RowData) VALUES ('</Stock>');
      INSERT INTO _Result(RowData) VALUES ('</DATA>');
+    
+     ELSE
 
+     -- !!!6.Формат CSV - 123!!!
+     IF vbExportKindId = 123
+     THEN
 
+     -- первая строчка CSV  - Шапка
+     INSERT INTO _Result(RowData)
+        SELECT COALESCE (Object_JuridicalBasis.ValueData, 'Alan')
+        -- Код ОКПО
+	|| ';' || COALESCE (OH_JuridicalDetails_From.OKPO, '')
+	--Номер РН
+	|| ';' || Movement.InvNumber
+	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
+	|| ';' || 'DN:V'||ObjectString_RoomNumber.ValueData ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
+	-- Версия формата
+	|| ';' || '14'
+	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
+	|| ';' || CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 'RN' ELSE 'VN' END
+	-- Дата РН   --ДД.ММ.РРРР
+	|| ';' || zfConvert_DateToString (MovementDate_OperDatePartner.ValueData)           
+	-- Номер договора
+	|| ';' || COALESCE (View_Contract.InvNumber, '')
+	-- Форма накладной
+	|| ';' || CASE WHEN MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm() THEN '10' ELSE '11' END
+	-- Код складу
+	|| ';' || COALESCE (ObjectString_RoomNumber.ValueData, '')
+        || ';'
+        FROM Movement
+             LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
+             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                    ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalDocument
+                                  ON ObjectLink_Contract_JuridicalDocument.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
+                                 AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_SecondForm()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                  ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = COALESCE (ObjectLink_Contract_JuridicalDocument.ChildObjectId, ObjectLink_Contract_JuridicalBasis.ChildObjectId)
+
+             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_JuridicalBasis.Id
+                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) >= OH_JuridicalDetails_From.StartDate
+                                                                AND COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) <  OH_JuridicalDetails_From.EndDate
+             LEFT JOIN Object AS Object_PartnerAdress
+                              ON Object_PartnerAdress.Id = vbPartnerId
+                             AND Object_PartnerAdress.DescId = zc_Object_Partner()
+             LEFT JOIN ObjectString AS ObjectString_RoomNumber
+                                    ON ObjectString_RoomNumber.ObjectId = vbPartnerId
+                                   AND ObjectString_RoomNumber.DescId = zc_ObjectString_Partner_RoomNumber()
+
+             LEFT JOIN ObjectString AS ObjectString_ShortName
+                                    ON ObjectString_ShortName.ObjectId = vbPartnerId
+                                   AND ObjectString_ShortName.DescId = zc_ObjectString_Partner_ShortName()
+
+        WHERE Movement.Id = inMovementId
+       ;
+
+     -- Строчная часть
+     INSERT INTO _Result(RowData)
+        WITH tmpObject_GoodsPropertyValue AS
+                (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                      , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                      , ObjectString_Article.ValueData       AS Article
+                 FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                      LEFT JOIN ObjectString AS ObjectString_Article
+                                             ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                )
+           , tmpObject_GoodsPropertyValueGroup AS
+                (SELECT tmpObject_GoodsPropertyValue.GoodsId
+                      , tmpObject_GoodsPropertyValue.BarCode
+                      , tmpObject_GoodsPropertyValue.Article
+                 FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+                      ) AS tmpGoodsProperty_find
+                      LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+                )
+           , tmpObject_GoodsPropertyValue_basis AS
+                (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+                      , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                      , ObjectString_BarCode.ValueData       AS BarCode
+                      , ObjectString_Article.ValueData       AS Article
+                 FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+                      ) AS tmpGoodsProperty
+                      INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                            ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                           ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                           ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                          AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+                      LEFT JOIN ObjectString AS ObjectString_BarCode
+                                             ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+                      LEFT JOIN ObjectString AS ObjectString_Article
+                                             ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                            AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+                )
+           , tmpGoodsByGoodsKind AS
+                (SELECT DISTINCT
+                        ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        AS ObjectId
+                      , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   AS GoodsId
+                      , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+                 FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                           ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                          AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                 WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                )
+
+           , tmpStickerProperty AS
+                (SELECT ObjectLink_Sticker_Goods.ChildObjectId                AS GoodsId
+                      , ObjectLink_StickerProperty_GoodsKind.ChildObjectId    AS GoodsKindId
+                      , COALESCE (ObjectFloat_Value5.ValueData, 0) :: Integer AS Value5
+                        --  № п/п
+                      , ROW_NUMBER() OVER (PARTITION BY ObjectLink_Sticker_Goods.ChildObjectId, ObjectLink_StickerProperty_GoodsKind.ChildObjectId ORDER BY COALESCE (ObjectFloat_Value5.ValueData, 0) DESC) AS Ord
+                 FROM Object AS Object_StickerProperty
+                       LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_Sticker
+                                            ON ObjectLink_StickerProperty_Sticker.ObjectId = Object_StickerProperty.Id
+                                           AND ObjectLink_StickerProperty_Sticker.DescId   = zc_ObjectLink_StickerProperty_Sticker()
+                       LEFT JOIN ObjectLink AS ObjectLink_Sticker_Goods
+                                            ON ObjectLink_Sticker_Goods.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                           AND ObjectLink_Sticker_Goods.DescId   = zc_ObjectLink_Sticker_Goods()
+                       LEFT JOIN ObjectLink AS ObjectLink_Sticker_Juridical
+                                            ON ObjectLink_Sticker_Juridical.ObjectId = ObjectLink_StickerProperty_Sticker.ChildObjectId
+                                           AND ObjectLink_Sticker_Juridical.DescId   = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                       LEFT JOIN ObjectLink AS ObjectLink_StickerProperty_GoodsKind
+                                            ON ObjectLink_StickerProperty_GoodsKind.ObjectId = Object_StickerProperty.Id
+                                           AND ObjectLink_StickerProperty_GoodsKind.DescId = zc_ObjectLink_StickerProperty_GoodsKind()
+
+                       LEFT JOIN ObjectFloat AS ObjectFloat_Value5
+                                             ON ObjectFloat_Value5.ObjectId = Object_StickerProperty.Id
+                                            AND ObjectFloat_Value5.DescId = zc_ObjectFloat_StickerProperty_Value5()
+                 WHERE Object_StickerProperty.DescId   = zc_Object_StickerProperty()
+                   AND Object_StickerProperty.isErased = FALSE
+                   AND ObjectLink_Sticker_Juridical.ChildObjectId IS NULL -- !!! БЕЗ Покупателя!!!
+                )
+                             
+        -- результат
+        SELECT --*** Артикул
+               COALESCE (tmpObject_GoodsPropertyValue.Article, tmpObject_GoodsPropertyValueGroup.Article, tmpObject_GoodsPropertyValue_basis.Article, '')
+               -- Внутренний код - справочник - "Параметры Товар и вид товара"
+               --tmpGoodsByGoodsKind.ObjectId :: TVarChar
+               -- Кол-во
+     || ';' || (MIFloat_AmountPartner.ValueData :: NUMERIC (16, 3)) :: TVarChar
+               -- Цена с НДС
+     || ';' || CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3)) :: TVarChar
+               -- Найменування товару
+     || ';' || REPLACE (Object_Goods.ValueData, '"', '') || CASE WHEN COALESCE (MILinkObject_GoodsKind.ObjectId, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+     || ';1' -- Коэффициент
+             -- Одиниця виміру
+     || ';' || COALESCE (Object_Measure.ValueData, '')
+               -- Цена без НДС
+     || ';' || CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+               AS NUMERIC (16, 3)) :: TVarChar
+               -- Сумма без НДС
+     || ';' || CAST
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
+               -- Сумма с НДС
+     || ';' || CAST
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2)) :: TVarChar
+               -- НДС
+    || ';' || (CAST
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+                   * 1.2
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
+             - CAST
+              (CAST (CASE WHEN MIFloat_ChangePercent.ValueData <> 0 AND vbIsChangePrice = TRUE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= MIFloat_ChangePercent.ValueData
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          WHEN vbChangePercent <> 0 AND vbIsChangePrice = FALSE
+                               THEN zfCalc_PriceTruncate (inOperDate     := vbOperDatePartner
+                                                        , inChangePercent:= vbChangePercent
+                                                        , inPrice        := CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                                                        , inIsWithVAT    := FALSE
+                                                         )
+                          ELSE CASE WHEN MIFloat_CountForPrice.ValueData > 0 THEN MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData ELSE MIFloat_Price.ValueData END
+                     END
+               AS NUMERIC (16, 3))
+             * MIFloat_AmountPartner.ValueData AS NUMERIC (16, 2))
+              ) :: TVarChar
+
+               --*** штрихкод
+    || ';' || COALESCE (tmpObject_GoodsPropertyValue.BarCode, tmpObject_GoodsPropertyValueGroup.BarCode, tmpObject_GoodsPropertyValue_basis.BarCode, '')
+               -- Термін придатності
+    || ';' || CASE WHEN COALESCE (tmpStickerProperty.Value5,0) <> 0 THEN tmpStickerProperty.Value5 :: TVarChar ELSE '' END :: TVarChar
+               -- Дата виробництва
+    || ';' ||  zfConvert_DateToString (vbOperDate) 
+    || ';'
+        FROM MovementItem
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
+                                        AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+             LEFT JOIN tmpGoodsByGoodsKind ON tmpGoodsByGoodsKind.GoodsId = MovementItem.ObjectId
+                                          AND tmpGoodsByGoodsKind.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
+                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                   AND tmpObject_GoodsPropertyValue.BarCode <> ''
+             LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
+                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = MovementItem.ObjectId
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+             LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = ObjectLink_Goods_Measure.ChildObjectId
+
+             LEFT JOIN tmpStickerProperty ON tmpStickerProperty.GoodsId     = tmpMovementItem.GoodsId
+                                         AND tmpStickerProperty.GoodsKindId = tmpMovementItem.GoodsKindId
+                                         AND tmpStickerProperty.Ord         = 1
+
+        WHERE MovementItem.MovementId = inMovementId
+          AND MovementItem.DescId = zc_MI_Master()
+          AND MovementItem.isErased = FALSE
+          AND MIFloat_AmountPartner.ValueData <> 0
+       ;
+     ---
+     
+     END IF;
      END IF;
      END IF;
      END IF;
@@ -1100,6 +1440,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Левицкий Б.
+ 11.03.20         * add --!!! 6 --
  29.07.16                                                                       * Шери - XML формат : цены в колонке " KOL="* формируются для каждой позиции отдельно с учетом скидки/накрутки
  10.05.16                                                                       * Шери - XML формат : не учитывалась скидка/накрутка при формировании цены в колонке " KOL="*
  05.05.16                                                                       * Допилена выгрузка для Шери - XML формат
