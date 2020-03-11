@@ -6,7 +6,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1055
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -76,7 +76,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 106
+            Width = 80
           end
           object GoodsGroupNameFull: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
@@ -84,7 +84,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 160
+            Width = 120
           end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
@@ -94,14 +94,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 172
-          end
-          object GoodsTypeKindName: TcxGridDBColumn
-            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsTypeKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' "'#1064#1090#1091#1095#1085#1099#1081'"'
-            Width = 55
           end
           object WmsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1042#1052#1057'*'
@@ -122,6 +114,23 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1076' SKU '#1074' '#1042#1052#1057
+            Options.Editing = False
+            Width = 70
+          end
+          object WmsNameCalc: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1042#1052#1057')'
+            DataBinding.FieldName = 'WmsNameCalc'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object GoodsTypeKindName: TcxGridDBColumn
+            Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsTypeKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072' '#1064#1090'/'#1053#1086#1084'/'#1053#1077#1085#1086#1084
             Options.Editing = False
             Width = 70
           end
@@ -156,11 +165,12 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 207
+            Width = 100
           end
           object GoodsCode_basis: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1094#1077#1093')'
             DataBinding.FieldName = 'GoodsCode_basis'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -169,6 +179,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
           object GoodsName_basis: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1094#1077#1093')'
             DataBinding.FieldName = 'GoodsName_basis'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -177,6 +188,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
           object GoodsCode_main: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1085#1072' '#1091#1087#1072#1082'.)'
             DataBinding.FieldName = 'GoodsCode_main'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -185,6 +197,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
           object GoodsName_main: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1085#1072' '#1091#1087#1072#1082'.)'
             DataBinding.FieldName = 'GoodsName_main'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -211,7 +224,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 35
           end
           object Weight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1090#1086#1074'.'
@@ -302,6 +315,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1052#1057' - '#1042#1099#1089#1086#1090#1072' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
@@ -313,6 +327,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1052#1057' - '#1044#1083#1080#1085#1072' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
@@ -324,6 +339,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1052#1057' - '#1064#1080#1088#1080#1085#1072' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
@@ -436,6 +452,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             DataBinding.FieldName = 'BoxCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -464,7 +481,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 70
           end
           object WeightOnBox: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1082#1075'. '#1074' '#1103#1097'. (E2/E3)'
@@ -574,6 +591,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             DataBinding.FieldName = 'BoxCode_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -590,6 +608,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
@@ -600,6 +619,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -610,6 +630,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1083#1080' = '#1074#1074#1086#1076' '#1047#1053#1040#1063#1045#1053#1048#1045', '#1080#1083#1080' = '#1082#1086#1083'.'#1077#1076'.*'#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089
@@ -620,6 +641,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             DataBinding.FieldName = 'BoxVolume_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -631,6 +653,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             DataBinding.FieldName = 'BoxWeight_2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
@@ -644,6 +667,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -655,6 +679,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -666,6 +691,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -677,6 +703,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' ('#1043#1086#1092#1088#1086')'
@@ -689,6 +716,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
@@ -701,6 +729,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
@@ -718,6 +747,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -728,6 +758,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -738,6 +769,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -753,6 +785,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -763,6 +796,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -773,6 +807,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -788,6 +823,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -798,6 +834,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -808,6 +845,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -823,6 +861,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -833,6 +872,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -843,6 +883,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -858,6 +899,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -868,6 +910,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -878,6 +921,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -893,6 +937,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 66
@@ -903,6 +948,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 61
@@ -913,6 +959,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -934,13 +981,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object WmsNameCalc: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1042#1052#1057')'
-            DataBinding.FieldName = 'WmsNameCalc'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
         end
       end
@@ -1662,6 +1702,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 27
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macUpdateGoodsBrandList: TMultiAction
@@ -1702,6 +1743,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1064#1090#1091#1095#1085#1099#1081' - '#1044#1040' '#1076#1083#1103' '#1042#1089#1077#1093
       ImageIndex = 76
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object macListUpdateSh_Yes: TMultiAction
