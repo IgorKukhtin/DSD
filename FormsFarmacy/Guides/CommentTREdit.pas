@@ -40,6 +40,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     cbisExplanation: TcxCheckBox;
+    cbisResort: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -59,6 +59,9 @@ BEGIN
                                                    , inToId             := inToId
                                                    , inComment          := '' :: TVarChar
                                                    , inChecked          := FALSE
+                                                   , inisComplete       := FALSE
+                                                   , inNumberSeats      := 0
+                                                   , inDriverSunId      := 0
                                                    , inUserId           := vbUserId
                                                    );
     

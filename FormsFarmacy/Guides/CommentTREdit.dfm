@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072'>'
-  ClientHeight = 189
+  ClientHeight = 212
   ClientWidth = 436
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 146
+    Top = 170
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 146
+    Top = 170
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -66,6 +66,13 @@
     Top = 105
     Caption = ' '#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1086#1103#1089#1085#1077#1085#1080#1103' '
     TabOrder = 6
+    Width = 245
+  end
+  object cbisResort: TcxCheckBox
+    Left = 20
+    Top = 129
+    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1087#1077#1088#1077#1089#1086#1088#1090#1072
+    TabOrder = 7
     Width = 245
   end
   object ActionList: TActionList
@@ -136,6 +143,14 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisResort'
+        Value = Null
+        Component = cbisResort
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -182,6 +197,13 @@
         Name = 'isExplanation'
         Value = Null
         Component = cbisExplanation
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isResort'
+        Value = Null
+        Component = cbisResort
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

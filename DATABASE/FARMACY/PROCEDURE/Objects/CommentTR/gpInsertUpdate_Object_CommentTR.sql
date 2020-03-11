@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Object_CommentTR()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentTR(Integer, Integer, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CommentTR(Integer, Integer, TVarChar, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CommentTR(
  INOUT ioId             Integer   ,     -- ключ объекта <Покупатель> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название
     IN inisExplanation  Boolean   ,     -- Обязательное заполнение пояснения
+    IN inisResort       Boolean   ,     -- Контроль пересорта
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -41,6 +42,8 @@ BEGIN
    -- сохранили Обязательное заполнение пояснения
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentTR_Explanation(), ioId, inisExplanation);
 
+   -- сохранили Обязательное заполнение пояснения
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CommentTR_Resort(), ioId, inisResort);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

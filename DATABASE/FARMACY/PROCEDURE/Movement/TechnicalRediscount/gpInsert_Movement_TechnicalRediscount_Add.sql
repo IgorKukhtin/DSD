@@ -21,6 +21,7 @@ BEGIN
                                                                  , inUnitId           := inUnitId
                                                                  , inComment          := ''
                                                                  , inisRedCheck       := False
+                                                                 , inisAdjustment     := False 
                                                                  , inUserId           := vbUserId
                                                                   );
 END;

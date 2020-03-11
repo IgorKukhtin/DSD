@@ -18,6 +18,10 @@ DECLARE
   vbInventoryNumber TVarChar;
   vbisRedCheck Boolean;
   vbisAdjustment Boolean;
+  vbComment TVarChar;
+  vbCommentTR TVarChar;
+  vbAmountIn TFloat;
+  vbAmountOut TFloat;
 BEGIN
 
 
@@ -27,11 +31,13 @@ BEGIN
          , Movement.InvNumber
          , COALESCE (MovementBoolean_RedCheck.ValueData, False)   AS isRedCheck
          , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
+         , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
     INTO vbOperDate
        , vbUnitId
        , vbInvNumber
        , vbisRedCheck
        , vbisAdjustment
+       , vbComment
     FROM Movement
          INNER JOIN MovementLinkObject AS MLO_Unit
                                        ON MLO_Unit.MovementId = Movement.Id
@@ -42,7 +48,43 @@ BEGIN
          LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
                                    ON MovementBoolean_Adjustment.MovementId = Movement.Id
                                   AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+         LEFT JOIN MovementString AS MovementString_Comment
+                                  ON MovementString_Comment.MovementId = Movement.Id
+                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
     WHERE Movement.Id = inMovementId;
+    
+    IF vbComment = ''
+    THEN
+        RAISE EXCEPTION 'Ошибка. Не заполнено примечание.';    
+    END IF;
+    
+    SELECT Object_CommentTR.ValueData                                                        AS CommentTR  
+         , SUM(CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END)        AS Amount
+         , SUM(CASE WHEN MovementItem.Amount < 0 THEN -1.0 * MovementItem.Amount ELSE 0 END) AS Amount
+    INTO vbCommentTR, vbAmountIn, vbAmountOut
+    FROM MovementItem
+                                     
+         INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                           ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+         INNER JOIN Object AS Object_CommentTR
+                           ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+                                  
+         INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Resort
+                                  ON ObjectBoolean_CommentTR_Resort.ObjectId = Object_CommentTR.Id 
+                                 AND ObjectBoolean_CommentTR_Resort.DescId = zc_ObjectBoolean_CommentTR_Resort()
+                                 AND ObjectBoolean_CommentTR_Resort.ValueData = TRUE
+                                     
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.isErased   = FALSE
+    GROUP BY Object_CommentTR.ValueData
+    HAVING SUM(MovementItem.Amount) <> 0;    
+
+    IF (COALESCE(vbCommentTR,'') <> '') 
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию кол-во излишка <%> не равно кол-ву недостачи <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
+    END IF;
 
       -- Сохраняем остаток и цену
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), T1.Id, COALESCE(T1.Price, 0))
