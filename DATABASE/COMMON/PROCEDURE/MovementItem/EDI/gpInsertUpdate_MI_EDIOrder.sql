@@ -173,4 +173,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_EDI (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MI_EDIOrder (inMovementId:= 16086413, inGoodsPropertyId:= 536616, inGoodsName:= 'Ковбаса Алан Яловича в/г с/к 1/2 в/у ваг', inGLNCode:= '9-0034180', inAmountOrder:= 0.6, inPriceOrder:= 215.7, inSession:= '5')

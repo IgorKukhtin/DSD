@@ -10,12 +10,37 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_EDIEvents(
 RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCount  Integer;
+   DECLARE vbCount_in Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
    vbUserId := lpGetUserBySession(inSession);
 
-   PERFORM lpInsert_Movement_EDIEvents(inMovementId, inEDIEvent, vbUserId);
+   IF SUBSTRING (inEDIEvent FROM 1 FOR 1) = '{'
+   THEN
+        --
+        vbCount:= (SELECT COUNT(*)
+                   FROM MovementItem
+                   WHERE MovementItem.MovementId = inMovementId
+                     AND MovementItem.DescId     = zc_MI_Master()
+                     AND MovementItem.isErased   = FALSE);
+        --
+        vbCount_in:= zfConvert_StringToFloat (SUBSTRING (inEDIEvent FROM 2 FOR POSITION ('}' IN inEDIEvent) - 2)) :: Integer;
+        --
+        PERFORM lpInsert_Movement_EDIEvents (inMovementId 
+                                           , CASE WHEN vbCount <> vbCount_in
+                                                       THEN 'Ошибка.Загружено {' || (vbCount :: TVarChar) || '} строк из {' || (vbCount_in :: TVarChar) || '}.'
+                                                  ELSE ''
+                                             END
+                                          || SUBSTRING (inEDIEvent
+                                                        FROM POSITION ('}' IN inEDIEvent) + 1
+                                                        FOR  LENGTH (inEDIEvent) - POSITION ('}' IN inEDIEvent)
+                                                       )
+                                           , vbUserId);
+   ELSE 
+        PERFORM lpInsert_Movement_EDIEvents (inMovementId, inEDIEvent, vbUserId);
+   END IF;
 
 END;
 $BODY$
@@ -30,4 +55,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_EDI (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsert_Movement_EDIEvents (inMovementId:= 16086413, inEDIEvent:= '{8}Загрузка ORDER из EDI завершена _order_20200311114504000_Zpp00048733.xml_', inSession:= '2')

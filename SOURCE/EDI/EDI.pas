@@ -2769,6 +2769,7 @@ var
   MovementId, GoodsPropertyId: integer;
   isMetro : Boolean;
   i: integer;
+  s : String;
 begin
   with spHeader, ORDER do
   begin
@@ -2788,7 +2789,12 @@ begin
     begin
       ParamByName('inMovementId').Value := MovementId;
       ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
-      ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
+      //
+      s:= CHARACTERISTIC.DESCRIPTION;
+      if Pos(char(189), s) > 0
+      then begin System.Insert('1/2', s, Pos(char(189), s) + 1);System.Delete(s, Pos(char(189), s), 1);end;
+      ParamByName('inGoodsName').Value := s;
+      //
       if isMetro = TRUE
       then ParamByName('inGLNCode').Value := BUYERPARTNUMBER
       else ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
@@ -2798,7 +2804,7 @@ begin
     end;
     //
     FInsertEDIEvents.ParamByName('inMovementId').Value := MovementId;
-    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='Загрузка ORDER из EDI завершена _'+lFileName+'_';
+    FInsertEDIEvents.ParamByName('inEDIEvent').Value :='{'+IntToStr(i)+'}Загрузка ORDER из EDI завершена _'+lFileName+'_';
     FInsertEDIEvents.Execute;
 end;
 
@@ -3258,6 +3264,7 @@ procedure TEDI.OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String;
   StartDate, EndDate: TDateTime);
 var
   List: TStrings;
+  //s : String;
   i: integer;
   Stream: TStringStream;
   ORDER: IXMLORDERType;
@@ -3282,6 +3289,8 @@ begin
             Start;
             for i := 0 to List.Count - 1 do
             begin
+              //s:= List[i];
+              //if (copy(s, 1, 5) = 'order') then showMessage(s);
               // если первые буквы файла order а последние .xml
               if ((copy(List[i], 1, 5) = 'order') and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
                or((AnsiUpperCase(copy(List[i], 1, 11)) = AnsiUpperCase('inbox\order')) and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))

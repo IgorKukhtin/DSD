@@ -333,6 +333,12 @@ BEGIN
          -- Оптимизация
          ANALYZE _tmpPartner_ReturnIn_Auto;*/
 
+         -- !!!проверка!!!
+         IF COALESCE (vbPartnerId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Для привзякт к продажам необходимо установить контрагента.';
+         END IF;
+
 
          -- Цикл по периодам (так наверно быстрее)
          WHILE vbStartDate >= inStartDateSale AND vbStartDate <= vbEndDate LOOP

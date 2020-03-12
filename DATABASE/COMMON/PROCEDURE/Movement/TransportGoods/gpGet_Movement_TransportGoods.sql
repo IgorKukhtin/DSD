@@ -106,7 +106,9 @@ BEGIN
                                                                                                 END
                                                                                       END
                                                                , inRouteId         := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId_Sale AND MLO.DescId = zc_MovementLinkObject_Route())
-                                                               , inMemberId1       := CASE WHEN COALESCE (tmpBranch.Member1Id,0) <> 0 THEN tmpBranch.Member1Id
+                                                                 -- отримав водій/експедитор - 1
+                                                               , inMemberId1       := CASE WHEN COALESCE (MLO_PersonalDriver.ObjectId,0) <> 0 THEN MLO_PersonalDriver.ObjectId
+                                                                                           WHEN COALESCE (tmpBranch.Member1Id,0) <> 0 THEN tmpBranch.Member1Id
                                                                                            ELSE CASE 
                                                                                                      -- vbIsOd + Фоззі
                                                                                                      WHEN vbIsOd = TRUE AND (SELECT OL_Retail.ChildObjectId
@@ -124,6 +126,7 @@ BEGIN
                                                                                                      ELSE NULL
                                                                                                 END
                                                                                       END
+                                                                 -- Бухгалтер (відповідальна особа вантажовідправника) - 2
                                                                , inMemberId2       := CASE WHEN COALESCE (tmpBranch.Member2Id,0) <> 0 THEN tmpBranch.Member2Id
                                                                                            ELSE CASE WHEN vbIsOd = TRUE
                                                                                                      THEN 418699 -- Бирдіна Оксана Євгенівна
@@ -133,6 +136,7 @@ BEGIN
                                                                                                 ELSE NULL
                                                                                            END
                                                                                       END
+                                                                 -- Відпуск дозволив - 3
                                                                , inMemberId3       := CASE WHEN COALESCE (tmpBranch.Member3Id,0) <> 0 THEN tmpBranch.Member3Id
                                                                                            ELSE CASE WHEN vbIsOd = TRUE
                                                                                                           THEN 418699 -- Бирдіна Оксана Євгенівна
@@ -142,6 +146,7 @@ BEGIN
                                                                                                      ELSE NULL
                                                                                                 END
                                                                                       END
+                                                                 -- Здав (відповідальна особа вантажовідправника) - 4
                                                                , inMemberId4       := CASE WHEN COALESCE (tmpBranch.Member4Id,0) <> 0 THEN tmpBranch.Member4Id
                                                                                            ELSE CASE WHEN vbIsKh = TRUE
                                                                                                           THEN 301480 -- Самохін Володимир Іванович кладовщик
@@ -151,9 +156,13 @@ BEGIN
                                                                                                      ELSE NULL
                                                                                                 END
                                                                                       END
+                                                                 -- Прийняв водій/експедитор - 1
                                                                , inMemberId5       := NULL
+                                                                 -- Здав водій/експедитор - пусто ИЛИ 1
                                                                , inMemberId6       := NULL
+                                                                 --  Прийняв (відповідальна особа вантажоодержувача) - пусто 
                                                                , inMemberId7       := NULL
+                                                                 -- 
                                                                , inUserId          := vbUserId
                                                                 )
                           FROM (SELECT vbBranchId AS BranchId) AS tmp

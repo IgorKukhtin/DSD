@@ -375,6 +375,7 @@ BEGIN
                                    , tmpParent.UnitId
                                    , tmpParent.PositionId
                                    , tmpParent.InfoMoneyId
+                                   , tmpParent.PersonalServiceListId
                               FROM tmpParent
                                    INNER JOIN ContainerLinkObject AS CLO_ServiceDate
                                                                   ON CLO_ServiceDate.ObjectId = vbServiceDateId
@@ -411,6 +412,7 @@ BEGIN
                                    , tmpContainer.UnitId
                                    , tmpContainer.PositionId
                                    , tmpContainer.InfoMoneyId
+                                   , tmpContainer.PersonalServiceListId
                               FROM tmpContainer
                                    INNER JOIN MovementItemContainer AS MIContainer
                                                                     ON MIContainer.ContainerId    = tmpContainer.ContainerId
@@ -420,46 +422,53 @@ BEGIN
                                      , tmpContainer.UnitId
                                      , tmpContainer.PositionId
                                      , tmpContainer.InfoMoneyId
-                                     , MIContainer.MovementDescId
+                                     , tmpContainer.PersonalServiceListId
+                                   --, MIContainer.MovementDescId
                              )
              , tmpService AS (SELECT tmpParent.PersonalId
                                    , tmpParent.UnitId
                                    , tmpParent.PositionId
                                    , tmpParent.InfoMoneyId
-                                   , tmpParent.SummService
-                                   , tmpParent.SummToPay_cash
-                                   , tmpParent.SummToPay
-                                   , tmpParent.SummCard
-                                   , tmpParent.SummCardSecond
-                                   , tmpParent.SummCardSecondCash
-                                   , tmpParent.SummNalog
-                                   , tmpParent.SummMinus
-                                   , tmpParent.SummFine
-                                   , tmpParent.SummAdd
-                                   , tmpParent.SummAddOth
-                                   , tmpParent.SummHoliday
-                                   , tmpParent.SummHosp
-                                   , tmpParent.SummSocialIn
-                                   , tmpParent.SummSocialAdd
-                                   , tmpParent.SummChild
-                                   , tmpParent.SummMinusExt
-                                   , tmpParent.SummTransport
-                                   , tmpParent.SummTransportAdd
-                                   , tmpParent.SummTransportAddLong
-                                   , tmpParent.SummTransportTaxi
-                                   , tmpParent.SummPhone
-                                   , tmpMIContainer.Amount_current
-                                   , tmpMIContainer.Amount_avance
-                                   , tmpMIContainer.Amount_avance_ret
-                                   , tmpMIContainer.AmountCardSecond_avance
-                                   , tmpMIContainer.Amount_service
-                                   , tmpParent.PersonalServiceListId
+                                   , SUM (tmpParent.SummService)                  AS SummService
+                                   , SUM (tmpParent.SummToPay_cash)               AS SummToPay_cash
+                                   , SUM (tmpParent.SummToPay)                    AS SummToPay
+                                   , SUM (tmpParent.SummCard)                     AS SummCard
+                                   , SUM (tmpParent.SummCardSecond)               AS SummCardSecond
+                                   , SUM (tmpParent.SummCardSecondCash)           AS SummCardSecondCash
+                                   , SUM (tmpParent.SummNalog)                    AS SummNalog
+                                   , SUM (tmpParent.SummMinus)                    AS SummMinus
+                                   , SUM (tmpParent.SummFine)                     AS SummFine
+                                   , SUM (tmpParent.SummAdd)                      AS SummAdd
+                                   , SUM (tmpParent.SummAddOth)                   AS SummAddOth
+                                   , SUM (tmpParent.SummHoliday)                  AS SummHoliday
+                                   , SUM (tmpParent.SummHosp)                     AS SummHosp
+                                   , SUM (tmpParent.SummSocialIn)                 AS SummSocialIn
+                                   , SUM (tmpParent.SummSocialAdd)                AS SummSocialAdd
+                                   , SUM (tmpParent.SummChild)                    AS SummChild
+                                   , SUM (tmpParent.SummMinusExt)                 AS SummMinusExt
+                                   , SUM (tmpParent.SummTransport)                AS SummTransport
+                                   , SUM (tmpParent.SummTransportAdd)             AS SummTransportAdd
+                                   , SUM (tmpParent.SummTransportAddLong)         AS SummTransportAddLong
+                                   , SUM (tmpParent.SummTransportTaxi)            AS SummTransportTaxi
+                                   , SUM (tmpParent.SummPhone)                    AS SummPhone
+                                   , SUM (tmpMIContainer.Amount_current)          AS Amount_current
+                                   , SUM (tmpMIContainer.Amount_avance)           AS Amount_avance
+                                   , SUM (tmpMIContainer.Amount_avance_ret)       AS Amount_avance_ret
+                                   , SUM (tmpMIContainer.AmountCardSecond_avance) AS AmountCardSecond_avance
+                                   , SUM (tmpMIContainer.Amount_service)          AS Amount_service
+                                   , 0 AS PersonalServiceListId
+                                -- , tmpParent.PersonalServiceListId
                                  --, tmpParent.PersonalServiceListId_calc
                               FROM tmpParent
                                    LEFT JOIN tmpMIContainer ON tmpMIContainer.PersonalId            = tmpParent.PersonalId
                                                            AND tmpMIContainer.UnitId                = tmpParent.UnitId
                                                            AND tmpMIContainer.PositionId            = tmpParent.PositionId
                                                            AND tmpMIContainer.InfoMoneyId           = tmpParent.InfoMoneyId
+                                                           AND tmpMIContainer.PersonalServiceListId = tmpParent.PersonalServiceListId
+                              GROUP BY tmpParent.PersonalId
+                                     , tmpParent.UnitId
+                                     , tmpParent.PositionId
+                                     , tmpParent.InfoMoneyId
                              )
                 , tmpData AS (SELECT tmpMI.MovementItemId
                                    , tmpMI.Amount
