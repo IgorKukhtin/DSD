@@ -189,6 +189,8 @@ type
     UnitName_to: TcxGridDBColumn;
     actPrint_MOAuto: TdsdPrintAction;
     bbPrint_MOAuto: TdxBarButton;
+    actPrintCount: TdsdPrintAction;
+    bbPrintCount: TdxBarButton;
   private
   public
   end;
