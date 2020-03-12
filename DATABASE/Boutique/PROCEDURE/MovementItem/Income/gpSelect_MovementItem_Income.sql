@@ -19,8 +19,9 @@ RETURNS TABLE (Id Integer, PartionId Integer, GoodsId Integer, GoodsCode Integer
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
              , Amount TFloat, Remains TFloat
-             , PriceJur TFloat, OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat, TotalSummPriceJur TFloat
+             , PriceJur TFloat, OperPrice TFloat, CountForPrice TFloat
+             , OperPriceList TFloat, OperPriceList_grn TFloat
+             , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat, TotalSummPriceList_grn TFloat, TotalSummPriceJur TFloat
              , PriceTax TFloat       -- % наценки
              , Color_Calc Integer
              , isProtocol Boolean
@@ -33,6 +34,7 @@ $BODY$
   DECLARE vbCurrencyValue  TFloat;
   DECLARE vbParValue       TFloat;
   DECLARE vbUnitId         Integer;
+  DECLARE vbCurrencyId_pl  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Income());
@@ -42,18 +44,31 @@ BEGIN
      SELECT MLO_CurrencyDocument.ObjectId AS CurrencyId_Doc
           , MF_CurrencyValue.ValueData    AS CurrencyValue
           , MF_ParValue.ValueData         AS ParValue
-            INTO vbCurrencyId_Doc, vbCurrencyValue, vbParValue
-     FROM MovementLinkObject AS MLO_CurrencyDocument
+          , COALESCE (ObjectLink_currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl -- Получили валюту для прайса
+            INTO vbCurrencyId_Doc, vbCurrencyValue, vbParValue, vbCurrencyId_pl
+     FROM Movement
+          LEFT JOIN MovementLinkObject AS MLO_CurrencyDocument
+                                       ON MLO_CurrencyDocument.MovementId = Movement.Id
+                                      AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
+
           LEFT JOIN MovementFloat AS MF_CurrencyValue
                                   ON MF_CurrencyValue.MovementId = MLO_CurrencyDocument.MovementId
                                  AND MF_CurrencyValue.DescId     = zc_MovementFloat_CurrencyValue()
           LEFT JOIN MovementFloat AS MF_ParValue
                                   ON MF_ParValue.MovementId = MLO_CurrencyDocument.MovementId
                                  AND MF_ParValue.DescId     = zc_MovementFloat_ParValue()
-     WHERE MLO_CurrencyDocument.MovementId = inMovementId
-       AND MLO_CurrencyDocument.DescId     = zc_MovementLinkObject_CurrencyDocument()
-    ;
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS ObjectLink_PriceList 
+                               ON ObjectLink_PriceList.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS ObjectLink_currency 
+                               ON ObjectLink_currency.ObjectId = ObjectLink_PriceList.ChildObjectId
+                              AND ObjectLink_currency.DescId   = zc_ObjectLink_PriceList_Currency()
+
+     WHERE Movement.Id = inMovementId;
 
      -- Параметры документа - Подразделение
      SELECT MovementLinkObject_To.ObjectId
@@ -71,7 +86,12 @@ BEGIN
                            , COALESCE (MIFloat_PriceJur.ValueData, 0)        AS PriceJur
                            , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
-                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0) 
+                             * (CASE WHEN vbCurrencyId_Doc <> zc_Currency_GRN() THEN 1 WHEN vbCurrencyValue <> 0 THEN vbCurrencyValue ELSE 1 END
+                              / CASE WHEN vbCurrencyId_Doc <> zc_Currency_GRN() THEN 1 WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END)         AS OperPriceList
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0) 
+                             * (CASE WHEN vbCurrencyId_Doc = zc_Currency_GRN() THEN 1 WHEN vbCurrencyValue <> 0 THEN vbCurrencyValue ELSE 1 END
+                              / CASE WHEN vbCurrencyId_Doc = zc_Currency_GRN() THEN 1 WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END)          AS OperPriceList_grn
                              -- Сумма по Вх. в Валюте - с округлением до 2-х знаков
                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSumm
                              -- Сумма по Вх. в zc_Currency_Basis
@@ -80,8 +100,16 @@ BEGIN
                                           , zfCalc_PriceIn_Basis (vbCurrencyId_Doc, MIFloat_OperPrice.ValueData, vbCurrencyValue, vbParValue)
                                           , MIFloat_CountForPrice.ValueData
                                            ) AS TotalSummBalance
-                             -- Сумма по Прайсу - с округлением до 0/2-х знаков
-                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)                       AS TotalSummPriceList
+                                           
+                             -- ГРН Сумма по Прайсу - с округлением до 0/2-х знаков
+                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData) 
+                             * (CASE WHEN vbCurrencyId_Doc <> zc_Currency_GRN() THEN 1 WHEN vbCurrencyValue <> 0 THEN vbCurrencyValue ELSE 1 END
+                              / CASE WHEN vbCurrencyId_Doc <> zc_Currency_GRN() THEN 1 WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END)         AS TotalSummPriceList
+                             -- ВАЛЮТА Сумма по Прайсу - с округлением до 0/2-х знаков
+                           , zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList.ValueData)
+                             * (CASE WHEN vbCurrencyId_Doc = zc_Currency_GRN() THEN 1 WHEN vbCurrencyValue <> 0 THEN vbCurrencyValue ELSE 1 END
+                              / CASE WHEN vbCurrencyId_Doc = zc_Currency_GRN() THEN 1 WHEN vbParValue <> 0 THEN vbParValue ELSE 1 END)          AS TotalSummPriceList_grn
+
                               -- Сумма по Вх. без скидки 
                            , zfCalc_SummIn (MovementItem.Amount, MIFloat_PriceJur.ValueData, MIFloat_CountForPrice.ValueData) AS TotalSummPriceJur
                            , MovementItem.isErased
@@ -144,15 +172,17 @@ BEGIN
            , Object_GoodsSize.ValueData          AS GoodsSizeName
 
            , tmpMI.Amount
-           , Container.Amount          :: TFloat AS Remains
-           , tmpMI.PriceJur            :: TFloat AS PriceJur
-           , tmpMI.OperPrice           :: TFloat AS OperPrice
-           , tmpMI.CountForPrice       :: TFloat AS CountForPrice
-           , tmpMI.OperPriceList       :: TFloat AS OperPriceList
-           , tmpMI.TotalSumm           :: TFloat AS TotalSumm
-           , tmpMI.TotalSummBalance    :: TFloat AS TotalSummBalance
-           , tmpMI.TotalSummPriceList  :: TFloat AS TotalSummPriceList
-           , tmpMI.TotalSummPriceJur   :: TFloat AS TotalSummPriceJur
+           , Container.Amount              :: TFloat AS Remains
+           , tmpMI.PriceJur                :: TFloat AS PriceJur
+           , tmpMI.OperPrice               :: TFloat AS OperPrice
+           , tmpMI.CountForPrice           :: TFloat AS CountForPrice
+           , tmpMI.OperPriceList           :: TFloat AS OperPriceList
+           , tmpMI.OperPriceList_grn       :: TFloat AS OperPriceList_grn
+           , tmpMI.TotalSumm               :: TFloat AS TotalSumm
+           , tmpMI.TotalSummBalance        :: TFloat AS TotalSummBalance
+           , tmpMI.TotalSummPriceList      :: TFloat AS TotalSummPriceList
+           , tmpMI.TotalSummPriceList_grn  :: TFloat AS TotalSummPriceList_grn
+           , tmpMI.TotalSummPriceJur       :: TFloat AS TotalSummPriceJur
            
            -- % наценки
            , CAST (CASE WHEN tmpMI.TotalSummBalance <> 0

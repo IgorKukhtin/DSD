@@ -14,7 +14,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
-             , TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , TotalSummBalance TFloat
+             , TotalSummPriceList TFloat
+             , TotalSummPriceList_grn TFloat
              , TotalSummJur TFloat, ChangePercent TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , FromName TVarChar, ToName TVarChar
@@ -87,7 +89,15 @@ BEGIN
            , MF_TotalCount.ValueData                     AS TotalCount
            , MF_TotalSumm.ValueData                      AS TotalSumm
            , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
-           , MF_TotalSummPriceList.ValueData             AS TotalSummPriceList
+           -- Сумма прайс в валюте
+           , CAST (MF_TotalSummPriceList.ValueData
+                * (CASE WHEN Object_CurrencyDocument.Id <> zc_Currency_GRN() THEN 1 WHEN MF_CurrencyValue.ValueData <> 0 THEN MF_CurrencyValue.ValueData ELSE 1 END
+                 / CASE WHEN Object_CurrencyDocument.Id <> zc_Currency_GRN() THEN 1 WHEN MF_ParValue.ValueData <> 0 THEN MF_ParValue.ValueData ELSE 1 END) AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList
+           -- Сумма прайс в грн
+           , CAST (MF_TotalSummPriceList.ValueData
+                * (CASE WHEN Object_CurrencyDocument.Id = zc_Currency_GRN() THEN 1 WHEN MF_CurrencyValue.ValueData <> 0 THEN MF_CurrencyValue.ValueData ELSE 1 END
+                 / CASE WHEN Object_CurrencyDocument.Id = zc_Currency_GRN() THEN 1 WHEN MF_ParValue.ValueData <> 0 THEN MF_ParValue.ValueData ELSE 1 END) AS NUMERIC (16, 2)) :: TFloat AS TotalSummPriceList_grn
+
            , MF_TotalSummJur.ValueData                   AS TotalSummJur
            , MF_ChangePercent.ValueData                  AS ChangePercent
                                                          
@@ -127,7 +137,7 @@ BEGIN
                                     ON MF_ParValue.MovementId = Movement.Id
                                    AND MF_ParValue.DescId = zc_MovementFloat_ParValue()
             LEFT JOIN MovementFloat AS MF_CurrencyValue
-                                    ON MF_CurrencyValue.MovementId =  Movement.Id
+                                    ON MF_CurrencyValue.MovementId = Movement.Id
                                    AND MF_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
 
             LEFT JOIN MovementFloat AS MF_TotalSummJur
