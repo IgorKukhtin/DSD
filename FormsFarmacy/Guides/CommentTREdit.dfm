@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' '#1089#1090#1088#1086#1082' '#1090#1077#1093#1085#1080#1095#1077#1089#1082#1086#1075#1086' '#1087#1077#1088#1077#1091#1095#1077#1090#1072'>'
-  ClientHeight = 189
-  ClientWidth = 436
+  ClientHeight = 232
+  ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 91
-    Top = 146
+    Top = 194
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 241
-    Top = 146
+    Top = 194
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -67,6 +67,34 @@
     Caption = ' '#1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1086#1103#1089#1085#1077#1085#1080#1103' '
     TabOrder = 6
     Width = 245
+  end
+  object cbisResort: TcxCheckBox
+    Left = 20
+    Top = 130
+    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1087#1077#1088#1077#1089#1086#1088#1090#1072
+    TabOrder = 7
+    Width = 146
+  end
+  object cbisDifferenceSum: TcxCheckBox
+    Left = 20
+    Top = 156
+    Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1087#1077#1088#1077#1089#1086#1088#1090#1072' '#1074' '#1089#1091#1084#1084#1077
+    TabOrder = 8
+    Width = 181
+  end
+  object cxLabel9: TcxLabel
+    Left = 219
+    Top = 156
+    Caption = ' '#1044#1086#1087#1091#1089#1090#1080#1084#1072#1103' '#1088#1072#1079#1085#1080#1094#1072' '
+  end
+  object edDifferenceSum: TcxCurrencyEdit
+    Left = 340
+    Top = 155
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 80
   end
   object ActionList: TActionList
     Left = 252
@@ -136,6 +164,30 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisResort'
+        Value = Null
+        Component = cbisResort
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDifferenceSum'
+        Value = Null
+        Component = cbisDifferenceSum
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDifferenceSum'
+        Value = Null
+        Component = edDifferenceSum
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 188
@@ -183,6 +235,27 @@
         Value = Null
         Component = cbisExplanation
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isResort'
+        Value = Null
+        Component = cbisResort
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isDifferenceSum'
+        Value = Null
+        Component = cbisDifferenceSum
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DifferenceSum'
+        Value = Null
+        Component = edDifferenceSum
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

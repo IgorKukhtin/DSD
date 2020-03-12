@@ -122,6 +122,25 @@ begin
     Add_Log('-------------------');
     Add_Log('Oтправка сообщений  по задержке доставк');
 
+    pmClick(N1);
+    Application.ProcessMessages;
+    btnExportClick(Sender);
+    Application.ProcessMessages;
+    btnSendMailClick(Sender);
+    Application.ProcessMessages;
+
+    pmClick(N2);
+    Application.ProcessMessages;
+    btnExportClick(Sender);
+    Application.ProcessMessages;
+    btnSendMailClick(Sender);
+    Application.ProcessMessages;
+
+    pmClick(N3);
+    Application.ProcessMessages;
+    btnExportClick(Sender);
+    Application.ProcessMessages;
+    btnSendMailClick(Sender);
     Application.ProcessMessages;
 
     Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingDelaySNU.ini');

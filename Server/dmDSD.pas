@@ -452,7 +452,7 @@ begin
   AResponseInfo.ContentText := 'HELLO WORLD';
   AResponseInfo.ContentType := 'text/html; charset=windows-1251';
 
-  LQuery := ReplaceAll(TIdURI.URLDecode(ARequestInfo.UnparsedParams, IndyTextEncoding_OSDefault), '+', ' ')
+  LQuery := TIdURI.URLDecode(ReplaceAll(ARequestInfo.UnparsedParams, '+', ' '), IndyTextEncoding_OSDefault)
     .Split(['XML='])[1];
 
   try

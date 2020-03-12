@@ -1581,9 +1581,14 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_MorionCode', 'Код мориона' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_MorionCode');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CommentTR_DifferenceSum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CommentTR_DifferenceSum'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CommentTR(), 'zc_ObjectFloat_CommentTR_DifferenceSum', 'Допустимая разница в сумме' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CommentTR_DifferenceSum');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.03.20                                                                                      * zc_ObjectFloat_CommentTR_DifferenceSum
  27.01.20         * zc_ObjectFloat_PersonalServiceList_Compensation
  21.12.19                                                                                      * zc_ObjectFloat_Price_MCSValueSun
  17.12.19         * zc_ObjectFloat_Unit_SunIncome

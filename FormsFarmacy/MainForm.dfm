@@ -189,7 +189,7 @@ inherited MainForm: TMainForm
     object actReport_Send_RemainsSun_over: TdsdOpenForm [11]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1 ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
+      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.2 ('#1057#1074#1077#1088#1093' '#1079#1072#1087#1072#1089')'
       FormName = 'TReport_Send_RemainsSun_overForm'
       FormNameParam.Value = 'TReport_Send_RemainsSun_overForm'
       FormNameParam.DataType = ftString

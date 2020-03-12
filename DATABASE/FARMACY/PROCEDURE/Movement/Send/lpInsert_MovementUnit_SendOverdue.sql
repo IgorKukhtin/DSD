@@ -186,6 +186,8 @@
                                                  inComment          := '',
                                                  inChecked          := FALSE,
                                                  inisComplete       := FALSE,
+                                                 inNumberSeats      := 0,
+                                                 inDriverSunId      := 0,
                                                  inSession          := inSession
                                                  );
 

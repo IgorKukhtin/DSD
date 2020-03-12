@@ -19,7 +19,7 @@ $BODY$
    DECLARE vbIsBasis    Boolean;
    DECLARE vbIsTushenka Boolean;
 BEGIN
-    -- проверка прав пользователя на вызов процедуры
+    -- проверка прав пользователя на вызов процедуры 
     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
 
@@ -41,7 +41,7 @@ BEGIN
     INSERT INTO tmpContainer_Count (MIDescId, ContainerId, GoodsId, GoodsKindId, Amount)
                                  WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
                                                  UNION
-                                                  SELECT UnitId, zc_MI_Child() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inToId)
+                                                  SELECT UnitId, zc_MI_Child() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inToId OR inToId = 2790412) -- ЦЕХ Тушенка
                                       -- Документ Инвентаризации
                                     , tmpInventory AS (SELECT Movement.Id AS MovementId, Movement.OperDate, MLO_From.ObjectId AS UnitId
                                                        FROM Movement

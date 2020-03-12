@@ -51,27 +51,35 @@ object CommentTRForm: TCommentTRForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 57
+        Width = 49
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 363
+        Width = 309
       end
       object isExplanation: TcxGridDBColumn
         Caption = #1054#1073#1103#1079#1072#1090#1077#1083#1100#1085#1086#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1077' '#1087#1086#1103#1089#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'isExplanation'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 110
+        Width = 94
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 78
+      end
+      object isResort: TcxGridDBColumn
+        Caption = #1050#1086#1085#1090#1088#1086#1083#1100' '#1087#1077#1088#1077#1089#1086#1088#1090#1072
+        DataBinding.FieldName = 'isResort'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

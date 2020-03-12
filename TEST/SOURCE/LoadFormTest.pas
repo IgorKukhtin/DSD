@@ -1006,11 +1006,11 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDataTimeDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDataTimeDialogForm');
   // exit;
@@ -1027,19 +1027,19 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserSettingsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserSettingsForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_byMessageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_byMessageForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUser_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUser_ObjectForm');
 

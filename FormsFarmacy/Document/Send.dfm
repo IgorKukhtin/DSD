@@ -1343,6 +1343,9 @@ inherited SendForm: TSendForm
       MoveParams = <>
       ActionList = <
         item
+          Action = actInsertUpdateMovement
+        end
+        item
           Action = actExecSetSent
         end>
       QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' " '#1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072'"?'

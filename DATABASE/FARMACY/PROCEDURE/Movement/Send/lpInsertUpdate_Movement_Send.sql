@@ -26,7 +26,21 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = ioId)
+     IF COALESCE ((SELECT MovementBoolean_Deferred.ValueData FROM MovementBoolean  AS MovementBoolean_Deferred
+                  WHERE MovementBoolean_Deferred.MovementId = ioId
+                    AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()), FALSE) = TRUE
+        AND EXISTS(SELECT 1
+                   FROM Movement
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                      ON MovementLinkObject_From.MovementId = Movement.Id
+                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+                        INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                      ON MovementLinkObject_To.MovementId = Movement.Id
+                                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                   WHERE Movement.Id = ioId
+                     AND (Movement.OperDate <> inOperDate OR MovementLinkObject_From.ObjectId <> COALESCE(inFromId, 0) OR MovementLinkObject_To.ObjectId <> COALESCE(inToId, 0)))
      THEN
           RAISE EXCEPTION 'Ошибка.Документ отложен, корректировка запрещена!';
      END IF;
