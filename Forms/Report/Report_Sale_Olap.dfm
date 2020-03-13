@@ -818,33 +818,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ToGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ToGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
           Name = 'GoodsGroupId'
-          Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsGroupName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsGroupId'
           Value = ''
           Component = GuidesGoodsGroup
           ComponentItem = 'Key'
@@ -852,7 +826,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ChildGoodsGroupName'
+          Name = 'GoodsGroupName'
           Value = ''
           Component = GuidesGoodsGroup
           ComponentItem = 'TextValue'
@@ -863,26 +837,13 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
         item
           Name = 'GoodsId'
           Value = ''
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'GoodsName'
-          Value = ''
-          DataType = ftString
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'ChildGoodsId'
-          Value = ''
           Component = GuidesGoods
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end
         item
-          Name = 'ChildGoodsName'
+          Name = 'GoodsName'
           Value = ''
           Component = GuidesGoods
           ComponentItem = 'TextValue'
@@ -1030,6 +991,8 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <>
+    ColorRuleList = <>
+    SummaryList = <>
     Left = 392
     Top = 272
   end

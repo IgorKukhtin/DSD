@@ -228,19 +228,6 @@ object Report_Sale_OlapDialogForm: TReport_Sale_OlapDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ChildGoodsId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChildGoodsName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'GoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -253,19 +240,6 @@ object Report_Sale_OlapDialogForm: TReport_Sale_OlapDialogForm
         Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChildGoodsGroupId'
-        Value = Null
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChildGoodsGroupName'
-        Value = Null
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -288,19 +262,6 @@ object Report_Sale_OlapDialogForm: TReport_Sale_OlapDialogForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ToGroupId'
-        Value = ''
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToGroupName'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'isMovement'
         Value = Null
         Component = cbGroupMovement
@@ -312,13 +273,6 @@ object Report_Sale_OlapDialogForm: TReport_Sale_OlapDialogForm
         Name = 'isPartion'
         Value = Null
         Component = cbisPartion
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isGroupInfoMoney'
-        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
