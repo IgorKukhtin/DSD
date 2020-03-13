@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_Sale ()
+-- Function: gpReport_Sale_Olap()
 
 DROP FUNCTION IF EXISTS gpReport_Sale_Olap (TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
@@ -53,9 +53,9 @@ $BODY$
 BEGIN
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
- 
+--    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+--    CREATE TEMP TABLE _tmpFromGroup (FromId Integer) ON COMMIT DROP;
+/* 
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
@@ -79,13 +79,23 @@ BEGIN
          INSERT INTO _tmpFromGroup (FromId)
           SELECT Id FROM Object_Unit_View;
     END IF;
-  
+*/  
     -- Результат
     RETURN QUERY
-      WITH 
-           
+      WITH _tmpGoods AS (SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup
+                         WHERE COALESCE (inGoodsId, 0) = 0 AND inGoodsGroupId > 0
+                        UNION 
+                         SELECT inGoodsId WHERE inGoodsId > 0
+                        UNION 
+                         SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND COALESCE (inGoodsId, 0) = 0 AND COALESCE (inGoodsGroupId, 0) = 0
+                        )
+         , _tmpFromGroup AS (SELECT lfSelect_Object_Unit_byGroup.UnitId AS FromId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
+                             WHERE inFromId > 0
+                            UNION
+                             SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (inFromId, 0) = 0
+                            )
            -- данные первого периода
-           tmpMI_ContainerIn1 AS
+         , tmpMI_ContainerIn1 AS
                        (SELECT MIContainer.OperDate                                 AS OperDate
                              , MIContainer.MovementId                               AS MovementId
                              , MIContainer.MovementItemId                           AS MovementItemId 
@@ -651,4 +661,4 @@ $BODY$
 */
 
 -- тест-
- -- SELECT * FROM gpReport_Sale_Olap (inStartDate:= '01.06.2018', inEndDate:= '01.06.2018', inStartDate2:= '05.06.2017', inEndDate2:= '05.06.2017', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;
+-- SELECT * FROM gpReport_Sale_Olap (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inStartDate2:= '05.06.2020', inEndDate2:= '05.06.2020', inIsMovement:= FALSE, inIsPartion:= FALSE, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 0, inSession:= zfCalc_UserAdmin()) limit 1;

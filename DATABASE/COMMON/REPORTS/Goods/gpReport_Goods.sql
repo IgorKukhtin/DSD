@@ -50,7 +50,9 @@ BEGIN
     IF inGoodsId = 0 AND inGoodsGroupId <> 0
     THEN
          RETURN QUERY
-         SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner, gpReport.MovementDescName, gpReport.MovementDescName_order
+         SELECT gpReport.MovementId, gpReport.InvNumber, gpReport.OperDate, gpReport.OperDatePartner
+              , gpReport.isPeresort
+              , gpReport.MovementDescName, gpReport.MovementDescName_order
               , gpReport.isActive, gpReport.isRemains, gpReport.isRePrice, gpReport.isInv
               , gpReport.LocationDescName, gpReport.LocationCode, gpReport.LocationName
               , gpReport.CarCode, gpReport.CarName

@@ -12,7 +12,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsGroup(
     IN inIsPartner    Boolean   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, MovementDescName_order TVarChar
+RETURNS TABLE  (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
+              , isPeresort Boolean
+              , MovementDescName TVarChar, MovementDescName_order TVarChar
               , isActive Boolean, isRemains Boolean, isRePrice Boolean, isInv Boolean
               , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               , CarCode Integer, CarName TVarChar
@@ -1065,10 +1067,11 @@ BEGIN
                                                              LIMIT 1
                                                             )
                       )
-   SELECT 0    :: Integer   AS MovementId
-        , ''   :: TVarChar  AS InvNumber
-        , NULL :: TDateTime AS OperDate
-        , NULL :: TDateTime AS OperDatePartner
+   SELECT 0      :: Integer   AS MovementId
+        , ''     :: TVarChar  AS InvNumber
+        , NULL   :: TDateTime AS OperDate
+        , NULL   :: TDateTime AS OperDatePartner
+        , FALSE  :: Boolean   AS isPeresort
         , CASE WHEN tmpResult.MovementDescId = zc_Movement_Inventory() AND tmpResult.isReprice = TRUE
                     THEN MovementDesc.ItemName || ' переоценка'
                WHEN tmpResult.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpResult.isActive = TRUE
