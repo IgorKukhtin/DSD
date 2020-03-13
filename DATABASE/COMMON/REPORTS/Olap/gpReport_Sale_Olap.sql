@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpReport_Sale_Olap (
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , MonthDate TDateTime
+             , PeriodName TVarChar
              , PartionGoods TVarChar, PartionGoods_Date TDateTime
              , GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
@@ -508,11 +509,13 @@ BEGIN
                                          , DATE_TRUNC ('Month', tmpMI_ContainerIn.OperDate)
                                   )
 
-         , tmpOperationGroup AS (SELECT tmpOperationGroup1.*                                      
+         , tmpOperationGroup AS (SELECT tmpOperationGroup1.*
+                                      , 'Период 1' AS PeriodName
                                  FROM tmpOperationGroup1
                                 UNION
-                                SELECT tmpOperationGroup2.*
-                                FROM tmpOperationGroup2
+                                 SELECT tmpOperationGroup2.*
+                                      , 'Период 2' AS PeriodName
+                                 FROM tmpOperationGroup2
                                 
                                  )
 
@@ -570,6 +573,7 @@ BEGIN
       SELECT Movement.InvNumber
            , Movement.OperDate
            , tmpOperationGroup.OperDate   :: TDateTime AS MonthDate
+           , tmpOperationGroup.PeriodName :: TVarChar
            , Object_PartionGoods.ValueData             AS PartionGoods
            , ObjectDate_PartionGoods_Value.ValueData :: TDateTime AS PartionGoods_Date
            
