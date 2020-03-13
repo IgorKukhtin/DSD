@@ -344,7 +344,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
       Area = faData
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
+      Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078#1080
       DataBinding.FieldName = 'Summ'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -357,7 +357,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
       Area = faData
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1062#1077#1085#1072' '#1089'/'#1089
+      Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
@@ -392,7 +392,7 @@ object Report_Sale_OlapForm: TReport_Sale_OlapForm
     object pvSummSale: TcxDBPivotGridField
       AreaIndex = 13
       IsCaptionAssigned = True
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072' ('#1089'/'#1089')'
+      Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089' '#1087#1088#1086#1076'.'
       DataBinding.FieldName = 'SummSale'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
