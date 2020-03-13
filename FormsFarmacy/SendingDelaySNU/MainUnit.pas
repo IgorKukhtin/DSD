@@ -145,6 +145,7 @@ begin
 
     Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingDelaySNU.ini');
     try
+      FDate := Now;
       Ini.WriteDateTime('Options', 'Date', FDate);
     finally
       Ini.Free;
@@ -172,7 +173,7 @@ procedure TMainForm.btnExportClick(Sender: TObject);
 begin
   if not qryReport_Upload.Active then Exit;
   if qryReport_Upload.IsEmpty then Exit;
-  Add_Log('Начало формирования текста');
+  Add_Log('Начало формирования текста для интервала: ' + IntToStr(FIterval));
 
   FMessageText := 'Перемещения СУН:'#10;
 
@@ -200,7 +201,7 @@ begin
 
   if FMessageText = '' then Exit;
 
-  Add_Log('Начало отправки Tercnf');
+  Add_Log('Начало отправки: ' + FMail);
 
   SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
        qryMailParam.FieldByName('Mail_Port').AsInteger,
@@ -208,7 +209,7 @@ begin
        qryMailParam.FieldByName('Mail_User').AsString,
        FMail,
        qryMailParam.FieldByName('Mail_From').AsString,
-       'Задержка по доставе перемещений по СУН',
+       'Задержка доставки перемещений по СУН',
        FMessageText,
        ['']);
 end;
@@ -314,6 +315,7 @@ end;
 procedure TMainForm.pmClick(Sender: TObject);
 begin
   qryReport_Upload.Close;
+  FMessageText := '';
 
   FIterval := TMenuItem(Sender).Tag + 1;
 

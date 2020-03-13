@@ -17,7 +17,7 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, Vcl.Menus, IdHTTP, IdIOHandler, IdIOHandlerSocket,
-  IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf;
+  IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf, cxButtonEdit;
 
 type
   TExportSalesForSuppForm = class(TForm)
@@ -176,6 +176,35 @@ type
     btnYuriFarmAll: TButton;
     grYuriFarmUnit_AccessKeyYF: TcxGridDBColumn;
     grYuriFarmUnit_MorionCode: TcxGridDBColumn;
+    tsMDMPfizer: TTabSheet;
+    Panel5: TPanel;
+    btnMDMPfizerEmail: TButton;
+    btnMDMPfizerExport: TButton;
+    btnMDMPfizerExecute: TButton;
+    btnMDMPfizerAll: TButton;
+    MDMPfizerDate: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    grMDMPfizer: TcxGrid;
+    grMDMPfizerDBTableView: TcxGridDBTableView;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
+    Amount: TcxGridDBColumn;
+    NDS: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    Summa: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    SummChangePercent: TcxGridDBColumn;
+    DiscountExternalName: TcxGridDBColumn;
+    DiscountCardName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    UnitName: TcxGridDBColumn;
+    MainJuridicalName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
+    grMDMPfizerLevel: TcxGridLevel;
+    dsReport_Upload_MDMPfizer: TDataSource;
+    qryReport_Upload_MDMPfizer: TZQuery;
     procedure btnBaDMExecuteClick(Sender: TObject);
     procedure btnBaDMExportClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -198,6 +227,10 @@ type
     procedure btnYuriFarmExecuteClick(Sender: TObject);
     procedure YuriFarmExecuteClick(Sender: TObject);
     procedure btnYuriFarmAllClick(Sender: TObject);
+    procedure btnMDMPfizerAllClick(Sender: TObject);
+    procedure btnMDMPfizerExecuteClick(Sender: TObject);
+    procedure btnMDMPfizerExportClick(Sender: TObject);
+    procedure btnMDMPfizerEmailClick(Sender: TObject);
   private
     { Private declarations }
     FileNameBaDM_byUnit: String;
@@ -234,6 +267,10 @@ type
 
     FYuriFarmType : Integer;
 
+    RecipientMDMPfizer: String;
+    SubjectMDMPfizer: String;
+    SavePathMDMPfizer: String;
+    FileNameMDMPfizer: String;
 
     function SendMail(const Host: String; const Port: integer; const Password,
       Username: String; const Recipients: array of String; const FromAdres,
@@ -608,6 +645,101 @@ begin
     end;
   finally
     idFTP1.Disconnect;
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnMDMPfizerAllClick(Sender: TObject);
+begin
+  try
+    btnMDMPfizerExecuteClick(nil);
+    Application.ProcessMessages;
+    btnMDMPfizerExportClick(nil);
+    Application.ProcessMessages;
+    btnMDMPfizerEmailClick(nil);
+    Application.ProcessMessages;
+  except
+    on E: Exception do
+      Add_Log(E.Message);
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnMDMPfizerEmailClick(Sender: TObject);
+var
+  addr: array of string;
+  S, S1: string;
+begin
+  if qryReport_Upload_MDMPfizer.IsEmpty then Exit;
+
+  S := Trim(RecipientMDMPfizer);
+
+  if S[Length(S)] <> ',' then
+    S := S + ',';
+
+  while S <> '' do
+  begin
+    S1 := Copy(S, 1, Pos(',', S) - 1);
+    Delete(S, 1, Pos(',', S));
+    SetLength(addr, Length(addr) + 1);
+    addr[Length(addr) - 1] := S1;
+  end;
+
+  if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
+       qryMailParam.FieldByName('Mail_Port').AsInteger,
+       qryMailParam.FieldByName('Mail_Password').AsString,
+       qryMailParam.FieldByName('Mail_User').AsString,
+       addr,
+       qryMailParam.FieldByName('Mail_From').AsString,
+       SubjectMDMPfizer,
+       '',
+       [SavePathMDMPfizer + FileNameMDMPfizer]) then
+  begin
+    try
+      DeleteFile(SavePathMDMPfizer + FileNameMDMPfizer);
+    except
+      on E: Exception do
+        Add_Log(E.Message);
+    end;
+  end;
+end;
+
+procedure TExportSalesForSuppForm.btnMDMPfizerExecuteClick(Sender: TObject);
+begin
+  Add_Log('Начало Формирования отчета МДМ Пфайзер');
+
+  qryReport_Upload_MDMPfizer.Close;
+  qryReport_Upload_MDMPfizer.Params.ParamByName('StartDate').Value := MDMPfizerDate.Date;
+  qryReport_Upload_MDMPfizer.Params.ParamByName('EndDate').Value := MDMPfizerDate.Date;
+
+  try
+    qryReport_Upload_MDMPfizer.Open;
+  except
+    on E:Exception do
+    begin
+      Add_Log(E.Message);
+      Exit;
+    end;
+  end;
+
+  FileNameMDMPfizer := 'MDMPfizer_' + FormatDateTime('DD_MM_YYYY', MDMPfizerDate.Date) + '.xls';
+end;
+
+procedure TExportSalesForSuppForm.btnMDMPfizerExportClick(Sender: TObject);
+begin
+  if qryReport_Upload_MDMPfizer.IsEmpty then Exit;
+
+  Add_Log('Начало выгрузки отчета МДМ Пфайзер');
+  if not ForceDirectories(SavePathMDMPfizer) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+  try
+    ExportGridToExcel(SavePathMDMPfizer+FileNameMDMPfizer,grMDMPfizer);
+  except ON E: Exception DO
+    Begin
+      Add_Log(E.Message);
+      exit;
+    End;
   end;
 end;
 
@@ -1331,7 +1463,12 @@ begin
     SavePathYuriFarm := Trim(Ini.ReadString('Options', 'PathYuriFarm', ExtractFilePath(Application.ExeName)));
     if SavePathADV[Length(SavePathYuriFarm)] <> '\' then
       SavePathYuriFarm := SavePathYuriFarm + '\';
-    Ini.WriteString('Options', 'PathPathYuriFarm', SavePathYuriFarm);
+    Ini.WriteString('Options', 'PathYuriFarm', SavePathYuriFarm);
+
+    SavePathMDMPfizer := Trim(Ini.ReadString('Options', 'PathMDMPfizer', ExtractFilePath(Application.ExeName)));
+    if SavePathMDMPfizer[Length(SavePathMDMPfizer)] <> '\' then
+      SavePathMDMPfizer := SavePathMDMPfizer + '\';
+    Ini.WriteString('Options', 'PathMDMPfizer', SavePathMDMPfizer);
 
     BaDMID.Value := Ini.ReadInteger('Options','BaDM_ID',59610);
     Ini.WriteInteger('Options','BaDM_ID',BaDMID.Value);
@@ -1399,6 +1536,12 @@ begin
     FURLYF := Ini.ReadString('HTTP','URLYF','http://test-spho.pharmbase.com.ua');
     Ini.WriteString('HTTP','URLYF',FURLYF);
 
+    RecipientMDMPfizer := Ini.ReadString('Mail', 'RecipientMDMPfizer', '');
+    Ini.WriteString('Mail', 'RecipientMDMPfizer', RecipientMDMPfizer);
+
+    SubjectMDMPfizer := Ini.ReadString('Mail', 'SubjectMDMPfizer', '');
+    Ini.WriteString('Mail', 'SubjectMDMPfizer', SubjectMDMPfizer);
+
   finally
     Ini.free;
   end;
@@ -1408,6 +1551,7 @@ begin
   TevaDate.Date := Date - 1;
   AVDDate.Date := Date - 1;
   YuriFarmDate.Date := Date - 1;
+  MDMPfizerDate.Date := Date - 1;
   ZConnection1.LibraryLocation := ExtractFilePath(Application.ExeName) + 'libpq.dll';
 
   try
@@ -1508,6 +1652,8 @@ begin
     btnTevaAllClick(nil);
 
     btnYuriFarmAllClick(Nil);
+
+    btnMDMPfizerAllClick(Nil);
   finally
     Close;
   end;

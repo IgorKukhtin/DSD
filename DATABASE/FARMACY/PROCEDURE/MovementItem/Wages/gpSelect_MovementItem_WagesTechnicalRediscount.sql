@@ -35,6 +35,8 @@ BEGIN
     RETURN QUERY
        WITH tmpTechnicalRediscount AS (SELECT  MovementLinkObject_Unit.ObjectId                                       AS UnitId
                                              , Sum(MovementFloat_TotalDiffSumm.ValueData)                             AS TotalDiffSumm
+                                             , SUM(COALESCE(MovementFloat_SummaManual.ValueData, 
+                                                            MovementFloat_TotalDiffSumm.ValueData))                   AS SummWages
                                              , SUM(CASE WHEN MovementFloat_SummaManual.ValueData IS NULL THEN 0 ELSE 1 END) AS TotalManual
                                          FROM Movement
 
@@ -70,7 +72,8 @@ BEGIN
              , Object_Unit.ValueData                     AS UnitName
 
              , tmpTechnicalRediscount.TotalDiffSumm::TFloat AS SummaTechnicalRediscount 
-             , MIFloat_SummaTechnicalRediscount.ValueData   AS SummWages
+             , tmpTechnicalRediscount.SummWages::TFloat     AS SummWages 
+--             , MIFloat_SummaTechnicalRediscount.ValueData   AS SummWages
 
              , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
              , MIDate_IssuedBy.ValueData                 AS DateIssuedBy
@@ -85,10 +88,10 @@ BEGIN
               
               LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitId = MovementItem.ObjectId 
 
-              LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
+/*              LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
                                           ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
                                          AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
-
+*/
               LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                             ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
                                            AND MIBoolean_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()

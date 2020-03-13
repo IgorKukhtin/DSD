@@ -36,21 +36,16 @@ BEGIN
                                AND MovementItem.DescId     = zc_MI_Master()
                                AND MovementItem.isErased  = FALSE)
        , tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
-                      FROM tmpMovementItem
-
-                           LEFT JOIN ObjectLink AS ObjectLink_Price_Unit
-                                                ON ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                               AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-
-                           LEFT JOIN ObjectLink AS Price_Goods
-                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                 AND Price_Goods.ChildObjectId = tmpMovementItem.GoodsId
-
-                           LEFT JOIN ObjectFloat AS Price_Value
-                                  ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                 AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+                              FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                      )
 
     -- Результат

@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_MovementCheck_DiscountExternal(
     IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
-             , UnitName TVarChar, MainJuridicalId Integer, MainJuridicalName TVarChar, RetailName TVarChar
+             , UnitName TVarChar, MainJuridicalId Integer, MainJuridicalName TVarChar, RetailId Integer, RetailName TVarChar
              , CashRegisterName TVarChar, PaidTypeName TVarChar
              , DiscountCardName TVarChar, DiscountExternalName TVarChar
 
@@ -65,6 +65,7 @@ BEGIN
            , Object_Unit.ValueData                              AS UnitName
            , Object_MainJuridical.Id                            AS MainJuridicalId
            , Object_MainJuridical.ValueData                     AS MainJuridicalName
+           , Object_Retail.ID                                   AS RetailId
            , Object_Retail.ValueData                            AS RetailName
            , Object_CashRegister.ValueData                      AS CashRegisterName
            , Object_PaidType.ValueData                          AS PaidTypeName
@@ -179,5 +180,3 @@ $BODY$
  29.10.19                                                       *
 */
 
--- тест
--- select * from gpReport_MovementCheck_DiscountExternal(inStartDate := ('01.01.2020')::TDateTime , inEndDate := ('29.10.2020')::TDateTime , inUnitId := 377605 , inDiscountExternalId := 4521216 ,  inSession := '3');
