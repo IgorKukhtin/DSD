@@ -17,10 +17,11 @@ RETURNS TABLE (MovementItemId   Integer
               )
 AS
 $BODY$
-   DECLARE vbUserId         Integer;
-   DECLARE vbMovementId_tax Integer;
-   DECLARE vbOperDate       TDateTime;
-   DECLARE vbOperDate_begin TDateTime;
+   DECLARE vbUserId                Integer;
+   DECLARE vbMovementId_tax        Integer;
+   DECLARE vbDocumentTaxKindId_tax Integer;
+   DECLARE vbOperDate              TDateTime;
+   DECLARE vbOperDate_begin        TDateTime;
    DECLARE vbMovementId_Corrective Integer; -- для Корректировки №2 (переносим строчки с другой причиной корректировки)
    DECLARE vbDocumentTaxKindId     Integer; -- вид Корректировки
 BEGIN
@@ -43,9 +44,13 @@ BEGIN
      -- определяются параметры для <Корректировка>
      SELECT Movement.OperDate
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement.OperDate END AS OperDate_begin
+            -- MovementId налоговой
           , MovementLinkMovement_Child.MovementChildId AS MovementId_tax
-          , MLO_DocumentTaxKind.ObjectId
-            INTO vbOperDate, vbOperDate_begin, vbMovementId_tax, vbDocumentTaxKindId
+            -- вид корр
+          , MLO_DocumentTaxKind.ObjectId      AS DocumentTaxKindId
+            -- вид налоговой
+          , MLO_DocumentTaxKind_tax.ObjectId  AS DocumentTaxKindId_tax
+            INTO vbOperDate, vbOperDate_begin, vbMovementId_tax, vbDocumentTaxKindId, vbDocumentTaxKindId_tax
      FROM Movement
           LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                  ON MovementDate_DateRegistered.MovementId = Movement.Id
@@ -56,6 +61,9 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind
                                        ON MLO_DocumentTaxKind.MovementId = Movement.Id
                                       AND MLO_DocumentTaxKind.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+          LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind_tax
+                                       ON MLO_DocumentTaxKind_tax.MovementId = MovementLinkMovement_Child.MovementChildId
+                                      AND MLO_DocumentTaxKind_tax.DescId     = zc_MovementLinkObject_DocumentTaxKind()
      WHERE Movement.Id = inMovementId
      ;
 
@@ -82,9 +90,9 @@ BEGIN
      AND EXISTS (SELECT 1
                 FROM Movement
                      INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                                    ON MovementLinkMovement_Child.MovementId      = Movement.Id
-                                                   AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
-                                                   AND MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
+                                                     ON MovementLinkMovement_Child.MovementId      = Movement.Id
+                                                    AND MovementLinkMovement_Child.DescId          = zc_MovementLinkMovement_Child()
+                                                    AND MovementLinkMovement_Child.MovementChildId = vbMovementId_tax
                 WHERE Movement.OperDate = vbOperDate
                   AND Movement.DescId   = zc_Movement_TaxCorrective()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -757,6 +765,16 @@ BEGIN
                                              , _tmpRes.MovementItemId
                                              , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                                      AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                                    , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                                    , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                                    , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                                     )
+                                                    THEN _tmpRes.AmountTax_calc -- !!!подставили из Налоговой!!!
+                                                    
+                                                    WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                , zc_Enum_DocumentTaxKind_Prepay()
                                                                                 )
                                                     THEN ABS (_tmpRes.Amount) -- !!!подставили что ввели, а не из Налоговой!!!
@@ -768,6 +786,17 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_NPP_calc()
                                              , _tmpRes.MovementItemId
                                              , CASE -- WHEN inSession = '5' THEN 0
+                                                    WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                               , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                                )
+                                                     AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                                   , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                                   , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                                   , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                                    )
+                                                     AND _tmpRes.AmountTax_calc > _tmpRes.Amount
+                                                         THEN _tmpRes.NPP_calc
+
                                                     WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                                , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                                , zc_Enum_DocumentTaxKind_Prepay()

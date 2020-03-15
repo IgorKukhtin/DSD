@@ -308,11 +308,11 @@ begin
      end;
 
      AddToLog('.....');
-     AddToLog('Началась отправка в EDI : <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+     AddToLog('Началась отправка в EDI итого : <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
      i:= 1;
 
      with Send_toEDICDS do
-     while not EOF do
+     while (not EOF) and ((gErr=FALSE) or (i<5)) do
      begin
           Application.ProcessMessages;
           FormParams.ParamByName('MovementId_toEDI').Value   := FieldByName('Id').AsInteger;
@@ -341,13 +341,13 @@ begin
               actUpdate_EDI_Send.Execute;
           end;
           //
-          AddToLog('завершено № : <' + IntToStr(i) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+          AddToLog('завершен № : <' + IntToStr(i) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
           //
           Next;
           i:= i+1;
      end;
 
-     AddToLog('Завершилась отправка в EDI : <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
+     AddToLog('Завершилась отправка в EDI : <' + IntToStr(i-1) + '> из <' + IntToStr(Send_toEDICDS.RecordCount) + '>');
      AddToLog('.....');
 
 end;
@@ -387,14 +387,18 @@ begin
   gErr:= FALSE;
   try fEdi_LoadData_from;
   except
-        gErr:= TRUE;
-        AddToLog('**** Ошибка *** LoadData - from ***');
+        on E: Exception do begin
+           gErr:= TRUE;
+           AddToLog('**** Ошибка *** LoadData - from *** : ' + E.Message);
+        end;
   end;
   //
   // !!! Только Отправка !!!
   try fEdi_SendData_to;
   except
-        AddToLog('**** Ошибка *** SendData - to ***');
+        on E: Exception do begin
+           AddToLog('**** Ошибка *** SendData - to *** : ' + E.Message);
+        end;
   end;
   //
   if gErr = TRUE then

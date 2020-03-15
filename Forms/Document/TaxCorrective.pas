@@ -153,6 +153,7 @@ type
     bbUpdateMI_NPP_Null: TdxBarButton;
     cxLabel18: TcxLabel;
     edInvNumberRegistered: TcxTextEdit;
+    LineNumTaxNew: TcxGridDBColumn;
   private
     { Private declarations }
   public

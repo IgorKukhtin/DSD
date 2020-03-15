@@ -126,3 +126,5 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelectMobile_Object_GoodsListSale',inSession:= zfCalc_UserAdmin()); -- +
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Personal',inSession:= zfCalc_UserAdmin()); -- +
+
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Sale_Olap',inSession:= zfCalc_UserAdmin()); -- +

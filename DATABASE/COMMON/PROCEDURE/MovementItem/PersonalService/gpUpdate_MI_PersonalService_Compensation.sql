@@ -46,6 +46,7 @@ BEGIN
                      WHERE MovementLinkObject_PersonalServiceList.MovementId = inMovementId
                        AND MovementLinkObject_PersonalServiceList.DescId     = zc_MovementLinkObject_PersonalServiceList()
                     ))
+        AND NOT EXISTS (SELECT 1 FROM Constant_User_LevelMax01_View WHERE Constant_User_LevelMax01_View.UserId = vbUserId) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
      THEN
          RAISE EXCEPTION 'Ошибка. Нет прав для загрузки данных.';
      END IF;

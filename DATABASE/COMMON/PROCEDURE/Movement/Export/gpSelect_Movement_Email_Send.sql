@@ -1078,8 +1078,10 @@ BEGIN
     
      ELSE
 
-     -- !!!6.Формат CSV - 123!!!
-     IF vbExportKindId = 123
+
+     -- !!!4.Формат CSV - zc_Enum_ExportKind_Dakort39135074!!!
+
+     IF vbExportKindId = zc_Enum_ExportKind_Avion40110917()
      THEN
 
      -- первая строчка CSV  - Шапка
@@ -1090,7 +1092,7 @@ BEGIN
 	--Номер РН
 	|| ';' || Movement.InvNumber
 	-- Адрес доставки (в ObjectString_RoomNumber.ValueData хранится номер магазина)
-	|| ';' || 'DN:V'||ObjectString_RoomNumber.ValueData ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №'||ObjectString_RoomNumber.ValueData||' '||COALESCE(Object_PartnerAdress.ValueData, '')
+	|| ';' || 'DN:V'|| COALESCE (ObjectString_RoomNumber.ValueData, '') ||' - '||COALESCE (ObjectString_ShortName.ValueData, '')||' №' || COALESCE (ObjectString_RoomNumber.ValueData, '') || ' ' ||COALESCE(Object_PartnerAdress.ValueData, '')
 	-- Версия формата
 	|| ';' || '14'
 	-- Вид документа : RN – расходная накладная or VN – возвратная накладная or SP - спецификация
@@ -1369,12 +1371,15 @@ BEGIN
                -- Термін придатності
     || ';' || CASE WHEN COALESCE (tmpStickerProperty.Value5,0) <> 0 THEN tmpStickerProperty.Value5 :: TVarChar ELSE '' END :: TVarChar
                -- Дата виробництва
-    || ';' ||  zfConvert_DateToString (vbOperDate) 
+    || ';' ||  CASE WHEN MIDate_PartionGoods.ValueData > zc_DateStart() THEN zfConvert_DateToString (MIDate_PartionGoods.ValueData) ELSE '' END
     || ';'
         FROM MovementItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                       AND MIDate_PartionGoods.DescId         = zc_MIDate_PartionGoods()
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()

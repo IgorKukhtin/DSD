@@ -3270,6 +3270,8 @@ var
   ORDER: IXMLORDERType;
   DocData: TDateTime;
   fIsDelete : Boolean; // add 10.08.2018
+  s, err_msg : String;
+  ii: Integer;
 begin
   try
     FTPSetConnection;
@@ -3281,6 +3283,9 @@ begin
       List := TStringList.Create;
       Stream := TStringStream.Create;
       try
+        err_msg:= '';
+        ii:=0;
+        //
         FIdFTP.List(List, '', false);
         if List.Count = 0 then
           exit;
@@ -3289,7 +3294,7 @@ begin
             Start;
             for i := 0 to List.Count - 1 do
             begin
-              //s:= List[i];
+              s:= List[i];
               //if (copy(s, 1, 5) = 'order') then showMessage(s);
               // если первые буквы файла order а последние .xml
               if ((copy(List[i], 1, 5) = 'order') and (copy(List[i], Length(List[i]) - 3, 4) = '.xml'))
@@ -3314,14 +3319,30 @@ begin
                   then fIsDelete:= spHeader.ParamByName('gIsDelete').Value
                   else fIsDelete:= false;
                   // теперь перенесли файл в директроию Archive
-                  if (DocData < Date) or (fIsDelete = true) then
-                    try
-                      FIdFTP.ChangeDir('/archive');
-                      FIdFTP.Put(Stream, List[i]);
-                    finally
-                      FIdFTP.ChangeDir(Directory);
-                      FIdFTP.Delete(List[i]);
-                    end;
+                  if (DocData < Date) or (fIsDelete = true)
+                  then
+                     try
+                       // FIdFTP.ChangeDir('/archive');
+                       // FIdFTP.Put(Stream, List[i]);
+                       //err_msg:= '';
+                       try FIdFTP.Delete(List[i]);
+                       except
+                            try FIdFTP.Delete(List[i]); except FIdFTP.Delete(List[i]); end;
+                       end;
+                     except
+                       on E: Exception do begin
+                         ii:= ii + 1;
+                         err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message;
+                         //if err_msg = ''
+                         //then err_msg:= '(' + intToStr(ii) + ')' + 'Delete - ' + s + ' : ' + E.Message
+                         //else err_msg:= '(' + intToStr(ii) + ')' + err_msg;
+                         //raise Exception.Create (err_msg);
+                         //ShowMessage(err_msg);
+                       end;
+                     //finally
+                     //  FIdFTP.ChangeDir(Directory);
+                     //  FIdFTP.Delete(List[i]);
+                     end;
                 end;
               end;
               IncProgress;
@@ -3333,11 +3354,16 @@ begin
         FIdFTP.Disconnect;
         List.Free;
         Stream.Free;
+        //
+        if err_msg <> '' then raise Exception.Create (err_msg);
       end;
     end;
   except
-    on E: Exception do
-      raise E;
+    on E: Exception do begin
+        if err_msg <> ''
+        then raise Exception.Create (err_msg)
+        else raise E;
+    end;
   end;
 end;
 

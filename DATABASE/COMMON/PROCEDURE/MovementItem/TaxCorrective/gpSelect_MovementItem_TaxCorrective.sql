@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TaxCorrective(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, LineNum Integer, LineNumTaxOld Integer, LineNumTax Integer, isAuto Boolean
-             , LineNumTaxCorr_calc Integer, LineNumTaxCorr Integer, AmountTax_calc TFloat
+             , LineNumTaxCorr_calc Integer, LineNumTaxCorr Integer, LineNumTaxNew Integer, AmountTax_calc TFloat
              , GoodsId Integer, GoodsCode Integer, GoodsCodeUKTZED TVarChar, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
              , Amount TFloat
@@ -88,6 +88,7 @@ BEGIN
            , TRUE                                   AS isAuto
            , 0                                      AS LineNumTaxCorr_calc
            , 0                                      AS LineNumTaxCorr
+           , 0                                      AS LineNumTaxNew
            , 0                            :: TFloat AS AmountTax_calc
 
 
@@ -171,8 +172,13 @@ BEGIN
 --           , COALESCE (tmpMITax1.LineNum, tmpMITax2.LineNum) :: Integer AS LineNumTax
            , COALESCE (MIBoolean_isAuto.ValueData, True) ::Boolean               AS isAuto
 
+             -- № п/п который корректируется
            , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)    :: Integer AS LineNumTaxCorr_calc
+             -- № п/п в Корректировке - сквозная нумерация
            , COALESCE (MIFloat_NPP_calc.ValueData, 0)       :: Integer AS LineNumTaxCorr
+             -- № п/п в Корректировке с новой ценой - сквозная нумерация
+           , COALESCE (MIFloat_NPPTaxNew_calc.ValueData, 0) :: Integer AS LineNumTaxNew
+
            , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) :: TFloat  AS AmountTax_calc
            
            , Object_Goods.Id                        AS GoodsId
@@ -227,6 +233,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_NPPTax_calc
                                         ON MIFloat_NPPTax_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_NPPTax_calc.DescId = zc_MIFloat_NPPTax_calc()
+            LEFT JOIN MovementItemFloat AS MIFloat_NPPTaxNew_calc
+                                        ON MIFloat_NPPTaxNew_calc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPPTaxNew_calc.DescId = zc_MIFloat_NPPTaxNew_calc()
             LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
                                         ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_NPP_calc.DescId = zc_MIFloat_NPP_calc()
@@ -304,6 +313,7 @@ BEGIN
 
            , COALESCE (MIFloat_NPPTax_calc.ValueData, 0)    :: Integer AS LineNumTaxCorr_calc
            , COALESCE (MIFloat_NPP_calc.ValueData, 0)       :: Integer AS LineNumTaxCorr
+           , COALESCE (MIFloat_NPPTaxNew_calc.ValueData, 0) :: Integer AS LineNumTaxNew
            , COALESCE (MIFloat_AmountTax_calc.ValueData, 0) :: TFloat  AS AmountTax_calc
 
            , Object_Goods.Id                        AS GoodsId
@@ -358,6 +368,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_NPP_calc
                                         ON MIFloat_NPP_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_NPP_calc.DescId = zc_MIFloat_NPP_calc()
+            LEFT JOIN MovementItemFloat AS MIFloat_NPPTaxNew_calc
+                                        ON MIFloat_NPPTaxNew_calc.MovementItemId = MovementItem.Id
+                                       AND MIFloat_NPPTaxNew_calc.DescId = zc_MIFloat_NPPTaxNew_calc()
             LEFT JOIN MovementItemFloat AS MIFloat_AmountTax_calc
                                         ON MIFloat_AmountTax_calc.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountTax_calc.DescId = zc_MIFloat_AmountTax_calc()

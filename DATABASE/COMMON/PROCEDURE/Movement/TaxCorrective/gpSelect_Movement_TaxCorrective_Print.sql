@@ -12,9 +12,10 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
-    DECLARE vbMovementId_Return Integer;
+    DECLARE vbMovementId_Return        Integer;
     DECLARE vbMovementId_TaxCorrective Integer;
-    DECLARE vbStatusId_TaxCorrective Integer;
+    DECLARE vbDocumentTaxKindId_tax    Integer;
+    DECLARE vbStatusId_TaxCorrective   Integer;
     DECLARE vbIsLongUKTZED Boolean;
 
     DECLARE vbGoodsPropertyId Integer;
@@ -95,8 +96,10 @@ BEGIN
           , Movement_TaxCorrective.StatusId                    AS StatusId_TaxCorrective
           , CASE WHEN MovementDate_DateRegistered.ValueData > Movement_TaxCorrective.OperDate THEN MovementDate_DateRegistered.ValueData ELSE Movement_TaxCorrective.OperDate END AS OperDate_begin
           , COALESCE (ObjectBoolean_isLongUKTZED.ValueData, TRUE)    AS isLongUKTZED
+            -- вид налоговой
+          , MLO_DocumentTaxKind_tax.ObjectId  AS DocumentTaxKindId_tax
 
-            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED
+            INTO vbMovementId_TaxCorrective, vbStatusId_TaxCorrective, vbOperDate_begin, vbIsLongUKTZED, vbDocumentTaxKindId_tax
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_TaxCorrective()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -118,6 +121,12 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
                                   ON ObjectBoolean_isLongUKTZED.ObjectId = MovementLinkObject_From.ObjectId 
                                  AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                         ON MovementLinkMovement_Child.MovementId = tmpMovement.MovementId_TaxCorrective
+                                        AND MovementLinkMovement_Child.DescId     = zc_MovementLinkMovement_Child()
+          LEFT JOIN MovementLinkObject AS MLO_DocumentTaxKind_tax
+                                       ON MLO_DocumentTaxKind_tax.MovementId = MovementLinkMovement_Child.MovementChildId
+                                      AND MLO_DocumentTaxKind_tax.DescId     = zc_MovementLinkObject_DocumentTaxKind()
      ;
 /* пока убрал, т.к. проверка сумм происходит в непроведенном состоянии, надо или добавить параметр - "когда ругаться" или сделать еще одну печать-проверку
      -- очень важная проверка

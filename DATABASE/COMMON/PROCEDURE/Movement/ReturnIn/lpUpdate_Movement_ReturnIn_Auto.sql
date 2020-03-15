@@ -24,6 +24,7 @@ $BODY$
    DECLARE vbPaidKindId Integer;
    DECLARE vbContractId Integer;
    DECLARE vbMovementDescId Integer;
+   DECLARE vbMovementId_tax Integer;
 
    DECLARE vbMovementItemId_return Integer;
    DECLARE vbMovementId_sale       Integer;
@@ -291,16 +292,21 @@ BEGIN
          SELECT CASE WHEN inStartDateSale >= COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 THEN inStartDateSale ELSE COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - vbPeriod1 END AS StartDate
               , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS EndDate
               , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS inEndDateSale -- !!!замена!!!
-
-              , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN zc_Movement_ReturnIn() ELSE Movement.DescId END AS DescId
+               -- замена, что б сразу искало в продажах
+              , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN zc_Movement_ReturnIn() ELSE Movement.DescId END AS MovementDescId
+               -- 
+              , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN COALESCE (Movement.ParentId, 0) ELSE 0 END AS MovementId_tax
+               -- 
               , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()        THEN MovementLinkObject_From.ObjectId
                      WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN MovementLinkObject_Partner.ObjectId
                      ELSE MovementLinkObject_PartnerFrom.ObjectId
                 END AS PartnerId
+               -- 
               , MovementLinkObject_PaidKind.ObjectId AS PaidKindId
+               -- 
               , MovementLinkObject_Contract.ObjectId AS ContractId
                 INTO vbStartDate, vbEndDate, inEndDateSale
-                   , vbMovementDescId, vbPartnerId, vbPaidKindId, vbContractId
+                   , vbMovementDescId, vbMovementId_tax, vbPartnerId, vbPaidKindId, vbContractId
          FROM Movement
               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                      ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -408,6 +414,9 @@ BEGIN
                                                                           ON MLO_Contract.MovementId = MD_OperDatePartner.MovementId
                                                                          AND MLO_Contract.DescId     = zc_MovementLinkObject_Contract()
                                                                          AND MLO_Contract.ObjectId   = vbContractId
+                                            LEFT JOIN MovementLinkMovement AS MLM_Master
+                                                                           ON MLM_Master.MovementId = MD_OperDatePartner.MovementId
+                                                                          AND MLM_Master.DescId     = zc_MovementLinkMovement_Master()
 
                                             INNER JOIN MovementItem ON MovementItem.MovementId = MD_OperDatePartner.MovementId
                                                                    AND MovementItem.isErased    = FALSE
@@ -428,6 +437,7 @@ BEGIN
 
                                        WHERE MD_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
                                          AND MD_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                                         AND (MLM_Master.MovementChildId = vbMovementId_tax OR vbMovementId_tax = 0)
                                       UNION ALL
                                        SELECT zc_Movement_TransferDebtIn()                   AS MovementDescId
                                             , MovementLinkObject_To.ObjectId                 AS PartnerId

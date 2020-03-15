@@ -4,11 +4,48 @@ BEGIN
 /*
 -- select count(*) from ResourseProtocol
 -- select count(*) from ResourseItemProtocol
-INSERT INTO ResourseProtocol_arc     SELECT * FROM ResourseProtocol;
-INSERT INTO ResourseItemProtocol_arc SELECT * FROM ResourseItemProtocol;
+-- select count(*) from ResourseProtocol_arc
+-- select count(*) from ResourseItemProtocol_arc
+-- переброска в архив
+INSERT INTO ResourseProtocol_arc (Id, UserId, OperDate, Value1, Value2, Value3, Value4, Value5, Time1, Time2, Time3, Time4, Time5, ProcName, ProtocolData)
+                           select Id, UserId, OperDate, Value1, Value2, Value3, Value4, Value5, Time1, Time2, Time3, Time4, Time5, ProcName, ProtocolData
+                           from ResourseProtocol
+                           where Id > (select max (Id) from ResourseProtocol_arc);
+TRUNCATE TABLE ResourseProtocol;
+--
+INSERT INTO ResourseItemProtocol_arc (Id, ParentId, pid, query_start, datname, usename, client_addr, state, wait_event_type, wait_event, query)
+                               select Id, ParentId, pid, query_start, datname, usename, client_addr, state, wait_event_type, wait_event, query
+                               from ResourseItemProtocol
+                               where Id > (select max (Id) from ResourseItemProtocol_arc);
+TRUNCATE TABLE ResourseItemProtocol;
+--
 TRUNCATE TABLE ResourseProtocol;
 TRUNCATE TABLE ResourseItemProtocol;
+
+-- запросов в которых пишется протокол - с таким количеством АП-сайт
+SELECT * FROM ResourseProtocol where OperDate > '25.02.2020' AND OperDate < '26.02.2020' and Value4 > 15
+
+-- Итого запросов по дням - в которых пишется протокол
+SELECT DATE_TRUNC ('DAY', OperDate), EXTRACT (DOW FROM OperDate), count(*) FROM ResourseProtocol 
+where OperDate > CURRENT_DATE - INTERVAL '28 DAY'
+and EXTRACT (DOW FROM OperDate) not in (6, 0)
+group by DATE_TRUNC ('DAY', OperDate), EXTRACT (DOW FROM OperDate)
+
+-- Итого запросов по дням - сайт
+SELECT OperDate, case when OperDate_d = 0 then 7 else OperDate_d  end as OperDate_d , count(*)
+FROM (select distinct DATE_TRUNC ('DAY', OperDate) AS OperDate, EXTRACT (DOW FROM OperDate) AS OperDate_d
+           , pid, query_start, query 
+      FROM ResourseProtocol 
+         join ResourseItemProtocol on ParentId = ResourseProtocol .Id and state = 'active' and client_addr ilike '%172.17%' 
+      where ResourseProtocol .OperDate between CURRENT_DATE - INTERVAL '60 DAY' and CURRENT_DATE - INTERVAL '0 DAY' 
+      and EXTRACT (DOW FROM OperDate) not in (6, 0)
+      and EXTRACT (HOUR FROM query_start) >=10 and and EXTRACT (HOUR FROM query_start) <= 17
+     ) as x
+group by OperDate, OperDate_d
+order by 1 desc
+
 */
+
       IF NOT (EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name = lower ('ResourseProtocol'))) 
       THEN
            CREATE TABLE ResourseProtocol (
