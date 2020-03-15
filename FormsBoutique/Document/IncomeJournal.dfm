@@ -100,6 +100,8 @@ object IncomeJournalForm: TIncomeJournalForm
     PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 101
+    ExplicitTop = 49
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -132,6 +134,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummJur
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_grn
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -163,6 +170,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummJur
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_grn
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -299,6 +311,16 @@ object IncomeJournalForm: TIncomeJournalForm
       object TotalSummPriceList: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089')'
         DataBinding.FieldName = 'TotalSummPriceList'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummPriceList_grn: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1072#1081#1089') '#1043#1056#1053
+        DataBinding.FieldName = 'TotalSummPriceList_grn'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

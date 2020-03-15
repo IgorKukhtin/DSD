@@ -21,7 +21,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Top = 0
     Width = 909
     Height = 543
-    ActivePage = tsYuriFarm
+    ActivePage = tsMDMPfizer
     Align = alClient
     TabOrder = 0
     object tsOptima: TTabSheet
@@ -1462,19 +1462,315 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         end
       end
     end
+    object tsMDMPfizer: TTabSheet
+      Caption = #1052#1044#1052' '#1055#1092#1072#1081#1079#1077#1088
+      ImageIndex = 5
+      object Panel5: TPanel
+        Left = 0
+        Top = 0
+        Width = 901
+        Height = 31
+        Align = alTop
+        TabOrder = 0
+        object btnMDMPfizerEmail: TButton
+          Left = 782
+          Top = 0
+          Width = 113
+          Height = 25
+          Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1100' Email'
+          TabOrder = 0
+          OnClick = btnMDMPfizerEmailClick
+        end
+        object btnMDMPfizerExport: TButton
+          Left = 519
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1069#1082#1089#1087#1086#1088#1090
+          TabOrder = 1
+          OnClick = btnMDMPfizerExportClick
+        end
+        object btnMDMPfizerExecute: TButton
+          Left = 423
+          Top = 0
+          Width = 90
+          Height = 25
+          Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100
+          TabOrder = 2
+          OnClick = btnMDMPfizerExecuteClick
+        end
+        object btnMDMPfizerAll: TButton
+          Left = 359
+          Top = 0
+          Width = 58
+          Height = 25
+          Caption = #1042#1089#1105'!'
+          TabOrder = 3
+          OnClick = btnMDMPfizerAllClick
+        end
+        object MDMPfizerDate: TcxDateEdit
+          Left = 85
+          Top = 4
+          EditValue = 42339d
+          Properties.ShowTime = False
+          TabOrder = 4
+          Width = 85
+        end
+        object cxLabel10: TcxLabel
+          Left = 6
+          Top = 5
+          Caption = #1044#1072#1090#1072' '#1086#1090#1095#1077#1090#1072':'
+        end
+      end
+      object grMDMPfizer: TcxGrid
+        Left = 0
+        Top = 31
+        Width = 901
+        Height = 484
+        Align = alClient
+        TabOrder = 1
+        object grMDMPfizerDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = dsReport_Upload_MDMPfizer
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summa
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.###'
+              Kind = skSum
+              Column = Amount
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = Name
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = SummChangePercent
+            end
+            item
+              Format = ',0.##'
+              Kind = skSum
+              Column = Summa
+            end>
+          DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          object Code: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'GoodsCode'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Caption = 'mactChoiceGoodsForm'
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 39
+          end
+          object Name: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 224
+          end
+          object Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 90
+          end
+          object NDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
+          object Price: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object Summa: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072', '#1074' '#1094#1077#1085#1072#1093' '#1088#1077#1072#1083#1080#1079'. '
+            DataBinding.FieldName = 'Summa'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 88
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object SummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object DiscountExternalName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
+            DataBinding.FieldName = 'DiscountExternalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object DiscountCardName: TcxGridDBColumn
+            Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
+            DataBinding.FieldName = 'DiscountCardName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object UnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 114
+          end
+          object MainJuridicalName: TcxGridDBColumn
+            Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'MainJuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 113
+          end
+          object FromName: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
+        end
+        object grMDMPfizerLevel: TcxGridLevel
+          GridView = grMDMPfizerDBTableView
+        end
+      end
+    end
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
     Port = 5432
     Protocol = 'postgresql-9'
-    Left = 120
-    Top = 112
+    Left = 112
+    Top = 104
   end
   object Timer1: TTimer
     Enabled = False
     OnTimer = Timer1Timer
-    Left = 48
-    Top = 128
+    Left = 40
+    Top = 104
   end
   object qryUnit: TZQuery
     Connection = ZConnection1
@@ -1493,8 +1789,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Name = 'inSelectAll'
         ParamType = ptUnknown
       end>
-    Left = 216
-    Top = 296
+    Left = 56
+    Top = 384
     ParamData = <
       item
         DataType = ftUnknown
@@ -1524,8 +1820,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 59610
       end>
-    Left = 232
-    Top = 200
+    Left = 208
+    Top = 208
     ParamData = <
       item
         DataType = ftDateTime
@@ -1542,13 +1838,13 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_BaDM: TDataSource
     DataSet = qryReport_Upload_BaDM
-    Left = 304
-    Top = 168
+    Left = 208
+    Top = 272
   end
   object dsUnit: TDataSource
     DataSet = qryUnit
-    Left = 256
-    Top = 296
+    Left = 56
+    Top = 328
   end
   object qryReport_Upload_Optima: TZQuery
     Connection = ZConnection1
@@ -1575,8 +1871,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 0
       end>
-    Left = 216
-    Top = 416
+    Left = 56
+    Top = 200
     ParamData = <
       item
         DataType = ftDateTime
@@ -1599,8 +1895,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_Optima: TDataSource
     DataSet = qryReport_Upload_Optima
-    Left = 256
-    Top = 416
+    Left = 64
+    Top = 256
   end
   object qryMailParam: TZQuery
     Connection = ZConnection1
@@ -1612,8 +1908,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       '    zc_Mail_User() AS Mail_User,'
       '    zc_Mail_Password() AS Mail_Password')
     Params = <>
-    Left = 400
-    Top = 416
+    Left = 200
+    Top = 104
   end
   object IdFTP1: TIdFTP
     IPVersion = Id_IPv4
@@ -1627,7 +1923,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     ProxySettings.ProxyType = fpcmNone
     ProxySettings.Port = 0
     ServerHOST = 'ftp:\\ooobadm.dp.ua'
-    Left = 768
+    Left = 640
     Top = 104
   end
   object qryReport_Upload_BaDM_byUnit: TZQuery
@@ -1641,8 +1937,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = '01.12.2015'
       end>
-    Left = 448
-    Top = 152
+    Left = 208
+    Top = 384
     ParamData = <
       item
         DataType = ftDateTime
@@ -1653,8 +1949,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_BaDM_byUnit: TDataSource
     DataSet = qryReport_Upload_BaDM_byUnit
-    Left = 624
-    Top = 152
+    Left = 208
+    Top = 432
   end
   object qryBadm_byUnit: TZQuery
     Connection = ZConnection1
@@ -1663,8 +1959,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         'SELECT Name, Num_byReportBadm FROM gpSelect_Object_Unit (FALSE, ' +
         #39'3'#39') AS tmp WHERE Num_byReportBadm > 0 ORDER BY Num_byReportBadm')
     Params = <>
-    Left = 408
-    Top = 248
+    Left = 208
+    Top = 336
   end
   object qryReport_Upload_Teva: TZQuery
     Connection = ZConnection1
@@ -1685,8 +1981,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 59610
       end>
-    Left = 588
-    Top = 232
+    Left = 348
+    Top = 208
     ParamData = <
       item
         DataType = ftDateTime
@@ -1739,13 +2035,13 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_Teva: TDataSource
     DataSet = qryReport_Upload_Teva
-    Left = 584
-    Top = 304
+    Left = 352
+    Top = 280
   end
   object dsReport_Upload_ADV: TDataSource
     DataSet = qryReport_Upload_ADV
-    Left = 720
-    Top = 304
+    Left = 344
+    Top = 424
   end
   object qryReport_Upload_ADV: TZQuery
     Connection = ZConnection1
@@ -1758,8 +2054,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 42773d
       end>
-    Left = 716
-    Top = 232
+    Left = 348
+    Top = 360
     ParamData = <
       item
         DataType = ftDateTime
@@ -1770,8 +2066,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   end
   object dsReport_Upload_YuriFarm: TDataSource
     DataSet = qryReport_Upload_YuriFarm
-    Left = 576
-    Top = 448
+    Left = 496
+    Top = 280
   end
   object qryReport_Upload_YuriFarm: TZQuery
     Connection = ZConnection1
@@ -1791,8 +2087,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         Name = 'inUnitID'
         ParamType = ptUnknown
       end>
-    Left = 580
-    Top = 376
+    Left = 500
+    Top = 208
     ParamData = <
       item
         DataType = ftDateTime
@@ -1824,8 +2120,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
         ParamType = ptInput
         Value = 42773d
       end>
-    Left = 740
-    Top = 376
+    Left = 500
+    Top = 352
     ParamData = <
       item
         DataType = ftDateTime
@@ -1835,8 +2131,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       end>
   end
   object pmExecute: TPopupMenu
-    Left = 832
-    Top = 136
+    Left = 496
+    Top = 416
     object N1: TMenuItem
       Tag = 51
       Caption = #1054#1089#1090#1072#1090#1082#1080
@@ -1860,8 +2156,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
-    Left = 768
-    Top = 224
+    Left = 816
+    Top = 104
   end
   object IdHTTP: TIdHTTP
     IOHandler = IdSSLIOHandlerSocketOpenSSL1
@@ -1878,7 +2174,43 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     Request.Ranges.Units = 'bytes'
     Request.Ranges = <>
     HTTPOptions = [hoForceEncodeParams]
-    Left = 768
-    Top = 160
+    Left = 704
+    Top = 104
+  end
+  object dsReport_Upload_MDMPfizer: TDataSource
+    DataSet = qryReport_Upload_MDMPfizer
+    Left = 640
+    Top = 288
+  end
+  object qryReport_Upload_MDMPfizer: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'select * from gpReport_MovementCheck_DiscountExternal(:StartDate' +
+        ', :EndDate, 0, 2807930, '#39'3'#39') WHERE RetailId = 4')
+    Params = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
+    Left = 644
+    Top = 216
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'StartDate'
+        ParamType = ptUnknown
+      end
+      item
+        DataType = ftUnknown
+        Name = 'EndDate'
+        ParamType = ptUnknown
+      end>
   end
 end

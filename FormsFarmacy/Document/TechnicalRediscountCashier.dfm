@@ -450,6 +450,8 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
     inherited actAddMask: TdsdExecStoredProc
       AfterAction = actChoiceGoods
       BeforeAction = actChoiceGoods
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1086#1074#1072#1088' '#1080#1079' '#1087#1086#1083#1085#1086#1075#1086' '#1087#1077#1088#1077#1095#1085#1103' '#1087#1086' '#1089#1077#1090#1080
     end
     object actChoiceCommentTR: TOpenChoiceForm
       Category = 'DSDLib'

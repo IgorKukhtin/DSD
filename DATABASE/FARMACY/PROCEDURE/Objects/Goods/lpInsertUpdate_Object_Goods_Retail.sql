@@ -99,6 +99,7 @@ BEGIN
                                                     , inExchangeId     :=  inExchangeId
                                                     , inObjectId       :=  inObjectId
                                                     , inUserId         :=  inUserId);
+
     EXCEPTION
       WHEN others THEN 
         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 

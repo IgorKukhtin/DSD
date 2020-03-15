@@ -148,7 +148,6 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
           StoredProc = spSelect
         end
         item
-          StoredProc = spGetTotalSumm
         end>
     end
     inherited actInsert: TdsdInsertUpdateAction
@@ -423,7 +422,7 @@ inherited WagesTechnicalRediscountUnitForm: TWagesTechnicalRediscountUnitForm
         Param.ComponentItem = 'SummWages'
         Param.DataType = ftFloat
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 2
       end>
     Left = 320
     Top = 224

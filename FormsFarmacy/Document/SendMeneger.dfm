@@ -8,75 +8,6 @@ inherited SendMenegerForm: TSendMenegerForm
       inherited cxGrid: TcxGrid
         TabOrder = 2
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Amount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SumPriceIn
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaWithVAT
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summa
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorage
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = PartionDateKindName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitFrom
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = SummaUnitTo
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colIsErased
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountStorageDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountDiff
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = AmountManual
-            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -109,7 +40,7 @@ inherited SendMenegerForm: TSendMenegerForm
     TabOrder = 9
   end
   inherited edDay: TcxCurrencyEdit
-    TabOrder = 8
+    TabOrder = 7
   end
   inherited ceChecked: TcxCheckBox
     TabOrder = 11

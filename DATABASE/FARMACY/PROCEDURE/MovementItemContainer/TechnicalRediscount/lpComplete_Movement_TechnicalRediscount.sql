@@ -58,11 +58,44 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Не заполнено примечание.';
     END IF;
 
-    SELECT Object_CommentTR.ValueData                                                        AS CommentTR
-         , SUM(CASE WHEN MovementItem.Amount > 0 THEN MovementItem.Amount ELSE 0 END)        AS Amount
-         , SUM(CASE WHEN MovementItem.Amount < 0 THEN -1.0 * MovementItem.Amount ELSE 0 END) AS Amount
-    INTO vbCommentTR, vbAmountIn, vbAmountOut
+      -- Контроль заполнене пояснений
+    SELECT Object_CommentTR.ValueData||COALESCE(' с пояснением '||MIString_Explanation.ValueData, '') AS CommentTR
+    INTO vbCommentTR
     FROM MovementItem
+
+         INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
+                                           ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_CommentTR.DescId = zc_MILinkObject_CommentTR()
+         INNER JOIN Object AS Object_CommentTR
+                           ON Object_CommentTR.ID = MILinkObject_CommentTR.ObjectId
+
+         INNER JOIN ObjectBoolean AS ObjectBoolean_CommentTR_Explanation
+                                  ON ObjectBoolean_CommentTR_Explanation.ObjectId = Object_CommentTR.Id
+                                 AND ObjectBoolean_CommentTR_Explanation.DescId = zc_ObjectBoolean_CommentTR_Explanation()
+                                 AND ObjectBoolean_CommentTR_Explanation.ValueData = TRUE
+
+         LEFT JOIN MovementItemString AS MIString_Explanation
+                                      ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                     AND MIString_Explanation.DescId = zc_MIString_Explanation()
+
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.isErased   = FALSE
+      AND COALESCE(MIString_Explanation.ValueData, '') = '';
+
+    IF (COALESCE(vbCommentTR,'') <> '')
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию не заполнено пояснение.', vbCommentTR;
+    END IF;
+
+      -- Контроль пересортов
+    SELECT Object_CommentTR.ValueData||COALESCE(' с пояснением '||MIString_Explanation.ValueData, '') AS CommentTR
+    INTO vbCommentTR
+    FROM MovementItem
+
+         LEFT JOIN MovementItemString AS MIString_Explanation
+                                      ON MIString_Explanation.MovementItemId = MovementItem.Id
+                                     AND MIString_Explanation.DescId = zc_MIString_Explanation()
 
          INNER JOIN MovementItemLinkObject AS MILinkObject_CommentTR
                                            ON MILinkObject_CommentTR.MovementItemId = MovementItem.Id
@@ -79,11 +112,12 @@ BEGIN
       AND MovementItem.DescId     = zc_MI_Master()
       AND MovementItem.isErased   = FALSE
     GROUP BY Object_CommentTR.ValueData
-    HAVING SUM(MovementItem.Amount) <> 0;
+           , MIString_Explanation.ValueData
+    HAVING COUNT(MovementItem.Amount) = 1;
 
     IF (COALESCE(vbCommentTR,'') <> '')
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию кол-во излишка <%> не равно кол-ву недостачи <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию кол-во пересортов равно 1.', vbCommentTR;
     END IF;
 
       -- Сохраняем остаток и цену
@@ -97,52 +131,27 @@ BEGIN
                                      WHERE MovementItem.MovementId = inMovementId
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND MovementItem.isErased  = FALSE)
-               , tmpPrice AS (SELECT tmpMovementItem.GoodsId                                             AS GoodsId
-                                   , ROUND(COALESCE (ObjectHistoryFloat_Price.ValueData, 0), 2)::TFloat  AS Price
-                              FROM tmpMovementItem
-
-                                   INNER JOIN ObjectLink AS ObjectLink_Goods
-                                                         ON ObjectLink_Goods.ChildObjectId = tmpMovementItem.GoodsId
-                                                        AND ObjectLink_Goods.DescId        = zc_ObjectLink_Price_Goods()
-                                   INNER JOIN ObjectLink AS ObjectLink_Unit
-                                                        ON ObjectLink_Unit.ObjectId      = ObjectLink_Goods.ObjectId
-                                                       AND ObjectLink_Unit.DescId        = zc_ObjectLink_Price_Unit()
-                                                       AND ObjectLink_Unit.ChildObjectId = vbUnitId
-
-                                   -- получаем значения цены и НТЗ из истории значений на начало дня
-                                   LEFT JOIN ObjectHistory AS ObjectHistory_Price
-                                                           ON ObjectHistory_Price.ObjectId = ObjectLink_Goods.ObjectId
-                                                          AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
-                                                          AND ObjectHistory_Price.EndDate >= CURRENT_DATE
-                                                          AND ObjectHistory_Price.StartDate < CURRENT_DATE
-                                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
-                                                                ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
-                                                               AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
-                             )
-                 -- остатки на начало следующего дня
-               , REMAINS AS (SELECT
-                                    T0.GoodsId
-                                   ,SUM (T0.Amount) :: TFloat AS Amount
-                             FROM(
-                                        -- остатки
-                                        SELECT
-                                             Container.Id                                                          AS ContainerId
-                                           , Container.ObjectId                                                    AS GoodsId
-                                           , Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0.0) AS Amount
-                                        FROM tmpMovementItem
-                                            LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
-                                                                     AND Container.DescID = zc_Container_Count()
-                                                                     AND Container.WhereObjectId = vbUnitId
-                                            LEFT OUTER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Container.Id
-                                                                                 AND MovementItemContainer.Operdate >= CURRENT_DATE + INTERVAL '1 DAY'
-                                        GROUP BY
-                                            Container.Id
-                                           ,Container.ObjectId
-                                        HAVING Container.Amount - COALESCE (SUM (MovementItemContainer.Amount), 0) <> 0
-                                    ) as T0
-
-                                GROUP BY T0.GoodsId
-                                HAVING SUM (T0.Amount) <> 0
+               , tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                                   , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
+                              FROM ObjectLink AS ObjectLink_Price_Unit
+                                   LEFT JOIN ObjectLink AS Price_Goods
+                                          ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                   LEFT JOIN ObjectFloat AS Price_Value
+                                          ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                         AND Price_Value.DescId =  zc_ObjectFloat_Price_Value()
+                              WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId)
+                 -- Текущий остаток
+               , REMAINS AS (SELECT Container.ObjectId                                                    AS GoodsId
+                                  , SUM (Container.Amount)                                                AS Amount
+                             FROM tmpMovementItem
+                                  LEFT OUTER JOIN Container ON Container.ObjectId = tmpMovementItem.GoodsId
+                                                           AND Container.DescID = zc_Container_Count()
+                                                           AND Container.WhereObjectId = vbUnitId
+                                                           AND Container.Amount <> 0
+                             GROUP BY Container.ObjectId
+                             HAVING SUM (Container.Amount) <> 0
                             )
 
 
@@ -156,7 +165,7 @@ BEGIN
                 LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.GoodsId) AS T1;
 
-      -- Контроль по сумме
+/*      -- Контроль по сумме
     SELECT Object_CommentTR.ValueData                                                        AS CommentTR
          , Abs(SUM(MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)))             AS Amount
          , COALESCE (ObjectFloat_DifferenceSum.ValueData, 0)                                 AS DifferenceSum
@@ -193,7 +202,7 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. По одному <%> или более комментарию разница суммы <%> превышает допустимую сумму <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
     END IF;
-
+*/
       -- Пересчитываем количество
     PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff(inMovementId);
 

@@ -103,6 +103,7 @@ BEGIN
                             )
           , tmpContainer AS (SELECT Container.PartionId     AS PartionId
                                   , Container.ObjectId      AS GoodsId
+                                  , Container.WhereObjectId AS UnitId
                                   , SUM (CASE WHEN CLO_Client.ContainerId IS NULL THEN Container.Amount ELSE 0 END)  AS Amount
                                   , SUM (CASE WHEN CLO_Client.ContainerId > 0     THEN Container.Amount ELSE 0 END)  AS AmountDebt
                              FROM Container
@@ -115,6 +116,7 @@ BEGIN
                                AND (Container.Amount      <> 0 OR inIsShowAll = TRUE)
                              GROUP BY Container.PartionId
                                     , Container.ObjectId
+                                    , Container.WhereObjectId
                             )
  , tmpDiscountList AS (SELECT DISTINCT tmpContainer.GoodsId FROM tmpContainer)
 
@@ -139,11 +141,12 @@ BEGIN
                   )
    , tmpPriceList AS (SELECT ObjectLink_Unit_PriceList.ObjectId               AS UnitId
                            , ObjectLink_PriceListItem_Goods.ChildObjectId     AS GoodsId
-                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS Price
-                           , OL_currency.ChildObjectId                        AS CurrencyId
+                           , ObjectHistoryFloat_PriceListItem_Value.ValueData AS OperPriceList
+                           , COALESCE (ObjectHistoryLink_Currency.ObjectId, OL_Currency.ChildObjectId) AS CurrencyId
                       FROM ObjectLink AS ObjectLink_Unit_PriceList
-                           LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
-                                                              AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
+                           LEFT JOIN ObjectLink AS OL_Currency
+                                                ON OL_Currency.ObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                               AND OL_Currency.DescId   = zc_ObjectLink_PriceList_Currency()
                            INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                  ON ObjectLink_PriceListItem_PriceList.ChildObjectId = ObjectLink_Unit_PriceList.ChildObjectId
                                                 AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
@@ -158,9 +161,39 @@ BEGIN
                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                         ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                        AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
-                      WHERE ObjectLink_Unit_PriceList.ObjectId = inUnitId
+                           LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                       ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
+                                                      AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+
+                      WHERE (ObjectLink_Unit_PriceList.ObjectId = inUnitId OR inUnitId = 0)
                         AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
                      )
+   -- Последняя цена из Прайс-листа - zc_PriceList_Basis
+   , tmpPriceList_Basis AS (SELECT OL_PriceListItem_Goods.ChildObjectId AS GoodsId
+                                 , OHF_Value.ValueData                  AS OperPriceList
+                                 , COALESCE (ObjectHistoryLink_Currency.ObjectId, OL_Currency.ChildObjectId) AS CurrencyId
+                            FROM ObjectLink AS OL_PriceListItem_PriceList
+                                 LEFT JOIN ObjectLink AS OL_Currency ON OL_currency.ObjectId = OL_PriceListItem_PriceList.ChildObjectId
+                                                     AND OL_Currency.DescId = zc_ObjectLink_PriceList_Currency()
+                                                              
+                                 INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                       ON OL_PriceListItem_Goods.ObjectId = OL_PriceListItem_PriceList.ObjectId
+                                                      AND OL_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+                                 INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                          ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                         AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                         AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                                 LEFT JOIN ObjectHistoryFloat AS OHF_Value
+                                                              ON OHF_Value.ObjectHistoryId = OH_PriceListItem.Id
+                                                             AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
+
+                                 LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                                             ON ObjectHistoryLink_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                            AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                            WHERE OL_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis() -- !!!Базовай Прайс!!!
+                              AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                           )
+
        -- Результат
        SELECT tmpContainer.PartionId              AS Id
             , Movement.Id                         AS MovementId
@@ -180,13 +213,19 @@ BEGIN
             , (tmpContainer.Amount + tmpContainer.AmountDebt) :: TFloat AS RemainsWithDebt
 
             , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
-            , Object_PartionGoods.OperPriceList   AS OperPriceList
+            
+            --, Object_PartionGoods.OperPriceList   AS OperPriceList 
+            , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END :: TFloat AS OperPriceList
 
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
-                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (Object_PartionGoods.OperPriceList, vbCurrencyValue_eur, vbParValue_eur))
+                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END
+                                                                         , vbCurrencyValue_eur, vbParValue_eur)
+                                                   )
                    WHEN tmpPriceList.CurrencyId = zc_Currency_USD()
-                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (Object_PartionGoods.OperPriceList, vbCurrencyValue_usd, vbParValue_usd))
-                   ELSE Object_PartionGoods.OperPriceList
+                        THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END
+                                                                         , vbCurrencyValue_usd, vbParValue_usd)
+                                                   )
+                   ELSE CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END
               END :: TFloat                       AS OperPriceListReal
 
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
@@ -225,8 +264,6 @@ BEGIN
               END :: Integer                      AS Color_Calc
 
        FROM tmpContainer
-           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpContainer.GoodsId
-
            LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = tmpContainer.PartionId
                                         AND Object_PartionGoods.isErased       = FALSE
                                         -- !!!обязательно условие, т.к. мог меняться GoodsId и тогда в Container - несколько строк!!!
@@ -238,6 +275,10 @@ BEGIN
                                         AND Object_PartionGoods_er.GoodsId        = tmpContainer.GoodsId
                                         --
                                         AND Object_PartionGoods.MovementItemId IS NULL
+
+           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpContainer.GoodsId
+                                 AND tmpPriceList.UnitId  = tmpContainer.UnitId
+           LEFT JOIN tmpPriceList_Basis ON tmpPriceList_Basis.GoodsId = tmpContainer.GoodsId
 
            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = COALESCE (Object_PartionGoods.PartnerId, Object_PartionGoods_er.PartnerId)
            LEFT JOIN Object AS Object_Unit    ON Object_Unit.Id    = COALESCE (Object_PartionGoods.UnitId   , Object_PartionGoods_er.UnitId)

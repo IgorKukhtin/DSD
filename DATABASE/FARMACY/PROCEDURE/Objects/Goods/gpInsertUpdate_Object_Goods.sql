@@ -136,6 +136,40 @@ BEGIN
 
 
      -- !!!временно!!! - для сквозной синхронизации!!! со "всеми" Retail.Id (а не только vbObjectId)
+     CREATE TEMP TABLE _tmpGoods(
+                             GoodsId Integer,
+                             RetailId Integer) ON COMMIT DROP;
+     INSERT INTO _tmpGoods (GoodsId, RetailId)
+        SELECT COALESCE (tmpGoods.GoodsId, ioId) AS GoodsId
+             , Object_Retail.Id                  AS RetailId
+        FROM Object AS Object_Retail
+             LEFT JOIN (SELECT DISTINCT
+                               COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
+                             , ObjectLink_Goods_Object.ChildObjectId                                     AS RetailId
+                        FROM Object AS Object_Goods
+                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
+                                                ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
+                                               AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
+                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
+                                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
+                                               AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+ 
+                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
+                                                ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
+                                               AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+                           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
+                                                ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
+                                               AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
+ 
+                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
+                                                ON ObjectLink_Goods_Object.ObjectId = COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id)
+                                               AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+                        WHERE Object_Goods.Id = ioId
+                        ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
+       WHERE Object_Retail.DescId = zc_Object_Retail()
+         -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+       ;
+                    
      PERFORM lpInsertUpdate_Object_Goods_Retail (ioId            := COALESCE (tmpGoods.GoodsId, ioId)
                                                , inCode          := CASE WHEN ioId <> 0 THEN inCode ELSE vbCode :: TVarChar END   :: TVarChar
                                                , inName          := inName                      :: TVarChar
@@ -152,35 +186,10 @@ BEGIN
                                                , inNameUkr       := inNameUkr      :: TVarChar
                                                , inCodeUKTZED    := inCodeUKTZED   :: TVarChar
                                                , inExchangeId    := inExchangeId     :: Integer
-                                               , inObjectId      := Object_Retail.Id :: Integer
+                                               , inObjectId      := tmpGoods.RetailId :: Integer
                                                , inUserId        := vbUserId         :: Integer
                                                 )
-     FROM Object AS Object_Retail
-          LEFT JOIN (SELECT DISTINCT
-                            COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id) AS GoodsId
-                          , ObjectLink_Goods_Object.ChildObjectId                                     AS RetailId
-                     FROM Object AS Object_Goods
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
-                                               ON ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-                                              AND ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain
-                                               ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId
-                                              AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain_find
-                                               ON ObjectLink_LinkGoods_GoodsMain_find.ChildObjectId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
-                                              AND ObjectLink_LinkGoods_GoodsMain_find.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                          LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods_find
-                                               ON ObjectLink_LinkGoods_Goods_find.ObjectId = ObjectLink_LinkGoods_GoodsMain_find.ObjectId
-                                              AND ObjectLink_LinkGoods_Goods_find.DescId = zc_ObjectLink_LinkGoods_Goods()
-
-                          LEFT JOIN ObjectLink AS ObjectLink_Goods_Object
-                                               ON ObjectLink_Goods_Object.ObjectId = COALESCE (ObjectLink_LinkGoods_Goods_find.ChildObjectId, Object_Goods.Id)
-                                              AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                     WHERE Object_Goods.Id = ioId
-                    ) AS tmpGoods ON tmpGoods.RetailId = Object_Retail.Id AND tmpGoods.GoodsId > 0
-     WHERE Object_Retail.DescId = zc_Object_Retail()
-       -- AND Object_Retail.Id NOT IN (10106458, 10106459, 10106460) -- select * from Object where DescId = zc_Object_Retail() order by id DESC
+     FROM _tmpGoods AS tmpGoods
      ;
 
      IF COALESCE (ioId, 0) = 0

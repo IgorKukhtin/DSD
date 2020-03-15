@@ -67,7 +67,15 @@ BEGIN
                                                        AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentTR_Explanation()
                                                        AND ObjectBoolean.ValueData = TRUE)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не заполнено <Пояснение>.';
+         IF EXISTS (SELECT 1 FROM ObjectBoolean
+                    WHERE ObjectBoolean.ObjectId = inCommentTRID
+                      AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentTR_Resort()
+                      AND ObjectBoolean.ValueData = TRUE)
+         THEN
+             RAISE EXCEPTION 'Ошибка. Проставьте номер пересорта в столбик "Пояснение" по порядку в документе (1,2,3 и тд).';
+         ELSE
+             RAISE EXCEPTION 'Ошибка. Не заполнено <Пояснение>.';
+         END IF;
      END IF;
 
      ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, vbUserId);
