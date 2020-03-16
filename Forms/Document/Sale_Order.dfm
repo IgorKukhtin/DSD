@@ -192,7 +192,20 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object MeasureName: TcxGridDBColumn [6]
+          object PartionGoodsDate: TcxGridDBColumn [6]
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.ReadOnly = True
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object MeasureName: TcxGridDBColumn [7]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -200,7 +213,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 45
           end
-          object MovementPromo: TcxGridDBColumn [7]
+          object MovementPromo: TcxGridDBColumn [8]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -208,7 +221,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 100
           end
-          object ChangePercentAmount: TcxGridDBColumn [8]
+          object ChangePercentAmount: TcxGridDBColumn [9]
             Caption = '% '#1089#1082#1080#1076'. '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -219,7 +232,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 55
           end
-          object Amount: TcxGridDBColumn [9]
+          object Amount: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -229,7 +242,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountChangePercent: TcxGridDBColumn [10]
+          object AmountChangePercent: TcxGridDBColumn [11]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -240,7 +253,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object TotalPercentAmount: TcxGridDBColumn [11]
+          object TotalPercentAmount: TcxGridDBColumn [12]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'TotalPercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -252,7 +265,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [12]
+          object AmountPartner: TcxGridDBColumn [13]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -262,7 +275,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountOrder: TcxGridDBColumn [13]
+          object AmountOrder: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1079#1072#1103#1074'.)'
             DataBinding.FieldName = 'AmountOrder'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -273,7 +286,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 55
           end
-          object ChangePercent: TcxGridDBColumn [14]
+          object ChangePercent: TcxGridDBColumn [15]
             Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -284,7 +297,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 62
           end
-          object CountForPrice: TcxGridDBColumn [15]
+          object CountForPrice: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -292,7 +305,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Price: TcxGridDBColumn [16]
+          object Price: TcxGridDBColumn [17]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -302,7 +315,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PricePromo: TcxGridDBColumn [17]
+          object PricePromo: TcxGridDBColumn [18]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -313,7 +326,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 50
           end
-          object Price_Pricelist: TcxGridDBColumn [18]
+          object Price_Pricelist: TcxGridDBColumn [19]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -325,7 +338,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [19]
+          object Price_Pricelist_vat: TcxGridDBColumn [20]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -336,7 +349,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object isCheck_Pricelist: TcxGridDBColumn [20]
+          object isCheck_Pricelist: TcxGridDBColumn [21]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -344,7 +357,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 61
           end
-          object AmountSumm: TcxGridDBColumn [21]
+          object AmountSumm: TcxGridDBColumn [22]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -354,7 +367,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 80
           end
-          object HeadCount: TcxGridDBColumn [22]
+          object HeadCount: TcxGridDBColumn [23]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             Visible = False
@@ -362,7 +375,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object AssetName: TcxGridDBColumn [23]
+          object AssetName: TcxGridDBColumn [24]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -371,7 +384,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 65
           end
-          object BoxCount: TcxGridDBColumn [24]
+          object BoxCount: TcxGridDBColumn [25]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -382,7 +395,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [25]
+          object BoxName: TcxGridDBColumn [26]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -398,7 +411,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyCode: TcxGridDBColumn [26]
+          object InfoMoneyCode: TcxGridDBColumn [27]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -407,7 +420,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [27]
+          object InfoMoneyGroupName: TcxGridDBColumn [28]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -416,7 +429,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [28]
+          object InfoMoneyDestinationName: TcxGridDBColumn [29]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -425,7 +438,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [29]
+          object InfoMoneyName: TcxGridDBColumn [30]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
@@ -434,7 +447,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 100
           end
-          object InfoMoneyName_all: TcxGridDBColumn [30]
+          object InfoMoneyName_all: TcxGridDBColumn [31]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
             DataBinding.FieldName = 'InfoMoneyName_all'
             Visible = False
@@ -443,7 +456,7 @@ inherited Sale_OrderForm: TSale_OrderForm
             Options.Editing = False
             Width = 90
           end
-          object isPeresort: TcxGridDBColumn [31]
+          object isPeresort: TcxGridDBColumn [32]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter
@@ -853,12 +866,12 @@ inherited Sale_OrderForm: TSale_OrderForm
       Width = 47
     end
     object cxLabel25: TcxLabel
-      Left = 255
+      Left = 360
       Top = 85
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
     object edInvNumberTransport: TcxButtonEdit
-      Left = 255
+      Left = 360
       Top = 103
       Properties.Buttons = <
         item
@@ -867,7 +880,7 @@ inherited Sale_OrderForm: TSale_OrderForm
         end>
       Properties.ReadOnly = True
       TabOrder = 52
-      Width = 275
+      Width = 170
     end
     object cxLabel26: TcxLabel
       Left = 535
@@ -905,6 +918,20 @@ inherited Sale_OrderForm: TSale_OrderForm
       TabOrder = 56
       Text = '-1'
       Width = 140
+    end
+    object cxLabel28: TcxLabel
+      Left = 255
+      Top = 85
+      Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+    end
+    object edPartionGoodsDate: TcxDateEdit
+      Left = 255
+      Top = 103
+      EditValue = 43831d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 58
+      Width = 102
     end
   end
   object edChangePercentAmount: TcxCurrencyEdit [2]
@@ -2293,6 +2320,46 @@ inherited Sale_OrderForm: TSale_OrderForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1040#1082#1094#1080#1103'>'
       ImageIndex = 29
     end
+    object actUpdate_PartionGoodsDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_PartionGoodsDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_PartionGoodsDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
+    object macUpdate_PartionGoodsDate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PartionGoodsDate
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
+    object macUpdate_PartionGoodsDateList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_PartionGoodsDate
+        end
+        item
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080'?'
+      InfoAfterExecute = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' '#1080#1079#1084#1077#1085#1077#1085#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2414,6 +2481,14 @@ inherited Sale_OrderForm: TSale_OrderForm
         item
           Visible = True
           ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PartionGoodsDateList'
         end
         item
           Visible = True
@@ -2692,6 +2767,10 @@ inherited Sale_OrderForm: TSale_OrderForm
     end
     object bbPromo: TdxBarButton
       Action = macOpenFormPromo
+      Category = 0
+    end
+    object bbUpdate_PartionGoodsDateList: TdxBarButton
+      Action = macUpdate_PartionGoodsDateList
       Category = 0
     end
   end
@@ -3220,6 +3299,13 @@ inherited Sale_OrderForm: TSale_OrderForm
         Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate'
+        Value = 'NULL'
+        Component = edPartionGoodsDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -5086,8 +5172,8 @@ inherited Sale_OrderForm: TSale_OrderForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 340
-    Top = 88
+    Left = 404
+    Top = 96
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Sale_Transport'
@@ -5317,5 +5403,30 @@ inherited Sale_OrderForm: TSale_OrderForm
     PackSize = 1
     Left = 248
     Top = 344
+  end
+  object spUpdate_MI_PartionGoodsDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_PartionGoodsDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = 43831d
+        Component = edPartionGoodsDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1136
+    Top = 291
   end
 end

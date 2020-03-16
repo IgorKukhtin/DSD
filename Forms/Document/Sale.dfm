@@ -1044,6 +1044,7 @@ inherited SaleForm: TSaleForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object actPrintPackGross: TdsdPrintAction [1]
@@ -3458,6 +3459,13 @@ inherited SaleForm: TSaleForm
         Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate'
+        Value = 'NULL'
+        Component = edPartionGoodsDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
