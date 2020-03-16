@@ -95,6 +95,7 @@ BEGIN
                             UNION
                              SELECT Object_Unit_View.Id FROM Object_Unit_View WHERE COALESCE (inFromId, 0) = 0
                             )
+
            -- данные первого периода
          , tmpMI_ContainerIn1 AS
                        (SELECT MIContainer.OperDate                                 AS OperDate
@@ -105,7 +106,9 @@ BEGIN
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
                              , CASE WHEN inIsPartion = TRUE THEN MIContainer.ContainerIntId_analyzer ELSE 0 END AS ContainerIntId_analyzer
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN  MIContainer.Amount ELSE 0 END)  AS Amount
-                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END)  AS Amount_Sum
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE
+                                          AND (MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10100() OR MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10200())
+                                        THEN MIContainer.Amount ELSE 0 END)         AS Amount_Sum
 
                              , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                           AND MIContainer.MovementDescId = zc_Movement_Sale()
@@ -233,14 +236,12 @@ BEGIN
                                         ELSE 0
                                    END) AS SummSendOnPriceOut
 
-
                         FROM MovementItemContainer AS MIContainer
 			     INNER JOIN _tmpFromGroup ON _tmpFromGroup.FromId = MIContainer.WhereObjectId_analyzer
  		             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                              LEFT JOIN MovementBoolean AS MovementBoolean_HistoryCost
                                                        ON MovementBoolean_HistoryCost.MovementId = MIContainer.MovementId
                                                       AND MovementBoolean_HistoryCost.DescId = zc_MovementBoolean_HistoryCost()
-
                         WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                           AND (MIContainer.MovementDescId = zc_Movement_Sale() OR MIContainer.MovementDescId = zc_Movement_SendOnPrice())
                         --  AND MIContainer.isActive = true
@@ -318,7 +319,9 @@ BEGIN
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
                              , CASE WHEN inIsPartion = TRUE THEN MIContainer.ContainerIntId_analyzer ELSE 0 END AS ContainerIntId_analyzer
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN  MIContainer.Amount ELSE 0 END)  AS Amount
-                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE THEN MIContainer.Amount ELSE 0 END)  AS Amount_Sum
+                             , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE
+                                          AND (MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10100() OR MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10200())
+                                        THEN MIContainer.Amount ELSE 0 END)         AS Amount_Sum
 
                              , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                           AND MIContainer.MovementDescId = zc_Movement_Sale()
