@@ -654,7 +654,6 @@ BEGIN
              LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
                                   ON ObjectDate_PartionGoods_Value.ObjectId = tmpOperationGroup.PartionGoodsId
                                  AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
-
   ;
          
 END;
