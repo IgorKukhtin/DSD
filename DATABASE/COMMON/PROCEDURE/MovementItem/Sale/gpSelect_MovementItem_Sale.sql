@@ -16,7 +16,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, GoodsId Integer, GoodsCode Integer, 
              , ChangePercentAmount TFloat, TotalPercentAmount TFloat, ChangePercent TFloat
              , Price TFloat, CountForPrice TFloat, PriceCost TFloat, SumCost TFloat, Price_Pricelist TFloat, Price_Pricelist_vat TFloat
              , HeadCount TFloat, BoxCount TFloat
-             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
+             , PartionGoods TVarChar
+             , PartionGoodsDate TDateTime
+             , GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , BoxId Integer, BoxName TVarChar
              , AmountSumm TFloat
@@ -172,6 +174,7 @@ BEGIN
                                  , MIFloat_WeightPack.ValueData                  AS WeightPack
                                  , MIBoolean_BarCode.ValueData                   AS isBarCode
                                  , MIString_PartionGoods.ValueData               AS PartionGoods
+                                 , COALESCE (MIDate_PartionGoods.ValueData, NULL) :: TDateTime AS PartionGoodsDate
 
                                  , MILinkObject_Box.ObjectId                     AS BoxId
                                  , MILinkObject_Asset.ObjectId                   AS AssetId
@@ -236,6 +239,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+
+                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                            ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -321,6 +328,7 @@ BEGIN
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TFloat)      AS BoxCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
+           , CAST (NULL AS TDateTime)   AS PartionGoodsDate
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
@@ -443,6 +451,7 @@ BEGIN
            , tmpMI_Goods.BoxCount
 
            , tmpMI_Goods.PartionGoods
+           , tmpMI_Goods.PartionGoodsDate :: TDateTime
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
@@ -598,6 +607,7 @@ BEGIN
                                  , MIFloat_WeightPack.ValueData                  AS WeightPack
                                  , MIBoolean_BarCode.ValueData                   AS isBarCode
                                  , MIString_PartionGoods.ValueData               AS PartionGoods
+                                 , COALESCE (MIDate_PartionGoods.ValueData, NULL) :: TDateTime AS PartionGoodsDate
 
                                  , MILinkObject_Box.ObjectId                     AS BoxId
                                  , MILinkObject_Asset.ObjectId                   AS AssetId
@@ -663,6 +673,10 @@ BEGIN
                                  LEFT JOIN MovementItemFloat AS MIFloat_PromoMovement
                                                              ON MIFloat_PromoMovement.MovementItemId = MovementItem.Id
                                                             AND MIFloat_PromoMovement.DescId = zc_MIFloat_PromoMovementId()
+
+                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                                            ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                            )
            -- Связь с акциями для существующих MovementItem
         , tmpMIPromo_all AS (SELECT tmp.MovementId_Promo                          AS MovementId_Promo
@@ -744,6 +758,7 @@ BEGIN
            , tmpMI_Goods.BoxCount
 
            , tmpMI_Goods.PartionGoods
+           , tmpMI_Goods.PartionGoodsDate :: TDateTime
            , Object_GoodsKind.Id                    AS GoodsKindId
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
@@ -861,6 +876,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.03.20         * PartionGoodsDate
  02.12.19         *
  04.01.19         * MovementId_Promo
  09.10.14                                                       * add box

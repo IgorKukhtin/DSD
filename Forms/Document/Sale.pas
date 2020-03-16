@@ -173,7 +173,7 @@ type
     ceComment: TcxTextEdit;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     actPrintSaleOrder: TdsdPrintAction;
-    тт: TdxBarButton;
+    bbPrintSaleOrder: TdxBarButton;
     PriceCost: TcxGridDBColumn;
     SumCost: TcxGridDBColumn;
     spUpdate_MI_Sale_Price: TdsdStoredProc;
@@ -239,6 +239,14 @@ type
     spCheckRight: TdsdStoredProc;
     macOpenFormPromo: TMultiAction;
     actCheckRight: TdsdExecStoredProc;
+    cxLabel28: TcxLabel;
+    edPartionGoodsDate: TcxDateEdit;
+    spUpdate_MI_PartionGoodsDate: TdsdStoredProc;
+    actUpdate_PartionGoodsDate: TdsdExecStoredProc;
+    macUpdate_PartionGoodsDate: TMultiAction;
+    macUpdate_PartionGoodsDateList: TMultiAction;
+    actRefreshMI: TdsdDataSetRefresh;
+    bbUpdate_PartionGoodsDateList: TdxBarButton;
   private
     { Private declarations }
   public
