@@ -18,6 +18,7 @@ $BODY$
   DECLARE vbUnitId     Integer;
   DECLARE vbUnitIdStr  TVarChar;
   DECLARE vbAreaId     Integer;
+  DECLARE vbGoodsId     Integer;
 BEGIN
 
      IF inPreceWithVAT > 15 
@@ -33,6 +34,9 @@ BEGIN
 
      -- проверяем регион пользователя
      vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
+
+     -- получаем главный товар
+     vbGoodsId:= (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inGoodsID);
 
      if COALESCE (vbAreaId, 0) = 0
      THEN
@@ -139,7 +143,7 @@ BEGIN
                         LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
 
 
-                  WHERE LinkGoodsObject.GoodsId = inGoodsID
+                  WHERE LoadPriceListItem.GoodsId = vbGoodsId
                     AND COALESCE(JuridicalSettings.isPriceCloseOrder, TRUE)  = FALSE
                     AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0 OR
                          COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis()))
@@ -170,4 +174,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsPriceWithVAT_ForSite (inGoodsID := 5740550, inUnitID := 377610, inPreceWithVAT := 10, inSession := '3354092');
+-- 
+SELECT * FROM gpSelect_GoodsPriceWithVAT_ForSite (inGoodsID := 5740550, inUnitID := 377610, inPreceWithVAT := 10, inSession := '3354092');

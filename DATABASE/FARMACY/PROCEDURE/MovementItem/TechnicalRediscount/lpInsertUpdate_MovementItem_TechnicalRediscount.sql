@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, Integer, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TechnicalRediscount(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inCommentTRID         Integer   , -- Комментарий
-    IN isExplanation         TVarChar  , -- Количество
+    IN isExplanation         TVarChar  , -- Пояснение
+    IN isComment             TVarChar  , -- Комментарий 2
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -27,6 +28,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentTR(), ioId, inCommentTRID);
      -- Сохранили <Пояснение>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Explanation(), ioId, isExplanation);
+     -- Сохранили <Комментарий 2>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, isComment);
 
      PERFORM lpUpdate_Movement_TechnicalRediscount_TotalDiff (inMovementId);
 

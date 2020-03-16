@@ -767,10 +767,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
     exit;
-
+}
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
-
+    exit;
+{
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
@@ -2175,11 +2176,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
 
-   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));

@@ -201,6 +201,13 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
             HeaderAlignmentVert = vaCenter
             Width = 117
           end
+          object Comment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081' 2'
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 113
+          end
           object Remains_FactAmount: TcxGridDBColumn
             Caption = #1060#1072#1082#1090#1080#1095#1077#1089#1082#1080#1081' '#1086#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains_FactAmount'
@@ -914,6 +921,15 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Explanation'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','

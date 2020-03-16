@@ -50,6 +50,12 @@ type
     cxLabel5: TcxLabel;
     edArea: TcxButtonEdit;
     GuidesArea: TdsdGuides;
+    IsPromo: TcxGridDBColumn;
+    actUpdate_Goods_Promo: TMultiAction;
+    spUpdate_Goods_Promo: TdsdStoredProc;
+    actExecUpdate_Goods_Promo: TdsdExecStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

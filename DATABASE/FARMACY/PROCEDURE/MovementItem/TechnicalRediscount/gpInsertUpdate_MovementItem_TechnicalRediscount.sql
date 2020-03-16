@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TechnicalRediscount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TechnicalRediscount(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TechnicalRediscount(
     IN inRemains_Amount      TFloat    , --
     IN inCommentTRID         Integer   , -- Комментарий
     IN isExplanation         TVarChar  , -- Количество
+    IN isComment             TVarChar  , -- Комментарий 2
    OUT outDiffSumm           TFloat    , --
    OUT outRemains_FactAmount TFloat    , --
    OUT outRemains_FactSumm   TFloat    , --
@@ -32,7 +33,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TechnicalRediscount());
 
-     IF ROUND(inRemains_Amount + inAmount, 4) < 0
+     IF ROUND(COALESCE(inRemains_Amount, 0) + inAmount, 4) < 0
      THEN
        RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
      END IF;
@@ -78,7 +79,7 @@ BEGIN
          END IF;
      END IF;
 
-     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, vbUserId);
+     ioId := lpInsertUpdate_MovementItem_TechnicalRediscount(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, isComment, vbUserId);
 
      outDiffSumm           := inAmount * inPrice;
      outRemains_FactAmount := inRemains_Amount + inAmount;

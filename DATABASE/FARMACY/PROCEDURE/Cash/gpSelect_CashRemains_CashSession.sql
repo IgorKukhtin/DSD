@@ -136,27 +136,35 @@ BEGIN
 
 
     RETURN QUERY
-    WITH 
+    WITH
           -- Отложенные перемещения
-         tmpDeferredSendAll AS (SELECT
-                                    Container.Id
-                                  , Container.ParentId
-                                  , SUM(- MovementItemContainer.Amount) AS Amount
+         tmpMovementSend AS (SELECT
+                                    Movement.Id
                              FROM Movement
 
                                   INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
                                                             AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                            AND MovementBoolean_Deferred.ValueData = TRUE
+
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                               AND MovementLinkObject_From.ObjectId = vbUnitId
+
+                             WHERE Movement.DescId = zc_Movement_Send()
+                              AND Movement.StatusId = zc_Enum_Status_UnComplete())
+         , tmpDeferredSendAll AS (SELECT
+                                    Container.Id
+                                  , Container.ParentId
+                                  , SUM(- MovementItemContainer.Amount) AS Amount
+                             FROM tmpMovementSend AS Movement
 
                                   INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
                                                                   AND MovementItemContainer.DescId IN (zc_Container_Count(), zc_Container_CountPartionDate())
 
                                   INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
-                                                      AND Container.WhereObjectId = vbUnitId
 
-                             WHERE Movement.DescId = zc_Movement_Send()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                               AND MovementBoolean_Deferred.ValueData = TRUE
                              GROUP BY Container.Id, Container.ParentId
                               )
          , tmpDeferredSendParrent  AS (SELECT tmpDeferredSendAll.ParentId
@@ -176,19 +184,20 @@ BEGIN
                                 WHERE tmpDeferredSendID.Amount - COALESCE(tmpDeferredSendParrent.Amount, 0) <> 0
                                 )
          -- Отложенные чеки
-       , tmpMovReserveAll AS (SELECT Movement.Id
+       , tmpMovementCheck AS (SELECT Movement.Id
+                              FROM Movement
+                              WHERE Movement.DescId = zc_Movement_Check()
+                               AND Movement.StatusId = zc_Enum_Status_UnComplete())
+       , tmpMovReserveAll AS (
+                             SELECT Movement.Id
                              FROM MovementBoolean AS MovementBoolean_Deferred
-                                  INNER JOIN Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
-                                                     AND Movement.DescId = zc_Movement_Check()
-                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementBoolean_Deferred.MovementId
                              WHERE MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
                                AND MovementBoolean_Deferred.ValueData = TRUE
                              UNION ALL
                              SELECT Movement.Id
                              FROM MovementString AS MovementString_CommentError
-                                  INNER JOIN Movement ON Movement.Id     = MovementString_CommentError.MovementId
-                                                     AND Movement.DescId = zc_Movement_Check()
-                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                  INNER JOIN tmpMovementCheck AS Movement ON Movement.Id     = MovementString_CommentError.MovementId
                              WHERE MovementString_CommentError.DescId = zc_MovementString_CommentError()
                                AND MovementString_CommentError.ValueData <> ''
                              )
@@ -287,8 +296,8 @@ BEGIN
                                  FROM tmpContainerPD
                                  GROUP BY tmpContainerPD.ParentId
                                  )
-       , tmpGoods_PD AS (SELECT DISTINCT tmpContainerPD.ObjectId AS GoodsId 
-                         FROM tmpContainerPD 
+       , tmpGoods_PD AS (SELECT DISTINCT tmpContainerPD.ObjectId AS GoodsId
+                         FROM tmpContainerPD
                          WHERE tmpContainerPD.PriceWithVAT <= 15
                            AND tmpContainerPD.PartionDateKindId = zc_Enum_PartionDateKind_6())
          -- спец-цены
@@ -539,10 +548,10 @@ BEGIN
 
 
 
-       , tmpContainer AS (SELECT Container.ObjectId
+       , tmpContainerIncome AS (SELECT Container.ObjectId
                                       , Container.Amount - COALESCE (tmpContainerPDAll.Amount, 0)       AS Amount
                                       , Container.DeferredSend
-                                      , MIDate_ExpirationDate.ValueData                                 AS ExpirationDate
+                                      , COALESCE (MI_Income_find.Id,MI_Income.Id)                       AS MI_IncomeId 
                                  FROM tmpContainerAll AS Container
                                       LEFT JOIN  tmpContainerPDAll on tmpContainerPDAll.ParentId = Container.Id
                                       LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
@@ -558,10 +567,16 @@ BEGIN
                                       -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                       LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
                                                                            -- AND 1=0
-                                      LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                       ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
-                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                  WHERE Container.DescId = zc_Container_Count()
+                                 )
+       , tmpContainer AS (SELECT Container.ObjectId
+                                      , Container.Amount 
+                                      , Container.DeferredSend
+                                      , MIDate_ExpirationDate.ValueData                                 AS ExpirationDate
+                                 FROM tmpContainerIncome AS Container
+                                      LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                       ON MIDate_ExpirationDate.MovementItemId = Container.MI_IncomeId
+                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                  )
        , tmpGoodsRemains AS (SELECT Container.ObjectId
                                       , SUM(Container.Amount)                                   AS Remains
@@ -668,6 +683,7 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 13.03.20                                                                                                    * Оптимизация
  15.07.19                                                                                                    *
  28.05.19                                                                                                    * PartionDateKindId
  13.05.19                                                                                                    *
@@ -693,5 +709,6 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 
 */
 
---тест SELECT * FROM gpSelect_CashRemains_CashSession ('3')
+--тест
+SELECT * FROM gpSelect_CashRemains_CashSession ('3')
 
