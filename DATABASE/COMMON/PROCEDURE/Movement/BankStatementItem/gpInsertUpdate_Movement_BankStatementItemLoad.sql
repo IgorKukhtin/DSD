@@ -117,6 +117,10 @@ BEGIN
          JOIN MovementString AS MovementString_Comment
                              ON MovementString_Comment.MovementId =  Movement.Id
                             AND MovementString_Comment.DescId = zc_MovementString_Comment()
+         JOIN MovementFloat AS MovementFloat_Amount
+                            ON MovementFloat_Amount.MovementId =  Movement.Id
+                           AND MovementFloat_Amount.DescId     = zc_MovementFloat_Amount()
+                           AND MovementFloat_Amount.ValueData  = inAmount
     WHERE Movement.ParentId                    = vbMovementId
       AND Movement.DescId                      = zc_Movement_BankStatementItem()
       AND Movement.InvNumber                   = inDocNumber
