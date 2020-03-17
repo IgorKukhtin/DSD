@@ -17,7 +17,6 @@ BEGIN
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_OrderInternal());
 
 
-
     -- таблица -
    CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, ReceiptId Integer, CuterCount TFloat, GoodsId_child Integer, GoodsKindId_child Integer, Amount_child TFloat, isOrderSecond Boolean) ON COMMIT DROP;
    --
@@ -176,7 +175,7 @@ BEGIN
                                 (SELECT MAX (MovementItem.Id)                         AS MovementItemId 
                                       , MovementItem.ObjectId                         AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                 FROM MovementItem 
+                                 FROM MovementItem
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

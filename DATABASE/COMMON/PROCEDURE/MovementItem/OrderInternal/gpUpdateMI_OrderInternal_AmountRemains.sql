@@ -131,7 +131,7 @@ BEGIN
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
                                                          AND Container.ObjectId NOT IN (SELECT tmpMI_Inventory.GoodsId FROM tmpMI_Inventory)
-                                     INNER JOIN ContainerLinkObject AS CLO_Unit 
+                                     INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                      INNER JOIN tmpUnit ON tmpUnit.UnitId = CLO_Unit.ObjectId
