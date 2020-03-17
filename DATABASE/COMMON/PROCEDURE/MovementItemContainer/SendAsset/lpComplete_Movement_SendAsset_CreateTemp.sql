@@ -1,0 +1,44 @@
+-- Function: lpComplete_Movement_SendAsset_CreateTemp ()
+
+DROP FUNCTION IF EXISTS lpComplete_Movement_SendAsset_CreateTemp ();
+
+CREATE OR REPLACE FUNCTION lpComplete_Movement_SendAsset_CreateTemp()
+RETURNS VOID
+AS
+$BODY$
+BEGIN
+     -- таблица - Проводки
+     PERFORM lpComplete_Movement_All_CreateTemp();
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItem'))
+     THEN
+         DELETE FROM _tmpItem;
+         DELETE FROM _tmpItemSumm;
+     ELSE
+         -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+         CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, CarId_From Integer, BranchId_From Integer, UnitId_To Integer, MemberId_To Integer, CarId_To Integer, BranchId_To Integer
+                                   , MIContainerId_To BigInt, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, ObjectDescId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime
+                                   , OperCount TFloat
+                                   , AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                   , JuridicalId_basis_To Integer, BusinessId_To Integer
+                                   , StorageId_Item Integer, PartionGoodsId_Item Integer
+                                   , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, isPartionGoodsKind_From Boolean, isPartionGoodsKind_To Boolean
+                                   , PartionGoodsId_From Integer, PartionGoodsId_To Integer
+                                   , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, UnitId_ProfitLoss Integer, BranchId_ProfitLoss Integer, BusinessId_ProfitLoss Integer
+                                    ) ON COMMIT DROP;
+         -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+         CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId_To BigInt, ContainerId_To Integer, AccountId_To Integer, ContainerId_ProfitLoss Integer, ContainerId_GoodsFrom Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
+     END IF;
+
+
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.03.20         *
+*/
+
+-- тест
+-- SELECT * FROM lpComplete_Movement_SendAsset_CreateTemp ()
