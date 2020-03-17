@@ -266,6 +266,11 @@ begin
            ParamByName('SubjectDocCode').AsInteger := DataSet.FieldByName('SubjectDocCode').asInteger;
            ParamByName('SubjectDocName').asString  := DataSet.FieldByName('SubjectDocName').asString;
 
+           ParamByName('OrderExternalId').AsInteger        := DataSet.FieldByName('MovementId_Order').asInteger;
+           ParamByName('OrderExternal_DescId').AsInteger   := DataSet.FieldByName('MovementDescId_Order').asInteger;
+           ParamByName('OrderExternal_InvNumber').asString := DataSet.FieldByName('InvNumber_Order').asString;
+           ParamByName('OrderExternalName_master').asString:= DataSet.FieldByName('OrderExternalName_master').asString;
+
          end;
 
          {except

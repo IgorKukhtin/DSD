@@ -707,7 +707,7 @@ end;
 procedure TDialogMovementDescForm.EditBarCodeChange(Sender: TObject);
 begin
     isEditBarCode:=true;
-//    if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then ActiveControl:=DBGrid;{EditBarCodeExit(Self);}
+    //if (Length(trim(EditBarCode.Text))>=13)and(not IsBarCodeMaster) then ActiveControl:=DBGrid;{EditBarCodeExit(Self);}
 end;
 {------------------------------------------------------------------------}
 procedure TDialogMovementDescForm.EditPartnerCodeEnter(Sender: TObject);

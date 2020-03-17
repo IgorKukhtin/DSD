@@ -100,7 +100,8 @@ uses
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   GuideSubjectDoc in '..\Scale\GuideSubjectDoc.pas' {GuideSubjectDocForm},
   GuideUnit in '..\Scale\GuideUnit.pas' {GuideUnitForm},
-  dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas';
+  dmMainScaleCeh in '..\Scale\Util\dmMainScaleCeh.pas',
+  APScale_TLB in '..\Scale\Util\APScale_TLB.pas';
 
 {$R *.res}
 

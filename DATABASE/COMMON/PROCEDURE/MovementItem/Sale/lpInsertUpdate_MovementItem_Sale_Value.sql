@@ -33,6 +33,7 @@ $BODY$
    DECLARE vbCountPack TFloat;
    DECLARE vbWeightTotal TFloat;
    DECLARE vbWeightPack TFloat;
+   DECLARE vbPartionGoodsDate TDateTime;
 BEGIN
 
      -- !!!скидка - вес упаковки!!!
@@ -56,6 +57,8 @@ BEGIN
                             ELSE 0
                        END;
      END IF;
+     
+     vbPartionGoodsDate:= zfConvert_StringToDate (inPartionGoods);
 
      -- сохранили
      SELECT tmp.ioId INTO ioId
@@ -70,7 +73,7 @@ BEGIN
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
                                           , inBoxCount           := inBoxCount
-                                          , inPartionGoods       := inPartionGoods
+                                          , inPartionGoods       := CASE WHEN vbPartionGoodsDate > zc_DateStart() THEN '' ELSE inPartionGoods END
                                           , inGoodsKindId        := inGoodsKindId
                                           , inAssetId            := inAssetId
                                           , inBoxId              := inBoxId
@@ -82,6 +85,13 @@ BEGIN
 
                                           , inUserId             := inUserId
                                            ) AS tmp;
+
+
+     -- дописали свойство <Партия товара-дата>
+     IF vbPartionGoodsDate > zc_DateStart()
+     THEN
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, vbPartionGoodsDate);
+     END IF;
 
 
 END;

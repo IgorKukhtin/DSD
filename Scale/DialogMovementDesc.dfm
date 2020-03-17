@@ -53,7 +53,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 0
-        ExplicitWidth = 192
         object ScaleLabel: TLabel
           Left = 1
           Top = 1
@@ -61,7 +60,7 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
           Height = 16
           Align = alTop
           Caption = '  '#1050#1086#1076' '#1086#1087#1077#1088#1072#1094#1080#1080' / '#1064'/'#1050'/'#8470' '#1079#1072#1103#1074#1082#1080
-          ExplicitWidth = 183
+          ExplicitWidth = 190
         end
         object EditBarCode: TEdit
           Left = 8
@@ -85,8 +84,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
       Alignment = taLeftJustify
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 192
-      ExplicitWidth = 475
       object Panel3: TPanel
         Left = 0
         Top = 0
@@ -132,7 +129,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
         Alignment = taLeftJustify
         BevelOuter = bvSpace
         TabOrder = 1
-        ExplicitWidth = 360
         object Label3: TLabel
           Left = 1
           Top = 1
@@ -159,7 +155,6 @@ inherited DialogMovementDescForm: TDialogMovementDescForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitWidth = 358
         end
       end
     end

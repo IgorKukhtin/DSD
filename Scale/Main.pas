@@ -12,7 +12,7 @@ uses
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, dsdDB, Datasnap.DBClient, dxSkinsCore,
   dxSkinsDefaultPainters
- ,SysScalesLib_TLB,AxLibLib_TLB
+ ,SysScalesLib_TLB,AxLibLib_TLB, APScale_TLB
  ,UtilScale,DataModul, cxStyles, dxSkinscxPCPainter, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxDBData, dsdAddOn, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxClasses, cxGridCustomView, cxGrid,
@@ -246,6 +246,7 @@ type
     WeightTare5: TcxGridDBColumn;
     WeightTare6: TcxGridDBColumn;
     CountTareTotal: TcxGridDBColumn;
+    bbSetPartionGoods: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -282,7 +283,10 @@ type
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
     procedure EditSubjectDocPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
+    procedure bbSetPartionGoodsClick(Sender: TObject);
+    procedure EditPartionGoodsEnter(Sender: TObject);
   private
+    Scale_AP: IAPScale;
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
     Scale_Zeus: TZeus;
@@ -319,7 +323,7 @@ implementation
 uses UnilWin,DMMainScale, UtilConst, DialogMovementDesc
     ,GuideGoods,GuideGoodsPartner,GuideGoodsSticker
     ,GuideGoodsMovement,GuideMovement,GuideMovementTransport, GuidePartner
-    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc
+    ,UtilPrint,DialogNumberValue,DialogStringValue,DialogPersonalComplete,DialogPrint,GuidePersonal, GuideSubjectDoc, DialogDateValue
     ,IdIPWatch, LookAndFillSettings;
 //------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -347,7 +351,7 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.myActiveControl;
 begin
-     if (PanelPartionGoods.Visible)and(fStartBarCode = false)
+     if (PanelPartionGoods.Visible)and(fStartBarCode = false)and(SettingMain.isPartionDate = FALSE)
      then ActiveControl:=EditPartionGoods
      else if BarCodePanel.Visible
           then ActiveControl:=EditBarCode
@@ -777,7 +781,16 @@ begin
                    //
                    ParamsMI.ParamByName('Count').AsFloat:=0;
                    ParamsMI.ParamByName('HeadCount').AsFloat:=0;
-                   ParamsMI.ParamByName('PartionGoods').AsString:='';
+                   //
+                   if (SettingMain.isPartionDate = TRUE)and(trim(EditPartionGoods.Text) <> '')
+                   then try StrToDate(EditPartionGoods.Text)
+                        except
+                             ShowMessage('Ошибка.Дата партии не определена');
+                             Result:=false;
+                             exit;
+                        end
+                   else ParamsMI.ParamByName('PartionGoods').AsString:='';
+                   //
                    try ParamsMI.ParamByName('BoxCount').AsFloat:=StrToFloat(EditBoxCount.Text);except ParamsMI.ParamByName('BoxCount').AsFloat:=0;end;
                    try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
                    //сохранение MovementItem
@@ -813,7 +826,14 @@ begin
      try ParamsMI.ParamByName('BoxCode').AsFloat:=StrToFloat(EditBoxCode.Text);except ParamsMI.ParamByName('BoxCode').AsFloat:=0;end;
 
      // доопределили параметр
-     ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
+     if (SettingMain.isPartionDate = TRUE)and(trim(EditPartionGoods.Text) <> '')
+     then try ParamsMI.ParamByName('PartionGoods').AsString:= DateToStr(StrToDate(EditPartionGoods.Text))
+          except
+               ShowMessage('Ошибка.Дата партии не определена');
+               Result:=false;
+               exit;
+          end
+     else ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
      //
      //GuideGoodsMovementForm
      if SettingMain.isSticker = TRUE
@@ -948,17 +968,34 @@ begin
      ParamAddValue(execParams,'inMovementItemId',ftInteger,CDS.FieldByName('MovementItemId').AsInteger);
      ParamAddValue(execParams,'inDescCode',ftString,'zc_MIString_PartionGoods');
 
-     with DialogStringValueForm do
-     begin
-          LabelStringValue.Caption:='Партия СЫРЬЯ';
-          ActiveControl:=StringValueEdit;
-          StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
-          if not Execute (true, false) then begin execParams.Free;exit;end;
-          //
-          ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
-          DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
-          //
-     end;
+     if SettingMain.isPartionDate = TRUE
+     then
+         with DialogDateValueForm do
+         begin
+              LabelDateValue.Caption:='Партия ДАТА';
+              ActiveControl:=DateValueEdit;
+              try DateValueEdit.Text:=DateToStr(StrToDate(CDS.FieldByName('PartionGoods').AsString));
+              except
+                   DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
+              end;
+              isPartionGoodsDate:=true;
+              if not Execute then begin execParams.Free;exit;end;
+              //
+              ParamAddValue(execParams,'inValueData',ftString,DateValueEdit.Text);
+              DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
+         end
+      else
+         with DialogStringValueForm do
+         begin
+              LabelStringValue.Caption:='Партия СЫРЬЯ';
+              ActiveControl:=StringValueEdit;
+              StringValueEdit.Text:=CDS.FieldByName('PartionGoods').AsString;
+              if not Execute (true, false) then begin execParams.Free;exit;end;
+              //
+              ParamAddValue(execParams,'inValueData',ftString,StringValueEdit.Text);
+              DMMainScaleForm.gpUpdate_Scale_MIString(execParams);
+              //
+         end;
      //
      execParams.Free;
      //
@@ -1317,6 +1354,11 @@ begin
           end;
 end;
 //---------------------------------------------------------------------------------------------
+procedure TMainForm.EditPartionGoodsEnter(Sender: TObject);
+begin
+     if (SettingMain.isPartionDate = TRUE) then ActiveControl:=EditBarCode;
+end;
+//---------------------------------------------------------------------------------------------
 procedure TMainForm.EditPartionGoodsExit(Sender: TObject);
 begin
      //если партия с ошибкой
@@ -1404,7 +1446,7 @@ begin
   Initialize_afterSave_MI;
   //local visible Columns
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName').Index].Visible       :=SettingMain.isGoodsComplete = TRUE;
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isPartionDate = TRUE) or ((SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310)));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('HeadCount').Index].Visible           :=(SettingMain.isGoodsComplete = FALSE) and (SettingMain.isSticker = FALSE) and not((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=((SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE)) or ((SettingMain.BranchCode >= 301) and (SettingMain.BranchCode <= 310));
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('LevelNumber').Index].Visible         :=(SettingMain.isGoodsComplete = TRUE)  and (SettingMain.isSticker = FALSE);
@@ -1476,15 +1518,26 @@ begin
   end;
 
   //local visible
-  PanelPartionGoods.Visible:=(SettingMain.isGoodsComplete = FALSE) and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
-  HeadCountPanel.Visible:=PanelPartionGoods.Visible;
+  PanelPartionGoods.Visible:=((SettingMain.isGoodsComplete = FALSE) or (SettingMain.isPartionDate = TRUE))
+                         and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
+  bbSetPartionGoods.Visible:= SettingMain.isPartionDate = TRUE;
+  if SettingMain.isPartionDate = TRUE then
+  begin
+       cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Caption:= 'ПАРТИЯ Дата';
+       bbChangePartionGoods.Hint:= 'Изменить <Партия Дата>';
+       LabelPartionGoods.Caption:= 'ПАРТИЯ Дата';
+       //EditPartionGoods.Text:= DateToStr(now-1);
+  end;
+
+  HeadCountPanel.Visible:=((SettingMain.isGoodsComplete = FALSE))
+                      and ((SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310));
   PanelCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isSticker = FALSE);
   BarCodePanel.Visible:=GetArrayList_Value_byName (Default_Array,'isBarCode') = AnsiUpperCase('TRUE');
   PanelBox.Visible:=GetArrayList_Value_byName (Default_Array,'isBox') = AnsiUpperCase('TRUE');
   TransportPanel.Visible:=GetArrayList_Value_byName (Default_Array,'isTransport') = AnsiUpperCase('TRUE');
 
   bbChangeHeadCount.Visible:=HeadCountPanel.Visible;
-  bbChangePartionGoods.Visible:=HeadCountPanel.Visible;
+  bbChangePartionGoods.Visible:=(HeadCountPanel.Visible) or (SettingMain.isPartionDate = TRUE);
 
   bbChangeCountPack.Visible:=not bbChangeHeadCount.Visible;
   //
@@ -1592,6 +1645,11 @@ begin
   try Scale_DB:=TCasDB.Create(self); except end;
   try Scale_BI:=TCasBI.Create(self); except end;
   try Scale_Zeus:=TZeus.Create(self); except end;
+  try Scale_AP:=CoAPScale_.Create; except end;
+
+  Scale_AP.Connect('COM1');
+  Scale_AP.Get_Data;
+
 
   SettingMain.IndexScale_old:=-1;
 
@@ -1808,6 +1866,24 @@ end;
 procedure TMainForm.bbSale_Order_diffTaxClick(Sender: TObject);
 begin
      with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,TRUE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.bbSetPartionGoodsClick(Sender: TObject);
+begin
+     with DialogDateValueForm do
+     begin
+          LabelDateValue.Caption:='Партия ДАТА';
+          ActiveControl:=DateValueEdit;
+          try DateValueEdit.Text:=DateToStr(StrToDate(EditPartionGoods.Text));
+          except
+               DateValueEdit.Text:=DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime-1);
+          end;
+          isPartionGoodsDate:=true;
+          if not Execute then begin EditPartionGoods.Text:=''; exit;end;
+          //
+          EditPartionGoods.Text:=DateValueEdit.Text;
+          //
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.actExitExecute(Sender: TObject);

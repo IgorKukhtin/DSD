@@ -31,6 +31,7 @@ uses UtilScale;
 {------------------------------------------------------------------------------}
 function TDialogDateValueForm.Checked: boolean; //Проверка корректного ввода в Edit
 var tmpValue:TDateTime;
+     tmpPeriod:Integer;
 begin
      try
         tmpValue := StrToDate(DateValueEdit.Text)
@@ -47,7 +48,10 @@ begin
                Result:=false;
                exit;
           end;
-          if (tmpValue<ParamsMovement.ParamByName('OperDate').AsDateTime - StrToInt(GetArrayList_Value_byName(Default_Array,'PeriodPartionGoodsDate'))) then
+          try tmpPeriod:= StrToInt(GetArrayList_Value_byName(Default_Array,'PeriodPartionGoodsDate'))
+          except tmpPeriod:= 1;
+          end;
+          if (tmpValue<ParamsMovement.ParamByName('OperDate').AsDateTime - tmpPeriod) then
           begin
                ShowMessage('Неверно установлена дата. Не может быть раньше <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
                Result:=false;

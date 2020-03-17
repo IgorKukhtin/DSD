@@ -1511,6 +1511,8 @@ begin
        SettingMain.WeightTare4:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare4'));
        SettingMain.WeightTare5:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare5'));
        SettingMain.WeightTare6:=myStrToFloat(GetArrayList_Value_byName(Default_Array,'WeightTare6'));
+       //
+       SettingMain.isPartionDate:=GetArrayList_Value_byName(Default_Array,'isPartionDate') = AnsiUpperCase('TRUE')
   end;
   //
   Result:=true;

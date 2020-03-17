@@ -3,7 +3,7 @@
   ClientHeight = 509
   ClientWidth = 727
   ExplicitWidth = 733
-  ExplicitHeight = 537
+  ExplicitHeight = 534
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -241,14 +241,14 @@
     Caption = #1044#1086#1084
   end
   object cxLabel16: TcxLabel [32]
-    Left = 484
+    Left = 466
     Top = 251
     Caption = #1050#1086#1088#1087#1091#1089
   end
   object cxLabel17: TcxLabel [33]
-    Left = 600
+    Left = 568
     Top = 251
-    Caption = #1050#1074#1072#1088#1090#1080#1088#1072
+    Caption = #8470' '#1057#1082#1083#1072#1076#1072' '#1080#1083#1080' '#1050#1074'.'
   end
   object ceStreet: TcxButtonEdit [34]
     Left = 484
@@ -265,19 +265,19 @@
     Left = 410
     Top = 250
     TabOrder = 35
-    Width = 60
+    Width = 53
   end
   object edCaseNumber: TcxTextEdit [36]
-    Left = 530
+    Left = 512
     Top = 250
     TabOrder = 36
-    Width = 60
+    Width = 49
   end
   object edRoomNumber: TcxTextEdit [37]
-    Left = 659
+    Left = 669
     Top = 250
     TabOrder = 37
-    Width = 60
+    Width = 50
   end
   object cxLabel18: TcxLabel [38]
     Left = 15

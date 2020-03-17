@@ -23,6 +23,11 @@ RETURNS TABLE (MovementId       Integer
              , SubjectDocId   Integer
              , SubjectDocCode Integer
              , SubjectDocName TVarChar
+
+             , MovementId_Order Integer
+             , MovementDescId_Order Integer
+             , InvNumber_Order  TVarChar
+             , OrderExternalName_master TVarChar
               )
 AS	
 $BODY$
@@ -73,10 +78,11 @@ BEGIN
                , tmpMovement AS (SELECT tmpMovement_find.Id
                                       , Movement.InvNumber
                                       , Movement.OperDate
-                                      , MovementFloat_MovementDesc.ValueData   AS MovementDescId
-                                      , MovementLinkObject_From.ObjectId       AS FromId
-                                      , MovementLinkObject_To.ObjectId         AS ToId
-                                      , MovementLinkObject_SubjectDoc.ObjectId AS SubjectDocId
+                                      , MovementFloat_MovementDesc.ValueData        AS MovementDescId
+                                      , MovementLinkObject_From.ObjectId            AS FromId
+                                      , MovementLinkObject_To.ObjectId              AS ToId
+                                      , MovementLinkObject_SubjectDoc.ObjectId      AS SubjectDocId
+                                      , MovementLinkMovement_Order.MovementChildId  AS MovementId_Order
                                  FROM tmpMovement_find
                                       LEFT JOIN Movement ON Movement.Id = tmpMovement_find.Id
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -88,6 +94,10 @@ BEGIN
                                       LEFT JOIN MovementLinkObject AS MovementLinkObject_SubjectDoc
                                                                    ON MovementLinkObject_SubjectDoc.MovementId = Movement.Id
                                                                   AND MovementLinkObject_SubjectDoc.DescId     = zc_MovementLinkObject_SubjectDoc()
+
+                                      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order
+                                                                     ON MovementLinkMovement_Order.MovementId = Movement.Id
+                                                                    AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
 
                                       LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                                               ON MovementFloat_MovementDesc.MovementId =  Movement.Id
@@ -114,10 +124,17 @@ BEGIN
             , Object_SubjectDoc.ObjectCode                   AS SubjectDocCode
             , Object_SubjectDoc.ValueData                    AS SubjectDocName
 
+            , tmpMovement.MovementId_Order AS MovementId_Order
+            , Movement_Order.DescId        AS MovementDescId_Order
+            , Movement_Order.InvNumber     AS InvNumber_Order
+            , ('№ <' || Movement_Order.InvNumber || '>' || ' от <' || DATE (Movement_Order.OperDate) :: TVarChar || '>') :: TVarChar AS OrderExternalName_master
+
        FROM tmpMovement
             LEFT JOIN Object AS Object_From ON Object_From.Id = tmpMovement.FromId
             LEFT JOIN Object AS Object_To ON Object_To.Id = tmpMovement.ToId
             LEFT JOIN Object AS Object_SubjectDoc ON Object_SubjectDoc.Id = tmpMovement.SubjectDocId
+
+            LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = tmpMovement.MovementId_Order
 
             LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
                                       ON MovementBoolean_isIncome.MovementId =  tmpMovement.Id

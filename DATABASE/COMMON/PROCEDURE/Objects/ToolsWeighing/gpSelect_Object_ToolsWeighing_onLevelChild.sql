@@ -91,6 +91,9 @@ BEGIN
                                                   WHEN STRPOS (tmp.Name, 'LightColor_3') > 0
                                                        THEN '11987626' -- GreenL
                                                        
+                                                  WHEN STRPOS (tmp.Name, 'PeriodPartionGoodsDate') > 0
+                                                       THEN '100'
+                                                       
                                                   ELSE '1'
                                              END
                                            , inSession) AS Value
@@ -162,7 +165,7 @@ BEGIN
            UNION SELECT 'UnitId1_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
            UNION SELECT 'UnitId2_sep'            AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
 
-           UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE inIsCeh = TRUE AND vbIsSticker = FALSE
+           UNION SELECT 'PeriodPartionGoodsDate' AS Name WHERE /*inIsCeh = TRUE AND*/ vbIsSticker = FALSE
 
            UNION SELECT 'BranchId'               AS Name WHERE inIsCeh = FALSE
            UNION SELECT 'DiffSaleOrder'          AS Name WHERE inIsCeh = FALSE

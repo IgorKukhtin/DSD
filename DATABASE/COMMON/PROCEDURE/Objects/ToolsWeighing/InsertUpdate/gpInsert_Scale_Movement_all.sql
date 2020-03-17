@@ -1670,7 +1670,7 @@ end if;
 end if;*/
 
 -- !!! ВРЕМЕННО !!!
-IF inSession = '5' AND 1=0 THEN
+IF inSession = '5' AND 1=1 THEN
     RAISE EXCEPTION 'Admin - Test = OK : %  %  %  % % % % %'
   , inBranchCode -- 'Повторите действие через 3 мин.'
   , vbMovementId_begin

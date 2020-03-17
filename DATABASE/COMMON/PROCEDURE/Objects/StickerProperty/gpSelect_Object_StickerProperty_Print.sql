@@ -465,49 +465,63 @@ BEGIN
 --                            || tmpLanguageParam.Value6 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value4.ValueData, 0)) || '°С '
 --                            || tmpLanguageParam.Value7 ||' ' || zfConvert_FloatToString (COALESCE (ObjectFloat_Value5.ValueData, 0)) || tmpLanguageParam.Value14 ||'. '
 
-                              -- || 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
-                              || tmpLanguageParam.Value8 ||': '
+                              -- 'ПОЖИВНА ЦІННІСТЬ ТА КАЛОРІЙНІСТЬ В 100ГР.ПРОДУКТА:'
+                              -- білки не менше + жири не більше + кКал + кДж
+                              || CASE WHEN Sticker_Value2.ValueData <> 0 OR Sticker_Value3.ValueData <> 0 OR Sticker_Value4.ValueData <> 0 OR Sticker_Value5.ValueData <> 0
+                                           THEN tmpLanguageParam.Value8 ||': '
+                                     ELSE ''
+                                 END
 
                               -- вуглеводи не більше
                               || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData = 0 --  з них насичені (жири) 
                                            THEN tmpLanguageParam.Value15  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16 ||', '
-                                 ELSE '' END
+                                      ELSE ''
+                                 END
 
                               -- білки OR білки не менше
-                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
-                                          THEN SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
-                                     ELSE tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10
-                                END ||', '
+                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                                           THEN SUBSTRING (tmpLanguageParam.Value9 FROM 1 FOR 5) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
+                                      WHEN Sticker_Value2.ValueData <> 0
+                                           THEN tmpLanguageParam.Value9  ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value2.ValueData, 0)) || tmpLanguageParam.Value10 ||', '
+                                      ELSE ''
+                                 END
                               -- жири OR жири не більше
-                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
-                                          THEN SUBSTRING (tmpLanguageParam.Value11 FROM 1 FOR 4) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12
-                                     ELSE tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12
-                                END ||''
+                              || CASE WHEN Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
+                                           THEN SUBSTRING (tmpLanguageParam.Value11 FROM 1 FOR 4) || ' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
+                                      WHEN Sticker_Value3.ValueData > 0
+                                           THEN tmpLanguageParam.Value11 ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value3.ValueData, 0)) || tmpLanguageParam.Value12 ||''
+                                      ELSE ''
+                                 END
                               -- з них насичені (жири)
-                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
-                                          THEN ', з них насичені' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value6.ValueData, 0)) || tmpLanguageParam.Value12
-                                     ELSE ''
-                                END ||''
+                              || CASE WHEN Sticker_Value6.ValueData > 0
+                                           THEN ', з них насичені' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value6.ValueData, 0)) || tmpLanguageParam.Value12
+                                      ELSE ''
+                                 END
                               -- вуглеводи
                               || CASE WHEN Sticker_Value1.ValueData <> 0 AND Sticker_Value6.ValueData > 0 --  з них насичені (жири) 
                                            THEN ', вуглеводи' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value1.ValueData, 0)) || tmpLanguageParam.Value16
-                                 ELSE '' END
+                                      ELSE ''
+                                 END
                               --  цукри 
-                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
-                                          THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
-                                     ELSE ''
-                                END ||''
+                              || CASE WHEN Sticker_Value6.ValueData > 0
+                                           THEN ' з них цукри' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value7.ValueData, 0)) || tmpLanguageParam.Value12
+                                      ELSE ''
+                                 END
                               --  сіль  
-                              ||CASE WHEN Sticker_Value6.ValueData > 0 --  
-                                          THEN ',  сіль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
-                                     ELSE ''
-                                END ||''
+                              || CASE WHEN Sticker_Value6.ValueData > 0
+                                           THEN ',  сіль' ||' ' || zfConvert_FloatToString (COALESCE (Sticker_Value8.ValueData, 0)) || tmpLanguageParam.Value12
+                                      ELSE ''
+                                 END ||''
                               -- кКал
-                              ||                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
+                              || CASE WHEN Sticker_Value4.ValueData > 0
+                                           THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value4.ValueData, 0)) ||  tmpLanguageParam.Value13 ||''
+                                      ELSE ''
+                                 END
                               -- кДж
-                              || CASE WHEN Sticker_Value5.ValueData <> 0 THEN
-                                                    ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value5.ValueData, 0)) ||  tmpLanguageParam.Value17 ||''
-                                 ELSE '' END
+                              || CASE WHEN Sticker_Value5.ValueData <> 0
+                                            THEN ', ' || zfConvert_FloatToString (COALESCE (Sticker_Value5.ValueData, 0)) ||  tmpLanguageParam.Value17 ||''
+                                      ELSE ''
+                                 END
                                , inIsLength
                                , FALSE -- теперь НЕ используется
                                 ) AS Info

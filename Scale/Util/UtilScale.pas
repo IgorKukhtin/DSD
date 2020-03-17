@@ -55,6 +55,7 @@ type
 
   TSettingMain = record
     isModeSorting:Boolean;  // ScaleCeh - Режим маркировка/сортировка
+    isPartionDate:Boolean;  // Scale
     isSticker:Boolean;      // Scale
     isCeh:Boolean;          // ScaleCeh or Scale
     isGoodsComplete:Boolean;// ScaleCeh or Scale - склад ГП/производство/упаковка or обвалка
@@ -985,6 +986,7 @@ begin
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ProductionSeparate)
           or(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_ReturnOut)
            )
+        and(SettingMain.isPartionDate = FALSE)
         then begin
                   PartionGoods:=myCalcPartionGoods(Edit.Text);
                   Result:=PartionGoods<>'';
@@ -992,7 +994,7 @@ begin
         end
         else begin
                   Result:=true;
-                  Edit.Text:='';
+                  if SettingMain.isPartionDate = FALSE then Edit.Text:='';
              end;
 end;
 {------------------------------------------------------------------------------}

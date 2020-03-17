@@ -588,5 +588,5 @@ ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";
