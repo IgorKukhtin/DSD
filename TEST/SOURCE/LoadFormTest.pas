@@ -168,6 +168,7 @@ type
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
+    procedure LoadSendAssetFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -886,6 +887,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
+end;
+
+procedure TLoadFormTest.LoadSendAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendAssetJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendAssetJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSendMemberFormTest;
@@ -2714,6 +2723,9 @@ begin
 end;
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
