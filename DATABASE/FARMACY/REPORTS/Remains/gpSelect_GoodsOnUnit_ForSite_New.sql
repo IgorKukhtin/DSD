@@ -160,25 +160,10 @@ BEGIN
     IF COALESCE(inGoodsId_list, '') <> ''
     THEN
       vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
-           WITH tmpRes AS (SELECT ObjectLink_Child.ChildObjectId      AS GoodsId
-                                , ObjectLink_Child_ALL.ChildObjectId AS GoodsId_retail
-                                , Object_Retail.DescId
-                           FROM ObjectLink AS ObjectLink_Child
-                                INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                         AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                INNER JOIN ObjectLink AS ObjectLink_Main_ALL ON ObjectLink_Main_ALL.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                            AND ObjectLink_Main_ALL.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                INNER JOIN ObjectLink AS ObjectLink_Child_ALL ON ObjectLink_Child_ALL.ObjectId = ObjectLink_Main_ALL.ObjectId
-                                                                             AND ObjectLink_Child_ALL.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object
-                                                      ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_ALL.ChildObjectId
-                                                     AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
-                                INNER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Goods_Object.ChildObjectId
-                                                                -- AND Object_Retail.DescId = zc_Object_Retail()
-                           WHERE ObjectLink_Child.ChildObjectId IN ('||inGoodsId_list||')
-                             AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                          )
-              SELECT tmpRes.GoodsId, tmpRes.GoodsId_retail FROM tmpRes WHERE tmpRes.DescId = zc_Object_Retail()';
+                      SELECT  Retail4.Id, RetailAll.Id
+                      FROM Object_Goods_Retail AS Retail4
+                           INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.GoodsMainId  = Retail4.GoodsMainId
+                      WHERE Retail4.Id IN ('||inGoodsId_list||')';
 
       EXECUTE vbQueryText;
     END IF;
@@ -259,6 +244,38 @@ BEGIN
     -- !!!Оптимизация!!!
     ANALYZE _tmpContainerCount;
 
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMovementCheck'))
+    THEN
+        -- таблица
+        CREATE TEMP TABLE _tmpMovementCheck (Id Integer) ON COMMIT DROP;
+    ELSE
+        DELETE FROM _tmpMovementCheck;
+    END IF;
+    --
+    INSERT INTO _tmpMovementCheck (Id)
+      WITH           -- Резервы по срокам
+            tmpMovementCheck AS (SELECT Movement.Id
+                                 FROM Movement
+                                 WHERE Movement.DescId = zc_Movement_Check()
+                                   AND Movement.StatusId = zc_Enum_Status_UnComplete())
+          , tmpMovReserveId AS (
+                             SELECT Movement.Id
+                                  , COALESCE(MovementBoolean_Deferred.ValueData, FALSE) AS  isDeferred
+                                  ,  MovementString_CommentError.ValueData <> ''        AS  isCommentError
+                             FROM tmpMovementCheck AS Movement
+                                  LEFT JOIN MovementBoolean AS MovementBoolean_Deferred ON Movement.Id     = MovementBoolean_Deferred.MovementId
+                                                            AND MovementBoolean_Deferred.DescId    = zc_MovementBoolean_Deferred()
+                                  LEFT JOIN MovementString AS MovementString_CommentError ON Movement.Id     = MovementString_CommentError.MovementId
+                                                          AND MovementString_CommentError.DescId = zc_MovementString_CommentError()
+                                                          AND MovementString_CommentError.ValueData <> ''                             )
+                       
+          , tmpMovReserveAll AS (
+                             SELECT Movement.Id
+                             FROM tmpMovReserveId AS Movement
+                             WHERE isDeferred = TRUE OR isCommentError = TRUE)
+
+    SELECT Movement.Id FROM tmpMovReserveAll AS Movement;
+
     -- еще оптимизируем - _tmpContainerCountPD
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpContainerCountPD'))
     THEN
@@ -270,38 +287,23 @@ BEGIN
     --
     INSERT INTO _tmpContainerCountPD (UnitId, GoodsId, PartionDateKindId, Amount, Remains, PriceWithVAT, PartionDateDiscount)
       WITH           -- Резервы по срокам
-            ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
-                                      , Sum(MovementItemChild.Amount)::TFloat       AS Amount
-                                 FROM MovementBoolean AS MovementBoolean_Deferred
-                                      INNER JOIN Movement ON Movement.Id       = MovementBoolean_Deferred.MovementId
-                                                         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                                         AND Movement.DescId   = zc_Movement_Check()
+             MovementItemChildId AS (SELECT MovementItemChild.Id
+                                          , MovementItemChild.Amount
+                                     FROM _tmpMovementCheck AS Movement
 
-                                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                    ON MovementLinkObject_Unit.movementid = Movement.Id
-                                                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-                                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                             AND MovementItem.isErased   = FALSE
-
-                                      INNER JOIN MovementItem AS MovementItemMaster
-                                                              ON MovementItemMaster.MovementId = Movement.Id
-                                                             AND MovementItemMaster.DescId     = zc_MI_Master()
-                                                             AND MovementItemMaster.isErased   = FALSE
-
-                                      INNER JOIN MovementItem AS MovementItemChild
-                                                              ON MovementItemChild.MovementId = Movement.Id
-                                                             AND MovementItemChild.ParentId = MovementItemMaster.Id
-                                                             AND MovementItemChild.DescId     = zc_MI_Child()
-                                                             AND MovementItemChild.Amount     > 0
-                                                             AND MovementItemChild.isErased   = FALSE
-
-                                      LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                                  ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                          INNER JOIN MovementItem AS MovementItemChild
+                                                                  ON MovementItemChild.MovementId = Movement.Id
+                                                                 AND MovementItemChild.DescId     = zc_MI_Child()
+                                                                 AND MovementItemChild.Amount     > 0
+                                                                 AND MovementItemChild.isErased   = FALSE)
+          , ReserveContainer AS (SELECT MIFloat_ContainerId.ValueData::Integer      AS ContainerId
+                                      , Sum(MovementItemChildId.Amount)::TFloat       AS Amount
+                                 FROM MovementItemChildId
+                                 INNER JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                                  ON MIFloat_ContainerId.MovementItemId = MovementItemChildId.Id
                                                                  AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-                                 WHERE MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                                   AND MovementBoolean_Deferred.ValueData = TRUE
-                                 GROUP BY  MIFloat_ContainerId.ValueData
+
+                                 GROUP BY MIFloat_ContainerId.ValueData
                                 )
              -- Остатки по срокам
           , tmpPDContainerAll AS (SELECT Container.Id,
@@ -337,8 +339,6 @@ BEGIN
                                            ELSE zc_Enum_PartionDateKind_Good() END                  AS PartionDateKindId           -- Востановлен с просрочки
                                FROM tmpPDContainerAll AS Container
 
-                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
-
                                     LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
                                                          ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
                                                         AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
@@ -355,33 +355,18 @@ BEGIN
                                                           ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
                                                          AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
                                 )
-          , tmpPDPriceWithVAT AS (SELECT ROW_NUMBER()OVER(PARTITION BY Container.WhereObjectId, Container.ObjectId, Container.PartionDateKindId ORDER BY Container.Id DESC) as ORD
-                                       , Container.WhereObjectId
-                                       , Container.ObjectId
-                                       , Container.PartionDateKindId
-                                       , Container.PriceWithVAT
-                                  FROM tmpPDContainer AS Container
-                                  WHERE COALESCE (Container.PriceWithVAT , 0) <> 0
-                                  )
         SELECT Container.WhereObjectId
              , Container.ObjectId
              , Container.PartionDateKindId                                                  AS PartionDateKindId
              , SUM (Container.Amount)                                                       AS Amount
              , SUM (Container.Remains)                                                      AS Remains
-             , gpSelect_GoodsPriceWithVAT_ForSite (Container.ObjectId, 
-               Container.WhereObjectId, MAX (Container.PriceWithVAT), inSession)            AS PriceWithVAT
+             , Max(Container.PriceWithVAT)                                                  AS PriceWithVAT
              , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
                          THEN 0
                          WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_6()
                          THEN Container.Percent
                          ELSE Container.PercentMin END)::TFloat                             AS PartionDateDiscount
         FROM tmpPDContainer AS Container
-
-             LEFT JOIN tmpPDPriceWithVAT ON tmpPDPriceWithVAT.ObjectId = Container.ObjectId
-                                        AND tmpPDPriceWithVAT.WhereObjectId = Container.WhereObjectId
-                                        AND tmpPDPriceWithVAT.PartionDateKindId = Container.PartionDateKindId
-                                        AND tmpPDPriceWithVAT.Ord = 1
-
         GROUP BY Container.WhereObjectId
                , Container.ObjectId
                , Container.PartionDateKindId;
@@ -527,10 +512,7 @@ BEGIN
                (SELECT MovementLinkObject_Unit.ObjectId AS UnitId
                      , MovementItem.ObjectId     AS GoodsId
                      , SUM (MovementItem.Amount) AS Amount
-                FROM MovementBoolean AS MovementBoolean_Deferred
-                     INNER JOIN Movement ON Movement.Id       = MovementBoolean_Deferred.MovementId
-                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                                        AND Movement.DescId   = zc_Movement_Check()
+                FROM _tmpMovementCheck AS Movement
 
                      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                    ON MovementLinkObject_Unit.movementid = Movement.Id
@@ -539,8 +521,6 @@ BEGIN
                      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                             AND MovementItem.isErased   = FALSE
 
-                WHERE MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
-                  AND MovementBoolean_Deferred.ValueData = TRUE
                 GROUP BY MovementLinkObject_Unit.ObjectId
                        , MovementItem.ObjectId
                )
@@ -653,6 +633,12 @@ BEGIN
                 FROM _tmpContainerCountPD AS PDGoodsRemains
                 GROUP BY  PDGoodsRemains.GoodsId, PDGoodsRemains.UnitId
                 )
+          , tmpNDSKind AS
+                (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                       , ObjectFloat_NDSKind_NDS.ValueData
+                 FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                 WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                )
 
         SELECT Object_Goods.Id                                                     AS Id
 
@@ -683,19 +669,24 @@ BEGIN
                       ELSE CEIL(CEIL(Price_Unit.Price * (100.0 - PDGoodsRemains1.PartionDateDiscount) / 100 * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2)::TFloat AS Price_unit_sale_1
 
              , PDGoodsRemains6.Remains::TFloat AS Remains_6
-             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL 
-                     ELSE CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
-                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - PDGoodsRemains6.PriceWithVAT) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
+                     ELSE CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
+                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                                ELSE Price_Unit.Price END * 10.0) / 10.0 END::TFloat                AS Price_unit_6
-             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL 
+             , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
                      ELSE ROUND (CASE WHEN vbSiteDiscount = 0 THEN
-                 CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
-                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - PDGoodsRemains6.PriceWithVAT) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+                 CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
+                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0
-                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > PDGoodsRemains6.PriceWithVAT
-                     THEN ROUND(Price_Unit.Price - PDGoodsRemains6.PriceWithVAT * PDGoodsRemains6.PartionDateDiscount / 100, 2)
+                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
+                     THEN ROUND(Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                                    ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) END :: TFloat AS Price_unit_sale_6
-
 
         FROM _tmpList AS tmpList -- _tmpContainerCount AS tmpList -- _tmpList AS tmpList -- _tmpGoodsMinPrice_List
              -- LEFT JOIN _tmpUnitMinPrice_List ON 1=1
@@ -723,9 +714,8 @@ BEGIN
                                   ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                  AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
-             LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                   ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
-                                  AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+             LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                  ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
 
 
              LEFT JOIN MarginCategory      ON MinPrice_List.Price >= MarginCategory.MinPrice      AND MinPrice_List.Price < MarginCategory.MaxPrice
@@ -751,7 +741,7 @@ BEGIN
        ;
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-/*     INSERT INTO ResourseProtocol (UserId
+     INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -790,7 +780,7 @@ BEGIN
                -- ProtocolData
              , CHR (39) || inUnitId_list || CHR (39) || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
         WHERE vbUserId > 0
-        ;*/
+        ;
 
 END;
 $BODY$
@@ -813,3 +803,7 @@ $BODY$
 
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '377610', inGoodsId_list:= '2149403', inFrontSite := False, inSession:= zfCalc_UserSite());
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '0', inGoodsId_list:= '53275', inFrontSite := True, inSession:= zfCalc_UserSite());
+
+--SELECT p.* FROM gpselect_goodsonunit_forsite ('183292,11769526,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375626,375627,11152911,10128935,472116', '24970,31333,393553,15610,5878,31561,1849,976003,31285,1594,4534,27658,6430,31000,14941,19093,38173,18922,18916,29449,19696,5486995,28516,26422,21748,15172,3002798,54604,358750,2503', TRUE, zfCalc_UserSite()) AS p
+SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
+

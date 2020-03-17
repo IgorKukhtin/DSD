@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isPromo Boolean
              , Comment TVarChar
              , MovementId_Production Integer, InvNumber_ProductionFull TVarChar
+             , PartionGoodsDate TDateTime
               )
 AS
 $BODY$
@@ -106,6 +107,7 @@ BEGIN
 
              , 0                                            AS MovementId_Production
              , CAST ('' AS TVarChar)                        AS InvNumber_ProductionFull
+             , inOperDate                                   AS PartionGoodsDate
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
@@ -208,6 +210,7 @@ BEGIN
                || zfCalc_PartionMovementName (Movement_Production.DescId, MovementDesc_Production.ItemName, Movement_Production.InvNumber, Movement_Production.OperDate)
                  , ' ')                     :: TVarChar      AS InvNumber_ProductionFull
 
+               , Movement.OperDate AS PartionGoodsDate
            FROM Movement
                 LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -377,8 +380,7 @@ BEGIN
                LEFT JOIN MovementDesc AS MovementDesc_Production ON MovementDesc_Production.Id = Movement_Production.DescId
 
            WHERE Movement.Id     = inMovementId
-             AND Movement.DescId = zc_Movement_Sale()
-          ;
+             AND Movement.DescId = zc_Movement_Sale();
 
      END IF;
 

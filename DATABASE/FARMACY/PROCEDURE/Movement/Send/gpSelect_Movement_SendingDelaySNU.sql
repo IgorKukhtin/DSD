@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendingDelaySNU(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , TotalSummFrom TFloat, TotalSummTo TFloat
-             , FromId Integer, FromName TVarChar, ProvinceCityName_From TVarChar
-             , ToId Integer, ToName TVarChar, ProvinceCityId integer, ProvinceCityName_To TVarChar
+             , FromId Integer, FromName TVarChar, ProvinceCityId_From integer, ProvinceCityName_From TVarChar
+             , ToId Integer, ToName TVarChar, ProvinceCityId_To integer, ProvinceCityName_To TVarChar
              , PartionDateKindName TVarChar
              , Comment TVarChar
              , isAuto Boolean, MCSPeriod TFloat, MCSDay TFloat
@@ -75,10 +75,11 @@ BEGIN
            , MovementFloat_TotalSummTo.ValueData    AS TotalSummTo
            , Object_From.Id                         AS FromId
            , Object_From.ValueData                  AS FromName
+           , tmpProvinceCity_From.ProvinceCityId    AS ProvinceCityId_From
            , tmpProvinceCity_From.ProvinceCityName  AS ProvinceCityName_From
            , Object_To.Id                           AS ToId
            , Object_To.ValueData                    AS ToName
-           , tmpProvinceCity_To.ProvinceCityId      AS ProvinceCityId
+           , tmpProvinceCity_To.ProvinceCityId      AS ProvinceCityId_To
            , tmpProvinceCity_To.ProvinceCityName    AS ProvinceCityName_To
            , Object_PartionDateKind.ValueData                   :: TVarChar AS PartionDateKindName
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
@@ -131,7 +132,7 @@ BEGIN
                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
                 AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
                 AND MovementDate_Sent.ValueData <= CURRENT_TIMESTAMP - (inIterval::TVarChar||' DAY')::INTERVAL
-                AND MovementDate_Sent.ValueData > CURRENT_TIMESTAMP - ((inIterval + 1)::TVarChar||' DAY')::INTERVAL
+                AND (MovementDate_Sent.ValueData > CURRENT_TIMESTAMP - ((inIterval + 1)::TVarChar||' DAY')::INTERVAL OR inIterval = 3)
                 AND MovementDate_Sent.ValueData > inDate - ((inIterval)::TVarChar||' DAY')::INTERVAL
             ) AS tmpMovement
 
@@ -241,7 +242,8 @@ BEGIN
                                         AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MovementLinkObject_PartionDateKind.ObjectId
 
-       WHERE tmpProvinceCity_To.ProvinceCityId NOT IN (7214807, 7214813)
+       WHERE tmpProvinceCity_From.ProvinceCityId NOT IN (7214807, 7214813, 7214810)
+         AND tmpProvinceCity_To.ProvinceCityId NOT IN (7214807, 7214813, 7214810)
 
        ;
 
@@ -259,4 +261,4 @@ ALTER FUNCTION gpSelect_Movement_SendingDelaySNU (TDateTime, Integer, TVarChar) 
 */
 
 -- тест
---SELECT * FROM gpSelect_Movement_SendingDelaySNU (inDate := '11.03.2020 00:00:00', inIterval := 1, inSession:= '3')
+--SELECT * FROM gpSelect_Movement_SendingDelaySNU (inDate := '11.03.2020 00:00:00', inIterval := 3, inSession:= '3')

@@ -226,7 +226,10 @@ BEGIN
             ,Movement.InvNumber                       AS InvNumber
             ,Object_Unit.ValueData                    AS UnitName
             ,Object_From.ValueData                    AS JuridicalName
-            ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0 ELSE MIFloat_Price.ValueData END ::TFloat AS Price
+            ,CASE WHEN Movement.DescId = zc_Movement_Check() THEN 0 
+                  WHEN Movement.DescId = zc_Movement_OrderInternal() THEN MIFloat_JuridicalPrice.ValueData
+                  ELSE MIFloat_Price.ValueData 
+             END ::TFloat AS Price
             ,MI_Income_View.PriceWithVAT   ::TFloat
             ,COALESCE (MIFloat_PriceSample.ValueData, 0) ::TFloat AS PriceSample
             ,Status.ValueData                         AS STatusNAme
@@ -309,6 +312,11 @@ BEGIN
         LEFT JOIN tmpMIFloat AS MIFloat_Price
                              ON MIFloat_Price.MovementItemId = Movement.MovementItemId
                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+        LEFT JOIN tmpMIFloat AS MIFloat_JuridicalPrice
+                             ON MIFloat_JuridicalPrice.MovementItemId = Movement.MovementItemId
+                            AND MIFloat_JuridicalPrice.DescId = zc_MIFloat_JuridicalPrice()
+                            AND Movement.DescId = zc_Movement_OrderInternal()
 
         LEFT JOIN tmpMIFloat AS MIFloat_PriceSale
                              ON MIFloat_PriceSale.MovementItemId = CASE WHEN Movement.DescId = zc_Movement_ReturnOut() THEN  Movement.ParentId ELSE Movement.MovementItemId END

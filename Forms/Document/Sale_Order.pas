@@ -222,6 +222,13 @@ type
     spCheckRight: TdsdStoredProc;
     actCheckRight: TdsdExecStoredProc;
     macOpenFormPromo: TMultiAction;
+    cxLabel28: TcxLabel;
+    edPartionGoodsDate: TcxDateEdit;
+    spUpdate_MI_PartionGoodsDate: TdsdStoredProc;
+    actUpdate_PartionGoodsDate: TdsdExecStoredProc;
+    macUpdate_PartionGoodsDate: TMultiAction;
+    macUpdate_PartionGoodsDateList: TMultiAction;
+    bbUpdate_PartionGoodsDateList: TdxBarButton;
   private
     { Private declarations }
   public

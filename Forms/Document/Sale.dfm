@@ -1,4 +1,4 @@
-﻿inherited SaleForm: TSaleForm
+inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 645
   ClientWidth = 1293
@@ -177,7 +177,28 @@
             HeaderAlignmentVert = vaCenter
             Width = 228
           end
-          object GoodsKindName: TcxGridDBColumn [4]
+          object PartionGoods: TcxGridDBColumn [4]
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object PartionGoodsDate: TcxGridDBColumn [5]
+            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
+            DataBinding.FieldName = 'PartionGoodsDate'
+            PropertiesClassName = 'TcxDateEditProperties'
+            Properties.ReadOnly = True
+            Properties.SaveTime = False
+            Properties.ShowTime = False
+            Properties.UseNullString = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
+          end
+          object GoodsKindName: TcxGridDBColumn [6]
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -192,15 +213,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 122
           end
-          object PartionGoods: TcxGridDBColumn [5]
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object MeasureName: TcxGridDBColumn [6]
+          object MeasureName: TcxGridDBColumn [7]
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
@@ -208,7 +221,7 @@
             Options.Editing = False
             Width = 45
           end
-          object MovementPromo: TcxGridDBColumn [7]
+          object MovementPromo: TcxGridDBColumn [8]
             Caption = #8470' '#1076#1086#1082'. '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'MovementPromo'
             HeaderAlignmentHorz = taCenter
@@ -216,7 +229,7 @@
             Options.Editing = False
             Width = 100
           end
-          object isBarCode: TcxGridDBColumn [8]
+          object isBarCode: TcxGridDBColumn [9]
             Caption = #1057#1082#1080#1076#1082#1072' '#1089#1082#1072#1085'. '#1091#1087'.'
             DataBinding.FieldName = 'isBarCode'
             HeaderAlignmentHorz = taCenter
@@ -224,7 +237,7 @@
             Options.Editing = False
             Width = 60
           end
-          object CountPack: TcxGridDBColumn [9]
+          object CountPack: TcxGridDBColumn [10]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'CountPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -235,7 +248,7 @@
             Options.Editing = False
             Width = 55
           end
-          object WeightTotal: TcxGridDBColumn [10]
+          object WeightTotal: TcxGridDBColumn [11]
             Caption = #1042#1077#1089' 1'#1077#1076'.  '#1089' '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -246,7 +259,7 @@
             Options.Editing = False
             Width = 57
           end
-          object WeightPack: TcxGridDBColumn [11]
+          object WeightPack: TcxGridDBColumn [12]
             Caption = #1042#1077#1089' 1'#1077#1076'. '#1091#1087#1072#1082'.'
             DataBinding.FieldName = 'WeightPack'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -257,7 +270,7 @@
             Options.Editing = False
             Width = 57
           end
-          object ChangePercentAmount: TcxGridDBColumn [12]
+          object ChangePercentAmount: TcxGridDBColumn [13]
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -268,7 +281,7 @@
             Options.Editing = False
             Width = 65
           end
-          object Amount: TcxGridDBColumn [13]
+          object Amount: TcxGridDBColumn [14]
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -278,7 +291,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object AmountChangePercent: TcxGridDBColumn [14]
+          object AmountChangePercent: TcxGridDBColumn [15]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
             DataBinding.FieldName = 'AmountChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -289,7 +302,7 @@
             Options.Editing = False
             Width = 70
           end
-          object TotalPercentAmount: TcxGridDBColumn [15]
+          object TotalPercentAmount: TcxGridDBColumn [16]
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1082#1080#1076#1082#1072
             DataBinding.FieldName = 'TotalPercentAmount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -301,7 +314,7 @@
             Options.Editing = False
             Width = 60
           end
-          object AmountPartner: TcxGridDBColumn [16]
+          object AmountPartner: TcxGridDBColumn [17]
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -311,7 +324,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object ChangePercent: TcxGridDBColumn [17]
+          object ChangePercent: TcxGridDBColumn [18]
             Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
             DataBinding.FieldName = 'ChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -321,7 +334,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object CountForPrice: TcxGridDBColumn [18]
+          object CountForPrice: TcxGridDBColumn [19]
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
@@ -329,7 +342,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object Price: TcxGridDBColumn [19]
+          object Price: TcxGridDBColumn [20]
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -339,7 +352,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object PricePromo: TcxGridDBColumn [20]
+          object PricePromo: TcxGridDBColumn [21]
             Caption = #1062#1077#1085#1072' '#1072#1082#1094#1080#1103
             DataBinding.FieldName = 'PricePromo'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -350,7 +363,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist: TcxGridDBColumn [21]
+          object Price_Pricelist: TcxGridDBColumn [22]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -363,7 +376,7 @@
             Options.Editing = False
             Width = 70
           end
-          object Price_Pricelist_vat: TcxGridDBColumn [22]
+          object Price_Pricelist_vat: TcxGridDBColumn [23]
             Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1089' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price_Pricelist_vat'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -375,7 +388,7 @@
             Options.Editing = False
             Width = 80
           end
-          object isCheck_Pricelist: TcxGridDBColumn [23]
+          object isCheck_Pricelist: TcxGridDBColumn [24]
             Caption = #1054#1096#1080#1073#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'isCheck_Pricelist'
             HeaderAlignmentHorz = taCenter
@@ -383,7 +396,7 @@
             Options.Editing = False
             Width = 61
           end
-          object AmountSumm: TcxGridDBColumn [24]
+          object AmountSumm: TcxGridDBColumn [25]
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -393,7 +406,7 @@
             Options.Editing = False
             Width = 80
           end
-          object PriceCost: TcxGridDBColumn [25]
+          object PriceCost: TcxGridDBColumn [26]
             Caption = #1062#1077#1085#1072' '#1089'/'#1089
             DataBinding.FieldName = 'PriceCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -405,7 +418,7 @@
             Options.Editing = False
             Width = 70
           end
-          object SumCost: TcxGridDBColumn [26]
+          object SumCost: TcxGridDBColumn [27]
             Caption = #1057#1091#1084#1084#1072' '#1089'/'#1089
             DataBinding.FieldName = 'SumCost'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -417,7 +430,7 @@
             Options.Editing = False
             Width = 80
           end
-          object HeadCount: TcxGridDBColumn [27]
+          object HeadCount: TcxGridDBColumn [28]
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -426,7 +439,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object AssetName: TcxGridDBColumn [28]
+          object AssetName: TcxGridDBColumn [29]
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
             DataBinding.FieldName = 'AssetName'
             Visible = False
@@ -435,7 +448,7 @@
             Options.Editing = False
             Width = 80
           end
-          object BoxCount: TcxGridDBColumn [29]
+          object BoxCount: TcxGridDBColumn [30]
             Caption = #1050#1086#1083'-'#1074#1086' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -445,7 +458,7 @@
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object BoxName: TcxGridDBColumn [30]
+          object BoxName: TcxGridDBColumn [31]
             Caption = #1042#1080#1076' '#1103#1097#1080#1082#1086#1074
             DataBinding.FieldName = 'BoxName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -460,35 +473,35 @@
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
-          object InfoMoneyCode: TcxGridDBColumn [31]
+          object InfoMoneyCode: TcxGridDBColumn [32]
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [32]
+          object InfoMoneyGroupName: TcxGridDBColumn [33]
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [33]
+          object InfoMoneyDestinationName: TcxGridDBColumn [34]
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object InfoMoneyName: TcxGridDBColumn [34]
+          object InfoMoneyName: TcxGridDBColumn [35]
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object isPeresort: TcxGridDBColumn [35]
+          object isPeresort: TcxGridDBColumn [36]
             Caption = #1055#1077#1088#1077#1089#1086#1088#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isPeresort'
             HeaderAlignmentHorz = taCenter
@@ -685,8 +698,8 @@
       Width = 102
     end
     object cxLabel10: TcxLabel
-      Left = 252
-      Top = 40
+      Left = 255
+      Top = 44
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
@@ -918,12 +931,12 @@
     Width = 47
   end
   object cxLabel25: TcxLabel [14]
-    Left = 255
+    Left = 360
     Top = 85
     Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
   end
   object edInvNumberTransport: TcxButtonEdit [15]
-    Left = 255
+    Left = 360
     Top = 103
     Properties.Buttons = <
       item
@@ -932,7 +945,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 19
-    Width = 275
+    Width = 170
   end
   object cbPromo: TcxCheckBox [16]
     Left = 683
@@ -986,6 +999,20 @@
     TabOrder = 25
     Width = 140
   end
+  object cxLabel28: TcxLabel [22]
+    Left = 254
+    Top = 85
+    Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+  end
+  object edPartionGoodsDate: TcxDateEdit [23]
+    Left = 254
+    Top = 103
+    EditValue = 43831d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 27
+    Width = 102
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
     Top = 552
@@ -1006,7 +1033,21 @@
   inherited ActionList: TActionList
     Left = 39
     Top = 295
-    object actPrintPackGross: TdsdPrintAction [0]
+    object actRefreshMI: TdsdDataSetRefresh [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object actPrintPackGross: TdsdPrintAction [1]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_Pack
@@ -1040,7 +1081,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Transport: TMultiAction [1]
+    object mactPrint_Transport: TMultiAction [2]
       Category = 'Print_TTN'
       MoveParams = <>
       ActionList = <
@@ -1054,7 +1095,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1058#1088#1072#1085#1089#1087#1086#1088#1090#1085#1072#1103
       ImageIndex = 20
     end
-    object actPrint_Tax_ReportName: TdsdExecStoredProc [2]
+    object actPrint_Tax_ReportName: TdsdExecStoredProc [3]
       Category = 'Print_Tax'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1065,7 +1106,7 @@
         end>
       Caption = 'actPrint_Tax_ReportName'
     end
-    object actPrint_Transport: TdsdPrintAction [3]
+    object actPrint_Transport: TdsdPrintAction [4]
       Category = 'Print_TTN'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1103,7 +1144,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object mactPrint_Tax_Us: TMultiAction [4]
+    object mactPrint_Tax_Us: TMultiAction [5]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1117,7 +1158,7 @@
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object actPrint_Transport_ReportName: TdsdExecStoredProc [5]
+    object actPrint_Transport_ReportName: TdsdExecStoredProc [6]
       Category = 'Print_TTN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1128,7 +1169,7 @@
         end>
       Caption = 'actPrint_Transport_ReportName'
     end
-    object actPrint_ExpInvoice: TdsdPrintAction [6]
+    object actPrint_ExpInvoice: TdsdPrintAction [7]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1167,7 +1208,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrintTax_Us: TdsdPrintAction [7]
+    object actPrintTax_Us: TdsdPrintAction [8]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -1210,7 +1251,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Pack: TdsdPrintAction [8]
+    object actPrint_Pack: TdsdPrintAction [9]
       Category = 'Print_Fozzy'
       MoveParams = <>
       StoredProc = spSelectPrint_Pack
@@ -1244,7 +1285,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_PackWeight: TdsdPrintAction [9]
+    object actPrint_PackWeight: TdsdPrintAction [10]
       Category = 'Print_Fozzy'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1281,7 +1322,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpSpec: TdsdPrintAction [10]
+    object actPrint_ExpSpec: TdsdPrintAction [11]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpInvoice
@@ -1324,7 +1365,7 @@
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actAssetGoodsChoiceForm: TOpenChoiceForm [13]
+    object actAssetGoodsChoiceForm: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1358,7 +1399,7 @@
         end>
       isShowModal = True
     end
-    object actOpenReportForm: TdsdOpenForm [17]
+    object actOpenReportForm: TdsdOpenForm [18]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -1527,7 +1568,7 @@
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint_Sale: TMultiAction [22]
+    object mactPrint_Sale: TMultiAction [23]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -1545,7 +1586,7 @@
       ImageIndex = 3
       ShortCut = 16464
     end
-    object mactPrint_Tax_Client: TMultiAction [23]
+    object mactPrint_Tax_Client: TMultiAction [24]
       Category = 'Print_Tax'
       MoveParams = <>
       ActionList = <
@@ -1559,7 +1600,7 @@
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Account: TMultiAction [24]
+    object mactPrint_Account: TMultiAction [25]
       Category = 'Print_Account'
       MoveParams = <>
       ActionList = <
@@ -1573,7 +1614,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Client: TdsdPrintAction [25]
+    object actPrintTax_Client: TdsdPrintAction [26]
       Category = 'Print_Tax'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -1616,7 +1657,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_Account: TdsdPrintAction [26]
+    object actPrint_Account: TdsdPrintAction [27]
       Category = 'Print_Account'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -1655,7 +1696,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actPrint_ExpPack: TdsdPrintAction [27]
+    object actPrint_ExpPack: TdsdPrintAction [28]
       Category = 'Print_Export'
       MoveParams = <>
       StoredProc = spSelectPrint_ExpPack
@@ -1706,7 +1747,7 @@
         item
         end>
     end
-    object actPrintSaleOrderTax: TdsdPrintAction [30]
+    object actPrintSaleOrderTax: TdsdPrintAction [31]
       Category = 'Print'
       MoveParams = <>
       StoredProc = spSelectPrint_SaleOrderTax
@@ -1744,7 +1785,7 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
-    object actGoodsKindChoice: TOpenChoiceForm [33]
+    object actGoodsKindChoice: TOpenChoiceForm [34]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2419,6 +2460,47 @@
         end>
       Caption = 'actCheckRight'
     end
+    object actUpdate_PartionGoodsDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MI_PartionGoodsDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MI_PartionGoodsDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
+    object macUpdate_PartionGoodsDate: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PartionGoodsDate
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
+    object macUpdate_PartionGoodsDateList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdate_PartionGoodsDate
+        end
+        item
+          Action = actRefreshMI
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1080#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080'?'
+      InfoAfterExecute = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080' '#1080#1079#1084#1077#1085#1077#1085#1072
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1072#1088#1090#1080#1080
+      ImageIndex = 67
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -2540,6 +2622,14 @@
         item
           Visible = True
           ItemName = 'bbUpdatePrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_PartionGoodsDateList'
         end
         item
           Visible = True
@@ -2671,7 +2761,7 @@
         end
         item
           Visible = True
-          ItemName = #1074#1074
+          ItemName = 'bbPrintSaleOrder'
         end
         item
           Visible = True
@@ -2784,7 +2874,7 @@
       Action = mactPrint_QualityDoc
       Category = 0
     end
-    object вв: TdxBarButton
+    object bbPrintSaleOrder: TdxBarButton
       Action = actPrintSaleOrder
       Category = 0
     end
@@ -2826,6 +2916,10 @@
     end
     object bbPromo: TdxBarButton
       Action = macOpenFormPromo
+      Category = 0
+    end
+    object bbUpdate_PartionGoodsDateList: TdxBarButton
+      Action = macUpdate_PartionGoodsDateList
       Category = 0
     end
   end
@@ -3365,6 +3459,13 @@
         Component = ProductionDocGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PartionGoodsDate'
+        Value = 'NULL'
+        Component = edPartionGoodsDate
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -5352,7 +5453,7 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 332
+    Left = 444
     Top = 88
   end
   object HeaderSaver2: THeaderSaver
@@ -5556,5 +5657,30 @@
     PackSize = 1
     Left = 40
     Top = 416
+  end
+  object spUpdate_MI_PartionGoodsDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Sale_PartionGoodsDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionGoodsDate'
+        Value = 42887d
+        Component = edPartionGoodsDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1136
+    Top = 347
   end
 end

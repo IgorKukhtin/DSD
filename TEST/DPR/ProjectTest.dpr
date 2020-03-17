@@ -1135,7 +1135,10 @@ uses
   MemberBankAccount in '..\..\Forms\Guides\MemberBankAccount.pas' {MemberBankAccountForm: TParentForm},
   MemberBankAccountEdit in '..\..\Forms\Guides\MemberBankAccountEdit.pas' {MemberBankAccountEditForm: TParentForm},
   OrderInternalStewJournal in '..\..\Forms\Document\OrderInternalStewJournal.pas' {OrderInternalStewJournalForm: TParentForm},
-  GoodsByGoodsKind_lineVMC in '..\..\Forms\Guides\GoodsByGoodsKind_lineVMC.pas' {GoodsByGoodsKind_lineVMCForm: TParentForm};
+  GoodsByGoodsKind_lineVMC in '..\..\Forms\Guides\GoodsByGoodsKind_lineVMC.pas' {GoodsByGoodsKind_lineVMCForm: TParentForm},
+  SendAsset in '..\..\Forms\Document\SendAsset.pas' {SendAssetForm: TParentForm},
+  SendAssetJournal in '..\..\Forms\Document\SendAssetJournal.pas' {SendAssetJournalForm: TParentForm},
+  Asset_Object in '..\..\Forms\Guides\Asset_Object.pas' {Asset_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

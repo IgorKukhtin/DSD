@@ -372,10 +372,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_TechnicalRediscount() RETURNS Integer AS 
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_TechnicalRediscount', 'Технический переучет' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TechnicalRediscount');
 
+CREATE OR REPLACE FUNCTION zc_Movement_SendAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SendAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_SendAsset', 'Перемещение (ОС)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendAsset');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 16.03.20         * zc_Movement_SendAsset
  14.02.20                                                                                     * zc_Movement_TechnicalRediscount
  31.01.20         * zc_Movement_ReestrTransportGoods
  27.12.19                                                                                     * zc_Movement_LoyaltySaveMoney

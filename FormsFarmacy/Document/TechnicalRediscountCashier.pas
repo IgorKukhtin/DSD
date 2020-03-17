@@ -48,8 +48,9 @@ type
     actChoiceCommentTR: TOpenChoiceForm;
     actChoiceGoods: TOpenChoiceForm;
     dxBarButton2: TdxBarButton;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    ExpirationDate: TcxGridDBColumn;
     cbAdjustment: TcxCheckBox;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

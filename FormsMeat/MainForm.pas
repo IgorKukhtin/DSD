@@ -1092,6 +1092,8 @@ type
     N214: TMenuItem;
     actGoodsByGoodsKind_lineVMC: TdsdOpenForm;
     miGoodsByGoodsKind_lineVMC: TMenuItem;
+    actSendAssetJournal: TdsdOpenForm;
+    miSendAssetJournal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

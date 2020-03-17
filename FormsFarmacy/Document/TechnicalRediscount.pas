@@ -51,6 +51,7 @@ type
     dxBarButton2: TdxBarButton;
     MinExpirationDate: TcxGridDBColumn;
     cbAdjustment: TcxCheckBox;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -165,6 +165,30 @@ BEGIN
                 LEFT JOIN REMAINS  ON REMAINS.GoodsId = MovementItem.GoodsId
                 LEFT JOIN tmpPrice ON tmpPrice.GoodsId = MovementItem.GoodsId) AS T1;
 
+      -- Контроль остатка
+    SELECT Object_Goods.ValueData                                                 AS CommentTR
+         , COALESCE (MovementItem.Amount, 0)                                      AS Amount
+         , COALESCE (MIFloat_Remains.ValueData, 0)                                AS DifferenceSum
+    INTO vbCommentTR, vbAmountIn, vbAmountOut
+    FROM MovementItem
+
+         LEFT JOIN MovementItemFloat AS MIFloat_Remains
+                                     ON MIFloat_Remains.MovementItemId = MovementItem.Id
+                                    AND MIFloat_Remains.DescId = zc_MIFloat_Remains()
+
+         INNER JOIN Object AS Object_Goods
+                           ON Object_Goods.ID = MovementItem.ObjectId
+
+    WHERE MovementItem.MovementId = inMovementId
+      AND MovementItem.DescId     = zc_MI_Master()
+      AND MovementItem.isErased   = FALSE
+      AND (COALESCE (MovementItem.Amount, 0) + COALESCE (MIFloat_Remains.ValueData, 0)) < 0;
+
+    IF (COALESCE(vbCommentTR,'') <> '')
+    THEN
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товаров недостачи <%> больше остаток <%>.', vbCommentTR, vbAmountIn, vbAmountOut;
+    END IF;
+
 /*      -- Контроль по сумме
     SELECT Object_CommentTR.ValueData                                                        AS CommentTR
          , Abs(SUM(MovementItem.Amount * COALESCE (MIFloat_Price.ValueData, 0)))             AS Amount

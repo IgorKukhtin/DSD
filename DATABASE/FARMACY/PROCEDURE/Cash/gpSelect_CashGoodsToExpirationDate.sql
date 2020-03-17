@@ -87,27 +87,49 @@ BEGIN
 
 
      RETURN QUERY
-     WITH tmpContainerAll AS (SELECT Container.Id, 
-                                     Container.ParentID,  
-                                     Container.DescId,     
-                                     Container.ObjectId, 
-                                     Container.Amount
+     WITH tmpContainer AS (SELECT Container.Id,
+                                  Container.ObjectId                            AS GoodsId,
+                                  Container.Amount
                              FROM Container
-                             WHERE Container.DescId in (zc_Container_Count(), zc_Container_CountPartionDate())
+                             WHERE Container.DescId = zc_Container_Count()
                                AND Container.WhereObjectId = vbUnitId
                                AND Container.Amount <> 0
                             )
-       , tmpContainer AS (SELECT Container.Id, 
-                                  Container.ObjectId AS GoodsId, 
-                                  Container.Amount
-                          FROM tmpContainerAll AS Container
-                          WHERE Container.DescId = zc_Container_Count()
-                         )
-       , tmpExpirationDate AS (SELECT tmp.Id
+       , tmpContainerPDId AS (SELECT Container.ParentId                                          AS ContainerId
+                                   , Max(Container.Id)                                           AS ContainerPDId
+                              FROM Container
+                              WHERE Container.DescId = zc_Container_CountPartionDate()
+                                AND Container.WhereObjectId = vbUnitId
+                                AND Container.Amount <> 0
+                              GROUP BY Container.ParentId)
+       , tmpContainerPD AS (SELECT tmpContainerPDId.ContainerId                                  AS ContainerId
+                                 , ObjectDate_ExpirationDate.ValueData                           AS ExpirationDate
+                                 , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
+                                              COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
+                                                                                              THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
+                                        ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
+                            FROM tmpContainerPDId
+
+                                 LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = tmpContainerPDId.ContainerPDId
+                                                              AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                      ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
+                                                        AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5())
+       , tmpExpirationIn AS (SELECT tmp.Id
                                     , tmp.GoodsId
                                     , tmp.Amount
-                                    , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate  
+                                    , COALESCE (MI_Income_find.Id,MI_Income.Id)    AS MI_IncomeId
                                FROM tmpContainer AS tmp
+
+                                     -- находим срок годности из прихода
                                   LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                 ON ContainerLinkObject_MovementItem.Containerid = tmp.Id
                                                                AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
@@ -120,50 +142,21 @@ BEGIN
                                                              AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
                                   -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                                   LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                       -- AND 1=0
-                                   LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                                    ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                               )
+       , tmpExpirationDate AS (SELECT tmp.Id
+                                    , tmp.GoodsId
+                                    , tmp.Amount
+                                    , COALESCE (tmpContainerPD.ExpirationDate, MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
+                                    , tmpContainerPD.PartionDateKindId                                                        AS PartionDateKindId
+                               FROM tmpExpirationIn AS tmp
+
+                                   -- находим срок годности для партийного товара
+                                  LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = tmp.Id
+
+                                  LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                    ON MIDate_ExpirationDate.MovementItemId = tmp.MI_IncomeId
                                                                    AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                )
-          -- Остатки по срокам
-       , tmpPDContainerAll AS (SELECT Container.Id,
-                                      Container.ParentID,
-                                      Container.Amount,
-                                      ContainerLinkObject.ObjectId                       AS PartionGoodsId
-                              FROM tmpContainerAll AS Container
-
-                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-
-                            WHERE Container.DescId = zc_Container_CountPartionDate()
-                           -- !!!
-                           -- AND 1=0
-                              )
-       , tmpPDContainer AS (SELECT Container.Id,
-                                   Container.ParentID,
-                                   Container.Amount,
-                                   COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate,
-                                   CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
-                                             COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
-                                                                                              THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
-                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
-                                        ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
-
-                            FROM tmpPDContainerAll AS Container
-
-                                 LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
-
-                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                      ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
-                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
-                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = Container.PartionGoodsId
-                                                        AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
-                         -- !!!
-                         -- WHERE 1=0
-                                  )
        , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
                                           AND ObjectFloat_Goods_Price.ValueData > 0
                                          THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
@@ -190,19 +183,18 @@ BEGIN
 
      SELECT Container.GoodsId                                                      AS ID
           , COALESCE(tmpObject_Price.Price,0)::TFloat                              AS Price
-          , COALESCE(tmpPDContainer.Amount, Container.Amount)                      AS Amount
-          , COALESCE (tmpPDContainer.ExpirationDate, tmpExpirationDate.ExpirationDate, zc_DateEnd()) :: TDateTime    AS MinExpirationDate
-          , tmpPDContainer.PartionDateKindId                                       AS PartionDateKindId          
-          , CASE WHEN COALESCE (tmpPDContainer.ExpirationDate, tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_0 THEN zc_Color_Red() ELSE   -- просрочено
-            CASE WHEN COALESCE (tmpPDContainer.ExpirationDate, tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_1 THEN zc_Color_Yelow() ELSE     -- Меньше 1 месяца
-            CASE WHEN COALESCE (tmpPDContainer.ExpirationDate, tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan() ELSE      -- Меньше 6 месяца
+          , Container.Amount                                                       AS Amount
+          , tmpExpirationDate.ExpirationDate                                       AS MinExpirationDate
+          , tmpExpirationDate.PartionDateKindId                                    AS PartionDateKindId
+          , CASE WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_0 THEN zc_Color_Red() ELSE       -- просрочено
+            CASE WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_1 THEN zc_Color_Yelow() ELSE     -- Меньше 1 месяца
+            CASE WHEN COALESCE (tmpExpirationDate.ExpirationDate, zc_DateEnd()) <= vbDate_6 THEN zc_Color_Cyan() ELSE      -- Меньше 6 месяца
             zc_Color_White() END END END                                                           AS Color_calc
      FROM tmpContainer AS Container
-          LEFT JOIN tmpPDContainer ON tmpPDContainer.ParentID = Container.ID
 
           LEFT JOIN tmpExpirationDate ON tmpExpirationDate.id = Container.Id
 
-          LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId 
+          LEFT OUTER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = Container.GoodsId
      ORDER BY 1, 4;
 
 END;
@@ -212,10 +204,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
- 21.09.19                                                                                     * 
- 15.07.19                                                                                     * 
+ 21.09.19                                                                                     *
+ 15.07.19                                                                                     *
  28.03.19                                                                                     *
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3');
+--
+SELECT * FROM gpSelect_CashGoodsToExpirationDate (inSession := '3');

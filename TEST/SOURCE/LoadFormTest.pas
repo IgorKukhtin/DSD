@@ -168,6 +168,7 @@ type
     procedure LoadNameBeforeFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
+    procedure LoadSendAssetFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendMemberFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -888,6 +889,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
 end;
 
+procedure TLoadFormTest.LoadSendAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendAssetJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendAssetJournalForm');
+end;
+
 procedure TLoadFormTest.LoadSendMemberFormTest;
 begin
 
@@ -1146,22 +1155,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_TransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_TransportJournalForm');
   //
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
-  {
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderForm');
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_OrderJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_OrderJournalForm');
 
@@ -2714,6 +2723,9 @@ begin
 end;
 procedure TLoadFormTest.LoadAssetFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAsset_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAsset_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
@@ -3376,10 +3388,10 @@ end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
  begin
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   {
@@ -3387,14 +3399,14 @@ end;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionEditForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionItemJournalForm');
   exit;
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionParamEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionParamEditForm');
-
+  }
 end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;

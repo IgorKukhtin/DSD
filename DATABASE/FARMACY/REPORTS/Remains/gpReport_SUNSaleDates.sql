@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpReport_SUNSaleDates(
     IN inUnitId           Integer  ,  -- Подразделение
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (UnitName TVarChar
+RETURNS TABLE (UnitId Integer
+             , UnitName TVarChar
              , GoodsCode Integer
              , GoodsName TVarChar
 
@@ -302,7 +303,8 @@ BEGIN
 
 
 
-    SELECT Object_Unit.ValueData                                               AS UnitName
+    SELECT Object_Unit.Id                                                      AS Id
+         , Object_Unit.ValueData                                               AS UnitName
          , Object_Goods.ObjectCode
          , Object_Goods.ValueData
 

@@ -4,7 +4,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
   ClientWidth = 908
   AddOnFormData.Params = FormParams
   ExplicitWidth = 924
-  ExplicitHeight = 448
+  ExplicitHeight = 449
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -133,6 +133,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             DataBinding.FieldName = 'Remains'
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object IsPromo: TcxGridDBColumn
+            Caption = #1040#1082#1094#1080#1103
+            DataBinding.FieldName = 'IsPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
           end
         end
       end
@@ -366,6 +374,31 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
       ImageIndex = 28
     end
+    object actUpdate_Goods_Promo: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_Goods_Promo
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103' '#1085#1072' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      ImageIndex = 79
+    end
+    object actExecUpdate_Goods_Promo: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_Promo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_Promo
+        end>
+      Caption = 'actExecUpdate_Goods_Promo'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 104
@@ -430,6 +463,10 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -438,6 +475,15 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     end
     object bbGetMovement: TdxBarButton
       Action = MacGetMovement
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Action = actUpdate_Goods_Promo
+      Category = 0
+      ItemLinks = <>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdate_Goods_Promo
       Category = 0
     end
   end
@@ -639,5 +685,29 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       end>
     Left = 464
     Top = 24
+  end
+  object spUpdate_Goods_Promo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'PartnerGoodsID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPromo'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 272
   end
 end

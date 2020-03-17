@@ -228,7 +228,7 @@ object MainForm: TMainForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 109
+        Width = 96
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
@@ -244,6 +244,13 @@ object MainForm: TMainForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 95
+      end
+      object DatSent: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1086#1090#1087#1088#1072#1074#1082#1080
+        DataBinding.FieldName = 'DatSent'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 106
       end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086

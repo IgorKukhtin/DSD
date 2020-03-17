@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_IlliquidUnit_Formation()
+--- Function: gpInsertUpdate_Movement_IlliquidUnit_Formation()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TechnicalRediscount_Formation (TVarChar);
 
@@ -31,9 +31,13 @@ BEGIN
                                 LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
                                                           ON MovementBoolean_RedCheck.MovementId = Movement.Id
                                                          AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
+                                LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
+                                                          ON MovementBoolean_Adjustment.MovementId = Movement.Id
+                                                         AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
                            WHERE Movement.DescId = zc_Movement_TechnicalRediscount() 
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                              AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
+                             AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False
                            )
          , tmpUnit AS (SELECT Object_Unit.Id AS UnitId
                        FROM Object AS Object_Unit
