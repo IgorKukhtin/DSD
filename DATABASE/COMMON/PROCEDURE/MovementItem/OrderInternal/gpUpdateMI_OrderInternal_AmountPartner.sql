@@ -99,13 +99,13 @@ BEGIN
                                                    END)  <> 0
                                        )
                         , tmpOrder AS (SELECT tmpOrder_all.GoodsId
-                                            , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END AS GoodsKindId
+                                            , CASE WHEN tmpGoods.isGoodsKind = TRUE AND tmpOrder_all.GoodsKindId = 0 THEN zc_GoodsKind_Basis() WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END AS GoodsKindId
                                             , SUM (tmpOrder_all.AmountPartner)      AS AmountPartner
                                             , SUM (tmpOrder_all.AmountPartnerPrior) AS AmountPartnerPrior
                                        FROM tmpOrder_all
                                             INNER JOIN tmpGoods ON tmpGoods.GoodsId = tmpOrder_all.GoodsId
                                        GROUP BY tmpOrder_all.GoodsId
-                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END
+                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE AND tmpOrder_all.GoodsKindId = 0 THEN zc_GoodsKind_Basis() WHEN tmpGoods.isGoodsKind = TRUE THEN tmpOrder_all.GoodsKindId ELSE 0 END
                                        )
                      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
@@ -126,7 +126,7 @@ BEGIN
              , COALESCE (tmpOrder.AmountPartner, 0)             AS AmountPartner
              , COALESCE (tmpOrder.AmountPartnerPrior, 0)        AS AmountPartnerPrior
        FROM tmpOrder
-            FULL JOIN tmpMI AS tmp  ON tmp.GoodsId = tmpOrder.GoodsId
+            FULL JOIN tmpMI AS tmp  ON tmp.GoodsId     = tmpOrder.GoodsId
                                    AND tmp.GoodsKindId = tmpOrder.GoodsKindId
       ;
 

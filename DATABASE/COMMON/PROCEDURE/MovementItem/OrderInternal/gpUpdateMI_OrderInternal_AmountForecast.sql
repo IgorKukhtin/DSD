@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpUpdateMI_OrderInternal_AmountForecast(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inStartDate           TDateTime , -- Дата документа
     IN inEndDate             TDateTime , -- Дата документа
-    IN inFromId              Integer   , -- 
+    IN inFromId              Integer   , --
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -30,12 +30,12 @@ BEGIN
     vbIsTushenka:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 2790412); -- ЦЕХ Тушенка
 
 
-    
+
     -- !!!НАШЛИ!!!
     SELECT gpGet.StartDate, gpGet.EndDate
            INTO inStartDate, inEndDate
     FROM gpGet_Object_GoodsReportSaleInf (inSession) AS gpGet;
-    
+
     -- сохранили свойство <Дата проноз с>
     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDateStart(), inMovementId, inStartDate);
     -- сохранили свойство <Дата проноз по>
@@ -44,12 +44,13 @@ BEGIN
 
      -- таблица -
      CREATE TEMP TABLE tmpAll (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, AmountForecastOrder TFloat, AmountForecast TFloat) ON COMMIT DROP;
-    
-     -- 
+
+     --
                                  WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                                                         , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                         , zc_Enum_InfoMoney_30101() -- Готовая продукция
+                                                                                                        , zc_Enum_InfoMoney_30102() -- Тушенка
                                                                                                         , zc_Enum_InfoMoney_30201() -- Мясное сырье
                                                                                                          )
                                                                     THEN TRUE
@@ -69,7 +70,7 @@ BEGIN
                                                       OR ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
                                                           )
                                                          AND vbIsPack = FALSE AND vbIsBasis = FALSE AND vbIsTushenka = TRUE)
-   
+
                                                       OR ((Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30101()            -- Доходы + Продукция + Готовая продукция
                                                         OR Object_InfoMoney_View.InfoMoneyId            = zc_Enum_InfoMoney_30201()            -- Доходы + Мясное сырье + Мясное сырье
                                                         OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
@@ -83,7 +84,10 @@ BEGIN
                                                      )
                                     , tmpMIAll AS
                                       (SELECT ObjectLink_Goods.ChildObjectId                                           AS GoodsId
-                                            , COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0)                         AS GoodsKindId
+                                            , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0) = 0
+                                                        THEN zc_GoodsKind_Basis()
+                                                   ELSE COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0)
+                                              END AS GoodsKindId
 
                                             , SUM (COALESCE (ObjectFloat_Order1.ValueData, 0)
                                                  + COALESCE (ObjectFloat_Order2.ValueData, 0)
@@ -147,148 +151,151 @@ BEGIN
                                                                  ON ObjectLink_GoodsKind.ObjectId = ObjectLink_Goods.ObjectId
                                                                 AND ObjectLink_GoodsKind.DescId   = zc_ObjectLink_GoodsReportSale_GoodsKind()
 
-            -- 1.1 Продажи
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount1
-                                  ON ObjectFloat_Amount1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount1.DescId = zc_ObjectFloat_GoodsReportSale_Amount1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount2
-                                  ON ObjectFloat_Amount2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount2.DescId = zc_ObjectFloat_GoodsReportSale_Amount2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount3
-                                  ON ObjectFloat_Amount3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount3.DescId = zc_ObjectFloat_GoodsReportSale_Amount3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount4
-                                  ON ObjectFloat_Amount4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount4.DescId = zc_ObjectFloat_GoodsReportSale_Amount4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount5
-                                  ON ObjectFloat_Amount5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount5.DescId = zc_ObjectFloat_GoodsReportSale_Amount5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount6
-                                  ON ObjectFloat_Amount6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount6.DescId = zc_ObjectFloat_GoodsReportSale_Amount6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Amount7
-                                  ON ObjectFloat_Amount7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Amount7.DescId = zc_ObjectFloat_GoodsReportSale_Amount7()
-            -- 1.2 Продажи
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo1
-                                  ON ObjectFloat_Promo1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo1.DescId = zc_ObjectFloat_GoodsReportSale_Promo1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo2
-                                  ON ObjectFloat_Promo2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo2.DescId = zc_ObjectFloat_GoodsReportSale_Promo2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo3
-                                  ON ObjectFloat_Promo3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo3.DescId = zc_ObjectFloat_GoodsReportSale_Promo3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo4
-                                  ON ObjectFloat_Promo4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo4.DescId = zc_ObjectFloat_GoodsReportSale_Promo4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo5
-                                  ON ObjectFloat_Promo5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo5.DescId = zc_ObjectFloat_GoodsReportSale_Promo5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo6
-                                  ON ObjectFloat_Promo6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo6.DescId = zc_ObjectFloat_GoodsReportSale_Promo6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Promo7
-                                  ON ObjectFloat_Promo7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Promo7.DescId = zc_ObjectFloat_GoodsReportSale_Promo7()
-            -- 1.3 Перемещение на филиал
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch1
-                                  ON ObjectFloat_Branch1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch1.DescId = zc_ObjectFloat_GoodsReportSale_Branch1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch2
-                                  ON ObjectFloat_Branch2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch2.DescId = zc_ObjectFloat_GoodsReportSale_Branch2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch3
-                                  ON ObjectFloat_Branch3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch3.DescId = zc_ObjectFloat_GoodsReportSale_Branch3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch4
-                                  ON ObjectFloat_Branch4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch4.DescId = zc_ObjectFloat_GoodsReportSale_Branch4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch5
-                                  ON ObjectFloat_Branch5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch5.DescId = zc_ObjectFloat_GoodsReportSale_Branch5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch6
-                                  ON ObjectFloat_Branch6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch6.DescId = zc_ObjectFloat_GoodsReportSale_Branch6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Branch7
-                                  ON ObjectFloat_Branch7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Branch7.DescId = zc_ObjectFloat_GoodsReportSale_Branch7()
-            -- 2.1 Заявки
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order1
-                                  ON ObjectFloat_Order1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order1.DescId = zc_ObjectFloat_GoodsReportSale_Order1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order2
-                                  ON ObjectFloat_Order2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order2.DescId = zc_ObjectFloat_GoodsReportSale_Order2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order3
-                                  ON ObjectFloat_Order3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order3.DescId = zc_ObjectFloat_GoodsReportSale_Order3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order4
-                                  ON ObjectFloat_Order4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order4.DescId = zc_ObjectFloat_GoodsReportSale_Order4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order5
-                                  ON ObjectFloat_Order5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order5.DescId = zc_ObjectFloat_GoodsReportSale_Order5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order6
-                                  ON ObjectFloat_Order6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order6.DescId = zc_ObjectFloat_GoodsReportSale_Order6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_Order7
-                                  ON ObjectFloat_Order7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_Order7.DescId = zc_ObjectFloat_GoodsReportSale_Order7()
-            -- 2.2 Заявки
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo1
-                                  ON ObjectFloat_OrderPromo1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo1.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo2
-                                  ON ObjectFloat_OrderPromo2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo2.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo3
-                                  ON ObjectFloat_OrderPromo3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo3.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo4
-                                  ON ObjectFloat_OrderPromo4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo4.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo5
-                                  ON ObjectFloat_OrderPromo5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo5.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo6
-                                  ON ObjectFloat_OrderPromo6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo6.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo7
-                                  ON ObjectFloat_OrderPromo7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderPromo7.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo7()
-            -- 2.3 Заявки
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch1
-                                  ON ObjectFloat_OrderBranch1.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch1.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch1()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch2
-                                  ON ObjectFloat_OrderBranch2.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch2.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch2()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch3
-                                  ON ObjectFloat_OrderBranch3.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch3.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch3()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch4
-                                  ON ObjectFloat_OrderBranch4.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch4.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch4()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch5
-                                  ON ObjectFloat_OrderBranch5.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch5.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch5()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch6
-                                  ON ObjectFloat_OrderBranch6.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch6.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch6()
-            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch7
-                                  ON ObjectFloat_OrderBranch7.ObjectId = ObjectLink_Goods.ObjectId
-                                 AND ObjectFloat_OrderBranch7.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch7()
+                                            -- 1.1 Продажи
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount1
+                                                                  ON ObjectFloat_Amount1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount1.DescId = zc_ObjectFloat_GoodsReportSale_Amount1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount2
+                                                                  ON ObjectFloat_Amount2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount2.DescId = zc_ObjectFloat_GoodsReportSale_Amount2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount3
+                                                                  ON ObjectFloat_Amount3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount3.DescId = zc_ObjectFloat_GoodsReportSale_Amount3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount4
+                                                                  ON ObjectFloat_Amount4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount4.DescId = zc_ObjectFloat_GoodsReportSale_Amount4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount5
+                                                                  ON ObjectFloat_Amount5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount5.DescId = zc_ObjectFloat_GoodsReportSale_Amount5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount6
+                                                                  ON ObjectFloat_Amount6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount6.DescId = zc_ObjectFloat_GoodsReportSale_Amount6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Amount7
+                                                                  ON ObjectFloat_Amount7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Amount7.DescId = zc_ObjectFloat_GoodsReportSale_Amount7()
+                                            -- 1.2 Продажи
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo1
+                                                                  ON ObjectFloat_Promo1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo1.DescId = zc_ObjectFloat_GoodsReportSale_Promo1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo2
+                                                                  ON ObjectFloat_Promo2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo2.DescId = zc_ObjectFloat_GoodsReportSale_Promo2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo3
+                                                                  ON ObjectFloat_Promo3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo3.DescId = zc_ObjectFloat_GoodsReportSale_Promo3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo4
+                                                                  ON ObjectFloat_Promo4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo4.DescId = zc_ObjectFloat_GoodsReportSale_Promo4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo5
+                                                                  ON ObjectFloat_Promo5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo5.DescId = zc_ObjectFloat_GoodsReportSale_Promo5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo6
+                                                                  ON ObjectFloat_Promo6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo6.DescId = zc_ObjectFloat_GoodsReportSale_Promo6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Promo7
+                                                                  ON ObjectFloat_Promo7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Promo7.DescId = zc_ObjectFloat_GoodsReportSale_Promo7()
+                                            -- 1.3 Перемещение на филиал
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch1
+                                                                  ON ObjectFloat_Branch1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch1.DescId = zc_ObjectFloat_GoodsReportSale_Branch1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch2
+                                                                  ON ObjectFloat_Branch2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch2.DescId = zc_ObjectFloat_GoodsReportSale_Branch2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch3
+                                                                  ON ObjectFloat_Branch3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch3.DescId = zc_ObjectFloat_GoodsReportSale_Branch3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch4
+                                                                  ON ObjectFloat_Branch4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch4.DescId = zc_ObjectFloat_GoodsReportSale_Branch4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch5
+                                                                  ON ObjectFloat_Branch5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch5.DescId = zc_ObjectFloat_GoodsReportSale_Branch5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch6
+                                                                  ON ObjectFloat_Branch6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch6.DescId = zc_ObjectFloat_GoodsReportSale_Branch6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Branch7
+                                                                  ON ObjectFloat_Branch7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Branch7.DescId = zc_ObjectFloat_GoodsReportSale_Branch7()
+                                            -- 2.1 Заявки
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order1
+                                                                  ON ObjectFloat_Order1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order1.DescId = zc_ObjectFloat_GoodsReportSale_Order1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order2
+                                                                  ON ObjectFloat_Order2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order2.DescId = zc_ObjectFloat_GoodsReportSale_Order2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order3
+                                                                  ON ObjectFloat_Order3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order3.DescId = zc_ObjectFloat_GoodsReportSale_Order3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order4
+                                                                  ON ObjectFloat_Order4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order4.DescId = zc_ObjectFloat_GoodsReportSale_Order4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order5
+                                                                  ON ObjectFloat_Order5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order5.DescId = zc_ObjectFloat_GoodsReportSale_Order5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order6
+                                                                  ON ObjectFloat_Order6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order6.DescId = zc_ObjectFloat_GoodsReportSale_Order6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_Order7
+                                                                  ON ObjectFloat_Order7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_Order7.DescId = zc_ObjectFloat_GoodsReportSale_Order7()
+                                            -- 2.2 Заявки
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo1
+                                                                  ON ObjectFloat_OrderPromo1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo1.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo2
+                                                                  ON ObjectFloat_OrderPromo2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo2.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo3
+                                                                  ON ObjectFloat_OrderPromo3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo3.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo4
+                                                                  ON ObjectFloat_OrderPromo4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo4.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo5
+                                                                  ON ObjectFloat_OrderPromo5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo5.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo6
+                                                                  ON ObjectFloat_OrderPromo6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo6.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderPromo7
+                                                                  ON ObjectFloat_OrderPromo7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderPromo7.DescId = zc_ObjectFloat_GoodsReportSale_OrderPromo7()
+                                            -- 2.3 Заявки
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch1
+                                                                  ON ObjectFloat_OrderBranch1.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch1.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch1()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch2
+                                                                  ON ObjectFloat_OrderBranch2.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch2.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch2()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch3
+                                                                  ON ObjectFloat_OrderBranch3.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch3.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch3()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch4
+                                                                  ON ObjectFloat_OrderBranch4.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch4.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch4()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch5
+                                                                  ON ObjectFloat_OrderBranch5.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch5.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch5()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch6
+                                                                  ON ObjectFloat_OrderBranch6.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch6.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch6()
+                                            LEFT JOIN ObjectFloat AS ObjectFloat_OrderBranch7
+                                                                  ON ObjectFloat_OrderBranch7.ObjectId = ObjectLink_Goods.ObjectId
+                                                                 AND ObjectFloat_OrderBranch7.DescId = zc_ObjectFloat_GoodsReportSale_OrderBranch7()
 
                                        GROUP BY ObjectLink_Goods.ChildObjectId
-                                              , ObjectLink_GoodsKind.ChildObjectId
+                                              , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0) = 0
+                                                          THEN zc_GoodsKind_Basis()
+                                                     ELSE COALESCE (ObjectLink_GoodsKind.ChildObjectId, 0)
+                                                END
 
                                        /*-- 1.1 Заявки
                                         SELECT MovementItem.ObjectId                                                    AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)                            AS GoodsKindId
                                             , SUM (MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0)) AS AmountOrder
                                             , 0                                                                        AS AmountSale
-                                       FROM Movement 
+                                       FROM Movement
                                             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                           ON MovementLinkObject_To.MovementId = Movement.Id
                                                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -346,7 +353,7 @@ BEGIN
                                          AND vbIsBasis = FALSE
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
-                                       HAVING SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) <> 0   
+                                       HAVING SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) <> 0
                                       UNION ALL
                                        -- 1.3 Перемещение на филиал
                                        SELECT MovementItem.ObjectId                               AS GoodsId
@@ -407,16 +414,16 @@ BEGIN
                                          AND vbIsBasis = TRUE
                                        GROUP BY MovementItem.ObjectId
                                               , MILinkObject_GoodsKind.ObjectId
-                                       HAVING SUM (COALESCE (MovementItem.Amount, 0)) <> 0   
+                                       HAVING SUM (COALESCE (MovementItem.Amount, 0)) <> 0
                                       )
-                                      
-                                      
+
+
                                     , tmpMI AS
-                                      (SELECT MovementItem.Id                               AS MovementItemId 
+                                      (SELECT MovementItem.Id                               AS MovementItemId
                                             , MovementItem.ObjectId                         AS GoodsId
                                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                             , MovementItem.Amount
-                                       FROM MovementItem 
+                                       FROM MovementItem
                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -464,7 +471,7 @@ BEGIN
                                                                                 ELSE NULL
                                                                            END
                                                  , inUserId             := vbUserId
-                                                  ) 
+                                                  )
        FROM tmpAll
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpAll.GoodsId

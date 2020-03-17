@@ -41,7 +41,12 @@ BEGIN
     INSERT INTO tmpContainer_Count (MIDescId, ContainerId, GoodsId, GoodsKindId, Amount)
                                  WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
                                                  UNION
-                                                  SELECT UnitId, zc_MI_Child() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup WHERE UnitId <> inToId OR inToId = 2790412) -- ЦЕХ Тушенка
+                                                  SELECT UnitId, zc_MI_Child() AS MIDescId
+                                                  FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
+                                                  WHERE lfSelect.UnitId <> inToId
+                                                     OR (inToId = 2790412 -- ЦЕХ Тушенка
+                                                     AND lfSelect.UnitId = inToId)
+                                                 )
                                       -- Документ Инвентаризации
                                     , tmpInventory AS (SELECT Movement.Id AS MovementId, Movement.OperDate, MLO_From.ObjectId AS UnitId
                                                        FROM Movement
@@ -55,6 +60,7 @@ BEGIN
                                                       )
                                     , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
                                                         , Object_InfoMoney_View.InfoMoneyDestinationId
+                                                        , Object_InfoMoney_View.InfoMoneyId
                                                    FROM Object_InfoMoney_View
                                                         LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                                              ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
@@ -125,7 +131,10 @@ BEGIN
                                 SELECT tmpUnit.MIDescId
                                      , Container.Id                         AS ContainerId
                                      , Container.ObjectId                   AS GoodsId
-                                     , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                     , CASE WHEN tmpGoods.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
+                                                 THEN zc_GoodsKind_Basis()
+                                                 ELSE COALESCE (CLO_GoodsKind.ObjectId, 0)
+                                       END AS GoodsKindId
                                      , Container.Amount
                                 FROM tmpGoods
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
