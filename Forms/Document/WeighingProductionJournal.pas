@@ -122,6 +122,9 @@ type
     bbPrintNoGroup: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
+    actPrintSaleOrder: TdsdPrintAction;
+    spSelectPrint_SaleOrder: TdsdStoredProc;
+    bbPrintSaleOrder: TdxBarButton;
   private
   public
   end;

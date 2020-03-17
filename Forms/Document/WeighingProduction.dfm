@@ -26,7 +26,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1250
     object edInvNumber: TcxTextEdit
       Left = 113
       Top = 23
@@ -267,14 +266,12 @@ object WeighingProductionForm: TWeighingProductionForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1250
     ClientRectBottom = 336
     ClientRectRight = 1309
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1250
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -282,7 +279,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1250
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -1403,8 +1399,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 424
-    Top = 88
+    Left = 400
+    Top = 96
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -2189,7 +2185,7 @@ object WeighingProductionForm: TWeighingProductionForm
         DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
-    Left = 44
-    Top = 16
+    Left = 36
+    Top = 24
   end
 end
