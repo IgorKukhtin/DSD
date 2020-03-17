@@ -113,20 +113,22 @@ BEGIN
                               AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
     WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6();
 
-    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpgoodsminprice_list')
+
+    -- таблица
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpGoodsMinPrice_List')
     THEN
-        -- таблица
         CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpGoodsMinPrice_List;
     END IF;
-    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = '_tmpunitminprice_list')
+    -- таблица
+    IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpUnitMinPrice_List')
     THEN
-        -- таблица
         CREATE TEMP TABLE _tmpUnitMinPrice_List (UnitId Integer, AreaId Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpUnitMinPrice_List;
     END IF;
+
 
     -- даты + 6 месяцев, + 1 месяц
     vbDate180 := CURRENT_DATE + CASE WHEN vbIsMonth_6 = TRUE THEN vbMonth_6 ||' MONTH'  ELSE vbMonth_6 ||' DAY' END :: INTERVAL;
@@ -740,47 +742,23 @@ BEGIN
         ORDER BY Price_Unit.Price
        ;
 
-     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
-                                 , OperDate
-                                 , Value1
-                                 , Value2
-                                 , Value3
-                                 , Value4
-                                 , Value5
-                                 , Time1
-                                 , Time2
-                                 , Time3
-                                 , Time4
-                                 , Time5
-                                 , ProcName
-                                 , ProtocolData
-                                  )
-        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
-        SELECT vbUserId
-               -- во сколько началась
-             , CURRENT_TIMESTAMP
-             , (SELECT COUNT (*) FROM tmp_pg)                                   AS Value1
-             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr =  '172.17.2.4') AS Value2
-             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr <> '172.17.2.4') AS Value3
-             , 0 AS Value4
-             , 0 AS Value5
-               -- сколько всего выполнялась проц
-             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
-               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
-             , (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL AS Time2
-               -- сколько всего выполнялась проц lpSelectMinPrice_List
-             , (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL AS Time3
-               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
-             , (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL AS Time4
-               -- во сколько закончилась
-             , CLOCK_TIMESTAMP() AS Time5
-               -- ProcName
-             , 'gpSelect_GoodsOnUnit_ForSite'
-               -- ProtocolData
-             , CHR (39) || inUnitId_list || CHR (39) || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
-        WHERE vbUserId > 0
-        ;
+    -- !!!Протокол - отладка Скорости!!!
+    IF vbUserId > 0 OR 1=0
+    THEN
+        PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_Begin1 -- для расчета - сколько всего выполнялась проц
+                                         , inTime2        := (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL -- сколько всего выполнялась проц    ДО lpSelectMinPrice_List
+                                         , inTime3        := (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL -- сколько всего выполнялась проц       lpSelectMinPrice_List
+                                         , inTime4        := (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+                                         , inProcName     := 'gpSelect_GoodsOnUnit_ForSite'
+                                         , inProtocolData := '(' || (SELECT COUNT(*) FROM _tmpUnitMinPrice_List)  :: TVarChar || ')'
+                                                          || '(' || (SELECT COUNT(*) FROM _tmpGoodsMinPrice_List) :: TVarChar || ')'
+                                                          || '(' || (SELECT COUNT(*) FROM _tmpList)               :: TVarChar || ')'
+                                                        || ' - ' || CHR (39) || inUnitId_list  || CHR (39)
+                                                        || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
+                                                        || ' , ' || CHR (39) || inSession      || CHR (39)
+                                         , inUserId       := vbUserId
+                                          );
+    END IF;
 
 END;
 $BODY$
@@ -805,5 +783,5 @@ $BODY$
 -- SELECT * FROM gpSelect_GoodsOnUnit_ForSite (inUnitId_list:= '0', inGoodsId_list:= '53275', inFrontSite := True, inSession:= zfCalc_UserSite());
 
 --SELECT p.* FROM gpselect_goodsonunit_forsite ('183292,11769526,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375626,375627,11152911,10128935,472116', '24970,31333,393553,15610,5878,31561,1849,976003,31285,1594,4534,27658,6430,31000,14941,19093,38173,18922,18916,29449,19696,5486995,28516,26422,21748,15172,3002798,54604,358750,2503', TRUE, zfCalc_UserSite()) AS p
-SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
+-- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
 

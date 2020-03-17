@@ -668,47 +668,24 @@ BEGIN
        ;
 --    raise notice 'Value 09: %', timeofday();
 
-     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     INSERT INTO ResourseProtocol (UserId
-                                 , OperDate
-                                 , Value1
-                                 , Value2
-                                 , Value3
-                                 , Value4
-                                 , Value5
-                                 , Time1
-                                 , Time2
-                                 , Time3
-                                 , Time4
-                                 , Time5
-                                 , ProcName
-                                 , ProtocolData
-                                  )
-        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
-        SELECT vbUserId
-               -- во сколько началась
-             , CURRENT_TIMESTAMP
-             , (SELECT COUNT (*) FROM tmp_pg)                                   AS Value1
-             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr =  '172.17.2.4') AS Value2
-             , (SELECT COUNT (*) FROM tmp_pg WHERE client_addr <> '172.17.2.4') AS Value3
-             , 0 AS Value4
-             , 0 AS Value5
-               -- сколько всего выполнялась проц
-             , (CLOCK_TIMESTAMP() - vbOperDate_Begin1) :: INTERVAL AS Time1
-               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
-             , (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL AS Time2
-               -- сколько всего выполнялась проц lpSelectMinPrice_List
-             , (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL AS Time3
-               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
-             , (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL AS Time4
-               -- во сколько закончилась
-             , CLOCK_TIMESTAMP() AS Time5
-               -- ProcName
-             , 'gpSelect_GoodsOnUnit_ForSite'
-               -- ProtocolData
-             , CHR (39) || inUnitId_list || CHR (39) || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
-        WHERE vbUserId > 0
-        ;
+
+    -- !!!Протокол - отладка Скорости!!!
+    IF vbUserId > 0 OR 1=0
+    THEN
+        PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_Begin1 -- для расчета - сколько всего выполнялась проц
+                                         , inTime2        := (vbOperDate_Begin2 - vbOperDate_Begin1) :: INTERVAL -- сколько всего выполнялась проц    ДО lpSelectMinPrice_List
+                                         , inTime3        := (vbOperDate_Begin3 - vbOperDate_Begin2) :: INTERVAL -- сколько всего выполнялась проц       lpSelectMinPrice_List
+                                         , inTime4        := (CLOCK_TIMESTAMP() - vbOperDate_Begin3) :: INTERVAL -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+                                         , inProcName     := 'gpSelect_GoodsOnUnit_ForSite'
+                                         , inProtocolData := '(' || (SELECT COUNT(*) FROM _tmpUnitMinPrice_List)  :: TVarChar || ')'
+                                                          || '(' || (SELECT COUNT(*) FROM _tmpGoodsMinPrice_List) :: TVarChar || ')'
+                                                          || '(' || (SELECT COUNT(*) FROM _tmpList)               :: TVarChar || ')'
+                                                        || ' - ' || CHR (39) || inUnitId_list  || CHR (39)
+                                                        || ' , ' || CHR (39) || inGoodsId_list || CHR (39)
+                                                        || ' , ' || CHR (39) || inSession      || CHR (39)
+                                         , inUserId       := vbUserId
+                                          );
+    END IF;
 
 END;
 $BODY$
