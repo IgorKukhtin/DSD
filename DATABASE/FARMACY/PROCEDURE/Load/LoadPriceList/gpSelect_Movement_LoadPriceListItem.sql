@@ -13,12 +13,19 @@ RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, CodeUKTZED TVar
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbJuridicalId Integer;
+   DECLARE vbAreaId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
 --     vbUserId:= lpGetUserBySession (inSession);
 
+     SELECT LoadPriceList.JuridicalId, COALESCE(LoadPriceList.AreaId, 0)
+     INTO vbJuridicalId, vbAreaId
+     FROM LoadPriceList
+     WHERE LoadPriceList.Id = inLoadPriceListId;   
+       
      RETURN QUERY
        SELECT
          LoadPriceListItem.Id, 
@@ -35,10 +42,19 @@ BEGIN
          LoadPriceListItem.Price, 
          LoadPriceListItem.Remains, 
          LoadPriceListItem.ProducerName, 
-         LoadPriceListItem.ExpirationDate 
+         LoadPriceListItem.ExpirationDate,
+         PartnerGoods.ID                                AS PartnerGoodsID,
+         COALESCE(PartnerGoods.IsPromo, FALSE)          AS IsPromo
        FROM LoadPriceListItem 
+
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+            
+            LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = vbJuridicalId
+                                                            AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                                            AND COALESCE(PartnerGoods.AreaId, 0) = vbAreaId
+                                                         
       WHERE LoadPriceListItem.LoadPriceListId = inLoadPriceListId;
+
 
 END;
 $BODY$

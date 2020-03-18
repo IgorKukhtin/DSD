@@ -13,13 +13,14 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TechnicalRediscount());
 
-  PERFORM gpInsertUpdate_Movement_TechnicalRediscount (ioId          := 0,
-                                                       inInvNumber   := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar),
-                                                       inOperDate    := CURRENT_DATE,
-                                                       inUnitID      := UnitList.UnitId,
-                                                       inComment     := '',
-                                                       inisRedCheck  := FALSE,
-                                                       inSession     := inSession)
+  PERFORM gpInsertUpdate_Movement_TechnicalRediscount (ioId           := 0,
+                                                       inInvNumber    := CAST (NEXTVAL ('Movement_TechnicalRediscount_seq') AS TVarChar),
+                                                       inOperDate     := CURRENT_DATE,
+                                                       inUnitID       := UnitList.UnitId,
+                                                       inComment      := '',
+                                                       inisRedCheck   := FALSE,
+                                                       inisAdjustment := FALSE,
+                                                       inSession      := inSession)
   FROM (
           WITH
            tmpMovement AS (SELECT Movement.Id

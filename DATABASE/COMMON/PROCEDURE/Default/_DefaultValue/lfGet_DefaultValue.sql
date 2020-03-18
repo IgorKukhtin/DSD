@@ -76,6 +76,7 @@ BEGIN
                                               AND OL_Unit_Juridical.DescId        = zc_ObjectLink_Unit_Juridical()
                          INNER JOIN Object AS Object_Unit ON Object_Unit.Id       = OL_Unit_Juridical.ObjectId
                                                          AND Object_Unit.isErased = FALSE
+                                                         AND Object_Unit.Id not in (183288, 183289, 183290, 183291)
                          LEFT JOIN ObjectLink AS OL_Unit_Parent
                                               ON OL_Unit_Parent.ChildObjectId = OL_Unit_Juridical.ObjectId
                                              AND OL_Unit_Parent.DescId        = zc_ObjectLink_Unit_Parent()
