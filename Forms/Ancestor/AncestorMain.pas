@@ -64,7 +64,7 @@ end;
 
 procedure TAncestorMainForm.actLookAndFeelExecute(Sender: TObject);
 begin
-  TLookAndFillSettingsForm.Create(nil).Show;
+  TLookAndFillSettingsForm.Create(Screen.ActiveForm).Show;
 end;
 
 procedure TAncestorMainForm.actUpdateProgramExecute(Sender: TObject);

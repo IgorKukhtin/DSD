@@ -29,7 +29,7 @@ BEGIN
        INNER JOIN Movement ON Movement.ID = MovementItem.MovementId
   WHERE MovementItem.ID = inMovementItemId;
 
-  IF date_part('DAY',  vbOperDate)::Integer <= 15
+/*  IF date_part('DAY',  vbOperDate)::Integer <= 15
   THEN
       vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '14 DAY';
   ELSE
@@ -42,7 +42,7 @@ BEGIN
      AND  vbOperDate < CURRENT_DATE
   THEN
       RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
-  END IF;
+  END IF;*/
 
   -- устанавливаем новое значение
   outIsErased:= gpSetUnErased_MovementItem (inMovementItemId:= inMovementItemId, inSession:= inSession);
