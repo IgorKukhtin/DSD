@@ -25,7 +25,9 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
              , SumTransportAdd TFloat, SumTransportAddLong TFloat, SumTransportTaxi TFloat, SumRateExp TFloat
-             , CountDoc_Reestr TFloat, TotalCountKg_Reestr TFloat, TotalCountKg_Reestr_zp TFloat, InvNumber_Reestr TVarChar
+             , CountDoc_Reestr TFloat, CountDoc_Reestr_zp TFloat
+             , TotalCountKg_Reestr TFloat, TotalCountKg_Reestr_zp TFloat, InvNumber_Reestr TVarChar
+             , RouteName_order TVarChar
               )
 AS
 $BODY$
@@ -554,7 +556,9 @@ BEGIN
          , tmpDataReestr AS (SELECT tmp.MovementId                                AS MovementId
                                -- , STRING_AGG (DISTINCT tmp.InvNumber, ';')      AS InvNumber
                                   , STRING_AGG (DISTINCT tmp.InvNumber || ' ' || tmp.FromName, ';')          AS InvNumber
+                                  , STRING_AGG (DISTINCT tmp.InvNumber || ' ' || tmp.RouteName_order, ';')   AS RouteName_order
                                   , COUNT (DISTINCT tmp.MovementId_sale)          AS CountDoc
+                                  , COUNT (DISTINCT tmp.MovementId_sale_zp)       AS CountDoc_zp
                                   , SUM (tmp.TotalCountKg)                        AS TotalCountKg
                                   , SUM (tmp.TotalCountKg_Reestr_zp)              AS TotalCountKg_Reestr_zp
 
@@ -565,6 +569,8 @@ BEGIN
                                         , MovementFloat_MovementItemId.MovementId                   AS MovementId_sale
                                         , MovementFloat_TotalCountKg.ValueData                      AS TotalCountKg
                                         , CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE MovementFloat_TotalCountKg.ValueData END AS TotalCountKg_Reestr_zp
+                                        , CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN NULL ELSE MovementFloat_MovementItemId.MovementId END AS MovementId_sale_zp
+                                        , Object_Route.ValueData                                    AS RouteName_order
                                    FROM (SELECT DISTINCT tmpTransport.MovementId FROM tmpTransport) AS tmp
                                         INNER JOIN MovementLinkMovement AS MovementLinkMovement_Transport
                                                                         ON MovementLinkMovement_Transport.MovementChildId = tmp.MovementId
@@ -599,6 +605,8 @@ BEGIN
                                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                                                      ON MovementLinkObject_Route.MovementId = MLM_Order.MovementChildId
                                                                     AND MovementLinkObject_Route.DescId     = zc_MovementLinkObject_Route()
+                                        LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
                                         LEFT JOIN ObjectBoolean AS OB_NotPayForWeight
                                                                 ON OB_NotPayForWeight.ObjectId  = MovementLinkObject_Route.ObjectId
                                                                AND OB_NotPayForWeight.DescId    = zc_ObjectBoolean_Route_NotPayForWeight()
@@ -653,11 +661,13 @@ BEGIN
              , MAX (tmpFuel.SumRateExp)               :: TFloat AS SumRateExp
 
              , MAX (COALESCE (tmpDataReestr.CountDoc, 0))           :: TFloat   AS CountDoc_Reestr
+             , MAX (COALESCE (tmpDataReestr.CountDoc_zp, 0))        :: TFloat   AS CountDoc_Reestr_zp
              , MAX (COALESCE (tmpDataReestr.TotalCountKg, 0))       :: TFloat   AS TotalCountKg_Reestr
            --, MAX (CASE WHEN OB_NotPayForWeight.ValueData = TRUE THEN 0 ELSE COALESCE (tmpDataReestr.TotalCountKg, 0) END) :: TFloat AS TotalCountKg_Reestr_zp
              , MAX (COALESCE (tmpDataReestr.TotalCountKg_Reestr_zp, 0)) :: TFloat AS TotalCountKg_Reestr_zp
 
              , MAX (COALESCE (tmpDataReestr.InvNumber, ''))         :: TVarChar AS InvNumber_Reestr
+             , MAX (COALESCE (tmpDataReestr.RouteName_order, ''))   :: TVarChar AS RouteName_order
 
               -- группировка по всем
         FROM (SELECT tmpAll.MovementId

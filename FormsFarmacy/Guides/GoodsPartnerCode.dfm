@@ -1,29 +1,29 @@
 inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   Caption = #1050#1086#1076#1099' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
   ClientHeight = 529
-  ClientWidth = 1000
+  ClientWidth = 1257
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1016
+  ExplicitWidth = 1273
   ExplicitHeight = 568
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 61
-    Width = 1000
+    Width = 1257
     Height = 468
     ExplicitTop = 61
-    ExplicitWidth = 1000
+    ExplicitWidth = 1257
     ExplicitHeight = 468
     ClientRectBottom = 468
-    ClientRectRight = 1000
+    ClientRectRight = 1257
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1000
+      ExplicitWidth = 1257
       ExplicitHeight = 468
       inherited cxGrid: TcxGrid
-        Width = 1000
+        Width = 1257
         Height = 468
-        ExplicitWidth = 1000
+        ExplicitWidth = 1257
         ExplicitHeight = 468
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -216,7 +216,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 1000
+    Width = 1257
     Height = 35
     Align = alTop
     TabOrder = 5
@@ -826,6 +826,56 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end>
       isShowModal = False
     end
+    object actUpdate_Goods_Promo_True: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_Goods_Promo_True
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103' '#1085#1072' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      ImageIndex = 79
+    end
+    object actExecUpdate_Goods_Promo_True: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_Promo_True
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_Promo_True
+        end>
+      Caption = 'actExecUpdate_Goods_Promo_True'
+    end
+    object actUpdate_Goods_Promo_False: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_Goods_Promo_False
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103' '#1085#1072' '#1074#1089#1077' '#1090#1086#1074#1072#1088#1099' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1054#1090#1084#1077#1085#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      Hint = #1054#1090#1084#1077#1085#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' '#1040#1082#1094#1080#1103
+      ImageIndex = 76
+    end
+    object actExecUpdate_Goods_Promo_False: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_Promo_False
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_Promo_False
+        end>
+      Caption = 'actExecUpdate_Goods_Promo_False'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -937,6 +987,18 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Goods_Promo_True'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Goods_Promo_False'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbIsUpdate'
         end
         item
@@ -970,6 +1032,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           ItemName = 'dxBarButton2'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -1056,6 +1119,14 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     end
     object bbProtocolOpenTwoForm: TdxBarButton
       Action = ProtocolOpenTwoForm
+      Category = 0
+    end
+    object bbUpdate_Goods_Promo_False: TdxBarButton
+      Action = actUpdate_Goods_Promo_False
+      Category = 0
+    end
+    object bbUpdate_Goods_Promo_True: TdxBarButton
+      Action = actUpdate_Goods_Promo_True
       Category = 0
     end
   end
@@ -1761,5 +1832,53 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
     PackSize = 1
     Left = 616
     Top = 191
+  end
+  object spUpdate_Goods_Promo_True: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPromo'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1016
+    Top = 376
+  end
+  object spUpdate_Goods_Promo_False: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_Promo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsPromo'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 824
+    Top = 376
   end
 end

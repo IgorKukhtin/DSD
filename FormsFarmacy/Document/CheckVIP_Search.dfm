@@ -821,21 +821,13 @@ inherited CheckVIP_SearchForm: TCheckVIP_SearchForm
     Top = 56
   end
   object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_CheckVIP'
+    StoredProcName = 'gpSelect_MovementItem_CheckDeferred'
     DataSet = ClientDataSet1
     DataSets = <
       item
         DataSet = ClientDataSet1
       end>
-    Params = <
-      item
-        Name = 'inIsErased'
-        Value = Null
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+    Params = <>
     PackSize = 1
     Left = 440
     Top = 56

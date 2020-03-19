@@ -111,6 +111,14 @@ type
     bbProtocolOpenTwoForm: TdxBarButton;
     spUpdate_Goods_isUploadYuriFarm: TdsdStoredProc;
     isUploadYuriFarm: TcxGridDBColumn;
+    spUpdate_Goods_Promo_True: TdsdStoredProc;
+    spUpdate_Goods_Promo_False: TdsdStoredProc;
+    actUpdate_Goods_Promo_True: TMultiAction;
+    actExecUpdate_Goods_Promo_True: TdsdExecStoredProc;
+    actUpdate_Goods_Promo_False: TMultiAction;
+    actExecUpdate_Goods_Promo_False: TdsdExecStoredProc;
+    bbUpdate_Goods_Promo_True: TdxBarButton;
+    bbUpdate_Goods_Promo_False: TdxBarButton;
   private
     { Private declarations }
   public

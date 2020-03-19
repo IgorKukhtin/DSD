@@ -399,6 +399,13 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 57
       end
+      object RouteName_order: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1079#1072#1103#1074#1082#1072')'
+        DataBinding.FieldName = 'RouteName_order'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object UnitName_route: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1072#1088#1096#1088#1091#1090')'
         DataBinding.FieldName = 'UnitName_route'
@@ -653,6 +660,18 @@ object Report_TransportForm: TReport_TransportForm
       object CountDoc_Reestr: TcxGridDBColumn
         Caption = #1050#1086#1083'.'#1076#1086#1082'. ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
         DataBinding.FieldName = 'CountDoc_Reestr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.00##;-,0.00##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'. '#1076#1086#1082'. ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        Options.Editing = False
+        Width = 70
+      end
+      object CountDoc_Reestr_zp: TcxGridDBColumn
+        Caption = ' '#1050#1086#1083'.'#1076#1086#1082'. '#1076#1083#1103' '#1047#1055' ('#1074' '#1088#1077#1077#1089#1090#1088#1077' '#1074#1080#1079')'
+        DataBinding.FieldName = 'CountDoc_Reestr_zp'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

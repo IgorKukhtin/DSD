@@ -117,35 +117,41 @@ BEGIN
               WHERE COALESCE (Object_ContractSettings.isErased, FALSE) = FALSE
                    AND JuridicalSettings.MainJuridicalId = vbJuridicalId
              )
+          , tmpNDSKind AS
+                (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                       , ObjectFloat_NDSKind_NDS.ValueData
+                 FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                 WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                )
 
         INSERT INTO _GoodsPriceAll
         SELECT
 
-           LinkGoodsObject.GoodsId             AS GoodsId,
+           Object_Goods_Retail.Id               AS GoodsId,
            LoadPriceList.JuridicalId           AS JuridicalId,
            LoadPriceList.ContractId            AS ContractId,
-           Object_Goods.NDS                    AS NDS,
+           COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
-           CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop) = TRUE
-                     THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectGoodsView.PercentMarkup, 0))
+           CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop) = TRUE
+                     THEN COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0))
                 ELSE COALESCE (MarginCondition.MarginPercent, 0) + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
              END                       :: TFloat AS MarginPercent,
            LoadPriceListItem.ExpirationDate    AS ExpirationDate,
 
-           zfCalc_SalePrice((LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100),                         -- Цена С НДС
+           zfCalc_SalePrice((LoadPriceListItem.Price * (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0))/100),                         -- Цена С НДС
                              CASE WHEN COALESCE (ObjectFloat_Contract_Percent.ValueData, 0) <> 0
                                       THEN MarginCondition.MarginPercent + COALESCE (ObjectFloat_Contract_Percent.valuedata, 0)
                                   ELSE MarginCondition.MarginPercent + COALESCE (ObjectFloat_Juridical_Percent.valuedata, 0)
                              END,                                                                             -- % наценки в КАТЕГОРИИ
-                             COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), ObjectGoodsView.isTop),              -- ТОП позиция
-                             COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectGoodsView.PercentMarkup),  -- % наценки у товара
+                             COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop),           -- ТОП позиция
+                             COALESCE (NULLIF (GoodsPrice.PercentMarkup, 0), ObjectFloat_Goods_PercentMarkup.ValueData),  -- % наценки у товара
                              0.0, --ObjectFloat_Juridical_Percent.valuedata,                                  -- % корректировки у Юр Лица для ТОПа
-                             ObjectGoodsView.Price                                                            -- Цена у товара (фиксированная)
+                             ObjectFloat_Goods_Price.valuedata                                                            -- Цена у товара (фиксированная)
                            )         :: TFloat AS Price,
            GoodsPrice.MCSValue       AS MCSValue,
-           ObjectGoodsView.IsClose AS IsClose,
-           ObjectGoodsView.isFirst AS isFirst,
-           ObjectGoodsView.isSecond AS isSecond
+           Object_Goods.IsClose AS IsClose,
+           Object_Goods_Retail.isFirst AS isFirst,
+           Object_Goods_Retail.issecond AS isSecond
 
          FROM LoadPriceListItem
 
@@ -164,7 +170,7 @@ BEGIN
                                    AND ObjectFloat_Contract_Percent.DescId = zc_ObjectFloat_Contract_Percent()
 
               LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink
-                                                       ON (Object_MarginCategoryLink.UnitId = vbUnitId)
+                                                       ON (Object_MarginCategoryLink.UnitId = 183292)
                                                       AND Object_MarginCategoryLink.JuridicalId = LoadPriceList.JuridicalId
 
               LEFT JOIN Object_MarginCategoryLink_View AS Object_MarginCategoryLink_all
@@ -173,32 +179,34 @@ BEGIN
                                                       AND Object_MarginCategoryLink_all.isErased    = FALSE
                                                       AND Object_MarginCategoryLink.JuridicalId IS NULL
 
-              LEFT JOIN Object_Goods_Main_View AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+              INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
+              INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = LoadPriceListItem.GoodsId
+                                                                 AND Object_Goods_Retail.RetailId = 4
+              LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                   ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
+              LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
+                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods_Retail.Id 
+                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+              LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
+                                    ON ObjectFloat_Goods_Price.ObjectId = Object_Goods_Retail.Id 
+                                   AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
 
               LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
-                                      AND (LoadPriceListItem.Price * (100 + Object_Goods.NDS)/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
+                                      AND (LoadPriceListItem.Price * (100 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0))/100)::TFloat BETWEEN MarginCondition.MinPrice AND MarginCondition.MaxPrice
 
-              LEFT JOIN Object_Goods_View AS PartnerGoods ON PartnerGoods.ObjectId  = LoadPriceList.JuridicalId
-                                                         AND PartnerGoods.GoodsCode = LoadPriceListItem.GoodsCode
-              LEFT JOIN Object_LinkGoods_View AS LinkGoods ON LinkGoods.GoodsMainId = Object_Goods.Id
-                                                          AND LinkGoods.GoodsId     = PartnerGoods.Id
-              LEFT JOIN Object_LinkGoods_View AS LinkGoodsObject ON LinkGoodsObject.GoodsMainId = Object_Goods.Id
-                                                                AND LinkGoodsObject.ObjectId    = vbObjectId
-              LEFT JOIN Object_Goods_View AS ObjectGoodsView ON ObjectGoodsView.Id = LinkGoodsObject.GoodsId
-
-              LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = LinkGoodsObject.GoodsId
+           LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = Object_Goods_Retail.Id
 
 
         WHERE COALESCE(JuridicalSettings.isPriceCloseOrder, TRUE)  = FALSE
-          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0 OR
+          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = 0 OR COALESCE(0, 0) = 0 OR
                COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis());
-
+               
      ANALYSE _GoodsPriceAll;
 
      RETURN QUERY
      WITH GoodsPriceAll AS (
          SELECT
-              ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price)::Integer AS Ord,
+              ROW_NUMBER() OVER (PARTITION BY _GoodsPriceAll.GoodsId ORDER BY _GoodsPriceAll.Price, _GoodsPriceAll.ContractId)::Integer AS Ord,
               _GoodsPriceAll.GoodsId           AS GoodsId,
               _GoodsPriceAll.JuridicalId       AS JuridicalId,
               _GoodsPriceAll.ContractId        AS ContractId,
@@ -245,6 +253,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 18.03.20                                                                                     * оптимизация
  12.02.20                                                                                     *
  20.01.19                                                                                     *
  05.12.18                                                                                     *
