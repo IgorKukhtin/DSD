@@ -140,6 +140,11 @@ inherited OrderExternalItemJournalForm: TOrderExternalItemJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountSumm
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
