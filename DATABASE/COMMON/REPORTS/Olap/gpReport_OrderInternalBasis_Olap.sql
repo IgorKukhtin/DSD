@@ -1,20 +1,24 @@
 -- Function: gpReport_OrderInternalBasis_Olap ()
 
 DROP FUNCTION IF EXISTS gpReport_OrderInternalBasis_Olap (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_OrderInternalBasis_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_OrderInternalBasis_Olap (
     IN inStartDate          TDateTime ,  
     IN inEndDate            TDateTime ,
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
-    IN inFromId             Integer   ,    -- от кого 
+    IN inFromId             Integer   ,    -- от кого
+    IN inToId             Integer   ,    -- кому 
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (OperDate            TDateTime
              , DayOfWeekName       TVarChar
              , MonthName           TVarChar
-             , UnitCode            Integer
-             , UnitName            TVarChar
+             , FromCode            Integer
+             , FromName            TVarChar
+             , ToCode              Integer
+             , ToName              TVarChar
              , GoodsGroupNameFull  TVarChar
              , GoodsGroupName      TVarChar
              , GoodsId             Integer
@@ -55,17 +59,43 @@ BEGIN
          END IF;
     END IF;
 
+    -- ограничения по подразделениям
+    CREATE TEMP TABLE _tmpUnitFrom (UnitId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnitTo (UnitId Integer) ON COMMIT DROP;
+    -- от кого
+    IF inFromId <> 0
+    THEN
+        INSERT INTO _tmpUnitFrom (UnitId)
+           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup;
+    ELSE
+         INSERT INTO _tmpUnitFrom (UnitId)
+          SELECT Id FROM Object_Unit_View;
+    END IF;
+    -- кому
+    IF inToId <> 0
+    THEN
+        INSERT INTO _tmpUnitTo (UnitId)
+           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect_Object_Unit_byGroup;
+    ELSE
+         INSERT INTO _tmpUnitTo (UnitId)
+          SELECT Id FROM Object_Unit_View;
+    END IF;
+    -------
+
+    
     -- Результат
     RETURN QUERY
     WITH
      tmpMovement AS (SELECT Movement.Id        AS Id
                           , Movement.OperDate  AS OperDate
                           , 1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData))) AS DayCount
+                          , MovementLinkObject_From.ObjectId AS FromId
                      FROM Movement 
-                        INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                                     AND MovementLinkObject_From.ObjectId = inFromId
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                     ON MovementLinkObject_From.MovementId = Movement.Id
+                                                    AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                        INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MovementLinkObject_From.ObjectId
+
                         LEFT JOIN MovementBoolean AS MovementBoolean_Remains
                                                   ON MovementBoolean_Remains.MovementId = Movement.Id
                                                  AND MovementBoolean_Remains.DescId = zc_MovementBoolean_Remains()
@@ -84,8 +114,9 @@ BEGIN
                      )
      
      , tmpMI AS (SELECT Movement.Id           AS MovementId
+                      , Movement.FromId       AS FromId
                       , Movement.OperDate     AS OperDate
-                      , Movement.DayCount
+                      , Movement.DayCount     AS DayCount
                       , MovementItem.Id       AS MovementItemId
                       , MovementItem.ObjectId AS GoodsId
                       , MovementItem.Amount   AS Amount
@@ -122,6 +153,7 @@ BEGIN
 
      , tmpData AS (SELECT tmpMI.OperDate
                         , tmpMI.DayCount
+                        , tmpMI.FromId
                         , tmpMI.GoodsId
                         , COALESCE (MILinkObject_Receipt.ObjectId, 0)   AS ReceiptId
                         , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -159,30 +191,35 @@ BEGIN
                                                     ON MILinkObject_GoodsKind.MovementItemId = tmpMI.MovementItemId
                    GROUP BY tmpMI.OperDate
                           , tmpMI.DayCount
+                          , tmpMI.FromId
                           , tmpMI.GoodsId
                           , COALESCE (MILinkObject_Receipt.ObjectId, 0)
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
               )
 
      , tmpMI_Send AS (-- группируется Перемещение
-                       SELECT tmpMI.OperDate
-                            , tmpMI.GoodsId                          AS GoodsId
-                            , tmpMI.GoodsKindId                      AS GoodsKindId
+                       SELECT tmpMI.OperDate     AS OperDate
+                            , tmpMI.UnitId       AS UnitId
+                            , tmpMI.GoodsId      AS GoodsId
+                            , tmpMI.GoodsKindId  AS GoodsKindId
                             , SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
                        FROM (SELECT MIContainer.OperDate
-                                  , MIContainer.ObjectId_Analyzer                  AS GoodsId
+                                  , MIContainer.WhereObjectId_Analyzer     AS UnitId
+                                  , MIContainer.ObjectId_Analyzer          AS GoodsId
                                   , CASE -- !!!временно захардкодил!!!
                                          WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
                                               THEN 8338 -- морож.
                                          ELSE 0
-                                    END AS GoodsKindId
-                                  , SUM (MIContainer.Amount)                       AS Amount
+                                    END                                    AS GoodsKindId
+                                  , SUM (MIContainer.Amount)               AS Amount
                              FROM MovementItemContainer AS MIContainer
+                                  INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
                              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                AND MIContainer.DescId     = zc_MIContainer_Count()
                                AND MIContainer.MovementDescId = zc_Movement_Send()
-                               AND MIContainer.WhereObjectId_Analyzer = inFromId
+                               --AND MIContainer.WhereObjectId_Analyzer = inFromId
                              GROUP BY MIContainer.ObjectId_Analyzer, MIContainer.OperDate
+                                    , MIContainer.WhereObjectId_Analyzer
                                     , CASE -- !!!временно захардкодил!!!
                                            WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
                                                 THEN 8338 -- морож.
@@ -196,15 +233,18 @@ BEGIN
                                                   ON ObjectFloat_Weight.ObjectId = tmpMI.GoodsId
                                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                         GROUP BY tmpMI.OperDate
+                               , tmpMI.UnitId
                                , tmpMI.GoodsId
                                , tmpMI.GoodsKindId
                       )
 
       SELECT tmpData.OperDate
-           , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName
+           , (Number::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)   ::TVarChar AS DayOfWeekName
            , zfCalc_MonthName (DATE_TRUNC ('Month', tmpData.OperDate)) ::TVarChar AS MonthName
-           , Object_Unit.ObjectCode               AS UnitCode
-           , Object_Unit.ValueData                AS UnitName
+           , Object_From.ObjectCode               AS FromCode
+           , Object_From.ValueData                AS FromName
+           , Object_To.ObjectCode                 AS ToCode
+           , Object_To.ValueData                  AS ToName
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_GoodsGroup.ValueData                 AS GoodsGroupName
            , Object_Goods.Id                      AS GoodsId
@@ -239,6 +279,7 @@ BEGIN
              AS NUMERIC (16, 1))        :: TFloat AS DayCountForecast -- Ост. в днях (по пр.)
   
       FROM tmpData
+          LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
 
@@ -256,18 +297,21 @@ BEGIN
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpData.ReceiptId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
-                                                                        THEN inFromId
+          LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN tmpData.ReceiptId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                                                                        THEN tmpData.FromId
                                                                    WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                         THEN 8455 -- Склад специй
                                                                    ELSE 8439 -- Участок мясного сырья
                                                               END
+          --ограничения по подразделению кому
+          INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = Object_To.Id
 
-         LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpData.GoodsId
-                             AND tmpMI_Send.GoodsKindId = tmpData.GoodsKindId
-                             AND tmpMI_Send.OperDate    = tmpData.OperDate
+          LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpData.GoodsId
+                              AND tmpMI_Send.GoodsKindId = tmpData.GoodsKindId
+                              AND tmpMI_Send.OperDate    = tmpData.OperDate
+                              AND tmpMI_Send.UnitId      = tmpData.FromId
 
-         LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDate) AS tmpWeekDay ON 1=1
+          LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDate) AS tmpWeekDay ON 1=1
          ;
 
 END;
@@ -281,4 +325,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderInternalBasis_Olap (inStartDate:= '17.03.2020'::TDateTime, inEndDate:= '18.03.2020'::TDateTime, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 8447 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_OrderInternalBasis_Olap (inStartDate:= '17.03.2020'::TDateTime, inEndDate:= '18.03.2020'::TDateTime, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 8447, inToId:= 8447 , inSession:= zfCalc_UserAdmin())

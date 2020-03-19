@@ -24,14 +24,17 @@ type
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
     cxLabel5: TcxLabel;
-    edFromGroup: TcxButtonEdit;
-    GuidesFromGroup: TdsdGuides;
+    edUnitGroupFrom: TcxButtonEdit;
+    GuidesUnitGroupFrom: TdsdGuides;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GuidesGoodsGroup: TdsdGuides;
     cxLabel2: TcxLabel;
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
+    cxLabel1: TcxLabel;
+    edUnitGroupTo: TcxButtonEdit;
+    GuidesUnitGroupTo: TdsdGuides;
   private
     { Private declarations }
   public

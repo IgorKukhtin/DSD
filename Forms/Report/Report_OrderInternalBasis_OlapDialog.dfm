@@ -3,7 +3,7 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1074#1085'. '#1087#1086' '#1089#1099#1088#1100#1102' ('#1054#1051#1040#1055')>'
-  ClientHeight = 257
+  ClientHeight = 304
   ClientWidth = 346
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 43
-    Top = 219
+    Left = 42
+    Top = 266
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 217
-    Top = 219
+    Left = 216
+    Top = 266
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -65,9 +65,9 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   object cxLabel5: TcxLabel
     Left = 11
     Top = 55
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
   end
-  object edFromGroup: TcxButtonEdit
+  object edUnitGroupFrom: TcxButtonEdit
     Left = 11
     Top = 73
     Properties.Buttons = <
@@ -81,12 +81,12 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   end
   object cxLabel4: TcxLabel
     Left = 11
-    Top = 105
+    Top = 152
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 11
-    Top = 123
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -97,12 +97,12 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   end
   object cxLabel2: TcxLabel
     Left = 11
-    Top = 153
+    Top = 200
     Caption = #1058#1086#1074#1072#1088':'
   end
   object edGoods: TcxButtonEdit
     Left = 11
-    Top = 176
+    Top = 223
     Properties.Buttons = <
       item
         Default = True
@@ -112,14 +112,31 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
     TabOrder = 11
     Width = 318
   end
+  object cxLabel1: TcxLabel
+    Left = 11
+    Top = 103
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+  end
+  object edUnitGroupTo: TcxButtonEdit
+    Left = 11
+    Top = 121
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 318
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 136
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 240
-    Top = 140
+    Left = 239
+    Top = 187
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -189,7 +206,7 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
       item
         Name = 'FromGroupId'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroupFrom
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -197,7 +214,24 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
       item
         Name = 'FromGroupName'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroupFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToGroupId'
+        Value = Null
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ToGroupName'
+        Value = Null
+        Component = GuidesUnitGroupTo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -206,9 +240,9 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
     Left = 264
     Top = 12
   end
-  object GuidesFromGroup: TdsdGuides
+  object GuidesUnitGroupFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edFromGroup
+    LookupControl = edUnitGroupFrom
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -219,7 +253,7 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroupFrom
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -228,13 +262,13 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesFromGroup
+        Component = GuidesUnitGroupFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 64
+    Left = 176
     Top = 58
   end
   object GuidesGoodsGroup: TdsdGuides
@@ -264,8 +298,8 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 122
-    Top = 99
+    Left = 121
+    Top = 146
   end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
@@ -294,7 +328,38 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 149
+    Left = 103
+    Top = 196
+  end
+  object GuidesUnitGroupTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroupTo
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 128
+    Top = 114
   end
 end

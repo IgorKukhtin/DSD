@@ -57,17 +57,20 @@ type
     dxBarStatic: TdxBarStatic;
     pvGoodsKindName: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
-    edUnitGroup: TcxButtonEdit;
+    edUnitGroupFrom: TcxButtonEdit;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     cxLabel8: TcxLabel;
     edGoods: TcxButtonEdit;
-    GuidesUnitGroup: TdsdGuides;
+    GuidesUnitGroupFrom: TdsdGuides;
     GuidesGoodsGroup: TdsdGuides;
     GuidesGoods: TdsdGuides;
     cfPrice: TdsdPivotGridCalcFields;
     cfPricePartner: TdsdPivotGridCalcFields;
     cfPriceSaleReal: TdsdPivotGridCalcFields;
+    cxLabel5: TcxLabel;
+    edUnitGroupTo: TcxButtonEdit;
+    GuidesUnitGroupTo: TdsdGuides;
   private
   public
   end;

@@ -61,7 +61,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       Top = 7
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086'):'
     end
-    object edUnitGroup: TcxButtonEdit
+    object edUnitGroupFrom: TcxButtonEdit
       Left = 304
       Top = 5
       Properties.Buttons = <
@@ -118,7 +118,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     OptionsView.RowGrandTotalWidth = 336
     TabOrder = 1
     object pvMonthDate: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1052#1077#1089#1103#1094
       DataBinding.FieldName = 'MonthDate'
@@ -126,7 +126,8 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvDayOfWeekName: TcxDBPivotGridField
-      AreaIndex = 1
+      Area = faColumn
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
       DataBinding.FieldName = 'DayOfWeekName'
@@ -134,7 +135,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvOperDate: TcxDBPivotGridField
-      AreaIndex = 6
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
       DataBinding.FieldName = 'OperDate'
@@ -142,54 +143,72 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object pvGoodsGroupName: TcxDBPivotGridField
-      AreaIndex = 7
+      Area = faRow
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsGroupName'
+      Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsCode: TcxDBPivotGridField
+      Area = faRow
       AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1050#1086#1076' '#1090#1086#1074'.'
       DataBinding.FieldName = 'GoodsCode'
+      Visible = True
       Width = 50
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object pvGoodsName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 0
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1058#1086#1074#1072#1088
       DataBinding.FieldName = 'GoodsName'
       Visible = True
-      Width = 200
+      Width = 120
       UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
     end
     object pvGoodsKindName: TcxDBPivotGridField
-      AreaIndex = 3
+      Area = faRow
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
       DataBinding.FieldName = 'GoodsKindName'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvGoodsGroupNameFull: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
       DataBinding.FieldName = 'GoodsGroupNameFull'
+      Visible = True
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
-    object pvUnitName: TcxDBPivotGridField
-      AreaIndex = 5
+    object pvFromName: TcxDBPivotGridField
+      AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1055#1086#1076#1088#1087#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
-      DataBinding.FieldName = 'UnitName'
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
+      DataBinding.FieldName = 'FromName'
+      Visible = True
+      UniqueName = #1057#1086#1089#1090#1072#1074
+    end
+    object pvToName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
+      DataBinding.FieldName = 'ToName'
+      Visible = True
+      Width = 100
       UniqueName = #1057#1086#1089#1090#1072#1074
     end
     object pvAmount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 0
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1047#1072#1082#1072#1079' '#1092#1072#1082#1090
@@ -203,8 +222,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountSecond: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 4
+      AreaIndex = 7
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1044#1086#1079#1072#1082#1072#1079' '#1092#1072#1082#1090
@@ -218,8 +236,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountSend: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
+      AreaIndex = 6
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1055#1088#1080#1093#1086#1076' '#1092#1072#1082#1090
@@ -234,7 +251,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     end
     object pvAmountPartner: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 2
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1088'. '#1041#1045#1047' '#1101#1084#1091#1083'.'
@@ -247,8 +264,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmountRemains: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 0
+      AreaIndex = 5
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1085#1072#1095#1072#1083#1100#1085'.'
@@ -262,8 +278,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
     object pvAmount_calc: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 6
+      AreaIndex = 4
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1047#1072#1082#1072#1079' '#1088#1072#1089#1095#1077#1090#1085'.'
@@ -278,7 +293,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     end
     object pvAmountPartner_all: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 7
+      AreaIndex = 3
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1088#1072#1089#1095#1077#1090'. '#1048#1058#1054#1043
@@ -292,7 +307,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     end
     object pvAmountPartnerSecond: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 8
+      AreaIndex = 4
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1076#1086#1079#1072#1082#1072#1079
@@ -305,7 +320,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     end
     object pvAmountPartnerPrior: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 1
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1088'. '#1044#1051#1071' '#1101#1084#1091#1083'.'
@@ -347,6 +362,23 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
   end
+  object cxLabel5: TcxLabel
+    Left = 179
+    Top = 30
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091'):'
+  end
+  object edUnitGroupTo: TcxButtonEdit
+    Left = 304
+    Top = 29
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 215
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 120
@@ -379,7 +411,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
           'Width')
       end
       item
-        Component = GuidesUnitGroup
+        Component = GuidesUnitGroupFrom
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -580,7 +612,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         item
           Name = 'FromGroupId'
           Value = Null
-          Component = GuidesUnitGroup
+          Component = GuidesUnitGroupFrom
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -588,7 +620,24 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         item
           Name = 'FromGroupName'
           Value = Null
-          Component = GuidesUnitGroup
+          Component = GuidesUnitGroupFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToGroupId'
+          Value = Null
+          Component = GuidesUnitGroupTo
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToGroupName'
+          Value = Null
+          Component = GuidesUnitGroupTo
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -642,7 +691,15 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       item
         Name = 'inFromId'
         Value = Null
-        Component = GuidesUnitGroup
+        Component = GuidesUnitGroupFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = Null
+        Component = GuidesUnitGroupTo
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -685,6 +742,8 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <>
+    ExpandRow = 5
+    ExpandColumn = 4
     ColorRuleList = <>
     SummaryList = <>
     Left = 392
@@ -695,9 +754,9 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     Left = 360
     Top = 184
   end
-  object GuidesUnitGroup: TdsdGuides
+  object GuidesUnitGroupFrom: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnitGroup
+    LookupControl = edUnitGroupFrom
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -708,7 +767,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnitGroup
+        Component = GuidesUnitGroupFrom
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -717,13 +776,14 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnitGroup
+        Component = GuidesUnitGroupFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 384
+    Left = 440
+    Top = 65528
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'
@@ -817,5 +877,36 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     CalcFieldsType = cfDivision
     Left = 656
     Top = 312
+  end
+  object GuidesUnitGroupTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnitGroupTo
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 360
+    Top = 24
   end
 end
