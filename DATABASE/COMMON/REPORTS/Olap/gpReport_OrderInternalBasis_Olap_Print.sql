@@ -19,11 +19,12 @@ $BODY$
 BEGIN
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpReport (DayOfWeekName TVarChar, DayOfWeekNumber Integer, GoodsGroupNameFull TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, DayOfWeekName TVarChar, DayOfWeekNumber Integer, GoodsGroupNameFull TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, Amount TFloat) ON COMMIT DROP;
     
-    INSERT INTO _tmpReport (DayOfWeekName, DayOfWeekNumber, GoodsGroupNameFull, GoodsCode, GoodsName, GoodsKindId, GoodsKindName, Amount)
+    INSERT INTO _tmpReport (InvNumber, DayOfWeekName, DayOfWeekNumber, GoodsGroupNameFull, GoodsCode, GoodsName, GoodsKindId, GoodsKindName, Amount)
     
-         SELECT tmpReport.DayOfWeekName
+         SELECT tmpReport.InvNumber
+              , tmpReport.DayOfWeekName
               , tmpReport.DayOfWeekNumber
               , tmpReport.GoodsGroupNameFull
               , tmpReport.GoodsCode
@@ -33,12 +34,32 @@ BEGIN
               , tmpReport.Amount
          FROM gpReport_OrderInternalBasis_Olap (inStartDate, inEndDate, inGoodsGroupId, inGoodsId, inFromId, inToId, inSession) AS tmpReport
          WHERE COALESCE (tmpReport.Amount, 0) <> 0;
-
  
     -------
 
     OPEN Cursor1 FOR
+    SELECT STRING_AGG (DISTINCT tmp.InvNumber1, '; ') :: TVarChar AS InvNumber1
+         , STRING_AGG (DISTINCT tmp.InvNumber2, '; ') :: TVarChar AS InvNumber2
+         , STRING_AGG (DISTINCT tmp.InvNumber3, '; ') :: TVarChar AS InvNumber3
+         , STRING_AGG (DISTINCT tmp.InvNumber4, '; ') :: TVarChar AS InvNumber4
+         , STRING_AGG (DISTINCT tmp.InvNumber5, '; ') :: TVarChar AS InvNumber5
+         , STRING_AGG (DISTINCT tmp.InvNumber6, '; ') :: TVarChar AS InvNumber6
+         , STRING_AGG (DISTINCT tmp.InvNumber7, '; ') :: TVarChar AS InvNumber7
+    FROM (SELECT CASE WHEN _tmpReport.DayOfWeekNumber = 1 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber1
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 2 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber2
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 3 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber3
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 4 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber4
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 5 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber5
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 6 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber6
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 7 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber7
+          FROM _tmpReport
+          ) AS tmp
+    ;
+    RETURN NEXT Cursor1;
+
+    OPEN Cursor2 FOR
     SELECT _tmpReport.GoodsGroupNameFull
+         , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1_fr --"морож."  freeze
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2_fr --"морож."  freeze
@@ -58,6 +79,7 @@ BEGIN
     FROM _tmpReport
     GROUP BY _tmpReport.GoodsGroupNameFull
            , _tmpReport.GoodsName
+           , _tmpReport.GoodsCode
     HAVING SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0 
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
@@ -73,10 +95,7 @@ BEGIN
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
     ;
-    RETURN NEXT Cursor1;
-
-    OPEN Cursor2 FOR
-    SELECT inStartDate AS StartDate, inEndDate AS EndDate;
+    
     RETURN NEXT Cursor2;
 
 END;

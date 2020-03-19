@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderInternalBasis_Olap (
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (OperDate            TDateTime
+             , InvNumber           TVarChar
              , DayOfWeekName       TVarChar
              , DayOfWeekNumber     Integer
              , MonthName           TVarChar
@@ -90,6 +91,7 @@ BEGIN
     WITH
      tmpMovement AS (SELECT Movement.Id        AS Id
                           , Movement.OperDate  AS OperDate
+                          , Movement.InvNumber
                           , 1 + EXTRACT (DAY FROM (zfConvert_DateTimeWithOutTZ (MovementDate_OperDateEnd.ValueData) - zfConvert_DateTimeWithOutTZ (MovementDate_OperDateStart.ValueData))) AS DayCount
                           , MovementLinkObject_From.ObjectId AS FromId
                      FROM Movement 
@@ -118,6 +120,7 @@ BEGIN
      , tmpMI AS (SELECT Movement.Id           AS MovementId
                       , Movement.FromId       AS FromId
                       , Movement.OperDate     AS OperDate
+                      , Movement.InvNumber    AS InvNumber
                       , Movement.DayCount     AS DayCount
                       , MovementItem.Id       AS MovementItemId
                       , MovementItem.ObjectId AS GoodsId
@@ -154,6 +157,7 @@ BEGIN
                              )
 
      , tmpData AS (SELECT tmpMI.OperDate
+                        , STRING_AGG (tmpMI.InvNumber :: TVarChar, ';') :: TVarChar AS InvNumber
                         , tmpMI.DayCount
                         , tmpMI.FromId
                         , tmpMI.GoodsId
@@ -241,6 +245,7 @@ BEGIN
                       )
 
       SELECT tmpData.OperDate
+           , tmpData.InvNumber ::TVarChar
            , (tmpWeekDay.Number::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)   ::TVarChar AS DayOfWeekName
            , (tmpWeekDay.Number)                                                  ::Integer  AS DayOfWeekNumber
            , zfCalc_MonthName (DATE_TRUNC ('Month', tmpData.OperDate)) ::TVarChar AS MonthName
