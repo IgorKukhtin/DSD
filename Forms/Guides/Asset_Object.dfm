@@ -492,6 +492,70 @@ object Asset_ObjectForm: TAsset_ObjectForm
           Component = ClientDataSet
           ComponentItem = 'ContainerId'
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SerialNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'SerialNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PassportNumber'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PassportNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Release'
+          Value = 'NULL'
+          Component = ClientDataSet
+          ComponentItem = 'Release'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MakerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarModelName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'CarModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodUse'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'PeriodUse'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
