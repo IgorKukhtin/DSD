@@ -71,6 +71,11 @@ type
     cxLabel5: TcxLabel;
     edUnitGroupTo: TcxButtonEdit;
     GuidesUnitGroupTo: TdsdGuides;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;

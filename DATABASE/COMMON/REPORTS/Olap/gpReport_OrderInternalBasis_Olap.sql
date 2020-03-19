@@ -9,11 +9,12 @@ CREATE OR REPLACE FUNCTION gpReport_OrderInternalBasis_Olap (
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
     IN inFromId             Integer   ,    -- от кого
-    IN inToId             Integer   ,    -- кому 
+    IN inToId               Integer   ,    -- кому 
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (OperDate            TDateTime
              , DayOfWeekName       TVarChar
+             , DayOfWeekNumber     Integer
              , MonthName           TVarChar
              , FromCode            Integer
              , FromName            TVarChar
@@ -24,6 +25,7 @@ RETURNS TABLE (OperDate            TDateTime
              , GoodsId             Integer
              , GoodsCode           Integer
              , GoodsName           TVarChar
+             , GoodsKindId         Integer
              , GoodsKindName       TVarChar
              , Amount              TFloat -- Заказ на склад
              , AmountSecond        TFloat -- Дозаказ на склад
@@ -239,7 +241,8 @@ BEGIN
                       )
 
       SELECT tmpData.OperDate
-           , (Number::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)   ::TVarChar AS DayOfWeekName
+           , (tmpWeekDay.Number::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)   ::TVarChar AS DayOfWeekName
+           , (tmpWeekDay.Number)                                                  ::Integer  AS DayOfWeekNumber
            , zfCalc_MonthName (DATE_TRUNC ('Month', tmpData.OperDate)) ::TVarChar AS MonthName
            , Object_From.ObjectCode               AS FromCode
            , Object_From.ValueData                AS FromName
@@ -250,6 +253,7 @@ BEGIN
            , Object_Goods.Id                      AS GoodsId
            , Object_Goods.ObjectCode              AS GoodsCode
            , Object_Goods.ValueData               AS GoodsName
+           , Object_GoodsKind.Id                  AS GoodsKindId
            , Object_GoodsKind.ValueData           AS GoodsKindName
 
 

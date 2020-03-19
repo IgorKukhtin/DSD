@@ -1,7 +1,8 @@
  -- Function: gpReport_GoodsMI_SendOnPrice ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SendOnPrice (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SendOnPrice (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_SendOnPrice (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SendOnPrice (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SendOnPrice (
     IN inStartDate         TDateTime ,
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SendOnPrice (
     IN inIsGoods           Boolean   , --
     IN inIsGoodsKind       Boolean   , --
     IN inIsMovement        Boolean   , --
+    In inIsSubjectDoc      Boolean   , --
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
@@ -333,7 +335,7 @@ BEGIN
      FROM (SELECT tmpContainer.MovementId
                 , tmpContainer.FromId
                 , tmpContainer.ToId
-                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ')                  AS SubjectDocName
+                , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') END :: TVarChar  AS SubjectDocName
                 , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
                 , tmpContainer.GoodsKindId
                 , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
@@ -573,9 +575,9 @@ BEGIN
                              , tmpContainer.ToId
                              , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END
                              , tmpContainer.GoodsKindId
-
                              , _tmpGoods.InfoMoneyId
                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
+                             , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') END
 
                     ) AS tmpOperationGroup
 
@@ -627,4 +629,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_GoodsMI_SendOnPrice (inStartDate:= '01.11.2017', inEndDate:= '01.11.2017', inFromId:= 8459, inToId:= 0, inGoodsGroupId:= 0, inIsTradeMark:= TRUE, inIsGoods:= TRUE, inIsGoodsKind:= TRUE, inIsMovement:= FALSE, inSession:= zfCalc_UserAdmin()); -- Склад Реализации
--- select * from gpReport_GoodsMI_SendOnPrice (inStartDate := ('13.02.2020')::TDateTime , inEndDate := ('13.02.2020')::TDateTime , inFromId := 8411 , inToId := 0 , inGoodsGroupId := 0 , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsMovement := 'False' ,  inSession := '5');
+-- select * from gpReport_GoodsMI_SendOnPrice (inStartDate := ('13.02.2020')::TDateTime , inEndDate := ('13.02.2020')::TDateTime , inFromId := 8411 , inToId := 0 , inGoodsGroupId := 0 , inIsTradeMark := 'False' , inIsGoods := 'False' , inIsGoodsKind := 'False' , inIsMovement := 'False' , inIsSubjectDoc:= 'False',  inSession := '5');

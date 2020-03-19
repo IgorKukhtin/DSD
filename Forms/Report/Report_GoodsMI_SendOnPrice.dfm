@@ -1263,6 +1263,14 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
     TabOrder = 9
     Width = 107
   end
+  object cbSubjectDoc: TcxCheckBox [6]
+    Left = 581
+    Top = 87
+    Caption = #1087#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1102
+    Properties.ReadOnly = False
+    TabOrder = 10
+    Width = 107
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -1709,6 +1717,14 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
           DataType = ftBoolean
           ParamType = ptInputOutput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSubjectDoc'
+          Value = Null
+          Component = cbSubjectDoc
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1797,6 +1813,14 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSubjectDoc'
+        Value = Null
+        Component = cbSubjectDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 112
     Top = 192
@@ -1833,7 +1857,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbcbTradeMark'
         end
         item
           Visible = True
@@ -1846,6 +1870,10 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
         item
           Visible = True
           ItemName = 'bbPartionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbcbSubjectDoc'
         end
         item
           Visible = True
@@ -1888,7 +1916,7 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
       Action = ExecuteDialog
       Category = 0
     end
-    object bb: TdxBarControlContainerItem
+    object bbcbTradeMark: TdxBarControlContainerItem
       Caption = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
       Category = 0
       Hint = #1087#1086' '#1058#1086#1088#1075#1086#1074#1099#1084' '#1084#1072#1088#1082#1072#1084
@@ -1915,6 +1943,13 @@ inherited Report_GoodsMI_SendOnPriceForm: TReport_GoodsMI_SendOnPriceForm
       Hint = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
       Visible = ivAlways
       Control = cbMovement
+    end
+    object bbcbSubjectDoc: TdxBarControlContainerItem
+      Caption = #1087#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1102
+      Category = 0
+      Hint = #1087#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1102
+      Visible = ivAlways
+      Control = cbSubjectDoc
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -3,7 +3,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
-  ClientHeight = 290
+  ClientHeight = 284
   ClientWidth = 303
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 49
-    Top = 248
+    Top = 247
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object cxButton2: TcxButton
     Left = 162
-    Top = 248
+    Top = 247
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -54,7 +54,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object edGoodsGroup: TcxButtonEdit
     Left = 9
-    Top = 210
+    Top = 209
     Properties.Buttons = <
       item
         Default = True
@@ -66,7 +66,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object cxLabel1: TcxLabel
     Left = 9
-    Top = 188
+    Top = 187
     Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
   end
   object cxLabel6: TcxLabel
@@ -81,12 +81,12 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object cxLabel4: TcxLabel
     Left = 10
-    Top = 141
+    Top = 140
     Caption = #1050#1086#1084#1091':'
   end
   object edUnitTo: TcxButtonEdit
     Left = 9
-    Top = 161
+    Top = 160
     Properties.Buttons = <
       item
         Default = True
@@ -98,12 +98,12 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object cxLabel8: TcxLabel
     Left = 9
-    Top = 98
+    Top = 97
     Caption = #1054#1090' '#1082#1086#1075#1086':'
   end
   object edUnitFrom: TcxButtonEdit
     Left = 9
-    Top = 118
+    Top = 117
     Properties.Buttons = <
       item
         Default = True
@@ -145,6 +145,14 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
     TabOrder = 15
     Width = 150
   end
+  object cbSubjectDoc: TcxCheckBox
+    Left = 136
+    Top = 86
+    Caption = #1087#1086' '#1054#1089#1085#1086#1074#1072#1085#1080#1102
+    Properties.ReadOnly = False
+    TabOrder = 16
+    Width = 150
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -152,7 +160,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 32
-    Top = 239
+    Top = 238
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -164,8 +172,8 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 96
-    Top = 75
+    Left = 112
+    Top = 27
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -175,6 +183,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'EndDate'
@@ -182,6 +191,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupId'
@@ -189,6 +199,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = GuidesGoodsGroup
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'GoodsGroupName'
@@ -197,6 +208,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitToId'
@@ -204,6 +216,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = GuidesUnitTo
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitToName'
@@ -212,6 +225,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitFromId'
@@ -219,6 +233,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = GuidesUnitFrom
         ComponentItem = 'Key'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'UnitFromName'
@@ -227,6 +242,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isTradeMark'
@@ -234,6 +250,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = cbTradeMark
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isGoods'
@@ -241,6 +258,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = cbGoods
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isGoodsKind'
@@ -248,6 +266,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'isMovement'
@@ -255,6 +274,15 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         Component = cbMovement
         DataType = ftBoolean
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSubjectDoc'
+        Value = Null
+        Component = cbSubjectDoc
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 248
     Top = 239
@@ -264,6 +292,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
     LookupControl = edGoodsGroup
     FormNameParam.Value = 'TGoodsGroupForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -274,6 +303,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -282,15 +312,17 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 136
-    Top = 191
+    Top = 190
   end
   object GuidesUnitTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitTo
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -301,6 +333,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -309,15 +342,17 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 144
-    Top = 136
+    Top = 135
   end
   object GuidesUnitFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitFrom
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -328,6 +363,7 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end
       item
         Name = 'TextValue'
@@ -336,8 +372,9 @@ object Report_GoodsMI_SendOnPriceDialogForm: TReport_GoodsMI_SendOnPriceDialogFo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 148
-    Top = 87
+    Left = 68
+    Top = 126
   end
 end

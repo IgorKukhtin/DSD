@@ -36,6 +36,7 @@ type
     cbGoods: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;
     cbMovement: TcxCheckBox;
+    cbSubjectDoc: TcxCheckBox;
   private
     { Private declarations }
   public
