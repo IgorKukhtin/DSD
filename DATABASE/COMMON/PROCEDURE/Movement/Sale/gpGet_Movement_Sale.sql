@@ -43,6 +43,8 @@ $BODY$
   DECLARE vbContractId      Integer;
   DECLARE vbContractName    TVarChar;
   DECLARE vbContractTagName TVarChar;
+  DECLARE vbMovementId_Transport Integer;
+  DECLARE vbInvNumber_Transport  TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -112,6 +114,44 @@ BEGIN
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN Object as Object_Currency ON Object_Currency.Id = zc_Enum_Currency_Basis();
      ELSE
+
+         -- Поиск - отдельно для скорости
+         vbMovementId_Transport:= (WITH tmpMF_MovementItemId AS (SELECT MF.ValueData :: Integer AS ValueData FROM MovementFloat AS MF WHERE MF.MovementId = inMovementId AND MF.DescId = zc_MovementFloat_MovementItemId())
+                                      , tmpMI_reestr AS (SELECT MI.MovementId, MI.isErased
+                                                         FROM MovementItem AS MI
+                                                         WHERE MI.Id = (SELECT tmpMF_MovementItemId.ValueData FROM tmpMF_MovementItemId)
+                                                        )
+                           , tmpMLM_Transport_reestr AS (SELECT MLM.MovementChildId
+                                                         FROM MovementLinkMovement AS MLM
+                                                         WHERE MLM.MovementId = (SELECT tmpMI_reestr.MovementId FROM tmpMI_reestr WHERE tmpMI_reestr.isErased = FALSE)
+                                                           AND MLM.DescId     = zc_MovementLinkMovement_Transport()
+                                                        )
+                                  , tmpMLM_Transport AS (SELECT MLM.MovementChildId
+                                                         FROM MovementLinkMovement AS MLM
+                                                         WHERE MLM.MovementId = inMovementId
+                                                           AND MLM.DescId     = zc_MovementLinkMovement_Transport()
+                                                        )
+                                   SELECT COALESCE (tmpMLM_Transport_reestr.MovementChildId, tmpMLM_Transport.MovementChildId)
+                                   FROM (SELECT inMovementId AS MovementId) AS tmp
+                                        LEFT JOIN tmpMLM_Transport_reestr ON 1=1
+                                        LEFT JOIN tmpMLM_Transport        ON 1=1
+                                  );
+         --
+         vbInvNumber_Transport := (SELECT '№ ' || Movement.InvNumber || ' от ' || zfConvert_DateToString (Movement.OperDate)
+                                       ||' ('  || Object_Car.ValueData || ' / ' || Object_PersonalDriver.ValueData || ')'
+                                   FROM Movement
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                                     ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                        LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                                     ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                                        LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+                                   WHERE Movement.Id = vbMovementId_Transport
+                                  );
+         --RAISE EXCEPTION 'Ошибка.<%>', vbInvNumber_Transport;
+    
 
          -- Поиск Договора - отдельно для скорости
          SELECT View_Contract_InvNumber.ContractId    	    AS ContractId
@@ -188,8 +228,8 @@ BEGIN
                , Movement_TransportGoods.InvNumber              AS InvNumber_TransportGoods
                , COALESCE (Movement_TransportGoods.OperDate, Movement.OperDate) AS OperDate_TransportGoods
 
-               , Movement_Transport.Id                     AS MovementId_Transport
-               , ('№ ' || Movement_Transport.InvNumber || ' от ' || Movement_Transport.OperDate  :: Date :: TVarChar ||' ('||Object_Car.ValueData ||' / '|| Object_PersonalDriver.ValueData ||')') :: TVarChar AS InvNumber_Transport
+               , vbMovementId_Transport AS MovementId_Transport
+               , vbInvNumber_Transport  AS InvNumber_Transport
 
 
                , Object_ReestrKind.Id             		    AS ReestrKindId
@@ -311,35 +351,12 @@ BEGIN
                                               AND MovementLinkMovement_TransportGoods.DescId = zc_MovementLinkMovement_TransportGoods()
                 LEFT JOIN Movement AS Movement_TransportGoods ON Movement_TransportGoods.Id = MovementLinkMovement_TransportGoods.MovementChildId
 
-
-                -- реестр
-                LEFT JOIN MovementFloat AS MovementFloat_MovementItemId
-                                        ON MovementFloat_MovementItemId.MovementId = Movement.Id
-                                       AND MovementFloat_MovementItemId.DescId     = zc_MovementFloat_MovementItemId()
-                LEFT JOIN MovementItem AS MI_reestr 
-                                       ON MI_reestr.Id       = MovementFloat_MovementItemId.ValueData :: Integer
-                                      AND MI_reestr.isErased = FALSE
-                -- П/л (реестр)
-                LEFT JOIN MovementLinkMovement AS MLM_Transport_reestr
-                                               ON MLM_Transport_reestr.MovementId = MI_reestr.MovementId
-                                              AND MLM_Transport_reestr.DescId     = zc_MovementLinkMovement_Transport()
-                --LEFT JOIN Movement AS Movement_Transport_reestr ON Movement_Transport_reestr.Id = MLM_Transport_reestr.MovementChildId
-       
+                -- !!! без этого работает в 20 раз дольше!!!
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Transport
-                                               ON MovementLinkMovement_Transport.MovementId = Movement.Id
-                                              AND MovementLinkMovement_Transport.DescId = zc_MovementLinkMovement_Transport()
-                                              
-                LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
-
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                             ON MovementLinkObject_Car.MovementId = Movement_Transport.Id
-                                            AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                             ON MovementLinkObject_PersonalDriver.MovementId = Movement_Transport.Id
-                                            AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-                LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+                                               ON MovementLinkMovement_Transport.MovementId = NULL -- Movement.Id
+                                              AND MovementLinkMovement_Transport.DescId     = zc_MovementLinkMovement_Transport()
+                LEFT JOIN Movement AS Movement_Transport ON Movement_Transport.Id = NULL -- COALESCE (MLM_Transport_reestr.MovementChildId, MovementLinkMovement_Transport.MovementChildId)
+                -- !!! без этого работает в 20 раз дольше!!!
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ReestrKind
                                              ON MovementLinkObject_ReestrKind.MovementId = Movement.Id
@@ -387,8 +404,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TFloat, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

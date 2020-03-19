@@ -2,6 +2,10 @@ CREATE OR REPLACE FUNCTION zc_Container_Count() RETURNS integer AS $BODY$BEGIN R
 INSERT INTO ContainerDesc(Code, ItemName)
   SELECT 'zc_Container_Count', 'Остатки количественного учета' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_Count');
 
+CREATE OR REPLACE FUNCTION zc_Container_CountCount() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_CountCount'); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO ContainerDesc(Code, ItemName)
+  SELECT 'zc_Container_CountCount', 'Остатки количественного учета батонов' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_CountCount');
+
 CREATE OR REPLACE FUNCTION zc_Container_CountSupplier() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ContainerDesc WHERE Code = 'zc_Container_CountSupplier'); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO ContainerDesc(Code, ItemName)
   SELECT 'zc_Container_CountSupplier', 'Остатки количественного учета - долги поставщику' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_CountSupplier');

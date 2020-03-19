@@ -377,10 +377,10 @@ BEGIN
                             , Movement.InvNumber
                             , Movement.OperDate
                             , MovementLinkObject_Member.ObjectId    AS MemberId
-                            , MovementDate_OperDateStart.ValueData  AS OperDateStart
-                            , MovementDate_OperDateEnd.ValueData    AS OperDateEnd
-                            , MovementDate_BeginDateStart.ValueData AS BeginDateStart
-                            , MovementDate_BeginDateEnd.ValueData   AS BeginDateEnd
+                            , MovementDate_OperDateStart.ValueData  :: TIMESTAMP AS OperDateStart
+                            , MovementDate_OperDateEnd.ValueData    :: TIMESTAMP AS OperDateEnd
+                            , MovementDate_BeginDateStart.ValueData :: TIMESTAMP AS BeginDateStart
+                            , MovementDate_BeginDateEnd.ValueData   :: TIMESTAMP AS BeginDateEnd
                        FROM Movement
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
                                                          ON MovementLinkObject_Member.MovementId = Movement.Id

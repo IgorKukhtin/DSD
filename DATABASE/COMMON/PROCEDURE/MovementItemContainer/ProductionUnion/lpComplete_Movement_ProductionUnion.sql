@@ -238,8 +238,8 @@ BEGIN
 
      -- заполняем таблицу - количественные Master(приход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_pr (MovementItemId
-                         , MIContainerId_To, ContainerId_GoodsTo, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
-                         , OperCount
+                         , MIContainerId_To, MIContainerId_count, ContainerId_GoodsTo, ContainerId_count, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
+                         , OperCount, OperCountCount
                          , InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
                          , UnitId_Item, StorageId_Item
@@ -248,7 +248,9 @@ BEGIN
         SELECT _tmp.MovementItemId
 
              , 0 AS MIContainerId_To
+             , 0 AS MIContainerId_count
              , 0 AS ContainerId_GoodsTo
+             , 0 AS ContainerId_count
              , _tmp.GoodsId
              , _tmp.GoodsKindId
              , _tmp.GoodsKindId_complete
@@ -257,6 +259,7 @@ BEGIN
              , _tmp.PartionGoodsDate
 
              , _tmp.OperCount
+             , _tmp.OperCountCount
 
                -- Управленческие назначения
              , _tmp.InfoMoneyDestinationId
@@ -289,6 +292,7 @@ BEGIN
                    , Movement.OperDate AS PartionGoodsDate
 
                    , MovementItem.Amount AS OperCount
+                   , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
 
                   -- Управленческие назначения
                   , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
@@ -314,6 +318,10 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                               ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Count.DescId         = zc_MIFloat_Count()
 
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -357,7 +365,7 @@ BEGIN
      -- заполняем таблицу - количественные Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemChild (MovementItemId_Parent, MovementItemId
                               , ContainerId_GoodsFrom, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
-                              , OperCount
+                              , OperCount, OperCountCount
                               , InfoMoneyDestinationId, InfoMoneyId
                               , BusinessId_From
                               , UnitId_Item, PartionGoodsId_Item
@@ -387,6 +395,7 @@ BEGIN
                    , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
 
                    , MovementItem.Amount AS OperCount
+                   , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
 
                      -- Управленческие назначения
                    , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
@@ -415,6 +424,10 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                     ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                   LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                               ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Count.DescId         = zc_MIFloat_Count()
 
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
@@ -493,6 +506,7 @@ BEGIN
 
                -- !!!или подбор партий!!!
              , COALESCE (tmpContainer.Amount, _tmp.OperCount) AS OperCount
+             , _tmp.OperCountCount                            AS OperCountCount
 
                -- Управленческие назначения
              , _tmp.InfoMoneyDestinationId
@@ -661,7 +675,7 @@ END IF;
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-     -- определяется ContainerId_GoodsFrom для Child(расход)-элементы количественного учета
+     -- 1.1. определяется ContainerId_GoodsFrom для Child(расход)-элементы количественного учета
      UPDATE _tmpItemChild SET ContainerId_GoodsFrom = CASE WHEN _tmpItemChild.ContainerId_GoodsFrom > 0 THEN _tmpItemChild.ContainerId_GoodsFrom
                                                       ELSE
                                                       lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
@@ -678,20 +692,41 @@ END IF;
                                                                                          , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                           )
                                                       END;
-     -- определяется ContainerId_GoodsTo для Master(приход)-элементы количественного учета
+     -- 1.2. определяется ContainerId_count для Child(расход)-Остатки количественного учета батонов
+     UPDATE _tmpItemChild SET ContainerId_count = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()
+                                                                        , inParentId          := _tmpItemChild.ContainerId_GoodsFrom
+                                                                        , inObjectId          := _tmpItemChild.GoodsId
+                                                                        , inJuridicalId_basis := NULL
+                                                                        , inBusinessId        := NULL
+                                                                        , inObjectCostDescId  := NULL
+                                                                        , inObjectCostId      := NULL
+                                                                         )
+     WHERE _tmpItemChild.OperCountCount <> 0;
+
+     -- 2.1. определяется ContainerId_GoodsTo для Master(приход)-элементы количественного учета
      UPDATE _tmpItem_pr SET ContainerId_GoodsTo = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
-                                                                                  , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN _tmpItem_pr.UnitId_Item ELSE vbUnitId_To END
-                                                                                  , inCarId                  := NULL
-                                                                                  , inMemberId               := vbMemberId_To
-                                                                                  , inInfoMoneyDestinationId := _tmpItem_pr.InfoMoneyDestinationId
-                                                                                  , inGoodsId                := _tmpItem_pr.GoodsId
-                                                                                  , inGoodsKindId            := _tmpItem_pr.GoodsKindId
-                                                                                  , inIsPartionCount         := _tmpItem_pr.isPartionCount
-                                                                                  , inPartionGoodsId         := _tmpItem_pr.PartionGoodsId
-                                                                                  , inAssetId                := _tmpItem_pr.AssetId
-                                                                                  , inBranchId               := vbBranchId_To
-                                                                                  , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
-                                                                                   );
+                                                                                     , inUnitId                 := CASE WHEN vbMemberId_To <> 0 THEN _tmpItem_pr.UnitId_Item ELSE vbUnitId_To END
+                                                                                     , inCarId                  := NULL
+                                                                                     , inMemberId               := vbMemberId_To
+                                                                                     , inInfoMoneyDestinationId := _tmpItem_pr.InfoMoneyDestinationId
+                                                                                     , inGoodsId                := _tmpItem_pr.GoodsId
+                                                                                     , inGoodsKindId            := _tmpItem_pr.GoodsKindId
+                                                                                     , inIsPartionCount         := _tmpItem_pr.isPartionCount
+                                                                                     , inPartionGoodsId         := _tmpItem_pr.PartionGoodsId
+                                                                                     , inAssetId                := _tmpItem_pr.AssetId
+                                                                                     , inBranchId               := vbBranchId_To
+                                                                                     , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
+                                                                                      );
+     -- 2.1. определяется ContainerId_count для Master(приход)-Остатки количественного учета батонов
+     UPDATE _tmpItem_pr SET ContainerId_count = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()
+                                                                      , inParentId          := _tmpItem_pr.ContainerId_GoodsTo
+                                                                      , inObjectId          := _tmpItem_pr.GoodsId
+                                                                      , inJuridicalId_basis := NULL
+                                                                      , inBusinessId        := NULL
+                                                                      , inObjectCostDescId  := NULL
+                                                                      , inObjectCostId      := NULL
+                                                                       )
+     WHERE _tmpItem_pr.OperCountCount <> 0;
 
      -- самое интересное: заполняем таблицу - суммовые Child(расход)-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      IF inMovementId IN (2296516, 2296563) -- !!!захардкодил исправление ошибки - 31.07.2015!!!
@@ -833,25 +868,45 @@ END IF;
 
      -- формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
      UPDATE _tmpItem_pr SET MIContainerId_To =
-             lpInsertUpdate_MovementItemContainer (ioId             := 0
-                                                 , inDescId         := zc_MIContainer_Count()
-                                                 , inMovementDescId := vbMovementDescId
-                                                 , inMovementId     := inMovementId
-                                                 , inMovementItemId := _tmpItem_pr.MovementItemId
-                                                 , inParentId       := NULL
-                                                 , inContainerId    := _tmpItem_pr.ContainerId_GoodsTo            -- был опеределен выше
-                                                 , inAccountId      := 0                                       -- нет счета
-                                                 , inAnalyzerId              := vbWhereObjectId_Analyzer_From  -- нет аналитики, но для ускорения отчетов будет Подраделение "От кого" или...
-                                                 , inObjectId_Analyzer       := _tmpItem_pr.GoodsId               -- Товар
-                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To    -- Подраделение или...
-                                                 , inContainerId_Analyzer    := 0                              -- количественный Контейнер-Мастер (для прихода не надо)
-                                                 , inObjectIntId_Analyzer    := _tmpItem_pr.GoodsKindId           -- вид товара
-                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From  -- Подраделение "От кого"
-                                                 , inContainerIntId_Analyzer := 0                              -- Контейнер "товар"
-                                                 , inAmount         := _tmpItem_pr.OperCount
-                                                 , inOperDate       := vbOperDate
-                                                 , inIsActive       := TRUE
-                                                  );
+             lpInsertUpdate_MovementItemContainer (ioId                      := 0
+                                                 , inDescId                  := zc_MIContainer_Count()
+                                                 , inMovementDescId          := vbMovementDescId
+                                                 , inMovementId              := inMovementId
+                                                 , inMovementItemId          := _tmpItem_pr.MovementItemId
+                                                 , inParentId                := NULL
+                                                 , inContainerId             := _tmpItem_pr.ContainerId_GoodsTo -- был опеределен выше
+                                                 , inAccountId               := 0                               -- нет счета
+                                                 , inAnalyzerId              := vbWhereObjectId_Analyzer_From   -- нет аналитики, но для ускорения отчетов будет Подраделение "От кого" или...
+                                                 , inObjectId_Analyzer       := _tmpItem_pr.GoodsId             -- Товар
+                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To     -- Подраделение или...
+                                                 , inContainerId_Analyzer    := 0                               -- количественный Контейнер-Мастер (для прихода не надо)
+                                                 , inObjectIntId_Analyzer    := _tmpItem_pr.GoodsKindId         -- вид товара
+                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From   -- Подраделение "От кого"
+                                                 , inContainerIntId_Analyzer := 0                               -- Контейнер "товар"
+                                                 , inAmount                  := _tmpItem_pr.OperCount
+                                                 , inOperDate                := vbOperDate
+                                                 , inIsActive                := TRUE
+                                                  )
+        , MIContainerId_count = CASE WHEN _tmpItem_pr.OperCountCount = 0 THEN 0 ELSE
+             lpInsertUpdate_MovementItemContainer (ioId                      := 0
+                                                 , inDescId                  := zc_MIContainer_CountCount()
+                                                 , inMovementDescId          := vbMovementDescId
+                                                 , inMovementId              := inMovementId
+                                                 , inMovementItemId          := _tmpItem_pr.MovementItemId
+                                                 , inParentId                := NULL
+                                                 , inContainerId             := _tmpItem_pr.ContainerId_count   -- был опеределен выше
+                                                 , inAccountId               := 0                               -- нет счета
+                                                 , inAnalyzerId              := vbWhereObjectId_Analyzer_From   -- нет аналитики, но для ускорения отчетов будет Подраделение "От кого" или...
+                                                 , inObjectId_Analyzer       := _tmpItem_pr.GoodsId             -- Товар
+                                                 , inWhereObjectId_Analyzer  := vbWhereObjectId_Analyzer_To     -- Подраделение или...
+                                                 , inContainerId_Analyzer    := 0                               -- количественный Контейнер-Мастер (для прихода не надо)
+                                                 , inObjectIntId_Analyzer    := _tmpItem_pr.GoodsKindId         -- вид товара
+                                                 , inObjectExtId_Analyzer    := vbWhereObjectId_Analyzer_From   -- Подраделение "От кого"
+                                                 , inContainerIntId_Analyzer := 0                               -- Контейнер "товар"
+                                                 , inAmount                  := _tmpItem_pr.OperCountCount
+                                                 , inOperDate                := vbOperDate
+                                                 , inIsActive                := TRUE
+                                                  ) END;
      -- формируются Проводки для количественного учета - От кого
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementDescId, MovementId, MovementItemId, ContainerId --, ParentId, Amount, OperDate, IsActive)
                                        , AccountId, AnalyzerId, ObjectId_Analyzer, WhereObjectId_Analyzer, ContainerId_Analyzer, ObjectIntId_Analyzer, ObjectExtId_Analyzer
@@ -863,16 +918,35 @@ END IF;
             , CASE WHEN tmpGoods_ReWork.GoodsId > 0 THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
             , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
             , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
-            , _tmpItem_pr.ContainerId_GoodsTo            AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
+            , _tmpItem_pr.ContainerId_GoodsTo         AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
             , _tmpItemChild.GoodsKindId               AS ObjectIntId_Analyzer   -- вид товара
             , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому"
-            , _tmpItem_pr.MIContainerId_To               AS ParentId
+            , _tmpItem_pr.MIContainerId_To            AS ParentId
             , -1 * _tmpItemChild.OperCount
             , vbOperDate
             , FALSE
        FROM _tmpItemChild
             JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent
             LEFT JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = _tmpItem_pr.GoodsId
+
+      UNION ALL
+       SELECT 0, zc_MIContainer_CountCount() AS DescId, vbMovementDescId, inMovementId, _tmpItemChild.MovementItemId
+            , _tmpItemChild.ContainerId_count
+            , 0                                       AS AccountId              -- нет счета
+            , CASE WHEN tmpGoods_ReWork.GoodsId > 0 THEN zc_Enum_AnalyzerId_ReWork() ELSE vbWhereObjectId_Analyzer_To END AS AnalyzerId -- есть аналитика + для ускорения отчетов будет Подраделение "Кому" или...
+            , _tmpItemChild.GoodsId                   AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer_From           AS WhereObjectId_Analyzer -- Подраделение или...
+            , _tmpItem_pr.ContainerId_count           AS ContainerId_Analyzer   -- количественный Контейнер-Мастер (т.е. из прихода)
+            , _tmpItemChild.GoodsKindId               AS ObjectIntId_Analyzer   -- вид товара
+            , vbWhereObjectId_Analyzer_To             AS ObjectExtId_Analyzer   -- Подраделение "Кому"
+            , NULL                                    AS ParentId               -- !!!
+            , -1 * _tmpItemChild.OperCountCount
+            , vbOperDate
+            , FALSE
+       FROM _tmpItemChild
+            JOIN _tmpItem_pr ON _tmpItem_pr.MovementItemId = _tmpItemChild.MovementItemId_Parent
+            LEFT JOIN tmpGoods_ReWork ON tmpGoods_ReWork.GoodsId = _tmpItem_pr.GoodsId
+       WHERE _tmpItemChild.OperCountCount <> 0
       ;
 
 

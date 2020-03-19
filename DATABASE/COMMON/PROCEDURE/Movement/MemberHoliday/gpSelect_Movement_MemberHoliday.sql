@@ -85,8 +85,8 @@ BEGIN
            , ObjectDate_DateIn.ValueData           AS DateIn
            , CASE WHEN COALESCE (ObjectDate_DateOut.ValueData, zc_DateEnd()) = zc_DateEnd() THEN NULL ELSE ObjectDate_DateOut.ValueData END :: TDateTime AS DateOut
            
-           , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData - MovementDate_OperDateStart.ValueData)   + 1) :: TFloat AS Day_work
-           , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData - MovementDate_BeginDateStart.ValueData) + 1) :: TFloat AS Day_holiday
+           , (DATE_PART ('DAY', MovementDate_OperDateEnd.ValueData  :: TIMESTAMP - MovementDate_OperDateStart.ValueData  :: TIMESTAMP) + 1) :: TFloat AS Day_work
+           , (DATE_PART ('DAY', MovementDate_BeginDateEnd.ValueData :: TIMESTAMP - MovementDate_BeginDateStart.ValueData :: TIMESTAMP) + 1) :: TFloat AS Day_holiday
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_MemberHoliday()
