@@ -341,8 +341,20 @@ begin
         ReleaseMutex(MutexGoods);
       end;
 
-      if ListGoodsCDS.Active and ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) and
-        not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
+      if not ListGoodsCDS.Active then
+      begin
+        ShowMessage('Ошибка открытия прайсов поставщиков.');
+        Exit;
+      end;
+
+      if not ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) then
+      begin
+        ListGoodsCDS.Close;
+        ShowMessage('Ошибка медикамент не найден в прайсах поставщиков.');
+        Exit;
+      end;
+
+      if ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
       begin
         if  ListGoodsCDS.FieldByName('ExpirationDate').AsDateTime < IncYear(Date, 1) then
         begin
@@ -365,6 +377,7 @@ begin
     end;
   finally
     ReleaseMutex(MutexDiffCDS);
+    if not ListGoodsCDS.Active then PostMessage(Handle, WM_CLOSE, 0, 0);
   end;
 end;
 

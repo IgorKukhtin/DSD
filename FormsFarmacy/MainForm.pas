@@ -1037,7 +1037,7 @@ uses
 
 procedure TMainForm.actReport_Analysis_Remains_SellingExecute(Sender: TObject);
 begin
-  with TReport_Analysis_Remains_SellingForm.Create(nil) do
+  with TReport_Analysis_Remains_SellingForm.Create(Self) do
   try
      Show;
   finally
@@ -1047,7 +1047,7 @@ end;
 procedure TMainForm.actReport_ImplementationPlanEmployeeExecute(
   Sender: TObject);
 begin
-  with TReport_ImplementationPlanEmployeeForm.Create(nil) do
+  with TReport_ImplementationPlanEmployeeForm.Create(Self) do
   try
      Show;
   finally
@@ -1057,7 +1057,7 @@ end;
 procedure TMainForm.actReport_IncomeConsumptionBalanceExecute(Sender: TObject);
 begin
   inherited;
-  with TReport_IncomeConsumptionBalanceForm.Create(nil) do
+  with TReport_IncomeConsumptionBalanceForm.Create(Self) do
   try
      Show;
   finally
@@ -1066,7 +1066,7 @@ end;
 
 procedure TMainForm.actSaveDataExecute(Sender: TObject);
 begin
-  with TdmUnloadUploadData.Create(nil) do
+  with TdmUnloadUploadData.Create(Self) do
      try
        UnloadData;
      finally
@@ -1106,7 +1106,7 @@ end;
 
 procedure TMainForm.miRepriceClick(Sender: TObject);
 begin
-  with TRepriceUnitForm.Create(nil) do
+  with TRepriceUnitForm.Create(Self) do
   try
      Show;
   finally
@@ -1116,7 +1116,7 @@ end;
 
 procedure TMainForm.miReprice_testClick(Sender: TObject);
 begin
-  with TRepriceUnit_testForm.Create(nil) do
+  with TRepriceUnit_testForm.Create(Self) do
   try
      Show;
   finally
@@ -1166,7 +1166,7 @@ end;
 
 procedure TMainForm.miRepriceChangeClick(Sender: TObject);
 begin
-  with TReprice—hangeRetailForm.Create(nil) do
+  with TReprice—hangeRetailForm.Create(Self) do
   try
      Show;
   finally

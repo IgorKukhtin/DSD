@@ -93,7 +93,7 @@ type
     cbGoods: TcxCheckBox;
     cbGoodsKind: TcxCheckBox;
     bbGoods: TdxBarControlContainerItem;
-    bb: TdxBarControlContainerItem;
+    bbcbTradeMark: TdxBarControlContainerItem;
     dxBarControlContainerItem1: TdxBarControlContainerItem;
     cbMovement: TcxCheckBox;
     bbPartionGoods: TdxBarControlContainerItem;
@@ -106,6 +106,8 @@ type
     OperDatePartner: TcxGridDBColumn;
     Summ_pl: TcxGridDBColumn;
     Summ_pl_real: TcxGridDBColumn;
+    cbSubjectDoc: TcxCheckBox;
+    bbcbSubjectDoc: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

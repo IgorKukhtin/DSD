@@ -831,7 +831,8 @@ uses
   Report_EntryGoodsMovementDialog in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovementDialog.pas' {Report_EntryGoodsMovementDialogForm: TParentForm},
   Report_EntryGoodsMovement in '..\..\FormsFarmacy\Report\Report_EntryGoodsMovement.pas' {Report_EntryGoodsMovementForm: TParentForm},
   DriverSun in '..\..\FormsFarmacy\Guides\DriverSun.pas' {DriverSunForm: TParentForm},
-  DriverSunEdit in '..\..\FormsFarmacy\Guides\DriverSunEdit.pas' {DriverSunEditForm: TParentForm};
+  DriverSunEdit in '..\..\FormsFarmacy\Guides\DriverSunEdit.pas' {DriverSunEditForm: TParentForm},
+  Report_MoneyBoxSun in '..\..\FormsFarmacy\Report\Report_MoneyBoxSun.pas' {Report_MoneyBoxSunForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

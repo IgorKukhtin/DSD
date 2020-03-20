@@ -4,9 +4,8 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
   ClientWidth = 1020
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -276
   ExplicitWidth = 1036
-  ExplicitHeight = 433
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -175,6 +174,11 @@ inherited OrderExternalJournalChoiceForm: TOrderExternalJournalChoiceForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCountSecond
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = FromName
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False

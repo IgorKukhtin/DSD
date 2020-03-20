@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxButtonEdit, Vcl.ExtCtrls, cxSplitter, cxDropDownEdit,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarBuiltInMenu, cxNavigator;
+  dxBarBuiltInMenu, cxNavigator, cxCurrencyEdit;
 
 type
   TRepriceUnitShedulerForm = class(TAncestorDBGridForm)

@@ -10,7 +10,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, dxmdaset, cxCheckBox, cxContainer, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCheckComboBox, cxLabel, cxSpinEdit, cxVGrid,
-  cxInplaceContainer, DataModul;
+  cxInplaceContainer, DataModul, dxSkinsCore;
 
 type
   TLookAndFillSettingsForm = class(TForm)
@@ -91,15 +91,20 @@ begin
   erContentFontSize.Properties.Value := dmMain.cxContentStyle.Font.Size;
   FSkinResources := TStringList.Create;
   FSkinNames := TStringList.Create;
-  dxSkinsPopulateSkinResources(HInstance, FSkinResources, FSkinNames);
-  cxSkinComboBox.Properties.Items.Add('Flat');
-  cxSkinComboBox.Properties.Items.Add('Standard');
-  cxSkinComboBox.Properties.Items.Add('UltraFlat');
-  cxSkinComboBox.Properties.Items.Add('Office11');
-  cxSkinComboBox.Properties.Items.Add('Native');
-  for I := 0 to FSkinNames.Count - 1 do
-      cxSkinComboBox.Properties.Items.Add(FSkinNames[i]);
-  cxSkinComboBox.Text := dmMain.cxLookAndFeelController.SkinName;
+  try
+    dxSkinsPopulateSkinResources(HInstance, FSkinResources, FSkinNames);
+    cxSkinComboBox.Properties.Items.Add('Flat');
+    cxSkinComboBox.Properties.Items.Add('Standard');
+    cxSkinComboBox.Properties.Items.Add('UltraFlat');
+    cxSkinComboBox.Properties.Items.Add('Office11');
+    cxSkinComboBox.Properties.Items.Add('Native');
+    for I := 0 to FSkinNames.Count - 1 do
+        cxSkinComboBox.Properties.Items.Add(FSkinNames[i]);
+    cxSkinComboBox.Text := dmMain.cxLookAndFeelController.SkinName;
+  finally
+    FSkinResources.Free;
+    FSkinNames.Free;
+  end;
 end;
 
 end.

@@ -1,4 +1,4 @@
-unit Report_SUNSaleDates;
+unit Report_MoneyBoxSun;
 
 interface
 
@@ -28,11 +28,8 @@ uses
   cxGridBandedTableView, cxGridDBBandedTableView;
 
 type
-  TReport_SUNSaleDatesForm = class(TAncestorReportForm)
-    cxLabel3: TcxLabel;
-    ceUnit: TcxButtonEdit;
+  TReport_MoneyBoxSunForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
-    GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
@@ -44,23 +41,13 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     actRefreshJuridical: TdsdDataSetRefresh;
-    actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
     UnitName: TcxGridDBColumn;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
-    Summa: TcxGridDBColumn;
-    AmountSend: TcxGridDBColumn;
-    SummaSend: TcxGridDBColumn;
-    AmountCheck: TcxGridDBColumn;
-    SummaCheck: TcxGridDBColumn;
-    AmountSendTheir: TcxGridDBColumn;
-    SummaSendTheir: TcxGridDBColumn;
-    AmountLoss: TcxGridDBColumn;
-    SummaLoss: TcxGridDBColumn;
-    actMoneyBoxSun: TdsdOpenForm;
-    bbMoneyBoxSun: TdxBarButton;
+    UnitCode: TcxGridDBColumn;
+    SummaMoneyBox: TcxGridDBColumn;
+    SummaMoneyBoxQuite: TcxGridDBColumn;
+    SummaMoneyBoxUse: TcxGridDBColumn;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public
@@ -68,7 +55,7 @@ type
   end;
 
 var
-  Report_SUNSaleDatesForm: TReport_SUNSaleDatesForm;
+  Report_MoneyBoxSunForm: TReport_MoneyBoxSunForm;
 
 implementation
 
@@ -76,5 +63,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_SUNSaleDatesForm)
+  RegisterClass(TReport_MoneyBoxSunForm)
 end.
