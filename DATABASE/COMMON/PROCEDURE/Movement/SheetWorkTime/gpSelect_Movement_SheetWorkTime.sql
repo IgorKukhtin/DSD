@@ -1,4 +1,4 @@
--- Function: gpSelect_SheetWorkTime_Period()
+ -- Function: gpSelect_SheetWorkTime_Period()
 
 -- DROP FUNCTION gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
 

@@ -276,7 +276,7 @@ BEGIN
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
                          , ContainerId_Goods, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate
-                         , OperCount, OperSumm
+                         , OperCount, OperCountCount, OperSumm
                          , InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId
                          , UnitId_Item, StorageId_Item, UnitId_Partion, Price_Partion
@@ -305,7 +305,9 @@ BEGIN
 
                             , COALESCE (MIFloat_ContainerId.ValueData, 0) AS ContainerId
 
-                            , MovementItem.Amount AS OperCount
+                            , MovementItem.Amount                   AS OperCount
+                            , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
+
                             , CASE WHEN vbOperDate = '30.06.2015' AND MovementItem.Amount <> 0 THEN CAST (COALESCE (MIFloat_Summ.ValueData, 0) / MovementItem.Amount AS NUMERIC (16, 4)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price_Partion
                             , COALESCE (MIFloat_Summ.ValueData, 0) AS OperSumm
 
@@ -347,6 +349,9 @@ BEGIN
                             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_Fuel ON View_InfoMoney_Fuel.InfoMoneyId = zc_Enum_InfoMoney_20401()
                                                                                   AND Object.DescId                   = zc_Object_Fuel()
 
+                            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_Count.DescId         = zc_MIFloat_Count()
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -441,6 +446,7 @@ BEGIN
              , _tmp.PartionGoodsDate
 
              , (_tmp.OperCount)
+             , (_tmp.OperCountCount)
              , (_tmp.OperSumm)
 
                -- Управленческие назначения
@@ -573,9 +579,19 @@ BEGIN
                                                                                 , inAccountId              := NULL -- эта аналитика нужна для "товар в пути"
                                                                                  )
      WHERE _tmpItem.ContainerId_Goods = 0;
+     -- определяется ContainerId_count для количественного учета батонов
+     UPDATE _tmpItem SET ContainerId_count = lpInsertFind_Container (inContainerDescId   := zc_Container_CountCount()
+                                                                   , inParentId          := _tmpItem.ContainerId_Goods
+                                                                   , inObjectId          := _tmpItem.GoodsId
+                                                                   , inJuridicalId_basis := NULL
+                                                                   , inBusinessId        := NULL
+                                                                   , inObjectCostDescId  := NULL
+                                                                   , inObjectCostId      := NULL
+                                                                    )
+     WHERE _tmpItem.OperCountCount <> 0;
 
      -- заполняем таблицу - количественный расчетный остаток на конец vbOperDate, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим), т.к. один и тот же товар может быть введен несколько раз то привязываемся к MAX (_tmpItem.MovementItemId)
-     INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCount_find)
+     INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, ContainerId_count, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCountCount, OperCount_find, OperCountCount_find)
         WITH tmpContainerList AS (SELECT Container.*
                                   FROM (SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId = vbUnitId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() AND vbUnitId <> 0
                                        UNION
@@ -603,6 +619,11 @@ BEGIN
                                     AND COALESCE (Object_PartionGoods.ObjectCode, 0) = 0 -- !!!т.е. без ОС!!!
                                     AND (_tmpGoods_Complete_Inventory.GoodsId > 0 OR vbIsGoodsGroup = FALSE)
                                  )
+     , tmpContainerList_count AS (SELECT Container.*
+                                  FROM tmpContainerList
+                                       JOIN Container ON Container.ParentId = tmpContainerList.Id
+                                                     AND Container.DescId   = zc_Container_CountCount()
+                                 )
                , tmpContainer AS (SELECT tmpContainerList.Id       AS ContainerId_Goods
                                        , tmpContainerList.ObjectId AS GoodsId
                                        , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
@@ -623,20 +644,70 @@ BEGIN
                                                    ELSE 0
                                               END) <> 0
                                  )
+         , tmpContainer_count AS (SELECT tmpContainerList.ParentId AS ContainerId_Goods
+                                       , tmpContainerList.Id       AS ContainerId_count
+                                       , tmpContainerList.ObjectId AS GoodsId
+                                       , tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
+                                       , SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                                        THEN ABS (MIContainer.Amount)
+                                                   ELSE 0
+                                              END) AS OperCount_find -- здесь только движение до конца месяца
+                                  FROM tmpContainerList_count AS tmpContainerList
+                                       LEFT JOIN MovementItemContainer AS MIContainer
+                                                                       ON MIContainer.ContainerId = tmpContainerList.Id
+                                                                      AND MIContainer.OperDate > vbOperDate
+                                  GROUP BY tmpContainerList.ParentId
+                                         , tmpContainerList.Id
+                                         , tmpContainerList.ObjectId
+                                         , tmpContainerList.Amount
+                                  HAVING tmpContainerList.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+                                      OR SUM (CASE WHEN MIContainer.OperDate BETWEEN (vbOperDate + INTERVAL '1 DAY') AND (DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
+                                                        THEN ABS (MIContainer.Amount)
+                                                   ELSE 0
+                                              END) <> 0
+                                 )
         -- Результат
-        SELECT COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId
-             , tmpContainer.ContainerId_Goods
-             , tmpContainer.GoodsId
+        SELECT COALESCE (tmpMI_find.MovementItemId, 0)            AS MovementItemId
+             , tmpContainer.ContainerId_Goods                     AS ContainerId_Goods
+             , COALESCE (tmpContainer_count.ContainerId_count, 0) AS ContainerId_count
+             , tmpContainer.GoodsId                               AS GoodsId
              , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
              , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
-             , tmpContainer.OperCount
-             , tmpContainer.OperCount_find
+
+             , tmpContainer.OperCount                             AS OperCount
+             , COALESCE (tmpContainer_count.OperCount, 0)         AS OperCountCount
+             , tmpContainer.OperCount_find                        AS OperCount_find
+             , COALESCE (tmpContainer_count.OperCount_find, 0)    AS OperCountCount_find
         FROM tmpContainer
+             LEFT JOIN (SELECT tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId, MIN (tmpContainer_count.ContainerId_count) AS ContainerId_count, SUM (tmpContainer_count.OperCount) AS OperCount, SUM (tmpContainer_count.OperCount_find) AS OperCount_find FROM tmpContainer_count GROUP BY tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId
+                       ) AS tmpContainer_count ON tmpContainer_count.ContainerId_Goods = tmpContainer.ContainerId_Goods
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
                        ) AS tmpMI_find ON tmpMI_find.ContainerId_Goods = tmpContainer.ContainerId_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = tmpContainer.GoodsId AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyGroup ON ObjectLink_InfoMoneyGroup.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
              LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+
+       UNION ALL
+        SELECT COALESCE (tmpMI_find.MovementItemId, 0)            AS MovementItemId
+             , tmpContainer_count.ContainerId_Goods               AS ContainerId_Goods
+             , COALESCE (tmpContainer_count.ContainerId_count, 0) AS ContainerId_count
+             , tmpContainer_count.GoodsId                         AS GoodsId
+             , COALESCE (ObjectLink_InfoMoneyGroup.ChildObjectId, 0)
+             , COALESCE (ObjectLink_InfoMoneyDestination.ChildObjectId, 0)
+
+             , 0                                                  AS OperCount
+             , COALESCE (tmpContainer_count.OperCount, 0)         AS OperCountCount
+             , 0                                             AS OperCount_find
+             , COALESCE (tmpContainer_count.OperCount_find, 0)    AS OperCountCount_find
+        FROM (SELECT tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId, MIN (tmpContainer_count.ContainerId_count) AS ContainerId_count, SUM (tmpContainer_count.OperCount) AS OperCount, SUM (tmpContainer_count.OperCount_find) AS OperCount_find FROM tmpContainer_count GROUP BY tmpContainer_count.ContainerId_Goods, tmpContainer_count.GoodsId
+             ) AS tmpContainer_count
+             LEFT JOIN tmpContainer ON tmpContainer.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
+             LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
+                       ) AS tmpMI_find ON tmpMI_find.ContainerId_Goods = tmpContainer_count.ContainerId_Goods
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney ON ObjectLink_Goods_InfoMoney.ObjectId = tmpContainer_count.GoodsId AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyGroup ON ObjectLink_InfoMoneyGroup.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+             LEFT JOIN ObjectLink AS ObjectLink_InfoMoneyDestination ON ObjectLink_InfoMoneyDestination.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId AND ObjectLink_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+        WHERE tmpContainer.ContainerId_Goods IS NULL
      ;
 
      -- заполняем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
@@ -702,14 +773,17 @@ BEGIN
        ;
 
      -- добавляем из суммовой расчетный остаток в количественный расчетный остаток те товары которых нет, и пробуем найти MovementItemId (что бы расчетный остаток связать с фактическим)
-     INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCount_find)
+     INSERT INTO _tmpRemainsCount (MovementItemId, ContainerId_Goods, ContainerId_count, GoodsId, InfoMoneyGroupId, InfoMoneyDestinationId, OperCount, OperCountCount, OperCount_find, OperCountCount_find)
         SELECT COALESCE (tmpMI_find.MovementItemId, 0) AS MovementItemId
              , _tmpRemainsSumm.ContainerId_Goods
+             , 0 AS ContainerId_count
              , _tmpRemainsSumm.GoodsId
              , _tmpRemainsSumm.InfoMoneyGroupId
              , _tmpRemainsSumm.InfoMoneyDestinationId
              , 0 AS OperCount
+             , 0 AS OperCountCount
              , 0 AS OperCount_find
+             , 0 AS OperCountCount_find
         FROM _tmpRemainsSumm
              LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
              LEFT JOIN (SELECT MAX (_tmpItem.MovementItemId) AS MovementItemId, _tmpItem.ContainerId_Goods FROM _tmpItem GROUP BY _tmpItem.ContainerId_Goods
@@ -876,7 +950,25 @@ BEGIN
             , TRUE
        FROM _tmpItem
             LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.MovementItemId = _tmpItem.MovementItemId
-       WHERE (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) <> 0;
+       WHERE (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) <> 0
+       
+      UNION ALL
+       SELECT 0, zc_MIContainer_CountCount() AS DescId, vbMovementDescId, inMovementId, _tmpItem.MovementItemId
+            , _tmpItem.ContainerId_count
+            , 0                                       AS AccountId              -- нет счета
+            , 0                                       AS AnalyzerId             -- нет аналитики
+            , _tmpItem.GoodsId                        AS ObjectId_Analyzer      -- Товар
+            , vbWhereObjectId_Analyzer                AS WhereObjectId_Analyzer -- Подраделение или...
+            , 0                                       AS ContainerId_Analyzer   -- !!!нет!!!
+            , _tmpItem.GoodsKindId                    AS ObjectIntId_Analyzer   -- вид товара
+            , 0                                       AS ObjectExtId_Analyzer   -- !!!нет!!!
+            , 0                                       AS ParentId
+            , _tmpItem.OperCountCount - COALESCE (_tmpRemainsCount.OperCountCount, 0)
+            , vbOperDate
+            , TRUE
+       FROM _tmpItem
+            LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.MovementItemId = _tmpItem.MovementItemId
+       WHERE (_tmpItem.OperCountCount - COALESCE (_tmpRemainsCount.OperCountCount, 0)) <> 0;
 
 
 
@@ -1870,3 +1962,18 @@ where Container.Id = tmp.Id
 -- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 1902144, inIsLastComplete:= FALSE, inSession:= zc_Enum_Process_Auto_PrimeCost() :: TVarChar)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')
 -- SELECT * FROM gpReComplete_Movement_Inventory (inMovementId:= 14590084, inSession:= '5')
+
+/*
+select *
+from
+(select x1 .containerId , x2 .containerId
+, coalesce (amount1, 0) as amount1, coalesce (amount2, 0) as amount2
+from (select containerId, sum (Amount) as amount1 from _MIContainer_20_03_2020_test group by containerId) as x1 
+full join (select containerId, sum (Amount) as amount2  from MovementItemContainer 
+where MovementId = 15999936 
+-- and DescId <> zc_MIContainer_CountCount()
+group by containerId) as x2
+on x1 .containerId = x2 .containerId
+) as x11
+where amount1 <> amount2
+*/

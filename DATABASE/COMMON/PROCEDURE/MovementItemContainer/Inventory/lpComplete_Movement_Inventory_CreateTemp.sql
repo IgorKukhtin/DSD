@@ -14,7 +14,7 @@ BEGIN
      CREATE TEMP TABLE _tmpGoods_Complete_Inventory (GoodsId Integer) ON COMMIT DROP;
 
      -- таблица - количественный остаток
-     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat, OperCount_find TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, ContainerId_count Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperCount TFloat, OperCountCount TFloat, OperCount_find TFloat, OperCountCount_find TFloat) ON COMMIT DROP;
      -- таблица - суммовой остаток
      CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, OperSumm TFloat, InfoMoneyId Integer, InfoMoneyId_Detail Integer) ON COMMIT DROP;
 
@@ -25,8 +25,8 @@ BEGIN
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
-                               , OperCount TFloat, OperSumm TFloat
+                               , ContainerId_Goods Integer, ContainerId_count Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCountCount TFloat, OperSumm TFloat
                                , InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer
                                , UnitId_Item Integer, StorageId_Item Integer, UnitId_Partion Integer, Price_Partion TFloat

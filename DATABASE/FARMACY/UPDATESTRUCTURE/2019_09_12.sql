@@ -35,8 +35,8 @@ group by DATE_TRUNC ('DAY', OperDate), EXTRACT (DOW FROM OperDate)
 SELECT OperDate, case when OperDate_d = 0 then 7 else OperDate_d  end as OperDate_d , count(*)
 FROM (select distinct DATE_TRUNC ('DAY', OperDate) AS OperDate, EXTRACT (DOW FROM OperDate) AS OperDate_d
            , pid, query_start, query 
-      FROM ResourseProtocol 
-         join ResourseItemProtocol on ParentId = ResourseProtocol .Id and state = 'active' and client_addr ilike '%172.17%' 
+      FROM ResourseProtocol_arc as ResourseProtocol 
+         join ResourseItemProtocol_arc as ResourseItemProtocol on ParentId = ResourseProtocol .Id and state = 'active' and client_addr ilike '%172.17%' 
       where ResourseProtocol .OperDate between CURRENT_DATE - INTERVAL '60 DAY' and CURRENT_DATE - INTERVAL '0 DAY' 
       and EXTRACT (DOW FROM OperDate) not in (6, 0)
       and EXTRACT (HOUR FROM query_start) >=10 and and EXTRACT (HOUR FROM query_start) <= 17

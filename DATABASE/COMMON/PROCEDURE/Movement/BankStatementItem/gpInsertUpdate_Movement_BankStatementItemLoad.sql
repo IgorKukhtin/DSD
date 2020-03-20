@@ -106,7 +106,7 @@ BEGIN
 
 
     -- 6. Найти документ zc_Movement_BankStatementItem номеру, комментарию, ОКПО и р/c
-    SELECT Movement.Id INTO vbMovementItemId
+    /*SELECT Movement.Id INTO vbMovementItemId
     FROM Movement
          JOIN MovementString AS MovementString_OKPO
                              ON MovementString_OKPO.MovementId =  Movement.Id
@@ -126,7 +126,7 @@ BEGIN
       AND Movement.InvNumber                   = inDocNumber
       AND MovementString_OKPO.ValueData        = inOKPO
       AND MovementString_BankAccount.ValueData = inBankAccount
-      AND MovementString_Comment.ValueData     = inComment;
+      AND MovementString_Comment.ValueData     = inComment;*/
     --
     IF COALESCE(vbMovementItemId, 0) = 0 THEN
        -- Если такого документа нет - создать его
