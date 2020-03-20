@@ -38,14 +38,30 @@ BEGIN
     -------
 
     OPEN Cursor1 FOR
-    SELECT STRING_AGG (DISTINCT tmp.InvNumber1, '; ') :: TVarChar AS InvNumber1
+    SELECT MAX (tmp.DayOfWeekName1) :: TVarChar AS DayOfWeekName1
+         , MAX (tmp.DayOfWeekName2) :: TVarChar AS DayOfWeekName2
+         , MAX (tmp.DayOfWeekName3) :: TVarChar AS DayOfWeekName3
+         , MAX (tmp.DayOfWeekName4) :: TVarChar AS DayOfWeekName4
+         , MAX (tmp.DayOfWeekName5) :: TVarChar AS DayOfWeekName5
+         , MAX (tmp.DayOfWeekName6) :: TVarChar AS DayOfWeekName6
+         , MAX (tmp.DayOfWeekName7) :: TVarChar AS DayOfWeekName7
+         
+         , STRING_AGG (DISTINCT tmp.InvNumber1, '; ') :: TVarChar AS InvNumber1
          , STRING_AGG (DISTINCT tmp.InvNumber2, '; ') :: TVarChar AS InvNumber2
          , STRING_AGG (DISTINCT tmp.InvNumber3, '; ') :: TVarChar AS InvNumber3
          , STRING_AGG (DISTINCT tmp.InvNumber4, '; ') :: TVarChar AS InvNumber4
          , STRING_AGG (DISTINCT tmp.InvNumber5, '; ') :: TVarChar AS InvNumber5
          , STRING_AGG (DISTINCT tmp.InvNumber6, '; ') :: TVarChar AS InvNumber6
          , STRING_AGG (DISTINCT tmp.InvNumber7, '; ') :: TVarChar AS InvNumber7
-    FROM (SELECT CASE WHEN _tmpReport.DayOfWeekNumber = 1 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber1
+    FROM (SELECT CASE WHEN _tmpReport.DayOfWeekNumber = 1 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName1
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 2 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName2
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 3 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName3
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 4 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName4
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 5 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName5
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 6 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName6
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 7 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName7
+               
+               , CASE WHEN _tmpReport.DayOfWeekNumber = 1 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber1
                , CASE WHEN _tmpReport.DayOfWeekNumber = 2 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber2
                , CASE WHEN _tmpReport.DayOfWeekNumber = 3 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber3
                , CASE WHEN _tmpReport.DayOfWeekNumber = 4 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber4
@@ -54,6 +70,13 @@ BEGIN
                , CASE WHEN _tmpReport.DayOfWeekNumber = 7 THEN _tmpReport.InvNumber ELSE NULL END :: TVarChar AS InvNumber7
           FROM _tmpReport
           ) AS tmp
+  /*  GROUP BY tmp.DayOfWeekName1 :: TVarChar
+           , tmp.DayOfWeekName2 :: TVarChar
+           , tmp.DayOfWeekName3 :: TVarChar
+           , tmp.DayOfWeekName4 :: TVarChar
+           , tmp.DayOfWeekName5 :: TVarChar
+           , tmp.DayOfWeekName6 :: TVarChar
+           , tmp.DayOfWeekName7 :: TVarChar*/
     ;
     RETURN NEXT Cursor1;
 
@@ -61,39 +84,41 @@ BEGIN
     SELECT _tmpReport.GoodsGroupNameFull
          , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6_fr --"морож."  freeze
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7_fr --"морож."  freeze
+         , _tmpReport.DayOfWeekName
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6_fr --"морож."  freeze
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7_fr --"морож."  freeze
       
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7 --"охл."
     FROM _tmpReport
     GROUP BY _tmpReport.GoodsGroupNameFull
            , _tmpReport.GoodsName
            , _tmpReport.GoodsCode
-    HAVING SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0 
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND _tmpReport.GoodsKindId = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
-        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND _tmpReport.GoodsKindId <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+           , _tmpReport.DayOfWeekName
+    HAVING SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0 
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
+        OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
     ;
     
     RETURN NEXT Cursor2;

@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpReport_OrderInternalBasis_Olap (
 )
 RETURNS TABLE (OperDate            TDateTime
              , InvNumber           TVarChar
+             , DayOfWeekName_Full  TVarChar
              , DayOfWeekName       TVarChar
              , DayOfWeekNumber     Integer
              , MonthName           TVarChar
@@ -243,11 +244,19 @@ BEGIN
                                , tmpMI.GoodsId
                                , tmpMI.GoodsKindId
                       )
+       , tmpListDate AS (SELECT tmp.OperDate
+                              , tmpWeekDay.Number
+                              , ROW_NUMBER()OVER (ORDER BY tmp.OperDate) AS Num_day
+                         FROM (SELECT generate_series(inStartDate, inStartDate +interval '6 Day', '1 day' ::interval) AS OperDate) AS tmp
+                               LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1
+                        )
+
 
       SELECT tmpData.OperDate
            , tmpData.InvNumber ::TVarChar
-           , (tmpWeekDay.Number::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)   ::TVarChar AS DayOfWeekName
-           , (tmpWeekDay.Number)                                                  ::Integer  AS DayOfWeekNumber
+           , (tmpListDate.Num_day::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)    ::TVarChar AS DayOfWeekName_Full
+           , (tmpListDate.Num_day::TVarChar ||' '||tmpWeekDay.DayOfWeekName)         ::TVarChar AS DayOfWeekName
+           , (tmpListDate.Num_day)                                                   ::Integer  AS DayOfWeekNumber
            , zfCalc_MonthName (DATE_TRUNC ('Month', tmpData.OperDate)) ::TVarChar AS MonthName
            , Object_From.ObjectCode               AS FromCode
            , Object_From.ValueData                AS FromName
@@ -321,6 +330,7 @@ BEGIN
                               AND tmpMI_Send.UnitId      = tmpData.FromId
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDate) AS tmpWeekDay ON 1=1
+          LEFT JOIN tmpListDate ON tmpListDate.Number = tmpWeekDay.Number
          ;
 
 END;

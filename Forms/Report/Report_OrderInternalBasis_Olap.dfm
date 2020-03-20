@@ -125,12 +125,12 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
-    object pvDayOfWeekName: TcxDBPivotGridField
+    object pvDayOfWeekName_full: TcxDBPivotGridField
       Area = faColumn
       AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1044#1077#1085#1100' '#1085#1077#1076#1077#1083#1080
-      DataBinding.FieldName = 'DayOfWeekName'
+      DataBinding.FieldName = 'DayOfWeekName_full'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
@@ -901,10 +901,10 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

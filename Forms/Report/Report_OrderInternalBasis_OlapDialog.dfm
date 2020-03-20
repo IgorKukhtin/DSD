@@ -304,10 +304,10 @@ object Report_OrderInternalBasis_OlapDialogForm: TReport_OrderInternalBasis_Olap
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
