@@ -26,10 +26,9 @@ BEGIN
     -- расчет, временно захардкодил - To = Цех Упаковки
     vbIsPack:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 8451); -- Цех Упаковки
     -- расчет, временно захардкодил - From = ЦЕХ колбаса+дел-сы
-    vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp)); -- ЦЕХ колбаса+дел-сы
+    vbIsBasis:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_From() AND MovementId = inMovementId AND (ObjectId IN (SELECT tmp.UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS tmp) OR ObjectId = 2790412) ); -- ЦЕХ колбаса+дел-сы  
     -- расчет, временно захардкодил - To = ЦЕХ Тушенка
     vbIsTushenka:= EXISTS (SELECT MovementId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_To() AND MovementId = inMovementId AND ObjectId = 2790412); -- ЦЕХ Тушенка
-
 
     -- таблица
     CREATE TEMP TABLE tmpContainer_Count (MIDescId Integer, ContainerId Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat) ON COMMIT DROP;
@@ -85,7 +84,7 @@ BEGIN
                                                       OR ((Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
                                                            -- OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Незавершенное производство
                                                           )
-                                                         AND vbIsPack = FALSE AND vbIsBasis = TRUE)
+                                                         AND vbIsPack = FALSE AND vbIsBasis = TRUE AND vbIsTushenka = TRUE)
                                                   )
                                -- Элементы Инвентаризации - все (даже удаленные нужны) - и все это надо что б остатки разделить по видам, а в проводках этой инфы нет
                              , tmpMI_Inventory_all AS (SELECT MovementItem.ObjectId AS GoodsId
