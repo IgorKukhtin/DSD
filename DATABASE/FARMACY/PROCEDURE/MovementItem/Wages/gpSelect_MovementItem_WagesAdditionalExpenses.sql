@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
-             , SummaSUN1 TFloat, SummaTechnicalRediscount TFloat
+             , SummaSUN1 TFloat, SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -109,6 +109,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaValidationResults
                  , NULL::TFloat                       AS SummaSUN1
                  , NULL::TFloat                       AS SummaTechnicalRediscount
+                 , NULL::TFloat                       AS SummaMoneyBox
                  , NULL::TFloat                       AS SummaTotal
 
                  , False                              AS isIssuedBy
@@ -139,8 +140,9 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
-                 --, MIFloat_SummaTechnicalRediscount.ValueData AS SummaTechnicalRediscount
-                 ,tmpTechnicalRediscount.SummWages     AS SummaTechnicalRediscount
+                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+                 , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
+                   MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
 
                  , MovementItem.Amount                 AS SummaTotal
 
@@ -175,10 +177,10 @@ BEGIN
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
-/*                  LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
-                                              ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
-*/
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
+                                              ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+
                   LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
                   
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
@@ -240,8 +242,9 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
-                 --, MIFloat_SummaTechnicalRediscount.ValueData AS SummaTechnicalRediscount
-                 , tmpTechnicalRediscount.SummWages     AS SummaTechnicalRediscount
+                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+                 , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
+                   MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
                  , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
@@ -275,11 +278,11 @@ BEGIN
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
-/*                  LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
-                                              ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
-                                             AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
+                                              ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
 
-*/                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -308,5 +311,5 @@ $BODY$
  02.10.19                                                        *
  01.09.19                                                        *
 */
--- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 15414488 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 

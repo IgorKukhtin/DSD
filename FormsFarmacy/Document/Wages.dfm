@@ -1085,6 +1085,33 @@ inherited WagesForm: TWagesForm
         end>
       isShowModal = False
     end
+    object actWagesMoneyBoxSun: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1050#1086#1087#1080#1083#1082#1072
+      Hint = #1050#1086#1087#1080#1083#1082#1072
+      ImageIndex = 75
+      FormName = 'TWagesMoneyBoxSunForm'
+      FormNameParam.Value = 'TWagesMoneyBoxSunForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inOperDate'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -1167,6 +1194,10 @@ inherited WagesForm: TWagesForm
         item
           Visible = True
           ItemName = 'dxBarButton17'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton18'
         end
         item
           Visible = True
@@ -1334,6 +1365,10 @@ inherited WagesForm: TWagesForm
     end
     object dxBarButton17: TdxBarButton
       Action = actWagesTechnicalRediscount
+      Category = 0
+    end
+    object dxBarButton18: TdxBarButton
+      Action = actWagesMoneyBoxSun
       Category = 0
     end
   end
