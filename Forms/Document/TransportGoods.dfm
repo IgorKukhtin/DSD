@@ -4,7 +4,7 @@
   ClientWidth = 547
   AddOnFormData.isSingle = False
   ExplicitWidth = 553
-  ExplicitHeight = 445
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -180,6 +180,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -197,6 +198,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -307,6 +309,7 @@
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True

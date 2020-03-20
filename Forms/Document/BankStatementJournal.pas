@@ -55,6 +55,9 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    BankOTPXLSLoad: TClientBankLoadAction;
+    BankOTPXLS: TMultiAction;
+    bbBankOTPXLS: TdxBarButton;
   private
     { Private declarations }
   public

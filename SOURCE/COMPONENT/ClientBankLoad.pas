@@ -8,7 +8,7 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad {$IFDEF DELPHI103RIO}, Actions 
 
 type
 
-  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank,
+  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank, cbOTPBankXLS,
     cbPireusBank, cbPireusBankDBF, cbMarfinBank, cbUrkExim, cbProkreditBank);
 
   TClientBankLoad = class(TFileExternalLoad)
@@ -175,6 +175,24 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TOTPBankXLSLoad = class(TClientBankLoad)
+    constructor Create(StartDate, EndDate: TDateTime); overload;
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
   TPireusBankLoad = class(TClientBankLoad)
     constructor Create(StartDate, EndDate: TDateTime); overload;
     function GetOperSumm: real; override;
@@ -262,6 +280,9 @@ begin
       result := TFidoBankLoad.Create(StartDate, EndDate);
     cbOTPBank:
       result := TOTPBankLoad.Create(StartDate, EndDate);
+      //result := TOTPBankXLSLoad.Create(StartDate, EndDate);
+    cbOTPBankXLS:
+      result := TOTPBankXLSLoad.Create(StartDate, EndDate);
     cbPireusBank:
       result := TPireusBankLoad.Create(StartDate, EndDate);
     cbUrkExim:
@@ -830,6 +851,80 @@ begin
     result := -FDataSet.FieldByName('SUM').AsFloat
 end;
 
+{ TOTPBankXLSLoad }
+
+constructor TOTPBankXLSLoad.Create(StartDate, EndDate: TDateTime);
+begin
+  inherited Create(StartDate, EndDate, dtXLS);
+end;
+
+function TOTPBankXLSLoad.GetBankAccount: string;
+begin
+  result := trim(FDataSet.FieldByName('IBAN').AsString)
+end;
+
+function TOTPBankXLSLoad.GetBankAccountMain: string;
+begin
+  result := trim(FDataSet.FieldByName('Наш IBAN').AsString)
+end;
+
+function TOTPBankXLSLoad.GetBankMFO: string;
+begin
+  result := trim(FDataSet.FieldByName('МФО банку').AsString)
+end;
+
+function TOTPBankXLSLoad.GetBankMFOMain: string;
+begin
+
+end;
+
+function TOTPBankXLSLoad.GetBankName: string;
+begin
+
+end;
+
+function TOTPBankXLSLoad.GetComment: string;
+begin
+  result := trim(FDataSet.FieldByName('Призначення платежу').AsString)
+end;
+
+function TOTPBankXLSLoad.GetCurrencyCode: string;
+begin
+end;
+
+function TOTPBankXLSLoad.GetCurrencyName: string;
+begin
+  result := trim(FDataSet.FieldByName('Валюта').AsString)
+end;
+
+function TOTPBankXLSLoad.GetDocNumber: string;
+begin
+  result := trim(FDataSet.FieldByName('Номер документа').AsString)
+end;
+
+function TOTPBankXLSLoad.GetJuridicalName: string;
+begin
+  result := trim(FDataSet.FieldByName('Найменування контрагента').AsString)
+end;
+
+function TOTPBankXLSLoad.GetOKPO: string;
+begin
+  result := trim(FDataSet.FieldByName('Код контрагента').AsString)
+end;
+
+function TOTPBankXLSLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('Дата проведення').AsDateTime
+end;
+
+function TOTPBankXLSLoad.GetOperSumm: real;
+begin
+  if FDataSet.FieldByName('Операція').AsString = 'Дебет' then
+    result := -FDataSet.FieldByName('Сума').AsFloat
+  else
+    result := FDataSet.FieldByName('Сума').AsFloat
+end;
+
 { TPireusBankLoad }
 
 constructor TPireusBankLoad.Create(StartDate, EndDate: TDateTime);
@@ -854,12 +949,11 @@ end;
 
 function TPireusBankLoad.GetBankMFOMain: string;
 begin
-
+  result := trim(FDataSet.FieldByName('МФО').AsString)
 end;
 
 function TPireusBankLoad.GetBankName: string;
 begin
-
 end;
 
 function TPireusBankLoad.GetComment: string;

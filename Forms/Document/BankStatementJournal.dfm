@@ -3,9 +3,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   ClientWidth = 872
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitTop = -221
   ExplicitWidth = 888
-  ExplicitHeight = 714
+  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -73,10 +72,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     Width = 872
     ExplicitWidth = 872
     inherited deStart: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43831d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 42736d
+      EditValue = 43831d
     end
   end
   object cxLabel27: TcxLabel [2]
@@ -328,8 +327,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Action = actRefresh
         end>
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
-      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' DBF'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' DBF'
       ImageIndex = 69
     end
     object BankVostokLoad: TClientBankLoadAction
@@ -461,6 +460,33 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object BankOTPXLSLoad: TClientBankLoadAction
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbOTPBankXLS
+      StartDateParam.Value = 42736d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      StartDateParam.MultiSelectSeparator = ','
+      EndDateParam.Value = 42736d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      EndDateParam.MultiSelectSeparator = ','
+    end
+    object BankOTPXLS: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankOTPXLSLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' XLS'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' XLS'
+      ImageIndex = 69
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankStatement'
@@ -520,35 +546,19 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbBankPrivat'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankForum'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankVostok'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankErnst'
-        end
-        item
-          Visible = True
           ItemName = 'bbOTPLoad'
         end
         item
           Visible = True
-          ItemName = 'bbPireus'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbPireusDBFLoad'
+          ItemName = 'bbBankOTPXLS'
         end
         item
           Visible = True
-          ItemName = 'bbMarfinLoad'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -587,6 +597,9 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    inherited dxBarStatic: TdxBarStatic
+      ShowCaption = False
     end
     inherited bbInsert: TdxBarButton
       Enabled = False
@@ -634,6 +647,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbProkreditBank: TdxBarButton
       Action = ProcreditBank
+      Category = 0
+    end
+    object bbBankOTPXLS: TdxBarButton
+      Action = BankOTPXLS
       Category = 0
     end
   end

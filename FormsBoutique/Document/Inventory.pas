@@ -136,6 +136,7 @@ type
     AmountSecond_diff: TcxGridDBColumn;
     CurrencyName: TcxGridDBColumn;
     actRefreshItemEdit: TdsdDataSetRefresh;
+    OperDate_pr: TcxGridDBColumn;
   private
   public
   end;

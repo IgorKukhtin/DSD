@@ -1647,10 +1647,6 @@ begin
   try Scale_Zeus:=TZeus.Create(self); except end;
   try Scale_AP:=CoAPScale_.Create; except end;
 
-  Scale_AP.Connect('COM1');
-  Scale_AP.Get_Data;
-
-
   SettingMain.IndexScale_old:=-1;
 
   number:=-1;
@@ -1675,6 +1671,7 @@ begin
                if Scale_Array[SettingMain.IndexScale_old].ScaleType=stBI then Scale_BI.Active := 0;
                if Scale_Array[SettingMain.IndexScale_old].ScaleType=stDB then Scale_DB.Active := 0;
                if Scale_Array[SettingMain.IndexScale_old].ScaleType=stZeus then Scale_DB.Active := 0;
+               if Scale_Array[SettingMain.IndexScale_old].ScaleType=stAP   then try Scale_AP.DisConnect; except end;
           end;
      MyDelay_two(200);
 
@@ -1724,6 +1721,17 @@ begin
              ScaleLabel.Caption:='Zeus.Active = Error-ALL';
          end;
 
+     if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
+     then try
+             // !!! SCALE Zeus !!!
+             try Scale_AP.DisConnect; except end;
+             Scale_AP.Connect('COM' + IntToStr(Scale_Array[rgScale.ItemIndex].ComPort));
+             //
+             ScaleLabel.Caption:='AP.Connect = OK';
+          except
+             ScaleLabel.Caption:='AP.Connect = Error-ALL';
+         end;
+
      //
      PanelWeight_Scale.Caption:='';
      //
@@ -1744,6 +1752,7 @@ begin
 end;
 //------------------------------------------------------------------------------------------------
 function TMainForm.fGetScale_CurrentWeight:Double;
+var WeightStr_all, WeightStr : String;
 begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
@@ -1755,7 +1764,16 @@ begin
                   then Result:=Scale_DB.Weight
                   else if Scale_Array[rgScale.ItemIndex].ScaleType = stZeus
                        then Result:=Scale_Zeus.Weight
-                       else Result:=0;
+                       else if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
+                            then begin
+                                      WeightStr:='???';
+                                      WeightStr_all:= Scale_AP.Data;
+                                      WeightStr:=trim(WeightStr_all[1]+WeightStr_all[2]+WeightStr_all[3]+WeightStr_all[4]+WeightStr_all[5]+WeightStr_all[6]);
+                                      if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
+                                      then Result:= myStrToFloat(WeightStr)
+                                      else Result:= 0;
+                                 end
+                            else Result:=0;
      except Result:=0;end;
      // закрываем ВЕСЫ
      // Scale_DB.Active:=0;
@@ -1768,7 +1786,18 @@ begin
      if (System.Pos('ves=',ParamStr(3))>0)and(Result=0)
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
-     PanelWeight_Scale.Caption:=FloatToStr(Result);
+     if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
+     then try
+            if AnsiUpperCase (WeightStr_all[1]) = AnsiUpperCase ('E')
+            then PanelWeight_Scale.Caption:= WeightStr
+            else if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
+                 then PanelWeight_Scale.Caption:= WeightStr
+                 else PanelWeight_Scale.Caption:= '('+WeightStr_all[8]+')' + WeightStr
+          except
+               PanelWeight_Scale.Caption:= 'GetWeight = ' + WeightStr;
+               //ShowMessage(Scale_AP.Data);
+          end
+     else PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;Shift: TShiftState);

@@ -33,7 +33,7 @@ type
     FileName: String;
   end;
 
-  TScaleType = (stBI, stDB, stZeus);
+  TScaleType = (stBI, stDB, stZeus, stAP);
 
   TListItemScale = record
     Number   : Integer;
