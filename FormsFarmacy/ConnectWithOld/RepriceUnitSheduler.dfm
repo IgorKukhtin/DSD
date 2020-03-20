@@ -10,19 +10,19 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
   inherited PageControl: TcxPageControl
     Width = 737
     Height = 313
-    ExplicitWidth = 767
+    ExplicitWidth = 737
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 737
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 767
+      ExplicitWidth = 737
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Left = 3
         Width = 734
         Height = 313
         ExplicitLeft = 3
-        ExplicitWidth = 764
+        ExplicitWidth = 734
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -102,6 +102,8 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           object PercentRepriceMax: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1086#1094'. '#1089' % '#1085#1077' '#1073#1086#1083#1077#1077
             DataBinding.FieldName = 'PercentRepriceMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
@@ -109,6 +111,8 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           object PercentRepriceMin: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1086#1094'. '#1089' % '#1085#1077' '#1084#1077#1085#1077#1077
             DataBinding.FieldName = 'PercentRepriceMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 63
@@ -130,12 +134,16 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
           object EqualRepriceMax: TcxGridDBColumn
             Caption = #1059#1088#1072#1074#1085'. '#1089' % '#1085#1077' '#1073#1086#1083#1077#1077
             DataBinding.FieldName = 'EqualRepriceMax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
           object EqualRepriceMin: TcxGridDBColumn
             Caption = #1059#1088#1072#1074#1085'. '#1089' % '#1085#1077' '#1084#1077#1085#1077#1077
             DataBinding.FieldName = 'EqualRepriceMin'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
           end
@@ -444,6 +452,7 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PercentRepriceMax'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -452,6 +461,7 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PercentRepriceMin'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -460,6 +470,7 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'EqualRepriceMax'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -468,6 +479,7 @@ inherited RepriceUnitShedulerForm: TRepriceUnitShedulerForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'EqualRepriceMin'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

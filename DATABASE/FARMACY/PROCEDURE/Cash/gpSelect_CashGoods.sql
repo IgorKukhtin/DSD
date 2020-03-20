@@ -26,6 +26,7 @@ $BODY$
   DECLARE vbObjectId    Integer;
   DECLARE vbUnitId      Integer;
   DECLARE vbUnitIdStr   TVarChar;
+  DECLARE vbRetailId    Integer;
   DECLARE vbAreaId      Integer;
   DECLARE vbJuridicalId Integer;
 BEGIN
@@ -49,9 +50,12 @@ BEGIN
        vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId(inSession));
      END IF;
      
-     SELECT ObjectLink_Unit_Juridical.ChildObjectId
-     INTO vbJuridicalId
+     SELECT ObjectLink_Unit_Juridical.ChildObjectId, ObjectLink_Juridical_Retail.ChildObjectId
+     INTO vbJuridicalId, vbRetailId
      FROM ObjectLink AS ObjectLink_Unit_Juridical
+          INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
      WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
        AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();     
 
@@ -181,7 +185,7 @@ BEGIN
 
               INNER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
               INNER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = LoadPriceListItem.GoodsId
-                                                                 AND Object_Goods_Retail.RetailId = 4
+                                                                   AND Object_Goods_Retail.RetailId = vbRetailId
               LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
               LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
@@ -262,4 +266,3 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_CashGoods (inSession := '3');

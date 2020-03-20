@@ -11,10 +11,10 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
 
              , PercentDifference Integer
              , VAT20 Boolean
-             , PercentRepriceMax Integer
-             , PercentRepriceMin Integer
-             , EqualRepriceMax Integer
-             , EqualRepriceMin Integer
+             , PercentRepriceMax TFloat
+             , PercentRepriceMin TFloat
+             , EqualRepriceMax TFloat
+             , EqualRepriceMin TFloat
              , isEqual Boolean
              , UnitRePriceId Integer
              , UnitRePriceName TVarChar
@@ -43,10 +43,10 @@ BEGIN
 
            , ObjectFloat_PercentDifference.ValueData::Integer AS PercentDifference
            , ObjectBoolean_VAT20.ValueData                    AS VAT20
-           , ObjectFloat_PercentRepriceMax.ValueData::Integer AS PercentRepriceMax
-           , ObjectFloat_PercentRepriceMin.ValueData::Integer AS PercentRepriceMin
-           , ObjectFloat_EqualRepriceMax.ValueData::Integer   AS EqualRepriceMax
-           , ObjectFloat_EqualRepriceMin.ValueData::Integer   AS EqualRepriceMin
+           , ObjectFloat_PercentRepriceMax.ValueData          AS PercentRepriceMax
+           , ObjectFloat_PercentRepriceMin.ValueData          AS PercentRepriceMin
+           , ObjectFloat_EqualRepriceMax.ValueData            AS EqualRepriceMax
+           , ObjectFloat_EqualRepriceMin.ValueData            AS EqualRepriceMin
            , ObjectBoolean_Equal.ValueData                    AS isEqual
            , COALESCE (Object_UnitRePrice.Id,0)          ::Integer  AS UnitRePriceId
            , COALESCE (Object_UnitRePrice.ValueData, '') ::TVarChar AS UnitRePriceName

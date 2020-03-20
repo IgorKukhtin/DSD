@@ -1,16 +1,17 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler(
  INOUT ioId                 Integer,    -- »ƒ
     IN inUnitId             Integer, 
     IN inPercentDifference  Integer, 
     IN inVAT20              Boolean,
-    IN inPercentRepriceMax  Integer, 
-    IN inPercentRepriceMin  Integer, 
-    IN inEqualRepriceMax    Integer, 
-    IN inEqualRepriceMin    Integer, 
+    IN inPercentRepriceMax  TFloat, 
+    IN inPercentRepriceMin  TFloat, 
+    IN inEqualRepriceMax    TFloat, 
+    IN inEqualRepriceMin    TFloat, 
     IN inisEqual            Boolean,
     IN inUserId             Integer, 
     IN inSession            TVarChar   -- —ÂÒÒËˇ
@@ -76,7 +77,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, Integer, Integer, Integer, Integer, Boolean, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_RepriceUnitSheduler (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

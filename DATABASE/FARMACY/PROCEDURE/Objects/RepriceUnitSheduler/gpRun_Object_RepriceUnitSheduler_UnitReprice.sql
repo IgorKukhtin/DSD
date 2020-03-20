@@ -11,10 +11,10 @@ $BODY$
    DECLARE vbUnitID Integer;
    DECLARE vbPercentDifference Integer;
    DECLARE vbVAT20 Boolean;
-   DECLARE vbPercentRepriceMax Integer;
-   DECLARE vbPercentRepriceMin Integer;
-   DECLARE vbEqualRepriceMax Integer;
-   DECLARE vbEqualRepriceMin Integer;
+   DECLARE vbPercentRepriceMax TFloat;
+   DECLARE vbPercentRepriceMin TFloat;
+   DECLARE vbEqualRepriceMax TFloat;
+   DECLARE vbEqualRepriceMin TFloat;
    DECLARE vbGUID TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -72,10 +72,10 @@ BEGIN
              ObjectLink_Unit.ChildObjectId                    AS UnitId
            , ObjectFloat_PercentDifference.ValueData::Integer AS PercentDifference
            , ObjectBoolean_VAT20.ValueData                    AS VAT20
-           , ObjectFloat_PercentRepriceMax.ValueData::Integer AS PercentRepriceMax
-           , ObjectFloat_PercentRepriceMin.ValueData::Integer AS PercentRepriceMin
-           , ObjectFloat_EqualRepriceMax.ValueData::Integer   AS EqualRepriceMax
-           , ObjectFloat_EqualRepriceMin.ValueData::Integer   AS EqualRepriceMin
+           , ObjectFloat_PercentRepriceMax.ValueData          AS PercentRepriceMax
+           , ObjectFloat_PercentRepriceMin.ValueData          AS PercentRepriceMin
+           , ObjectFloat_EqualRepriceMax.ValueData            AS EqualRepriceMax
+           , ObjectFloat_EqualRepriceMin.ValueData            AS EqualRepriceMin
   INTO
              vbUnitID
            , vbPercentDifference
