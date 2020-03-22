@@ -885,9 +885,11 @@ inherited CheckForm: TCheckForm
     end
     inherited actMISetErased: TdsdUpdateErased
       Enabled = False
+      ShortCut = 0
     end
     inherited actMISetUnErased: TdsdUpdateErased
       Enabled = False
+      ShortCut = 0
     end
     inherited actShowErased: TBooleanStoredProcAction
       Enabled = False
@@ -1992,6 +1994,10 @@ inherited CheckForm: TCheckForm
     end
     object dxBarButton11: TdxBarButton
       Action = actSetPromoCodeDoctor
+      Category = 0
+    end
+    object dxBarButton12: TdxBarButton
+      Action = actMISetUnErased
       Category = 0
     end
   end

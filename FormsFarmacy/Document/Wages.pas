@@ -114,6 +114,8 @@ type
     actWagesTechnicalRediscount: TdsdOpenForm;
     dxBarButton17: TdxBarButton;
     IlliquidAssets: TcxGridDBBandedColumn;
+    actWagesMoneyBoxSun: TdsdOpenForm;
+    dxBarButton18: TdxBarButton;
   private
     { Private declarations }
   public

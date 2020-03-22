@@ -171,6 +171,7 @@ type
     actSetPromoCodeDoctor: TdsdExecStoredProc;
     actChoicePromoCodeDoctor: TOpenChoiceForm;
     dxBarButton11: TdxBarButton;
+    dxBarButton12: TdxBarButton;
   private
     { Private declarations }
   public
