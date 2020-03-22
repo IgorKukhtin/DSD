@@ -46,62 +46,71 @@ BEGIN
      -- 
      CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer
                                     , ReceiptId Integer
-                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat, AmountPartnerSecond TFloat
+                                    , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartner TFloat, AmountPartnerPrior TFloat, AmountPartnerSecond TFloat, AmountPartnerNext TFloat
                                     , AmountForecast TFloat
                                     , isErased Boolean) ON COMMIT DROP;
      INSERT INTO _tmpMI_master (MovementItemId, GoodsId, GoodsKindId
                               , ReceiptId
-                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior, AmountPartnerSecond
+                              , Amount, AmountSecond, AmountRemains, AmountPartner, AmountPartnerPrior, AmountPartnerSecond, AmountPartnerNext
                               , AmountForecast
                               , isErased)
-                              -- результат
-                              SELECT MovementItem.Id AS MovementItemId
-                                   , MovementItem.ObjectId AS GoodsId
-                                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                                   , COALESCE (MILinkObject_Receipt.ObjectId, 0)   AS ReceiptId
+        -- результат
+        SELECT MovementItem.Id AS MovementItemId
+             , MovementItem.ObjectId AS GoodsId
+             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+             , COALESCE (MILinkObject_Receipt.ObjectId, 0)   AS ReceiptId
 
-                                   , MovementItem.Amount                                   AS Amount
-                                   , COALESCE (MIFloat_AmountSecond.ValueData, 0)          AS AmountSecond
+             , MovementItem.Amount                                   AS Amount
+             , COALESCE (MIFloat_AmountSecond.ValueData, 0)          AS AmountSecond
 
-                                   , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
-                                   , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
-                                   , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)    AS AmountPartnerPrior
-                                   , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)   AS AmountPartnerSecond
-                                   , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
+             , COALESCE (MIFloat_AmountRemains.ValueData, 0)         AS AmountRemains
+             , COALESCE (MIFloat_AmountPartner.ValueData, 0)         AS AmountPartner
+             , COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0)    AS AmountPartnerPrior
+             , COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)   AS AmountPartnerSecond
+             , COALESCE (MIFloat_AmountPartnerNext.ValueData, 0)     AS AmountPartnerNext
+             , COALESCE (MIFloat_AmountForecast.ValueData, 0)        AS AmountForecast
 
-                                   , MovementItem.isErased                                 AS isErased
+             , MovementItem.isErased                                 AS isErased
 
-                              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = tmpIsErased.isErased
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                               ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+             INNER JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                    AND MovementItem.DescId     = zc_MI_Master()
+                                    AND MovementItem.isErased   = tmpIsErased.isErased
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
-                                                               ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                               ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
-                                                               ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
-                                                               ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
-                                   LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
-                                                               ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                         ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+             -- Программа БЕЗ сырья для эмул. - но сами Эмульсии (только которые нужны для ГП) здесь
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+             -- Программа сырьё ДЛЯ эмул. (которые нужны для ГП + добавочные)
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
+                                         ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
+             -- Программа дозаказ - (сырье + эмульсии)
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                         ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+             -- Программа - здесь только Эмульсии (добавочные)
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerNext
+                                         ON MIFloat_AmountPartnerNext.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartnerNext.DescId         = zc_MIFloat_AmountPartnerNext()
+             -- Прогноз по произв.
+             LEFT JOIN MovementItemFloat AS MIFloat_AmountForecast
+                                         ON MIFloat_AmountForecast.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountForecast.DescId = zc_MIFloat_AmountForecast()
 
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
-                                                                    ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                    ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             ;
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                              ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+       ;
 
        --
        OPEN Cursor1 FOR
@@ -164,11 +173,12 @@ BEGIN
 
            , CASE WHEN tmpMI.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond THEN tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond - tmpMI.AmountRemains - COALESCE (tmpMI_Send.Amount, 0) ELSE 0 END :: TFloat AS Amount_calc  -- Расчетный заказ
 
-           , tmpMI.AmountRemains      :: TFloat  AS AmountRemains       -- Ост. начальн.
-           , tmpMI.AmountPartner      :: TFloat  AS AmountPartner       -- расчет составляющих по заявке на производство (без производства ПФ)
-           , tmpMI.AmountPartnerPrior :: TFloat  AS AmountPartnerPrior  -- расчет составляющих по заявке на производство (для производства ПФ)
+           , tmpMI.AmountRemains       :: TFloat  AS AmountRemains       -- Ост. начальн.
+           , tmpMI.AmountPartner       :: TFloat  AS AmountPartner       -- Программа БЕЗ сырья для эмул. - но сами Эмульсии (только которые нужны для ГП) здесь
+           , tmpMI.AmountPartnerPrior  :: TFloat  AS AmountPartnerPrior  -- Программа сырьё ДЛЯ эмул. (которые нужны для ГП + добавочные)
            , (tmpMI.AmountPartner + tmpMI.AmountPartnerPrior + tmpMI.AmountPartnerSecond) :: TFloat AS AmountPartner_all -- расчет составляющих по заявке на производство (итого)
-           , tmpMI.AmountPartnerSecond :: TFloat AS AmountPartnerSecond -- расчет ....
+           , tmpMI.AmountPartnerSecond :: TFloat  AS AmountPartnerSecond -- Программа дозаказ - (сырье + эмульсии)
+           , tmpMI.AmountPartnerNext   :: TFloat  AS AmountPartnerNext   -- Программа - здесь только Эмульсии (добавочные)
 
            , CASE WHEN ABS (tmpMI.AmountForecast) < 1 THEN tmpMI.AmountForecast ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1)) END :: TFloat AS AmountForecast -- Прогноз по факт. расходу на производство
            , CAST (CASE WHEN vbDayCount <> 0 THEN tmpMI.AmountForecast / vbDayCount ELSE 0 END AS NUMERIC (16, 1))                      :: TFloat AS CountForecast  -- Норм 1д (по пр.)
