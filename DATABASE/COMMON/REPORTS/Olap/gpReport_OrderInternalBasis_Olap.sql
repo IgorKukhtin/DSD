@@ -44,6 +44,7 @@ RETURNS TABLE (OperDate            TDateTime
              , AmountSendIn_or     TFloat -- расход по заявке
              , AmountSendOut_or    TFloat -- возврат по заявке
              , AmountSend_or       TFloat -- итого расход по заявке
+             , AmountSend_diff     TFloat -- осталось выдать
              )   
 AS
 $BODY$
@@ -340,6 +341,7 @@ BEGIN
            , tmpSend.AmountSendIn  :: TFloat AS AmountSendIn_or
            , tmpSend.AmountSendOut :: TFloat AS AmountSendOut_or
            , tmpSend.AmountSend    :: TFloat AS AmountSend_or
+           , (COALESCE (tmpData.Amount,0) - COALESCE (tmpSend.AmountSend, 0)) :: TFloat AS AmountSend_diff
            
       FROM tmpData
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
@@ -376,7 +378,7 @@ BEGIN
                               AND tmpMI_Send.UnitId      = tmpData.FromId
           -- факт перемещение 
           LEFT JOIN tmpSend ON tmpSend.GoodsId     = tmpData.GoodsId
-                           AND tmpSend.GoodsKindId = tmpData.GoodsKindId
+                          --AND tmpSend.GoodsKindId = tmpData.GoodsKindId
                            AND tmpSend.OperDate    = tmpData.OperDate
                            AND tmpSend.UnitId      = tmpData.FromId
 

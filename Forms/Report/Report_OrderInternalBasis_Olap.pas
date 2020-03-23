@@ -76,6 +76,9 @@ type
     spSelectPrint: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    bbPrintSend: TdxBarButton;
+    spSelectPrintSend: TdsdStoredProc;
+    actPrintSend: TdsdPrintAction;
   private
   public
   end;

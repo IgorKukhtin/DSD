@@ -216,7 +216,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Styles.ColumnHeader = dmMain.cxRemainsCashContentStyle
       Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
@@ -230,7 +230,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Styles.ColumnHeader = dmMain.cxRemainsCashContentStyle
       Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
@@ -244,7 +244,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Styles.ColumnHeader = dmMain.cxRemainsCashContentStyle
       Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
@@ -286,7 +286,6 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
-      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
       Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
@@ -332,7 +331,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
     object pvAmountForecast: TcxDBPivotGridField
-      AreaIndex = 8
+      AreaIndex = 12
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1085#1086#1079' '#1087#1086' '#1087#1088#1086#1080#1079#1074'.'
       DataBinding.FieldName = 'AmountForecast'
@@ -342,7 +341,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvCountForecast: TcxDBPivotGridField
-      AreaIndex = 9
+      AreaIndex = 13
       IsCaptionAssigned = True
       Caption = #1055#1088#1086#1075#1085#1086#1079' 1'#1076
       DataBinding.FieldName = 'CountForecast'
@@ -352,7 +351,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
     end
     object pvDayCountForecast: TcxDBPivotGridField
-      AreaIndex = 10
+      AreaIndex = 14
       IsCaptionAssigned = True
       Caption = #1054#1089#1090'. '#1074' '#1076#1085#1103#1093' ('#1087#1088#1086#1075#1085#1086#1079') '
       DataBinding.FieldName = 'DayCountForecast'
@@ -360,6 +359,62 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Width = 55
       UniqueName = #1050#1086#1083'-'#1074#1086' '#1044#1086#1083#1075'.'
+    end
+    object pvAmountSendIn_or: TcxDBPivotGridField
+      AreaIndex = 8
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090' '#1092#1072#1082#1090
+      DataBinding.FieldName = 'AmountSendIn_or'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSendOut_or: TcxDBPivotGridField
+      AreaIndex = 9
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' '#1092#1072#1082#1090
+      DataBinding.FieldName = 'AmountSendOut_or'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSend_or: TcxDBPivotGridField
+      AreaIndex = 10
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'  '#1092#1072#1082#1090
+      DataBinding.FieldName = 'AmountSend_or'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
+    end
+    object pvAmountSend_diff: TcxDBPivotGridField
+      AreaIndex = 11
+      AllowedAreas = [faFilter, faData]
+      IsCaptionAssigned = True
+      Caption = #1054#1089#1090#1072#1083#1086#1089#1100' '#1082' '#1074#1099#1076#1072#1095#1077
+      DataBinding.FieldName = 'AmountSend_diff'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      Styles.ColumnHeader = dmMain.cxRemainsContentStyle
+      Visible = True
+      Width = 80
+      UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end
   end
   object cxLabel5: TcxLabel
@@ -499,6 +554,14 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintSend'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -530,6 +593,10 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbPrintSend: TdxBarButton
+      Action = actPrintSend
       Category = 0
     end
   end
@@ -659,6 +726,77 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actPrintSend: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = Null
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintSend
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSend
+        end>
+      Caption = #1048#1090#1086#1075#1086' '#1047#1072#1082#1072#1079' / '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      Hint = #1048#1090#1086#1075#1086' '#1047#1072#1082#1072#1079' / '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'FromName'
+          Value = ''
+          Component = GuidesUnitGroupFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          Component = GuidesUnitGroupTo
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'StartDate'
+          Value = 43101d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 43101d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1087#1086' '#1089#1099#1088#1100#1102'_'#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1054#1083#1072#1087')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1087#1086' '#1089#1099#1088#1100#1102'_'#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1054#1083#1072#1087')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -689,7 +827,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsName'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
         end>
       Params = <
         item
@@ -793,8 +931,8 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
     Top = 288
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 544
-    Top = 280
+    Left = 328
+    Top = 344
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -1066,7 +1204,71 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
+    Left = 599
+    Top = 248
+  end
+  object spSelectPrintSend: TdsdStoredProc
+    StoredProcName = 'gpReport_OrderInternalBasis_Olap_SendPrint'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 43101d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 43101d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GuidesGoodsGroup
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesUnitGroupFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesUnitGroupTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
     Left = 607
-    Top = 240
+    Top = 192
   end
 end
