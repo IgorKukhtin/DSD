@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 )
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
-             , SummaSUN1 TFloat, SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
+             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -140,9 +140,11 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
-                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+--                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
+                 , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
 
                  , MovementItem.Amount                 AS SummaTotal
 
@@ -177,11 +179,19 @@ BEGIN
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
+                                              ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                               ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
 
-                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                              ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+--                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
                   
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -242,9 +252,12 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
-                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+--                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
+                 , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+
                  , MovementItem.Amount                 AS SummaTotal
 
                  , COALESCE(MIBoolean_isIssuedBy.ValueData, FALSE)::Boolean AS isIssuedBy
@@ -278,11 +291,19 @@ BEGIN
                                               ON MIFloat_SummaSUN1.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaSUN1.DescId = zc_MIFloat_SummaSUN1()
 
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
+                                              ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
+
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                               ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
 
-                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                              ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+--                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -308,8 +329,10 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                 ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 21.03.20                                                        *
  02.10.19                                                        *
  01.09.19                                                        *
 */
--- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 

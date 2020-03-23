@@ -1004,6 +1004,9 @@ type
     MenuItem355: TMenuItem;
     MenuItem356: TMenuItem;
     MenuItem357: TMenuItem;
+    actReport_GeneralMovementGoods: TdsdOpenForm;
+    MenuItem358: TMenuItem;
+    N226: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

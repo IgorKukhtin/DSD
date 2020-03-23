@@ -5,7 +5,7 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
   ExplicitWidth = 840
-  ExplicitHeight = 397
+  ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -683,11 +683,11 @@ inherited Report_GoodsPartionHistoryForm: TReport_GoodsPartionHistoryForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

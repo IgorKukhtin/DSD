@@ -3449,6 +3449,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GeneralMovementGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1073#1097#1080#1081' '#1086#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1090#1086#1074#1072#1088#1072
+      Hint = #1054#1073#1097#1080#1081' '#1086#1090#1095#1077#1090' '#1087#1086' '#1076#1074#1080#1078#1077#1085#1080#1102' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_GeneralMovementGoodsForm'
+      FormNameParam.Value = 'TReport_GeneralMovementGoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4020,6 +4032,9 @@ inherited MainForm: TMainForm
       end
       object miReport_Movement_ReturnOut: TMenuItem
         Action = actReport_Movement_ReturnOut
+      end
+      object N226: TMenuItem
+        Action = actReport_GeneralMovementGoods
       end
       object N178: TMenuItem
         Caption = '-'
@@ -5130,6 +5145,9 @@ inherited MainForm: TMainForm
       end
       object MenuItem180: TMenuItem
         Action = actReport_Movement_ReturnOut
+      end
+      object MenuItem358: TMenuItem
+        Action = actReport_GeneralMovementGoods
       end
       object MenuItem181: TMenuItem
         Caption = '-'
