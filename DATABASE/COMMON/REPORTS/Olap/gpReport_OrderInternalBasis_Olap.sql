@@ -41,6 +41,9 @@ RETURNS TABLE (OperDate            TDateTime
              , AmountForecast      TFloat -- Прогноз по факт. расходу на производство
              , CountForecast       TFloat -- Норм 1д (по пр.)
              , DayCountForecast    TFloat -- Ост. в днях (по пр.)  
+             , AmountSendIn_or     TFloat -- расход по заявке
+             , AmountSendOut_or    TFloat -- возврат по заявке
+             , AmountSend_or       TFloat -- итого расход по заявке
              )   
 AS
 $BODY$
@@ -251,6 +254,44 @@ BEGIN
                                LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1
                         )
 
+       -- факт перемещения (расход / возврат / итого выдали)
+       , tmpMovementSend AS (SELECT tmp.MovementId                  AS MovementId
+                                  , MovementLinkMovement.MovementId AS MovementId_Send
+                                  , tmp.OperDate                    AS OperDate
+                             FROM (SELECT DISTINCT tmpMI.MovementId, tmpMI.OperDate FROM tmpMI) AS tmp
+                                  INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = tmp.MovementId
+                                                                 AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
+                                  INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
+                                                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                                                     AND Movement.DescId = zc_Movement_Send()
+                            )
+
+       , tmpSend AS (SELECT tmpMovementSend.OperDate
+                          , MIContainer.WhereObjectId_Analyzer     AS UnitId
+                          , MIContainer.ObjectId_Analyzer          AS GoodsId
+                          , CASE -- !!!временно захардкодил!!!
+                                 WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                      THEN 8338 -- морож.
+                                 ELSE 0
+                            END                                    AS GoodsKindId
+                          , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN COALESCE (MIContainer.Amount,0)      ELSE 0 END) AS AmountSendIn
+                          , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountSendOut
+                          , SUM (COALESCE (MIContainer.Amount,0))  AS AmountSend
+                     FROM tmpMovementSend
+                          INNER JOIN MovementItemContainer AS MIContainer
+                                                           ON MIContainer.MovementId = tmpMovementSend.MovementId_Send
+                                                          AND MIContainer.DescId     = zc_MIContainer_Count()
+                                                          AND MIContainer.MovementDescId = zc_Movement_Send() 
+                          INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                     GROUP BY tmpMovementSend.OperDate
+                            , MIContainer.WhereObjectId_Analyzer
+                            , MIContainer.ObjectId_Analyzer
+                            , CASE WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                        THEN 8338 -- морож.
+                                   ELSE 0
+                              END
+                     )
+
 
       SELECT tmpData.OperDate
            , tmpData.InvNumber ::TVarChar
@@ -295,7 +336,11 @@ BEGIN
                         ELSE 0
                    END
              AS NUMERIC (16, 1))        :: TFloat AS DayCountForecast -- Ост. в днях (по пр.)
-  
+
+           , tmpSend.AmountSendIn  :: TFloat AS AmountSendIn_or
+           , tmpSend.AmountSendOut :: TFloat AS AmountSendOut_or
+           , tmpSend.AmountSend    :: TFloat AS AmountSend_or
+           
       FROM tmpData
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
@@ -324,10 +369,16 @@ BEGIN
           --ограничения по подразделению кому
           INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = Object_To.Id
 
+          -- приход сегодня
           LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpData.GoodsId
                               AND tmpMI_Send.GoodsKindId = tmpData.GoodsKindId
                               AND tmpMI_Send.OperDate    = tmpData.OperDate
                               AND tmpMI_Send.UnitId      = tmpData.FromId
+          -- факт перемещение 
+          LEFT JOIN tmpSend ON tmpSend.GoodsId     = tmpData.GoodsId
+                           AND tmpSend.GoodsKindId = tmpData.GoodsKindId
+                           AND tmpSend.OperDate    = tmpData.OperDate
+                           AND tmpSend.UnitId      = tmpData.FromId
 
           LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDate) AS tmpWeekDay ON 1=1
           LEFT JOIN tmpListDate ON tmpListDate.Number = tmpWeekDay.Number
@@ -344,4 +395,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_OrderInternalBasis_Olap (inStartDate:= '17.03.2020'::TDateTime, inEndDate:= '18.03.2020'::TDateTime, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 8447, inToId:= 8447 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpReport_OrderInternalBasis_Olap (inStartDate:= '26.02.2020'::TDateTime, inEndDate:= '28.02.2020'::TDateTime, inGoodsGroupId:= 0, inGoodsId:= 0, inFromId:= 8447, inToId:= 8447 , inSession:= zfCalc_UserAdmin())
