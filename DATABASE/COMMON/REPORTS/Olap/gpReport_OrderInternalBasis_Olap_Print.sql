@@ -19,15 +19,16 @@ $BODY$
 BEGIN
 
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, OperDate TDateTime, DayOfWeekName TVarChar, DayOfWeekNumber Integer, GoodsGroupNameFull TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, Amount TFloat) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, OperDate TDateTime, DayOfWeekName TVarChar, DayOfWeekNumber Integer, GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, Amount TFloat) ON COMMIT DROP;
     
-    INSERT INTO _tmpReport (InvNumber, OperDate, DayOfWeekName, DayOfWeekNumber, GoodsGroupNameFull, GoodsCode, GoodsName, GoodsKindId, GoodsKindName, Amount)
+    INSERT INTO _tmpReport (InvNumber, OperDate, DayOfWeekName, DayOfWeekNumber, GoodsGroupNameFull, GoodsGroupName, GoodsCode, GoodsName, GoodsKindId, GoodsKindName, Amount)
     
          SELECT tmpReport.InvNumber
               , tmpReport.OperDate
               , tmpReport.DayOfWeekName
               , tmpReport.DayOfWeekNumber
               , tmpReport.GoodsGroupNameFull
+              , tmpReport.GoodsGroupName
               , tmpReport.GoodsCode
               , tmpReport.GoodsName
               , tmpReport.GoodsKindId
@@ -92,6 +93,7 @@ BEGIN
 
     OPEN Cursor2 FOR
     SELECT _tmpReport.GoodsGroupNameFull
+         , _tmpReport.GoodsGroupName
          , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1_fr --"морож."  freeze
@@ -111,6 +113,7 @@ BEGIN
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7 --"охл."
     FROM _tmpReport
     GROUP BY _tmpReport.GoodsGroupNameFull
+           , _tmpReport.GoodsGroupName
            , _tmpReport.GoodsName
            , _tmpReport.GoodsCode
     HAVING SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
