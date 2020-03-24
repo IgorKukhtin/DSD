@@ -280,6 +280,11 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
           Format = ',0.####'
           Kind = skSum
           Column = SummInventory_Basis
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_byCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -536,6 +541,11 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
           Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
           Kind = skCount
           Column = GoodsName
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_byCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1437,9 +1447,9 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object CountEnd_byCount: TcxGridDBColumn
-        Caption = #1054#1089#1090'. '#1073#1090'. '#1082#1086#1085#1077#1095'.'
-        DataBinding.FieldName = 'CountEnd_byCount'
+      object CountInventory_byCount: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountInventory_byCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1470,6 +1480,16 @@ object Report_GoodsBalance_ServerForm: TReport_GoodsBalance_ServerForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1056#1072#1089#1093'. *** '#1073#1072#1090'. '#1055#1060' ('#1043#1055') '#1079#1072' '#1087#1077#1088#1080#1086#1076
         Width = 70
+      end
+      object CountEnd_byCount: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1073#1090'. '#1082#1086#1085#1077#1095'.'
+        DataBinding.FieldName = 'CountEnd_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object Weight_byCount: TcxGridDBColumn
         Caption = #1042#1077#1089' 1 '#1073#1090'.'
