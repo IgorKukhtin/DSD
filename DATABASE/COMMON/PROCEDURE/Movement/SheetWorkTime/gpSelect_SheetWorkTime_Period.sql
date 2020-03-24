@@ -75,14 +75,14 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
-       WITH tmpList AS (SELECT DISTINCT ObjectLink.ObjectId AS UnitId
+       WITH tmpList AS (/*SELECT DISTINCT ObjectLink.ObjectId AS UnitId
                         FROM ObjectLink
                              LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                                   ON ObjectLink_Personal_Member.ObjectId = ObjectLink.ChildObjectId
                                                  AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                         WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
                           AND (ObjectLink_Personal_Member.ChildObjectId = vbMemberId OR vbMemberId = 0)
-                       UNION
+                       UNION*/
                         SELECT DISTINCT ObjectLink_Unit.ChildObjectId AS UnitId
                         FROM ObjectLink
                              INNER JOIN ObjectLink AS ObjectLink_Unit

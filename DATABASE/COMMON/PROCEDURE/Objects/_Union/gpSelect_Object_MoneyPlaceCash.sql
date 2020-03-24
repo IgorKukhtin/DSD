@@ -46,18 +46,22 @@ BEGIN
      -- Результат
      RETURN QUERY
      WITH View_InfoMoney_40801 AS (SELECT * FROM Object_InfoMoney_View WHERE Object_InfoMoney_View.InfoMoneyCode = 40801) -- Внутренний оборот
-        , tmpPersonal_Branch AS (SELECT View_Personal.MemberId
+        , tmpPersonal_Branch AS (SELECT DISTINCT View_Personal.MemberId
                                  FROM ObjectLink AS ObjectLink_Unit_Branch
                                       INNER JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = ObjectLink_Unit_Branch.ObjectId
                                  WHERE ObjectLink_Unit_Branch.ChildObjectId = vbObjectId_Constraint_Branch
-                                   AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                                 GROUP BY View_Personal.MemberId
-                                UNION ALL
-                                 SELECT View_Personal.MemberId
+                                   AND ObjectLink_Unit_Branch.DescId        = zc_ObjectLink_Unit_Branch()
+
+                                UNION
+                                 SELECT DISTINCT View_Personal.MemberId
+                                 FROM Object_Personal_View AS View_Personal
+                                 WHERE View_Personal.UnitId = 413386 -- Наши
+
+                                UNION
+                                 SELECT DISTINCT View_Personal.MemberId
                                  FROM Object_Personal_View AS View_Personal
                                  WHERE View_Personal.PositionId = 81178 -- экспедитор
-                                    OR View_Personal.UnitId = 8409 -- Отдел экспедиторов
-                                 GROUP BY View_Personal.MemberId
+                                    OR View_Personal.UnitId     = 8409  -- Отдел экспедиторов
                                 )
         , tmpMember_Car AS (SELECT ObjectLink_Personal_Member.ChildObjectId AS MemberId
                                  , Object_Car.Id              AS CarId
@@ -167,6 +171,7 @@ BEGIN
        -- AND COALESCE (Object_Contract_View_Container.PaidKindId, View_Contract.PaidKindId) = zc_Enum_PaidKind_SecondForm()
        AND (ObjectLink_Juridical_JuridicalGroup.ChildObjectId IN (vbObjectId_Constraint
                                                                 , 8359 -- 04-Услуги
+                                                                , 8357 -- 02-Поставщики
                                                                  )
             OR Object_PersonalTrade.BranchId = vbObjectId_Constraint_Branch
             OR ObjectBoolean_isBranchAll.ValueData = TRUE
@@ -306,7 +311,8 @@ BEGIN
       AND Object_Member.isErased = FALSE
       AND (tmpPersonal_Branch.MemberId > 0
            OR vbIsConstraint_Branch = FALSE
-           OR Object_Member.Id = 4218193 -- Клиент Харьков-Одесса
+         --OR Object_Member.Id = 4218193 -- Клиент Харьков-Одесса
+         --OR Object_Member.Id = 5034716 -- Клиент Киев-Одесса
           )
     UNION ALL
      SELECT tmpPartner.Id

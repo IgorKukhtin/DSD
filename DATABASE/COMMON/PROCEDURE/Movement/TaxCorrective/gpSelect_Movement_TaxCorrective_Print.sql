@@ -1,4 +1,4 @@
--- Function: gpSelect_Movement_TaxCorrective_Print()
+ -- Function: gpSelect_Movement_TaxCorrective_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar);
 

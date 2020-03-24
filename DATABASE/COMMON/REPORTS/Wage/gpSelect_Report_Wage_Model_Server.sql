@@ -72,6 +72,8 @@ RETURNS TABLE(
     ,GrossOnOneMember               TFloat
     ,Amount                         TFloat
     ,AmountOnOneMember              TFloat
+    
+    ,KoeffHoursWork_car             TFloat
 )
 AS
 $BODY$
@@ -1394,6 +1396,8 @@ BEGIN
                 END, 0)
               , 2) :: TFloat AS AmountOnOneMember
 
+       , 0 :: TFloat AS KoeffHoursWork_car
+
     FROM Setting_Wage_1 AS Setting
          CROSS JOIN tmpOperDate
 
@@ -1585,6 +1589,9 @@ BEGIN
                     THEN tmpMovement_PersonalComplete.CountMovement
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+
+       , 0 :: TFloat AS KoeffHoursWork_car
+
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_PersonalComplete ON ((tmpMovement_PersonalComplete.UnitId = Setting.FromId AND Setting.FromId > 0)
                                                   OR (tmpMovement_PersonalComplete.UnitId = Setting.UnitId AND Setting.UnitId > 0 AND COALESCE (Setting.FromId, 0) = 0))
@@ -1600,6 +1607,7 @@ BEGIN
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MI_Master(), zc_Enum_SelectKind_MI_MasterCount(), zc_Enum_SelectKind_MovementCount())
 
    UNION ALL
@@ -1690,6 +1698,9 @@ BEGIN
                     THEN tmpMovement_Reestr.CountMovement
               ELSE 0
          END * Setting.Ratio * Setting.Price) :: TFloat AS AmountOnOneMember
+
+       , 0 :: TFloat AS KoeffHoursWork_car
+
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Reestr ON tmpMovement_Reestr.UnitId_car = Setting.UnitId
                                       AND tmpMovement_Reestr.FromId     = COALESCE (Setting.FromId, 0)
@@ -1768,6 +1779,9 @@ BEGIN
        , tmpMovement_PersonalComplete.HoursWork :: TFloat AS GrossOnOneMember
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS Amount
        , (tmpMovement_PersonalComplete.HoursWork * Setting.Ratio * Setting.Price * tmpMovement_PersonalComplete.KoeffHoursWork_car) :: TFloat AS AmountOnOneMember
+       
+       , tmpMovement_PersonalComplete.KoeffHoursWork_car :: TFloat AS KoeffHoursWork_car
+
     FROM Setting_Wage_1 AS Setting
          INNER JOIN tmpMovement_Transport AS tmpMovement_PersonalComplete
                                           ON tmpMovement_PersonalComplete.UnitId_car = Setting.UnitId
@@ -1782,6 +1796,7 @@ BEGIN
                              AND ObjectLink_Personal_PositionLevel.DescId        = zc_ObjectLink_Personal_PositionLevel()
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+
     WHERE Setting.SelectKindId IN (zc_Enum_SelectKind_MovementTransportHours())
    ;
 

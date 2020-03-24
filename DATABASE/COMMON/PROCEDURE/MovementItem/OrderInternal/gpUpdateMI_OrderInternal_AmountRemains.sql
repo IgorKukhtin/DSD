@@ -84,7 +84,7 @@ BEGIN
                                                       OR ((Object_InfoMoney_View.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_10000() -- Основное сырье
                                                            -- OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Незавершенное производство
                                                           )
-                                                         AND vbIsPack = FALSE AND vbIsBasis = TRUE AND vbIsTushenka = TRUE)
+                                                         AND vbIsPack = FALSE AND vbIsBasis = TRUE)
                                                   )
                                -- Элементы Инвентаризации - все (даже удаленные нужны) - и все это надо что б остатки разделить по видам, а в проводках этой инфы нет
                              , tmpMI_Inventory_all AS (SELECT MovementItem.ObjectId AS GoodsId

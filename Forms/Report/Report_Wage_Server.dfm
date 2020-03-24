@@ -322,6 +322,17 @@ inherited Report_Wage_ServerForm: TReport_Wage_ServerForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object KoeffHoursWork_car: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088'.'#1074#1088'.'
+            DataBinding.FieldName = 'KoeffHoursWork_car'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092#1092'. '#1076#1083#1103' '#1084#1086#1076#1077#1083#1080' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080' ('#1040#1074#1090#1086')'
+            Width = 70
+          end
           object PersonalServiceListName: TcxGridDBColumn
             Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
             DataBinding.FieldName = 'PersonalServiceListName'

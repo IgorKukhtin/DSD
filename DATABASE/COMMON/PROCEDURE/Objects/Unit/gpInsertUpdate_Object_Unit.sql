@@ -26,7 +26,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
   RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode_calc Integer;
    DECLARE vbOldId Integer;
    DECLARE vbOldParentId integer;
    DECLARE vbOldValue_Address TVarChar;
@@ -39,7 +39,14 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
-   
+
+
+   -- проверка
+   IF inPersonalSheetWorkTimeId > 0
+   THEN -- 
+        RAISE EXCEPTION 'Ошибка.Нет прав заполнять <Сотрудник (доступ к табелю р.времени)>.';
+   END IF;
+
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Unit(), inName);
    -- проверка уникальности <Код>
@@ -49,9 +56,9 @@ BEGIN
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
 
    -- сохраняем прошлое значение адреса
-   vbOldValue_Address := (SELECT COALESCE(ObjectString_Unit_Address.ValueData,'') AS Address 
+   vbOldValue_Address := (SELECT COALESCE(ObjectString_Unit_Address.ValueData,'') AS Address
                           FROM ObjectString AS ObjectString_Unit_Address
-                          WHERE ObjectString_Unit_Address.ObjectId = ioId --8426  -- inUnitId 
+                          WHERE ObjectString_Unit_Address.ObjectId = ioId --8426  -- inUnitId
                             AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address());
 
    -- сохранили
@@ -102,7 +109,7 @@ BEGIN
       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), ioId, TRUE);
    END IF;
 
-   -- Точно теперь inParentId стал папкой 
+   -- Точно теперь inParentId стал папкой
    IF COALESCE (inParentId, 0) <> 0 THEN
       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), inParentId, FALSE);
    END IF;
@@ -110,28 +117,28 @@ BEGIN
    IF COALESCE (vbOldParentId, 0) <> 0 THEN
       PERFORM lpUpdate_isLeaf (vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
-   
+
    vbAddress := COALESCE (inAddress, '') ;
 
    IF vbAddress = '' THEN
      vbAddress := (SELECT COALESCE(ObjectString_Unit_Address.ValueData,'') as Address
                    FROM lfSelect_Object_UnitParent_byUnit (ioId) AS tmpUnitList
-                        INNER JOIN ObjectString AS ObjectString_Unit_Address 
+                        INNER JOIN ObjectString AS ObjectString_Unit_Address
                                 ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
                                AND COALESCE(ObjectString_Unit_Address.ValueData,'') <>''
                    ORDER BY tmpUnitList.Level
                    LIMIT 1);
-   END IF;     
-        
-   
+   END IF;
+
+
    -- сохранили свойство <адрес>
    -- установить у Подразделения и всех Child новый адрес, у которых был такой же или пустой
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Unit_Address(), tmpUnitList.UnitId, vbAddress)
    FROM lfSelect_Object_Unit_byGroup (ioId) AS tmpUnitList
-         LEFT JOIN ObjectString AS ObjectString_Unit_Address 
+         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                 ON ObjectString_Unit_Address.ObjectId = tmpUnitList.UnitId
    WHERE (COALESCE(ObjectString_Unit_Address.ValueData,'') = vbOldValue_Address OR COALESCE(ObjectString_Unit_Address.ValueData,'') = '');
-                                          
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -154,10 +161,10 @@ $BODY$
  08.12.13                                        * add inAccessKeyId
  20.07.13                                        * add inPartionDate
  16.06.13                                        * COALESCE (MAX (ObjectCode), 0)
- 14.06.13          *              
+ 14.06.13          *
  13.05.13                                        * rem lpCheckUnique_Object_ValueData
- 04.03.13          * vbCode_calc              
+ 04.03.13          * vbCode_calc
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Unit ()                            
+-- SELECT * FROM gpInsertUpdate_Object_Unit ()

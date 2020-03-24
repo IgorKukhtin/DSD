@@ -69,6 +69,8 @@ RETURNS TABLE(
 
     ,ModelServiceId                 Integer
     ,StaffListSummKindId            Integer
+
+    ,KoeffHoursWork_car             TFloat
     )
 AS
 $BODY$
@@ -194,7 +196,9 @@ BEGIN
            --
          , Report_1.Gross,Report_1.GrossOnOneMember
          , Report_1.Amount,Report_1.AmountOnOneMember
-         , Report_1.ServiceModelId AS ModelServiceId, 0 AS StaffListSummKindId
+         , Report_1.ServiceModelId AS ModelServiceId
+         , 0 AS StaffListSummKindId
+         , Report_1.KoeffHoursWork_car
     FROM gpSelect_Report_Wage_Model (inStartDate      := inStartDate,
                                      inEndDate        := inEndDate, --дата окончания периода
                                      inUnitId         := inUnitId,   --подразделение
@@ -274,6 +278,7 @@ BEGIN
        , Report_2.Summ AS AmountOnOneMember
        , 0             AS ModelServiceId
        , Report_2.StaffListSummKindId
+       , 0 :: TFloat   AS KoeffHoursWork_car
 
     FROM gpSelect_Report_Wage_Sum (inStartDate      := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inStartDate END
                                  , inEndDate        := CASE WHEN inModelServiceId > 0 THEN NULL ELSE inEndDate   END
@@ -439,6 +444,8 @@ BEGIN
                      THEN Res.StaffListSummKindId
                 END AS StaffListSummKindId
 
+               , Res.KoeffHoursWork_car
+
             FROM Res
             WHERE Res.MemberId > 0
             GROUP BY
@@ -529,7 +536,10 @@ BEGIN
                ,CASE WHEN inDetailModelService = TRUE
                      THEN Res.StaffListSummKindId
                 END
+               ,Res.KoeffHoursWork_car
         )
+
+        -- Результат
         SELECT
             tmpRes.StaffListId
           , Object_StaffList.ObjectCode AS StaffListCode
@@ -604,6 +614,8 @@ BEGIN
 
            ,tmpRes.ModelServiceId      :: Integer AS ModelServiceId
            ,tmpRes.StaffListSummKindId :: Integer AS StaffListSummKindId
+
+           ,tmpRes.KoeffHoursWork_car  :: TFloat  AS KoeffHoursWork_car
 
         FROM
             tmpRes

@@ -33,7 +33,7 @@ BEGIN
                                ))
     THEN
         vbMemberId:= 0;
-    ELSE
+    /*ELSE
         vbMemberId:= (SELECT ObjectLink_User_Member.ChildObjectId
                       FROM ObjectLink AS ObjectLink_User_Member
                       WHERE ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
@@ -59,12 +59,12 @@ BEGIN
                                        , 439923 -- Васильева Л.Я.
                                        , 439925 -- Новиков Д.В.
                                         )
-                     );
+                     );*/
     END IF;
 
     RETURN QUERY
         WITH tmpList AS (
-                         SELECT DISTINCT 
+                         /*SELECT DISTINCT 
                                 ObjectLink.ObjectId AS UnitId
                          FROM ObjectLink
                               LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -72,7 +72,17 @@ BEGIN
                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                          WHERE ObjectLink.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
                            AND ( ObjectLink_Personal_Member.ChildObjectId = vbMemberId 
-                              OR vbMemberId = 0)
+                              OR vbMemberId = 0)*/
+                         SELECT DISTINCT ObjectLink_Unit.ChildObjectId AS UnitId
+                         FROM ObjectLink
+                              INNER JOIN ObjectLink AS ObjectLink_Unit
+                                                    ON ObjectLink_Unit.ObjectId = ObjectLink.ObjectId
+                                                   AND ObjectLink_Unit.DescId   = zc_ObjectLink_MemberSheetWorkTime_Unit()
+                              INNER JOIN Object ON Object.Id       = ObjectLink.ObjectId
+                                               AND Object.isErased = FALSE
+                         WHERE ObjectLink.DescId        = zc_ObjectLink_MemberSheetWorkTime_Member()
+                           AND (ObjectLink.ChildObjectId = vbMemberId
+                                OR vbMemberId = 0)
                         )
         SELECT
             Object_Unit.Id                     AS UnitId
@@ -85,16 +95,18 @@ BEGIN
           , Object_SheetWorkTime.ValueData     AS SheetWorkTimeName
           , Object_Unit.isLeaf
           , Object_Unit.isErased
-        FROM (  SELECT DISTINCT 
-                    ChildObjectId AS UnitId 
-                FROM ObjectLink 
-                WHERE DescId = zc_ObjectLink_StaffList_Unit() 
-                  AND ChildObjectId > 0 
-                  AND vbMemberId = 0
-                UNION
-                SELECT tmpList.UnitId 
-                FROM tmpList
+        FROM (SELECT DISTINCT 
+                  ChildObjectId AS UnitId 
+              FROM ObjectLink 
+              WHERE DescId = zc_ObjectLink_StaffList_Unit() 
+                AND ChildObjectId > 0 
+                AND vbMemberId = 0
+
+             UNION
+              SELECT tmpList.UnitId FROM tmpList
+
              ) AS ObjectLink_StaffList_Unit
+
             LEFT JOIN Object_Unit_View AS Object_Unit 
                                        ON Object_Unit.Id = ObjectLink_StaffList_Unit.UnitId
             LEFT JOIN ObjectLink AS ObjectLink_Unit_SheetWorkTime
@@ -105,7 +117,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_UnitSheetWorkTime (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

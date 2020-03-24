@@ -90,6 +90,7 @@ type
     macPersonalServiceErased: TMultiAction;
     macPersonalServiceAll: TMultiAction;
     actPersonalServiceErased: TdsdExecStoredProc;
+    KoeffHoursWork_car: TcxGridDBColumn;
   private
     { Private declarations }
   public

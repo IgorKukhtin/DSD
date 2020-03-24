@@ -174,8 +174,8 @@ BEGIN
             LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Unit_Area.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_PersonalSheetWorkTime
-                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = Object_Unit_View.Id 
-                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId = zc_ObjectLink_Unit_PersonalSheetWorkTime()
+                                 ON ObjectLink_Unit_PersonalSheetWorkTime.ObjectId = NULL -- Object_Unit_View.Id 
+                                AND ObjectLink_Unit_PersonalSheetWorkTime.DescId   = zc_ObjectLink_Unit_PersonalSheetWorkTime()
             LEFT JOIN Object AS Object_PersonalSheetWorkTime ON Object_PersonalSheetWorkTime.Id = ObjectLink_Unit_PersonalSheetWorkTime.ChildObjectId
         
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
