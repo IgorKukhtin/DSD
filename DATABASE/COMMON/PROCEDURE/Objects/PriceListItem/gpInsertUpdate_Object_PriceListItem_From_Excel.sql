@@ -25,21 +25,22 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Сначала выберите Прайс лист';
     END IF;
     
+    IF COALESCE (inGoodsKindName,'') <> ''
+    THEN 
+         -- поиск вида товара
+         vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData = inGoodsKindName);
+         IF (COALESCE(vbGoodsKindId,0) = 0)
+         THEN
+             RAISE EXCEPTION 'Ошибка. В базе данных не найден вид товара <%>', inGoodsKindName;
+         END IF;
+    END IF;
+    
     --поиск товара по коду
     vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode);
 
-    -- поиск вида товара
-    vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData = inGoodsKindName);
-
-    
     IF (COALESCE(vbGoodsId,0) = 0)
     THEN
         RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
-    END IF;
-
-    IF (COALESCE(vbGoodsKindId,0) = 0)
-    THEN
-        RAISE EXCEPTION 'Ошибка. В базе данных не найден вид товара <%>', inGoodsKindName;
     END IF;
 
  
@@ -52,7 +53,7 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId := 0
                                                       , inPriceListId := inPriceListId
                                                       , inGoodsId     := vbGoodsId
-                                                      , inGoodsKindId := vbGoodsKindId
+                                                      , inGoodsKindId := COALESCE (vbGoodsKindId, Null) :: Integer
                                                       , inOperDate    := inOperDate
                                                       , inValue       := inPriceValue
                                                       , inUserId      := vbUserId
@@ -65,7 +66,7 @@ $BODY$
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  24.03.20         *
 */
 
