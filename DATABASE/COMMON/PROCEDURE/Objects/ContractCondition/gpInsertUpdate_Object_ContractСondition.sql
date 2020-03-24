@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
                         
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
     IN inBonusKindId               Integer   , -- Виды бонусов
     IN inInfoMoneyId               Integer   , -- Статьи назначения
     IN inContractSendId            Integer   , -- Договор маркетинга
+    IN inStartDate                 TDateTime , -- Дейстует с...
     IN inSession                   TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -28,6 +30,28 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Договор не установлен.';
    END IF;
+
+   -- проверка на уникальность, нельзя добавить с существующим StartDate
+   IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart()
+   THEN
+        IF EXISTS (SELECT 1
+                   FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                             ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                            AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                            AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                       INNER JOIN ObjectDate AS ObjectDate_StartDate
+                                             ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                            AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+                                            AND ObjectDate_StartDate.ValueData = inStartDate
+                   WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+                     AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
+                     AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract())
+        THEN
+            RAISE EXCEPTION 'Ошибка.Дата начала действия условия договора не уникальна.';
+        END IF;
+   END IF;
+   
 
    
    -- определили <Признак>
@@ -49,6 +73,34 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_ContractSend(), ioId, inContractSendId);   
+   
+   IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart()
+   THEN
+       --
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, inStartDate);
+       
+       --EndDate - апдейтим конечн. дату предыдущего условия  ROW_NUMBER
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, inStartDate-Interval '1 day');
+       FROM (SELECT ObjectLink_ContractCondition_Contract.ObjectId AS Id
+                  , ROW_NUMBER() OVER (ORDER BY ObjectLink_ContractCondition_Contract.ObjectId DESC) AS Ord
+             FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                 LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                                       ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                                      AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
+                 LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                                       ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                      AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+             WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+               AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
+               AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+               AND COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart()) < inStartDate
+             ) AS tmp
+       WHERE tmp.Ord = 1;
+
+
+   END IF;
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);

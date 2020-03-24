@@ -2,7 +2,6 @@ inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 711
   ClientWidth = 934
-  ExplicitTop = -22
   ExplicitWidth = 940
   ExplicitHeight = 739
   PixelsPerInch = 96
@@ -314,7 +313,7 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 97
+          Width = 79
         end
         object ContractConditionKindName: TcxGridDBColumn
           Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -329,14 +328,14 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 117
+          Width = 96
         end
         object Value: TcxGridDBColumn
           Caption = #1047#1085#1072#1095#1077#1085#1080#1077
           DataBinding.FieldName = 'Value'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 64
+          Width = 53
         end
         object InfoMoneyName: TcxGridDBColumn
           Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -351,7 +350,7 @@ inherited ContractEditForm: TContractEditForm
           Properties.ReadOnly = True
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 103
+          Width = 84
         end
         object ContractSendName: TcxGridDBColumn
           Caption = #8470' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090#1080#1085#1075
@@ -367,7 +366,7 @@ inherited ContractEditForm: TContractEditForm
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           HeaderHint = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1077#1088#1077#1074#1099#1089#1090#1072#1074#1083#1077#1085#1080#1077' '#1084#1072#1088#1082#1077#1090#1080#1085#1075
-          Width = 70
+          Width = 57
         end
         object ContractStateKindCode_Send: TcxGridDBColumn
           Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. '#1084#1072#1088#1082#1077#1090'.'
@@ -448,7 +447,29 @@ inherited ContractEditForm: TContractEditForm
           DataBinding.FieldName = 'Comment'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
-          Width = 92
+          Width = 76
+        end
+        object colStartDate: TcxGridDBColumn
+          Caption = #1044#1077#1081#1089#1090#1091#1077#1090' '#1089
+          DataBinding.FieldName = 'StartDate'
+          FooterAlignmentHorz = taCenter
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 55
+        end
+        object colEndDate: TcxGridDBColumn
+          Caption = #1044#1077#1081#1089#1090#1091#1077#1090' '#1087#1086
+          DataBinding.FieldName = 'EndDate'
+          FooterAlignmentHorz = taCenter
+          GroupSummaryAlignment = taCenter
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          HeaderGlyphAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 43
         end
         object isErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
@@ -891,7 +912,7 @@ inherited ContractEditForm: TContractEditForm
   object edPartnerCode: TcxTextEdit [78]
     Left = 55
     Top = 41
-    TabOrder = 81
+    TabOrder = 79
     Width = 50
   end
   object cbisDefaultOut: TcxCheckBox [79]
@@ -901,7 +922,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 83
+    TabOrder = 82
     Width = 155
   end
   object cxLabel36: TcxLabel [80]
@@ -2337,15 +2358,15 @@ inherited ContractEditForm: TContractEditForm
   end
   object ContractConditionDS: TDataSource
     DataSet = ContractConditionCDS
-    Left = 446
-    Top = 125
+    Left = 430
+    Top = 149
   end
   object ContractConditionCDS: TClientDataSet
     Aggregates = <>
     PacketRecords = 0
     Params = <>
-    Left = 481
-    Top = 135
+    Left = 489
+    Top = 151
   end
   object spInsertUpdateContractCondition: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractCondition'
@@ -2439,8 +2460,8 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 434
-    Top = 103
+    Left = 426
+    Top = 87
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
