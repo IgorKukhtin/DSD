@@ -22,42 +22,65 @@ BEGIN
 
     IF COALESCE(inPriceListId,0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. Сначала выберите Прайс лист';
+        RAISE EXCEPTION 'Ошибка.Не выберан Прайс-лист.';
     END IF;
     
-    IF COALESCE (inGoodsKindName,'') <> ''
+    IF COALESCE (TRIM (inGoodsKindName), '') <> ''
     THEN 
          -- поиск вида товара
-         vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData = inGoodsKindName);
-         IF (COALESCE(vbGoodsKindId,0) = 0)
+         vbGoodsKindId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsKind() AND Object.ValueData ILIKE TRIM (inGoodsKindName));
+         IF COALESCE (vbGoodsKindId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка. В базе данных не найден вид товара <%>', inGoodsKindName;
+             RAISE EXCEPTION 'Ошибка.Значение вид товара = <%> не найден.', inGoodsKindName;
          END IF;
     END IF;
     
-    --поиск товара по коду
+    -- поиск товара по коду
     vbGoodsId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = inGoodsCode);
-
-    IF (COALESCE(vbGoodsId,0) = 0)
+    --
+    IF COALESCE (vbGoodsId, 0) = 0
     THEN
-        RAISE EXCEPTION 'Ошибка. В базе данных не найден товар с кодом <%>', inGoodsCode;
+        RAISE EXCEPTION 'Ошибка.Значение код товара = <%> не найден.', inGoodsCode;
     END IF;
 
  
-    IF inPriceValue is not null AND (inPriceValue < 0)
+    IF inPriceValue < 0
     THEN
-        RAISE EXCEPTION 'Ошибка. Цена <%> Не может быть меньше нуля.', inPriceValue;
+        RAISE EXCEPTION 'Ошибка. Цена = <%> не может быть меньше нуля.', inPriceValue;
     END IF;
    
     -- 
-    PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId := 0
+    PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
                                                       , inPriceListId := inPriceListId
                                                       , inGoodsId     := vbGoodsId
-                                                      , inGoodsKindId := COALESCE (vbGoodsKindId, Null) :: Integer
+                                                      , inGoodsKindId := vbGoodsKindId
                                                       , inOperDate    := inOperDate
                                                       , inValue       := inPriceValue
                                                       , inUserId      := vbUserId
-                                                      );
+                                                       );
+    IF 1=1 AND COALESCE (vbGoodsKindId, 0) = 0
+    THEN
+        PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId          := 0
+                                                          , inPriceListId := inPriceListId
+                                                          , inGoodsId     := vbGoodsId
+                                                          , inGoodsKindId := OL_PriceListItem_GoodsKind.ChildObjectId
+                                                          , inOperDate    := inOperDate
+                                                          , inValue       := inPriceValue
+                                                          , inUserId      := vbUserId
+                                                           )
+        FROM ObjectLink AS OL_PriceListItem_Goods
+             JOIN ObjectLink AS OL_PriceListItem_PriceList
+                             ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                            AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+                            AND OL_PriceListItem_PriceList.ChildObjectId = inPriceListId
+             JOIN ObjectLink AS OL_PriceListItem_GoodsKind
+                             ON OL_PriceListItem_GoodsKind.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                            AND OL_PriceListItem_GoodsKind.DescId        = zc_ObjectLink_PriceListItem_GoodsKind()
+                            AND OL_PriceListItem_GoodsKind.ChildObjectId > 0
+        WHERE OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+          AND OL_PriceListItem_Goods.ChildObjectId = vbGoodsId
+       ;
+    END IF;
 
 END;
 $BODY$
