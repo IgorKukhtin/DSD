@@ -12,6 +12,7 @@ object PriceListItemForm: TPriceListItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -421,6 +422,14 @@ object PriceListItemForm: TPriceListItemForm
         end
         item
           Visible = True
+          ItemName = 'bbStartLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -500,6 +509,10 @@ object PriceListItemForm: TPriceListItemForm
     end
     object bbPrintGrid: TdxBarButton
       Action = actPrintGrid
+      Category = 0
+    end
+    object bbStartLoad: TdxBarButton
+      Action = actStartLoad
       Category = 0
     end
   end
@@ -809,6 +822,60 @@ object PriceListItemForm: TPriceListItemForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actDoLoad: TExecuteImportSettingsAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ImportSettingsId.Value = Null
+      ImportSettingsId.Component = FormParams
+      ImportSettingsId.ComponentItem = 'ImportSettingId'
+      ImportSettingsId.MultiSelectSeparator = ','
+      ExternalParams = <
+        item
+          Name = 'inPriceListId'
+          Value = '0'
+          Component = PriceListGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+    end
+    object actGetImportSetting: TdsdExecStoredProc
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGetImportSettingId
+      StoredProcList = <
+        item
+          StoredProc = spGetImportSettingId
+        end>
+      Caption = 'actGetImportSetting'
+    end
+    object actStartLoad: TMultiAction
+      Category = #1047#1072#1075#1088#1091#1079#1082#1072
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetImportSetting
+        end
+        item
+          Action = actDoLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1053#1072#1095#1072#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' '#1055#1088#1072#1081#1089#1072' '#1080#1079' '#1092#1072#1081#1083#1072'?'
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      Hint = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1080#1079' '#1101#1082#1089#1077#1083#1103
+      ImageIndex = 41
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
@@ -1070,5 +1137,47 @@ object PriceListItemForm: TPriceListItemForm
     Params = <>
     Left = 740
     Top = 193
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ImportSettingId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end>
+    Left = 472
+    Top = 136
+  end
+  object spGetImportSettingId: TdsdStoredProc
+    StoredProcName = 'gpGet_DefaultValue'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inDefaultKey'
+        Value = 'TPriceListItemForm;zc_Object_ImportSetting_PriceListItem'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUserKeyId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'gpGet_DefaultValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ImportSettingId'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 264
   end
 end

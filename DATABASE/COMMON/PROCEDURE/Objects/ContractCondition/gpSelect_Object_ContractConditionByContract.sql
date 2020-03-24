@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer
              , ContractTagName_Send TVarChar             
              , InfoMoneyCode_Send Integer, InfoMoneyName_Send TVarChar
              , JuridicalCode_Send Integer, JuridicalName_Send TVarChar
+             , StartDate TDateTime, EndDate TDateTime
              , Comment TVarChar
              , isErased boolean
              ) AS
@@ -49,6 +50,8 @@ BEGIN
          , Object_JuridicalSend.ObjectCode      AS JuridicalCode_Send
          , Object_JuridicalSend.ValueData       AS JuridicalName_Send 
 
+         , ObjectDate_StartDate.ValueData  :: TDateTime AS StartDate
+         , ObjectDate_EndDate.ValueData    :: TDateTime AS EndDate
           
          , Object_ContractCondition.ValueData AS Comment
          
@@ -101,7 +104,14 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-          
+
+          LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                               ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+          LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                               ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
+
      WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
        AND ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId;
   
@@ -114,6 +124,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionByContract (Integer, TVarChar) O
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.03.20         *
  02.03.16         *
  14.03.14         * add InfoMoney
  18.12.13                        *

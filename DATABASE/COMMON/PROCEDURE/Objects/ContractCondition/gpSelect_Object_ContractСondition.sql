@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer
              , ContractTagName_Send TVarChar             
              , InfoMoneyCode_Send Integer, InfoMoneyName_Send TVarChar
              , JuridicalCode_Send Integer, JuridicalName_Send TVarChar
+             , StartDate TDateTime, EndDate TDateTime
  
              , Comment TVarChar
              , InsertName TVarChar, UpdateName TVarChar
@@ -54,7 +55,10 @@ BEGIN
          , Object_InfoMoneySend.ValueData       AS InfoMoneyName_Send 
     
          , Object_JuridicalSend.ObjectCode      AS JuridicalCode_Send
-         , Object_JuridicalSend.ValueData       AS JuridicalName_Send 
+         , Object_JuridicalSend.ValueData       AS JuridicalName_Send
+         
+         , ObjectDate_StartDate.ValueData  :: TDateTime AS StartDate
+         , ObjectDate_EndDate.ValueData    :: TDateTime AS EndDate
 
          , Object_ContractCondition.ValueData   AS Comment
          
@@ -134,6 +138,13 @@ BEGIN
                               AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
+          LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                               ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+          LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                               ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
+
      WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
        AND Object_ContractCondition.isErased = FALSE
     ;
@@ -147,6 +158,7 @@ ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.03.20         *
  16.04.14                                        * add isErased = FALSE
  14.03.14         * add InfoMoney
  25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...

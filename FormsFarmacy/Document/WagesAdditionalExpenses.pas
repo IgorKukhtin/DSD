@@ -41,23 +41,25 @@ type
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
     dxBarButton10: TdxBarButton;
-    UnitName: TcxGridDBColumn;
-    SummaCleaning: TcxGridDBColumn;
-    SummaSP: TcxGridDBColumn;
-    SummaOther: TcxGridDBColumn;
-    SummaTotal: TcxGridDBColumn;
-    isIssuedBy: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
-    MIDateIssuedBy: TcxGridDBColumn;
+    UnitName: TcxGridDBBandedColumn;
+    SummaCleaning: TcxGridDBBandedColumn;
+    SummaSP: TcxGridDBBandedColumn;
+    SummaOther: TcxGridDBBandedColumn;
+    SummaTotal: TcxGridDBBandedColumn;
+    isIssuedBy: TcxGridDBBandedColumn;
+    Comment: TcxGridDBBandedColumn;
+    MIDateIssuedBy: TcxGridDBBandedColumn;
     actCopySumm: TdsdExecStoredProc;
     spCopySumm: TdsdStoredProc;
     dxBarButton11: TdxBarButton;
-    SummaValidationResults: TcxGridDBColumn;
-    SummaSUN1: TcxGridDBColumn;
+    SummaValidationResults: TcxGridDBBandedColumn;
+    SummaSUN1: TcxGridDBBandedColumn;
     actWagesTechnicalRediscount: TdsdOpenForm;
     dxBarButton12: TdxBarButton;
-    SummaTechnicalRediscount: TcxGridDBColumn;
-    SummaMoneyBox: TcxGridDBColumn;
+    SummaTechnicalRediscount: TcxGridDBBandedColumn;
+    SummaMoneyBox: TcxGridDBBandedColumn;
+    cxGridDBBandedTableView1: TcxGridDBBandedTableView;
+    SummaFullCharge: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

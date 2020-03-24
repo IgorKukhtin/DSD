@@ -253,9 +253,9 @@ BEGIN
                       END
             END::TFloat AS MarginPercent
           , (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)::TFloat AS Juridical_Price
-          , zfCalc_SalePrice( --для сети НЕ БОЛЕЙ!!! к цене поставщика дополнительные +1.5 19.03.2020      ----  +3% - 17,03,2020 Люба
+          , zfCalc_SalePrice( 
                               (SelectMinPrice_AllGoods.Price * (100 + Object_Goods.NDS)/100)               -- Цена С НДС
-                               * CASE WHEN vbObjectId = 4 THEN 1.015 ELSE 1 END
+                             --  * CASE WHEN vbObjectId = 4 THEN 1.015 ELSE 1 END                          -- 23.03. убрали  -- для сети НЕ БОЛЕЙ!!! к цене поставщика дополнительные +1.5 19.03.2020      ----  +3% - 17,03,2020 Люба
                             , CASE -- % наценки для срока годности < 6 мес.
                                    WHEN vbMarginPercent_ExpirationDate > 0
                                     AND SelectMinPrice_AllGoods.MinExpirationDate <= (CURRENT_DATE + vbInterval_ExpirationDate)

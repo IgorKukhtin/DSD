@@ -290,6 +290,11 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = Count_onCount_out
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_byCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -556,6 +561,11 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
           Format = ',0.####'
           Kind = skSum
           Column = Count_onCount_out
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory_byCount
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -1474,6 +1484,16 @@ object Report_GoodsBalanceForm: TReport_GoodsBalanceForm
       object CountStart_byCount: TcxGridDBColumn
         Caption = #1054#1089#1090'. '#1073#1090'. '#1085#1072#1095'. '
         DataBinding.FieldName = 'CountStart_byCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountInventory_byCount: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090'. '#1073#1090'.'
+        DataBinding.FieldName = 'CountInventory_byCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

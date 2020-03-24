@@ -414,9 +414,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Buyer_DateBirth() RETURNS Integer AS $B
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Buyer(), 'zc_ObjectDate_Buyer_DateBirth', 'Дата рождения' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Buyer_DateBirth');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractCondition_StartDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractCondition_StartDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractCondition(), 'zc_ObjectDate_ContractCondition_StartDate', 'Дейстует с' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractCondition_StartDate');
+
+CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractCondition_EndDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractCondition_EndDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_ContractCondition(), 'zc_ObjectDate_ContractCondition_EndDate', 'Дейстует по' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractCondition_EndDate');
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 24.03.20         * zc_ObjectDate_ContractCondition_StartDate
+                    zc_ObjectDate_ContractCondition_EndDate
  10.02.20                                                                                     * zc_ObjectDate_Buyer_DateBirth
  29.01.20         * zc_ObjectDate_PlanIventory_DateEnd
                     zc_ObjectDate_PlanIventory_DateStart

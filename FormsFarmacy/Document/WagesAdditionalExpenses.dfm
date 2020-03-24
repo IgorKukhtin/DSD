@@ -25,6 +25,67 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         ExplicitWidth = 877
         ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.DataSource = nil
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+            end>
+          OptionsBehavior.IncSearch = True
+          Styles.Content = nil
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+        end
+        object cxGridDBBandedTableView1: TcxGridDBBandedTableView [1]
+          Navigator.Buttons.CustomButtons = <>
+          Navigator.Buttons.First.Visible = True
+          Navigator.Buttons.PriorPage.Visible = True
+          Navigator.Buttons.Prior.Visible = True
+          Navigator.Buttons.Next.Visible = True
+          Navigator.Buttons.NextPage.Visible = True
+          Navigator.Buttons.Last.Visible = True
+          Navigator.Buttons.Insert.Visible = True
+          Navigator.Buttons.Append.Visible = False
+          Navigator.Buttons.Delete.Visible = True
+          Navigator.Buttons.Edit.Visible = True
+          Navigator.Buttons.Post.Visible = True
+          Navigator.Buttons.Cancel.Visible = True
+          Navigator.Buttons.Refresh.Visible = True
+          Navigator.Buttons.SaveBookmark.Visible = True
+          Navigator.Buttons.GotoBookmark.Visible = True
+          Navigator.Buttons.Filter.Visible = True
+          DataController.DataSource = MasterDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00;-,0.00; ;'
@@ -44,11 +105,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             item
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
-              Column = SummaTotal
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
               Column = SummaValidationResults
             end
             item
@@ -60,22 +116,47 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaTechnicalRediscount
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaMoneyBox
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaFullCharge
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaTotal
             end>
-          OptionsBehavior.IncSearch = True
-          Styles.Content = nil
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-          object UnitName: TcxGridDBColumn [0]
+          DataController.Summary.SummaryGroups = <>
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          Bands = <
+            item
+            end
+            item
+            end
+            item
+            end
+            item
+            end>
+          object UnitName: TcxGridDBBandedColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 256
+            Position.BandIndex = 0
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object SummaCleaning: TcxGridDBColumn [1]
+          object SummaCleaning: TcxGridDBBandedColumn
             Caption = #1059#1073#1086#1088#1082#1072
             DataBinding.FieldName = 'SummaCleaning'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -83,8 +164,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object SummaSP: TcxGridDBColumn [2]
+          object SummaSP: TcxGridDBBandedColumn
             Caption = #1057#1055
             DataBinding.FieldName = 'SummaSP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -92,26 +176,35 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          object SummaOther: TcxGridDBColumn [3]
+          object SummaOther: TcxGridDBBandedColumn
             Caption = #1055#1088#1086#1095#1077#1077
             DataBinding.FieldName = 'SummaOther'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 72
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 2
+            Position.RowIndex = 0
           end
-          object SummaValidationResults: TcxGridDBColumn [4]
+          object SummaValidationResults: TcxGridDBBandedColumn
             Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1087#1088#1086#1074#1077#1088#1082#1080
             DataBinding.FieldName = 'SummaValidationResults'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 3
+            Position.RowIndex = 0
           end
-          object SummaSUN1: TcxGridDBColumn [5]
+          object SummaSUN1: TcxGridDBBandedColumn
             Caption = #1064#1090#1088#1072#1092' '#1087#1086' '#1057#1059#1053'1'
             DataBinding.FieldName = 'SummaSUN1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -119,9 +212,12 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 76
+            Position.BandIndex = 1
+            Position.ColIndex = 4
+            Position.RowIndex = 0
           end
-          object SummaTechnicalRediscount: TcxGridDBColumn [6]
+          object SummaTechnicalRediscount: TcxGridDBBandedColumn
             Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
             DataBinding.FieldName = 'SummaTechnicalRediscount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -130,8 +226,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 76
+            Position.BandIndex = 2
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object SummaMoneyBox: TcxGridDBColumn [7]
+          object SummaMoneyBox: TcxGridDBBandedColumn
             Caption = #1050#1086#1087#1080#1083#1082#1072
             DataBinding.FieldName = 'SummaMoneyBox'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -139,9 +238,24 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
+            Width = 76
+            Position.BandIndex = 2
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          object SummaTotal: TcxGridDBColumn [8]
+          object SummaFullCharge: TcxGridDBBandedColumn
+            Caption = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
+            DataBinding.FieldName = 'SummaFullCharge'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+            Position.BandIndex = 2
+            Position.ColIndex = 2
+            Position.RowIndex = 0
+          end
+          object SummaTotal: TcxGridDBBandedColumn
             Caption = #1048#1090#1086#1075#1086
             DataBinding.FieldName = 'SummaTotal'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -149,34 +263,45 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 73
+            Width = 76
+            Position.BandIndex = 3
+            Position.ColIndex = 0
+            Position.RowIndex = 0
           end
-          object isIssuedBy: TcxGridDBColumn [9]
+          object isIssuedBy: TcxGridDBBandedColumn
             Caption = #1042#1099#1076#1072#1085#1086
             DataBinding.FieldName = 'isIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 62
+            Position.BandIndex = 3
+            Position.ColIndex = 1
+            Position.RowIndex = 0
           end
-          object MIDateIssuedBy: TcxGridDBColumn [10]
+          object MIDateIssuedBy: TcxGridDBBandedColumn
             Caption = #1042#1088#1077#1084#1103' '#1080' '#1076#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
             DataBinding.FieldName = 'MIDateIssuedBy'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 106
+            Position.BandIndex = 3
+            Position.ColIndex = 2
+            Position.RowIndex = 0
           end
-          object Comment: TcxGridDBColumn [11]
+          object Comment: TcxGridDBBandedColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 227
+            Position.BandIndex = 3
+            Position.ColIndex = 3
+            Position.RowIndex = 0
           end
-          inherited colIsErased: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
+        end
+        inherited cxGridLevel: TcxGridLevel
+          GridView = cxGridDBBandedTableView1
         end
       end
     end
@@ -522,6 +647,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBBandedTableView1
     SummaryItemList = <
       item
         Param.Value = Null
