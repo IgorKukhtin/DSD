@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   Vcl.ExtCtrls, cxPC, dxDockControl, dxDockPanel, cxContainer, dsdGuides,
   cxTextEdit, cxMaskEdit, cxButtonEdit, cxLabel, Vcl.ComCtrls, dxCore,
-  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit;
+  cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit, ExternalLoad;
 
 type
   TPriceListItemForm = class(TParentForm)
@@ -95,6 +95,12 @@ type
     valueprice_kg: TcxGridDBColumn;
     valuepricewithvat_kg: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+    spGetImportSettingId: TdsdStoredProc;
+    actDoLoad: TExecuteImportSettingsAction;
+    actGetImportSetting: TdsdExecStoredProc;
+    actStartLoad: TMultiAction;
+    bbStartLoad: TdxBarButton;
   private
     { Private declarations }
   public
