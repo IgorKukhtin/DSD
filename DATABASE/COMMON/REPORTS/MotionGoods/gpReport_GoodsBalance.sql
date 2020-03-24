@@ -114,6 +114,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , Count_onCount      TFloat -- Кол-во батонов в Расходе ПФ(ГП) за весь период
              , Count_onCount_in   TFloat -- Кол-во батонов в ПРиходе ПФ(ГП) за текущий период
              , Count_onCount_out  TFloat -- Кол-во батонов в расходе ПФ(ГП) за текущий период
+             , CountInventory_byCount TFloat -- Кол-во батонов инвентаризация за текущий период
              , CountStart_byCount TFloat -- Нач остаток батонов в ПФ(ГП)
              , CountEnd_byCount   TFloat -- Кон остаток батонов в ПФ(ГП)
              , Weight_byCount     TFloat -- вес 1 батона
@@ -660,8 +661,8 @@ BEGIN
                                          , -1 * SUM (CASE WHEN MIContainer.isActive = FALSE THEN MIContainer.Amount                    ELSE 0 END) AS CountOut_byCount
                                          ,      SUM (CASE WHEN MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount
 
-                                         ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END)AS Count_onCount_out
-                                         ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount_in
+                                        -- ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END)AS Count_onCount_out
+                                        -- ,      SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = TRUE THEN COALESCE (MIFloat_Count.ValueData, 0) ELSE 0 END) AS Count_onCount_in
                                                                                           
                                          ,      SUM (CASE WHEN MIContainer.isActive = TRUE THEN MIContainer.Amount                         ELSE 0 END) AS CountIn_byPF
                                          ,      SUM (CASE WHEN MIContainer.isActive = TRUE THEN COALESCE (MIFloat_CuterCount.ValueData, 0) ELSE 0 END) AS CuterCount
@@ -685,6 +686,46 @@ BEGIN
                                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementItemId ELSE NULL END
                                            , CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.isActive = FALSE THEN MIContainer.MovementId     ELSE NULL END
                                    )
+                                   
+     , tmpContainer_CountCount AS (SELECT tmp.LocationId
+                                        , tmp.GoodsId
+                                        , tmp.GoodsKindId
+                                        , tmp.PartionGoodsId
+                                        , SUM (tmp.AmountStart) AS AmountStart_byCount
+                                        , SUM (tmp.AmountEnd)   AS AmountEnd_byCount 
+                                        , SUM (tmp.AmountIn)    AS AmountIn_byCount
+                                        , SUM (tmp.AmountOut)   AS AmountOut_byCount
+                                        , SUM (tmp.AmountInventory) AS AmountInventory_byCount
+                                   FROM (SELECT tmpContainer_Count.LocationId
+                                              , tmpContainer_Count.GoodsId
+                                              , tmpContainer_Count.GoodsKindId
+                                              , tmpContainer_Count.PartionGoodsId
+                                              , Container.Amount - SUM ( COALESCE (MIContainer.Amount,0))                                                                               AS AmountStart
+                                              , Container.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END)                                  AS AmountEnd
+                                              , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = TRUE AND MIContainer.MovementDescId <> zc_Movement_Inventory() THEN COALESCE (MIContainer.Amount,0) ELSE 0 END)       AS AmountIn
+                                              , SUM (CASE WHEN MIContainer.OperDate <= inEndDate AND MIContainer.isActive = FALSE AND MIContainer.MovementDescId <> zc_Movement_Inventory() THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountOut
+                                         
+                                              , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Inventory() AND MIContainer.OperDate <= inEndDate THEN MIContainer.Amount ELSE 0 END) AS AmountInventory
+
+                                         FROM tmpContainer_Count
+                                               INNER JOIN Container ON Container.ParentId = tmpContainer_Count.ContainerId_begin
+                                                                   AND Container.DescId = zc_Container_CountCount()
+                                               LEFT JOIN MovementItemContainer AS MIContainer 
+                                                                               ON MIContainer.ContainerId = Container.Id
+                                                                              AND MIContainer.DescId = zc_MIContainer_CountCount()
+                                                                              AND MIContainer.OperDate >= inStartDate
+                                         GROUP BY tmpContainer_Count.LocationId
+                                                , tmpContainer_Count.GoodsId
+                                                , tmpContainer_Count.GoodsKindId
+                                                , tmpContainer_Count.PartionGoodsId
+                                                , Container.Amount
+                                         ) AS tmp
+                                   GROUP BY tmp.LocationId
+                                          , tmp.GoodsId
+                                          , tmp.GoodsKindId
+                                          , tmp.PartionGoodsId
+                                   )
+
      , tmpMIContainer_GP_all AS (-- Приход с производства ГП
                                  SELECT tmpMIContainer_Count_all.LocationId
                                       , tmpMIContainer_Count_all.GoodsId
@@ -727,8 +768,8 @@ BEGIN
                                      , SUM (tmpMIContainer_Count_all.CountOut_byPF)    AS CountOut_byPF
                                      , SUM (tmpMIContainer_Count_all.CountOut_byCount) AS CountOut_byCount
                                      , SUM (tmpMIContainer_Count_all.Count_onCount)    AS CountOut_onCount
-                                     , SUM (tmpMIContainer_Count_all.Count_onCount_in) AS Count_onCount_in
-                                     , SUM (tmpMIContainer_Count_all.Count_onCount_out) AS Count_onCount_out
+                                     --, SUM (tmpMIContainer_Count_all.Count_onCount_in) AS Count_onCount_in
+                                     --, SUM (tmpMIContainer_Count_all.Count_onCount_out) AS Count_onCount_out
                                      , SUM (tmpMIContainer_Count_all.CountIn_byPF)     AS CountIn_byPF
                                      , SUM (tmpMIContainer_Count_all.CuterCount)       AS CuterCount
                                 FROM tmpMIContainer_Count_all
@@ -773,6 +814,9 @@ BEGIN
                               , SUM (tmpAll.CountOut_onCount) AS CountOut_onCount
                               , SUM (tmpAll.Count_onCount_in)  AS Count_onCount_in
                               , SUM (tmpAll.Count_onCount_out) AS Count_onCount_out
+                              , SUM (tmpAll.CountStart_byCount) AS CountStart_byCount
+                              , SUM (tmpAll.CountEnd_byCount)   AS CountEnd_byCount
+                              , SUM (tmpAll.CountInventory_byCount) AS CountInventory_byCount
 
                               , SUM (tmpAll.CountIn_calc)  AS CountIn_calc
                               , SUM (tmpAll.CountOut_calc) AS CountOut_calc
@@ -803,8 +847,6 @@ BEGIN
                               , SUM (tmpAll.SummEnd)   AS SummEnd
 
                               , SUM (tmpAll.CountStart + tmpAll.CountInventory + tmpAll.CountIn + tmpAll.CountIn_calc - tmpAll.CountOut - tmpAll.CountOut_calc) AS CountEnd_calc
-
---                              , MIN (tmpAll.PartionGoodsDate) AS 
 
                          FROM (-- Не проведенное движение по zc_Movement_ProductionSeparate
                                SELECT tmpMovement_all.LocationId
@@ -848,9 +890,9 @@ BEGIN
                                     , 0 AS CountOut_onCount
                                     , 0 AS Count_onCount_in
                                     , 0 AS Count_onCount_out
-
---                                    , zc_DateEnd() AS PartionGoodsDate
-
+                                    , 0 AS CountStart_byCount
+                                    , 0 AS CountEnd_byCount
+                                    , 0 AS CountInventory_byCount
                                FROM tmpMovement_all
                                     LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                                             ON ObjectBoolean_PartionCount.ObjectId = tmpMovement_all.GoodsId
@@ -895,10 +937,11 @@ BEGIN
                                     , tmpMIContainer_Count.CountOut_byPF    AS CountOut_byPF
                                     , tmpMIContainer_Count.CountOut_byCount AS CountOut_byCount
                                     , tmpMIContainer_Count.CountOut_onCount AS CountOut_onCount
-                                    , tmpMIContainer_Count.Count_onCount_in   AS Count_onCount_in
-                                    , tmpMIContainer_Count.Count_onCount_out  AS Count_onCount_out
-
---                                    , zc_DateEnd() AS PartionGoodsDate
+                                    , 0  AS Count_onCount_in
+                                    , 0  AS Count_onCount_out
+                                    , 0 AS CountStart_byCount
+                                    , 0 AS CountEnd_byCount
+                                    , 0 AS CountInventory_byCount
 
                                FROM tmpMIContainer_Count
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_Count.PartionGoodsId
@@ -968,7 +1011,9 @@ BEGIN
                                     , 0 AS CountOut_onCount
                                     , 0 AS Count_onCount_in
                                     , 0 AS Count_onCount_out
-
+                                    , 0 AS CountStart_byCount
+                                    , 0 AS CountEnd_byCount
+                                    , 0 AS CountInventory_byCount
                                FROM tmpMIContainer_all
                                     LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMIContainer_all.PartionGoodsId
                                     LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
@@ -1040,7 +1085,9 @@ BEGIN
                                     , 0 AS CountOut_onCount
                                     , 0 AS Count_onCount_in
                                     , 0 AS Count_onCount_out
-
+                                    , 0 AS CountStart_byCount
+                                    , 0 AS CountEnd_byCount
+                                    , 0 AS CountInventory_byCount
                                FROM tmpMIContainer_GP
                                     LEFT JOIN tmpNorm_GP ON tmpNorm_GP.GoodsId_gp     = tmpMIContainer_GP.GoodsId_gp
                                                         AND tmpNorm_GP.GoodsKindId_gp = tmpMIContainer_GP.GoodsKindId_gp
@@ -1060,6 +1107,62 @@ BEGIN
                                     LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
                                                          ON ObjectLink_GoodsKindComplete.ObjectId = tmpMIContainer_GP.PartionGoodsId
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+
+                              UNION ALL
+                               -- остатки и движение батонов
+                               SELECT tmpContainer_CountCount.LocationId
+                                    , tmpContainer_CountCount.GoodsId
+                                    , tmpContainer_CountCount.GoodsKindId
+                                    , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
+                                    , COALESCE (Object_PartionGoods.ValueData, '')                       AS PartionGoodsName
+                                    , COALESCE (ObjectDate_PartionGoods_Value.ValueData, zc_DateStart()) AS PartionGoodsDate
+
+                                    , 0 AS CountIn_calc
+                                    , 0 AS CountOut_calc
+
+                                    , 0 AS CountIn
+                                    , 0 AS SummIn
+                                    , 0 AS CountOut
+                                    , 0 AS SummOut
+
+                                    , 0 AS CountLoss
+                                    , 0 AS SummLoss
+                                    , 0 AS CountInventory
+                                    , 0 AS SummInventory
+                                    , 0 AS SummInventory_RePrice
+                                    , 0 AS SummInventory_Basis
+
+                                    , 0 AS CountReal
+                                    , 0 AS SummReal
+                                    , 0 AS CountStart
+                                    , 0 AS CountEnd
+                                    , 0 AS SummStart
+                                    , 0 AS SummEnd
+
+                                    , 0 AS CountIn_Weight_gp
+                                    , 0 AS CountOut_norm_pf
+                                    , 0 AS SummIn_gp
+
+                                    , 0 AS CountIn_byPF
+                                    , 0 AS CuterCount
+                                    , 0 AS CountOut_byPF
+                                    , 0 AS CountOut_byCount
+                                    , 0 AS CountOut_onCount
+                                    , tmpContainer_CountCount.AmountIn_byCount    AS Count_onCount_in
+                                    , tmpContainer_CountCount.AmountOut_byCount   AS Count_onCount_out
+                                    , tmpContainer_CountCount.AmountStart_byCount AS CountStart_byCount
+                                    , tmpContainer_CountCount.AmountEnd_byCount   AS CountEnd_byCount
+                                    , tmpContainer_CountCount.AmountInventory_byCount AS CountInventory_byCount
+
+                               FROM tmpContainer_CountCount
+                                    LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpContainer_CountCount.PartionGoodsId
+                                    LEFT JOIN ObjectDate AS ObjectDate_PartionGoods_Value
+                                                         ON ObjectDate_PartionGoods_Value.ObjectId = tmpContainer_CountCount.PartionGoodsId
+                                                        AND ObjectDate_PartionGoods_Value.DescId = zc_ObjectDate_PartionGoods_Value()
+                                    LEFT JOIN ObjectLink AS ObjectLink_GoodsKindComplete
+                                                         ON ObjectLink_GoodsKindComplete.ObjectId = tmpContainer_CountCount.PartionGoodsId
+                                                        AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
+                                                        
                               ) AS tmpAll
 
                         GROUP BY tmpAll.LocationId
@@ -1323,10 +1426,14 @@ BEGIN
         , tmpResult.CountOut_onCount :: TFloat AS Count_onCount  -- Кол-во батонов в Расходе ПФ(ГП) за весь период
         , tmpResult.Count_onCount_in  :: TFloat AS Count_onCount_in   -- Кол-во батонов в приходе ПФ(ГП) за текущий период
         , tmpResult.Count_onCount_out :: TFloat AS Count_onCount_out  -- Кол-во батонов в расходе ПФ(ГП) за текущий период
+        , tmpResult.CountInventory_byCount :: TFloat AS CountInventory_byCount -- Кол-во батонов инвентаризация
         --, CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountStart / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount -- Нач остаток батонов в ПФ(ГП)
         --, CAST (CASE WHEN tmpResult.CountOut_byCount <> 0 THEN tmpResult.CountOut_onCount * tmpResult.CountEnd   / tmpResult.CountOut_byCount ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
-        , CAST (CASE WHEN tmpResult.CountStart <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_in,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount  -- Нач остаток батонов в ПФ(ГП)
-        , CAST (CASE WHEN tmpResult.CountEnd   <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_out,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
+        --, CAST (CASE WHEN tmpResult.CountStart <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_in,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount  -- Нач остаток батонов в ПФ(ГП)
+        --, CAST (CASE WHEN tmpResult.CountEnd   <> 0 THEN COALESCE (tmpResult.CountOut_onCount,0) - COALESCE (tmpResult.Count_onCount_out,0) ELSE 0 END AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
+        , CAST (tmpResult.CountStart_byCount AS NUMERIC (16, 0)) :: TFloat AS CountStart_byCount  -- Нач остаток батонов в ПФ(ГП)
+        , CAST (tmpResult.CountEnd_byCount   AS NUMERIC (16, 0)) :: TFloat AS CountEnd_byCount   -- Кон остаток батонов в ПФ(ГП)
+
 
         , CAST (CASE WHEN tmpResult.CountOut_onCount <> 0 THEN tmpResult.CountOut_byCount / tmpResult.CountOut_onCount ELSE 0 END AS NUMERIC (16, 2)) :: TFloat AS Weight_byCount -- вес 1 батона
 
@@ -1497,4 +1604,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
 
---select * from gpReport_GoodsBalance(inStartDate := ('09.02.2020')::TDateTime , inEndDate := ('29.02.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 867706 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
+-- select * from gpReport_GoodsBalance(inStartDate := ('03.03.2020')::TDateTime , inEndDate := ('23.03.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 2339 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
