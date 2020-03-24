@@ -2904,6 +2904,10 @@
 				<Form>Report_GeneralMovementGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_GeneralMovementGoodsDialog.pas">
+				<Form>Report_GeneralMovementGoodsDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

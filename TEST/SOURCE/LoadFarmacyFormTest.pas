@@ -846,6 +846,8 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsDialogForm');
     exit;
 
     {

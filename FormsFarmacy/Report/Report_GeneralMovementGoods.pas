@@ -21,8 +21,6 @@ type
   TReport_GeneralMovementGoodsForm = class(TAncestorEnumForm)
     edCodeSearch: TcxTextEdit;
     cxLabel1: TcxLabel;
-    colGoodsCode: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
     ChoiceGoodsForm: TOpenChoiceForm;
     UpdateDataSet: TdsdUpdateDataSet;
     actSetGoodsLink: TdsdExecStoredProc;
@@ -38,18 +36,15 @@ type
     cxLabel4: TcxLabel;
     dxBarButton1: TdxBarButton;
     FormParams: TdsdFormParams;
-    cxGrid1: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
-    UnitCode: TcxGridDBBandedColumn;
+    GoodsCode: TcxGridDBBandedColumn;
     UnitName: TcxGridDBBandedColumn;
-    SummaSelling: TcxGridDBBandedColumn;
-    SummaComing: TcxGridDBBandedColumn;
-    SummChange: TcxGridDBBandedColumn;
+    SummaSale: TcxGridDBBandedColumn;
     SummaIncome: TcxGridDBBandedColumn;
+    AmountIncome: TcxGridDBBandedColumn;
+    SummaProfit: TcxGridDBBandedColumn;
     Remains: TcxGridDBBandedColumn;
     RemainsSum: TcxGridDBBandedColumn;
-    cxGridLevel1: TcxGridLevel;
     ceUnit: TcxButtonEdit;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
@@ -58,9 +53,16 @@ type
     deEnd: TcxDateEdit;
     GuidesUnit: TdsdGuides;
     PeriodChoice: TPeriodChoice;
-    ReportDS: TDataSource;
-    ReportCDS: TClientDataSet;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
+    AmountSale: TcxGridDBBandedColumn;
+    actGridToExcelReport: TdsdGridToExcel;
+    bbGridToExcelReport: TdxBarButton;
+    GoodsName: TcxGridDBBandedColumn;
+    ExecuteDialog: TExecuteDialog;
+    bbExecuteDialog: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
+    edGoods: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public

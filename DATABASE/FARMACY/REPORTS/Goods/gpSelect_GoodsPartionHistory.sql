@@ -104,7 +104,7 @@ BEGIN
                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                               AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
+                                               AND (ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId OR vbObjectId = 0)
 
                      WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                        AND (ObjectLink_Unit_Juridical.ObjectId = inUnitId OR inUnitId = 0
@@ -204,14 +204,16 @@ BEGIN
                            AND CLO_Party.descid = zc_ContainerLinkObject_PartionMovementItem()
                          )
       , tmpRem_All AS (SELECT _tmpRem.ContainerId
-                            , tmpPrice.MCSValue
+                            , CASE WHEN COALESCE(inUnitId, 0) <> 0 THEN Max(tmpPrice.MCSValue) ELSE Null END AS MCSValue
                             , CLO_Party.ObjectId   AS PartyId
-                            , _tmpRem.RemainsStart
-                            , _tmpRem.RemainsEnd
+                            , SUM(_tmpRem.RemainsStart) AS RemainsStart
+                            , SUM(_tmpRem.RemainsEnd)   AS RemainsEnd
                        FROM _tmpRem
                            LEFT JOIN tmpContainer_Rem ON tmpContainer_Rem.Id = _tmpRem.ContainerId
                            LEFT OUTER JOIN tmpPrice ON tmpPrice.GoodsId = COALESCE (tmpContainer_Rem.ObjectId, inGoodsId)
                            LEFT OUTER JOIN tmpCLO_Party_Rem AS CLO_Party ON CLO_Party.containerid = tmpContainer_Rem.Id
+                       GROUP BY _tmpRem.ContainerId
+                              , CLO_Party.ObjectId
                        )
 
       , tmpRES AS (
@@ -398,9 +400,12 @@ BEGIN
                    NULL                       AS ToName,       -- Кому (Название)
                    NULL::TFloat               AS Price,        --Цена в документе
                    NULL::TFloat               AS Summa,        --Сума в документе
-                   tmpAmount.AmountIn         AS AmountIn,     --Кол-во приход
-                   tmpAmount.AmountOut        AS AmountOut,    --Кол-во расход
-                   tmpAmount.AmountInvent     AS AmountInvent, --Кол-во переучет
+--                   tmpAmount.AmountIn         AS AmountIn,     --Кол-во приход
+--                   tmpAmount.AmountOut        AS AmountOut,    --Кол-во расход
+--                   tmpAmount.AmountInvent     AS AmountInvent, --Кол-во переучет
+                   NULL::TFloat               AS AmountIn,     --Кол-во приход
+                   NULL::TFloat               AS AmountOut,    --Кол-во расход
+                   NULL::TFloat               AS AmountInvent, --Кол-во переучет
                    tmpRem_All.MCSValue        AS MCSValue,     --НТЗ
                    NULL                       AS CheckMember,  --Менеджер
                    NULL                       AS Bayer,        --Покупатель
@@ -553,4 +558,3 @@ $BODY$
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 18253 , inUnitId := 183292 , inStartDate := ('01.10.2015')::TDateTime , inEndDate := ('26.11.2016')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 59173 , inUnitId := 183292 , inStartDate := ('01.01.2018')::TDateTime , inEndDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
 --select * from gpSelect_GoodsPartionHistory(inPartyId := 0 , inGoodsId := 59173 , inUnitId := 183292 , inStartDate := ('24.05.2018')::TDateTime , inEndDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' ,  inSession := '3');
-
