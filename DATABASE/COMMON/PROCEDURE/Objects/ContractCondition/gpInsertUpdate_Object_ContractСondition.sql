@@ -52,8 +52,6 @@ BEGIN
         END IF;
    END IF;
    
-
-   
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
@@ -78,9 +76,11 @@ BEGIN
    THEN
        --
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, inStartDate);
+       --
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), ioId, zc_DateEnd());
        
        --EndDate - апдейтим конечн. дату предыдущего условия  ROW_NUMBER
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, inStartDate-Interval '1 day');
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, inStartDate-Interval '1 day')
        FROM (SELECT ObjectLink_ContractCondition_Contract.ObjectId AS Id
                   , ROW_NUMBER() OVER (ORDER BY ObjectLink_ContractCondition_Contract.ObjectId DESC) AS Ord
              FROM ObjectLink AS ObjectLink_ContractCondition_Contract
@@ -89,8 +89,8 @@ BEGIN
                                       AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                                       AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = inContractConditionKindId
                  LEFT JOIN ObjectDate AS ObjectDate_StartDate
-                                       ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
-                                      AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+                                      ON ObjectDate_StartDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                     AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
              WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
                AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
                AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
@@ -101,7 +101,30 @@ BEGIN
 
    END IF;
    
+   --если Выбран элемент УДАЛЕН нужно изменить дату окончания предыдущего условия договора,   у последнего №п/п всегда получится zc_DateEnd()
+   -- текущие обнулим
+   IF COALESCE (inContractConditionKindId,0) = 0
+   THEN
+       --
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_StartDate(), ioId, NULL);
+       --
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), ioId, NULL);   
 
+       --
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ContractCondition_EndDate(), tmp.Id, zc_DateEnd())
+       FROM (SELECT ObjectLink_ContractCondition_Contract.ObjectId AS Id
+             FROM ObjectLink AS ObjectLink_ContractCondition_Contract
+                 LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                                      ON ObjectDate_EndDate.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                                     AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
+             WHERE ObjectLink_ContractCondition_Contract.ChildObjectId = inContractId
+               AND ObjectLink_ContractCondition_Contract.ObjectId <> ioId
+               AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+               AND COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd()) = inStartDate - INTERVAL '1 DAY'
+             ) AS tmp;
+   END IF;
+   
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
@@ -114,6 +137,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.03.20         * add inStartDate
  08.05.14                                        * add lpCheckRight
  14.03.14         * add InfoMoney
  25.02.14                                        * add inIsUpdate and inIsErased

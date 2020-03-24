@@ -58,7 +58,7 @@ BEGIN
          , Object_JuridicalSend.ValueData       AS JuridicalName_Send
          
          , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
-         , COALESCE (ObjectDate_EndDate.ValueData, NULL)              :: TDateTime AS EndDate
+         , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
 
          , Object_ContractCondition.ValueData   AS Comment
          
