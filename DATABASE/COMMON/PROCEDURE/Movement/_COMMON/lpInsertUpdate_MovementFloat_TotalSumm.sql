@@ -87,6 +87,7 @@ $BODY$
 
   DECLARE vbIsNPP_calc Boolean;
   DECLARE vbDocumentTaxKindId Integer;
+  DECLARE vbDocumentTaxKindId_tax Integer;
 
 BEGIN
      IF COALESCE (inMovementId, 0) = 0
@@ -114,7 +115,7 @@ BEGIN
           , COALESCE (MovementFloat_ParValue.ValueData, 0)                                    AS ParValue
           , COALESCE (MovementFloat_CurrencyPartnerValue.ValueData, 0)                        AS CurrencyPartnerValue
           , COALESCE (MovementFloat_ParPartnerValue.ValueData, 0)                             AS ParPartnerValue
- 
+
             INTO vbMovementDescId, vbOperDatePartner, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbIsDiscountPrice, vbChangePrice, vbPaidKindId
                , vbCurrencyDocumentId, vbCurrencyPartnerId, vbCurrencyValue, vbParValue, vbCurrencyPartnerValue, vbParPartnerValue
 
@@ -182,6 +183,13 @@ BEGIN
      THEN
          -- !!!ОПРЕДЕЛИЛИ!!!
          vbDocumentTaxKindId:= COALESCE ((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_DocumentTaxKind()), 0);
+         vbDocumentTaxKindId_tax:= COALESCE ((SELECT MLO.ObjectId
+                                              FROM MovementLinkMovement AS MLM
+                                                   LEFT JOIN MovementLinkObject AS MLO
+                                                                                ON MLO.MovementId = MLM.MovementChildId
+                                                                               AND MLO.DescId     = zc_MovementLinkObject_DocumentTaxKind()
+                                              WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Child()
+                                             ), 0);
          -- !!!ОПРЕДЕЛИЛИ!!!
          vbIsNPP_calc:= EXISTS (SELECT 1
                                 FROM MovementItem
@@ -266,7 +274,7 @@ BEGIN
                   -- так переводится в валюту zc_Enum_Currency_Basis
                 -- !!!убрал, переводится в строчной части!!! * CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN CASE WHEN vbParValue = 0 THEN 0 ELSE vbCurrencyValue / vbParValue END ELSE 1 END
             AS NUMERIC (16, 2)) AS OperSumm_PVAT_original
-            
+
             -- Сумма НДС
           , OperSumm_VAT_2018
 
@@ -284,7 +292,7 @@ BEGIN
             -- Сумма в валюте
           , CAST (CASE WHEN vbCurrencyDocumentId <> zc_Enum_Currency_Basis() THEN OperSumm_Partner_Currency ELSE OperSumm_Partner END
                   -- так переводится в валюту CurrencyPartnerId
-                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice() 
+                * CASE WHEN vbMovementDescId <> zc_Movement_Invoice()
                        THEN CASE WHEN vbCurrencyPartnerId <> vbCurrencyDocumentId THEN CASE WHEN vbParPartnerValue = 0 THEN 0 ELSE vbCurrencyPartnerValue / vbParPartnerValue END ELSE CASE WHEN vbCurrencyPartnerId = zc_Enum_Currency_Basis() THEN 0 ELSE 1 END END
                        ELSE 1
                   END
@@ -359,7 +367,7 @@ BEGIN
                                          FROM MovementItem
                                               LEFT JOIN MovementItemFloat AS MIFloat_MovementId
                                                                           ON MIFloat_MovementId.MovementItemId = MovementItem.Id
-                                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()                         
+                                                                         AND MIFloat_MovementId.DescId         = zc_MIFloat_MovementId()
                                               LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = MIFloat_MovementId.ValueData :: Integer
                                               LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Tax
                                                                              ON MovementLinkMovement_Tax.MovementId = Movement_Sale.Id
@@ -472,7 +480,7 @@ BEGIN
 
                                , SUM (COALESCE (MIFloat_SummCompensation.ValueData, 0))       AS OperSumm_Compensation
                                , SUM (COALESCE (MIFloat_SummCompensationRecalc.ValueData, 0)) AS OperSumm_CompensationRecalc
-                               
+
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Master
                                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child()  THEN COALESCE (MIFloat_HeadCount.ValueData, 0) ELSE 0 END) AS OperHeadCount_Child
 
@@ -523,7 +531,7 @@ BEGIN
                                                            ON MIFloat_SummTaxDiff_calc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummTaxDiff_calc.DescId         = zc_MIFloat_SummTaxDiff_calc()
                                                           AND vbMovementDescId                        = zc_Movement_TaxCorrective()
-                               LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
+                                LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
                                                            ON MIFloat_PriceTax_calc.MovementItemId = MovementItem.Id
                                                           AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
                                                           AND vbMovementDescId                      = zc_Movement_TaxCorrective()
@@ -907,7 +915,7 @@ BEGIN
                 , OperHeadCount_Child
            FROM
                  -- получили 1 запись + !!! перевели в валюту если надо!!!
-                (SELECT SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                (SELECT SUM (CASE WHEN tmpMI.myLevel IN (2, 3) AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                        THEN 0
                                   ELSE tmpMI.OperCount_Master
                             END) AS OperCount_Master
@@ -917,11 +925,11 @@ BEGIN
                       , SUM (tmpMI.OperCount_Second)  AS OperCount_Second  -- Количество дозаказ
 
                       , SUM (tmpMI.OperCount_Tare) AS OperCount_Tare
-                      , SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                      , SUM (CASE WHEN tmpMI.myLevel IN (2, 3) AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                        THEN 0
                                   ELSE tmpMI.OperCount_Sh
                             END) AS OperCount_Sh
-                      , SUM (CASE WHEN tmpMI.myLevel = 2 AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
+                      , SUM (CASE WHEN tmpMI.myLevel IN (2, 3) AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical())
                                        THEN 0
                                   ELSE tmpMI.OperCount_Kg
                             END) AS OperCount_Kg
@@ -1197,7 +1205,22 @@ BEGIN
                                            AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                       )
+                                           AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                              )
                                                THEN tmpMI.PriceTax_calc * CASE WHEN tmpMI.OperCount_calc < 0 THEN -1 ELSE 1 END
+                                          WHEN vbIsNPP_calc = TRUE
+                                           AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                      )
+                                           AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                          )
+                                               THEN tmpMI.PriceTax_calc
                                           ELSE 1 * tmpMI.Price
                                      END AS Price
 
@@ -1281,7 +1304,21 @@ BEGIN
                                    , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                       )
+                                           AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                              )
                                                THEN -1 * (tmpMI.PriceTax_calc - tmpMI.Price)
+                                          WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                      )
+                                           AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                          )
+                                               THEN 1 * tmpMI.PriceTax_calc
                                           ELSE 1 * tmpMI.Price
                                      END AS Price
 
@@ -1296,8 +1333,25 @@ BEGIN
                                    , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                       )
+                                           AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                              )
                                                THEN 1 * tmpMI.OperCount_calc
+
+                                          WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                      )
+                                           AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                          )
+                                               THEN -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc)
+
                                           ELSE -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc)
+
                                      END AS OperCount_calc
 
                                      -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
@@ -1307,7 +1361,23 @@ BEGIN
                                    , CASE WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
                                                                      , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
                                                                       )
+                                           AND vbDocumentTaxKindId_tax NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                             , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                              )
                                                THEN 1 * tmpMI.OperCount_calc
+
+                                          WHEN vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                                     , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                                      )
+                                           AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                                         , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                                          )
+                                               THEN -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc)
+
                                           ELSE -1 * (tmpMI.AmountTax_calc - tmpMI.OperCount_calc)
                                      END AS OperCount_Master
 
@@ -1358,11 +1428,100 @@ BEGIN
                                    , tmpMI.OperSumm_HospOthRecalc
                                    , tmpMI.OperSumm_Compensation
                                    , tmpMI.OperSumm_CompensationRecalc
-                                   
+
                                    , tmpMI.OperHeadCount_Master
                                    , tmpMI.OperHeadCount_Child
                               FROM tmpMI
                               WHERE vbIsNPP_calc = TRUE
+
+                             UNION ALL
+                              SELECT tmpMI.MovementDescId
+                                   , tmpMI.MovementItemId
+                                   , tmpMI.DescId
+                                   , tmpMI.GoodsId
+                                   , tmpMI.GoodsKindId
+
+                                     -- !!! ТРЕТЬЯ Строка !!!
+                                   , 3 AS myLevel
+                                     -- !!! ТРЕТЬЯ Строка !!!
+                                   , tmpMI.PriceTax_calc - tmpMI.Price AS Price
+
+                                   , tmpMI.Price_original
+                                   , tmpMI.CountForPrice
+
+                                   , tmpMI.ChangePercent
+                                     -- Сумма DIFF для НН в колонке 13/1строка
+                                   , 0 AS SummTaxDiff_calc
+
+                                     -- !!!очень важное кол-во, для него расчет сумм!!! - !!! ТРЕТЬЯ Строка !!!
+                                   , -1 * tmpMI.OperCount_calc AS OperCount_calc
+
+                                     -- !!!не очень важное кол-во "ушло", для него тоже расчет сумм!!!
+                                   , tmpMI.OperCount_calcFrom
+
+                                     -- !!!важное кол-во, для него zc_MovementFloat_TotalCount !!! - !!! ВТОРАЯ Строка !!!
+                                   , -1 * tmpMI.OperCount_calc AS OperCount_Master
+
+                                   , tmpMI.OperCount_Child
+                                   , tmpMI.OperCount_Partner -- Количество у контрагента
+                                   , tmpMI.OperCount_Packer  -- Количество у заготовителя
+                                   , tmpMI.OperCount_Second  -- Количество дозаказ
+
+                                   , tmpMI.OperSumm_Inventory
+
+                                   , tmpMI.OperSumm_ToPay
+                                   , tmpMI.OperSumm_Service
+                                   , tmpMI.OperSumm_Card
+                                   , tmpMI.OperSumm_CardSecond
+                                   , tmpMI.OperSumm_Nalog
+                                   , tmpMI.OperSumm_Minus
+                                   , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_Holiday
+
+                                   , tmpMI.OperSumm_CardRecalc
+                                   , tmpMI.OperSumm_CardSecondRecalc
+                                   , tmpMI.OperSumm_CardSecondCash
+                                   , tmpMI.OperSumm_NalogRecalc
+                                   , tmpMI.OperSumm_SocialIn
+                                   , tmpMI.OperSumm_SocialAdd
+                                   , tmpMI.OperSumm_Child
+                                   , tmpMI.OperSumm_ChildRecalc
+                                   , tmpMI.OperSumm_MinusExt
+                                   , tmpMI.OperSumm_MinusExtRecalc
+
+                                   , tmpMI.OperSumm_Transport
+                                   , tmpMI.OperSumm_TransportAdd
+                                   , tmpMI.OperSumm_TransportAddLong
+                                   , tmpMI.OperSumm_TransportTaxi
+                                   , tmpMI.OperSumm_Phone
+
+                                   , tmpMI.OperSumm_NalogRet
+                                   , tmpMI.OperSumm_NalogRetRecalc
+
+                                   , tmpMI.OperSumm_AddOth
+                                   , tmpMI.OperSumm_AddOthRecalc
+
+                                   , tmpMI.OperSumm_Fine
+                                   , tmpMI.OperSumm_Hosp
+                                   , tmpMI.OperSumm_FineOth
+                                   , tmpMI.OperSumm_HospOth
+                                   , tmpMI.OperSumm_FineOthRecalc
+                                   , tmpMI.OperSumm_HospOthRecalc
+                                   , tmpMI.OperSumm_Compensation
+                                   , tmpMI.OperSumm_CompensationRecalc
+
+                                   , tmpMI.OperHeadCount_Master
+                                   , tmpMI.OperHeadCount_Child
+                              FROM tmpMI
+                              WHERE vbIsNPP_calc = TRUE
+                                AND vbDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectivePrice()
+                                                          , zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                                           )
+                                AND vbDocumentTaxKindId_tax IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                              , zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                              , zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                               )
                              ) AS tmpMI
 
                              LEFT JOIN ObjectFloat AS ObjectFloat_Weight
@@ -1488,7 +1647,7 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCompensation(), inMovementId, vbTotalSummCompensation);
          -- Сохранили свойство <Компенсация(ввод)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummCompensationRecalc(), inMovementId, vbTotalSummCompensationRecalc);
-         
+
      ELSE
          -- Сохранили свойство <Итого количество("главные элементы")>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master + vbOperCount_Packer);
@@ -1536,12 +1695,12 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_AmountCurrency(), inMovementId, vbOperSumm_Currency);
          -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
-         
+
          -- Сохранили свойство <Итого кол-во голов расход>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCount(), inMovementId, vbTotalHeadCount_Master);
          -- Сохранили свойство <Итого кол-во голов приход>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalHeadCountChild(), inMovementId, vbTotalHeadCount_Child);
-         
+
      END IF;
      END IF;
 

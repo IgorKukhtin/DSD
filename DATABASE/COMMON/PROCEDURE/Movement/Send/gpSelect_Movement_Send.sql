@@ -106,12 +106,9 @@ BEGIN
                                  THEN ''
                             ELSE '???'
                        END
-                    || CASE WHEN TRIM (COALESCE (MovementString_InvNumberPartner_Order.ValueData, '')) <> ''
-                                 THEN MovementString_InvNumberPartner_Order.ValueData
-                            ELSE '***' || Movement_Order.InvNumber
-                       END
+                    || Movement_Order.InvNumber
              END                                    :: TVarChar AS InvNumberOrder
-           , Object_Partner_order.ValueData                     AS PartnerName_order
+           , Object_From_order.ValueData                        AS PartnerName_order
            
            , Object_SubjectDoc.Id                               AS SubjectDocId
            , Object_SubjectDoc.ValueData                        AS SubjectDocName
@@ -192,14 +189,10 @@ BEGIN
                              ON MovementLinkMovement_Order.MovementId = Movement.Id
                             AND MovementLinkMovement_Order.DescId = zc_MovementLinkMovement_Order()
             LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = MovementLinkMovement_Order.MovementChildId
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner_Order
-                                     ON MovementString_InvNumberPartner_Order.MovementId = Movement_Order.Id
-                                    AND MovementString_InvNumberPartner_Order.DescId = zc_MovementString_InvNumberPartner()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner 
-                                         ON MovementLinkObject_Partner.MovementId = MovementLinkMovement_Order.MovementChildId
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner_order ON Object_Partner_order.Id = MovementLinkObject_Partner.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_order
+                                         ON MovementLinkObject_From_order.MovementId = MovementLinkMovement_Order.MovementChildId
+                                        AND MovementLinkObject_From_order.DescId     = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From_order ON Object_From_order.Id = MovementLinkObject_From_order.ObjectId
 
        WHERE (vbIsDocumentUser = FALSE OR MLO_Insert.ObjectId = vbUserId)
       ;

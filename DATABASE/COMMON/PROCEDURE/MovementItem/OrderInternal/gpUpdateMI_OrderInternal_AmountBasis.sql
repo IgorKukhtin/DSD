@@ -38,6 +38,9 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                   ON ObjectLink_Goods_GoodsGroup.ObjectId      = ObjectLink_Goods_InfoMoney.ObjectId
                                                  AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_pf
+                                                  ON ObjectLink_Goods_GoodsGroup_pf.ObjectId      = ObjectLink_Goods_InfoMoney.ObjectId
+                                                 AND ObjectLink_Goods_GoodsGroup_pf.DescId        = zc_ObjectLink_Goods_GoodsGroup()
                         WHERE ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                              OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье : запечена...
                              OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна

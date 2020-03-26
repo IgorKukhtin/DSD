@@ -2,12 +2,14 @@
 
 -- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (TDateTime, Integer, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (Boolean, TDateTime, Integer, Integer, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (Boolean, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Scale_OrderExternal (Boolean, TDateTime, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Scale_OrderExternal(
     IN inIsCeh          Boolean   , -- программа ScaleCeh - да/нет
     IN inOperDate       TDateTime   ,
     IN inFromId         Integer   , --
+    IN inToId           Integer   , --
     IN inBranchCode     Integer   , --
     IN inBarCode        TVarChar    ,
     IN inSession        TVarChar      -- сессия пользователя
@@ -215,7 +217,7 @@ BEGIN
                                         -- Для Мясного сырья - замена
                                         WHEN tmpMovement.DescId = zc_Movement_OrderInternal()
                                          AND inBranchCode BETWEEN 201 AND 210
-                                             THEN MovementLinkObject_From.ObjectId
+                                             THEN inToId
 
                                         -- Для остальных - Заявка покупателя или SendOnPrice или ReturnIn
                                         ELSE MovementLinkObject_From.ObjectId
@@ -740,4 +742,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inBranchCode:= 301, inBarCode:= '135', inSession := '5');
+-- SELECT * FROM gpGet_Scale_OrderExternal (inIsCeh:= TRUE, inOperDate:= CURRENT_DATE, inFromId:= 1, inToId:= 1, inBranchCode:= 301, inBarCode:= '135', inSession := '5');

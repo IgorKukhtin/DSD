@@ -147,7 +147,7 @@ BEGIN
 
         
    WHERE Object_Branch.DescId = zc_Object_Branch()
-     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE)
+--     AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll = TRUE)
   ;
   
 END;

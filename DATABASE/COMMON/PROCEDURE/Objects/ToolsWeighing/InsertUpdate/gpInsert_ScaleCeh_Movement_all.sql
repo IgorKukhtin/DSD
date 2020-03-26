@@ -428,6 +428,14 @@ BEGIN
                                     FROM gpGet_Movement_WeighingProduction (inMovementId:= inMovementId, inSession:= inSession) AS tmp
                                  );
 
+         -- сохранили связь с документом <Заявки сторонние>
+         IF vbMovementDescId = zc_Movement_Send() AND EXISTS (SELECT 1 FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
+         THEN
+             PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), vbMovementId_begin
+                                                        , (SELECT MLM.MovementChildId FROM MovementLinkMovement AS MLM WHERE MLM.MovementId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Order() AND MLM.MovementChildId > 0)
+                                                         );
+         END IF;
+
          -- только НЕ для <Взвешивание п/ф факт куттера>
          IF vbMovementDescId <> zc_Movement_ProductionUnion() OR vbDocumentKindId NOT IN (zc_Enum_DocumentKind_CuterWeight(), zc_Enum_DocumentKind_RealWeight())
          THEN
