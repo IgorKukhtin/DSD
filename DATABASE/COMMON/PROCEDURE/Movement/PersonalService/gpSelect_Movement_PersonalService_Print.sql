@@ -83,9 +83,7 @@ BEGIN
            , (COALESCE (MovementFloat_TotalSummCardSecond.ValueData, 0) + COALESCE (MovementFloat_TotalSummCardSecondRecalc.ValueData, 0)) :: TFloat AS TotalSummCardSecond
            , MovementFloat_TotalSummCardSecondCash.ValueData AS TotalSummCardSecondCash
            , MovementFloat_TotalSummNalog.ValueData          AS TotalSummNalog
-           , (MovementFloat_TotalSummNalogRet.ValueData 
-             -- вывести в колонке "Возмещ. налоги грн" но только для PersonalServiceListId = 293428;"Ведомость СБ
-             + CASE WHEN Object_PersonalServiceList.Id = 293428 THEN COALESCE (MovementFloat_TotalSummAuditAdd.ValueData, 0) ELSE 0 END)   :: TFloat AS TotalSummNalogRet  
+           , MovementFloat_TotalSummNalogRet.ValueData       AS TotalSummNalogRet  
            , MovementFloat_TotalSummChild.ValueData          AS TotalSummChild
            , MovementFloat_TotalSummMinusExt.ValueData       AS TotalSummMinusExt
            , (COALESCE (MovementFloat_TotalSummToPay.ValueData, 0)
@@ -101,8 +99,7 @@ BEGIN
            , MovementFloat_TotalSummTransportTaxi.ValueData    AS TotalSummTransportTaxi
            , MovementFloat_TotalSummPhone.ValueData            AS TotalSummPhone
            
-           , CASE WHEN Object_PersonalServiceList.Id = 301885 THEN 'Допл. за ревизию' ELSE 'Допл. за аудит' END :: TVarChar AS AuditColumnName --301885;"Ведомость охрана - заменить название колонки на "допл. за ревизию" 
-           
+           , CASE WHEN Object_PersonalServiceList.Id  IN (293428, 301885) THEN 'Допл. за ревизию' ELSE 'Возмещ. налоги грн' END :: TVarChar AS AuditColumnName --293428;"Ведомость СБ  + 301885;"Ведомость охрана - заменить название колонки на "допл. за ревизию" 
        FROM Movement
             LEFT JOIN MovementDate AS MovementDate_ServiceDate
                                    ON MovementDate_ServiceDate.MovementId = Movement.Id
@@ -756,9 +753,7 @@ BEGIN
             , tmpAll.SummCardSecond         :: TFloat AS SummCardSecond
             , tmpAll.SummCardSecondCash     :: TFloat AS SummCardSecondCash
             , tmpMIContainer.SummNalog      :: TFloat AS SummNalog
-            , (tmpMIContainer.SummNalogRet
-            --  вывести в колонке "Возмещ. налоги грн" но только для PersonalServiceListId = 293428;"Ведомость СБ
-               + CASE WHEN tmpAll.PersonalServiceListId = 293428 THEN COALESCE (tmpAll.SummAuditAdd,0) ELSE 0 END )   :: TFloat AS SummNalogRet
+            , tmpMIContainer.SummNalogRet   :: TFloat AS SummNalogRet
 --            , tmpAll.SummCardRecalc       :: TFloat AS SummCardRecalc
               -- !!!временно!!!
             , (tmpAll.SummMinus + tmpAll.SummFine + tmpAll.SummFineOth) :: TFloat AS SummMinus
@@ -780,8 +775,6 @@ BEGIN
             , tmpMIContainer_pay.Amount_service :: TFloat AS Amount_pay_service
 
             , tmpAll.Comment
-
-            , CASE WHEN tmpAll.PersonalServiceListId = 301885 THEN 'Допл. за ревизию' ELSE 'Допл. за аудит' END :: TVarChar AS AuditColumnName --301885;"Ведомость охрана - заменить название колонки на "допл. за ревизию" 
 
        FROM tmpAll
             LEFT JOIN tmpMIContainer ON tmpMIContainer.MemberId    = tmpAll.MemberId
@@ -859,3 +852,5 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 1001606, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
 -- SELECT * FROM gpSelect_Movement_PersonalService_Print (inMovementId := 377284, inisShowAll:= FALSE, inSession:= zfCalc_UserAdmin());
+--select * from gpSelect_Movement_PersonalService_Print(inMovementId := 16191486 , inisShowAll := 'FALSE' ,  inSession := '5');
+--FETCH ALL "<unnamed portal 5>";
