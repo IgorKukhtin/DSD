@@ -16,7 +16,21 @@ AS
 $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE vbisFreezing Boolean;
 BEGIN
+
+    --если НЕ склад мясн сырья и просто подписать в печати "кол-во"
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+    INSERT INTO _tmpUnit (UnitId)
+           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (8446) AS lfSelect_Object_Unit_byGroup; --8446   --ЦЕХ колбаса+дел-сы
+        
+    IF EXISTS (SELECT 1 FROM _tmpUnit WHERE _tmpUnit.UnitId = inFromId)
+    THEN
+        vbisFreezing := TRUE;
+    ELSE 
+        vbisFreezing := FALSE;
+    END IF;
+    
 
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, OperDate TDateTime, DayOfWeekName TVarChar, DayOfWeekNumber Integer, GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, Amount TFloat) ON COMMIT DROP;
@@ -63,6 +77,7 @@ BEGIN
          , STRING_AGG (DISTINCT tmp.InvNumber5, '; ') :: TVarChar AS InvNumber5
          , STRING_AGG (DISTINCT tmp.InvNumber6, '; ') :: TVarChar AS InvNumber6
          , STRING_AGG (DISTINCT tmp.InvNumber7, '; ') :: TVarChar AS InvNumber7
+         , vbisFreezing AS isFreezing
     FROM (SELECT CASE WHEN _tmpReport.DayOfWeekNumber = 1 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName1
                , CASE WHEN _tmpReport.DayOfWeekNumber = 2 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName2
                , CASE WHEN _tmpReport.DayOfWeekNumber = 3 THEN _tmpReport.DayOfWeekName ELSE NULL END :: TVarChar AS DayOfWeekName3
@@ -104,13 +119,13 @@ BEGIN
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6_fr --"морож."  freeze
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7_fr --"морож."  freeze
       
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6 --"охл."
-         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND COALESCE (_tmpReport.GoodsKindId,0) <> 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 4 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount4 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 5 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount5 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 6 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount6 --"охл."
+         , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 7 AND (COALESCE (_tmpReport.GoodsKindId,0) <> 8338 OR vbisFreezing = FALSE) THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount7 --"охл."
     FROM _tmpReport
     GROUP BY _tmpReport.GoodsGroupNameFull
            , _tmpReport.GoodsGroupName

@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummCard TFloat, SummCardRecalc TFloat, SummCardSecond TFloat, SummCardSecondRecalc TFloat, SummCardSecondDiff TFloat, SummCardSecondCash TFloat
              , SummNalog TFloat, SummNalogRecalc TFloat
              , SummNalogRet TFloat, SummNalogRetRecalc TFloat
-             , SummMinus TFloat, SummFine TFloat, SummFineOth TFloat, SummFineOthRecalc TFloat, SummAdd TFloat
+             , SummMinus TFloat, SummFine TFloat, SummFineOth TFloat, SummFineOthRecalc TFloat
+             , SummAdd TFloat, SummAuditAdd TFloat
              , SummHoliday TFloat, SummHosp TFloat, SummHospOth TFloat, SummHospOthRecalc TFloat
              , SummSocialIn TFloat, SummSocialAdd TFloat
              , SummChild TFloat, SummChildRecalc TFloat, SummMinusExt TFloat, SummMinusExtRecalc TFloat
@@ -230,6 +231,7 @@ BEGIN
             , MIFloat_SummFineOth.ValueData           AS SummFineOth
             , MIFloat_SummFineOthRecalc.ValueData     AS SummFineOthRecalc
             , MIFloat_SummAdd.ValueData               AS SummAdd
+            , MIFloat_SummAuditAdd.ValueData          AS SummAuditAdd
             , MIFloat_SummHoliday.ValueData           AS SummHoliday
             , MIFloat_SummHosp.ValueData              AS SummHosp
             , MIFloat_SummHospOth.ValueData           AS SummHospOth
@@ -333,6 +335,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                         ON MIFloat_SummAdd.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
+                                        ON MIFloat_SummAuditAdd.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
 
             LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                         ON MIFloat_SummHoliday.MovementItemId = tmpAll.MovementItemId
@@ -469,6 +475,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.03.20         * add SummAuditAdd
  05.02.20         *
  27.01.19         *
  15.10.19         *

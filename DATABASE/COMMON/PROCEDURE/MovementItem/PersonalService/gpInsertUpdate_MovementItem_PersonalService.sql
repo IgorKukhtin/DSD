@@ -9,9 +9,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 */
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+/*DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+*/
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
                                                                    
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
@@ -47,6 +52,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalService(
     IN inSummHosp              TFloat    , -- больничный
     IN inSummHospOthRecalc     TFloat    , -- больничный (ввод для распределения)
     IN inSummCompensationRecalc TFloat   , -- компенсация (ввод)
+    IN inSummAuditAdd           TFloat   , -- Сумма доплаты за аудит
     IN inComment               TVarChar  , -- 
     IN inInfoMoneyId           Integer   , -- Статьи назначения
     IN inUnitId                Integer   , -- Подразделение
@@ -90,6 +96,7 @@ BEGIN
                                                      , inSummHosp              := inSummHosp
                                                      , inSummHospOthRecalc     := inSummHospOthRecalc
                                                      , inSummCompensationRecalc:= inSummCompensationRecalc
+                                                     , inSummAuditAdd          := inSummAuditAdd
                                                      , inComment               := inComment
                                                      , inInfoMoneyId           := inInfoMoneyId
                                                      , inUnitId                := inUnitId
@@ -114,6 +121,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.20         * inSummAuditAdd
  27.01.20         * inSummCompensationRecalc
  29.07.19         *
  25.06.18         * inSummAddOthRecalc

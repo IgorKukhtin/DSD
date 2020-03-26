@@ -17,13 +17,13 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
-
+    
     -- Ограничения по товару
-    CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, OperDate TDateTime, DayOfWeekName TVarChar, DayOfWeekNumber Integer
+    CREATE TEMP TABLE _tmpReport (InvNumber TVarChar, OperDate TDateTime, DayOfWeekName TVarChar, DayOfWeekNumber Integer, ToName TVarChar
                                 , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
                                 , Amount TFloat, AmountSendIn_or TFloat, AmountSendOut_or TFloat, AmountSend_or TFloat, AmountSend_diff TFloat) ON COMMIT DROP;
     
-    INSERT INTO _tmpReport (InvNumber, OperDate, DayOfWeekName, DayOfWeekNumber, GoodsGroupNameFull, GoodsGroupName
+    INSERT INTO _tmpReport (InvNumber, OperDate, DayOfWeekName, DayOfWeekNumber, ToName, GoodsGroupNameFull, GoodsGroupName
                           , GoodsCode, GoodsName, GoodsKindId, GoodsKindName
                           , Amount, AmountSendIn_or, AmountSendOut_or, AmountSend_or, AmountSend_diff)
     
@@ -31,6 +31,7 @@ BEGIN
               , tmpReport.OperDate
               , tmpReport.DayOfWeekName
               , tmpReport.DayOfWeekNumber
+              , tmpReport.ToName
               , tmpReport.GoodsGroupNameFull
               , tmpReport.GoodsGroupName
               , tmpReport.GoodsCode
@@ -53,15 +54,16 @@ BEGIN
     -------
 
     OPEN Cursor1 FOR
-    SELECT inStartDate AS StartDate
-         , inEndDate   AS EndDate
-         , COALESCE (SELECT Object.ValueData FROM Object WHERE Object.Id = inFromId, '') ::TVarChar AS FromName
-         , COALESCE (SELECT Object.ValueData FROM Object WHERE Object.Id = inToId, '')   ::TVarChar AS ToName    
+    SELECT inStartDate  AS StartDate
+         , inEndDate    AS EndDate
+         , COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inFromId), '') ::TVarChar AS FromName
+         , COALESCE ((SELECT Object.ValueData FROM Object WHERE Object.Id = inToId), '')   ::TVarChar AS ToName    
     ;
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR
-    SELECT _tmpReport.GoodsGroupNameFull
+    SELECT _tmpReport.ToName
+         , _tmpReport.GoodsGroupNameFull
          , _tmpReport.GoodsGroupName
          , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
@@ -72,7 +74,8 @@ BEGIN
          , SUM (_tmpReport.AmountSend_diff)  :: TFloat AS AmountSend_diff
 
     FROM _tmpReport
-    GROUP BY _tmpReport.GoodsGroupNameFull
+    GROUP BY _tmpReport.ToName
+           , _tmpReport.GoodsGroupNameFull
            , _tmpReport.GoodsGroupName
            , _tmpReport.GoodsName
            , _tmpReport.GoodsCode

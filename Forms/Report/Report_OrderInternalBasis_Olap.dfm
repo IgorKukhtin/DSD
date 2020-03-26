@@ -755,7 +755,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'GoodsGroupName;GoodsName'
+          IndexFieldNames = 'ToName;GoodsGroupName;GoodsName'
         end>
       Params = <
         item

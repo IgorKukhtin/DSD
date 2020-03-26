@@ -518,10 +518,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_NumberSeats() RETURNS Integer AS $BO
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_NumberSeats', 'Количество мест' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_NumberSeats');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummAuditAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummAuditAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummAuditAdd', 'Доплата за ревизию' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummAuditAdd');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 25.03.20         * zc_MovementFloat_TotalSummAuditAdd
  03.03.20                                                                                     * zc_MovementFloat_NumberSeats
  03.03.20                                                                                     * zc_MovementFloat_SummaManual
  27.01.20         * zc_MovementFloat_TotalSummCompensation

@@ -65,6 +65,7 @@ BEGIN
            , Object_Juridical.ValueData                      AS JuridicalName
            , (COALESCE (MovementFloat_TotalSummService.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummAdd.ValueData, 0)
+            + COALESCE (MovementFloat_TotalSummAuditAdd.ValueData,0)
             + COALESCE (MovementFloat_TotalSummAddOth.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHoliday.ValueData, 0)
             + COALESCE (MovementFloat_TotalSummHosp.ValueData, 0)
@@ -171,6 +172,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAuditAdd
+                                    ON MovementFloat_TotalSummAuditAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAuditAdd.DescId = zc_MovementFloat_TotalSummAuditAdd()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAddOth
                                     ON MovementFloat_TotalSummAddOth.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAddOth.DescId = zc_MovementFloat_TotalSummAddOth()
@@ -279,6 +285,7 @@ BEGIN
                            , COALESCE (MIFloat_SummHosp.ValueData, 0)         AS SummHosp
                            , COALESCE (MIFloat_SummHospOth.ValueData, 0)      AS SummHospOth
                            , CAST (COALESCE (MIFloat_SummCompensation.ValueData, 0) AS NUMERIC (16, 2)) AS SummCompensation
+                           , COALESCE (MIFloat_SummAuditAdd.ValueData, 0)     AS SummAuditAdd
 
                            , COALESCE (MIFloat_SummMinus.ValueData, 0)        AS SummMinus
                            , COALESCE (MIFloat_SummFine.ValueData, 0)         AS SummFine
@@ -360,6 +367,10 @@ BEGIN
                                                        ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHoliday.DescId = zc_MIFloat_SummHoliday()
 
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
+                                                       ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
+
                            LEFT JOIN MovementItemFloat AS MIFloat_SummHosp
                                                        ON MIFloat_SummHosp.MovementItemId = MovementItem.Id
                                                       AND MIFloat_SummHosp.DescId         = zc_MIFloat_SummHosp()
@@ -432,6 +443,7 @@ BEGIN
                            , SUM (tmpMI_all.SummHosp)         AS SummHosp
                            , SUM (tmpMI_all.SummHospOth)      AS SummHospOth
                            , SUM (tmpMI_all.SummCompensation) AS SummCompensation
+                           , SUM (tmpMI_all.SummAuditAdd)     AS SummAuditAdd
 
                            , SUM (tmpMI_all.SummMinus)        AS SummMinus
                            , SUM (tmpMI_all.SummFine)         AS SummFine
@@ -498,6 +510,7 @@ BEGIN
                             , tmpMI.SummHosp
                             , tmpMI.SummHospOth
                             , tmpMI.SummCompensation
+                            , tmpMI.SummAuditAdd
 
                             , tmpMI.SummMinus
                             , tmpMI.SummFine
@@ -529,6 +542,7 @@ BEGIN
                             , 0 AS SummHosp
                             , 0 AS SummHospOth
                             , 0 AS SummCompensation
+                            , 0 AS SummAuditAdd
 
                             , 0 AS SummMinus
                             , 0 AS SummFine
@@ -568,6 +582,7 @@ BEGIN
                         , SUM (tmpAll.SummFine)               :: TFloat AS SummFine
                         , SUM (tmpAll.SummFineOth)            :: TFloat AS SummFineOth
                         , SUM (tmpAll.SummAdd + tmpAll.SummAddOth)   :: TFloat AS SummAdd
+                        , SUM (tmpAll.SummAuditAdd)           :: TFloat AS SummAuditAdd
             --            , SUM (tmpAll.SummSocialIn)         :: TFloat AS SummSocialIn
             --            , SUM (tmpAll.SummSocialAdd)        :: TFloat AS SummSocialAdd
                         , SUM (tmpAll.SummChild)              :: TFloat AS SummChild
@@ -606,6 +621,7 @@ BEGIN
                       OR 0 <> tmpAll.SummCardSecond
                       OR 0 <> tmpAll.SummAdd
                       OR 0 <> tmpAll.SummAddOth
+                      OR 0 <> tmpAll.SummAuditAdd
                       -- OR 0 <> tmpAll.SummNalog
                       -- OR 0 <> tmpAll.SummNalogRet
                    GROUP BY tmpAll.PositionId
@@ -751,6 +767,7 @@ BEGIN
             , (tmpAll.SummMinus + tmpAll.SummFine + tmpAll.SummFineOth) :: TFloat AS SummMinus
             , (tmpAll.SummFine  + tmpAll.SummFineOth)              :: TFloat AS SummFine
             , tmpAll.SummAdd                :: TFloat AS SummAdd
+            , tmpAll.SummAuditAdd           :: TFloat AS SummAuditAdd
 --            , tmpAll.SummSocialIn         :: TFloat AS SummSocialIn
 --            , tmpAll.SummSocialAdd        :: TFloat AS SummSocialAdd
             , tmpAll.SummChild              :: TFloat AS SummChild
@@ -835,6 +852,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.03.20         * SummAuditAdd
  02.10.18         *
 */
 

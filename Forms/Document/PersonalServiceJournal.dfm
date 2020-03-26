@@ -214,6 +214,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCompensationRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAuditAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -400,6 +405,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummCompensationRecalc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalSummAuditAdd
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -820,6 +830,18 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object TotalSummAuditAdd: TcxGridDBColumn
+            Caption = #1040#1091#1076#1080#1090
+            DataBinding.FieldName = 'TotalSummAuditAdd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1072#1091#1076#1080#1090
             Width = 80
           end
           object isAuto: TcxGridDBColumn
