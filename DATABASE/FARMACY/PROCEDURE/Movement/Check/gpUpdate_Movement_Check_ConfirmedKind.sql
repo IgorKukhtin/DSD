@@ -45,6 +45,7 @@ BEGIN
     THEN
         ouConfirmedKindName:= '';
         vbConfirmedKindId:= 0;
+        RAISE EXCEPTION 'Ошибка. Обновите дату VIP чека';
     END IF;
 
     IF vbConfirmedKindId > 0

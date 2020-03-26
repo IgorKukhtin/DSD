@@ -43,6 +43,7 @@ $BODY$
   DECLARE vbTotalSummNalogRetRecalc   TFloat;
   DECLARE vbTotalSummMinus            TFloat;
   DECLARE vbTotalSummAdd              TFloat;
+  DECLARE vbTotalSummAuditAdd         TFloat;
   DECLARE vbTotalSummHoliday          TFloat;
   DECLARE vbTotalSummSocialIn         TFloat;
   DECLARE vbTotalSummSocialAdd        TFloat;
@@ -316,6 +317,7 @@ BEGIN
           , OperSumm_Nalog
           , OperSumm_Minus
           , OperSumm_Add
+          , OperSumm_AuditAdd
           , OperSumm_Holiday
           , OperSumm_CardRecalc
           , OperSumm_CardSecondRecalc
@@ -351,7 +353,7 @@ BEGIN
                , vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_PVAT_original, vbOperSumm_VAT_2018
                , vbOperSumm_Partner, vbOperSumm_PartnerFrom, vbOperSumm_Currency
                , vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
-               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummHoliday
+               , vbTotalSummToPay, vbTotalSummService, vbTotalSummCard, vbTotalSummCardSecond, vbTotalSummNalog, vbTotalSummMinus, vbTotalSummAdd, vbTotalSummAuditAdd, vbTotalSummHoliday
                , vbTotalSummCardRecalc, vbTotalSummCardSecondRecalc, vbTotalSummCardSecondCash, vbTotalSummNalogRecalc, vbTotalSummSocialIn, vbTotalSummSocialAdd
                , vbTotalSummChild, vbTotalSummChildRecalc, vbTotalSummMinusExt, vbTotalSummMinusExtRecalc
                , vbTotalSummTransport, vbTotalSummTransportAdd, vbTotalSummTransportAddLong, vbTotalSummTransportTaxi, vbTotalSummPhone
@@ -443,6 +445,7 @@ BEGIN
                                , SUM (COALESCE (MIFloat_SummNalog.ValueData, 0))              AS OperSumm_Nalog
                                , SUM (COALESCE (MIFloat_SummMinus.ValueData, 0))              AS OperSumm_Minus
                                , SUM (COALESCE (MIFloat_SummAdd.ValueData, 0))                AS OperSumm_Add
+                               , SUM (COALESCE (MIFloat_SummAuditAdd.ValueData, 0))           AS OperSumm_AuditAdd
                                , SUM (COALESCE (MIFloat_SummHoliday.ValueData, 0))            AS OperSumm_Holiday
 
                                , SUM (COALESCE (MIFloat_SummCardRecalc.ValueData, 0))         AS OperSumm_CardRecalc
@@ -563,6 +566,10 @@ BEGIN
                                LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                                            ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                                           AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                                                          AND Movement.DescId = zc_Movement_PersonalService()
+                               LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
+                                                           ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
+                                                          AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
                                                           AND Movement.DescId = zc_Movement_PersonalService()
                                LEFT JOIN MovementItemFloat AS MIFloat_SummHoliday
                                                            ON MIFloat_SummHoliday.MovementItemId = MovementItem.Id
@@ -883,6 +890,7 @@ BEGIN
                 , OperSumm_Nalog
                 , OperSumm_Minus
                 , OperSumm_Add
+                , OperSumm_AuditAdd
                 , OperSumm_Holiday
                 , OperSumm_CardRecalc
                 , OperSumm_CardSecondRecalc
@@ -1033,6 +1041,7 @@ BEGIN
                       , SUM (tmpMI.OperSumm_Nalog)       AS OperSumm_Nalog
                       , SUM (tmpMI.OperSumm_Minus)       AS OperSumm_Minus
                       , SUM (tmpMI.OperSumm_Add)         AS OperSumm_Add
+                      , SUM (tmpMI.OperSumm_AuditAdd)    AS OperSumm_AuditAdd
                       , SUM (tmpMI.OperSumm_Holiday)     AS OperSumm_Holiday
                       , SUM (tmpMI.OperSumm_CardRecalc)  AS OperSumm_CardRecalc
                       , SUM (tmpMI.OperSumm_CardSecondRecalc)  AS OperSumm_CardSecondRecalc
@@ -1157,6 +1166,7 @@ BEGIN
                             , tmpMI.OperSumm_Nalog
                             , tmpMI.OperSumm_Minus
                             , tmpMI.OperSumm_Add
+                            , tmpMI.OperSumm_AuditAdd
                             , tmpMI.OperSumm_Holiday
                             , tmpMI.OperSumm_CardRecalc
                             , tmpMI.OperSumm_CardSecondRecalc
@@ -1253,6 +1263,7 @@ BEGIN
                                    , tmpMI.OperSumm_Nalog
                                    , tmpMI.OperSumm_Minus
                                    , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_AuditAdd
                                    , tmpMI.OperSumm_Holiday
 
                                    , tmpMI.OperSumm_CardRecalc
@@ -1395,6 +1406,7 @@ BEGIN
                                    , tmpMI.OperSumm_Nalog
                                    , tmpMI.OperSumm_Minus
                                    , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_AuditAdd
                                    , tmpMI.OperSumm_Holiday
 
                                    , tmpMI.OperSumm_CardRecalc
@@ -1582,6 +1594,8 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMinus(), inMovementId, vbTotalSummMinus);
          -- Сохранили свойство <Итого Сумма премия>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAdd(), inMovementId, vbTotalSummAdd);
+         -- Сохранили свойство <Итого Сумма доплаты за аудит>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummAuditAdd(), inMovementId, vbTotalSummAuditAdd);
          -- Сохранили свойство <Итого Сумма отпускные>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummHoliday(), inMovementId, vbTotalSummHoliday);
          -- Сохранили свойство <Карта БН (ввод) - 1ф.>
@@ -1714,6 +1728,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.20         *
  15.09.19         *
  29.07.19         *
  22.02.19         * TotalHeadCount

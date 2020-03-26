@@ -78,8 +78,6 @@ object ContractForm: TContractForm
     Align = alTop
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 104
-    ExplicitTop = 62
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -852,6 +850,24 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object colStartDate: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1091#1077#1090' c...'
+        DataBinding.FieldName = 'StartDate'
+        FooterAlignmentHorz = taCenter
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object colEndDate: TcxGridDBColumn
+        Caption = #1044#1077#1081#1089#1090#1091#1077#1090' '#1087#1086'...'
+        DataBinding.FieldName = 'EndDate'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object clccInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -2307,6 +2323,9 @@ object ContractForm: TContractForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateContractCondition
+        end
+        item
+          StoredProc = spSelectContractCondition
         end>
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
@@ -2789,10 +2808,19 @@ object ContractForm: TContractForm
         ComponentItem = 'ContractSendId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = CDSContractCondition
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 296
-    Top = 416
+    Left = 248
+    Top = 456
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'

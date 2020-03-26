@@ -28,7 +28,7 @@ BEGIN
        CREATE TEMP TABLE tmpMI (MovementItemId Integer, PersonalId Integer, isMain Boolean
              , UnitId Integer, PositionId Integer, InfoMoneyId Integer, MemberId Integer, PersonalServiceListId Integer
              , Amount TFloat, SummService TFloat, SummCardRecalc TFloat, SummCardSecondRecalc TFloat, SummCardSecondCash TFloat
-             , SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat, SummAddOthRecalc TFloat
+             , SummNalogRecalc TFloat, SummNalogRetRecalc TFloat, SummNalogRet TFloat, SummMinus TFloat, SummAdd TFloat, SummAuditAdd TFloat, SummAddOthRecalc TFloat
              , SummHoliday TFloat, SummSocialIn TFloat, SummSocialAdd TFloat, SummChildRecalc TFloat, SummMinusExtRecalc TFloat
              , SummFine TFloat, SummFineOthRecalc TFloat, SummHosp TFloat, SummHospOthRecalc TFloat, SummCompensationRecalc TFloat) ON COMMIT DROP;
 
@@ -57,7 +57,7 @@ BEGIN
                      )
          INSERT INTO tmpMI  (MovementItemId, PersonalId, isMain, UnitId, PositionId, InfoMoneyId, MemberId, PersonalServiceListId
                            , Amount, SummService, SummCardRecalc, SummCardSecondRecalc, SummCardSecondCash
-                           , SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd, SummAddOthRecalc
+                           , SummNalogRecalc, SummNalogRetRecalc, SummNalogRet, SummMinus, SummAdd, SummAuditAdd, SummAddOthRecalc
                            , SummHoliday, SummSocialIn, SummSocialAdd, SummChildRecalc, SummMinusExtRecalc, SummFine, SummFineOthRecalc, SummHosp, SummHospOthRecalc, SummCompensationRecalc)
             SELECT COALESCE (tmpMI.MovementItemId, 0)        AS MovementItemId
                  , MovementItem.ObjectId                     AS PersonalId
@@ -77,6 +77,7 @@ BEGIN
                  , COALESCE (MIFloat_SummNalogRet.ValueData, 0)        :: TFloat  AS SummNalogRet
                  , COALESCE (MIFloat_SummMinus.ValueData, 0)           :: TFloat  AS SummMinus
                  , COALESCE (MIFloat_SummAdd.ValueData, 0)             :: TFloat  AS SummAdd
+                 , COALESCE (MIFloat_SummAuditAdd.ValueData, 0)        :: TFloat  AS SummAuditAdd
                  , COALESCE (MIFloat_SummAddOthRecalc.ValueData, 0)    :: TFloat  AS SummAddOthRecalc
                  , COALESCE (MIFloat_SummHoliday.ValueData, 0)         :: TFloat  AS SummHoliday
                  , COALESCE (MIFloat_SummSocialIn.ValueData, 0)        :: TFloat  AS SummSocialIn
@@ -137,6 +138,10 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_SummAdd
                                              ON MIFloat_SummAdd.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummAdd.DescId = zc_MIFloat_SummAdd()
+                 LEFT JOIN MovementItemFloat AS MIFloat_SummAuditAdd
+                                             ON MIFloat_SummAuditAdd.MovementItemId = MovementItem.Id
+                                            AND MIFloat_SummAuditAdd.DescId = zc_MIFloat_SummAuditAdd()
+
                  LEFT JOIN MovementItemFloat AS MIFloat_SummAddOthRecalc
                                              ON MIFloat_SummAddOthRecalc.MovementItemId = MovementItem.Id
                                             AND MIFloat_SummAddOthRecalc.DescId = zc_MIFloat_SummAddOthRecalc()
@@ -213,6 +218,7 @@ BEGIN
                                                         , inSummHosp           := SummHosp
                                                         , inSummHospOthRecalc  := SummHospOthRecalc
                                                         , inSummCompensationRecalc:= SummCompensationRecalc
+                                                        , inSummAuditAdd       := SummAuditAdd
                                                         , inComment            := 'копирование из другой ведомости'
                                                         , inInfoMoneyId        := InfoMoneyId
                                                         , inUnitId             := UnitId
@@ -274,6 +280,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.20         * SummAuditAdd
  27.01.20         * SummCompensationRecalc
  15.09.19         *
  29.07.19         *

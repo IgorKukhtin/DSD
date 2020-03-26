@@ -746,10 +746,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceJournalChoiceForm');
-  }
+
 end;
 
 procedure TLoadFormTest.LoadPersonalServiceListFormTest;
@@ -1829,7 +1829,8 @@ begin
    }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
 
@@ -1841,7 +1842,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListTaxDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListTaxDialogForm');
-
+  }
 end;
 
 procedure TLoadFormTest.LoadQualityFormTest;

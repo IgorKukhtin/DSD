@@ -22,23 +22,14 @@ BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
-    IF vbIsInsert = FALSE
+    IF vbIsInsert = TRUE
     THEN
-      vbSummaSUN1 := (SELECT MIFloat_SummaSUN1.ValueData
-                      FROM MovementItemFloat AS MIFloat_SummaSUN1
-                      WHERE MIFloat_SummaSUN1.MovementItemId = ioId
-                        AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaSUN1(),
-                                                         zc_MIFloat_SummaTechnicalRediscount()));
-    ELSE
-      vbSummaSUN1 := 0;
+       -- сохранили <Элемент документа>
+      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, COALESCE (inSummaCleaning, 0) + 
+                                                                                       COALESCE (inSummaSP, 0) + 
+                                                                                       COALESCE (inSummaOther, 0) + 
+                                                                                       COALESCE (inValidationResults, 0), 0);
     END IF;
-
-     -- сохранили <Элемент документа>
-    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, COALESCE (inSummaCleaning, 0) + 
-                                                                                     COALESCE (inSummaSP, 0) + 
-                                                                                     COALESCE (inSummaOther, 0) + 
-                                                                                     COALESCE (inValidationResults, 0) + 
-                                                                                     COALESCE (vbSummaSUN1, 0), 0);
     
      -- сохранили свойство <Уборка>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaCleaning(), ioId, inSummaCleaning);
@@ -51,6 +42,12 @@ BEGIN
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
+
+    IF vbIsInsert = FALSE
+    THEN
+       -- сохранили <Элемент документа>
+      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, lpGet_MovementItem_WagesAE_TotalSum (ioId, inUserId), 0);
+    END IF;
 
     -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

@@ -855,6 +855,11 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_DayWork() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_DayWork', 'Рабочих дней' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_DayWork');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummAuditAdd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAuditAdd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummAuditAdd', 'Сумма доплата за аудит' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummAuditAdd');
+
+
 ----!!!!!!Farmacy
 
 CREATE OR REPLACE FUNCTION zc_MIFloat_JuridicalPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_JuridicalPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -1285,6 +1290,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 25.03.20         * zc_MIFloat_SummAuditAdd
  21.03.20                                                                                                     * zc_MIFloat_SummaFullCharge
  20.03.20                                                                                                     * zc_MIFloat_SummaMoneyBox ...
  06.03.20                                                                                                     * zc_MIFloat_SummaIlliquidAssets

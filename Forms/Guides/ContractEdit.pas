@@ -189,6 +189,8 @@ type
     cbisDefaultOut: TcxCheckBox;
     cxLabel36: TcxLabel;
     edBankAccountPartner: TcxTextEdit;
+    colStartDate: TcxGridDBColumn;
+    colEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

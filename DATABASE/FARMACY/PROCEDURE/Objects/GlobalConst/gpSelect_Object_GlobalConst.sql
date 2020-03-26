@@ -24,20 +24,21 @@
                                   , *
                              FROM pg_stat_activity WHERE state = 'active' and query NOT LIKE '%gpSelect_Object_GlobalConst%')
             , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)
-            , tmpProcess_HistoryCost AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpInsertUpdate_HistoryCost%' OR query LIKE '%gpComplete_All_Sybase%')
-            , tmpProcess_Cash AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Cash%')
-            , tmpProcess_Check AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Check%')
-            , tmpProcess_Send AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Send%')
-            , tmpProcess_Inv AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%Inventory%')
-            , tmpProcess_RepOth AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%gpReport%')
-            , tmpProcess_Vacuum AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query LIKE '%VACUUM%')
+            , tmpProcess_HistoryCost AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%gpInsertUpdate_HistoryCost%' OR query ILIKE '%gpComplete_All_Sybase%')
+            , tmpProcess_Cash AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%Cash%')
+            , tmpProcess_Check AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%Check%')
+            , tmpProcess_Send AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%Send%')
+            , tmpProcess_Site AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%Site%')
+            , tmpProcess_Inv AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%Inventory%')
+            , tmpProcess_RepOth AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%gpReport%')
+            , tmpProcess_Vacuum AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess WHERE query ILIKE '%VACUUM%')
          -- Результат
          SELECT 1::Integer AS Id
               , TO_CHAR (CURRENT_TIMESTAMP, 'DD.MM.YYYY hh24:mi:ss')::TVarChar AS OperDate
               , ('Кол-во АП = <' || COALESCE ((SELECT Res FROM tmpProcess_All), '0') || '> из которых :'
 
                             || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Cash), '0') <> '0'
-                                         THEN ' Чеки. = <' || COALESCE ((SELECT Res FROM tmpProcess_Cash), '0') || '>'
+                                         THEN ' Чеки. = <' || COALESCE ((SELECT Res FROM tmpProcess_Check), '0') || '>'
                                     ELSE ''
                                END
 
@@ -48,6 +49,11 @@
 
                             || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Cash), '0') <> '0'
                                          THEN ' Касса. = <'   || COALESCE ((SELECT Res FROM tmpProcess_Cash), '0') || '>'
+                                    ELSE ''
+                               END
+
+                            || CASE WHEN COALESCE ((SELECT Res FROM tmpProcess_Cash), '0') <> '0'
+                                         THEN ' Сайт. = <'   || COALESCE ((SELECT Res FROM tmpProcess_Site), '0') || '>'
                                     ELSE ''
                                END
 
@@ -89,3 +95,4 @@
 
   -- тест
   -- SELECT * FROM gpSelect_Object_GlobalConst ('', zfCalc_UserAdmin())
+  

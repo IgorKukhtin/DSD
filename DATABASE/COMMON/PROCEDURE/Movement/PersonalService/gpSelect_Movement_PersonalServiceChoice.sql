@@ -12,7 +12,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalServiceChoice(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
-             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat
+             , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat, TotalSummCard TFloat, TotalSummMinus TFloat
+             , TotalSummAdd TFloat, TotalSummAuditAdd TFloat
              , TotalSummHoliday TFloat, TotalSummCardRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat, TotalSummChild TFloat
              , TotalSummAddOth TFloat, TotalSummAddOthRecalc TFloat
              , TotalSummFine TFloat, TotalSummHosp TFloat
@@ -111,6 +112,7 @@ BEGIN
            
            , MovementFloat_TotalSummMinus.ValueData     AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData       AS TotalSummAdd
+           , MovementFloat_TotalSummAuditAdd.ValueData  AS TotalSummAuditAdd
            , MovementFloat_TotalSummHoliday.ValueData   AS TotalSummHoliday
 
            , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
@@ -190,6 +192,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAuditAdd
+                                    ON MovementFloat_TotalSummAuditAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummAuditAdd.DescId = zc_MovementFloat_TotalSummAuditAdd()
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
                                     ON MovementFloat_TotalSummHoliday.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummHoliday.DescId = zc_MovementFloat_TotalSummHoliday()
@@ -244,6 +249,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.03.20         * add TotalSummAuditAdd
  29.07.19         *
  25.06.18         * TotalSummAddOth
                     TotalSummAddOthRecalc

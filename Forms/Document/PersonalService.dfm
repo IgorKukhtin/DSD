@@ -244,6 +244,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.'
               Kind = skSum
               Column = DayHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAuditAdd
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -465,6 +470,11 @@ inherited PersonalServiceForm: TPersonalServiceForm
               Format = ',0.'
               Kind = skSum
               Column = DayHoliday
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummAuditAdd
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -696,15 +706,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1057#1091#1084#1084#1072' '#1087#1088#1077#1084#1080#1103' ('#1074#1074#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103')'
             Width = 70
           end
-          object SummHoliday: TcxGridDBColumn [24]
-            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
-            DataBinding.FieldName = 'SummHoliday'
+          object SummAuditAdd: TcxGridDBColumn [24]
+            Caption = #1040#1091#1076#1080#1090
+            DataBinding.FieldName = 'SummAuditAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 74
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1072#1091#1076#1080#1090
+            Width = 70
           end
           object SummMinus: TcxGridDBColumn [25]
             Caption = #1059#1076#1077#1088#1078#1072#1085#1080#1103
@@ -1142,6 +1153,16 @@ inherited PersonalServiceForm: TPersonalServiceForm
             HeaderHint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1076#1085#1077#1081' '#1086#1090#1087#1091#1089#1082#1072
             Options.Editing = False
             Width = 83
+          end
+          object SummHoliday: TcxGridDBColumn [67]
+            Caption = #1054#1090#1087#1091#1089#1082#1085#1099#1077
+            DataBinding.FieldName = 'SummHoliday'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 74
           end
         end
       end
@@ -1667,9 +1688,6 @@ inherited PersonalServiceForm: TPersonalServiceForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -3422,6 +3440,15 @@ inherited PersonalServiceForm: TPersonalServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummAuditAdd'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummAuditAdd'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inComment'
         Value = Null
         Component = MasterCDS
@@ -3530,8 +3557,8 @@ inherited PersonalServiceForm: TPersonalServiceForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 540
-    Top = 182
+    Left = 516
+    Top = 198
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_PersonalService_Print'

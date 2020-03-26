@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ServiceDate TDateTime
              , TotalSumm TFloat, TotalSummToPay TFloat, TotalSummCash TFloat, TotalSummService TFloat
              , TotalSummCard TFloat, TotalSummCardSecond TFloat, TotalSummCardSecondCash TFloat
-             , TotalSummNalog TFloat, TotalSummMinus TFloat, TotalSummAdd TFloat, TotalSummHoliday TFloat
+             , TotalSummNalog TFloat, TotalSummMinus TFloat
+             , TotalSummAdd TFloat, TotalSummAuditAdd TFloat,TotalSummHoliday TFloat
              , TotalSummCardRecalc TFloat, TotalSummCardSecondRecalc TFloat, TotalSummNalogRecalc TFloat, TotalSummSocialIn TFloat, TotalSummSocialAdd TFloat
              , TotalSummChild TFloat, TotalSummChildRecalc TFloat
              , TotalSummMinusExt TFloat, TotalSummMinusExtRecalc TFloat
@@ -188,6 +189,7 @@ BEGIN
            , MovementFloat_TotalSummNalog.ValueData      AS TotalSummNalog
            , MovementFloat_TotalSummMinus.ValueData      AS TotalSummMinus
            , MovementFloat_TotalSummAdd.ValueData        AS TotalSummAdd
+           , MovementFloat_TotalSummAuditAdd.ValueData   AS TotalSummAuditAdd
 
            , MovementFloat_TotalSummHoliday.ValueData     AS TotalSummHoliday
            , MovementFloat_TotalSummCardRecalc.ValueData  AS TotalSummCardRecalc
@@ -272,6 +274,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummAdd
                                     ON MovementFloat_TotalSummAdd.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummAdd.DescId = zc_MovementFloat_TotalSummAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummAuditAdd
+                                    ON MovementFloat_TotalSummAuditAdd.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummAuditAdd.DescId = zc_MovementFloat_TotalSummAuditAdd()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummHoliday
                                     ON MovementFloat_TotalSummHoliday.MovementId = Movement.Id
@@ -390,6 +396,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.03.20         * add TotalSummAuditAdd
  27.01.20         *
  15.10.19         *
  29.07.19         *

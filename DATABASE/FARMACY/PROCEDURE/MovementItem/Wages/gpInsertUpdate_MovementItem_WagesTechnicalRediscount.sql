@@ -87,7 +87,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';
     END IF;
 
-    vbSumma := COALESCE((SELECT  Sum(COALESCE(MovementFloat_SummaManual.ValueData, MovementFloat_TotalDiffSumm.ValueData))
+    vbSumma := COALESCE(Round((SELECT  Sum(COALESCE(MovementFloat_SummaManual.ValueData, MovementFloat_TotalDiffSumm.ValueData))
                          FROM Movement
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -115,20 +115,13 @@ BEGIN
                            AND Movement.DescId = zc_Movement_TechnicalRediscount()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
                            AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
-                           AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False), 0);
+                           AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False), 2), 0);
 
      -- сохранили свойство <Штрафах по техническому переучету>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaTechnicalRediscount(), vbId, CASE WHEN vbSumma  > 0 THEN 0 ELSE vbSumma END);
 
-    vbSumma := (SELECT SUM(MIFloat_Summa.ValueData)
-                FROM MovementItemFloat AS MIFloat_Summa
-                WHERE MIFloat_Summa.MovementItemId = vbId
-                  AND MIFloat_Summa.DescId in (zc_MIFloat_SummaCleaning(), zc_MIFloat_SummaSP(), zc_MIFloat_SummaOther(),
-                                               zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1(),
-                                               zc_MIFloat_SummaTechnicalRediscount()));
-
      -- сохранили <Элемент документа>
-    vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, COALESCE (vbSumma, 0)::TFloat, 0);
+    vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, vbUserId), 0);
 
     outSummaTechnicalRediscount := COALESCE((SELECT SUM(MIFloat_SummaTechnicalRediscount.ValueData)
                                              FROM MovementItemFloat AS MIFloat_SummaTechnicalRediscount

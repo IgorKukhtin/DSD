@@ -6,7 +6,11 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, In
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 -- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 --DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalService (Integer, Integer, Integer, Boolean
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
  INOUT ioId                     Integer   , -- Ключ объекта <Элемент документа>
@@ -41,6 +45,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalService(
     IN inSummHosp               TFloat    , -- больничный
     IN inSummHospOthRecalc      TFloat    , -- больничный (ввод для распределения)
     IN inSummCompensationRecalc TFloat    , -- Компенсация ввод (ввод)
+    IN inSummAuditAdd           TFloat    , -- Сумма доплата за аудит
 
     IN inComment                TVarChar  , -- 
     IN inInfoMoneyId            Integer   , -- Статьи назначения
@@ -191,7 +196,7 @@ BEGIN
 
      -- рассчитываем сумму (затраты)
      outAmount:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
-               + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) -- - COALESCE (inSummSocialIn, 0);
+               + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0) + COALESCE (inSummHosp, 0) + COALESCE (inSummAuditAdd, 0)-- - COALESCE (inSummSocialIn, 0);
                  -- "плюс" <Премия (распределено)>
                + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummAddOth()), 0)
                  -- "минус" <штраф (распределено)>
@@ -203,7 +208,7 @@ BEGIN
                 ;
      -- рассчитываем сумму к выплате
      outAmountToPay:= COALESCE (inSummService, 0) - COALESCE (inSummMinus, 0) - COALESCE (inSummFine, 0)
-                    + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0)  + COALESCE (inSummHosp, 0) + COALESCE (inSummSocialAdd, 0)
+                    + COALESCE (inSummAdd, 0) + COALESCE (inSummHoliday, 0)  + COALESCE (inSummHosp, 0) + COALESCE (inSummSocialAdd, 0) + COALESCE (inSummAuditAdd, 0)
                     - COALESCE (outSummTransport, 0) + COALESCE (outSummTransportAdd, 0) + COALESCE (outSummTransportAddLong, 0) + COALESCE (outSummTransportTaxi, 0)
                     - COALESCE (outSummPhone, 0)
                       -- "плюс" <Премия (распределено)>
@@ -260,6 +265,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummMinus(), ioId, inSummMinus);
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAdd (), ioId, inSummAdd );
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAuditAdd (), ioId, inSummAuditAdd );
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummAddOthRecalc(), ioId, inSummAddOthRecalc);
      -- сохранили свойство <>
@@ -324,6 +331,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.20         * inSummAuditAdd
  27.01.20         * add inSummCompensationRecalc
  15.10.19         * замена inSummFine, inSummHosp на inSummFineRecalc, inSummHospRecalc
  29.07.19         * inSummFine, inSummHosp

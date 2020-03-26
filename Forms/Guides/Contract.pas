@@ -223,6 +223,8 @@ type
     spUpdateVat: TdsdStoredProc;
     actUpdateDefaultOut: TdsdExecStoredProc;
     bbUpdateDefaultOut: TdxBarButton;
+    colStartDate: TcxGridDBColumn;
+    colEndDate: TcxGridDBColumn;
 
   private
     { Private declarations }
