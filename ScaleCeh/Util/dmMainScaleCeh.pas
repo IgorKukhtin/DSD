@@ -35,7 +35,7 @@ type
     //
     // +++ScaleCeh+++
     function gpGet_ScaleCeh_Movement(var execParamsMovement:TParams;isLast,isNext:Boolean): Boolean;
-    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String; inFromId_calc:Integer): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String; inFromId_calc, inToId_calc:Integer): Boolean;
     function gpGet_ScaleCeh_GoodsSeparate(inOperDate: TDateTime; inMovementId, inGoodsId : Integer; inPartionGoods : String;
                                           inIsClose : Boolean;
                                       var TotalCount_in, TotalCount_isOpen, TotalCount_null, TotalCount_MO, TotalCount_OB, TotalCount_PR, TotalCount_P : Double;
@@ -284,7 +284,7 @@ begin
     Result:=true;
 end;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String; inFromId_calc : Integer): Boolean;
+function TDMMainScaleCehForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode: String; inFromId_calc, inToId_calc : Integer): Boolean;
 var MovementDescId_old:Integer;
 begin
     with spSelect do
@@ -295,6 +295,7 @@ begin
        Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inOperDate', ftDateTime, ptInput, execParams.ParamByName('OperDate').AsDateTime);
        Params.AddParam('inFromId',ftInteger, ptInput, inFromId_calc);
+       Params.AddParam('inToId',ftInteger, ptInput, inToId_calc);
        Params.AddParam('inBranchCode',ftInteger, ptInput, SettingMain.BranchCode);
        Params.AddParam('inBarCode', ftString, ptInput, inBarCode);
        //try

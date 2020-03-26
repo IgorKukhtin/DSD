@@ -597,6 +597,10 @@ begin
      ParamAdd(Params,'UnitId', ftInteger);   //
      ParamAdd(Params,'UnitCode', ftInteger); //
      ParamAdd(Params,'UnitName', ftString);  //
+     ParamAdd(Params,'UnitId_to', ftInteger);   //
+     ParamAdd(Params,'UnitCode_to', ftInteger); //
+     ParamAdd(Params,'UnitName_to', ftString);  //
+     ParamAdd(Params,'BarCode', ftString);  //
 end;
 {------------------------------------------------------------------------}
 {------------------------------------------------------------------------}

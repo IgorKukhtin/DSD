@@ -116,15 +116,29 @@ object GuideUnitForm: TGuideUnitForm
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object UnitCode: TcxGridDBColumn
-          Caption = #1050#1086#1076
+          Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
           DataBinding.FieldName = 'UnitCode'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 35
         end
         object UnitName: TcxGridDBColumn
-          Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
           DataBinding.FieldName = 'UnitName'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 150
+        end
+        object UnitCode_to: TcxGridDBColumn
+          Caption = #1050#1086#1076' ('#1082#1086#1084#1091')'
+          DataBinding.FieldName = 'UnitCode_to'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 35
+        end
+        object UnitName_to: TcxGridDBColumn
+          Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1082#1086#1084#1091')'
+          DataBinding.FieldName = 'UnitName_to'
           HeaderAlignmentHorz = taCenter
           HeaderAlignmentVert = vaCenter
           Width = 150
@@ -157,8 +171,10 @@ object GuideUnitForm: TGuideUnitForm
       Width = 137
       Height = 41
       Align = alLeft
-      Caption = #1050#1086#1076
+      Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
       TabOrder = 0
+      ExplicitLeft = -1
+      ExplicitTop = -3
       object EditCode: TEdit
         Left = 5
         Top = 17
@@ -178,10 +194,8 @@ object GuideUnitForm: TGuideUnitForm
       Width = 594
       Height = 41
       Align = alClient
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1086#1090' '#1082#1086#1075#1086')'
       TabOrder = 1
-      ExplicitLeft = 136
-      ExplicitTop = -3
       object EditName: TEdit
         Left = 5
         Top = 17

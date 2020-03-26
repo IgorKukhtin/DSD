@@ -40,6 +40,8 @@ type
     actRefresh: TAction;
     actChoice: TAction;
     actExit: TAction;
+    UnitCode_to: TcxGridDBColumn;
+    UnitName_to: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure EditNameEnter(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
@@ -81,6 +83,12 @@ uses dmMainScale;
 {------------------------------------------------------------------------------}
 function TGuideUnitForm.Execute(var execParams:TParams): boolean;
 begin
+     with spSelect do
+     begin
+         Params.ParamByName('inBarCode').Value:= execParams.ParamByName('BarCode').AsString;
+         Execute;
+     end;
+
      CopyValuesParamsFrom(execParams,Params_local);
 
      EditCode.Text:='';
@@ -161,6 +169,10 @@ begin
                ParamByName('UnitId').AsInteger:= CDS.FieldByName('UnitId').AsInteger;
                ParamByName('UnitCode').AsInteger:= CDS.FieldByName('UnitCode').AsInteger;
                ParamByName('UnitName').asString:= CDS.FieldByName('UnitName').asString;
+               //
+               ParamByName('UnitId_to').AsInteger:= CDS.FieldByName('UnitId_to').AsInteger;
+               ParamByName('UnitCode_to').AsInteger:= CDS.FieldByName('UnitCode_to').AsInteger;
+               ParamByName('UnitName_to').asString:= CDS.FieldByName('UnitName_to').asString;
           end;
 end;
 {------------------------------------------------------------------------------}
@@ -255,8 +267,9 @@ begin
        StoredProcName:='gpSelect_Scale_Unit';
        Params.AddParam('inIsCeh', ftBoolean, ptInput, SettingMain.isCeh);
        Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+       Params.AddParam('inBarCode', ftString, ptInput, '');
        OutputType:=otDataSet;
-       Execute;
+       //Execute;
   end;
 
 end;

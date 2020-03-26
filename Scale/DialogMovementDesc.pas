@@ -58,13 +58,14 @@ type
     isEditPartnerCodeExit: Boolean;
     isEditBarCode: Boolean;
     isOrderExternal: Boolean;
+    isOrderExternal_exists: Boolean;
     isBarCodeMaster: Boolean;
     isUpdateUnit: Boolean;
     ParamsMovement_local: TParams;
 
     function Checked: boolean; override;//Проверка корректного ввода в Edit
 
-    function fGetUnit_OrderInternal : Integer;
+    procedure fGetUnit_OrderInternal (var FromId_calc, ToId_calc: Integer; BarCode : String);
   public
     function Execute(BarCode: String): boolean; virtual;
     function Get_isSendOnPriceIn(MovementDescNumber:Integer): boolean;
@@ -185,6 +186,7 @@ begin
 
      IsBarCodeMaster:=BarCode<>'';
      IsOrderExternal:=false;
+     isOrderExternal_exists:=false;
 
      CDS.Filtered:=false;
 
@@ -248,6 +250,13 @@ begin
               ShowMessage('Ошибка.В выбранном режиме можно исправить ТОЛЬКО склад.');
               exit;
          end;
+     end;
+
+     //если режим для этой оперции - выбор только через заявку
+     if (CDS.FieldByName('isOrderInternal').asBoolean = TRUE) and (isOrderExternal_exists = FALSE)
+     then begin
+            ShowMessage('Ошибка.Выбрать данную оперцию можно только через заявку.');
+            exit;
      end;
 
      //!!!обнуляется т.к.было изменение MovementDescId!!!
@@ -521,6 +530,7 @@ begin
 
                     if {(SettingMain.BranchCode < 301) or (SettingMain.BranchCode > 310)
                     or} (CDS.FieldByName('MovementDescId').asInteger <> zc_Movement_Send)
+                     or (isOrderExternal_exists = FALSE)
                     then begin
                               ParamByName('OrderExternalId').AsInteger        := 0;
                               ParamByName('OrderExternal_DescId').AsInteger   := 0;
@@ -546,16 +556,18 @@ begin
     CDS.Locate('Number',IntToStr(ParamsMovement_local.ParamByName('MovementDescNumber').AsInteger),[]);
 end;
 {------------------------------------------------------------------------}
-function TDialogMovementDescForm.fGetUnit_OrderInternal : Integer;
+procedure TDialogMovementDescForm.fGetUnit_OrderInternal (var FromId_calc, ToId_calc: Integer; BarCode : String);
 var execParams:TParams;
 begin
      if GetArrayList_Value_byName (Default_Array,'isGet_Unit') <> AnsiUpperCase('TRUE') then exit;
      //
      Create_ParamsUnit_OrderInternal(execParams);
+     execParams.ParamByName('BarCode').AsString:=BarCode;
      //
      if GuideUnitForm.Execute(execParams)
      then
-         Result:=execParams.ParamByName('UnitId').AsInteger;
+         FromId_calc:=execParams.ParamByName('UnitId').AsInteger;
+         ToId_calc:=execParams.ParamByName('UnitId_to').AsInteger;
      //
      execParams.Free;
 end;
@@ -563,7 +575,7 @@ end;
 procedure TDialogMovementDescForm.EditBarCodeExit(Sender: TObject);
 var Number:Integer;
     fOK:Boolean;
-    FromId_calc:Integer;
+    FromId_calc, ToId_calc:Integer;
 begin
     if isEditBarCode=false then exit;
 
@@ -582,7 +594,7 @@ begin
               // если надо - сначала уточникм подразделение
               if GetArrayList_Value_byName (Default_Array,'isGet_Unit') = AnsiUpperCase('TRUE') then
               begin
-                    FromId_calc:= fGetUnit_OrderInternal;
+                    fGetUnit_OrderInternal(FromId_calc, ToId_calc, EditBarCode.Text);
                     if FromId_calc = 0 then
                     begin
                          ShowMessage('Ошибка.Подразделение не выбрано.');
@@ -591,8 +603,8 @@ begin
               end;
               //поиск по номеру или ш-к
               if SettingMain.isCeh = TRUE
-              then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc)
-              else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc);
+              then isOrderExternal:=DMMainScaleCehForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc)
+              else isOrderExternal:=DMMainScaleForm.gpGet_Scale_OrderExternal(ParamsMovement_local,EditBarCode.Text, FromId_calc, ToId_calc);
               if isOrderExternal=false then
               begin
                    ShowMessage('Ошибка.'+#10+#13+'Значение <Код операции/№ "основания"/Штрих код "основания"> не найдено.');
@@ -600,12 +612,14 @@ begin
                    exit;
               end
               else begin
+                        isOrderExternal_exists:= TRUE;
                         EditPartnerCode.Text:= IntToStr(ParamsMovement_local.ParamByName('calcPartnerCode').AsInteger);
                         PanelPartnerName.Caption:= ParamsMovement_local.ParamByName('calcPartnerName').asString;
                    end;
     end
     else begin //обнуление
                isOrderExternal:=true;
+               isOrderExternal_exists:= FALSE;
                {ParamsMovement_local.ParamByName('OrderExternalId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_DescId').AsInteger:=0;
                ParamsMovement_local.ParamByName('OrderExternal_BarCode').asString :='';
@@ -696,6 +710,7 @@ begin
                    ShowMessage('Ошибка.Значение <Вид документа> не определено.');
                    ActiveControl:=EditBarCode;
                    isOrderExternal:=false;
+                   isOrderExternal_exists:=false;
                    exit;
               end;
               // завершение
