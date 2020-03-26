@@ -63,6 +63,13 @@ BEGIN
                                                    OR ObjectLink_Unit_Parent_3.ChildObjectId = 8439
                                                    OR ObjectLink_Unit_Parent_4.ChildObjectId = 8439
                                                    OR ObjectLink_Unit_Parent_5.ChildObjectId = 8439
+
+                                                   OR ObjectLink_Unit_Parent_to_0.ChildObjectId = 8439
+                                                   OR ObjectLink_Unit_Parent_to_1.ChildObjectId = 8439
+                                                   OR ObjectLink_Unit_Parent_to_2.ChildObjectId = 8439
+                                                   OR ObjectLink_Unit_Parent_to_3.ChildObjectId = 8439
+                                                   OR ObjectLink_Unit_Parent_to_4.ChildObjectId = 8439
+                                                   OR ObjectLink_Unit_Parent_to_5.ChildObjectId = 8439
                                                       THEN 8439 -- Участок мясного сырья
                                                  ELSE 0 -- ObjectLink_Unit_Parent_0.ChildObjectId
                                             END
@@ -88,11 +95,34 @@ BEGIN
                                           LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_5
                                                                ON ObjectLink_Unit_Parent_5.ObjectId = ObjectLink_Unit_Parent_4.ChildObjectId
                                                               AND ObjectLink_Unit_Parent_5.DescId   = zc_ObjectLink_Unit_Parent()
+
+                                          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_0
+                                                               ON ObjectLink_Unit_Parent_to_0.ObjectId = MovementLinkObject_To.ObjectId
+                                                              AND ObjectLink_Unit_Parent_to_0.DescId   = zc_ObjectLink_Unit_Parent()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_1
+                                                               ON ObjectLink_Unit_Parent_to_1.ObjectId = ObjectLink_Unit_Parent_to_0.ChildObjectId
+                                                              AND ObjectLink_Unit_Parent_to_1.DescId   = zc_ObjectLink_Unit_Parent()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_2
+                                                               ON ObjectLink_Unit_Parent_to_2.ObjectId = ObjectLink_Unit_Parent_to_1.ChildObjectId
+                                                              AND ObjectLink_Unit_Parent_to_2.DescId   = zc_ObjectLink_Unit_Parent()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_3
+                                                               ON ObjectLink_Unit_Parent_to_3.ObjectId = ObjectLink_Unit_Parent_to_2.ChildObjectId
+                                                              AND ObjectLink_Unit_Parent_to_3.DescId   = zc_ObjectLink_Unit_Parent()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_4
+                                                               ON ObjectLink_Unit_Parent_to_4.ObjectId = ObjectLink_Unit_Parent_to_3.ChildObjectId
+                                                              AND ObjectLink_Unit_Parent_to_4.DescId   = zc_ObjectLink_Unit_Parent()
+                                          LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent_to_5
+                                                               ON ObjectLink_Unit_Parent_to_5.ObjectId = ObjectLink_Unit_Parent_to_4.ChildObjectId
+                                                              AND ObjectLink_Unit_Parent_to_5.DescId   = zc_ObjectLink_Unit_Parent()
                                      WHERE Movement.Id = inMovementId_Weighing
                                     ), 0);
      ELSE
          vbFromId_group:= 0;
      END IF;
+
 
      -- % отклонения
      vbDiffTax := (WITH tmpBranch AS (SELECT MIN (COALESCE (OL_Branch.ChildObjectId, zc_Branch_Basis())) AS BranchId
