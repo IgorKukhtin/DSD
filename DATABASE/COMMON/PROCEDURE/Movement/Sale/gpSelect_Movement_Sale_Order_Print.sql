@@ -21,6 +21,7 @@ $BODY$
 
     DECLARE vbMovementId Integer;
     DECLARE vbFromId_group Integer;
+    DECLARE vbToId Integer;
     DECLARE vbDiffTax TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -29,14 +30,24 @@ BEGIN
 
 
      -- таблица
-     CREATE TEMP TABLE _tmpListMovement (MovementId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpListMovement (MovementId Integer, FromId Integer, ToId Integer) ON COMMIT DROP;
      -- Нашли Продажу + SendOnPrice + Send
-     INSERT INTO _tmpListMovement (MovementId)
+     INSERT INTO _tmpListMovement (MovementId, FromId, ToId)
         SELECT Movement.Id
+             , MovementLinkObject_From.ObjectId AS FromId
+             , MovementLinkObject_To.ObjectId   AS ToId
         FROM MovementLinkMovement
              INNER JOIN Movement ON Movement.Id       = MovementLinkMovement.MovementId
                                 AND Movement.DescId   IN (zc_Movement_Sale(), zc_Movement_SendOnPrice(), zc_Movement_Send())
                                 AND Movement.StatusId <> zc_Enum_Status_Erased()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                          ON MovementLinkObject_From.MovementId = Movement.Id
+                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                          ON MovementLinkObject_To.MovementId = Movement.Id
+                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
         WHERE MovementLinkMovement.MovementChildId = inMovementId
           AND MovementLinkMovement.DescId          = zc_MovementLinkMovement_Order()
        ;
@@ -108,6 +119,13 @@ BEGIN
                    LIMIT 1
                   );
      
+    --- кому из шапки заявки
+    vbToId := (SELECT MovementLinkObject_From.ObjectId  
+               FROM MovementLinkObject AS MovementLinkObject_From
+               WHERE MovementLinkObject_From.MovementId = inMovementId
+                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From());
+
+
     --
     OPEN Cursor1 FOR
 
@@ -143,7 +161,8 @@ BEGIN
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
-                               , SUM (MovementItem.Amount)                                 AS Amount
+                               , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = vbToId THEN MovementItem.Amount ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN MovementLinkObject_From.ObjectId = vbToId THEN MovementItem.Amount ELSE 0 END) AS Amount_ret
                           FROM (SELECT Movement.Id AS MovementId
                                 FROM MovementLinkMovement AS MLM_Order
                                     INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
@@ -162,6 +181,14 @@ BEGIN
                                 WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
                                 ) AS tmp
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                             ON MovementLinkObject_From.MovementId = tmp.MovementId
+                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          
+                                LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                             ON MovementLinkObject_To.MovementId = tmp.MovementId
+                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          
                                 INNER JOIN MovementItem ON MovementItem.MovementId = tmp.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
@@ -183,21 +210,30 @@ BEGIN
                                , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
-                               , SUM (MovementItem.Amount)                                 AS Amount
+                               --, SUM (MovementItem.Amount)                                 AS Amount
+                               , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN _tmpListMovement.ToId   = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
                            FROM _tmpListMovement
+                           
                                 INNER JOIN MovementItem ON MovementItem.MovementId = _tmpListMovement.MovementId
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
                                                        AND MovementItem.Amount     <> 0
                                 LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                                           ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                                           ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
                                                           AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                 LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                             ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                                             ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                             AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                               /* LEFT JOIN MovementItemContainer AS MIContainer
+                                                                ON MIContainer.MovementItemId = MovementItem.Id
+                                                               AND MIContainer.DescId     = zc_MIContainer_Count()
+                                                               AND MIContainer.WhereObjectId_Analyzer = vbToId
+                                                               */
                           GROUP BY MovementItem.ObjectId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
@@ -259,7 +295,9 @@ BEGIN
                                , COALESCE (tmpWeighing.PartionGoods, tmpMI.PartionGoods)         AS PartionGoods
                                , COALESCE (tmpWeighing.PartionGoodsDate, tmpMI.PartionGoodsDate) AS PartionGoodsDate
                                , COALESCE (tmpWeighing.Amount, 0)                                AS Amount_Weighing
+                               , COALESCE (tmpWeighing.Amount_ret, 0)                            AS Amount_Weighing_ret
                                , COALESCE (tmpMI.Amount, 0)                                      AS Amount
+                               , COALESCE (tmpMI.Amount_ret, 0)                                  AS Amount_ret
                            FROM tmpWeighing
                                 FULL JOIN tmpMI ON tmpMI.GoodsId          =  tmpWeighing.GoodsId
                                                AND tmpMI.GoodsKindId      =  tmpWeighing.GoodsKindId
@@ -271,7 +309,9 @@ BEGIN
                                , COALESCE (tmpResult_1.PartionGoods, tmpMIOrder.PartionGoods)         AS PartionGoods
                                , COALESCE (tmpResult_1.PartionGoodsDate, tmpMIOrder.PartionGoodsDate) AS PartionGoodsDate
                                , COALESCE (tmpResult_1.Amount_Weighing, 0)                       AS Amount_Weighing
+                               , COALESCE (tmpResult_1.Amount_Weighing_ret, 0)                   AS Amount_Weighing_ret
                                , COALESCE (tmpResult_1.Amount, 0)                                AS Amount
+                               , COALESCE (tmpResult_1.Amount_ret, 0)                            AS Amount_ret
                                , COALESCE (tmpMIOrder.Amount, 0)                                 AS Amount_Order
                                , COALESCE (tmpMIOrder.AmountSecond, 0)                           AS AmountSecond_Order
                            FROM tmpResult_1
@@ -296,6 +336,14 @@ BEGIN
             , tmpResult1.Amount_Weighing
             , tmpResult1.Amount_Weighing_Sh
             , tmpResult1.Amount_Weighing_Weight
+            --
+            , tmpResult1.Amount_ret
+            , tmpResult1.Amount_Sh_ret
+            , tmpResult1.Amount_Weight_ret
+
+            , tmpResult1.Amount_Weighing_ret
+            , tmpResult1.Amount_Weighing_Sh_ret
+            , tmpResult1.Amount_Weighing_Weight_ret
 
             , tmpResult1.PartionGoods
 
@@ -324,6 +372,15 @@ BEGIN
                   , tmpResult1.Amount_Weighing_Sh
                   , tmpResult1.Amount_Weighing_Weight
       
+                  --
+                  , tmpResult1.Amount_ret
+                  , tmpResult1.Amount_Sh_ret
+                  , tmpResult1.Amount_Weight_ret
+      
+                  , tmpResult1.Amount_Weighing_ret
+                  , tmpResult1.Amount_Weighing_Sh_ret
+                  , tmpResult1.Amount_Weighing_Weight_ret
+                  
                   , tmpResult1.PartionGoods
       
                   , tmpResult1.Amount_Order
@@ -334,21 +391,29 @@ BEGIN
                   , tmpResult1.AmountSecond_Order_Sh
                   , tmpResult1.AmountSecond_Order_Weight
       
-                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order > 0
+                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
+                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret > 0
                          THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
+                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret
                          ELSE 0
                     END AS CountDiff_B
-                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order < 0
-                         THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order)
+                  , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
+                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret < 0
+                         THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
+                                  + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret)
                          ELSE 0
                     END AS CountDiff_M
       
-                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight > 0
+                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
+                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret > 0
                          THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
+                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret
                          ELSE 0
                     END AS WeightDiff_B
-                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight < 0
-                         THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight)
+                  , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
+                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret < 0
+                         THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
+                                  + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret)
                          ELSE 0
                     END AS WeightDiff_M
 
@@ -362,11 +427,19 @@ BEGIN
                          , tmpResult.Amount                                                                                              :: TFloat AS Amount
                          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END                                :: TFloat AS Amount_Sh
                          , tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight
+
+                         , tmpResult.Amount_ret                                                                                              :: TFloat AS Amount_ret
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_ret ELSE 0 END                                :: TFloat AS Amount_Sh_ret
+                         , tmpResult.Amount_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight_ret
       
                          , tmpResult.Amount_Weighing                                                                                              :: TFloat AS Amount_Weighing
                          , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh
                          , tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight
       
+                         , tmpResult.Amount_Weighing_ret                                                                                              :: TFloat AS Amount_Weighing_ret
+                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing_ret ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh_ret
+                         , tmpResult.Amount_Weighing_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight_ret
+
                          , CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END :: TVarChar AS PartionGoods
       
                          , tmpResult.Amount_Order                                                                                              :: TFloat AS Amount_Order
