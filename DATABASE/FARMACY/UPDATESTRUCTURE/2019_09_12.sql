@@ -39,7 +39,7 @@ FROM (select distinct DATE_TRUNC ('DAY', OperDate) AS OperDate, EXTRACT (DOW FRO
          join ResourseItemProtocol_arc as ResourseItemProtocol on ParentId = ResourseProtocol .Id and state = 'active' and client_addr ilike '%172.17%' 
       where ResourseProtocol .OperDate between CURRENT_DATE - INTERVAL '60 DAY' and CURRENT_DATE - INTERVAL '0 DAY' 
       and EXTRACT (DOW FROM OperDate) not in (6, 0)
-      and EXTRACT (HOUR FROM query_start) >=10 and and EXTRACT (HOUR FROM query_start) <= 17
+      and EXTRACT (HOUR FROM query_start) >=10 and EXTRACT (HOUR FROM query_start) <= 17
      ) as x
 group by OperDate, OperDate_d
 order by 1 desc
