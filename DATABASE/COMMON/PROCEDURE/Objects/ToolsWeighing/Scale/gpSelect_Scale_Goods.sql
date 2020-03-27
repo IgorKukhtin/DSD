@@ -161,7 +161,10 @@ BEGIN
                                 )
                , tmpMI_Order2 AS (SELECT COALESCE (MILinkObject_Goods.ObjectId, MovementItem.ObjectId) AS GoodsId
                                        , COALESCE (MILinkObject_GoodsKind.ObjectId, CASE WHEN inIsGoodsComplete = FALSE THEN zc_Enum_GoodsKind_Main() ELSE zc_Enum_GoodsKind_Main() END) AS GoodsKindId
-                                       , CASE WHEN MILinkObject_Receipt.ObjectId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- ÑÎ-ÝÌÓËÜÑÈÈ
+                                       , CASE WHEN MILinkObject_Receipt.ObjectId > 0
+                                               AND (ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- ÑÎ-ÝÌÓËÜÑÈÈ + ÑÎ-ÏÎÑÎË
+                                                 OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- ÑÎ-ÝÌÓËÜÑÈÈ + ÑÎ-ÏÎÑÎË
+                                                   )
                                                    THEN vbFromId
                                               WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Îñíîâíîå ñûðüå + Ïðî÷åå ñûðüå
                                                    THEN 8455 -- Ñêëàä ñïåöèé
@@ -203,6 +206,9 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                            ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
                                                           AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
+                                                           ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                          AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
                                       LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                            ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                                           AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()

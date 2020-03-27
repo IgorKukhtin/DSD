@@ -350,7 +350,10 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpData.GoodsId
-                              AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                              AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
+                               ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                              AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
@@ -362,12 +365,15 @@ BEGIN
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-          LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN tmpData.ReceiptId > 0 AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
-                                                                        THEN tmpData.FromId
-                                                                   WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
-                                                                        THEN 8455 -- Склад специй
-                                                                   ELSE 8439 -- Участок мясного сырья
-                                                              END
+          LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN tmpData.ReceiptId > 0
+                                                                AND (ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                                                  OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                                                    )
+                                                                    THEN tmpData.FromId
+                                                                WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                    THEN 8455 -- Склад специй
+                                                                ELSE 8439 -- Участок мясного сырья
+                                                          END
           --ограничения по подразделению кому
           INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = Object_To.Id
 

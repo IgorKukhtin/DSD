@@ -27,7 +27,8 @@ BEGIN
    INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, CuterCount_pf, GoodsId_child, GoodsKindId_child, Amount_child, Amount_child_pf, isOrderSecond)
       WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
          , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-                             , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                             , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (5064881) -- СО-ПОСОЛ
+                                      OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
                                          THEN TRUE
                                     ELSE FALSE
                                END AS isPF
@@ -38,9 +39,9 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                   ON ObjectLink_Goods_GoodsGroup.ObjectId      = ObjectLink_Goods_InfoMoney.ObjectId
                                                  AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_pf
-                                                  ON ObjectLink_Goods_GoodsGroup_pf.ObjectId      = ObjectLink_Goods_InfoMoney.ObjectId
-                                                 AND ObjectLink_Goods_GoodsGroup_pf.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
+                                                  ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                 AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
                         WHERE ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                              OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье : запечена...
                              OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
@@ -48,7 +49,8 @@ BEGIN
                                AND vbIsTushenka = FALSE)
                             OR (Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
                                AND vbIsTushenka = TRUE)
-                            OR ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                            OR ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (5064881) -- СО-ПОСОЛ
+                            OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
                        )
       SELECT 0 AS MovementItemId
            , tmp.GoodsId
@@ -133,10 +135,12 @@ BEGIN
             , tmpReceipt AS (SELECT tmpGoods.GoodsId_child
                                   , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
                              FROM tmpGoods
-                                  INNER JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                                                        ON ObjectLink_Goods_GoodsGroup.ObjectId      = tmpGoods.GoodsId_child
-                                                       AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                                       AND ObjectLink_Goods_GoodsGroup.ChildObjectId = 1942 -- СО-ЭМУЛЬСИИ
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                       ON ObjectLink_Goods_GoodsGroup.ObjectId      = tmpGoods.GoodsId_child
+                                                      AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
+                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
+                                                       ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                      AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId_child
                                                        AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
@@ -146,6 +150,8 @@ BEGIN
                                                            ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
+                             WHERE ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
                              GROUP BY tmpGoods.GoodsId_child
                             )
           , tmpMIRemains AS (SELECT MovementItem.ObjectId                               AS GoodsId
