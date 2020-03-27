@@ -260,7 +260,7 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ReceiptId > 0
-                                                                      AND (ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
+                                                                      AND (ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
                                                                         OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
                                                                           )
                                                                           THEN vbFromId
