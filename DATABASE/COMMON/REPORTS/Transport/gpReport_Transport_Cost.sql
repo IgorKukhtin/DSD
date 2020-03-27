@@ -20,6 +20,7 @@ RETURNS TABLE (Invnumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
              , RouteName TVarChar, PersonalDriverName TVarChar
              , UnitName TVarChar, BranchName TVarChar,  BusinessName TVarChar
              , PartnerName TVarChar
+             , SummByPrint TFloat
              --, ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar, ProfitLossName TVarChar, ProfitLossName_all TVarChar
              , SumCount_Transport TFloat, SumAmount_Transport TFloat, PriceFuel TFloat
              , SumAmount_TransportAdd TFloat, SumAmount_TransportAddLong TFloat, SumAmount_TransportTaxi TFloat
@@ -695,6 +696,15 @@ BEGIN
             , Object_Unit_View.BranchName
             , Object_Business.ValueData        AS BusinessName                         --10
             , Object_Partner.ValueData         AS PartnerName
+            
+            -- если сумма больше 0 показываем в печати наименование 
+            , SUM (COALESCE (tmpUnion.Weight_Sale,0)
+                 + COALESCE (CASE WHEN COALESCE (tmpUnion.Count_TT,0) <> 0 THEN tmpUnion.SumTotal / tmpUnion.Count_TT ELSE 0 END,0)
+                 + COALESCE (tmpUnion.Wage_doc,0)
+                 + COALESCE (tmpUnion.Wage_Hours,0)
+                 + COALESCE (tmpUnion.Wage_kg,0)
+                 ) OVER (PARTITION BY Object_Route.ValueData) :: TFloat AS SummByPrint
+                        
                         
             , (tmpUnion.SumCount_Transport)         :: TFloat  AS SumCount_Transport 
             , (tmpUnion.SumAmount_Transport)        :: TFloat  AS SumAmount_Transport

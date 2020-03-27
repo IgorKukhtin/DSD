@@ -24,8 +24,6 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
     Height = 280
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 48
-    ExplicitTop = -69
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -760,6 +758,12 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object SummByPrint: TcxGridDBColumn
+        DataBinding.FieldName = 'SummByPrint'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 50
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -1194,7 +1198,7 @@ object Report_Transport_CostForm: TReport_Transport_CostForm
       DataSets = <
         item
           UserName = 'frxDBDataset'
-          IndexFieldNames = 'PartnerName'
+          IndexFieldNames = 'RouteName;PartnerName'
           GridView = cxGridDBTableView
         end>
       Params = <
