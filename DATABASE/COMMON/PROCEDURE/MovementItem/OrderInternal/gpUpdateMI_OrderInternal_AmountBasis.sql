@@ -27,8 +27,8 @@ BEGIN
    INSERT INTO tmpAll (MovementItemId, GoodsId, ReceiptId, CuterCount, CuterCount_pf, GoodsId_child, GoodsKindId_child, Amount_child, Amount_child_pf, isOrderSecond)
       WITH tmpUnit AS (SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup)
          , tmpGoods AS (SELECT ObjectLink_Goods_InfoMoney.ObjectId AS GoodsId
-                             , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (5064881) -- СО-ПОСОЛ
-                                      OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
+                             , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
+                                      OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
                                          THEN TRUE
                                     ELSE FALSE
                                END AS isPF
@@ -39,9 +39,9 @@ BEGIN
                              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                   ON ObjectLink_Goods_GoodsGroup.ObjectId      = ObjectLink_Goods_InfoMoney.ObjectId
                                                  AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
-                                                  ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                                 AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                             LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
+                                                  ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                 AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
                         WHERE ((Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30101() -- Доходы + Продукция + Готовая продукция
                              OR Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30201() -- Доходы + Мясное сырье + Мясное сырье : запечена...
                              OR Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900() -- Общефирменные + Ирна
@@ -49,8 +49,8 @@ BEGIN
                                AND vbIsTushenka = FALSE)
                             OR (Object_InfoMoney_View.InfoMoneyId = zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
                                AND vbIsTushenka = TRUE)
-                            OR ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (5064881) -- СО-ПОСОЛ
-                            OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
+                            OR ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
+                            OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
                        )
       SELECT 0 AS MovementItemId
            , tmp.GoodsId
@@ -68,10 +68,10 @@ BEGIN
                  , CASE WHEN tmpGoods.isPF = TRUE THEN MovementItem.ObjectId ELSE COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     END AS GoodsId_child
                  , CASE WHEN tmpGoods.isPF = TRUE THEN 0                     ELSE COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) END AS GoodsKindId_child
                  , CASE WHEN tmpGoods.isPF = TRUE THEN 0                     ELSE COALESCE (MILO_Receipt.ObjectId, 0)                           END AS ReceiptId
-                   -- все Составляющие без СО-ЭМУЛЬСИИ
+                   -- все Составляющие без СО-ПОСОЛ
                  , CASE WHEN tmpGoods.isPF = FALSE THEN COALESCE (MIFloat_CuterCount.ValueData, 0) ELSE 0 END AS CuterCount
                  , CASE WHEN tmpGoods.isPF = FALSE THEN COALESCE (MIFloat_CuterCount.ValueData, 0) * COALESCE (ObjectFloat_Value.ValueData, 0) ELSE 0 END AS Amount_child
-                   -- СО-ЭМУЛЬСИИ
+                   -- СО-ПОСОЛ
                  , CASE WHEN tmpGoods.isPF = TRUE THEN COALESCE (MIFloat_CuterCount.ValueData, 0) ELSE 0 END AS CuterCount_pf
                  , CASE WHEN tmpGoods.isPF = TRUE THEN MovementItem.Amount                        ELSE 0 END AS Amount_child_pf
                    -- дозаказ
@@ -134,13 +134,18 @@ BEGIN
          WITH tmpGoods AS (SELECT tmpAll.GoodsId_child, SUM (tmpAll.Amount_child) AS Amount_child, SUM (tmpAll.Amount_child_pf) AS Amount_child_pf FROM tmpAll GROUP BY tmpAll.GoodsId_child)
             , tmpReceipt AS (SELECT tmpGoods.GoodsId_child
                                   , MAX (ObjectLink_Receipt_Goods.ObjectId) AS ReceiptId
+                                  , CASE WHEN ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ПОСОЛ
+                                           OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ПОСОЛ
+                                              THEN TRUE
+                                         ELSE FALSE
+                                    END AS isPF
                              FROM tmpGoods
                                   LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                        ON ObjectLink_Goods_GoodsGroup.ObjectId      = tmpGoods.GoodsId_child
                                                       AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
-                                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
-                                                       ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                                      AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                  LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
+                                                       ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                      AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_parent()
                                   INNER JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                         ON ObjectLink_Receipt_Goods.ChildObjectId = tmpGoods.GoodsId_child
                                                        AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
@@ -150,9 +155,11 @@ BEGIN
                                                            ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                           AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                           AND ObjectBoolean_Main.ValueData = TRUE
-                             WHERE ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
-                                OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                             WHERE ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
                              GROUP BY tmpGoods.GoodsId_child
+                                    , ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                    , ObjectLink_GoodsGroup_parent.ChildObjectId
                             )
           , tmpMIRemains AS (SELECT MovementItem.ObjectId                               AS GoodsId
                                   , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0)) AS AmountRemains
@@ -177,9 +184,11 @@ BEGIN
               , COALESCE (ObjectLink_ReceiptChild_Goods.ChildObjectId, 0)     AS GoodsId_child
               , COALESCE (ObjectLink_ReceiptChild_GoodsKind.ChildObjectId, 0) AS GoodsKindId_child
                 -- вычитаем остаток ... только для isPF
-              , CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) >  tmpGoods.Amount_child THEN 0 ELSE tmpGoods.Amount_child - COALESCE (tmpMIRemains.AmountRemains, 0) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child
+            --, CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) >  tmpGoods.Amount_child THEN 0 ELSE tmpGoods.Amount_child - COALESCE (tmpMIRemains.AmountRemains, 0) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child
+              , CASE WHEN tmpReceipt.isPF = TRUE THEN 0 ELSE tmpGoods.Amount_child END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child
                 -- вычитаем что осталось ... только для isPF
-              , CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) <= tmpGoods.Amount_child THEN tmpGoods.Amount_child_pf ELSE tmpGoods.Amount_child_pf - (COALESCE (tmpMIRemains.AmountRemains, 0) - tmpGoods.Amount_child) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child_pf
+            --, CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) <= tmpGoods.Amount_child THEN tmpGoods.Amount_child_pf ELSE tmpGoods.Amount_child_pf - (COALESCE (tmpMIRemains.AmountRemains, 0) - tmpGoods.Amount_child) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child_pf
+              , tmpGoods.Amount_child_pf  * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData AS Amount_child_pf
               , FALSE AS isOrderSecond
          FROM tmpGoods
               INNER JOIN tmpReceipt ON tmpReceipt.GoodsId_child = tmpGoods.GoodsId_child
@@ -204,16 +213,17 @@ BEGIN
                                     AND ObjectFloat_Value.DescId = zc_ObjectFloat_ReceiptChild_Value()
                                     AND ObjectFloat_Value.ValueData <> 0
               LEFT JOIN tmpMIRemains ON tmpMIRemains.GoodsId = tmpGoods.GoodsId_child
-         WHERE CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) >  tmpGoods.Amount_child THEN 0 ELSE tmpGoods.Amount_child - COALESCE (tmpMIRemains.AmountRemains, 0) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData > 0
-            OR CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) <= tmpGoods.Amount_child THEN tmpGoods.Amount_child_pf ELSE tmpGoods.Amount_child_pf - (COALESCE (tmpMIRemains.AmountRemains, 0) - tmpGoods.Amount_child) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData > 0
+--         WHERE CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) >  tmpGoods.Amount_child THEN 0 ELSE tmpGoods.Amount_child - COALESCE (tmpMIRemains.AmountRemains, 0) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData > 0
+--            OR CASE WHEN COALESCE (tmpMIRemains.AmountRemains, 0) <= tmpGoods.Amount_child THEN tmpGoods.Amount_child_pf ELSE tmpGoods.Amount_child_pf - (COALESCE (tmpMIRemains.AmountRemains, 0) - tmpGoods.Amount_child) END * ObjectFloat_Value.ValueData / ObjectFloat_Value_master.ValueData > 0
+         WHERE tmpGoods.Amount_child_pf > 0
+            OR CASE WHEN tmpReceipt.isPF = TRUE THEN 0 ELSE tmpGoods.Amount_child END > 0
             ;
-
-/*if inSession = '5'
+/*
+if inSession = '5'
 then
     RAISE EXCEPTION 'Ошибка.<%>   %', (
     select sum (tmpAll.Amount_child_pf) from tmpAll
 )
-
 , (--
              SELECT SUM (CASE WHEN isOrderSecond = FALSE AND CuterCount_pf <> 0 THEN tmpAll.Amount_child_pf ELSE 0 END) AS Amount_child_pf
 

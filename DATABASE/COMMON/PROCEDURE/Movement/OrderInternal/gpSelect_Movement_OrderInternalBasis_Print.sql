@@ -254,14 +254,14 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = tmpMI.GoodsId
                                 AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
-                                 ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
+                                 ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = CASE WHEN tmpMI.ReceiptId > 0
                                                                       AND (ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
-                                                                        OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
+                                                                        OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- ян-щлскэяхх + ян-онянк
                                                                           )
                                                                           THEN vbFromId
                                                                      WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- нЯМНБМНЕ ЯШПЭЕ + оПНВЕЕ ЯШПЭЕ

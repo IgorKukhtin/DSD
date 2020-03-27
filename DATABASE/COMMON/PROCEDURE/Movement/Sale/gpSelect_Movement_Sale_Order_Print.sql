@@ -299,9 +299,9 @@ BEGIN
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                                     ON ObjectLink_Goods_GoodsGroup.ObjectId = MovementItem.ObjectId
                                                    AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
-                               LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup_parent
-                                                    ON ObjectLink_Goods_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                                   AND ObjectLink_Goods_GoodsGroup_parent.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                               LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
+                                                    ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                   AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
                                LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                                     ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                                    AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -311,8 +311,8 @@ BEGIN
                             AND MovementItem.isErased   = FALSE
                             AND MovementItem.Amount + COALESCE (MIFloat_AmountSecond.ValueData, 0) <> 0
                             AND (vbFromId_group = CASE WHEN MILinkObject_Receipt.ObjectId > 0
-                                                        AND (ObjectLink_Goods_GoodsGroup.ChildObjectId        IN (1942, 5064881) -- —Œ-›Ã”À‹—»» + —Œ-œŒ—ŒÀ
-                                                          OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- —Œ-›Ã”À‹—»» + —Œ-œŒ—ŒÀ
+                                                        AND (ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (1942, 5064881) -- —Œ-›Ã”À‹—»» + —Œ-œŒ—ŒÀ
+                                                          OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- —Œ-›Ã”À‹—»» + —Œ-œŒ—ŒÀ
                                                             )
                                                             THEN 0
                                                        WHEN View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- ŒÒÌÓ‚ÌÓÂ Ò˚¸Â + œÓ˜ÂÂ Ò˚¸Â

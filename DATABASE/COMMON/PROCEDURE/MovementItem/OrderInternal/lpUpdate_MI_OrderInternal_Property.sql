@@ -81,41 +81,56 @@ BEGIN
                 WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                )*/
-     THEN vbAmount_calc:= COALESCE (inAmount_Param, 0) + COALESCE (inAmount_ParamOrder, 0) + COALESCE (inAmount_ParamSecond, 0)
-                        - (-- Остатки
-                           COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountRemains()), 0)
-                            -- группируется Перемещение
-                         + COALESCE ((SELECT SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
-                                      FROM (SELECT CASE -- !!!временно захардкодил!!!
-                                                        WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                         -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                             THEN 8338 -- морож.
-                                                        ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                                   END AS GoodsKindId
-                                                 , SUM (MIContainer.Amount)                       AS Amount
-                                            FROM MovementItemContainer AS MIContainer
-                                            WHERE MIContainer.OperDate               = vbOperDate
-                                              AND MIContainer.DescId                 = zc_MIContainer_Count()
-                                              AND MIContainer.MovementDescId         = zc_Movement_Send()
-                                              AND MIContainer.ObjectId_Analyzer      = inGoodsId
-                                              AND MIContainer.WhereObjectId_Analyzer = vbFromId
-                                              -- AND MIContainer.isActive = TRUE
-                                            GROUP BY CASE -- !!!временно захардкодил!!!
-                                                          WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
-                                                           -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
-                                                               THEN 8338 -- морож.
-                                                          ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
-                                                     END
-                                           ) AS tmpMI
-                                           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                                                ON ObjectLink_Goods_Measure.ObjectId = inGoodsId
-                                                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-                                           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                                                 ON ObjectFloat_Weight.ObjectId = inGoodsId
-                                                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                                      WHERE tmpMI.GoodsKindId = COALESCE (inGoodsKindId, 0)
-                                     ), 0)
-                          );
+     THEN vbAmount_calc:= CASE WHEN EXISTS (SELECT 1
+                                            FROM ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                 LEFT JOIN ObjectLink AS ObjectLink_GoodsGroup_parent
+                                                                      ON ObjectLink_GoodsGroup_parent.ObjectId = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                                     AND ObjectLink_GoodsGroup_parent.DescId   = zc_ObjectLink_GoodsGroup_Parent()
+                                            WHERE ObjectLink_Goods_GoodsGroup.ObjectId = inGoodsId
+                                              AND ObjectLink_Goods_GoodsGroup.DescId   = zc_ObjectLink_Goods_GoodsGroup()
+                                              AND (ObjectLink_Goods_GoodsGroup.ChildObjectId  IN (5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                                OR ObjectLink_GoodsGroup_parent.ChildObjectId IN (5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
+                                                  )
+                                           )
+                          THEN
+                               COALESCE (inAmount_Param, 0) + COALESCE (inAmount_ParamOrder, 0) + COALESCE (inAmount_ParamSecond, 0)
+                          ELSE
+                               COALESCE (inAmount_Param, 0) + COALESCE (inAmount_ParamOrder, 0) + COALESCE (inAmount_ParamSecond, 0)
+                             - (-- Остатки
+                                COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_AmountRemains()), 0)
+                                 -- группируется Перемещение
+                              + COALESCE ((SELECT SUM (tmpMI.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) AS Amount
+                                           FROM (SELECT CASE -- !!!временно захардкодил!!!
+                                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                                  THEN 8338 -- морож.
+                                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                                        END AS GoodsKindId
+                                                      , SUM (MIContainer.Amount)                       AS Amount
+                                                 FROM MovementItemContainer AS MIContainer
+                                                 WHERE MIContainer.OperDate               = vbOperDate
+                                                   AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                                   AND MIContainer.MovementDescId         = zc_Movement_Send()
+                                                   AND MIContainer.ObjectId_Analyzer      = inGoodsId
+                                                   AND MIContainer.WhereObjectId_Analyzer = vbFromId
+                                                   -- AND MIContainer.isActive = TRUE
+                                                 GROUP BY CASE -- !!!временно захардкодил!!!
+                                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                                    THEN 8338 -- морож.
+                                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                                          END
+                                                ) AS tmpMI
+                                                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                                     ON ObjectLink_Goods_Measure.ObjectId = inGoodsId
+                                                                    AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                                LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                                                      ON ObjectFloat_Weight.ObjectId = inGoodsId
+                                                                     AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                           WHERE tmpMI.GoodsKindId = COALESCE (inGoodsKindId, 0)
+                                          ), 0)
+                               )
+                          END;
      END IF;
 
      -- определяется признак Создание/Корректировка
@@ -155,6 +170,7 @@ BEGIN
      -- ТОЛЬКО для СЫРЬЯ
      ELSEIF inDescId_ParamSecond = zc_MIFloat_AmountPartnerSecond()
      THEN
+
          -- сохранили <Элемент документа>
          ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0), NULL);
 
