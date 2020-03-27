@@ -1720,7 +1720,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeJournalForm');
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignDialogForm')
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignPercentDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignPercentDialogForm');
 end;
 
 procedure TLoadFormTest.LoadPromoUnitFormTest;

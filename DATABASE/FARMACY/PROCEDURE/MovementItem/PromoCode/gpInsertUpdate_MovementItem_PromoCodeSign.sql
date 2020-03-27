@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeSign (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeSign (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PromoCodeSign (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeSign(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PromoCodeSign(
  INOUT ioGUID                TVarChar  , -- 
     IN inComment             TVarChar  , -- примечание
     IN inIsChecked           Boolean   , -- отмечен
+    IN inChangePercent       TFloat    , -- Процент скидки по проиокоду
     IN inSession             TVarChar    -- сессия пользователя
 )
 AS
@@ -54,6 +56,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_BayerEmail(), ioId, inBayerEmail);
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+     -- сохранили свойство <Процент скидки по проиокоду>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercent(), ioId, inChangePercent);
 
      IF vbIsInsert = TRUE
      THEN

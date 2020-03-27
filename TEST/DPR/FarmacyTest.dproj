@@ -2908,6 +2908,10 @@
 				<Form>Report_GeneralMovementGoodsDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PromoCodeSignPercentDialog.pas">
+				<Form>PromoCodeSignPercentDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -672,21 +672,21 @@ BEGIN
 
              , PDGoodsRemains6.Remains::TFloat AS Remains_6
              , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
-                     ELSE CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     ELSE CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                               THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                                ELSE Price_Unit.Price END * 10.0) / 10.0 END::TFloat                AS Price_unit_6
              , CASE WHEN PDGoodsRemains6.Remains IS NULL THEN NULL
                      ELSE ROUND (CASE WHEN vbSiteDiscount = 0 THEN
-                 CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                 CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     THEN ROUND(Price_Unit.Price - (Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END) * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0
-                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                  ELSE CEIL(CEIL(CASE WHEN Price_Unit.Price > CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END
-                     THEN ROUND(Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 AND COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
+                     THEN ROUND(Price_Unit.Price - CASE WHEN PDGoodsRemains6.PriceWithVAT > 14 OR COALESCE (MinPrice_List.Price, 0) = 0 THEN PDGoodsRemains6.PriceWithVAT ELSE 
                                     ROUND (MinPrice_List.Price * (1 + COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) / 100), 2) END * PDGoodsRemains6.PartionDateDiscount / 100, 2)
                      ELSE Price_Unit.Price END * 10.0) / 10.0 * (100.0 - vbSiteDiscount) / 10.0) / 10.0 END, 2) END :: TFloat AS Price_unit_sale_6
 

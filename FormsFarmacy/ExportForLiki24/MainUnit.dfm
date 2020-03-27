@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' 103UA'
+  Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1051#1080#1082#1099' 24 '
   ClientHeight = 524
   ClientWidth = 909
   Color = clBtnFace
@@ -36,34 +36,94 @@ object MainForm: TMainForm
       OptionsView.CellTextMaxLineCount = 100
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
-      object Store: TcxGridDBColumn
-        DataBinding.FieldName = 'Store'
+      object PharmacyId: TcxGridDBColumn
+        DataBinding.FieldName = 'PharmacyId'
         Options.Editing = False
-        Width = 212
+        Width = 60
       end
-      object Name: TcxGridDBColumn
-        DataBinding.FieldName = 'Name'
+      object ProductId: TcxGridDBColumn
+        DataBinding.FieldName = 'ProductId'
         Options.Editing = False
-        Width = 235
+        Width = 60
+      end
+      object ProductName: TcxGridDBColumn
+        DataBinding.FieldName = 'ProductName'
+        Options.Editing = False
+        Width = 60
       end
       object Producer: TcxGridDBColumn
         DataBinding.FieldName = 'Producer'
-        Width = 152
+        Options.Editing = False
+        Width = 60
+      end
+      object Morion: TcxGridDBColumn
+        DataBinding.FieldName = 'Morion'
+        Options.Editing = False
+        Width = 60
+      end
+      object Barcode: TcxGridDBColumn
+        DataBinding.FieldName = 'Barcode'
+        Width = 60
+      end
+      object RegistrationNumber: TcxGridDBColumn
+        DataBinding.FieldName = 'RegistrationNumber'
+        Options.Editing = False
+        Width = 60
+      end
+      object Optima: TcxGridDBColumn
+        DataBinding.FieldName = 'Optima'
+        Options.Editing = False
+        Width = 60
+      end
+      object Badm: TcxGridDBColumn
+        DataBinding.FieldName = 'Badm'
+        Options.Editing = False
+        Width = 60
       end
       object Quantity: TcxGridDBColumn
         DataBinding.FieldName = 'Quantity'
         Options.Editing = False
-        Width = 94
+        Width = 60
       end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
         Options.Editing = False
-        Width = 93
+        Width = 60
       end
-      object Barcode: TcxGridDBColumn
-        DataBinding.FieldName = 'Barcode'
+      object OfflinePrice: TcxGridDBColumn
+        DataBinding.FieldName = 'OfflinePrice'
         Options.Editing = False
-        Width = 117
+        Width = 60
+      end
+      object PickupPrice: TcxGridDBColumn
+        DataBinding.FieldName = 'PickupPrice'
+        Options.Editing = False
+        Width = 60
+      end
+      object i10000001: TcxGridDBColumn
+        DataBinding.FieldName = '10000001 - insurance company #1 id'
+        Options.Editing = False
+        Width = 60
+      end
+      object i10000002: TcxGridDBColumn
+        DataBinding.FieldName = '10000002 - insurance company #2 id'
+        Options.Editing = False
+        Width = 60
+      end
+      object Vat: TcxGridDBColumn
+        DataBinding.FieldName = 'Vat'
+        Options.Editing = False
+        Width = 60
+      end
+      object PackSize: TcxGridDBColumn
+        DataBinding.FieldName = 'PackSize'
+        Options.Editing = False
+        Width = 60
+      end
+      object PackDivisor: TcxGridDBColumn
+        DataBinding.FieldName = 'PackDivisor'
+        Options.Editing = False
+        Width = 60
       end
     end
     object grReportUnitLevel1: TcxGridLevel
@@ -122,6 +182,15 @@ object MainForm: TMainForm
       TabOrder = 0
       OnClick = btnAllUnitClick
     end
+    object btnExecuteUnit: TButton
+      Left = 167
+      Top = 0
+      Width = 106
+      Height = 25
+      Caption = #1069#1082#1089#1087#1086#1088#1090' '#1072#1087#1090#1077#1082
+      TabOrder = 5
+      OnClick = btnExecuteUnitClick
+    end
   end
   object cxGrid: TcxGrid
     Left = 0
@@ -151,22 +220,70 @@ object MainForm: TMainForm
       OptionsSelection.InvertSelect = False
       OptionsView.GroupByBox = False
       OptionsView.Indicator = True
-      object UnitCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'UnitCode'
+      object UnitId: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 66
+        Width = 42
       end
       object UnitName: TcxGridDBColumn
-        Caption = 'Name'
-        DataBinding.FieldName = 'UnitName'
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 385
+        Width = 168
+      end
+      object Address: TcxGridDBColumn
+        DataBinding.FieldName = 'Address'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 251
+      end
+      object Phones: TcxGridDBColumn
+        DataBinding.FieldName = 'Phones'
+        HeaderAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 222
+      end
+      object UnitWorkingTime: TcxGridDBColumn
+        DataBinding.FieldName = 'WorkingTime'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitAllDay: TcxGridDBColumn
+        DataBinding.FieldName = 'AllDay'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitLatitude: TcxGridDBColumn
+        DataBinding.FieldName = 'Latitude'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitLongitude: TcxGridDBColumn
+        DataBinding.FieldName = 'Longitude'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitCompanyId: TcxGridDBColumn
+        DataBinding.FieldName = 'CompanyId'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitCompanyName: TcxGridDBColumn
+        DataBinding.FieldName = 'CompanyName'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitEmail: TcxGridDBColumn
+        DataBinding.FieldName = 'Email'
+        Options.Editing = False
+        Width = 120
+      end
+      object UnitCity: TcxGridDBColumn
+        DataBinding.FieldName = 'City'
+        Options.Editing = False
+        Width = 120
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -175,7 +292,12 @@ object MainForm: TMainForm
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
+    Catalog = ''
+    HostName = ''
     Port = 5432
+    Database = ''
+    User = ''
+    Password = ''
     Protocol = 'postgresql-9'
     Left = 136
     Top = 136
@@ -189,22 +311,22 @@ object MainForm: TMainForm
   object qryUnit: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
-      ' SELECT * FROM gpSelect_Object_Unit_ExportPriceFor103UA ('#39'3'#39')')
+      ' SELECT * FROM gpSelect_Object_Unit_ExportPriceForLiki24('#39'3'#39')')
     Params = <>
     Left = 144
-    Top = 344
+    Top = 384
   end
   object dsUnit: TDataSource
     DataSet = qryUnit
     Left = 224
-    Top = 344
+    Top = 384
   end
   object qryReport_Upload: TZQuery
     Connection = ZConnection1
     SQL.Strings = (
       
-        ' SELECT * FROM gpSelect_GoodsOnUnitRemains_For103UA (:UnitId, '#39'3' +
-        #39')')
+        ' SELECT * FROM gpSelect_GoodsOnUnitRemains_ForLiki24 (:UnitId, '#39 +
+        '3'#39')')
     Params = <
       item
         DataType = ftUnknown
@@ -257,6 +379,7 @@ object MainForm: TMainForm
     IPVersion = Id_IPv4
     Host = 'ftp:\\ooobadm.dp.ua'
     Passive = True
+    ConnectTimeout = 0
     Password = 'FsT3469Dv'
     Username = 'K_shapiro'
     NATKeepAlive.UseKeepAlive = False
