@@ -241,8 +241,8 @@ BEGIN
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                --, SUM (MovementItem.Amount)                                 AS Amount
-                               , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount
-                               , SUM (CASE WHEN _tmpListMovement.ToId   = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
+                               , SUM (CASE WHEN _tmpListMovement.ToId   = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount
+                               , SUM (CASE WHEN _tmpListMovement.FromId = vbToId THEN COALESCE (MovementItem.Amount,0) ELSE 0 END) AS Amount_ret  --  возврат
                            FROM _tmpListMovement
                            
                                 INNER JOIN MovementItem ON MovementItem.MovementId = _tmpListMovement.MovementId
@@ -422,28 +422,28 @@ BEGIN
                   , tmpResult1.AmountSecond_Order_Weight
       
                   , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
-                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret > 0
+                            - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret) > 0
                          THEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
-                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret
+                            - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret)
                          ELSE 0
                     END AS CountDiff_B
                   , CASE WHEN tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
-                            + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret < 0
+                            - (tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret) < 0
                          THEN -1 * (tmpResult1.Amount_Weighing + tmpResult1.Amount - tmpResult1.Amount_Order - tmpResult1.AmountSecond_Order
-                                  + tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret)
+                                   -(tmpResult1.Amount_Weighing_ret + tmpResult1.Amount_ret))
                          ELSE 0
                     END AS CountDiff_M
       
                   , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
-                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret > 0
+                            - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret) > 0
                          THEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
-                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret
+                            - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret)
                          ELSE 0
                     END AS WeightDiff_B
                   , CASE WHEN tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
-                            + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret < 0
+                            - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret) < 0
                          THEN -1 * (tmpResult1.Amount_Weighing_Weight + tmpResult1.Amount_Weight - tmpResult1.Amount_Order_Weight - tmpResult1.AmountSecond_Order_Weight
-                                  + tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret)
+                                  - (tmpResult1.Amount_Weighing_Weight_ret + tmpResult1.Amount_Weight_ret))
                          ELSE 0
                     END AS WeightDiff_M
 
@@ -453,32 +453,35 @@ BEGIN
                          , tmpResult.GoodsKindId
       
                          , Object_Measure.ValueData    AS MeasureName
+                         
+                         -- сгруппируем без партии, на печати партия не выводится
+                         --, (CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END) :: TVarChar AS PartionGoods
+                         , '' :: TVarChar AS PartionGoods
       
-                         , tmpResult.Amount                                                                                              :: TFloat AS Amount
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END                                :: TFloat AS Amount_Sh
-                         , tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight
+                         , SUM (tmpResult.Amount)                                                                                              :: TFloat AS Amount
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount ELSE 0 END)                                :: TFloat AS Amount_Sh
+                         , SUM (tmpResult.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
 
-                         , tmpResult.Amount_ret                                                                                              :: TFloat AS Amount_ret
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_ret ELSE 0 END                                :: TFloat AS Amount_Sh_ret
-                         , tmpResult.Amount_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weight_ret
+                         , SUM (tmpResult.Amount_ret)                                                                                              :: TFloat AS Amount_ret
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_ret ELSE 0 END)                                :: TFloat AS Amount_Sh_ret
+                         , SUM (tmpResult.Amount_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight_ret
       
-                         , tmpResult.Amount_Weighing                                                                                              :: TFloat AS Amount_Weighing
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh
-                         , tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight
+                         , SUM (tmpResult.Amount_Weighing)                                                                                              :: TFloat AS Amount_Weighing
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing ELSE 0 END)                                :: TFloat AS Amount_Weighing_Sh
+                         , SUM (tmpResult.Amount_Weighing * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weighing_Weight
       
-                         , tmpResult.Amount_Weighing_ret                                                                                              :: TFloat AS Amount_Weighing_ret
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing_ret ELSE 0 END                                :: TFloat AS Amount_Weighing_Sh_ret
-                         , tmpResult.Amount_Weighing_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Weighing_Weight_ret
+                         , SUM (tmpResult.Amount_Weighing_ret)                                                                                              :: TFloat AS Amount_Weighing_ret
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Weighing_ret ELSE 0 END)                                :: TFloat AS Amount_Weighing_Sh_ret
+                         , SUM (tmpResult.Amount_Weighing_ret * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weighing_Weight_ret
 
-                         , CASE WHEN tmpResult.PartionGoods <> '' THEN tmpResult.PartionGoods WHEN tmpResult.PartionGoodsDate <> zc_DateStart() THEN TO_CHAR (tmpResult.PartionGoodsDate, 'DD.MM.YYYY') ELSE '' END :: TVarChar AS PartionGoods
+                         , SUM (tmpResult.Amount_Order)                                                                                              :: TFloat AS Amount_Order
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Order ELSE 0 END)                                :: TFloat AS Amount_Order_Sh
+                         , SUM (tmpResult.Amount_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Order_Weight
       
-                         , tmpResult.Amount_Order                                                                                              :: TFloat AS Amount_Order
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.Amount_Order ELSE 0 END                                :: TFloat AS Amount_Order_Sh
-                         , tmpResult.Amount_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS Amount_Order_Weight
+                         , SUM (tmpResult.AmountSecond_Order)                                                                                              :: TFloat AS AmountSecond_Order
+                         , SUM (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END)                                :: TFloat AS AmountSecond_Order_Sh
+                         , SUM (tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSecond_Order_Weight
       
-                         , tmpResult.AmountSecond_Order                                                                                              :: TFloat AS AmountSecond_Order
-                         , CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpResult.AmountSecond_Order ELSE 0 END                                :: TFloat AS AmountSecond_Order_Sh
-                         , tmpResult.AmountSecond_Order * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END :: TFloat AS AmountSecond_Order_Weight
       
                    FROM tmpResult
       
@@ -490,6 +493,9 @@ BEGIN
                         LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                         ON ObjectFloat_Weight.ObjectId = tmpResult.GoodsId
                                        AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                   GROUP BY tmpResult.GoodsId
+                       , tmpResult.GoodsKindId
+                       , Object_Measure.ValueData 
                     ) AS tmpResult1
              ) AS tmpResult1
 
