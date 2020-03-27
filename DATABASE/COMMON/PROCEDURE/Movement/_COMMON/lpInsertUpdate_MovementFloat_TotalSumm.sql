@@ -1488,6 +1488,7 @@ BEGIN
                                    , tmpMI.OperSumm_Nalog
                                    , tmpMI.OperSumm_Minus
                                    , tmpMI.OperSumm_Add
+                                   , tmpMI.OperSumm_AuditAdd
                                    , tmpMI.OperSumm_Holiday
 
                                    , tmpMI.OperSumm_CardRecalc
@@ -1717,6 +1718,11 @@ BEGIN
 
      END IF;
      END IF;
+
+/*if  inMovementId = 1
+then
+    RAISE EXCEPTION 'Ошибка.<%>', vbOperSumm_Partner;
+end if;*/
 
 
 END;
