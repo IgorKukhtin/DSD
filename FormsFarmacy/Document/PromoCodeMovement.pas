@@ -167,6 +167,12 @@ type
     InfoDSD: TClientDataSet;
     spSelectPromoCodeInfo: TdsdStoredProc;
     GoodsisErased: TcxGridDBColumn;
+    ChangePercent: TcxGridDBColumn;
+    actInsertPromoCodepercentSign: TMultiAction;
+    dxBarButton1: TdxBarButton;
+    ExecutePromoCodeSignPercentDialog: TExecuteDialog;
+    spInsertPromoCodePercentSign: TdsdStoredProc;
+    ExecSPPromoCodeSignPercent: TdsdExecStoredProc;
   private
     { Private declarations }
   public

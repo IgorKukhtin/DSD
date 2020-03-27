@@ -8,16 +8,17 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PromoCodeSign(
     IN inIsErased    Boolean      , -- все
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id         Integer
-             , GUID       TVarChar
-             , BayerName  TVarChar
-             , BayerPhone TVarChar
-             , BayerEmail TVarChar
-             , Comment    TVarChar
-             , InsertName TVarChar, UpdateName TVarChar
-             , InsertDate TDateTime, UpdateDate TDateTime
-             , IsChecked  Boolean
-             , isErased   Boolean
+RETURNS TABLE (Id            Integer
+             , GUID          TVarChar
+             , BayerName     TVarChar
+             , BayerPhone    TVarChar
+             , BayerEmail    TVarChar
+             , Comment       TVarChar
+             , ChangePercent TFloat
+             , InsertName    TVarChar, UpdateName TVarChar
+             , InsertDate    TDateTime, UpdateDate TDateTime
+             , IsChecked     Boolean
+             , isErased      Boolean
              
              , Count_Check         Integer
              , Invnumber_Check     Integer
@@ -104,6 +105,7 @@ BEGIN
                 , MIString_BayerPhone.ValueData ::TVarChar AS BayerPhone
                 , MIString_BayerEmail.ValueData ::TVarChar AS BayerEmail
                 , MIString_Comment.ValueData    ::TVarChar AS Comment
+                , MIFloat_ChangePercent.ValueData          AS ChangePercent
                 
                 , Object_Insert.ValueData                  AS InsertName
                 , Object_Update.ValueData                  AS UpdateName
@@ -140,6 +142,10 @@ BEGIN
                                             ON MIString_Comment.MovementItemId = MI_Sign.Id
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
 
+               LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
+                                           ON MIFloat_ChangePercent.MovementItemId = MI_Sign.Id
+                                          AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
+
                LEFT JOIN MovementItemDate AS MIDate_Insert
                                           ON MIDate_Insert.MovementItemId = MI_Sign.Id
                                          AND MIDate_Insert.DescId = zc_MIDate_Insert()
@@ -171,4 +177,4 @@ $BODY$
 */
 
 
---select * from gpSelect_MovementItem_PromoCodeSign(inMovementId := 0 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+--select * from gpSelect_MovementItem_PromoCodeSign(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3');

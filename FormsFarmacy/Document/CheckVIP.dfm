@@ -720,6 +720,22 @@ inherited CheckVIPForm: TCheckVIPForm
       QuestionBeforeExecute = #1056#1072#1079#1073#1080#1090#1100' '#1095#1077#1082' '#1087#1086' '#1085#1072#1083#1080#1095#1080#1102'?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
     end
+    object actUpdateOperDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateOperDate
+      StoredProcList = <
+        item
+          StoredProc = spUpdateOperDate
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091
+      ImageIndex = 35
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1085#1072' '#1095#1077#1082' '#1090#1077#1082#1091#1097#1091#1102' '#1076#1072#1090#1091'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086'.'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -784,6 +800,14 @@ inherited CheckVIPForm: TCheckVIPForm
         item
           Visible = True
           ItemName = 'bbConfirmedKind_UnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateOperDate'
         end
         item
           Visible = True
@@ -860,6 +884,10 @@ inherited CheckVIPForm: TCheckVIPForm
     end
     object dxBarButton5: TdxBarButton
       Action = actSmashCheck
+      Category = 0
+    end
+    object bbUpdateOperDate: TdxBarButton
+      Action = actUpdateOperDate
       Category = 0
     end
   end
@@ -1091,5 +1119,22 @@ inherited CheckVIPForm: TCheckVIPForm
     PackSize = 1
     Left = 312
     Top = 176
+  end
+  object spUpdateOperDate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Check_CurrentOperDate'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 520
+    Top = 224
   end
 end

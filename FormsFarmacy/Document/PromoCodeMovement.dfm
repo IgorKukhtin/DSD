@@ -4,7 +4,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
   ClientWidth = 991
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 1007
-  ExplicitHeight = 603
+  ExplicitHeight = 604
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,6 +98,15 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 49
+          end
+          object ChangePercent: TcxGridDBColumn
+            Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080' '#1087#1086' '#1087#1088#1086#1084#1086#1082#1086#1076#1091
+            DataBinding.FieldName = 'ChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
           object InsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' '#1089#1086#1079#1076'.'
@@ -1378,6 +1387,62 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1084#1077#1095#1077#1085' - '#1053#1077#1090
       ImageIndex = 77
     end
+    object actInsertPromoCodepercentSign: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPromoCodeSign
+        end
+        item
+          Action = ExecutePromoCodeSignPercentDialog
+        end
+        item
+          Action = ExecSPPromoCodeSignPercent
+        end
+        item
+          Action = actRefreshPromoCodeSign
+        end>
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1084' '#1087#1088#1086#1094#1077#1085 +
+        #1090#1086#1084'?'
+      InfoAfterExecute = #1055#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1084' '#1087#1088#1086#1094#1077#1085#1090#1086#1084' '#1089#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1085#1099
+      Caption = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1084' '#1087#1088#1086#1094#1077#1085#1090#1086#1084
+      Hint = #1057#1075#1077#1085#1077#1088#1080#1088#1086#1074#1072#1090#1100' '#1087#1088#1086#1084#1086' - '#1082#1086#1076#1099' '#1089' '#1080#1085#1076#1080#1074#1080#1076#1091#1072#1083#1100#1085#1099#1084' '#1087#1088#1086#1094#1077#1085#1090#1086#1084
+      ImageIndex = 54
+    end
+    object ExecutePromoCodeSignPercentDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = ExecutePromoCodeSignPercentDialog
+      Caption = 'ExecutePromoCodeSignPercentDialog'
+      FormName = 'TPromoCodeSignPercentDialogForm'
+      FormNameParam.Value = 'TPromoCodeSignPercentDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inChangePercent_GUID'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inChangePercent_GUID'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object ExecSPPromoCodeSignPercent: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertPromoCodePercentSign
+      StoredProcList = <
+        item
+          StoredProc = spInsertPromoCodePercentSign
+        end>
+      Caption = 'ExecSPPromoCodeSignPercent'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoCode'
@@ -1489,6 +1554,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1595,6 +1664,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Action = macUpdateSignIsCheckedYes
       Category = 0
     end
+    object dxBarButton1: TdxBarButton
+      Action = actInsertPromoCodepercentSign
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1648,9 +1721,15 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end
       item
-        Value = Null
-        DataType = ftFloat
+        Name = 'inCount_GUID'
+        Value = 0
         ParamType = ptUnknown
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent_GUID'
+        Value = 0c
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -2356,7 +2435,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
+    Left = 800
     Top = 216
   end
   object SignDCS: TClientDataSet
@@ -2494,6 +2573,15 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Component = SignDCS
         ComponentItem = 'IsChecked'
         DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent'
+        Value = Null
+        Component = SignDCS
+        ComponentItem = 'ChangePercent'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -2933,5 +3021,41 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     PackSize = 1
     Left = 848
     Top = 384
+  end
+  object spInsertPromoCodePercentSign: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_PromoCodePercentSign'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCount_GUID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inCount_GUID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChangePercent_GUID'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inChangePercent_GUID'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    NeedResetData = True
+    ParamKeyField = 'inMovementId'
+    Left = 320
+    Top = 432
   end
 end

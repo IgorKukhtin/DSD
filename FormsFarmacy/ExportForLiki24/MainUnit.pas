@@ -17,7 +17,8 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
-  IdHTTP, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL;
+  cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, System.Zip,
+  IdHTTP, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, cxExport;
 
 type
   TMainForm = class(TForm)
@@ -37,19 +38,42 @@ type
     dsReport_Upload: TDataSource;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    UnitCode: TcxGridDBColumn;
+    UnitId: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     btnAllUnit: TButton;
-    Store: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    Barcode: TcxGridDBColumn;
-    Price: TcxGridDBColumn;
-    Quantity: TcxGridDBColumn;
+    Address: TcxGridDBColumn;
+    Phones: TcxGridDBColumn;
+    PharmacyId: TcxGridDBColumn;
+    ProductId: TcxGridDBColumn;
+    ProductName: TcxGridDBColumn;
     Producer: TcxGridDBColumn;
+    Morion: TcxGridDBColumn;
+    btnExecuteUnit: TButton;
+    Barcode: TcxGridDBColumn;
+    UnitWorkingTime: TcxGridDBColumn;
+    UnitAllDay: TcxGridDBColumn;
+    UnitLatitude: TcxGridDBColumn;
+    UnitLongitude: TcxGridDBColumn;
+    UnitCompanyId: TcxGridDBColumn;
+    UnitCompanyName: TcxGridDBColumn;
+    UnitEmail: TcxGridDBColumn;
+    UnitCity: TcxGridDBColumn;
     IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
     IdHTTP: TIdHTTP;
     IdFTP1: TIdFTP;
+    RegistrationNumber: TcxGridDBColumn;
+    Optima: TcxGridDBColumn;
+    Badm: TcxGridDBColumn;
+    Quantity: TcxGridDBColumn;
+    Price: TcxGridDBColumn;
+    OfflinePrice: TcxGridDBColumn;
+    PickupPrice: TcxGridDBColumn;
+    i10000001: TcxGridDBColumn;
+    i10000002: TcxGridDBColumn;
+    Vat: TcxGridDBColumn;
+    PackSize: TcxGridDBColumn;
+    PackDivisor: TcxGridDBColumn;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
@@ -58,6 +82,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAllUnitClick(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
+    procedure btnExecuteUnitClick(Sender: TObject);
   private
     { Private declarations }
 
@@ -118,9 +143,9 @@ begin
     Add_Log('-------------------');
     Add_Log('Аптека : ' + qryUnit.FieldByName('ID').AsString);
 
-    btnExecuteClick(Nil);
-    btnExportClick(Nil);
-    btnSendFTPClick(Nil);
+    btnExecuteClick(btnExecute);
+    btnExportClick(btnExport);
+    btnSendFTPClick(btnSendFTP);
 
   except
     on E: Exception do
@@ -132,15 +157,19 @@ end;
 procedure TMainForm.btnAllClick(Sender: TObject);
 begin
   try
-    qryUnit.First;
-    while not qryUnit.Eof do
-    begin
-
-      AllUnit;
-
-      qryUnit.Next;
+      // Экспорт аптек
+      btnExecuteUnitClick(Nil);
       Application.ProcessMessages;
-    end;
+      btnSendFTPClick(Nil);
+      Application.ProcessMessages;
+
+      // Экспорт медикаментов с остатками
+      btnExecuteClick(Nil);
+      Application.ProcessMessages;
+      btnExportClick(Nil);
+      Application.ProcessMessages;
+      btnSendFTPClick(Nil);
+      Application.ProcessMessages;
   except
     on E: Exception do
       Add_Log(E.Message);
@@ -166,8 +195,10 @@ begin
   qryReport_Upload.DisableControls;
   try
     try
-      FileName := 'price YA ' + qryUnit.FieldByName('UnitCode').AsString;
-      qryReport_Upload.Params.ParamByName('UnitID').AsInteger := qryUnit.FieldByName('ID').AsInteger;
+      FileName := qryUnit.FieldByName('ID').AsString;
+      if Assigned(Sender) then
+        qryReport_Upload.Params.ParamByName('UnitID').AsInteger := qryUnit.FieldByName('ID').AsInteger
+      else qryReport_Upload.Params.ParamByName('UnitID').AsInteger := 0;
       qryReport_Upload.Open;
     except
       on E:Exception do
@@ -193,10 +224,13 @@ begin
     exit;
   end;
 
+  FileName := 'Stock_' + FormatDateTime('YYYYMMDDHHNNSS', Now);
+
   // обычный отчет
   try
     try
-      ExportGridToXLSX(SavePath + FileName, grReportUnit);
+//      ExportGridToCSV(SavePath + FileName, grReportUnit, True, True, ',', 'csv', nil, TEncoding.UTF8);
+      ExportGridToFile(SavePath + FileName, cxExportToText, grReportUnit, True, True, False, ',', '', '', 'csv', nil, TEncoding.UTF8);
     except
       on E: Exception do
       begin
@@ -209,31 +243,32 @@ begin
 end;
 
 procedure TMainForm.btnSendFTPClick(Sender: TObject);
-  var vExt : string;
-
-  function GetFileSizeByName(AFileName: string): DWord;
-  var
-    Handle: THandle;
-  begin
-    if not FileExists(AFilename) then exit;
-    Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
-    Result := GetFileSize(Handle, nil);
-    CloseHandle(Handle);
-  end;
-
+  VAR ZipFile: TZipFile;
 begin
 
-  if not FileExists(SavePath + FileName + '.xlsx') then Exit;
+  if not FileExists(SavePath + FileName + '.csv') then Exit;
 
-  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.xlsx');
-  vExt := '.xls';
+  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.csv');
 
-//  if GetFileSizeByName(SavePath + FileName + '.xls') > 10000000 then
-//  begin
-//    vExt := '.zip';
-//    Add_Log('Архивирование отчета: ' + SavePath + FileName + vExt);
-//    GZCompressFile(SavePath + FileName + '.xls', SavePath + FileName + vExt);
-//  end;
+  try
+    ZipFile := TZipFile.Create;
+
+    try
+      ZipFile.Open(SavePath + FileName + '.zip', zmWrite);
+      ZipFile.Add(SavePath + FileName + '.csv');
+      ZipFile.Close;
+
+      DeleteFile(SavePath + FileName + '.csv');
+    finally
+      ZipFile.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      Add_Log(E.Message);
+      exit;
+    end;
+  end;
 
   try
     IdFTP1.Disconnect;
@@ -258,8 +293,8 @@ begin
       end;
     end;
     try
-      idFTP1.Put(SavePath + FileName + '.xlsx');
-      DeleteFile(SavePath + FileName + '.xlsx');
+      idFTP1.Put(SavePath + FileName + '.zip');
+      DeleteFile(SavePath + FileName + '.zip');
 
     except ON E: Exception DO
       Begin
@@ -269,6 +304,35 @@ begin
     end;
   finally
     idFTP1.Disconnect;
+  end;
+end;
+
+procedure TMainForm.btnExecuteUnitClick(Sender: TObject);
+begin
+  if not qryUnit.Active then Exit;
+  if qryUnit.IsEmpty then Exit;
+  Add_Log('Начало выгрузки аптек');
+  if not ForceDirectories(SavePath) then
+  Begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+
+  FileName := 'Pharmacies_' + FormatDateTime('YYYYMMDDHHNNSS', Now);
+
+  // обычный отчет
+  try
+    try
+//      ExportGridToCSV(SavePath + FileName, cxGrid, True, True, ',', 'csv', nil, TEncoding.UTF8);
+      ExportGridToFile(SavePath + FileName, cxExportToText, cxGrid, True, True, False, ',', '', '', 'csv', nil, TEncoding.UTF8);
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+        exit;
+      end;
+    end;
+  finally
   end;
 
 end;
@@ -282,7 +346,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportFor103UA.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'ExportForLiki24.ini');
 
   try
     SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
@@ -301,16 +365,16 @@ begin
     ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'eej9oponahT4gah3');
     Ini.WriteString('Connect', 'Password', ZConnection1.Password);
 
-    glFTPHost := Ini.ReadString('FTP','Host','Apteka.103.ua');
+    glFTPHost := Ini.ReadString('FTP','Host','liki24.com');
     Ini.WriteString('FTP','Host',glFTPHost);
 
     glFTPPath := Ini.ReadString('FTP','Path','');
     Ini.WriteString('FTP','Path',glFTPPath);
 
-    glFTPUser := Ini.ReadString('FTP','User','ne-bolej_ua');
+    glFTPUser := Ini.ReadString('FTP','User','ftpp8ascm');
     Ini.WriteString('FTP','User',glFTPUser);
 
-    glFTPPassword := Ini.ReadString('FTP','Password','%q$VVsdfWDq2!AD@Xs');
+    glFTPPassword := Ini.ReadString('FTP','Password','2T6s0Z8y');
     Ini.WriteString('FTP','Password',glFTPPassword);
 
   finally
@@ -343,7 +407,6 @@ begin
         Exit;
       end;
     end;
-
 
     if not (((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) or
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then

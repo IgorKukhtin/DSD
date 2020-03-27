@@ -76,6 +76,9 @@ type
     actSmashCheck: TdsdExecStoredProc;
     spSmashCheck: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
+    actUpdateOperDate: TdsdExecStoredProc;
+    bbUpdateOperDate: TdxBarButton;
+    spUpdateOperDate: TdsdStoredProc;
   private
     { Private declarations }
   public
