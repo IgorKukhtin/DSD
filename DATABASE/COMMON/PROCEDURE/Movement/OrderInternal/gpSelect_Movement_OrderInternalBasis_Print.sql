@@ -23,7 +23,6 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderInternal());
      vbUserId:= lpGetUserBySession (inSession);
 
-
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
@@ -123,6 +122,49 @@ BEGIN
                             GROUP BY tmpMI.GoodsId
                                    , tmpMI.GoodsKindId
                           )
+          , tmpMI AS (-- Заявка сырье
+                      SELECT MovementItem.ObjectId                                  AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
+                           , MAX (COALESCE (MILinkObject_Receipt.ObjectId, 0))      AS ReceiptId
+                           , SUM (MovementItem.Amount)                              AS Amount
+                           , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))     AS AmountSecond
+                           , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))    AS AmountRemains
+                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))       AS AmountPartner
+                           , SUM (COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0))  AS AmountPartnerPrior
+                           , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)) AS AmountPartnerSecond
+                           , 0                                                      AS AmountSend
+                           , 0                                                      AS AmountSendOut
+                           , 0                                                      AS AmountP
+                      FROM MovementItem
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+                                                            ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                                       ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
+                                                       ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                       ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
+                                                       ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
+                                                       ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                      )
+
+
        SELECT
              Object_Unit.ObjectCode          AS UnitCode
            , Object_Unit.ValueData           AS UnitName 
@@ -186,45 +228,19 @@ BEGIN
 
                   , SUM (tmpMI.AmountRemains) AS AmountRemains
              FROM (-- Заявка сырье
-                   SELECT MovementItem.ObjectId                                  AS GoodsId
-                        , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)          AS GoodsKindId
-                        , MAX (COALESCE (MILinkObject_Receipt.ObjectId, 0))      AS ReceiptId
-                        , SUM (MovementItem.Amount)                              AS Amount
-                        , SUM (COALESCE (MIFloat_AmountSecond.ValueData, 0))     AS AmountSecond
-                        , SUM (COALESCE (MIFloat_AmountRemains.ValueData, 0))    AS AmountRemains
-                        , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))       AS AmountPartner
-                        , SUM (COALESCE (MIFloat_AmountPartnerPrior.ValueData, 0))  AS AmountPartnerPrior
-                        , SUM (COALESCE (MIFloat_AmountPartnerSecond.ValueData, 0)) AS AmountPartnerSecond
-                        , 0                                                      AS AmountSend
-                        , 0                                                      AS AmountSendOut
-                        , 0                                                      AS AmountP
-                   FROM MovementItem
-                        LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
-                                                         ON MILinkObject_Receipt.MovementItemId = MovementItem.Id
-                                                        AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
-                                                    ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountRemains
-                                                    ON MIFloat_AmountRemains.MovementItemId = MovementItem.Id
-                                             AND MIFloat_AmountRemains.DescId = zc_MIFloat_AmountRemains()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                    ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerPrior
-                                                    ON MIFloat_AmountPartnerPrior.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountPartnerPrior.DescId = zc_MIFloat_AmountPartnerPrior()
-                        LEFT JOIN MovementItemFloat AS MIFloat_AmountPartnerSecond
-                                                    ON MIFloat_AmountPartnerSecond.MovementItemId = MovementItem.Id
-                                                   AND MIFloat_AmountPartnerSecond.DescId = zc_MIFloat_AmountPartnerSecond()
-                   WHERE MovementItem.MovementId = inMovementId
-                     AND MovementItem.DescId     = zc_MI_Master()
-                     AND MovementItem.isErased   = FALSE
-                   GROUP BY MovementItem.ObjectId
-                          , MILinkObject_GoodsKind.ObjectId
+                   SELECT tmpMI.GoodsId
+                        , tmpMI.GoodsKindId
+                        , tmpMI.ReceiptId
+                        , tmpMI.Amount
+                        , tmpMI.AmountSecond
+                        , tmpMI.AmountRemains
+                        , tmpMI.AmountPartner
+                        , tmpMI.AmountPartnerPrior
+                        , tmpMI.AmountPartnerSecond
+                        , 0  AS AmountSend
+                        , 0  AS AmountSendOut
+                        , 0  AS AmountP
+                   FROM tmpMI
                   UNION ALL
                    -- Перемещение
                    SELECT tmpMI_Send.GoodsId

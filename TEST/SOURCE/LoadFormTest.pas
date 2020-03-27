@@ -1214,12 +1214,13 @@ end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
-  }
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
+  }
 end;
 
 procedure TLoadFormTest.LoadTaskTest;

@@ -3,7 +3,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   ClientHeight = 668
   ClientWidth = 1114
   ExplicitWidth = 1130
-  ExplicitHeight = 703
+  ExplicitHeight = 706
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -285,9 +285,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object cxTabSheet1: TcxTabSheet
       Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#8470' '#1087'/'#1087
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
@@ -411,6 +408,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' - '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
             Width = 55
+          end
+          object cxLineNumTaxNew: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087' '#1050#1086#1088#1088'. '#1094'.'
+            DataBinding.FieldName = 'LineNumTaxNew'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.;-0.; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #8470' '#1087'/'#1087' '#1074' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1077' '#1089' '#1085#1086#1074#1086#1081' '#1094#1077#1085#1086#1081' - '#1089#1082#1074#1086#1079#1085#1072#1103' '#1085#1091#1084#1077#1088#1072#1094#1080#1103
+            Width = 59
           end
           object cxAmountTax_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1074' 7/1'
@@ -2682,8 +2689,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 282
-    Top = 432
+    Left = 298
+    Top = 400
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -2845,8 +2852,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 497
-    Top = 512
+    Left = 545
+    Top = 504
   end
   object spGetReportNameTaxCorrective: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_TaxCorrective_ReportName'
@@ -3041,6 +3048,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'LineNumTaxCorr'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLineNumTaxNew'
+        Value = Null
+        Component = ChildCDS
+        ComponentItem = 'LineNumTaxNew'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
