@@ -78,6 +78,9 @@ end;
 procedure TLoadReportTest.LoadTransportReportFormTest;
 begin
   // Транспорт
+
+  LoadReportFromFile('Отчет Затраты транспорта (реестр)', ReportPath + '\Транспорт\Отчет Затраты транспорта (реестр).fr3');
+  exit;
   {
   LoadReportFromFile('Отчет по ГСМ', ReportPath + '\Транспорт\Отчет по ГСМ.fr3');
   exit;

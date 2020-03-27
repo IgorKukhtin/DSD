@@ -104,6 +104,8 @@ type
     TotalSum_one: TcxGridDBColumn;
     TotalSum_kg: TcxGridDBColumn;
     TotalWeight_Doc: TcxGridDBColumn;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;
