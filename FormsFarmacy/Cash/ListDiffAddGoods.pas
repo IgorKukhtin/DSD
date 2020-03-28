@@ -354,7 +354,7 @@ begin
         Exit;
       end;
 
-      if ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
+      if not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
       begin
         if  ListGoodsCDS.FieldByName('ExpirationDate').AsDateTime < IncYear(Date, 1) then
         begin

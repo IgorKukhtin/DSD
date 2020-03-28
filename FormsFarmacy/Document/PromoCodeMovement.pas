@@ -13,7 +13,8 @@ uses
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGridCustomView, cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, cxCheckBox;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxSplitter, ExternalLoad, cxCheckBox,
+  dsdExportToXLSAction;
 
 type
   TPromoCodeMovementForm = class(TAncestorDocumentForm)
@@ -173,6 +174,11 @@ type
     ExecutePromoCodeSignPercentDialog: TExecuteDialog;
     spInsertPromoCodePercentSign: TdsdStoredProc;
     ExecSPPromoCodeSignPercent: TdsdExecStoredProc;
+    spSelectPrintSticker: TdsdStoredProc;
+    actPrintSticker: TdsdExportToXLS;
+    ExecSPPrintSticker: TdsdExecStoredProc;
+    dxBarButton2: TdxBarButton;
+    ExecutePromoCodeSignUnitName: TExecuteDialog;
   private
     { Private declarations }
   public

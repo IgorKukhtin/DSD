@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_EmployeeSchedule_Child ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_EmployeeSchedule_Child (Integer, Integer, Integer, Integer, TFloat, Integer, TDateTime, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_EmployeeSchedule_Child (Integer, Integer, Integer, Integer, TFloat, Integer, TDateTime, TDateTime, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_EmployeeSchedule_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -46,7 +46,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_ServiceExit(), ioId, inServiceExit);
 
     -- сохранили протокол
-    --PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
     --RETURN inId;
 
  END;

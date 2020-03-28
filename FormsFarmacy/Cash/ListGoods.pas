@@ -74,6 +74,7 @@ type
     bbGridToExcel: TdxBarButton;
     bbOpen: TdxBarButton;
     colContractName: TcxGridDBColumn;
+    colAreaName: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);

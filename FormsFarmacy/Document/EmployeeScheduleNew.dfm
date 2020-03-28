@@ -789,6 +789,36 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end>
       isShowModal = True
     end
+    object MovementItemChildProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1103#1095#1077#1081#1082#1080' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1103#1095#1077#1081#1082#1080' '#1089#1090#1088#1086#1082#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CrossDBViewAddOn
+          ComponentItem = 'ChildID'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersonalName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -920,6 +950,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton10'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1020,6 +1054,10 @@ inherited EmployeeScheduleNewForm: TEmployeeScheduleNewForm
     end
     object dxBarButton9: TdxBarButton
       Action = actEmployeeScheduleFilling
+      Category = 0
+    end
+    object dxBarButton10: TdxBarButton
+      Action = MovementItemChildProtocolOpenForm
       Category = 0
     end
   end

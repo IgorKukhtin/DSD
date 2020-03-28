@@ -1414,7 +1414,6 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     object ExecutePromoCodeSignPercentDialog: TExecuteDialog
       Category = 'DSDLib'
       MoveParams = <>
-      BeforeAction = ExecutePromoCodeSignPercentDialog
       Caption = 'ExecutePromoCodeSignPercentDialog'
       FormName = 'TPromoCodeSignPercentDialogForm'
       FormNameParam.Value = 'TPromoCodeSignPercentDialogForm'
@@ -1442,6 +1441,126 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
           StoredProc = spInsertPromoCodePercentSign
         end>
       Caption = 'ExecSPPromoCodeSignPercent'
+    end
+    object actPrintSticker: TdsdExportToXLS
+      Category = 'DSDLibExport'
+      MoveParams = <>
+      BeforeAction = ExecSPPrintSticker
+      ItemsDataSet = PrintItemsCDS
+      FileName = 'PrintSticker'
+      FileNameParam.Value = 'PrintSticker'
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
+      TitleHeight = 1.000000000000000000
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      HeaderFont.Charset = DEFAULT_CHARSET
+      HeaderFont.Color = clWindowText
+      HeaderFont.Height = -11
+      HeaderFont.Name = 'Tahoma'
+      HeaderFont.Style = []
+      Footer = False
+      ColumnParams = <
+        item
+          FieldName = 'Column1'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 25
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'GUID1'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end
+        item
+          FieldName = 'Column2'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 25
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'GUID2'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end
+        item
+          FieldName = 'Column3'
+          DecimalPlace = 0
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          Width = 25
+          WrapText = True
+          CalcColumnLists = <>
+          DetailedTexts = <
+            item
+              FieldName = 'GUID3'
+              Font.Charset = DEFAULT_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -13
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+            end>
+        end>
+      Caption = 'actPrintSticker'
+      ImageIndex = 29
+    end
+    object ExecSPPrintSticker: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = ExecutePromoCodeSignUnitName
+      PostDataSetBeforeExecute = False
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = 'ExecSPPrintSticker'
+    end
+    object ExecutePromoCodeSignUnitName: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ExecutePromoCodeSignUnitName'
+      FormName = 'TPromoCodeSignUnitNameDialogForm'
+      FormNameParam.Value = 'TPromoCodeSignUnitNameDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'UnitName'
+          Value = 0c
+          Component = FormParams
+          ComponentItem = 'UnitName'
+          DataType = ftWideString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -1566,6 +1685,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1668,6 +1791,10 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
       Action = actInsertPromoCodepercentSign
       Category = 0
     end
+    object dxBarButton2: TdxBarButton
+      Action = actPrintSticker
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1730,6 +1857,12 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Name = 'inChangePercent_GUID'
         Value = 0c
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 40
@@ -1893,6 +2026,14 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
         Value = 'NULL'
         Component = edUpdateDate
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitName'
+        DataType = ftWideString
         MultiSelectSeparator = ','
       end>
     Left = 72
@@ -2211,7 +2352,7 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 444
+    Left = 404
     Top = 209
   end
   object DetailDCS: TClientDataSet
@@ -3057,5 +3198,34 @@ inherited PromoCodeMovementForm: TPromoCodeMovementForm
     ParamKeyField = 'inMovementId'
     Left = 320
     Top = 432
+  end
+  object spSelectPrintSticker: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItem_PrintPromoCodeSticker'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inUnitName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitName'
+        DataType = ftWideString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 391
+    Top = 280
   end
 end

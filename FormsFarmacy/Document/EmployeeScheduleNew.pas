@@ -91,6 +91,8 @@ type
     dxBarButton8: TdxBarButton;
     actEmployeeScheduleFilling: TdsdOpenForm;
     dxBarButton9: TdxBarButton;
+    MovementItemChildProtocolOpenForm: TdsdOpenForm;
+    dxBarButton10: TdxBarButton;
   private
     { Private declarations }
   public

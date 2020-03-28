@@ -56,7 +56,7 @@ BEGIN
         ForSite.valuedata as ForSite,
         OneCode.valuedata as OneCode,
         BuySite.valuedata as BuySite,
-        ChangePercent.valuedata as ChangePercent,
+        COALESCE(NULLIF(COALESCE(MIFloat_ChangePercent.valuedata, 0), 0), ChangePercent.valuedata, 0) as ChangePercent,
         PromoCode.id,
         CASE WHEN PromoCode.amount > 0 THEN TRUE ELSE FALSE END as PromoCodeChecked,
         PromoCode.iserased,
@@ -89,6 +89,8 @@ BEGIN
                 ON PromoAction.id = LinkPromoAction.objectid
         LEFT JOIN MovementItemString MIString_Bayer
                 ON PromoCode.ID = MIString_Bayer.MovementItemId AND MIString_Bayer.DescId = zc_MIString_Bayer()
+        LEFT JOIN MovementItemFloat MIFloat_ChangePercent
+                ON PromoCode.ID = MIFloat_ChangePercent.MovementItemId AND MIFloat_ChangePercent.DescId = zc_MIFloat_ChangePercent()
     WHERE
         PromoCode_GUID.GUID = inPromoGUID;
 
@@ -160,6 +162,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 27.03.20                                                                                                        *
  05.02.20                                                                                                        *
  23.06.19                                                                                                        *
  07.08.18                                                                                                        *
@@ -168,4 +171,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_PromoCode_by_GUID(inPromoGUID := '894ac34f' ,  inSession := '3354092');
+-- select * from gpGet_PromoCode_by_GUID(inPromoGUID := '7460ad61' ,  inSession := '0');

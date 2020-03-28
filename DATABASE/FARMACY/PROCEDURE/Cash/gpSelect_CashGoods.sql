@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer,
                GoodsName TVarChar,
                JuridicalName TVarChar,
                ContractName TVarChar,
+               AreaName TVarChar,
                NDS TFloat,
                JuridicalPrice TFloat,
                MarginPercent TFloat,
@@ -42,28 +43,24 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
-     -- проверяем регион пользователя
-     vbAreaId:= (SELECT outAreaId FROM gpGet_Area_byUser(inSession));
-
-     if COALESCE (vbAreaId, 0) = 0
-     THEN
-       vbAreaId:= (SELECT AreaId FROM gpGet_User_AreaId(inSession));
-     END IF;
-     
-     SELECT ObjectLink_Unit_Juridical.ChildObjectId, ObjectLink_Juridical_Retail.ChildObjectId
-     INTO vbJuridicalId, vbRetailId
+     SELECT ObjectLink_Unit_Juridical.ChildObjectId, ObjectLink_Juridical_Retail.ChildObjectId, ObjectLink_ObjectLink_Unit_Area.ChildObjectId
+     INTO vbJuridicalId, vbRetailId, vbAreaId
      FROM ObjectLink AS ObjectLink_Unit_Juridical
           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+          INNER JOIN ObjectLink AS ObjectLink_ObjectLink_Unit_Area
+                                ON ObjectLink_ObjectLink_Unit_Area.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                               AND ObjectLink_ObjectLink_Unit_Area.DescId = zc_ObjectLink_Unit_Area()
      WHERE ObjectLink_Unit_Juridical.ObjectId = vbUnitId
-       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();     
+       AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical();
 
     --
     CREATE TEMP TABLE _GoodsPriceAll (
                              GoodsId Integer,
                              JuridicalId Integer,
                              ContractId Integer,
+                             AreaId Integer,
                              NDS TFloat,
                              JuridicalPrice TFloat,
                              MarginPercent TFloat,
@@ -93,8 +90,8 @@ BEGIN
 
           -- Список цены + ТОП
         , GoodsPrice AS
-             (SELECT ObjectLink_Price_Goods.ChildObjectId              AS GoodsId, 
-                     COALESCE (ObjectBoolean_Top.ValueData, FALSE)     AS isTOP, 
+             (SELECT ObjectLink_Price_Goods.ChildObjectId              AS GoodsId,
+                     COALESCE (ObjectBoolean_Top.ValueData, FALSE)     AS isTOP,
                      COALESCE (ObjectFloat_PercentMarkup.ValueData, 0) AS PercentMarkup,
                      MCS_Value.ValueData                               AS MCSValue
               FROM ObjectLink AS ObjectLink_Price_Unit
@@ -131,9 +128,10 @@ BEGIN
         INSERT INTO _GoodsPriceAll
         SELECT
 
-           Object_Goods_Retail.Id               AS GoodsId,
+           Object_Goods_Retail.Id              AS GoodsId,
            LoadPriceList.JuridicalId           AS JuridicalId,
            LoadPriceList.ContractId            AS ContractId,
+           LoadPriceList.AreaId                AS AreaId,
            COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0)::TFloat  AS NDS,
            LoadPriceListItem.Price             AS JuridicalPrice,
            CASE WHEN COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), Object_Goods_Retail.isTop) = TRUE
@@ -164,6 +162,7 @@ BEGIN
               LEFT JOIN JuridicalSettings
                       ON JuridicalSettings.JuridicalId = LoadPriceList.JuridicalId
                      AND JuridicalSettings.ContractId = LoadPriceList.ContractId
+--                     AND JuridicalSettings.ArId = LoadPriceList.AreaId
 
               LEFT JOIN ObjectFloat AS ObjectFloat_Juridical_Percent
                                     ON ObjectFloat_Juridical_Percent.ObjectId = LoadPriceList.JuridicalId
@@ -189,10 +188,10 @@ BEGIN
               LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_Goods.NDSKindId
               LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_PercentMarkup
-                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods_Retail.Id 
-                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()   
+                                     ON ObjectFloat_Goods_PercentMarkup.ObjectId = Object_Goods_Retail.Id
+                                    AND ObjectFloat_Goods_PercentMarkup.DescId = zc_ObjectFloat_Goods_PercentMarkup()
               LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
-                                    ON ObjectFloat_Goods_Price.ObjectId = Object_Goods_Retail.Id 
+                                    ON ObjectFloat_Goods_Price.ObjectId = Object_Goods_Retail.Id
                                    AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
 
               LEFT JOIN MarginCondition ON MarginCondition.MarginCategoryId = COALESCE (Object_MarginCategoryLink.MarginCategoryId, Object_MarginCategoryLink_all.MarginCategoryId)
@@ -202,9 +201,9 @@ BEGIN
 
 
         WHERE COALESCE(JuridicalSettings.isPriceCloseOrder, TRUE)  = FALSE
-          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = 0 OR COALESCE(0, 0) = 0 OR
-               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis());
-               
+          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0/* OR 
+               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis()*/);
+
      ANALYSE _GoodsPriceAll;
 
      RETURN QUERY
@@ -214,6 +213,7 @@ BEGIN
               _GoodsPriceAll.GoodsId           AS GoodsId,
               _GoodsPriceAll.JuridicalId       AS JuridicalId,
               _GoodsPriceAll.ContractId        AS ContractId,
+              _GoodsPriceAll.AreaId            AS AreaId,
               _GoodsPriceAll.NDS               AS NDS,
               _GoodsPriceAll.JuridicalPrice    AS JuridicalPrice,
               _GoodsPriceAll.MarginPercent     AS MarginPercent,
@@ -231,6 +231,7 @@ BEGIN
               Object_Goods.ValueData            AS GoodsName,
               Object_Juridical.ValueData        AS JuridicalName,
               Object_Contract.ValueData         AS ContractName,
+              Object_Area.ValueData             AS AreaName,
               GoodsPriceAll.NDS                 AS NDS,
               GoodsPriceAll.JuridicalPrice      AS JuridicalPrice,
               GoodsPriceAll.MarginPercent       AS MarginPercent,
@@ -247,6 +248,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = GoodsPriceAll.JuridicalId
           LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = GoodsPriceAll.ContractId
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = GoodsPriceAll.AreaId
 
      WHERE Ord = 1;
 
@@ -257,6 +259,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 28.03.20                                                                                     * учет регионов
  18.03.20                                                                                     * оптимизация
  12.02.20                                                                                     *
  20.01.19                                                                                     *
@@ -265,4 +268,4 @@ $BODY$
  11.09.18        *
 */
 
--- тест
+-- тест SELECT * FROM gpSelect_CashGoods('3');

@@ -1723,6 +1723,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignPercentDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignPercentDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoCodeSignUnitNameDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoCodeSignUnitNameDialogForm');
 end;
 
 procedure TLoadFormTest.LoadPromoUnitFormTest;
