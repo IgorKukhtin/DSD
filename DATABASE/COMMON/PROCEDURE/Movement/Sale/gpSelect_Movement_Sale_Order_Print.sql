@@ -19,10 +19,10 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 
-    DECLARE vbMovementId Integer;
+    DECLARE vbMovementId   Integer;
     DECLARE vbFromId_group Integer;
-    DECLARE vbToId Integer;
-    DECLARE vbDiffTax TFloat;
+    DECLARE vbToId         Integer;
+    DECLARE vbDiffTax      TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -57,6 +57,7 @@ BEGIN
      -- параметры из документа - inMovementId_Weighing
      IF EXISTS (SELECT 1 FROM Movement WHERE Movement.Id = inMovementId AND Movement.DescId = zc_Movement_OrderInternal())
      THEN
+         --
          vbFromId_group:= COALESCE ((SELECT CASE WHEN ObjectLink_Unit_Parent_0.ChildObjectId = 8439
                                                    OR ObjectLink_Unit_Parent_1.ChildObjectId = 8439
                                                    OR ObjectLink_Unit_Parent_2.ChildObjectId = 8439
@@ -188,7 +189,11 @@ BEGIN
     OPEN Cursor2 FOR
 
      WITH tmpWeighing AS (SELECT MovementItem.ObjectId                                     AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis()) AS GoodsKindId
+                               , CASE WHEN MovementLinkObject_From.ObjectId = 8445 -- Склад МИНУСОВКА
+                                        OR MovementLinkObject_To.ObjectId   = 8445 -- Склад МИНУСОВКА
+                                           THEN 8338 -- морож.
+                                      ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                 END                                                       AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                , SUM (CASE WHEN MovementLinkObject_To.ObjectId   = vbToId THEN MovementItem.Amount ELSE 0 END) AS Amount
@@ -197,7 +202,7 @@ BEGIN
                                 FROM MovementLinkMovement AS MLM_Order
                                     INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
                                                        AND Movement.DescId = zc_Movement_WeighingPartner()
-                                                       AND Movement.StatusId = zc_Enum_Status_unComplete()
+                                                       AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                 WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
@@ -206,7 +211,7 @@ BEGIN
                                 FROM MovementLinkMovement AS MLM_Order
                                     INNER JOIN Movement ON Movement.Id = MLM_Order.MovementId
                                                        AND Movement.DescId = zc_Movement_WeighingProduction()
-                                                       AND Movement.StatusId = zc_Enum_Status_unComplete()
+                                                       AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                                        AND (Movement.Id = inMovementId_Weighing OR COALESCE (inMovementId_Weighing, 0) = 0)
                                 WHERE MLM_Order.MovementChildId = inMovementId -- id заявки
                                   AND MLM_Order.DescId = zc_MovementLinkMovement_Order()
@@ -232,12 +237,20 @@ BEGIN
                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                           GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                 , CASE WHEN MovementLinkObject_From.ObjectId = 8445 -- Склад МИНУСОВКА
+                                          OR MovementLinkObject_To.ObjectId   = 8445 -- Склад МИНУСОВКА
+                                             THEN 8338 -- морож.
+                                        ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                   END
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                          )
               , tmpMI AS (SELECT MovementItem.ObjectId                                     AS GoodsId
-                               , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())  AS GoodsKindId
+                               , CASE WHEN _tmpListMovement.FromId = 8445 -- Склад МИНУСОВКА
+                                        OR _tmpListMovement.ToId   = 8445 -- Склад МИНУСОВКА
+                                           THEN 8338 -- морож.
+                                      ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                 END                                                       AS GoodsKindId
                                , COALESCE (MIString_PartionGoods.ValueData, '')            AS PartionGoods
                                , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())  AS PartionGoodsDate
                                --, SUM (MovementItem.Amount)                                 AS Amount
@@ -265,7 +278,11 @@ BEGIN
                                                                AND MIContainer.WhereObjectId_Analyzer = vbToId
                                                                */
                           GROUP BY MovementItem.ObjectId
-                                 , COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                 , CASE WHEN _tmpListMovement.FromId = 8445 -- Склад МИНУСОВКА
+                                          OR _tmpListMovement.ToId   = 8445 -- Склад МИНУСОВКА
+                                             THEN 8338 -- морож.
+                                        ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, zc_GoodsKind_Basis())
+                                   END
                                  , COALESCE (MIString_PartionGoods.ValueData, '')
                                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateStart())
                           )
@@ -284,8 +301,8 @@ BEGIN
                                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
                                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                                                ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
                                LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                                           ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
