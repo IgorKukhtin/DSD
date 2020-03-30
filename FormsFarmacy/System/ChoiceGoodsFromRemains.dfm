@@ -63,6 +63,16 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
               Format = ',0.00'
               Kind = skSum
               Column = AmountReserve
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = colDailyCheck
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = colDailySale
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -238,6 +248,32 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
             HeaderHint = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
             Options.Editing = False
             Width = 71
+          end
+          object colDailyCheck: TcxGridDBColumn
+            Caption = #1050#1072#1089#1089#1072' '#1079#1072' '#1089#1091#1090#1082#1080
+            DataBinding.FieldName = 'DailyCheck'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+          end
+          object colDailySale: TcxGridDBColumn
+            Caption = #1041#1077#1079#1085#1072#1083' '#1079#1072' '#1089#1091#1090#1082#1080
+            DataBinding.FieldName = 'DailySale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object colColor_calc: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_calc'
+            Visible = False
           end
         end
       end
@@ -623,6 +659,11 @@ inherited ChoiceGoodsFromRemainsForm: TChoiceGoodsFromRemainsForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = colColor_calc
+        ColorValueList = <>
+      end>
     Left = 536
     Top = 208
   end

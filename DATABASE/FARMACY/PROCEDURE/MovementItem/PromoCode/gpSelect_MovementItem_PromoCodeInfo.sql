@@ -29,12 +29,15 @@ BEGIN
                   FROM MovementItem AS MI_Sign
                   WHERE MI_Sign.MovementId = inMovementId
                     AND MI_Sign.DescId = zc_MI_Sign()
+                    AND MI_Sign.Amount = 1
+                    AND MI_Sign.isErased = False
                   )
        -- для скорости сначала вібираем все zc_MovementFloat_MovementItemId
       , tmpMovementFloat AS (SELECT MovementFloat_MovementItemId.MovementId
                                   , MovementFloat_MovementItemId.ValueData :: Integer As MovementItemId
                              FROM MovementFloat AS MovementFloat_MovementItemId
-                             WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                             WHERE MovementFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                             )
       -- Документ чек, по идее должен быть 1 , но чтоб не задвоилось берем макс и считаем сколько чеков
       , tmpCheck_Mov AS (SELECT tmpMI.Id
@@ -70,4 +73,5 @@ $BODY$
  13.09.18                                                                         *
 */
 
--- select * from gpSelect_MovementItem_PromoCodeInfo(inMovementId := 2,  inSession := '3'::TVarChar);
+-- select * from gpSelect_MovementItem_PromoCodeInfo(inMovementId := 18342218,  inSession := '3'::TVarChar);
+
