@@ -78,6 +78,9 @@ type
     GuidesRetail: TdsdGuides;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edMovementPromo: TcxButtonEdit;
+    GuidesMovementPromo: TdsdGuides;
   private
     { Private declarations }
   public

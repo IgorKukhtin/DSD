@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Promo(
 )
 RETURNS TABLE (Id               Integer     --Идентификатор
              , InvNumber        Integer    --Номер документа
+             , InvNumberFull    TVarChar   --Номер документа + дата
              , OperDate         TDateTime   --Дата документа
              , StatusCode       Integer     --код статуса
              , StatusName       TVarChar    --Статус
@@ -50,6 +51,7 @@ BEGIN
         SELECT
             0                                                 AS Id
           , CAST (NEXTVAL ('movement_Promo_seq') AS Integer)  AS InvNumber
+          , ''  :: TVarChar                                   AS InvNumberFull
           , inOperDate	                                      AS OperDate
           , Object_Status.Code               	              AS StatusCode
           , Object_Status.Name              		      AS StatusName
@@ -86,6 +88,7 @@ BEGIN
         SELECT
             Movement_Promo.Id                 --Идентификатор
           , Movement_Promo.InvNumber          --Номер документа
+          , ('№ ' || Movement_Promo.InvNumber || ' от ' || zfConvert_DateToString (Movement_Promo.OperDate)  ) :: TVarChar AS InvNumberFull
           , Movement_Promo.OperDate           --Дата документа
           , Movement_Promo.StatusCode         --код статуса
           , Movement_Promo.StatusName         --Статус

@@ -1,28 +1,28 @@
 inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081'>'
   ClientHeight = 434
-  ClientWidth = 935
+  ClientWidth = 1075
   AddOnFormData.ExecuteDialogAction = actReport_PromoDialog
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 951
+  ExplicitWidth = 1091
   ExplicitHeight = 472
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 935
+    Width = 1075
     Height = 351
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 935
     ExplicitHeight = 351
     ClientRectBottom = 351
-    ClientRectRight = 935
+    ClientRectRight = 1075
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 935
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
-        Width = 935
+        Width = 1075
         Height = 351
         ExplicitWidth = 935
         ExplicitHeight = 351
@@ -532,9 +532,10 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     end
   end
   inherited Panel: TPanel
-    Width = 935
+    Width = 1075
     Height = 57
-    ExplicitWidth = 935
+    ExplicitTop = 5
+    ExplicitWidth = 1233
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 116
@@ -608,6 +609,24 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     TabOrder = 7
     Width = 162
   end
+  object cxLabel4: TcxLabel [4]
+    Left = 776
+    Top = 6
+    Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1072#1082#1094#1080#1103':'
+  end
+  object edMovementPromo: TcxButtonEdit [5]
+    Left = 868
+    Top = 5
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 205
+  end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -640,6 +659,9 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1056#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1094#1077#1085#1086#1074#1099#1093' '#1072#1082#1094#1080#1081
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actReport_PromoDialog: TExecuteDialog
       Category = 'DSDLib'
@@ -990,6 +1012,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull'
+        Value = Null
+        Component = edMovementPromo
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 208
@@ -1022,5 +1052,35 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         MultiSelectSeparator = ','
       end>
     Left = 604
+  end
+  object GuidesMovementPromo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMovementPromo
+    FormNameParam.Value = 'TPromoJournalForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPromoJournalForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesMovementPromo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesMovementPromo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 980
+    Top = 8
   end
 end
