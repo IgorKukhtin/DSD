@@ -16,6 +16,7 @@ $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbLossDate TDateTime;
    DECLARE vbOperDate TDateTime;
+   DECLARE vbArticleLossId Integer;
 BEGIN
 
      -- создаются временные таблицы - для формирование данных для проводок
@@ -33,12 +34,16 @@ BEGIN
                                      , inInfoMoneyId            := NULL
                                      , inUserId                 := inUserId);
 
-    SELECT MovementLinkObject.ObjectId, ObjectLink_Unit_Juridical.ChildObjectId, Movement.OperDate INTO vbUnitId, vbJuridicalId, vbOperDate
+    SELECT MovementLinkObject.ObjectId, ObjectLink_Unit_Juridical.ChildObjectId, Movement.OperDate, MovementLinkObject_ArticleLoss.ObjectId 
+    INTO vbUnitId, vbJuridicalId, vbOperDate, vbArticleLossId
     FROM MovementLinkObject
         LEFT OUTER JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                    ON MovementLinkObject.ObjectId = ObjectLink_Unit_Juridical.ObjectId
                                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
         JOIN Movement ON Movement.Id = MovementLinkObject.MovementId                          
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                     ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                    AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
     WHERE MovementLinkObject.MovementId = inMovementId 
       AND MovementLinkObject.DescId = zc_MovementLinkObject_Unit();
       
@@ -344,6 +349,12 @@ WITH LOSS AS ( SELECT
                                  );
     --пересчитываем сумму документа по приходным ценам
     PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
+    
+    --Пересчет полного списания в зарплате
+    IF COALESCE(vbArticleLossId, 0) = 13892113
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitId, vbOperDate, inUserId::TVarChar); 
+    END IF;
     
 END;
 $BODY$

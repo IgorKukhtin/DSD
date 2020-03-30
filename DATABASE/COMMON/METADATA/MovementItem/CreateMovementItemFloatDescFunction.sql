@@ -1287,9 +1287,14 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFullCharge() RETURNS Integer AS $BODY
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaFullCharge', 'Полное списание' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFullCharge');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaMoneyBoxUsed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaMoneyBoxUsed'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaMoneyBoxUsed', 'Использование копилки по результатам СУН1' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaMoneyBoxUsed');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 30.03.20                                                                                                     * zc_MIFloat_SummaMoneyBoxUsed
  25.03.20         * zc_MIFloat_SummAuditAdd
  21.03.20                                                                                                     * zc_MIFloat_SummaFullCharge
  20.03.20                                                                                                     * zc_MIFloat_SummaMoneyBox ...

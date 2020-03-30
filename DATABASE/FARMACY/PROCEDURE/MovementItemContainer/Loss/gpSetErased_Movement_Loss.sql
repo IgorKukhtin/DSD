@@ -10,9 +10,29 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbOperDate  TDateTime;
+  DECLARE vbUnitiD   Integer;
+  DECLARE vbArticleLossId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Loss());
+
+     SELECT
+         Movement.OperDate,
+         Movement_Unit.ObjectId AS Unit,
+         MovementLinkObject_ArticleLoss.ObjectId 
+     INTO
+         vbOperDate,
+         vbUnitiD,
+         vbArticleLossId
+     FROM Movement
+         INNER JOIN MovementLinkObject AS Movement_Unit
+                                       ON Movement_Unit.MovementId = Movement.Id
+                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                      ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                     AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+     WHERE Movement.Id = inMovementId;
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
@@ -23,6 +43,12 @@ BEGIN
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
+
+     --Пересчет полного списания в зарплате
+     IF COALESCE(vbArticleLossId, 0) = 13892113
+     THEN
+       PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitiD, vbOperDate, inSession); 
+     END IF;
 
 END;
 $BODY$
