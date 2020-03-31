@@ -76,4 +76,4 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Inte
 */                                          
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Goods
+--

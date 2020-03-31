@@ -583,11 +583,11 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-    exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
-
+     exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAnalogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogEditForm'));
@@ -1538,10 +1538,10 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
  }

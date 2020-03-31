@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MorionCode Integer, BarCode TVarChar,
                NameUkr TVarChar, CodeUKTZED TVarChar, ExchangeId Integer, ExchangeName TVarChar,
                NotTransferTime boolean,
+               isSUN_v3 boolean, KoeffSUN_v3 TFloat,
                isErased boolean
                ) AS
 $BODY$
@@ -61,9 +62,11 @@ BEGIN
                   , ''::TVarChar  AS CodeUKTZED
                   , 0::Integer    AS ExchangeId
                   , ''::TVarChar  AS ExchangeName
-                  , CAST (NULL AS Boolean) AS NotTransferTime
+                  , CAST (FALSE AS Boolean) AS NotTransferTime
+                  , FALSE ::Boolean         AS isSUN_v3
+                  , 0     :: TFloat         AS KoeffSUN_v3
 
-                  , CAST (NULL AS Boolean) AS isErased
+                  , CAST (FALSE AS Boolean) AS isErased
 
              FROM (SELECT lfGet_ObjectCode_byRetail (vbObjectId, 0, zc_Object_Goods()) AS GoodsCodeIntNew) AS Object_Goods
                   LEFT JOIN Object AS ObjectMeasure ON ObjectMeasure.Id = lpGet_DefaultValue('TGoodsEditForm;zc_Object_Measure', vbUserId)::Integer
@@ -150,7 +153,10 @@ BEGIN
 
                   , Object_Exchange.Id               AS ExchangeId
                   , Object_Exchange.ValueData        AS ExchangeName
-                  , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
+                  , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)  AS NotTransferTime
+                  
+                  , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
+                  , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
                   
                   , Object_Goods_View.isErased       AS isErased
                   
@@ -162,6 +168,11 @@ BEGIN
                   LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_ReferPrice
                                          ON ObjectFloat_Goods_ReferPrice.ObjectId = Object_Goods_View.Id 
                                         AND ObjectFloat_Goods_ReferPrice.DescId = zc_ObjectFloat_Goods_ReferPrice()
+
+                  LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v3
+                                         ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id 
+                                        AND ObjectFloat_Goods_KoeffSUN_v3.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
+
                   -- определяем главный товар 
                   LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = Object_Goods_View.Id
                   -- определяем код Мориона
@@ -187,6 +198,10 @@ BEGIN
                                           ON ObjectBoolean_Goods_NotTransferTime.ObjectId = Object_Goods_View.Id 
                                          AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
 
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
+                                          ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id 
+                                         AND ObjectBoolean_Goods_SUN_v3.DescId = zc_ObjectBoolean_Goods_SUN_v3()
+
              WHERE Object_Goods_View.Id = inId;
 
      END IF;
@@ -200,6 +215,7 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.   Шаблий О.В.
+ 31.03.20         *
  01.04.19                                                                      * GoodsAnalog
  28.09.18                                                                      * NameUkr, CodeUKTZED, ExchangeId, ExchangeName
  19.05.17                                                       * MorionCode, BarCode

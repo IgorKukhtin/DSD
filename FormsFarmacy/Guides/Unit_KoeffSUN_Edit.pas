@@ -29,10 +29,11 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    cxLabel28: TcxLabel;
     edKoeffInSUN: TcxCurrencyEdit;
     edKoeffOutSUN: TcxCurrencyEdit;
-    cxLabel29: TcxLabel;
+    edFormName: TcxTextEdit;
+    edKoeffInSUNText: TcxTextEdit;
+    edKoeffOutSUNText: TcxTextEdit;
   private
     { Private declarations }
   public

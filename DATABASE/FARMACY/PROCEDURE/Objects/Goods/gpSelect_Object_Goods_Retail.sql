@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
              , GoodsAnalog TVarChar
              , NotTransferTime boolean
+             , isSUN_v3 boolean, KoeffSUN_v3 TFloat
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -121,6 +122,8 @@ BEGIN
            , COALESCE(Object_Update.ValueData, '')         ::TVarChar  AS UpdateName
            , COALESCE(ObjectDate_Update.ValueData, Null)   ::TDateTime AS UpdateDate
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
+           , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
+           , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
 
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
@@ -142,6 +145,13 @@ BEGIN
                              AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
 
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v3
+                                ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id 
+                               AND ObjectFloat_Goods_KoeffSUN_v3.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
+
+         LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
+                                 ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id 
+                                AND ObjectBoolean_Goods_SUN_v3.DescId = zc_ObjectBoolean_Goods_SUN_v3()
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
                              ON ObjectLink_Goods_ConditionsKeep.ObjectId = Object_Goods_View.Id
@@ -270,6 +280,9 @@ BEGIN
            , Object_Goods_Main.isAllowDivision                                   AS AllowDivision
            , Object_Goods_Main.Analog                                            AS GoodsAnalog
            , Object_Goods_Main.isNotTransferTime                                 AS NotTransferTime
+      
+           , COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
+           , COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

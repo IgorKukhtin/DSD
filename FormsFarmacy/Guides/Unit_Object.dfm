@@ -3,7 +3,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientHeight = 477
   ClientWidth = 955
   ExplicitWidth = 971
-  ExplicitHeight = 516
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -162,6 +162,28 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 56
           end
+          object KoeffInSUN_v3: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092'. '#1057#1047#1055
+            DataBinding.FieldName = 'KoeffInSUN_v3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' - '#1086#1087#1088#1077#1076#1077#1083#1103#1077#1090#1089#1103' '#1087#1088#1080#1093#1086#1076
+            Options.Editing = False
+            Width = 57
+          end
+          object KoeffOutSUN_v3: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092'. '#1057#1047#1054
+            DataBinding.FieldName = 'KoeffOutSUN_v3'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1101#1092' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' - '#1086#1087#1088#1077#1076#1077#1083#1103#1077#1090#1089#1103' '#1088#1072#1089#1093#1086#1076
+            Options.Editing = False
+            Width = 56
+          end
           object isSUN: TcxGridDBColumn
             Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V.1)'
             DataBinding.FieldName = 'isSUN'
@@ -213,6 +235,33 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072
+            Options.Editing = False
+            Width = 70
+          end
+          object isSUN_v3_in: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1087#1088#1080#1077#1084')'
+            DataBinding.FieldName = 'isSUN_v3_in'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084
+            Options.Editing = False
+            Width = 70
+          end
+          object isSUN_v3: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053
+            DataBinding.FieldName = 'isSUN_v3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object isSUN_v3_out: TcxGridDBColumn
+            Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'  ('#1086#1090#1087#1088#1072#1074#1082#1072')'
+            DataBinding.FieldName = 'isSUN_v3_out'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072
             Options.Editing = False
             Width = 70
           end
@@ -680,6 +729,45 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 76
     end
+    object actUpdate_Unit_isSUN_v3_out: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_out
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_out
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object actUpdate_Unit_isSUN_v3_in: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_in
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_in
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object actUpdate_Unit_isSUN_v3: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
     object actUpdate_Unit_isSUN_v2: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1022,6 +1110,59 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       isShowModal = True
     end
+    object ExecuteDialogKoeffSUNv3: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      ImageIndex = 26
+      FormName = 'TUnit_KoeffSUN_EditForm'
+      FormNameParam.Value = 'TUnit_KoeffSUN_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKoeffInSUN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KoeffInSUN_v3'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeffOutSUN'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'KoeffOutSUN_v3'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FormName'
+          Value = #1044#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KoeffInSUNText'
+          Value = #1050#1086#1101#1092'. '#1057#1047#1055
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KoeffOutSUNText'
+          Value = #1050#1086#1101#1092'. '#1057#1047#1054
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
     object actOpenUserForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1056,6 +1197,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object actUpdateKoeffSUNv3: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate_KoeffSUNv3
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_KoeffSUNv3
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateKoeffSUNv3: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogKoeffSUNv3
+        end
+        item
+          Action = actUpdateKoeffSUNv3
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1089#1091#1090#1086#1095#1085#1086#1075#1086' '#1079#1072#1087#1072#1089#1072
+      ImageIndex = 43
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1124,6 +1296,27 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           Component = MasterCDS
           ComponentItem = 'KoeffOutSUN'
           DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FormName'
+          Value = #1044#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KoeffInSUNText'
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1087#1088#1080#1093'.'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'KoeffOutSUNText'
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1088#1072#1089#1093'.'
+          DataType = ftString
+          ParamType = ptInput
           MultiSelectSeparator = ','
         end>
       isShowModal = True
@@ -1328,7 +1521,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_in'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_out'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateKoeffSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateKoeffSUNv3'
         end
         item
           Visible = True
@@ -1466,6 +1683,22 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton3: TdxBarButton
       Action = actUpdate_Unit_TechnicalRediscount
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v3: TdxBarButton
+      Action = actUpdate_Unit_isSUN_v3
+      Category = 0
+    end
+    object bbUpdateKoeffSUNv3: TdxBarButton
+      Action = macUpdateKoeffSUNv3
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v3_in: TdxBarButton
+      Action = actUpdate_Unit_isSUN_v3_in
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v3_out: TdxBarButton
+      Action = actUpdate_Unit_isSUN_v3_out
       Category = 0
     end
   end
@@ -2190,5 +2423,163 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 400
     Top = 411
+  end
+  object spUpdate_Unit_isSUN_v3: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 816
+    Top = 307
+  end
+  object spUpdate_KoeffSUNv3: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_KoeffSUN_v3'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffInSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KoeffInSUN_v3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffOutSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'KoeffOutSUN_v3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 522
+    Top = 376
+  end
+  object spUpdate_Unit_isSUN_v3_in: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_in'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_in'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3_in'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 896
+    Top = 283
+  end
+  object spUpdate_Unit_isSUN_v3_out: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_out'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_out'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3_out'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 904
+    Top = 323
   end
 end

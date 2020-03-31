@@ -50,6 +50,9 @@ type
     cxLabel14: TcxLabel;
     ceCodeUKTZED: TcxTextEdit;
     dsdExchangeGuides: TdsdGuides;
+    cbSUN_v3: TcxCheckBox;
+    cxLabel15: TcxLabel;
+    edKoeffSUN_v3: TcxCurrencyEdit;
   private
     { Private declarations }
   public

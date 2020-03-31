@@ -10,6 +10,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, Boolean, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -24,6 +26,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inPrice               TFloat    ,    -- Цена реализации
     IN inIsClose             Boolean   ,    -- Код закрыт
     IN inTOP                 Boolean   ,    -- ТОП - позиция
+    IN inisSun_v3            Boolean   ,    -- Работают по Э-СУН
+    IN inKoeffSUN_v3	     TFloat    ,    -- Кратность по Э-СУН
     IN inPercentMarkup	     TFloat    ,    -- % наценки
     IN inMorionCode          Integer   ,    -- Код Мориона
     IN inBarCode             TVarChar  ,    -- Штрих-код производителя
@@ -182,6 +186,8 @@ BEGIN
                                                , inPrice         := inPrice       :: TFloat
                                                , inIsClose       := inIsClose     :: Boolean
                                                , inTOP           := inTOP         :: Boolean
+                                               , inisSun_v3      := inisSun_v3    :: Boolean
+                                               , inKoeffSUN_v3   := inKoeffSUN_v3 :: TFloat
                                                , inPercentMarkup := inPercentMarkup :: TFloat
                                                , inNameUkr       := inNameUkr      :: TVarChar
                                                , inCodeUKTZED    := inCodeUKTZED   :: TVarChar

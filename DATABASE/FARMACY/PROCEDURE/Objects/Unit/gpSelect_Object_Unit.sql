@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ListDaySUN TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
+             , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
              , SunIncome TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
@@ -42,8 +43,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , StartTimeSP TDateTime
              , EndTimeSP   TDateTime
              , isSP        Boolean
-             , isSUN       Boolean, isSUN_v2 Boolean, isSUN_in Boolean, isSUN_out Boolean
+             , isSUN       Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean
+             , isSUN_in Boolean, isSUN_out Boolean
              , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
+             , isSUN_v3_in  Boolean, isSUN_v3_out Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
@@ -125,6 +128,9 @@ BEGIN
 
       , COALESCE (ObjectFloat_KoeffInSUN.ValueData,0)  ::TFloat AS KoeffInSUN
       , COALESCE (ObjectFloat_KoeffOutSUN.ValueData,0) ::TFloat AS KoeffOutSUN
+
+      , COALESCE (ObjectFloat_KoeffInSUN_v3.ValueData,0)  ::TFloat AS KoeffInSUN_v3
+      , COALESCE (ObjectFloat_KoeffOutSUN_v3.ValueData,0) ::TFloat AS KoeffOutSUN_v3
       
       , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END  ::TFloat AS SunIncome
 
@@ -150,10 +156,14 @@ BEGIN
       , COALESCE (ObjectBoolean_SP.ValueData, FALSE)      :: Boolean   AS isSP
       , COALESCE (ObjectBoolean_SUN.ValueData, FALSE)     :: Boolean   AS isSUN
       , COALESCE (ObjectBoolean_SUN_v2.ValueData, FALSE)  :: Boolean   AS isSUN_v2
+      , COALESCE (ObjectBoolean_SUN_v3.ValueData, FALSE)  :: Boolean   AS isSUN_v3
       , COALESCE (ObjectBoolean_SUN_in.ValueData, FALSE)  :: Boolean   AS isSUN_in
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
       , COALESCE (ObjectBoolean_SUN_v2_in.ValueData, FALSE)  :: Boolean   AS isSUN_v2_in
       , COALESCE (ObjectBoolean_SUN_v2_out.ValueData, FALSE) :: Boolean   AS isSUN_v2_out
+      , COALESCE (ObjectBoolean_SUN_v3_in.ValueData, FALSE)  :: Boolean   AS isSUN_v3_in
+      , COALESCE (ObjectBoolean_SUN_v3_out.ValueData, FALSE) :: Boolean   AS isSUN_v3_out
+      
       , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
@@ -289,6 +299,10 @@ BEGIN
                                 ON ObjectBoolean_SUN_v2.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2.DescId = zc_ObjectBoolean_Unit_SUN_v2()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3
+                                ON ObjectBoolean_SUN_v3.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v3.DescId = zc_ObjectBoolean_Unit_SUN_v3()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_in
                                 ON ObjectBoolean_SUN_in.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_in.DescId = zc_ObjectBoolean_Unit_SUN_in()
@@ -304,6 +318,13 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_out
                                 ON ObjectBoolean_SUN_v2_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_out()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_in
+                                ON ObjectBoolean_SUN_v3_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v3_in.DescId = zc_ObjectBoolean_Unit_SUN_v3_in()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_out
+                                ON ObjectBoolean_SUN_v3_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v3_out.DescId = zc_ObjectBoolean_Unit_SUN_v3_out()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
@@ -339,6 +360,13 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_KoeffOutSUN
                               ON ObjectFloat_KoeffOutSUN.ObjectId = Object_Unit.Id
                              AND ObjectFloat_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffInSUN_v3
+                              ON ObjectFloat_KoeffInSUN_v3.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_KoeffInSUN_v3.DescId = zc_ObjectFloat_Unit_KoeffInSUN_v3()
+        LEFT JOIN ObjectFloat AS ObjectFloat_KoeffOutSUN_v3
+                              ON ObjectFloat_KoeffOutSUN_v3.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_KoeffOutSUN_v3.DescId = zc_ObjectFloat_Unit_KoeffOutSUN_v3()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_SunIncome
                               ON ObjectFloat_SunIncome.ObjectId = Object_Unit.Id
@@ -436,6 +464,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 31.03.20         * 
  05.02.20         * add isSUN_NotSold
  17.12.19         * add SunIncome
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff

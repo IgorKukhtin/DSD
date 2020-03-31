@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, Boolean, TFloat, TFloat, TVarChar, TVarChar, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Object_Goods_Retail(
     IN inPrice               TFloat    ,    -- Цена реализации
     IN inIsClose             Boolean   ,    -- Код закрыт
     IN inTOP                 Boolean   ,    -- ТОП - позиция
+    IN inisSun_v3            Boolean   ,    -- Работают по Э-СУН
+    IN inKoeffSUN_v3	     TFloat    ,    -- Кратность по Э-СУН
     IN inPercentMarkup	     TFloat    ,    -- % наценки
     IN inNameUkr             TVarChar  ,    -- Название украинское
     IN inCodeUKTZED          TVarChar  ,    -- Код УКТЗЭД
@@ -64,6 +67,11 @@ BEGIN
          PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Price(), ioId, inPrice);
          -- ТОП - позиция
          PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_TOP(), ioId, inTOP);
+
+         -- Кратность по Э-СУН
+         PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_KoeffSUN_v3(), ioId, inKoeffSUN_v3);
+         -- Работают по Э-СУН
+         PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_SUN_v3(), ioId, inisSun_v3);
      END IF;
 
 
@@ -82,23 +90,25 @@ BEGIN
     -- Сохранили в плоскую таблицй
     BEGIN
     PERFORM lpInsertUpdate_Object_Goods_Retail_Flat (ioId             :=  ioId
-                                                    , inCode           :=  inCode
-                                                    , inName           :=  inName
-                                                    , inGoodsGroupId   :=  inGoodsGroupId
-                                                    , inMeasureId      :=  inMeasureId
-                                                    , inNDSKindId      :=  inNDSKindId
-                                                    , inMinimumLot     :=  inMinimumLot
-                                                    , inReferCode      :=  inReferCode
-                                                    , inReferPrice     :=  inReferPrice
-                                                    , inPrice          :=  inPrice
-                                                    , inIsClose        :=  inIsClose
-                                                    , inTOP            :=  inTOP
-                                                    , inPercentMarkup  :=  inPercentMarkup
-                                                    , inNameUkr        :=  inNameUkr
-                                                    , inCodeUKTZED     :=  inCodeUKTZED
-                                                    , inExchangeId     :=  inExchangeId
-                                                    , inObjectId       :=  inObjectId
-                                                    , inUserId         :=  inUserId);
+                                                   , inCode           :=  inCode
+                                                   , inName           :=  inName
+                                                   , inGoodsGroupId   :=  inGoodsGroupId
+                                                   , inMeasureId      :=  inMeasureId
+                                                   , inNDSKindId      :=  inNDSKindId
+                                                   , inMinimumLot     :=  inMinimumLot
+                                                   , inReferCode      :=  inReferCode
+                                                   , inReferPrice     :=  inReferPrice
+                                                   , inPrice          :=  inPrice
+                                                   , inIsClose        :=  inIsClose
+                                                   , inTOP            :=  inTOP
+                                                   , inisSun_v3       :=  inisSun_v3    :: Boolean
+                                                   , inKoeffSUN_v3    :=  inKoeffSUN_v3 :: TFloat
+                                                   , inPercentMarkup  :=  inPercentMarkup
+                                                   , inNameUkr        :=  inNameUkr
+                                                   , inCodeUKTZED     :=  inCodeUKTZED
+                                                   , inExchangeId     :=  inExchangeId
+                                                   , inObjectId       :=  inObjectId
+                                                   , inUserId         :=  inUserId);
 
     EXCEPTION
       WHEN others THEN 
@@ -112,7 +122,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer) OWNER TO postgres;
+--ALTER FUNCTION lpInsertUpdate_Object_Goods_Retail (Integer, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, Integer, TFloat, TFloat, Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer) OWNER TO postgres;
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

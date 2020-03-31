@@ -8,7 +8,7 @@ uses
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, dxSkinsCore, System.RegularExpressions,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls,
+  cxContainer, Vcl.ComCtrls, dxCore, cxSpinEdit, Vcl.StdCtrls, System.Zip,
   cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxClasses, cxGridCustomView, cxGrid, cxPC, ZAbstractRODataset,
@@ -197,9 +197,9 @@ begin
   // обычный отчет
   try
     try
-      ExportGridToXLSX(SavePath + FileName, grReportUnit);
-      ExportGridToExcel(SavePath + FileName, grReportUnit);
-      ExportGridToFile(SavePath + FileName, cxExportToText, grReportUnit, True, True, False, ',', '', '', 'csv', nil, TEncoding.UTF8);
+//      ExportGridToXLSX(SavePath + FileName, grReportUnit);
+//      ExportGridToExcel(SavePath + FileName, grReportUnit);
+      ExportGridToFile(SavePath + FileName, cxExportToText, grReportUnit, True, True, False, ';', '', '', 'csv', nil, TEncoding.UTF8);
     except
       on E: Exception do
       begin
@@ -212,31 +212,32 @@ begin
 end;
 
 procedure TMainForm.btnSendFTPClick(Sender: TObject);
-  var vExt : string;
-
-  function GetFileSizeByName(AFileName: string): DWord;
-  var
-    Handle: THandle;
-  begin
-    if not FileExists(AFilename) then exit;
-    Handle := FileOpen(AFilename, fmOpenRead or fmShareDenyNone);
-    Result := GetFileSize(Handle, nil);
-    CloseHandle(Handle);
-  end;
-
+  VAR ZipFile: TZipFile;
 begin
 
-  if not FileExists(SavePath + FileName + '.xlsx') then Exit;
+  if not FileExists(SavePath + FileName + '.csv') then Exit;
 
-  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.xlsx');
-  vExt := '.xls';
+  Add_Log('Начало отправки прайса: ' + SavePath + FileName + '.csv');
 
-//  if GetFileSizeByName(SavePath + FileName + '.xls') > 10000000 then
-//  begin
-//    vExt := '.zip';
-//    Add_Log('Архивирование отчета: ' + SavePath + FileName + vExt);
-//    GZCompressFile(SavePath + FileName + '.xls', SavePath + FileName + vExt);
-//  end;
+  try
+    ZipFile := TZipFile.Create;
+
+    try
+      ZipFile.Open(SavePath + FileName + '.zip', zmWrite);
+      ZipFile.Add(SavePath + FileName + '.csv');
+      ZipFile.Close;
+
+      DeleteFile(SavePath + FileName + '.csv');
+    finally
+      ZipFile.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      Add_Log(E.Message);
+      exit;
+    end;
+  end;
 
   try
     IdFTP1.Disconnect;
@@ -261,8 +262,8 @@ begin
       end;
     end;
     try
-      idFTP1.Put(SavePath + FileName + '.xlsx');
-      DeleteFile(SavePath + FileName + '.xlsx');
+      idFTP1.Put(SavePath + FileName + '.zip');
+      DeleteFile(SavePath + FileName + '.zip');
 
     except ON E: Exception DO
       Begin
@@ -273,7 +274,6 @@ begin
   finally
     idFTP1.Disconnect;
   end;
-
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);

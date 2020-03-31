@@ -4492,7 +4492,7 @@ inherited PromoForm: TPromoForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 544
+    Left = 504
     Top = 328
   end
   object PartnerCDS: TClientDataSet
@@ -4886,7 +4886,7 @@ inherited PromoForm: TPromoForm
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 776
+    Left = 800
     Top = 232
   end
   object spSelect_Movement_Promo_Print: TdsdStoredProc
