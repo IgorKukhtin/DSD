@@ -262,6 +262,15 @@ inherited Report_PromoForm: TReport_PromoForm
             HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             Width = 80
           end
+          object GoodsKindCompleteName_byPrint: TcxGridDBColumn
+            Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077') '#1080#1085#1092'.'
+            DataBinding.FieldName = 'GoodsKindCompleteName_byPrint'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
+            Width = 80
+          end
           object GoodsKindName_List: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1089#1087#1088#1072#1074#1086#1095#1085#1086')'
             DataBinding.FieldName = 'GoodsKindName_List'
@@ -563,6 +572,74 @@ inherited Report_PromoForm: TReport_PromoForm
     end
   end
   inherited ActionList: TActionList
+    object actPrint1: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      ImageIndex = 17
+      DataSets = <
+        item
+          UserName = 'frxMasterDS'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'DateStart'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateEnd'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1072#1082#1094#1080#1103#1084'('#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1072#1082#1094#1080#1103#1084'('#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrint2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1089#1083#1091#1078#1073
+      ImageIndex = 16
+      DataSets = <
+        item
+          UserName = 'frxMasterDS'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'DateStart'
+          Value = 42736d
+          Component = deStart
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DateEnd'
+          Value = 42736d
+          Component = deEnd
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1072#1082#1094#1080#1103#1084'('#1076#1083#1103' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1089#1083#1091#1078#1073')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090'_'#1087#1086'_'#1072#1082#1094#1080#1103#1084'('#1076#1083#1103' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1089#1083#1091#1078#1073')'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -813,6 +890,22 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -830,6 +923,14 @@ inherited Report_PromoForm: TReport_PromoForm
     end
     object dxBarButton3: TdxBarButton
       Action = actOpenPromo
+      Category = 0
+    end
+    object bbPrint1: TdxBarButton
+      Action = actPrint1
+      Category = 0
+    end
+    object bbPrint2: TdxBarButton
+      Action = actPrint2
       Category = 0
     end
   end

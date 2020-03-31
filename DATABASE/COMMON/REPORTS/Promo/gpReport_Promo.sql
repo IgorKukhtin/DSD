@@ -64,6 +64,7 @@ RETURNS TABLE(
     ,AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
     ,GoodsKindName        TVarChar  --Вид упаковки
     ,GoodsKindCompleteName  TVarChar  --Вид упаковки ( примечание)
+    ,GoodsKindCompleteName_byPrint TVarChar -- План мин - План макс + Вид упаковки ( примечание)
     ,GoodsKindName_List   TVarChar  --Вид товара (справочно)
     ,GoodsWeight          TFloat    --Вес
     ,Discount             TBlob     --Скидка, %
@@ -245,119 +246,119 @@ BEGIN
                                                                                 )
                                   )
         
-        , tmpMI_PromoGoods AS (SELECT
-        MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
-      , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
-      , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
-      , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
-      , Object_Measure.Id               AS MeasureId             --Единица измерения
-      , Object_Measure.ValueData               AS Measure             --Единица измерения
-      , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
-      , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
-      , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
-      , STRING_AGG (DISTINCT Object_GoodsKindComplete.ValueData, '; ') :: TVarChar  AS GoodsKindCompleteName       --Наименование обьекта <Вид товара (примечание)>
-
-      
-      , MIFloat_Price.ValueData                AS Price               --Цена в прайсе
-      , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
-      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
-      , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
-
-      , SUM (MovementItem.Amount)                    AS Amount              --% скидки на товар
-      , SUM (MIFloat_AmountReal.ValueData)           AS AmountReal          --Объем продаж в аналогичный период, кг
-      , SUM (MIFloat_AmountReal.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
-
-      , SUM (MIFloat_AmountPlanMin.ValueData)        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
-      , SUM (MIFloat_AmountPlanMin.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
-      , SUM (MIFloat_AmountPlanMax.ValueData)        AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
-      , SUM (MIFloat_AmountPlanMax.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
-      , SUM (MIFloat_AmountOrder.ValueData)          AS AmountOrder         --Кол-во заявка (факт)
-      , SUM (MIFloat_AmountOrder.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOrderWeight   --Кол-во заявка (факт) Вес
-      , SUM (MIFloat_AmountOut.ValueData)            AS AmountOut           --Кол-во реализация (факт)
-      , SUM (MIFloat_AmountOut.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOutWeight     --Кол-во реализация (факт) Вес
-      , SUM (MIFloat_AmountIn.ValueData)             AS AmountIn            --Кол-во возврат (факт)
-      , SUM (MIFloat_AmountIn.ValueData
-          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
-     
-    FROM tmpMI AS MovementItem
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
-                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithOutVAT
-                                    ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
-                                   AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithVAT
-                                    ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                   AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceSale
-                                    ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
-                                   AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOrder
-                                    ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOut
-                                    ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountIn
-                                    ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountReal
-                                    ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMin
-                                    ON MIFloat_AmountPlanMin.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountPlanMin.DescId = zc_MIFloat_AmountPlanMin()
-        LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMax
-                                    ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
-                                   AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
-
-        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-        LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind 
-                                         ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-
-        LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                         ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-        LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                             ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
-                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
-        LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                             ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
-                            AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-        LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-
-        LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
-                                    ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
-                                   AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-
-                       GROUP BY MovementItem.MovementId
-                              , MovementItem.ObjectId
-                              , Object_Goods.ObjectCode
-                              , Object_Goods.ValueData
-                              , Object_Measure.ValueData
-                              , Object_Measure.Id
-                              , Object_TradeMark.ValueData
-                              , Object_GoodsKind.ValueData
-                              , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
-                              , CASE WHEN inIsGoodsKind = FALSE THEN MovementItem.Id ELSE 0 END   
-                              , MIFloat_Price.ValueData
-                              , MIFloat_PriceWithOutVAT.ValueData
-                              , MIFloat_PriceWithVAT.ValueData
-                              , MIFloat_PriceSale.ValueData                
-                     )
-
+        , tmpMI_PromoGoods AS (SELECT MovementItem.MovementId                AS MovementId          --ИД документа <Акция>
+                                    , MovementItem.ObjectId                  AS GoodsId             --ИД объекта <товар>
+                                    , Object_Goods.ObjectCode::Integer       AS GoodsCode           --код объекта  <товар>
+                                    , Object_Goods.ValueData                 AS GoodsName           --наименование объекта <товар>
+                                    , Object_Measure.Id               AS MeasureId             --Единица измерения
+                                    , Object_Measure.ValueData               AS Measure             --Единица измерения
+                                    , Object_TradeMark.ValueData             AS TradeMark           --Торговая марка
+                                    , Object_GoodsKind.ValueData             AS GoodsKindName       --Наименование обьекта <Вид товара>
+                                    , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END::TFloat as GoodsWeight -- Вес
+                                    , STRING_AGG (DISTINCT Object_GoodsKindComplete.ValueData, '; ') :: TVarChar  AS GoodsKindCompleteName         --Наименование обьекта <Вид товара (примечание)>
+                                    , STRING_AGG (DISTINCT (CAST (MIFloat_AmountPlanMin.ValueData * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END AS NUMERIC (16,0))) :: TVarChar ||' кг - '
+                                                         ||(CAST (MIFloat_AmountPlanMax.ValueData* CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END AS NUMERIC (16,0))) :: TVarChar ||' кг - '
+                                                         || Object_GoodsKindComplete.ValueData, ''||CHR(13)||'') :: TVarChar  AS GoodsKindCompleteName_byPrint --Наименование обьекта <Вид товара (примечание)>
+                              
+                                    , MIFloat_Price.ValueData                AS Price               --Цена в прайсе
+                                    , MIFloat_PriceWithOutVAT.ValueData      AS PriceWithOutVAT     --Цена отгрузки без учета НДС, с учетом скидки, грн
+                                    , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                                    , MIFloat_PriceSale.ValueData            AS PriceSale           --Цена на полке
+                              
+                                    , SUM (MovementItem.Amount)                    AS Amount              --% скидки на товар
+                                    , SUM (MIFloat_AmountReal.ValueData)           AS AmountReal          --Объем продаж в аналогичный период, кг
+                                    , SUM (MIFloat_AmountReal.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+                              
+                                    , SUM (MIFloat_AmountPlanMin.ValueData)        AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+                                    , SUM (MIFloat_AmountPlanMin.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+                                    , SUM (MIFloat_AmountPlanMax.ValueData)        AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+                                    , SUM (MIFloat_AmountPlanMax.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+                                    , SUM (MIFloat_AmountOrder.ValueData)          AS AmountOrder         --Кол-во заявка (факт)
+                                    , SUM (MIFloat_AmountOrder.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOrderWeight   --Кол-во заявка (факт) Вес
+                                    , SUM (MIFloat_AmountOut.ValueData)            AS AmountOut           --Кол-во реализация (факт)
+                                    , SUM (MIFloat_AmountOut.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountOutWeight     --Кол-во реализация (факт) Вес
+                                    , SUM (MIFloat_AmountIn.ValueData)             AS AmountIn            --Кол-во возврат (факт)
+                                    , SUM (MIFloat_AmountIn.ValueData
+                                        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountInWeight      --Кол-во возврат (факт) Вес
+                                   
+                               FROM tmpMI AS MovementItem
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_Price
+                                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithOutVAT
+                                                                  ON MIFloat_PriceWithOutVAT.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_PriceWithOutVAT.DescId = zc_MIFloat_PriceWithOutVAT()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceWithVAT
+                                                                  ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_PriceSale
+                                                                  ON MIFloat_PriceSale.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOrder
+                                                                  ON MIFloat_AmountOrder.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountOrder.DescId = zc_MIFloat_AmountOrder()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountOut
+                                                                  ON MIFloat_AmountOut.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountOut.DescId = zc_MIFloat_AmountOut()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountIn
+                                                                  ON MIFloat_AmountIn.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountIn.DescId = zc_MIFloat_AmountIn()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountReal
+                                                                  ON MIFloat_AmountReal.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountReal.DescId = zc_MIFloat_AmountReal()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMin
+                                                                  ON MIFloat_AmountPlanMin.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountPlanMin.DescId = zc_MIFloat_AmountPlanMin()
+                                      LEFT JOIN tmpMovementItemFloat AS MIFloat_AmountPlanMax
+                                                                  ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                                 AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+                              
+                                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+                              
+                                      LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKind 
+                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                      LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+                              
+                                      LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                                       ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                                      AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                                      LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+                              
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                                           ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                      LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                              
+                                      LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                                           ON ObjectLink_Goods_TradeMark.ObjectId = MovementItem.ObjectId
+                                                          AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+                                      LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+                              
+                                      LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                                                  ON ObjectFloat_Goods_Weight.ObjectId = MovementItem.ObjectId
+                                                                 AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                               GROUP BY MovementItem.MovementId
+                                      , MovementItem.ObjectId
+                                      , Object_Goods.ObjectCode
+                                      , Object_Goods.ValueData
+                                      , Object_Measure.ValueData
+                                      , Object_Measure.Id
+                                      , Object_TradeMark.ValueData
+                                      , Object_GoodsKind.ValueData
+                                      , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END
+                                      , CASE WHEN inIsGoodsKind = FALSE THEN MovementItem.Id ELSE 0 END   
+                                      , MIFloat_Price.ValueData
+                                      , MIFloat_PriceWithOutVAT.ValueData
+                                      , MIFloat_PriceWithVAT.ValueData
+                                      , MIFloat_PriceSale.ValueData                
+                               )
+        --
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          --№ документа акции
@@ -407,17 +408,17 @@ BEGIN
                          AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
                          AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
                       )
-            , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
-               FROM
-                  Movement AS Movement_PromoPartner
-                  INNER JOIN MovementLinkObject AS MLO_Partner
-                                                ON MLO_Partner.MovementId = Movement_PromoPartner.ID
-                                               AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
-                  INNER JOIN Object ON Object.Id = MLO_Partner.ObjectId
-               WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
-                 AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
-                 AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
-                ))::TBlob AS RetailName
+          , (SELECT STRING_AGG (DISTINCT Object.ValueData,'; ')
+             FROM
+                Movement AS Movement_PromoPartner
+                INNER JOIN MovementLinkObject AS MLO_Partner
+                                              ON MLO_Partner.MovementId = Movement_PromoPartner.ID
+                                             AND MLO_Partner.DescId     = zc_MovementLinkObject_Partner()
+                INNER JOIN Object ON Object.Id = MLO_Partner.ObjectId
+             WHERE Movement_PromoPartner.ParentId = Movement_Promo.Id
+               AND Movement_PromoPartner.DescId   = zc_Movement_PromoPartner()
+               AND Movement_PromoPartner.StatusId <> zc_Enum_Status_Erased()
+              ))::TBlob AS RetailName
             --------------------------------------
           , (SELECT STRING_AGG (DISTINCT Object_Area.ValueData,'; ')
              FROM
@@ -454,7 +455,7 @@ BEGIN
           , MI_PromoGoods.GoodsKindName       --Наименование обьекта <Вид товара>
          -- , MI_PromoGoods.GoodsKindCompleteName -- --Наименование обьекта <Вид товара (примечание)>
           
-          , CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName
+          /*, CASE WHEN inIsGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName
                  ELSE (SELECT STRING_AGG (DISTINCT Object_GoodsKindComplete.ValueData,'; ') AS GoodsKindCompleteName
                        FROM MovementItem AS MI_Promo
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
@@ -467,6 +468,10 @@ BEGIN
                          AND MI_Promo.IsErased   = FALSE
                       )
             END  ::TVarChar AS GoodsKindCompleteName
+            */
+          , MI_PromoGoods.GoodsKindCompleteName         ::TVarChar AS GoodsKindCompleteName
+            
+          , MI_PromoGoods.GoodsKindCompleteName_byPrint ::TVarChar AS GoodsKindCompleteName_byPrint
 
           , (SELECT STRING_AGG (DISTINCT tmpGoodsKind.GoodsKindName,'; ')
              FROM Movement AS Movement_PromoPartner
@@ -526,8 +531,7 @@ BEGIN
           , Movement_Promo.Checked                                                AS Checked
         FROM
             tmpMovement_Promo AS Movement_Promo
-            LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods
-                                                         ON MI_PromoGoods.MovementId = Movement_Promo.Id
+            LEFT OUTER JOIN tmpMI_PromoGoods AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
 
                ;
 
@@ -545,5 +549,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_Report_Promo(inStartDate := ('04.04.2019')::TDateTime , inEndDate := ('01.05.2019')::TDateTime , inIsPromo := 'False' , inIsTender := 'False' ,inIsGoodsKind := 'false', inUnitId := 0 ,  inSession := '5'::TVarchar)
---where invnumber = 6862
+-- select * from gpSelect_Report_Promo(inStartDate := ('04.04.2019')::TDateTime , inEndDate := ('01.05.2019')::TDateTime , inIsPromo := 'False' , inIsTender := 'False' ,inIsGoodsKind := 'true', inUnitId := 0 ,  inSession := '5'::TVarchar)
+-- where invnumber = 6862

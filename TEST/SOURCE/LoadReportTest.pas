@@ -47,10 +47,15 @@ end;
 
 procedure TLoadReportTest.LoadPromoFormTest;
 begin
+  {
   LoadReportFromFile('Акция', ReportPath + '\Товарный Учет\PrintMovement_Promo.fr3');
   LoadReportFromFile('Планируемые результаты акции', ReportPath + '\Товарный Учет\PrintMovement_Promo_Calc.fr3');
 
   LoadReportFromFile('Отчет_по_акциям', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям.fr3');
+  }
+  LoadReportFromFile('Отчет_по_акциям(для торгового отдела)', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям(для торгового отдела).fr3');
+  LoadReportFromFile('Отчет_по_акциям(для внутренних служб)', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям(для внутренних служб).fr3');
+  exit;
   LoadReportFromFile('Отчет Результаты ценовых акций', ReportPath + '\Отчеты (товарные)\Отчет Результаты ценовых акций.fr3');
 end;
 
