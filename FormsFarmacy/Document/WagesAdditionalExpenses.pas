@@ -60,6 +60,7 @@ type
     SummaMoneyBox: TcxGridDBBandedColumn;
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     SummaFullCharge: TcxGridDBBandedColumn;
+    SummaMoneyBoxUsed: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains_For103UA(
 RETURNS TABLE (Store          TVarChar
              , Name           TVarChar
              , Producer       TVarChar
-             , Quantity       TFloat
-             , Price          TFloat
+             , Quantity       TVarChar
+             , Price          TVarChar
              , BarCode        TVarChar
 )
 AS
@@ -150,11 +150,11 @@ BEGIN
                             GROUP BY ObjectLink_Main_BarCode.ChildObjectId
                            )
 
-      SELECT Object_Unit.ValueData                                                 AS Store
-           , Object_Goods.ValueData                                                AS Name
-           , Remains.MakerName::TVarChar                                           AS Producer
-           , (Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0))::TFloat   AS Quantity
-           , Object_Price.Price                                                    AS Price
+      SELECT REPLACE(Object_Unit.ValueData, ';', ',')::TVarChar                    AS Store
+           , REPLACE(Object_Goods.ValueData, ';', ',')::TVarChar                   AS Name
+           , REPLACE(Remains.MakerName, ';', ',')::TVarChar                        AS Producer
+           , to_char((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)),'FM9999990.0999')::TVarChar   AS Quantity
+           , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                                              AS Price
            , COALESCE (tmpGoodsBarCode.BarCode, '')::TVarChar                      AS BarCode
 
       FROM Remains

@@ -201,8 +201,8 @@ BEGIN
 
 
         WHERE COALESCE(JuridicalSettings.isPriceCloseOrder, TRUE)  = FALSE
-          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0/* OR 
-               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis()*/);
+          AND (LoadPriceList.AreaId = 0 OR COALESCE (LoadPriceList.AreaId, 0) = vbAreaId OR COALESCE(vbAreaId, 0) = 0 OR 
+               COALESCE (LoadPriceList.AreaId, 0) = zc_Area_Basis() AND vbUnitId = 2886778);
 
      ANALYSE _GoodsPriceAll;
 
@@ -268,4 +268,4 @@ $BODY$
  11.09.18        *
 */
 
--- тест SELECT * FROM gpSelect_CashGoods('3');
+-- тест SELECT * FROM gpSelect_CashGoods('4278524');

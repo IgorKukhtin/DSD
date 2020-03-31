@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
-             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat
+             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -110,6 +110,8 @@ BEGIN
                  , NULL::TFloat                       AS SummaSUN1
                  , NULL::TFloat                       AS SummaTechnicalRediscount
                  , NULL::TFloat                       AS SummaMoneyBox
+                 , NULL::TFloat                       AS SummaFullCharge
+                 , NULL::TFloat                       AS SummaMoneyBoxUsed
                  , NULL::TFloat                       AS SummaTotal
 
                  , False                              AS isIssuedBy
@@ -145,6 +147,7 @@ BEGIN
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
                  , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+                 , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
 
@@ -190,6 +193,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
                                               ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
+                                              ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
 --                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
                   
@@ -257,6 +264,7 @@ BEGIN
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
                  , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+                 , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
 
@@ -302,6 +310,10 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
                                               ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
+                                              ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
 --                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
 
