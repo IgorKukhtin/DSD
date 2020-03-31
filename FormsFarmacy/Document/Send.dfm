@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 656
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +24,27 @@ inherited SendForm: TSendForm
         ExplicitWidth = 1001
         ExplicitHeight = 318
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueTo
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
@@ -92,6 +113,26 @@ inherited SendForm: TSendForm
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = RemainsTo
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueFrom
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = ValueTo
             end>
           OptionsBehavior.IncSearch = True
           OptionsBehavior.FocusCellOnCycle = False
@@ -428,6 +469,46 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
+          end
+          object RemainsFrom: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1091' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' ('#1076#1083#1103' '#1089#1093#1077#1084#1099' '#1069'-'#1057#1059#1053')'
+            DataBinding.FieldName = 'RemainsFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object RemainsTo: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'('#1076#1083#1103' '#1089#1093#1077#1084#1099' '#1069'-'#1057#1059#1053')'
+            DataBinding.FieldName = 'RemainsTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object ValueFrom: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078' '#1091' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' ('#1076#1083#1103' '#1089#1093#1077#1084#1099' '#1069'-'#1057#1059#1053')'
+            DataBinding.FieldName = 'ValueFrom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
+          end
+          object ValueTo: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1087#1088#1086#1076#1072#1078' '#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103'('#1076#1083#1103' '#1089#1093#1077#1084#1099' '#1069'-'#1057#1059#1053')'
+            DataBinding.FieldName = 'ValueTo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 102
           end
         end
       end
@@ -768,6 +849,17 @@ inherited SendForm: TSendForm
       Left = 400
       Top = 45
       Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
+    end
+    object cbSUN_v3: TcxCheckBox
+      Left = 804
+      Top = 106
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 22
+      Width = 148
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -1985,6 +2077,13 @@ inherited SendForm: TSendForm
         Name = 'NumberSeats'
         Value = Null
         Component = edNumberSeats
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSUN_v3'
+        Value = Null
+        Component = cbSUN_v3
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 216

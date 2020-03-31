@@ -162,6 +162,7 @@ type
     actOpenLossForm: TdsdOpenForm;
     cxCurrencyEdit1: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
+    cbSUN_v3: TcxCheckBox;
   private
     { Private declarations }
   public

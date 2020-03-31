@@ -2188,7 +2188,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 

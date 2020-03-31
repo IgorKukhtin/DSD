@@ -15,6 +15,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PriceIn TFloat, SumPriceIn TFloat
              , PriceUnitFrom TFloat, PriceUnitTo TFloat
              , SummaUnitFrom TFloat, SummaUnitTo TFloat
+             , RemainsFrom TFloat, RemainsTo TFloat
+             , ValueFrom TFloat, ValueTo TFloat
 
              , Price TFloat, Summa TFloat, PriceWithVAT TFloat, SummaWithVAT TFloat
              , AmountManual TFloat, AmountStorage TFloat, AmountDiff TFloat, AmountStorageDiff TFloat
@@ -223,6 +225,11 @@ BEGIN
                                       , COALESCE(MIFloat_PriceFrom.ValueData,0)     AS PriceFrom
                                       , COALESCE(MIFloat_PriceTo.ValueData,0)       AS PriceTo
 
+                                      , SUM (COALESCE(MIFloat_RemainsFrom.ValueData,0))   AS RemainsFrom
+                                      , SUM (COALESCE(MIFloat_RemainsTo.ValueData,0))     AS RemainsTo
+                                      , SUM (COALESCE(MIFloat_ValueFrom.ValueData,0))     AS ValueFrom
+                                      , SUM (COALESCE(MIFloat_ValueTo.ValueData,0))       AS ValueTo
+
                                       , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))/SUM(MIContainer_Count.Amount)),0) ::TFloat  AS Price
                                       , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.JuridicalPrice, 0))),0)                               ::TFloat  AS Summa
                                       , COALESCE(ABS(SUM(MIContainer_Count.Amount * COALESCE (MIContainer_Count.PriceWithVAT, 0))/SUM(MIContainer_Count.Amount)),0)   ::TFloat  AS PriceWithVAT
@@ -239,6 +246,19 @@ BEGIN
                                        LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceTo
                                                                          ON MIFloat_PriceTo.MovementItemId = MovementItem_Send.ID
                                                                         AND MIFloat_PriceTo.DescId = zc_MIFloat_PriceTo()
+
+                                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsFrom
+                                                                         ON MIFloat_RemainsFrom.MovementItemId = MovementItem_Send.ID
+                                                                        AND MIFloat_RemainsFrom.DescId = zc_MIFloat_RemainsFrom()
+                                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsTo
+                                                                         ON MIFloat_RemainsTo.MovementItemId = MovementItem_Send.ID
+                                                                        AND MIFloat_RemainsTo.DescId = zc_MIFloat_RemainsTo()
+                                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueFrom
+                                                                         ON MIFloat_ValueFrom.MovementItemId = MovementItem_Send.ID
+                                                                        AND MIFloat_ValueFrom.DescId = zc_MIFloat_ValueFrom()
+                                       LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
+                                                                         ON MIFloat_ValueTo.MovementItemId = MovementItem_Send.ID
+                                                                        AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
 
                                        LEFT OUTER JOIN tmpMIContainerAll AS MIContainer_Count
                                                                          ON MIContainer_Count.MovementItemId = MovementItem_Send.Id 
@@ -375,6 +395,11 @@ BEGIN
 
               , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
               , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
+              
+              , MovementItem_Send.RemainsFrom  ::TFloat
+              , MovementItem_Send.RemainsTo    ::TFloat
+              , MovementItem_Send.ValueFrom    ::TFloat
+              , MovementItem_Send.ValueTo      ::TFloat
 
               , MovementItem_Send.Price
               , MovementItem_Send.Summa
@@ -454,6 +479,11 @@ BEGIN
                                       , COALESCE(MIFloat_AmountStorage.ValueData,0)  ::TFloat  AS AmountStorage
                                       , MIDate_Insert.ValueData                                AS DateInsert
 
+                                      , COALESCE(MIFloat_RemainsFrom.ValueData,0)   AS RemainsFrom
+                                      , COALESCE(MIFloat_RemainsTo.ValueData,0)     AS RemainsTo
+                                      , COALESCE(MIFloat_ValueFrom.ValueData,0)     AS ValueFrom
+                                      , COALESCE(MIFloat_ValueTo.ValueData,0)       AS ValueTo
+
                                  FROM MovementItem   
                                      -- цена подразделений записанная при автоматическом распределении 
                                      LEFT OUTER JOIN MovementItemFloat AS MIFloat_PriceFrom
@@ -468,6 +498,20 @@ BEGIN
                                      LEFT JOIN MovementItemFloat AS MIFloat_AmountStorage
                                                                  ON MIFloat_AmountStorage.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_AmountStorage.DescId = zc_MIFloat_AmountStorage()
+
+                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsFrom
+                                                                       ON MIFloat_RemainsFrom.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_RemainsFrom.DescId = zc_MIFloat_RemainsFrom()
+                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_RemainsTo
+                                                                       ON MIFloat_RemainsTo.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_RemainsTo.DescId = zc_MIFloat_RemainsTo()
+                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueFrom
+                                                                       ON MIFloat_ValueFrom.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_ValueFrom.DescId = zc_MIFloat_ValueFrom()
+                                     LEFT OUTER JOIN MovementItemFloat AS MIFloat_ValueTo
+                                                                       ON MIFloat_ValueTo.MovementItemId = MovementItem.Id
+                                                                      AND MIFloat_ValueTo.DescId = zc_MIFloat_ValueTo()
+
                                      LEFT JOIN MovementItemLinkObject AS MILinkObject_ReasonDifferences
                                                                       ON MILinkObject_ReasonDifferences.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_ReasonDifferences.DescId = zc_MILinkObject_ReasonDifferences()
@@ -730,6 +774,11 @@ BEGIN
            , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_From.Price ELSE MovementItem_Send.PriceFrom END)) ::TFloat  AS SummaUnitFrom
            , (MovementItem_Send.Amount * (CASE WHEN vbisAuto = False OR vbIsSUN = TRUE THEN Object_Price_To.Price ELSE MovementItem_Send.PriceTo END))     ::TFloat  AS SummaUnitTo
 
+           , MovementItem_Send.RemainsFrom  ::TFloat
+           , MovementItem_Send.RemainsTo    ::TFloat
+           , MovementItem_Send.ValueFrom    ::TFloat
+           , MovementItem_Send.ValueTo      ::TFloat
+
            , tmpMIContainer.Price            ::TFloat  AS Price
            , tmpMIContainer.Summa            ::TFloat  AS Summa
            , tmpMIContainer.PriceWithVAT     ::TFloat  AS PriceWithVAT
@@ -809,6 +858,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.03.20         *
  09.06.19         *
  19.04.19         *
  05.02.19         * add AmountStorage 

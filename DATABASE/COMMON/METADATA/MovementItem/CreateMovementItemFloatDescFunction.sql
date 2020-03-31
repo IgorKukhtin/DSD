@@ -1291,9 +1291,29 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaMoneyBoxUsed() RETURNS Integer AS $BO
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaMoneyBoxUsed', 'Использование копилки по результатам СУН1' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaMoneyBoxUsed');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_RemainsFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_RemainsFrom', 'Остаток у отправителя (для схемы Э-СУН)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsFrom');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_RemainsTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_RemainsTo', 'Остаток у получателя(для схемы Э-СУН)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RemainsTo');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_ValueFrom() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValueFrom'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_ValueFrom', 'Статистика продаж у отправителя (для схемы Э-СУН)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValueFrom');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_ValueTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValueTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_ValueTo', 'Статистика продаж у получателя(для схемы Э-СУН)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_ValueTo');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 31.03.20         * zc_MIFloat_ValueTo
+                    zc_MIFloat_ValueFrom
+                    zc_MIFloat_RemainsTo
+                    zc_MIFloat_RemainsFrom
  30.03.20                                                                                                     * zc_MIFloat_SummaMoneyBoxUsed
  25.03.20         * zc_MIFloat_SummAuditAdd
  21.03.20                                                                                                     * zc_MIFloat_SummaFullCharge
