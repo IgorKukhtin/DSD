@@ -1100,6 +1100,8 @@ type
     miReport_OrderInternalBasis_Olap: TMenuItem;
     actReport_Promo_Trade: TdsdOpenForm;
     miReport_Promo_Trade: TMenuItem;
+    actPromoStateKind: TdsdOpenForm;
+    N216: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

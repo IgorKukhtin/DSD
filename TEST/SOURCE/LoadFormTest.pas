@@ -131,6 +131,7 @@ type
     procedure LoadProfitLossServiceFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPromoKindFormTest;
+    procedure LoadPromoStateKindFormTest;
     procedure LoadPromoFormTest;
     procedure LoadQualityFormTest;
     procedure LoadQualityParamsFormTest;
@@ -2733,6 +2734,11 @@ procedure TLoadFormTest.LoadPromoKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoKindForm');
+end;
+procedure TLoadFormTest.LoadPromoStateKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoStateKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPromoStateKindForm');
 end;
 
 procedure TLoadFormTest.LoadTradeMarkFormTest;

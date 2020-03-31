@@ -1141,7 +1141,8 @@ uses
   Asset_Object in '..\..\Forms\Guides\Asset_Object.pas' {Asset_ObjectForm: TParentForm},
   Report_OrderInternalBasis_Olap in '..\..\Forms\Report\Report_OrderInternalBasis_Olap.pas' {Report_OrderInternalBasis_OlapForm: TParentForm},
   Report_OrderInternalBasis_OlapDialog in '..\..\Forms\Report\Report_OrderInternalBasis_OlapDialog.pas' {Report_OrderInternalBasis_OlapDialogForm: TParentForm},
-  Report_Promo_Trade in '..\..\Forms\Report\Report_Promo_Trade.pas' {Report_Promo_TradeForm: TParentForm};
+  Report_Promo_Trade in '..\..\Forms\Report\Report_Promo_Trade.pas' {Report_Promo_TradeForm: TParentForm},
+  PromoStateKind in '..\..\Forms\Kind\PromoStateKind.pas' {PromoStateKindForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

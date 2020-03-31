@@ -956,6 +956,17 @@ BEGIN
 
 END $$;
 
+DO $$
+BEGIN
+   -- !!! состояние акций 
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Start(),     inDescId:= zc_Object_PromoStateKind(), inCode:= 1, inName:= 'В работе Отдел Маркетинга', inEnumName:= 'zc_Enum_PromoStateKind_Start');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Head(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 2, inName:= 'В работе Директор по маркетингу', inEnumName:= 'zc_Enum_PromoStateKind_Head');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Main(),      inDescId:= zc_Object_PromoStateKind(), inCode:= 3, inName:= 'В работе Исполнительный Директор', inEnumName:= 'zc_Enum_PromoStateKind_Main');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Complete(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 4, inName:= 'Согласован', inEnumName:= 'zc_Enum_PromoStateKind_Complete');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Canceled(),  inDescId:= zc_Object_PromoStateKind(), inCode:= 5, inName:= 'Отменен', inEnumName:= 'zc_Enum_PromoStateKind_Canceled');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PromoStateKind_Return(),    inDescId:= zc_Object_PromoStateKind(), inCode:= 6, inName:= 'Вернули для исправлений', inEnumName:= 'zc_Enum_PromoStateKind_Return');
+END $$;
+
 /* Закомментил, т.к. 1 раз добавили и харэ
 --Загрузка в Документ <Ведомость начисления зарплаты>
 DO $$
@@ -2661,6 +2672,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.
+ 31.03.20          *    -- !!! состояние акций 
  24.03.20          *
  23.10.19          *
  09.09.19          * Загрузить из экскля № карт счета IBAN ЗП1 В справ физ лиц
