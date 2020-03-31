@@ -73,6 +73,13 @@ type
     cxLabel20: TcxLabel;
     ceIlliquidAssets: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
+    ceSummaMoneyBox: TcxCurrencyEdit;
+    cxLabel22: TcxLabel;
+    ceSummaFullCharge: TcxCurrencyEdit;
+    cxLabel23: TcxLabel;
+    ceSummaMoneyBoxUsed: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
+    cxLabel25: TcxLabel;
   private
     { Private declarations }
   public

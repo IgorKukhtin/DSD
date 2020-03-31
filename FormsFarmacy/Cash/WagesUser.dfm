@@ -10,23 +10,23 @@ inherited WagesUserForm: TWagesUserForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 154
     Width = 655
-    Height = 318
+    Height = 295
     TabOrder = 0
     ExplicitTop = 131
     ExplicitWidth = 655
     ExplicitHeight = 318
-    ClientRectBottom = 318
+    ClientRectBottom = 295
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
       ExplicitHeight = 318
       inherited cxGrid: TcxGrid
         Width = 655
-        Height = 192
+        Height = 169
         ExplicitWidth = 655
-        ExplicitHeight = 203
+        ExplicitHeight = 192
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -79,12 +79,13 @@ inherited WagesUserForm: TWagesUserForm
       end
       object PanelBottom: TPanel
         Left = 0
-        Top = 192
+        Top = 169
         Width = 655
         Height = 126
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 192
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -281,7 +282,7 @@ inherited WagesUserForm: TWagesUserForm
     Left = 0
     Top = 0
     Width = 655
-    Height = 105
+    Height = 128
     Align = alTop
     ShowCaption = False
     TabOrder = 1
@@ -297,7 +298,7 @@ inherited WagesUserForm: TWagesUserForm
       Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 14
+      Left = 11
       Top = 6
       Caption = #1047#1072#1088#1087#1083#1072#1090#1072' '#1079#1072
     end
@@ -320,19 +321,19 @@ inherited WagesUserForm: TWagesUserForm
     end
     object edStatus: TcxTextEdit
       Left = 385
-      Top = 27
+      Top = 25
       Properties.ReadOnly = True
       TabOrder = 5
       Width = 57
     end
     object cxLabel9: TcxLabel
       Left = 322
-      Top = 28
+      Top = 26
       Caption = #1056#1077#1079#1091#1083#1100#1090#1072#1090
     end
     object edDateTimeTest: TcxDateEdit
       Left = 523
-      Top = 27
+      Top = 25
       TabStop = False
       EditValue = 42132d
       Properties.DisplayFormat = 'dd.mm.yyyy hh:nn'
@@ -343,7 +344,7 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel10: TcxLabel
       Left = 455
-      Top = 28
+      Top = 26
       Caption = #1076#1072#1090#1072' '#1087#1088#1086#1074'.'
     end
     object ceResult: TcxCurrencyEdit
@@ -355,60 +356,60 @@ inherited WagesUserForm: TWagesUserForm
       Width = 57
     end
     object ceSummaCleaning: TcxCurrencyEdit
-      Left = 65
-      Top = 55
+      Left = 74
+      Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 10
       Width = 65
     end
     object cxLabel11: TcxLabel
-      Left = 14
-      Top = 36
+      Left = 11
+      Top = 29
       Caption = #1044#1086#1087'. '#1088#1072#1089#1093#1086#1076#1099' ('#1085#1072' '#1072#1087#1090#1077#1082#1091'):'
     end
     object ceSummaSP: TcxCurrencyEdit
-      Left = 156
-      Top = 55
+      Left = 162
+      Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 12
       Width = 65
     end
     object cxLabel12: TcxLabel
-      Left = 135
-      Top = 56
+      Left = 141
+      Top = 49
       Caption = #1057#1055
     end
     object ceSummaOther: TcxCurrencyEdit
-      Left = 266
-      Top = 55
+      Left = 272
+      Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 14
       Width = 65
     end
     object cxLabel13: TcxLabel
-      Left = 222
-      Top = 56
+      Left = 228
+      Top = 49
       Caption = #1055#1088#1086#1095#1077#1077
     end
     object ceSummaValidationResults: TcxCurrencyEdit
       Left = 436
-      Top = 55
+      Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 16
       Width = 65
     end
     object cxLabel14: TcxLabel
-      Left = 335
-      Top = 56
+      Left = 339
+      Top = 49
       Caption = #1056#1077#1079#1091#1083#1100#1090'. '#1087#1088#1086#1074#1077#1088#1082#1080
     end
     object ceSummaTotal: TcxCurrencyEdit
       Left = 578
-      Top = 77
+      Top = 83
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 18
@@ -416,17 +417,17 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel15: TcxLabel
       Left = 536
-      Top = 78
+      Top = 84
       Caption = #1048#1090#1086#1075#1086':'
     end
     object cxLabel17: TcxLabel
-      Left = 14
-      Top = 56
+      Left = 11
+      Top = 49
       Caption = #1059#1073#1086#1088#1082#1072
     end
     object ceSUN1: TcxCurrencyEdit
       Left = 578
-      Top = 55
+      Top = 48
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
       TabOrder = 21
@@ -434,33 +435,102 @@ inherited WagesUserForm: TWagesUserForm
     end
     object cxLabel18: TcxLabel
       Left = 506
-      Top = 56
+      Top = 49
       Caption = #1064#1090#1088#1072#1092' '#1057#1059#1053'1'
     end
     object edPasswordEHels: TcxTextEdit
-      Left = 156
-      Top = 77
+      Left = 518
+      Top = 105
       Properties.ReadOnly = True
       TabOrder = 23
       Width = 125
     end
     object cxLabel19: TcxLabel
-      Left = 14
-      Top = 78
+      Left = 435
+      Top = 106
       Caption = #1055#1072#1088#1086#1083#1100' '#1045'-'#1061#1077#1083#1089
     end
     object ceSummaTechnicalRediscount: TcxCurrencyEdit
-      Left = 436
-      Top = 77
+      Left = 74
+      Top = 83
+      Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      ParentShowHint = False
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.00'
+      ShowHint = True
       TabOrder = 25
       Width = 65
     end
     object cxLabel20: TcxLabel
-      Left = 335
-      Top = 78
-      Caption = #1058#1077#1093#1085#1080#1095'. '#1087#1077#1088#1077#1091#1095#1077#1090
+      Left = 11
+      Top = 84
+      Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
+      Caption = #1058#1077#1093'. '#1087#1077#1088#1077#1091#1095
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceSummaMoneyBox: TcxCurrencyEdit
+      Left = 272
+      Top = 83
+      Hint = #1050#1086#1087#1080#1083#1082#1072
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 27
+      Width = 65
+    end
+    object cxLabel22: TcxLabel
+      Left = 225
+      Top = 83
+      Hint = #1050#1086#1087#1080#1083#1082#1072
+      Caption = #1050#1086#1087#1080#1083#1082#1072
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceSummaFullCharge: TcxCurrencyEdit
+      Left = 162
+      Top = 83
+      Hint = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 29
+      Width = 65
+    end
+    object cxLabel23: TcxLabel
+      Left = 142
+      Top = 84
+      Hint = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
+      Caption = #1055#1057
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceSummaMoneyBoxUsed: TcxCurrencyEdit
+      Left = 436
+      Top = 83
+      ParentShowHint = False
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00'
+      ShowHint = True
+      TabOrder = 31
+      Width = 65
+    end
+    object cxLabel24: TcxLabel
+      Left = 339
+      Top = 84
+      Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1080#1079' '#1082#1086#1087#1080#1083#1082#1080
+      Caption = #1048#1089#1087'. '#1080#1079' '#1082#1086#1087#1080#1083#1082#1080
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object cxLabel25: TcxLabel
+      Left = 11
+      Top = 68
+      Caption = 
+        #1056#1072#1089#1095#1077#1090' '#1086#1079#1085#1072#1082#1086#1084#1080#1090#1077#1083#1100#1085#1099#1081' ('#1089' 1-2 '#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1091#1078#1077' '#1073#1091#1076#1077#1090' '#1074#1083#1080#1103#1090#1100' '#1085#1072' '#1080#1090#1086#1075 +
+        ')'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -744,6 +814,27 @@ inherited WagesUserForm: TWagesUserForm
         Name = 'SummaTechnicalRediscount'
         Value = Null
         Component = ceSummaTechnicalRediscount
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFullCharge'
+        Value = Null
+        Component = ceSummaFullCharge
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaMoneyBox'
+        Value = Null
+        Component = ceSummaMoneyBox
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaMoneyBoxUsed'
+        Value = Null
+        Component = ceSummaMoneyBoxUsed
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

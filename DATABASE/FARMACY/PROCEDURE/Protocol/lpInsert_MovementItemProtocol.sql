@@ -84,32 +84,32 @@ BEGIN
   FROM
    (SELECT D.FieldXML
     FROM
-        (SELECT tmp.FieldXML :: TVarChar
+        (SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItem AS tmp
         UNION
-         SELECT tmp.FieldXML :: TVarChar
+         SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemFloat AS tmp
         UNION
-         SELECT tmp.FieldXML :: TVarChar
+         SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemDate AS tmp
         UNION
-         SELECT tmp.FieldXML :: TVarChar
+         SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemLinkObject AS tmp
         UNION
-         SELECT tmp.FieldXML :: TVarChar
+         SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemString AS tmp
         UNION
-         SELECT tmp.FieldXML :: TVarChar
+         SELECT tmp.FieldXML :: Text
               , tmp.GroupId
               , tmp.DescId
          FROM tmpMovementItemBoolean AS tmp
@@ -121,7 +121,7 @@ BEGIN
   -- Сохранили
   INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
                             VALUES (inMovementItemId, current_timestamp, inUserId, vbProtocolXML, inIsInsert);
-  
+
 END;           
 $BODY$
   LANGUAGE plpgsql VOLATILE;

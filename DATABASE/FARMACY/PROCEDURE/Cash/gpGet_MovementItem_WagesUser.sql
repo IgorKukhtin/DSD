@@ -13,8 +13,8 @@ RETURNS TABLE (Id Integer, UserID Integer, AmountAccrued TFloat
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , OperDate TDateTime
              , Result TFloat, Attempts Integer, Status TVarChar, DateTimeTest TDateTime
-             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat
-             , SummaSUN1 TFloat, SummaTechnicalRediscount TFloat
+             , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat 
+             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , PasswordEHels TVarChar
               )
@@ -39,7 +39,7 @@ BEGIN
     
     IF vbUserId = 3
     THEN
-      vbUserId  := 3990942;
+      vbUserId  := 4085760;
     END IF;
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_Wages())
@@ -100,6 +100,10 @@ BEGIN
                                                , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                                                , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
                                                , MIFloat_SummaTechnicalRediscount.ValueData AS SummaTechnicalRediscount
+                                               , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
+                                                 MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
+                                               , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+                                               , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
                                                , MovementItem.Amount                 AS SummaTotal
                                          FROM  MovementItem
 
@@ -126,6 +130,18 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaTechnicalRediscount
                                                                             ON MIFloat_SummaTechnicalRediscount.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_SummaTechnicalRediscount.DescId = zc_MIFloat_SummaTechnicalRediscount()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
+                                                                            ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                                                            ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
+                                                                            ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
                                          WHERE MovementItem.MovementId = vbMovementId
                                            AND MovementItem.ObjectId = vbUnitId
@@ -169,6 +185,9 @@ BEGIN
                  , tmpAdditionalExpenses.SummaValidationResults AS SummaValidationResults
                  , tmpAdditionalExpenses.SummaSUN1              AS SummaSUN1
                  , tmpAdditionalExpenses.SummaTechnicalRediscount AS SummaTechnicalRediscount
+                 , tmpAdditionalExpenses.SummaMoneyBox          AS SummaMoneyBox
+                 , tmpAdditionalExpenses.SummaFullCharge        AS SummaFullCharge
+                 , tmpAdditionalExpenses.SummaMoneyBoxUsed      AS SummaMoneyBoxUsed
                  , tmpAdditionalExpenses.SummaTotal             AS SummaTotal
                  , ObjectString_PasswordEHels.ValueData          AS UserPassword
             FROM  MovementItem
@@ -236,5 +255,5 @@ $BODY$
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  28.08.19                                                        *
 */
--- select * from gpGet_MovementItem_WagesUser(inOperDate := ('13.12.2019')::TDateTime ,  inSession := '3');
+-- select * from gpGet_MovementItem_WagesUser(inOperDate := ('01.03.2020')::TDateTime ,  inSession := '3');
 

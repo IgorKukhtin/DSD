@@ -12,12 +12,13 @@ RETURNS void
 AS
 $BODY$
    DECLARE vbId Integer;
+   DECLARE vbIsInsert Boolean;
    DECLARE vbMovementId Integer;
    DECLARE vbUserId Integer;
    DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
-    --vbUserId := lpGetUserBySession (inSession);
+    vbUserId := lpGetUserBySession (inSession);
 --    vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Check_OperDate());
 
     -- проверка прав пользователя на вызов процедуры
@@ -71,7 +72,13 @@ BEGIN
       vbId := 0;
     END IF;
                 
+    -- определяется признак Создание/Корректировка
+    vbIsInsert:= COALESCE (vbId, 0) = 0;
+
     vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Child(), inUnitId, vbMovementId, inTypeId, inId);
+
+    -- сохранили протокол
+    PERFORM lpInsert_MovementItemProtocol (vbId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

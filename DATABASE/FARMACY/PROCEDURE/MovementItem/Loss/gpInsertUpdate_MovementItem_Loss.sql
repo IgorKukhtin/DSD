@@ -21,7 +21,9 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Loss());
+    vbUserId:= lpGetUserBySession (inSession);
      --Проверили на корректность кол-ва
+
     IF (inAmount < 0)
     THEN
       RAISE EXCEPTION 'Ошибка. Количество <%> не может быть меньше нуля.', inAmount;
