@@ -97,7 +97,9 @@ BEGIN
                     
                     WHERE (Movement_Promo.Id = inMovementId OR inMovementId = 0)
                       AND (Movement_Promo.StartSale BETWEEN inStartDate AND inEndDate
-                            OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale)
+                            OR inStartDate BETWEEN Movement_Promo.StartSale AND Movement_Promo.EndSale
+                            OR inMovementId > 0
+                          )
                       AND (Movement_Promo.UnitId = inUnitId OR inUnitId = 0)
                       AND Movement_Promo.StatusId = zc_Enum_Status_Complete()
                       AND (  (Movement_Promo.isPromo = TRUE AND inIsPromo = TRUE) 
