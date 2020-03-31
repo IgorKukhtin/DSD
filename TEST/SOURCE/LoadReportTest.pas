@@ -47,10 +47,15 @@ end;
 
 procedure TLoadReportTest.LoadPromoFormTest;
 begin
+  {
   LoadReportFromFile('Акция', ReportPath + '\Товарный Учет\PrintMovement_Promo.fr3');
   LoadReportFromFile('Планируемые результаты акции', ReportPath + '\Товарный Учет\PrintMovement_Promo_Calc.fr3');
 
   LoadReportFromFile('Отчет_по_акциям', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям.fr3');
+  }
+  LoadReportFromFile('Отчет_по_акциям(для торгового отдела)', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям(для торгового отдела).fr3');
+  LoadReportFromFile('Отчет_по_акциям(для внутренних служб)', ReportPath + '\Отчеты (товарные)\Отчет_по_Акциям(для внутренних служб).fr3');
+  exit;
   LoadReportFromFile('Отчет Результаты ценовых акций', ReportPath + '\Отчеты (товарные)\Отчет Результаты ценовых акций.fr3');
 end;
 
@@ -317,11 +322,11 @@ begin
   LoadReportFromFile('Отчет по остаткам для снабжения', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения.fr3');
   LoadReportFromFile('Отчет по остаткам для снабжения(поставщик)', ReportPath + '\Отчеты (производство)\Отчет по остаткам для снабжения(поставщик).fr3');
   LoadReportFromFile('Отчет по движению по дням недели', ReportPath + '\Отчеты (производство)\Отчет по движению по дням недели.fr3');
-
+  }
   LoadReportFromFile('Отчет по заявкам по сырью_перемещение (Олап)', ReportPath + '\Отчеты (производство)\Отчет по заявкам по сырью_перемещение (Олап).fr3');
   LoadReportFromFile('Отчет по заявкам по сырью (Олап)', ReportPath + '\Отчеты (производство)\Отчет по заявкам по сырью (Олап).fr3');
   exit;
-
+  {
   LoadReportFromFile('Дефростер по партиям', ReportPath + '\Отчеты (производство)\Дефростер по партиям.fr3');
   LoadReportFromFile('Дефростер(итог)', ReportPath + '\Отчеты (производство)\Дефростер(итог).fr3');
 

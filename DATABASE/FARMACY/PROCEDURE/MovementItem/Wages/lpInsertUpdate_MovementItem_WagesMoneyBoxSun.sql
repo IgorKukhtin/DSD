@@ -57,7 +57,7 @@ BEGIN
 
      -- сохранили свойство <Копилка по результатам СУН1 за предыдущий месяц>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBoxMonth(), vbId, inSumma);
-    
+
     vbSumma := (SELECT sum(MIF_SummaMoneyBoxMonth.ValueData)
                 FROM Movement
                      INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
@@ -67,7 +67,7 @@ BEGIN
                                                   ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
                                                  AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
                 WHERE Movement.OperDate <=   date_trunc('month', inOparDate)
-                  AND Movement.DescId = zc_Movement_Wages());   
+                  AND Movement.DescId = zc_Movement_Wages());
 
      -- сохранили свойство <Копилка по результатам СУН1>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBox(), vbId, COALESCE (vbSumma, 0)::TFloat);
@@ -80,21 +80,15 @@ BEGIN
                      INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
                                                   ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
                                                  AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
-                WHERE Movement.DescId = zc_Movement_Wages());   
+                WHERE Movement.DescId = zc_Movement_Wages());
 
-     -- сохранили свойство <Копилка по результатам СУН1>
+     -- сохранили свойство <Копилка по результатам СУН1> общий итог в подразделение
     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSun(), inUnitID, COALESCE (vbSumma, 0)::TFloat);
 
     IF vbIsInsert = FALSE
     THEN
-        vbSumma := (SELECT SUM(MIFloat_SummaSUN1.ValueData)
-                    FROM MovementItemFloat AS MIFloat_SummaSUN1
-                    WHERE MIFloat_SummaSUN1.MovementItemId = vbId
-                      AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaCleaning(), zc_MIFloat_SummaSP(), zc_MIFloat_SummaOther(),
-                                                       zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1(),
-                                                       zc_MIFloat_SummaTechnicalRediscount()));
          -- сохранили <Элемент документа>
-        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, COALESCE (vbSumma, 0)::TFloat, 0);
+        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, inUserId), 0);
     END IF;
 
 

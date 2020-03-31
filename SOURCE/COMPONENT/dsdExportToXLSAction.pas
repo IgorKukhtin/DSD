@@ -2,8 +2,8 @@ unit dsdExportToXLSAction;
 
 interface
 
-uses Data.DB, System.Classes, System.SysUtils, System.Win.ComObj, Vcl.Graphics,
-     Vcl.ActnList, Vcl.Dialogs, dsdAction, dsdDB;
+uses Data.DB, System.Classes, System.SysUtils, System.Win.ComObj, System.StrUtils,
+     Vcl.Graphics, Vcl.ActnList, Vcl.Dialogs, dsdAction, dsdDB;
 
 type
 
@@ -35,6 +35,32 @@ type
     property Items[Index: Integer]: TdsdCalcColumnList read GetItem write SetItem; default;
   end;
 
+  TdsdDetailedText = class (TCollectionItem)
+  private
+    FFieldName: String;
+    FFont: TFont;
+    FFieldExists : boolean;
+  protected
+    procedure SetFont(Value: TFont);
+    function GetDisplayName: string; override;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+  published
+    property FieldName: String read FFieldName write FFieldName;
+    property Font: TFont read FFont write SetFont;
+  end;
+
+  TdsdDetailedTexts = class (TOwnedCollection)
+  private
+    function GetItem(Index: Integer): TdsdDetailedText;
+    procedure SetItem(Index: Integer; const Value: TdsdDetailedText);
+  public
+    function Add: TdsdDetailedText;
+    property Items[Index: Integer]: TdsdDetailedText read GetItem write SetItem; default;
+  end;
+
   TdsdColumnParam = class (TCollectionItem)
   private
     FCaption: String;
@@ -46,11 +72,13 @@ type
     FWrapText : Boolean;
     FCalcColumn : TdsdCalcColumnType;
     FCalcColumnLists : TdsdCalcColumnLists;
+    FDetailedTexts : TdsdDetailedTexts;
     FRound : boolean;
     FKind : TdsdKindType;
     FKindText: String;
     FExportToXLSAction : TdsdExportToXLS;
     FFieldExists : boolean;
+    FTitleFont: TFont;
   protected
     procedure SetFont(Value: TFont);
     function GetDisplayName: string; override;
@@ -69,6 +97,7 @@ type
     property WrapText : Boolean read FWrapText write FWrapText default False;
     property CalcColumn : TdsdCalcColumnType read FCalcColumn write FCalcColumn default ccNone;
     property CalcColumnLists : TdsdCalcColumnLists read FCalcColumnLists write FCalcColumnLists;
+    property DetailedTexts : TdsdDetailedTexts read FDetailedTexts write FDetailedTexts;
     property Round : boolean read FRound write FRound default True;
     property Kind : TdsdKindType read FKind write FKind default skNone;
     property KindText: String read FKindText write FKindText;
@@ -173,6 +202,60 @@ begin
   inherited SetItem(Index, Value);
 end;
 
+  { TdsdDetailedText }
+
+constructor TdsdDetailedText.Create(Collection: TCollection);
+begin
+  inherited;
+  FFont := TFont.Create;
+  FFieldExists := True;
+end;
+
+destructor TdsdDetailedText.Destroy;
+begin
+  FFont.Free;
+  inherited;
+end;
+
+procedure TdsdDetailedText.Assign(Source: TPersistent);
+begin
+  if Source is TdsdDetailedText then
+  begin
+     Self.FFieldName := TdsdDetailedText(Source).FieldName;
+  end else
+    inherited; //raises an exception
+end;
+
+function TdsdDetailedText.GetDisplayName: string;
+  var I, J : integer;
+begin
+  if FFieldName <> '' then
+     Result := FieldName
+  else
+     Result := inherited;
+end;
+
+procedure TdsdDetailedText.SetFont(Value: TFont);
+begin
+  FFont.Assign(Value);
+end;
+
+  { TdsdDetailedTexts }
+
+function TdsdDetailedTexts.Add: TdsdDetailedText;
+begin
+  result := TdsdDetailedText(inherited Add);
+end;
+
+function TdsdDetailedTexts.GetItem(Index: Integer): TdsdDetailedText;
+begin
+  Result := TdsdDetailedText(inherited GetItem(Index));
+end;
+
+procedure TdsdDetailedTexts.SetItem(Index: Integer; const Value: TdsdDetailedText);
+begin
+  inherited SetItem(Index, Value);
+end;
 
   { TdsdColumnParam }
 
@@ -181,6 +264,7 @@ begin
   inherited;
   FFont := TFont.Create;
   FCalcColumnLists := TdsdCalcColumnLists.Create(Self, TdsdCalcColumnList);
+  FDetailedTexts := TdsdDetailedTexts.Create(Self, TdsdDetailedText);
   FWidth := 10;
   FWrapText := False;
   FFieldExists := True;
@@ -193,6 +277,7 @@ end;
 destructor TdsdColumnParam.Destroy;
 begin
   FFont.Free;
+  FDetailedTexts.Free;
   FCalcColumnLists.Free;
   inherited;
 end;
@@ -411,9 +496,9 @@ function TdsdExportToXLS.LocalExecute: Boolean;
      nDataStart,   // Начало данных
      nDataCount,   // Количество строк данных
      nColumnCount, // Количество колонок
-     I, J : Integer;
+     I, J, L, P : Integer;
      nCurr : Extended;
-     cFileName : string;
+     cFileName, S : string;
      i64 : Currency;
 
  const xlLeft = - 4131;
@@ -572,6 +657,10 @@ begin
         if FColumnParams.Items[I].FieldName <> '' then
           FColumnParams.Items[I].FFieldExists := Assigned(FItemsDataSet.FindField(FColumnParams.Items[I].FieldName))
         else FColumnParams.Items[I].FFieldExists := False;
+        for J := 0 to FColumnParams.Items[I].DetailedTexts.Count - 1 do
+          if FColumnParams.Items[I].DetailedTexts.Items[L].FieldName <> '' then
+            FColumnParams.Items[I].DetailedTexts.Items[L].FFieldExists := Assigned(FItemsDataSet.FindField(FColumnParams.Items[I].DetailedTexts.Items[L].FieldName))
+          else FColumnParams.Items[I].DetailedTexts.Items[L].FFieldExists := False;
       end;
     end else
     begin
@@ -718,6 +807,38 @@ begin
           xlRange.Font.Italic := fsItalic in FColumnParams.Items[I].Font.Style;
           xlRange.Font.Underline := fsUnderline in FColumnParams.Items[I].Font.Style;
           J := I + 2;
+        end;
+      end;
+    end;
+
+      // Выделенный текс
+    if FColumnParams.Count > 0 then
+    begin
+      for I := 0 to nColumnCount - 1 do if FColumnParams.Items[I].FDetailedTexts.Count > 0 then
+      begin
+        for L := 0 to FColumnParams.Items[I].FDetailedTexts.Count - 1 do
+          if FColumnParams.Items[I].FDetailedTexts.Items[L].FFieldExists then
+        begin
+          for J := 0 to nDataCount - 1 do
+          begin
+            FItemsDataSet.RecNo := J + 1;
+            S := FItemsDataSet.FieldByName(FColumnParams.Items[I].FDetailedTexts.Items[L].FieldName).AsString;
+            if Trim(S) <> '' then
+            begin
+              xlRange := xlSheet.Cells[nDataStart + J, I + 1];
+              P := PosEx(S, xlRange.FormulaR1C1, 1);
+              while P > 0 do
+              begin
+                xlRange.Characters(P, Length(S)).Font.Name := FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Name;
+                xlRange.Characters(P, Length(S)).Font.Size := FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Size;
+                xlRange.Characters(P, Length(S)).Font.Color := FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Color;
+                xlRange.Characters(P, Length(S)).Font.Bold := fsBold in FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Style;;
+                xlRange.Characters(P, Length(S)).Font.Italic := fsItalic in FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Style;
+                xlRange.Characters(P, Length(S)).Font.Underline := fsUnderline in FColumnParams.Items[I].FDetailedTexts.Items[L].Font.Style;
+                P := PosEx(S, xlRange.FormulaR1C1, P + 1);
+              end;
+            end;
+          end;
         end;
       end;
     end;

@@ -58,7 +58,8 @@ BEGIN
       , tmpMovementFloat AS (SELECT MovementFloat_MovementItemId.MovementId
                                   , MovementFloat_MovementItemId.ValueData :: Integer As MovementItemId
                              FROM MovementFloat AS MovementFloat_MovementItemId
-                             WHERE MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                             WHERE MovementFloat_MovementItemId.ValueData IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                               AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
                                --AND vbIsOne = TRUE
                             )
       -- Документ чек, по идее должен быть 1 , но чтоб не задвоилось берем макс и считаем сколько чеков
@@ -177,4 +178,4 @@ $BODY$
 */
 
 
---select * from gpSelect_MovementItem_PromoCodeSign(inMovementId := 0 , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_PromoCodeSign(inMovementId := 18342218, inIsErased := 'False' ,  inSession := '3');

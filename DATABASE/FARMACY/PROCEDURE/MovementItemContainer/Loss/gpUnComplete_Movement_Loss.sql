@@ -11,7 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbOperDate  TDateTime;
-  DECLARE vbUnit    Integer;
+  DECLARE vbUnitiD    Integer;
+  DECLARE vbArticleLossId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Loss());
@@ -31,14 +32,19 @@ BEGIN
     -- Проверить, что бы не было переучета позже даты документа
     SELECT
         Movement.OperDate,
-        Movement_Unit.ObjectId AS Unit
+        Movement_Unit.ObjectId AS Unit,
+        MovementLinkObject_ArticleLoss.ObjectId 
     INTO
         vbOperDate,
-        vbUnit
+        vbUnitiD,
+        vbArticleLossId
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_Unit
                                       ON Movement_Unit.MovementId = Movement.Id
                                      AND Movement_Unit.DescId = zc_MovementLinkObject_Unit()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                     ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                    AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
     WHERE Movement.Id = inMovementId;
 
     /*IF EXISTS(SELECT 1
@@ -50,7 +56,7 @@ BEGIN
                   INNER JOIN MovementLinkObject AS Movement_Inventory_Unit
                                                 ON Movement_Inventory_Unit.MovementId = Movement_Inventory.Id
                                                AND Movement_Inventory_Unit.DescId = zc_MovementLinkObject_Unit()
-                                               AND Movement_Inventory_Unit.ObjectId = vbUnit
+                                               AND Movement_Inventory_Unit.ObjectId = vbUnitiD
                   Inner Join MovementItem AS MI_Send
                                           ON MI_Inventory.ObjectId = MI_Send.ObjectId
                                          AND MI_Send.DescId = zc_MI_Master()
@@ -75,6 +81,11 @@ BEGIN
     --пересчитываем сумму документа по приходным ценам
     PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
     
+    --Пересчет полного списания в зарплате
+    IF COALESCE(vbArticleLossId, 0) = 13892113
+    THEN
+      PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitiD, vbOperDate, inSession); 
+    END IF;
 
 END;
 $BODY$

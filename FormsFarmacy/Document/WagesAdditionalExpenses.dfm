@@ -142,6 +142,9 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             item
             end
             item
+              Caption = 
+                #1056#1072#1089#1095#1077#1090' '#1086#1079#1085#1072#1082#1086#1084#1080#1090#1077#1083#1100#1085#1099#1081' ('#1089' 1-2 '#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1091#1078#1077' '#1073#1091#1076#1077#1090' '#1074#1083#1080#1103#1090#1100' '#1085#1072' '#1080#1090#1086#1075 +
+                ')'
             end
             item
             end>
@@ -247,6 +250,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Caption = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077
             DataBinding.FieldName = 'SummaFullCharge'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

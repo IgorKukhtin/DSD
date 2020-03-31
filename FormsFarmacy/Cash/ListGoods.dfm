@@ -1,5 +1,4 @@
 inherited ListGoodsForm: TListGoodsForm
-  BorderIcons = [biSystemMenu]
   Caption = #1055#1086#1076#1073#1086#1088' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074
   ClientHeight = 442
   ClientWidth = 839
@@ -107,6 +106,12 @@ inherited ListGoodsForm: TListGoodsForm
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         Width = 125
+      end
+      object colAreaName: TcxGridDBColumn
+        Caption = #1056#1077#1075#1080#1086#1085
+        DataBinding.FieldName = 'AreaName'
+        HeaderAlignmentHorz = taCenter
+        Width = 76
       end
       object colGoodsNDS: TcxGridDBColumn
         Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072

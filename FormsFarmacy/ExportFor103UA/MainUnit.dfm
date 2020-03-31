@@ -155,7 +155,6 @@ object MainForm: TMainForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'UnitCode'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 66
       end
@@ -163,7 +162,6 @@ object MainForm: TMainForm
         Caption = 'Name'
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 385
@@ -175,7 +173,12 @@ object MainForm: TMainForm
   end
   object ZConnection1: TZConnection
     ControlsCodePage = cCP_UTF16
+    Catalog = ''
+    HostName = ''
     Port = 5432
+    Database = ''
+    User = ''
+    Password = ''
     Protocol = 'postgresql-9'
     Left = 136
     Top = 136
@@ -257,6 +260,7 @@ object MainForm: TMainForm
     IPVersion = Id_IPv4
     Host = 'ftp:\\ooobadm.dp.ua'
     Passive = True
+    ConnectTimeout = 0
     Password = 'FsT3469Dv'
     Username = 'K_shapiro'
     NATKeepAlive.UseKeepAlive = False

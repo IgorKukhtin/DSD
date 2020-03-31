@@ -47,6 +47,9 @@ type
     spSetGoodsObjectPrice: TdsdStoredProc;
     FormParams: TdsdFormParams;
     actViewSetGoodsObjectPrice: TMultiAction;
+    colDailyCheck: TcxGridDBColumn;
+    colDailySale: TcxGridDBColumn;
+    colColor_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

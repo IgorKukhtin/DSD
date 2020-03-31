@@ -275,8 +275,8 @@ BEGIN
                                       THEN 8338 -- морож.
                                  ELSE 0
                             END                                    AS GoodsKindId
-                          , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN COALESCE (MIContainer.Amount,0)      ELSE 0 END) AS AmountSendIn
-                          , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountSendOut
+                          , SUM (CASE WHEN MIContainer.isActive = FALSE THEN -1 * COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountSendIn
+                          , SUM (CASE WHEN MIContainer.isActive = TRUE  THEN      COALESCE (MIContainer.Amount,0) ELSE 0 END) AS AmountSendOut
                           , SUM (COALESCE (MIContainer.Amount,0))  AS AmountSend
                      FROM tmpMovementSend
                           INNER JOIN MovementItemContainer AS MIContainer
@@ -384,7 +384,7 @@ BEGIN
                               AND tmpMI_Send.UnitId      = tmpData.FromId
           -- факт перемещение 
           LEFT JOIN tmpSend ON tmpSend.GoodsId     = tmpData.GoodsId
-                          --AND tmpSend.GoodsKindId = tmpData.GoodsKindId
+                           AND tmpSend.GoodsKindId = tmpData.GoodsKindId
                            AND tmpSend.OperDate    = tmpData.OperDate
                            AND tmpSend.UnitId      = tmpData.FromId
 

@@ -3,8 +3,6 @@ inherited PromoForm: TPromoForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 659
   ClientWidth = 1204
-  ExplicitLeft = -118
-  ExplicitTop = -20
   ExplicitWidth = 1220
   ExplicitHeight = 697
   PixelsPerInch = 96
@@ -15,19 +13,18 @@ inherited PromoForm: TPromoForm
     Height = 437
     ExplicitTop = 139
     ExplicitWidth = 1204
-    ExplicitHeight = 520
+    ExplicitHeight = 437
     ClientRectBottom = 437
     ClientRectRight = 1204
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1204
-      ExplicitHeight = 496
+      ExplicitHeight = 413
       inherited cxGrid: TcxGrid
         Width = 1204
         Height = 224
-        ExplicitLeft = -1
         ExplicitWidth = 1204
-        ExplicitHeight = 169
+        ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -514,7 +511,6 @@ inherited PromoForm: TPromoForm
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 195
         object cxSplitter1: TcxSplitter
           Left = 660
           Top = 1
@@ -533,7 +529,6 @@ inherited PromoForm: TPromoForm
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = -5
           ClientRectBottom = 171
           ClientRectRight = 659
           ClientRectTop = 24
@@ -988,7 +983,6 @@ inherited PromoForm: TPromoForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitTop = -8
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -998,13 +992,11 @@ inherited PromoForm: TPromoForm
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitTop = 568
       end
     end
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088
       ImageIndex = 2
-      ExplicitHeight = 496
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1013,7 +1005,6 @@ inherited PromoForm: TPromoForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 496
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1261,7 +1252,6 @@ inherited PromoForm: TPromoForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
-      ExplicitHeight = 496
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1270,7 +1260,6 @@ inherited PromoForm: TPromoForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 496
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1356,7 +1345,6 @@ inherited PromoForm: TPromoForm
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 4
-      ExplicitHeight = 496
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -1365,7 +1353,6 @@ inherited PromoForm: TPromoForm
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitHeight = 496
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -1953,8 +1940,6 @@ inherited PromoForm: TPromoForm
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 12
-    ExplicitLeft = -8
-    ExplicitTop = 568
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MessageDS
@@ -3195,6 +3180,15 @@ inherited PromoForm: TPromoForm
           ComponentItem = 'Id'
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumberFull'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberFull'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -3880,6 +3874,14 @@ inherited PromoForm: TPromoForm
         Name = 'strSignNo'
         Value = Null
         Component = edstrSignNo
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberFull'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberFull'
         DataType = ftString
         MultiSelectSeparator = ','
       end>

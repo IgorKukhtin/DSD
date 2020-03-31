@@ -239,7 +239,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       AreaIndex = 6
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
-      Caption = #1055#1088#1080#1093#1086#1076' '#1092#1072#1082#1090
+      Caption = #1048#1090#1086#1075#1086' '#1088#1072#1089#1093#1086#1076' '#1074' '#1094#1077#1093
       DataBinding.FieldName = 'AmountSend'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -364,7 +364,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       AreaIndex = 8
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1074#1086#1079#1074#1088#1072#1090' '#1092#1072#1082#1090
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1080#1079' '#1094#1077#1093#1072
       DataBinding.FieldName = 'AmountSendIn_or'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -378,7 +378,7 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       AreaIndex = 9
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' '#1092#1072#1082#1090
+      Caption = #1056#1072#1089#1093#1086#1076' '#1074' '#1094#1077#1093
       DataBinding.FieldName = 'AmountSendOut_or'
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
@@ -398,7 +398,6 @@ object Report_OrderInternalBasis_OlapForm: TReport_OrderInternalBasis_OlapForm
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.####;-,0.####; ;'
       Styles.ColumnHeader = dmMain.cxRemainsContentStyle
-      Visible = True
       Width = 80
       UniqueName = #1040#1082#1090#1080#1074#1099' '#1085#1072' '#1085#1072#1095#1072#1083#1086
     end

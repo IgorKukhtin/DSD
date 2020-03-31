@@ -836,7 +836,8 @@ uses
   WagesMoneyBoxSun in '..\..\FormsFarmacy\Document\WagesMoneyBoxSun.pas' {WagesMoneyBoxSunForm: TParentForm},
   Report_GeneralMovementGoods in '..\..\FormsFarmacy\Report\Report_GeneralMovementGoods.pas' {Report_GeneralMovementGoodsForm: TParentForm},
   Report_GeneralMovementGoodsDialog in '..\..\FormsFarmacy\Report\Report_GeneralMovementGoodsDialog.pas' {Report_GeneralMovementGoodsDialogForm: TParentForm},
-  PromoCodeSignPercentDialog in '..\..\FormsFarmacy\Document\PromoCodeSignPercentDialog.pas' {PromoCodeSignPercentDialogForm: TParentForm};
+  PromoCodeSignPercentDialog in '..\..\FormsFarmacy\Document\PromoCodeSignPercentDialog.pas' {PromoCodeSignPercentDialogForm: TParentForm},
+  PromoCodeSignUnitNameDialog in '..\..\FormsFarmacy\Document\PromoCodeSignUnitNameDialog.pas' {PromoCodeSignUnitNameDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

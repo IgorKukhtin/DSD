@@ -26,7 +26,8 @@ RETURNS TABLE (Id Integer
              , UpdateId Integer
              , UpdateName TVarChar
              , UpdateDate TDateTime
-             , Comment TVarChar)
+             , Comment TVarChar
+             , UnitName Text)
 AS
 $BODY$
     DECLARE vbUserId Integer;
@@ -60,12 +61,21 @@ BEGIN
           , NULL  ::TVarChar            AS UpdateName
           , Null  :: TDateTime          AS UpdateDate
           , NULL  ::TVarChar            AS Comment
+          , NULL  ::Text                AS UnitName
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
              LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = vbUserId;
   
    ELSE
  
   RETURN QUERY
+  WITH tmpUnitName AS (SELECT string_agg(Object_Object.ValueData, Chr(13)||Chr(10)) as UnitName
+                       FROM MovementItem AS MI_PromoCode
+                           INNER JOIN Object AS Object_Object ON Object_Object.Id = MI_PromoCode.ObjectId
+                       WHERE MI_PromoCode.MovementId = inMovementId
+                         AND MI_PromoCode.DescId = zc_MI_Child()
+                         AND MI_PromoCode.isErased = FALSE
+                         AND MI_PromoCode.Amount = 1)
+     
      SELECT Movement.Id
           , Movement.InvNumber
           , Movement.OperDate
@@ -87,6 +97,7 @@ BEGIN
           , Object_Update.ValueData                                        AS UpdateName
           , MovementDate_Update.ValueData                                  AS UpdateDate
           , MovementString_Comment.ValueData                               AS Comment
+          , tmpUnitName.UnitName::Text                                     AS UnitName
      FROM Movement 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -136,6 +147,8 @@ BEGIN
                                      ON MovementLinkObject_Update.MovementId = Movement.Id
                                     AND MovementLinkObject_Update.DescId = zc_MovementLinkObject_Update()
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = MovementLinkObject_Update.ObjectId  
+        
+        LEFT JOIN tmpUnitName ON 1 = 1
         
      WHERE Movement.Id =  inMovementId;
 

@@ -77,6 +77,11 @@ type
     dxBarButton3: TdxBarButton;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
+    cbGoodsKind: TcxCheckBox;
+    actPrint1: TdsdPrintAction;
+    actPrint2: TdsdPrintAction;
+    bbPrint1: TdxBarButton;
+    bbPrint2: TdxBarButton;
   private
     { Private declarations }
   public

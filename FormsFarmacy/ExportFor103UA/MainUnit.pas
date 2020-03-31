@@ -17,7 +17,8 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
-  IdHTTP, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL;
+  IdHTTP, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL, cxNavigator,
+  cxDataControllerConditionalFormattingRulesManagerDialog, cxExport;
 
 type
   TMainForm = class(TForm)
@@ -197,6 +198,8 @@ begin
   try
     try
       ExportGridToXLSX(SavePath + FileName, grReportUnit);
+      ExportGridToExcel(SavePath + FileName, grReportUnit);
+      ExportGridToFile(SavePath + FileName, cxExportToText, grReportUnit, True, True, False, ',', '', '', 'csv', nil, TEncoding.UTF8);
     except
       on E: Exception do
       begin
