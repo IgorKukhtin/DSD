@@ -1354,6 +1354,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_CountPrice() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_CountPrice', 'Кол-во прайсов' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountPrice');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v3', 'Кратность по Э-СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v3');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_User_BillNumberMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_BillNumberMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_User(),'zc_ObjectFloat_User_BillNumberMobile', 'Добавляется к № документа' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_BillNumberMobile');
@@ -1462,6 +1467,15 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_KoeffOutSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffOutSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_KoeffOutSUN', 'Коэффициент баланса расход/приход' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffOutSUN');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_KoeffOutSUN_v3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffOutSUN_v3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_KoeffOutSUN_v3', 'коэф. СЗО' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffOutSUN_v3');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_KoeffInSUN_v3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffInSUN_v3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_KoeffInSUN_v3', 'коэф. СЗП' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_KoeffInSUN_v3');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1596,6 +1610,9 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 31.03.20         * zc_ObjectFloat_Unit_KoeffOutSUN_v3
+                    zc_ObjectFloat_Unit_KoeffInSUN_v3
+                    zc_ObjectFloat_Goods_KoeffSUN_v3
  19.03.20                                                                                      * zc_ObjectFloat_Unit_MoneyBoxSunUsed
  13.03.20                                                                                      * zc_ObjectFloat_Unit_MoneyBoxSun
  11.03.20                                                                                      * zc_ObjectFloat_CommentTR_DifferenceSum

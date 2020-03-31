@@ -118,11 +118,23 @@ type
     actUpdate_isNOT_v2_Yes: TdsdExecStoredProc;
     actSimpleUpdateNot_v2_Yes: TMultiAction;
     macUpdateNot_v2_Yes: TMultiAction;
-    actUpdateNot_v2_No: TdsdExecStoredProc;
+    actUpdate_isSun_v2_No: TdsdExecStoredProc;
     actSimpleUpdateNot_v2_No: TMultiAction;
     macUpdateNot_v2_No: TMultiAction;
     bbUpdateNot_v2_Yes: TdxBarButton;
     bbUpdateNot_v2_No: TdxBarButton;
+    isSUN_v3: TcxGridDBColumn;
+    KoeffSUN_v3: TcxGridDBColumn;
+    spUpdate_isSun_v3_No: TdsdStoredProc;
+    spUpdate_isSun_v3_yes: TdsdStoredProc;
+    actUpdate_isSun_v3_No: TdsdExecStoredProc;
+    actSimpleUpdate_isSUN_v3_No: TMultiAction;
+    macUpdate_isSun_v3_No: TMultiAction;
+    actUpdate_isSun_v3_yes: TdsdExecStoredProc;
+    actSimpleUpdate_isSUN_v3_yes: TMultiAction;
+    macUpdate_isSun_v3_yes: TMultiAction;
+    bbUpdate_isSun_v3_yes: TdxBarButton;
+    bbUpdate_isSun_v3_No: TdxBarButton;
   private
     { Private declarations }
   public

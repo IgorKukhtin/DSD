@@ -122,6 +122,14 @@ type
     spUpdate_Unit_TechnicalRediscount: TdsdStoredProc;
     actUpdate_Unit_TechnicalRediscount: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    spUpdate_Unit_isSUN_v3: TdsdStoredProc;
+    actUpdate_Unit_isSUN_v3: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN_v3: TdxBarButton;
+    macUpdateKoeffSUNv3: TMultiAction;
+    ExecuteDialogKoeffSUNv3: TExecuteDialog;
+    actUpdateKoeffSUNv3: TdsdDataSetRefresh;
+    spUpdate_KoeffSUNv3: TdsdStoredProc;
+    bbUpdateKoeffSUNv3: TdxBarButton;
   private
     { Private declarations }
   public

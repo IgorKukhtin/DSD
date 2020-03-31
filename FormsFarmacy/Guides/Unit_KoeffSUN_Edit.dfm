@@ -3,9 +3,9 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
   Top = 0
   Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
   BorderStyle = bsDialog
-  Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1086#1074' '#1073#1072#1083#1072#1085#1089#1072
+  Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
   ClientHeight = 156
-  ClientWidth = 313
+  ClientWidth = 296
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 37
-    Top = 118
+    Top = 124
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,24 +29,29 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 203
-    Top = 118
+    Left = 187
+    Top = 124
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
   end
-  object cxLabel28: TcxLabel
-    Left = 22
-    Top = 26
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
-    Caption = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1087#1088#1080#1093'.'
-  end
   object edKoeffInSUN: TcxCurrencyEdit
     Left = 133
-    Top = 25
+    Top = 38
     Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+    ParentShowHint = False
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    ShowHint = True
+    TabOrder = 2
+    Width = 100
+  end
+  object edKoeffOutSUN: TcxCurrencyEdit
+    Left = 133
+    Top = 81
+    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -54,26 +59,43 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
     TabOrder = 3
     Width = 100
   end
-  object edKoeffOutSUN: TcxCurrencyEdit
-    Left = 133
-    Top = 68
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
-    ParentShowHint = False
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    ShowHint = True
+  object edFormName: TcxTextEdit
+    Left = 37
+    Top = 8
+    Enabled = False
+    Properties.ReadOnly = True
+    StyleDisabled.TextColor = clBackground
     TabOrder = 4
-    Width = 100
+    Width = 242
   end
-  object cxLabel29: TcxLabel
+  object edKoeffInSUNText: TcxTextEdit
     Left = 23
-    Top = 69
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
-    Caption = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1088#1072#1089#1093'.'
+    Top = 38
+    Enabled = False
+    Properties.ReadOnly = True
+    Style.BorderColor = clHighlightText
+    Style.Edges = []
+    StyleDisabled.TextColor = clBackground
+    TabOrder = 5
+    Width = 104
+  end
+  object edKoeffOutSUNText: TcxTextEdit
+    Left = 23
+    Top = 81
+    Enabled = False
+    Properties.ReadOnly = True
+    Style.BorderColor = clHighlightText
+    Style.Edges = []
+    Style.TextStyle = []
+    Style.TransparentBorder = True
+    StyleDisabled.Color = clBtnFace
+    StyleDisabled.TextColor = clBackground
+    TabOrder = 6
+    Width = 104
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 249
-    Top = 28
+    Left = 217
+    Top = 57
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -86,7 +108,7 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 200
-    Top = 65533
+    Top = 10
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -105,8 +127,32 @@ object Unit_KoeffSUN_EditForm: TUnit_KoeffSUN_EditForm
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = edFormName
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KoeffInSUNText'
+        Value = Null
+        Component = edKoeffInSUNText
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'KoeffOutSUNText'
+        Value = Null
+        Component = edKoeffOutSUNText
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 65535
-    Top = 2
+    Left = 135
+    Top = 98
   end
 end

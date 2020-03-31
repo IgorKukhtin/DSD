@@ -28,7 +28,6 @@ BEGIN
    
    vbUserId := lpGetUserBySession (inSession);
 
-
    -- сохранили свойство <НДС> для всех сетей
    PERFORM 
            -- сохраняем новое значение НДС
