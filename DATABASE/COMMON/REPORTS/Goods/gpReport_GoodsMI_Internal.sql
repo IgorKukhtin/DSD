@@ -368,7 +368,8 @@ BEGIN
                 , tmpContainer.GoodsKindId
                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
                 , tmpContainer.Comment
-                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
+              --, STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
+                , tmpContainer.SubjectDocName          AS SubjectDocName
 
                 , SUM (tmpContainer.AmountOut)         AS AmountOut
                 , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
@@ -432,6 +433,7 @@ BEGIN
                   , tmpContainer.GoodsKindId
                   , CLO_PartionGoods.ObjectId
                   , tmpContainer.Comment
+                  , tmpContainer.SubjectDocName
           ) AS tmpOperationGroup
 
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpOperationGroup.GoodsId

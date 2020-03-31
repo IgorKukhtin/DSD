@@ -2,14 +2,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1114
+  ExplicitLeft = -341
+  ExplicitTop = -122
   ExplicitWidth = 1130
-  ExplicitHeight = 706
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 163
     Width = 1114
     Height = 505
+    Properties.ActivePage = cxTabSheet1
     ExplicitTop = 163
     ExplicitWidth = 1114
     ExplicitHeight = 505
@@ -915,6 +918,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end>
       RefreshOnTabSetChanges = True
     end
+    inherited actGridToExcel: TdsdGridToExcel
+      Enabled = False
+    end
     inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
@@ -928,7 +934,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       StoredProc = spUpdateMI_NPP
       StoredProcList = <
@@ -940,6 +945,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     inherited actUpdateMainDS: TdsdUpdateDataSet
       TabSheet = tsMain
+      Enabled = False
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -3084,6 +3090,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = Null
         Component = ChildCDS
         ComponentItem = 'PriceTax_calc'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
