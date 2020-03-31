@@ -46,6 +46,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSUN       Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean
              , isSUN_in Boolean, isSUN_out Boolean
              , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
+             , isSUN_v3_in  Boolean, isSUN_v3_out Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
@@ -160,6 +161,9 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_out.ValueData, FALSE) :: Boolean   AS isSUN_out
       , COALESCE (ObjectBoolean_SUN_v2_in.ValueData, FALSE)  :: Boolean   AS isSUN_v2_in
       , COALESCE (ObjectBoolean_SUN_v2_out.ValueData, FALSE) :: Boolean   AS isSUN_v2_out
+      , COALESCE (ObjectBoolean_SUN_v3_in.ValueData, FALSE)  :: Boolean   AS isSUN_v3_in
+      , COALESCE (ObjectBoolean_SUN_v3_out.ValueData, FALSE) :: Boolean   AS isSUN_v3_out
+      
       , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
@@ -315,6 +319,13 @@ BEGIN
                                 ON ObjectBoolean_SUN_v2_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v2_out.DescId = zc_ObjectBoolean_Unit_SUN_v2_out()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_in
+                                ON ObjectBoolean_SUN_v3_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v3_in.DescId = zc_ObjectBoolean_Unit_SUN_v3_in()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_out
+                                ON ObjectBoolean_SUN_v3_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v3_out.DescId = zc_ObjectBoolean_Unit_SUN_v3_out()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_NotSold.DescId = zc_ObjectBoolean_Unit_SUN_NotSold()
@@ -453,6 +464,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 31.03.20         * 
  05.02.20         * add isSUN_NotSold
  17.12.19         * add SunIncome
  24.11.19                                                       * isNotCashMCS, isNotCashListDiff

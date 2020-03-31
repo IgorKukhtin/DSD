@@ -130,6 +130,12 @@ type
     actUpdateKoeffSUNv3: TdsdDataSetRefresh;
     spUpdate_KoeffSUNv3: TdsdStoredProc;
     bbUpdateKoeffSUNv3: TdxBarButton;
+    spUpdate_Unit_isSUN_v3_in: TdsdStoredProc;
+    spUpdate_Unit_isSUN_v3_out: TdsdStoredProc;
+    actUpdate_Unit_isSUN_v3_out: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v3_in: TdsdExecStoredProc;
+    bbUpdate_Unit_isSUN_v3_in: TdxBarButton;
+    bbUpdate_Unit_isSUN_v3_out: TdxBarButton;
   private
     { Private declarations }
   public
