@@ -1,29 +1,29 @@
 inherited PromoForm: TPromoForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
-  ClientHeight = 659
+  ClientHeight = 684
   ClientWidth = 1319
   ExplicitWidth = 1335
-  ExplicitHeight = 697
+  ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
     Width = 1319
-    Height = 437
+    Height = 389
     ExplicitTop = 139
-    ExplicitWidth = 1204
+    ExplicitWidth = 1319
     ExplicitHeight = 437
-    ClientRectBottom = 437
+    ClientRectBottom = 389
     ClientRectRight = 1319
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1204
+      ExplicitWidth = 1319
       ExplicitHeight = 413
       inherited cxGrid: TcxGrid
         Width = 1319
-        Height = 224
-        ExplicitWidth = 1204
+        Height = 176
+        ExplicitWidth = 1319
         ExplicitHeight = 224
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -506,12 +506,12 @@ inherited PromoForm: TPromoForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 232
+        Top = 184
         Width = 1319
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 1204
+        ExplicitTop = 232
         object cxSplitter1: TcxSplitter
           Left = 775
           Top = 1
@@ -520,7 +520,6 @@ inherited PromoForm: TPromoForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
-          ExplicitLeft = 660
         end
         object cxPageControl1: TcxPageControl
           Left = 1
@@ -531,13 +530,11 @@ inherited PromoForm: TPromoForm
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitWidth = 659
           ClientRectBottom = 171
           ClientRectRight = 774
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitWidth = 659
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -546,7 +543,6 @@ inherited PromoForm: TPromoForm
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitWidth = 659
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -802,7 +798,6 @@ inherited PromoForm: TPromoForm
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 668
           ClientRectBottom = 171
           ClientRectRight = 264
           ClientRectTop = 24
@@ -891,7 +886,6 @@ inherited PromoForm: TPromoForm
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 940
           ClientRectBottom = 171
           ClientRectRight = 263
           ClientRectTop = 24
@@ -980,41 +974,42 @@ inherited PromoForm: TPromoForm
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
-          ExplicitLeft = 932
         end
       end
       object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 224
+        Top = 176
         Width = 1319
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 1204
+        ExplicitTop = 224
       end
       object cxSplitter2: TcxSplitter
         Left = 0
-        Top = 405
+        Top = 357
         Width = 1319
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitWidth = 1204
+        ExplicitTop = 435
       end
     end
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088
       ImageIndex = 2
+      ExplicitHeight = 413
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
         Width = 1319
-        Height = 413
+        Height = 365
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 413
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1262,14 +1257,16 @@ inherited PromoForm: TPromoForm
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 3
+      ExplicitHeight = 413
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
         Width = 1319
-        Height = 413
+        Height = 365
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 413
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1355,14 +1352,16 @@ inherited PromoForm: TPromoForm
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 4
+      ExplicitHeight = 413
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
         Width = 1319
-        Height = 413
+        Height = 365
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+        ExplicitHeight = 413
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -1596,12 +1595,117 @@ inherited PromoForm: TPromoForm
         end
       end
     end
+    object cxTabSheetPromoStateKind: TcxTabSheet
+      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1072#1082#1094#1080#1080
+      ImageIndex = 5
+      ExplicitHeight = 413
+      object cxGridPromoStateKind: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 1319
+        Height = 365
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 0
+        ExplicitLeft = -3
+        ExplicitTop = -6
+        ExplicitHeight = 413
+        object cxGridDBTableView1: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = PromoStateKindDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.IncSearch = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.DeletingConfirmation = False
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object psOrd: TcxGridDBColumn
+            Caption = #8470' '#1087'.'#1087'.'
+            DataBinding.FieldName = 'Ord'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object psisQuickly: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+            DataBinding.FieldName = 'isQuickly'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 70
+          end
+          object psPromoStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'PromoStateKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actPromoStateKindChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 114
+          end
+          object psComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 413
+          end
+          object psInsertName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 142
+          end
+          object psInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
+            DataBinding.FieldName = 'InsertDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 168
+          end
+          object psIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'IsErased'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 294
+          end
+        end
+        object cxGridLevel4: TcxGridLevel
+          GridView = cxGridDBTableView1
+        end
+      end
+    end
   end
   inherited DataPanel: TPanel
     Width = 1319
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1204
+    ExplicitWidth = 1319
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1944,13 +2048,12 @@ inherited PromoForm: TPromoForm
   end
   object cxGrid2: TcxGrid [8]
     Left = 0
-    Top = 576
+    Top = 528
     Width = 1319
-    Height = 83
+    Height = 156
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 12
-    ExplicitWidth = 1204
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MessageDS
@@ -2195,7 +2298,21 @@ inherited PromoForm: TPromoForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdatePlanDS: TdsdUpdateDataSet [4]
+    object actUpdatePromoStateKindDS: TdsdUpdateDataSet [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate_MI_PromoStateKind
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_MI_PromoStateKind
+        end
+        item
+        end>
+      Caption = 'actUpdatePromoStateKindDS'
+      DataSource = PromoStateKindDS
+    end
+    object actUpdatePlanDS: TdsdUpdateDataSet [5]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2241,9 +2358,12 @@ inherited PromoForm: TPromoForm
         end
         item
           StoredProc = spSelectMIMessage
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [6]
+    object mactInsertUpdateMISignNo: TMultiAction [7]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -2257,7 +2377,7 @@ inherited PromoForm: TPromoForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [7]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [8]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2272,7 +2392,7 @@ inherited PromoForm: TPromoForm
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
     end
-    object InsertRecord: TInsertRecord [9]
+    object InsertRecord: TInsertRecord [10]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
@@ -2284,7 +2404,7 @@ inherited PromoForm: TPromoForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [10]
+    object actUpdateCalcDS: TdsdUpdateDataSet [11]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2312,7 +2432,7 @@ inherited PromoForm: TPromoForm
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [12]
+    object actPrint_Calc: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -2368,7 +2488,7 @@ inherited PromoForm: TPromoForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [14]
+    object UpdateConditionDS: TdsdUpdateDataSet [15]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2395,7 +2515,7 @@ inherited PromoForm: TPromoForm
           StoredProc = spSelect_MovementItem_PromoCondition
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [17]
+    object macInsertUpdate_MI_Param: TMultiAction [18]
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
@@ -2420,7 +2540,7 @@ inherited PromoForm: TPromoForm
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [20]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [21]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2467,10 +2587,37 @@ inherited PromoForm: TPromoForm
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
+    object actPromoStateKindChoice: TOpenChoiceForm [25]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'User_byMessageForm'
+      FormName = 'TPromoStateKindForm'
+      FormNameParam.Value = 'TPromoStateKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = PromoStateKindDCS
+          ComponentItem = 'PromoStateKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = PromoStateKindDCS
+          ComponentItem = 'PromoStateKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [27]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [29]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2501,7 +2648,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [28]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [30]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -2532,7 +2679,7 @@ inherited PromoForm: TPromoForm
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [29]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [31]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -4979,7 +5126,7 @@ inherited PromoForm: TPromoForm
       end>
     PackSize = 1
     Left = 776
-    Top = 128
+    Top = 160
   end
   object AdvertisingCDS: TClientDataSet
     Aggregates = <>
@@ -5201,8 +5348,8 @@ inherited PromoForm: TPromoForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 478
-    Top = 537
+    Left = 446
+    Top = 553
   end
   object spInsertUpdate_Movement_PromoPartnerFromRetail: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PromoPartnerFromRetail'
@@ -5423,8 +5570,8 @@ inherited PromoForm: TPromoForm
       item
       end>
     SummaryItemList = <>
-    Left = 1120
-    Top = 383
+    Left = 1208
+    Top = 359
   end
   object spSelectCalc: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_PromoGoods_Calc'
@@ -5684,8 +5831,8 @@ inherited PromoForm: TPromoForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 1008
-    Top = 487
+    Left = 920
+    Top = 463
   end
   object MessageDS: TDataSource
     DataSet = MessageDCS
@@ -5841,5 +5988,113 @@ inherited PromoForm: TPromoForm
       end>
     Left = 1236
     Top = 24
+  end
+  object PromoStateKindDS: TDataSource
+    DataSet = PromoStateKindDCS
+    Left = 936
+    Top = 576
+  end
+  object PromoStateKindDCS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 872
+    Top = 552
+  end
+  object dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 1208
+    Top = 231
+  end
+  object spSelectMIPromoStateKind: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_Message_PromoStateKind'
+    DataSet = PromoStateKindDCS
+    DataSets = <
+      item
+        DataSet = PromoStateKindDCS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1248
+    Top = 424
+  end
+  object spInsertUpdate_MI_PromoStateKind: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_Message_PromoStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = PromoStateKindDCS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPromoStateKindId'
+        Value = Null
+        Component = PromoStateKindDCS
+        ComponentItem = 'PromoStateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisQuickly'
+        Value = Null
+        Component = PromoStateKindDCS
+        ComponentItem = 'isQuickly'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = PromoStateKindDCS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1160
+    Top = 435
   end
 end

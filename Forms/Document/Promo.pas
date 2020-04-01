@@ -323,6 +323,23 @@ type
     GuidesPromoStateKind: TdsdGuides;
     cePromoStateKind_val: TcxCurrencyEdit;
     cxLabel24: TcxLabel;
+    PromoStateKindDS: TDataSource;
+    PromoStateKindDCS: TClientDataSet;
+    cxGridPromoStateKind: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    psOrd: TcxGridDBColumn;
+    psisQuickly: TcxGridDBColumn;
+    psPromoStateKindName: TcxGridDBColumn;
+    psComment: TcxGridDBColumn;
+    psInsertName: TcxGridDBColumn;
+    psInsertDate: TcxGridDBColumn;
+    psIsErased: TcxGridDBColumn;
+    cxGridLevel4: TcxGridLevel;
+    dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn;
+    spSelectMIPromoStateKind: TdsdStoredProc;
+    spInsertUpdate_MI_PromoStateKind: TdsdStoredProc;
+    actPromoStateKindChoice: TOpenChoiceForm;
+    actUpdatePromoStateKindDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
