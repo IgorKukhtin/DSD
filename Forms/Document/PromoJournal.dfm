@@ -4,9 +4,8 @@ inherited PromoJournalForm: TPromoJournalForm
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -232
   ExplicitWidth = 1100
-  ExplicitHeight = 465
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -50,6 +49,26 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 173
+          end
+          object PromoStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'PromoStateKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1040#1082#1094#1080#1080
+            Options.Editing = False
+            Width = 111
+          end
+          object PromoStateKind: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+            DataBinding.FieldName = 'PromoStateKind'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1076#1083#1103' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
+            Options.Editing = False
+            Width = 70
           end
           object ChangePercentName: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1076#1086#1075#1086#1074#1086#1088#1091
@@ -234,6 +253,28 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object isPromoStateKind_Head: TcxGridDBColumn
+            Caption = #1044#1080#1088#1077#1082#1090#1086#1088' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091
+            DataBinding.FieldName = 'isPromoStateKind_Head'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1080#1088#1077#1082#1090#1086#1088' '#1087#1086' '#1084#1072#1088#1082#1077#1090#1080#1085#1075#1091' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 60
+          end
+          object isPromoStateKind_Main: TcxGridDBColumn
+            Caption = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1044#1080#1088#1077#1082#1090#1086#1088
+            DataBinding.FieldName = 'isPromoStateKind_Main'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1048#1089#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1044#1080#1088#1077#1082#1090#1086#1088' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 60
+          end
+          object Color_PromoStateKind: TcxGridDBColumn
+            DataBinding.FieldName = 'Color_PromoStateKind'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 60
           end
         end
       end
@@ -773,6 +814,11 @@ inherited PromoJournalForm: TPromoJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColorRuleList = <
+      item
+        BackGroundValueColumn = Color_PromoStateKind
+        ColorValueList = <>
+      end>
     Left = 208
   end
   inherited PopupMenu: TPopupMenu

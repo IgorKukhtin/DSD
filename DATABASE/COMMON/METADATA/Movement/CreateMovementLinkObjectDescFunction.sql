@@ -440,6 +440,9 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_DriverSun() RETURNS Integer AS 
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_DriverSun', 'Водитель получивший товар' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DriverSun');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PromoStateKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoStateKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PromoStateKind', 'Состояние Акции' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PromoStateKind');
 
 /*-------------------------------------------------------------------------------
 
@@ -447,6 +450,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 01.04.20         * zc_MovementLinkObject_PromoStateKind
  05.03.19                                                                                      * zc_MovementLinkObject_DriverSun
  06.02.20         * zc_MovementLinkObject_SubjectDoc
  04.02.20         * zc_MovementLinkObject_JuridicalCar

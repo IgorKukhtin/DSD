@@ -318,6 +318,11 @@ type
     spSelectMIMessage: TdsdStoredProc;
     actUserChoice: TOpenChoiceForm;
     actUpdateDataSetMessage: TdsdUpdateDataSet;
+    edPromoStateKind: TcxButtonEdit;
+    cxLabel23: TcxLabel;
+    GuidesPromoStateKind: TdsdGuides;
+    cePromoStateKind_val: TcxCurrencyEdit;
+    cxLabel24: TcxLabel;
   private
     { Private declarations }
   public

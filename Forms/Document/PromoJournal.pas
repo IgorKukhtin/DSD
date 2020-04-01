@@ -82,6 +82,9 @@ type
     bbInsertUpdateMISignYesList: TdxBarButton;
     bbInsertUpdateMISignNoList: TdxBarButton;
     DayCount: TcxGridDBColumn;
+    isPromoStateKind_Head: TcxGridDBColumn;
+    isPromoStateKind_Main: TcxGridDBColumn;
+    Color_PromoStateKind: TcxGridDBColumn;
   private
     { Private declarations }
   public

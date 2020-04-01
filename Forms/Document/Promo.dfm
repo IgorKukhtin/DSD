@@ -2,26 +2,26 @@ inherited PromoForm: TPromoForm
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 659
-  ClientWidth = 1204
-  ExplicitWidth = 1220
+  ClientWidth = 1319
+  ExplicitWidth = 1335
   ExplicitHeight = 697
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1204
+    Width = 1319
     Height = 437
     ExplicitTop = 139
     ExplicitWidth = 1204
     ExplicitHeight = 437
     ClientRectBottom = 437
-    ClientRectRight = 1204
+    ClientRectRight = 1319
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1204
       ExplicitHeight = 413
       inherited cxGrid: TcxGrid
-        Width = 1204
+        Width = 1319
         Height = 224
         ExplicitWidth = 1204
         ExplicitHeight = 224
@@ -507,41 +507,46 @@ inherited PromoForm: TPromoForm
       object Panel1: TPanel
         Left = 0
         Top = 232
-        Width = 1204
+        Width = 1319
         Height = 173
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 1204
         object cxSplitter1: TcxSplitter
-          Left = 660
+          Left = 775
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
+          ExplicitLeft = 660
         end
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 659
+          Width = 774
           Height = 171
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
+          ExplicitWidth = 659
           ClientRectBottom = 171
-          ClientRectRight = 659
+          ClientRectRight = 774
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
+            ExplicitWidth = 659
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 659
+              Width = 774
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
+              ExplicitWidth = 659
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -691,7 +696,7 @@ inherited PromoForm: TPromoForm
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 659
+              Width = 774
               Height = 147
               Align = alClient
               TabOrder = 0
@@ -789,7 +794,7 @@ inherited PromoForm: TPromoForm
           end
         end
         object cxPageControl2: TcxPageControl
-          Left = 668
+          Left = 783
           Top = 1
           Width = 264
           Height = 171
@@ -797,6 +802,7 @@ inherited PromoForm: TPromoForm
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 668
           ClientRectBottom = 171
           ClientRectRight = 264
           ClientRectTop = 24
@@ -877,7 +883,7 @@ inherited PromoForm: TPromoForm
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 940
+          Left = 1055
           Top = 1
           Width = 263
           Height = 171
@@ -885,6 +891,7 @@ inherited PromoForm: TPromoForm
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
+          ExplicitLeft = 940
           ClientRectBottom = 171
           ClientRectRight = 263
           ClientRectTop = 24
@@ -966,32 +973,35 @@ inherited PromoForm: TPromoForm
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 932
+          Left = 1047
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
+          ExplicitLeft = 932
         end
       end
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 224
-        Width = 1204
+        Width = 1319
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
+        ExplicitWidth = 1204
       end
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 405
-        Width = 1204
+        Width = 1319
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
+        ExplicitWidth = 1204
       end
     end
     object cxTabSheetCalc: TcxTabSheet
@@ -1000,7 +1010,7 @@ inherited PromoForm: TPromoForm
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1204
+        Width = 1319
         Height = 413
         Align = alClient
         TabOrder = 0
@@ -1255,7 +1265,7 @@ inherited PromoForm: TPromoForm
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1204
+        Width = 1319
         Height = 413
         Align = alClient
         TabOrder = 0
@@ -1348,7 +1358,7 @@ inherited PromoForm: TPromoForm
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
-        Width = 1204
+        Width = 1319
         Height = 413
         Align = alClient
         TabOrder = 0
@@ -1588,7 +1598,7 @@ inherited PromoForm: TPromoForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1204
+    Width = 1319
     Height = 113
     TabOrder = 3
     ExplicitWidth = 1204
@@ -1935,11 +1945,12 @@ inherited PromoForm: TPromoForm
   object cxGrid2: TcxGrid [8]
     Left = 0
     Top = 576
-    Width = 1204
+    Width = 1319
     Height = 83
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 12
+    ExplicitWidth = 1204
     object cxGridDBTableView2: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MessageDS
@@ -2076,6 +2087,45 @@ inherited PromoForm: TPromoForm
     object cxGridLevel3: TcxGridLevel
       GridView = cxGridDBTableView2
     end
+  end
+  object edPromoStateKind: TcxButtonEdit [9]
+    Left = 1128
+    Top = 18
+    Properties.Buttons = <
+      item
+        Default = True
+        Enabled = False
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 13
+    Width = 178
+  end
+  object cxLabel23: TcxLabel [10]
+    Left = 1128
+    Top = 4
+    Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+  end
+  object cePromoStateKind_val: TcxCurrencyEdit [11]
+    Left = 1204
+    Top = 54
+    Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
+    ParentShowHint = False
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    Properties.ReadOnly = True
+    Properties.UseThousandSeparator = True
+    ShowHint = True
+    TabOrder = 15
+    Width = 102
+  end
+  object cxLabel24: TcxLabel [12]
+    Left = 1204
+    Top = 38
+    Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
+    Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+    ParentShowHint = False
+    ShowHint = True
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Top = 312
@@ -3884,6 +3934,28 @@ inherited PromoForm: TPromoForm
         ComponentItem = 'InvNumberFull'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoStateKind'
+        Value = Null
+        Component = cePromoStateKind_val
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoStateKindId'
+        Value = Null
+        Component = GuidesPromoStateKind
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PromoStateKindName'
+        Value = Null
+        Component = GuidesPromoStateKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 264
@@ -4374,7 +4446,7 @@ inherited PromoForm: TPromoForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 516
+    Left = 460
     Top = 8
   end
   object GuidesPersonalTrade: TdsdGuides
@@ -5739,5 +5811,35 @@ inherited PromoForm: TPromoForm
     PackSize = 1
     Left = 704
     Top = 600
+  end
+  object GuidesPromoStateKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPromoStateKind
+    FormNameParam.Value = 'TPromoStateKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPromoStateKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPromoStateKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPromoStateKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 1236
+    Top = 24
   end
 end
