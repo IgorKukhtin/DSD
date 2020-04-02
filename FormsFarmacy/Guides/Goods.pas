@@ -135,6 +135,29 @@ type
     macUpdate_isSun_v3_yes: TMultiAction;
     bbUpdate_isSun_v3_yes: TdxBarButton;
     bbUpdate_isSun_v3_No: TdxBarButton;
+    actSetClose: TMultiAction;
+    maSetClose: TMultiAction;
+    actUpdate_isClose_Yes: TdsdExecStoredProc;
+    actClearClose: TMultiAction;
+    maClearClose: TMultiAction;
+    actUpdate_isClose_No: TdsdExecStoredProc;
+    spUpdate_isClose_No: TdsdStoredProc;
+    spUpdate_isClose_Yes: TdsdStoredProc;
+    bbSetClose: TdxBarButton;
+    bbClearClose: TdxBarButton;
+    isResolution_224: TcxGridDBColumn;
+    DateUpdateClose: TcxGridDBColumn;
+    spUpdate_inResolution_224: TdsdStoredProc;
+    actisResolution_224_Yes: TMultiAction;
+    mainResolution_224_Yes: TMultiAction;
+    actUpdate_inResolution_224_Yes: TdsdExecStoredProc;
+    actinResolution_224_No: TMultiAction;
+    mainResolution_224_No: TMultiAction;
+    actUpdate_inResolution_224_No: TdsdExecStoredProc;
+    spUpdate_inResolution_224_Yes: TdsdStoredProc;
+    spUpdate_inResolution_224_No: TdsdStoredProc;
+    bbinResolution_224_No: TdxBarButton;
+    bbisResolution_224_Yes: TdxBarButton;
   private
     { Private declarations }
   public

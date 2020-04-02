@@ -104,14 +104,8 @@ BEGIN
 
     IF vbIsInsert = FALSE
     THEN
-        vbSumma := (SELECT SUM(MIFloat_SummaSUN1.ValueData)
-                    FROM MovementItemFloat AS MIFloat_SummaSUN1
-                    WHERE MIFloat_SummaSUN1.MovementItemId = vbId
-                      AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaCleaning(), zc_MIFloat_SummaSP(), zc_MIFloat_SummaOther(),
-                                                       zc_MIFloat_ValidationResults(), zc_MIFloat_SummaSUN1(),
-                                                       zc_MIFloat_SummaTechnicalRediscount()));
          -- сохранили <Ёлемент документа>
-        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, COALESCE (vbSumma, 0)::TFloat, 0);
+        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, inUserId), 0);
     END IF;
 
 

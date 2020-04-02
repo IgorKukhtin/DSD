@@ -34,6 +34,8 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , GoodsAnalog TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
+             , isResolution_224  boolean
+             , DateUpdateClose TDateTime
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -124,6 +126,8 @@ BEGIN
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
            , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
+           , Object_Goods_Main.isResolution_224                                  AS isResolution_224
+           , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
 
     FROM Object AS Object_Retail
          INNER JOIN Object_Goods_View ON Object_Goods_View.ObjectId = Object_Retail.Id
@@ -283,6 +287,8 @@ BEGIN
       
            , COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
            , COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
+           , Object_Goods_Main.isResolution_224                                  AS isResolution_224
+           , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
@@ -452,7 +458,8 @@ BEGIN
            , COALESCE(ObjectBoolean_DoesNotShare.ValueData, false)  AS DoesNotShare
            , COALESCE(ObjectBoolean_AllowDivision.ValueData, false) AS AllowDivision
            , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
-          , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
+           , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)     AS NotTransferTime
+           , COALESCE (ObjectBoolean_Goods_Resolution_224.ValueData, False)      AS Resolution_224
       FROM Object_Goods_View
            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = Object_Goods_View.ObjectId
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_View.Id
@@ -542,6 +549,10 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Not
                                    ON ObjectBoolean_Goods_Not.ObjectId = Object_Goods_View.Id
                                   AND ObjectBoolean_Goods_Not.DescId = zc_ObjectBoolean_Goods_Not()
+                                  
+           LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
+                                    ON ObjectBoolean_Goods_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                   AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
       WHERE Object_Goods_View.ObjectId = vbObjectId
       ;*/

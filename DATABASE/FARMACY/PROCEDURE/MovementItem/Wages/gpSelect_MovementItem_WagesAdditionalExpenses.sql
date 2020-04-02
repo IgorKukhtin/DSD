@@ -96,7 +96,33 @@ BEGIN
                                              AND Movement.StatusId = zc_Enum_Status_Complete()
                                              AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
                                              AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False
-                                           GROUP BY MovementLinkObject_Unit.ObjectId)
+                                           GROUP BY MovementLinkObject_Unit.ObjectId),
+                tmpFullCharge AS (SELECT MovementLinkObject_Unit.ObjectId                              AS UnitId
+                                       , SUM(-1.0 * MovementFloat_TotalSummFrom.ValueData)::TFloat            AS SummWages
+                                  FROM Movement
+
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
+
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                    AND MovementLinkObject_To.ObjectId = 11299914 
+
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                 ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                         
+                                       LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                                               ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                                                              AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+ 
+                                  WHERE Movement.OperDate >= date_trunc('month', vbStartDate) AND vbStartDate = '01.03.2020'
+                                    AND Movement.DescId = zc_Movement_Send()
+                                    AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                    AND COALESCE (MovementBoolean_Deferred.ValueData, False) = True
+                                  GROUP BY MovementLinkObject_Unit.ObjectId)
 
             SELECT 0                                  AS Id
                  , Object_Unit.Id                     AS UserID
@@ -146,7 +172,7 @@ BEGIN
                  , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
-                 , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+                 , COALESCE(tmpFullCharge.SummWages, MIFloat_SummaFullCharge.ValueData)   AS SummaFullCharge
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
@@ -247,7 +273,33 @@ BEGIN
                                              AND Movement.StatusId = zc_Enum_Status_Complete()
                                              AND COALESCE (MovementBoolean_RedCheck.ValueData, False) = False
                                              AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False
-                                           GROUP BY MovementLinkObject_Unit.ObjectId)
+                                           GROUP BY MovementLinkObject_Unit.ObjectId),
+                tmpFullCharge AS (SELECT MovementLinkObject_Unit.ObjectId                              AS UnitId
+                                       , SUM(-1.0 * MovementFloat_TotalSummFrom.ValueData)::TFloat     AS SummWages
+                                  FROM Movement
+
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                     ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
+
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                                    AND MovementLinkObject_To.ObjectId = 11299914 
+
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                 ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                                AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                                         
+                                       LEFT JOIN MovementFloat AS MovementFloat_TotalSummFrom
+                                                               ON MovementFloat_TotalSummFrom.MovementId =  Movement.Id
+                                                              AND MovementFloat_TotalSummFrom.DescId = zc_MovementFloat_TotalSummFrom()
+ 
+                                  WHERE Movement.OperDate >= date_trunc('month', vbStartDate) AND vbStartDate = '01.03.2020'
+                                    AND Movement.DescId = zc_Movement_Send()
+                                    AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                                    AND COALESCE (MovementBoolean_Deferred.ValueData, False) = True
+                                  GROUP BY MovementLinkObject_Unit.ObjectId)
                                            
             SELECT MovementItem.Id                     AS Id
                  , MovementItem.ObjectId               AS UnitID
@@ -259,11 +311,11 @@ BEGIN
                  , MIFloat_SummaOther.ValueData        AS SummaOther
                  , MIFloat_ValidationResults.ValueData AS SummaValidationResults
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
---                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
-                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
+                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
+--                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
                  , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
                    MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
-                 , MIFloat_SummaFullCharge.ValueData   AS SummaFullCharge
+                 , COALESCE(tmpFullCharge.SummWages, MIFloat_SummaFullCharge.ValueData)   AS SummaFullCharge
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
@@ -315,7 +367,9 @@ BEGIN
                                               ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
---                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+
+                  LEFT JOIN tmpFullCharge ON tmpFullCharge.UnitID = MovementItem.ObjectId
 
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
