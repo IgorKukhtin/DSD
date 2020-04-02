@@ -38,6 +38,9 @@ type
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
     PriceListGuides: TdsdGuides;
+    cbMO_all: TcxCheckBox;
+    cbComment: TcxCheckBox;
+    cbSubjectDoc: TcxCheckBox;
   private
     { Private declarations }
   public

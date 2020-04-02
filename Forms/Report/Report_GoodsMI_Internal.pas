@@ -108,6 +108,7 @@ type
     bbPrintArticleLossGroup: TdxBarButton;
     Summ_ProfitLoss_loss: TcxGridDBColumn;
     Summ_ProfitLoss_send: TcxGridDBColumn;
+    cbSubjectDoc: TcxCheckBox;
   private
     { Private declarations }
   public

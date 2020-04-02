@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_Internal (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inStartDate    TDateTime ,
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inPriceListId  Integer   ,
     IN inIsMO_all     Boolean   ,
     IN inisComment    Boolean   , --показывать примечание
+    IN inisSubjectDoc Boolean   , --показывать основания Да/Нет
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
@@ -368,8 +370,8 @@ BEGIN
                 , tmpContainer.GoodsKindId
                 , CLO_PartionGoods.ObjectId AS PartionGoodsId
                 , tmpContainer.Comment
-              --, STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
-                , tmpContainer.SubjectDocName          AS SubjectDocName
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') AS SubjectDocName
+                --, tmpContainer.SubjectDocName          AS SubjectDocName
 
                 , SUM (tmpContainer.AmountOut)         AS AmountOut
                 , SUM (tmpContainer.AmountOut_Weight)  AS AmountOut_Weight
@@ -433,7 +435,7 @@ BEGIN
                   , tmpContainer.GoodsKindId
                   , CLO_PartionGoods.ObjectId
                   , tmpContainer.Comment
-                  , tmpContainer.SubjectDocName
+                  , CASE WHEN inisSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END
           ) AS tmpOperationGroup
 
           LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpOperationGroup.GoodsId
