@@ -2,7 +2,7 @@ object DataDialogForm: TDataDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1099#1073#1086#1088' '#1076#1072#1090#1099'  '#1085#1086#1074#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  Caption = #1042#1099#1073#1086#1088' '#1076#1072#1090#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   ClientHeight = 119
   ClientWidth = 285
   Color = clBtnFace
@@ -64,7 +64,7 @@ object DataDialogForm: TDataDialogForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 104
-    Top = 12
+    Top = 44
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -76,8 +76,8 @@ object DataDialogForm: TDataDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 39
-    Top = 54
+    Left = 31
+    Top = 14
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deOperDate
