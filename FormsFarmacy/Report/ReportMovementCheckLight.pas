@@ -76,6 +76,7 @@ type
     GuidesJuridical: TdsdGuides;
     cbList: TcxCheckBox;
     actRefreshList: TdsdDataSetRefresh;
+    isResolution_224: TcxGridDBColumn;
   private
     { Private declarations }
   public

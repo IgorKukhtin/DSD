@@ -118,7 +118,12 @@ BEGIN
                            AND COALESCE (MovementBoolean_Adjustment.ValueData, False) = False), 2), 0);
 
      -- сохранили свойство <Штрафах по техническому переучету>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaTechnicalRediscount(), vbId, CASE WHEN vbSumma  > 0 THEN 0 ELSE vbSumma END);
+    IF inUnitID = 472116 AND inOperDate = '01.03.2020'
+    THEN
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaTechnicalRediscount(), vbId, vbSumma);
+    ELSE    
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaTechnicalRediscount(), vbId, CASE WHEN vbSumma  > 0 THEN 0 ELSE vbSumma END);
+    END IF;
 
      -- сохранили <Элемент документа>
     vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, vbUserId), 0);
@@ -143,4 +148,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_WagesTechnicalRediscount (, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_WagesTechnicalRediscount (inUnitID := 472116,  inOperDate := '01.03.2020', inSession:= '3')

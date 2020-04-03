@@ -57,9 +57,9 @@ BEGIN
       vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
                             FROM MovementItemFloat AS MIFloat_SummaSUN1
                             WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
-                              AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount())), 0);
+                              AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullCharge())), 0);
 
-      IF vbOperDate >= '01.05.2020'
+/*      IF vbOperDate >= '01.05.2020'
       THEN
         vbSumma2 := vbSumma2 + COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
                                          FROM MovementItemFloat AS MIFloat_SummaSUN1
@@ -67,7 +67,7 @@ BEGIN
                                            AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaFullCharge())));
 
       END IF;
-
+*/
       -- Сумма кошелька
       vbSummaMoneyBox := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
                                    FROM MovementItemFloat AS MIFloat_SummaSUN1

@@ -31,7 +31,7 @@ RETURNS TABLE (ContainerId Integer
              , JuridicalCode  Integer, JuridicalName  TVarChar
              , IsClose Boolean, UpdateDate TDateTime
              , isTop boolean, isFirst boolean , isSecond boolean
-             , isPromo boolean
+             , isPromo boolean, isResolution_224 boolean
              )
 AS
 $BODY$
@@ -254,6 +254,7 @@ BEGIN
                            )
                  
           , tmpGoodsMain AS (SELECT tmp.GoodsId
+                              , ObjectLink_Main.ChildObjectId                      AS GoodsMainId 
                               , COALESCE (tmpGoodsSP.isSP, False)      :: Boolean  AS isSP
                               , COALESCE (tmpGoodsBarCode.BarCode, '') :: TVarChar AS BarCode
                          FROM tmpGoodsList AS tmp
@@ -426,6 +427,7 @@ BEGIN
              , COALESCE(Object_Goods.isSecond, False) :: Boolean AS isSecond
              
              , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+             , COALESCE(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean AS isResolution_224
 
         FROM tmpData
              LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpData.GoodsId
@@ -458,6 +460,10 @@ BEGIN
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
                                  
              LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = tmpData.GoodsId
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
+                                     ON ObjectBoolean_Goods_Resolution_224.ObjectId = tmpGoodsMain.GoodsMainId
+                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224() 
          ;
 
 END;
@@ -478,3 +484,4 @@ $BODY$
 -- тест
 --
 -- select * from gpReport_GoodsRemainsLight(inUnitId := 183292 , inRetailId := 0 , inJuridicalId := 0 , inRemainsDate := ('31.05.2018')::TDateTime , inIsPartion := 'False' , inisPartionPrice := 'False' , inisJuridical := 'True' , inisUnitList := 'False' ,  inSession := '3');
+

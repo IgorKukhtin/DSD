@@ -675,7 +675,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
         Param.MultiSelectSeparator = ','
-        DataSummaryItemIndex = 0
+        DataSummaryItemIndex = 20
       end>
     SearchAsFilter = False
     Left = 334
