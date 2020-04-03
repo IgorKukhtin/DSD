@@ -144,7 +144,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             Width = 67
           end
           object isResolution_224: TcxGridDBColumn
-            Caption = #1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

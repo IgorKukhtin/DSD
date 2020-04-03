@@ -158,6 +158,17 @@ type
     spUpdate_inResolution_224_No: TdsdStoredProc;
     bbinResolution_224_No: TdxBarButton;
     bbisResolution_224_Yes: TdxBarButton;
+    actGoodsTopDialog: TExecuteDialog;
+    actUpdate_inTop_Yes: TMultiAction;
+    maUpdate_inTop_Yes: TMultiAction;
+    actExecUpdate_inTop_Yes: TdsdExecStoredProc;
+    actUpdate_inTop_No: TMultiAction;
+    maUpdate_inTop_No: TMultiAction;
+    actExecUpdate_inTop_No: TdsdExecStoredProc;
+    spUpdate_Goods_inTop_No: TdsdStoredProc;
+    spUpdate_Goods_inTop_Yes: TdsdStoredProc;
+    bbUpdate_inTop_Yes: TdxBarButton;
+    bbUpdate_inTop_No: TdxBarButton;
   private
     { Private declarations }
   public

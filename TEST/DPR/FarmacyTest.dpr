@@ -838,7 +838,8 @@ uses
   Report_GeneralMovementGoodsDialog in '..\..\FormsFarmacy\Report\Report_GeneralMovementGoodsDialog.pas' {Report_GeneralMovementGoodsDialogForm: TParentForm},
   PromoCodeSignPercentDialog in '..\..\FormsFarmacy\Document\PromoCodeSignPercentDialog.pas' {PromoCodeSignPercentDialogForm: TParentForm},
   PromoCodeSignUnitNameDialog in '..\..\FormsFarmacy\Document\PromoCodeSignUnitNameDialog.pas' {PromoCodeSignUnitNameDialogForm: TParentForm},
-  LocalWorkUnit in '..\..\SOURCE\LocalWorkUnit.pas';
+  LocalWorkUnit in '..\..\SOURCE\LocalWorkUnit.pas',
+  GoodsTopDialog in '..\..\FormsFarmacy\Guides\GoodsTopDialog.pas' {GoodsTopDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

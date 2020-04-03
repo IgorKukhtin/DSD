@@ -20,8 +20,6 @@ inherited GoodsForm: TGoodsForm
       inherited cxGrid: TcxGrid
         Width = 1144
         Height = 417
-        ExplicitLeft = 160
-        ExplicitTop = -40
         ExplicitWidth = 1144
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -466,7 +464,7 @@ inherited GoodsForm: TGoodsForm
             Width = 70
           end
           object isResolution_224: TcxGridDBColumn
-            Caption = #1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1234,6 +1232,113 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdate_inResolution_224_No'
     end
+    object actGoodsTopDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actGoodsTopDialog'
+      FormName = 'TGoodsTopDialogForm'
+      FormNameParam.Value = 'TGoodsTopDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'PercentMarkup'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PercentMarkup'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Price'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Price'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_inTop_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGoodsTopDialog
+        end
+        item
+          Action = maUpdate_inTop_Yes
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"? '
+      InfoAfterExecute = #1059#1089#1090#1072#1085#1086#1074#1083#1077#1085' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"'
+      ImageIndex = 79
+    end
+    object maUpdate_inTop_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecUpdate_inTop_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1047#1072#1082#1088#1099#1090'"'
+      Hint = 'maSetClose'
+    end
+    object actExecUpdate_inTop_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_inTop_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_inTop_Yes
+        end>
+      Caption = 'actUpdate_inResolution_224_Yes'
+    end
+    object actUpdate_inTop_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = maUpdate_inTop_No
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"? '
+      InfoAfterExecute = #1057#1085#1103#1090' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"'
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1058#1054#1055'"'
+      ImageIndex = 58
+    end
+    object maUpdate_inTop_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecUpdate_inTop_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1057#1085#1103#1090#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1047#1072#1082#1088#1099#1090'"'
+      Hint = 'maClearClose'
+    end
+    object actExecUpdate_inTop_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Goods_inTop_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_inTop_No
+        end>
+      Caption = 'actUpdate_inResolution_224_No'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1391,6 +1496,18 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_inTop_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_inTop_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdate_CountPrice'
         end
         item
@@ -1503,6 +1620,14 @@ inherited GoodsForm: TGoodsForm
     end
     object bbisResolution_224_Yes: TdxBarButton
       Action = actisResolution_224_Yes
+      Category = 0
+    end
+    object bbUpdate_inTop_Yes: TdxBarButton
+      Action = actUpdate_inTop_Yes
+      Category = 0
+    end
+    object bbUpdate_inTop_No: TdxBarButton
+      Action = actUpdate_inTop_No
       Category = 0
     end
   end
@@ -1749,6 +1874,18 @@ inherited GoodsForm: TGoodsForm
       item
         Name = 'ImportSettingId'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PercentMarkup'
+        Value = 0c
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Price'
+        Value = 0c
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -2579,5 +2716,85 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 360
     Top = 232
+  end
+  object spUpdate_Goods_inTop_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inTop'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTop'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentMarkup'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = '0'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 248
+  end
+  object spUpdate_Goods_inTop_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inTop'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTop'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentMarkup'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PercentMarkup'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 432
+    Top = 192
   end
 end

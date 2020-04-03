@@ -586,6 +586,9 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTopDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoodsTopDialogForm');
      exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogForm'));
