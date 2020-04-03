@@ -354,6 +354,13 @@ begin
         Exit;
       end;
 
+      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
+      begin
+        ListGoodsCDS.Close;
+        ShowMessage('Временная блокировка товара.');
+        Exit;
+      end;
+
       if not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
       begin
         if  ListGoodsCDS.FieldByName('ExpirationDate').AsDateTime < IncYear(Date, 1) then

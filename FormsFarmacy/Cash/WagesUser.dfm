@@ -14,19 +14,19 @@ inherited WagesUserForm: TWagesUserForm
     Width = 655
     Height = 295
     TabOrder = 0
-    ExplicitTop = 131
+    ExplicitTop = 154
     ExplicitWidth = 655
-    ExplicitHeight = 318
+    ExplicitHeight = 295
     ClientRectBottom = 295
     ClientRectRight = 655
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 655
-      ExplicitHeight = 318
+      ExplicitHeight = 295
       inherited cxGrid: TcxGrid
         Width = 655
         Height = 169
         ExplicitWidth = 655
-        ExplicitHeight = 192
+        ExplicitHeight = 169
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.Footer = False
           Styles.Content = nil
@@ -85,7 +85,6 @@ inherited WagesUserForm: TWagesUserForm
         Align = alBottom
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 192
         object ceTotal: TcxCurrencyEdit
           Left = 157
           Top = 6
@@ -528,9 +527,7 @@ inherited WagesUserForm: TWagesUserForm
     object cxLabel25: TcxLabel
       Left = 11
       Top = 68
-      Caption = 
-        #1056#1072#1089#1095#1077#1090' '#1086#1079#1085#1072#1082#1086#1084#1080#1090#1077#1083#1100#1085#1099#1081' ('#1089' 1-2 '#1084#1072#1103' '#1089#1091#1084#1084#1072' '#1091#1078#1077' '#1073#1091#1076#1077#1090' '#1074#1083#1080#1103#1090#1100' '#1085#1072' '#1080#1090#1086#1075 +
-        ')'
+      Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080' (1-2 '#1084#1072#1103' '#1091#1078#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1055#1057')'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

@@ -75,6 +75,7 @@ type
     bbOpen: TdxBarButton;
     colContractName: TcxGridDBColumn;
     colAreaName: TcxGridDBColumn;
+    colisResolution_224: TcxGridDBColumn;
     procedure ParentFormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure edt1Exit(Sender: TObject);
