@@ -264,7 +264,6 @@ type
     CalcDS: TDataSource;
     dsdDBViewAddOnCalc: TdsdDBViewAddOn;
     spSelectCalc: TdsdStoredProc;
-    calcPromoCondition: TcxGridDBColumn;
     calcSummaProfit: TcxGridDBColumn;
     Color_PriceIn: TcxGridDBColumn;
     spInsertUpdate_Calc: TdsdStoredProc;
@@ -340,6 +339,46 @@ type
     spInsertUpdate_MI_PromoStateKind: TdsdStoredProc;
     actPromoStateKindChoice: TOpenChoiceForm;
     actUpdatePromoStateKindDS: TdsdUpdateDataSet;
+    calcTaxRetIn: TcxGridDBColumn;
+    cxGridCalc2: TcxGrid;
+    cxGridDBTableViewCalc2: TcxGridDBTableView;
+    ññNum: TcxGridDBColumn;
+    ññGoodsCode: TcxGridDBColumn;
+    ññGoodsName: TcxGridDBColumn;
+    ññGoodsKindName: TcxGridDBColumn;
+    ññGoodsKindCompleteName: TcxGridDBColumn;
+    ññPriceIn: TcxGridDBColumn;
+    ññTaxRetIn: TcxGridDBColumn;
+    ññContractCondition: TcxGridDBColumn;
+    ññAmountSale: TcxGridDBColumn;
+    ññSummaSale: TcxGridDBColumn;
+    ññPrice: TcxGridDBColumn;
+    ññPriceWithVAT: TcxGridDBColumn;
+    ññSummaProfit: TcxGridDBColumn;
+    ññTaxPromo_Condition: TcxGridDBColumn;
+    ññSummaProfit_Condition: TcxGridDBColumn;
+    ññColor_PriceIn: TcxGridDBColumn;
+    ññColor_RetIn: TcxGridDBColumn;
+    ññColor_ContractCond: TcxGridDBColumn;
+    ññColor_AmountSale: TcxGridDBColumn;
+    ññColor_SummaSale: TcxGridDBColumn;
+    ññColor_Price: TcxGridDBColumn;
+    ññColor_PriceWithVAT: TcxGridDBColumn;
+    ññColor_PromoCond: TcxGridDBColumn;
+    ññColor_SummaProfit: TcxGridDBColumn;
+    ññGroupNum: TcxGridDBColumn;
+    cxGridLevel5: TcxGridLevel;
+    dsdDBViewAddOnCalc2: TdsdDBViewAddOn;
+    spSelectCalc2: TdsdStoredProc;
+    spInsertUpdate_Calc2: TdsdStoredProc;
+    CalcCDS2: TClientDataSet;
+    CalcDS2: TDataSource;
+    calcTaxPromo: TcxGridDBColumn;
+    calcText: TcxGridDBColumn;
+    ccText: TcxGridDBColumn;
+    actUpdateCalcDS2: TdsdUpdateDataSet;
+    calcSummaProfit_Condition: TcxGridDBColumn;
+    calcTaxPromo_Condition: TcxGridDBColumn;
   private
     { Private declarations }
   public
