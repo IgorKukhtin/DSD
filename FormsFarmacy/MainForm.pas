@@ -529,7 +529,7 @@ type
     N186: TMenuItem;
     actReport_GoodsPartionDate5: TdsdOpenForm;
     N510: TMenuItem;
-    actReport_Movement_Send_RemainsSun: TdsdOpenForm;
+    actReport_Send_RemainsSun_express: TdsdOpenForm;
     miReport_Movement_Send_RemainsSun: TMenuItem;
     actMCS_Lite: TdsdOpenForm;
     miMCS_Lite: TMenuItem;
@@ -1007,6 +1007,13 @@ type
     actReport_GeneralMovementGoods: TdsdOpenForm;
     MenuItem358: TMenuItem;
     N226: TMenuItem;
+    actReport_Movement_Send_RemainsSun: TdsdOpenForm;
+    miReport_Send_RemainsSun_express: TMenuItem;
+    N227: TMenuItem;
+    mmReport_Send_RemainsSun_express: TMenuItem;
+    N228: TMenuItem;
+    actReport_Send_RemainsSunOut_express: TdsdOpenForm;
+    miReport_Send_RemainsSunOut_express: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

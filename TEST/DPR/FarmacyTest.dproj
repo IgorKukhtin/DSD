@@ -2916,9 +2916,26 @@
 				<Form>PromoCodeSignUnitNameDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+
 			<DCCReference Include="..\..\SOURCE\LocalWorkUnit.pas"/>
+             <Form>LocalWorkUnitForm</Form>
+	<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsTopDialog.pas">
 				<Form>GoodsTopDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas">
+				<Form>Report_Send_RemainsSun_expressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas">
+				<Form>Report_Send_RemainsSunOut_expressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas">
+				<Form>Report_Send_RemainsSun_expressDialogForm</Form>
+
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
