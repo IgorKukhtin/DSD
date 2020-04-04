@@ -132,6 +132,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'Remains'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object IsPromo: TcxGridDBColumn
@@ -141,6 +142,14 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 67
+          end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
         end
       end
@@ -399,6 +408,82 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         end>
       Caption = 'actExecUpdate_Goods_Promo'
     end
+    object actisResolution_224_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mainResolution_224_Yes
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"? '
+      InfoAfterExecute = #1059#1089#1090#1072#1085#1086#1074#1083#1077#1085' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"?'
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"'
+      ImageIndex = 79
+    end
+    object mainResolution_224_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_inResolution_224_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1047#1072#1082#1088#1099#1090'"'
+      Hint = 'maSetClose'
+    end
+    object actUpdate_inResolution_224_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inResolution_224_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inResolution_224_Yes
+        end>
+      Caption = 'actUpdate_inResolution_224_Yes'
+    end
+    object actinResolution_224_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = mainResolution_224_No
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"? '
+      InfoAfterExecute = #1057#1085#1103#1090' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"'
+      Caption = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"'
+      Hint = #1057#1085#1103#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1072#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224"'
+      ImageIndex = 58
+    end
+    object mainResolution_224_No: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_inResolution_224_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1057#1085#1103#1090#1080#1077' '#1087#1088#1080#1079#1085#1072#1082#1072' "'#1047#1072#1082#1088#1099#1090'"'
+      Hint = 'maClearClose'
+    end
+    object actUpdate_inResolution_224_No: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_inResolution_224_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_inResolution_224_No
+        end>
+      Caption = 'actUpdate_inResolution_224_No'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 104
@@ -466,7 +551,19 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbUpdate_Goods_Promo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbisResolution_224_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtinResolution_224_No'
         end>
     end
     object bbDeleteGoodsLink: TdxBarButton
@@ -482,8 +579,16 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       Category = 0
       ItemLinks = <>
     end
-    object dxBarButton1: TdxBarButton
+    object bbUpdate_Goods_Promo: TdxBarButton
       Action = actUpdate_Goods_Promo
+      Category = 0
+    end
+    object bbisResolution_224_Yes: TdxBarButton
+      Action = actisResolution_224_Yes
+      Category = 0
+    end
+    object bbtinResolution_224_No: TdxBarButton
+      Action = actinResolution_224_No
       Category = 0
     end
   end
@@ -709,5 +814,53 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     PackSize = 1
     Left = 352
     Top = 272
+  end
+  object spUpdate_inResolution_224_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inResolution_224'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisResolution_224'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 208
+  end
+  object spUpdate_inResolution_224_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inResolution_224'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisResolution_224'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 160
   end
 end

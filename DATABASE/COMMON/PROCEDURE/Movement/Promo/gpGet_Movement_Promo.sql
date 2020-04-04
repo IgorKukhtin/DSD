@@ -15,6 +15,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusName       TVarChar    --Статус
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
+             , PromoStateKindId Integer     -- Состояние Акции
+             , PromoStateKindName TVarChar  -- Состояние Акции
              , PriceListId      Integer     --прайс лист
              , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
@@ -27,6 +29,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
+             , PromoStateKind   TFloat      -- Приоритет для состояния
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           INTEGER     --Подразделение
@@ -57,6 +60,9 @@ BEGIN
           , Object_Status.Name              		      AS StatusName
           , NULL::Integer                                     AS PromoKindId         --Вид акции
           , NULL::TVarChar                                    AS PromoKindName       --Вид акции
+          , 0                                                 AS PromoStateKindId        --Состояние акции
+          , NULL::TVarChar                                    AS PromoStateKindName      --Состояние акции
+
           , Object_PriceList.Id                               AS PriceListId         --Прайс лист
           , Object_PriceList.ValueData                        AS PriceListName       --Прайс лист
           , NULL::TDateTime                                   AS StartPromo          --Дата начала акции
@@ -69,6 +75,7 @@ BEGIN
           , NULL::TDateTime                                   AS MonthPromo          --Месяц акции
           , inOperDate                                        AS CheckDate           --Дата Согласования
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
+          , 0   ::TFloat                                      AS PromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::TVarChar                                    AS CommentMain         --Примечание (Общее)
           , NULL::Integer                                     AS UnitId              --Подразделение
@@ -94,6 +101,8 @@ BEGIN
           , Movement_Promo.StatusName         --Статус
           , Movement_Promo.PromoKindId        --Вид акции
           , Movement_Promo.PromoKindName      --Вид акции
+          , Movement_Promo.PromoStateKindId        --Состояние акции
+          , Movement_Promo.PromoStateKindName      --Состояние акции
           , Movement_Promo.PriceListId        --Вид акции
           , Movement_Promo.PriceListName      --Вид акции
           , Movement_Promo.StartPromo         --Дата начала акции
@@ -106,6 +115,7 @@ BEGIN
           , Movement_Promo.MonthPromo         -- месяц акции
           , Movement_Promo.CheckDate          --Дата Согласования
           , Movement_Promo.CostPromo          --Стоимость участия в акции
+          , Movement_Promo.PromoStateKind     -- Приоритет для состояния
           , Movement_Promo.Comment            --Примечание
           , Movement_Promo.CommentMain        --Примечание (Общее)
           , Movement_Promo.UnitId             --Подразделение
@@ -131,6 +141,7 @@ ALTER FUNCTION gpGet_Movement_Promo (Integer, TDateTime, TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+ 01.04.20         *
  01.08.17         * CheckedDate
  25.07.17         *
  13.10.15                                                                        *

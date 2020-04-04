@@ -1,5 +1,7 @@
 -- Function: gpSelect_Movement_PriceList()
 
+-- Function: gpSelect_Movement_PriceList()
+
 DROP FUNCTION IF EXISTS gpSelect_Movement_LoadPriceListItem (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
@@ -9,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_LoadPriceListItem(
 RETURNS TABLE (Id Integer, CommonCode Integer, BarCode TVarChar, CodeUKTZED TVarChar,
                GoodsCode TVarChar, GoodsName TVarChar, GoodsNDS TVarChar, 
                GoodsId Integer, Code Integer, Name TVarChar, LoadPriceListId Integer, 
-               Price TFloat, Remains TFloat, ProducerName TVarChar, ExpirationDate TDateTime,  
-               PartnerGoodsID Integer, IsPromo Boolean)
+               Price TFloat, Remains TFloat, ProducerName TVarChar, ExpirationDate TDateTime,
+               PartnerGoodsID Integer, IsPromo Boolean, isResolution_224 Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,7 +24,6 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PriceList());
 --     vbUserId:= lpGetUserBySession (inSession);
 
-     
      SELECT LoadPriceList.JuridicalId, COALESCE(LoadPriceList.AreaId, 0)
      INTO vbJuridicalId, vbAreaId
      FROM LoadPriceList
@@ -46,7 +47,8 @@ BEGIN
          LoadPriceListItem.ProducerName, 
          LoadPriceListItem.ExpirationDate,
          PartnerGoods.ID                                AS PartnerGoodsID,
-         COALESCE(PartnerGoods.IsPromo, FALSE)          AS IsPromo
+         COALESCE(PartnerGoods.IsPromo, FALSE)          AS IsPromo,
+         MainGoods.isResolution_224
        FROM LoadPriceListItem 
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = LoadPriceListItem.GoodsId
@@ -55,7 +57,10 @@ BEGIN
                                                             AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
                                                             AND COALESCE(PartnerGoods.AreaId, 0) = vbAreaId
                                                          
+            LEFT JOIN Object_Goods_Main AS MainGoods ON MainGoods.Id  = LoadPriceListItem.GoodsId
+
       WHERE LoadPriceListItem.LoadPriceListId = inLoadPriceListId;
+
 
 END;
 $BODY$

@@ -1,4 +1,4 @@
-unit Report_GoodsMI_InternalDialog;
+unit Report_Send_RemainsSun_expressDialog;
 
 interface
 
@@ -12,35 +12,14 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_GoodsMI_InternalDialogForm = class(TParentForm)
+  TReport_Send_RemainsSun_expressDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    deEnd: TcxDateEdit;
-    deStart: TcxDateEdit;
-    PeriodChoice: TPeriodChoice;
+    deOperDate: TcxDateEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edGoodsGroup: TcxButtonEdit;
-    GuidesGoodsGroup: TdsdGuides;
-    edFrom: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    cxLabel1: TcxLabel;
     cxLabel6: TcxLabel;
-    cxLabel7: TcxLabel;
-    cxLabel4: TcxLabel;
-    edTo: TcxButtonEdit;
-    edPaidKind: TcxButtonEdit;
-    cxLabel2: TcxLabel;
-    GuidesPaidKind: TdsdGuides;
-    GuidesFrom: TdsdGuides;
-    GuidesTo: TdsdGuides;
-    cxLabel5: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    PriceListGuides: TdsdGuides;
-    cbMO_all: TcxCheckBox;
-    cbComment: TcxCheckBox;
-    cbSubjectDoc: TcxCheckBox;
   private
     { Private declarations }
   public
@@ -52,6 +31,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_GoodsMI_InternalDialogForm);
+  RegisterClass(TReport_Send_RemainsSun_expressDialogForm);
 
 end.

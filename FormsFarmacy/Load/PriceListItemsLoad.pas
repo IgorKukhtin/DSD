@@ -55,7 +55,18 @@ type
     spUpdate_Goods_Promo: TdsdStoredProc;
     actExecUpdate_Goods_Promo: TdsdExecStoredProc;
     dxBarSubItem1: TdxBarSubItem;
-    dxBarButton1: TdxBarButton;
+    bbUpdate_Goods_Promo: TdxBarButton;
+    isResolution_224: TcxGridDBColumn;
+    spUpdate_inResolution_224_No: TdsdStoredProc;
+    spUpdate_inResolution_224_Yes: TdsdStoredProc;
+    actisResolution_224_Yes: TMultiAction;
+    mainResolution_224_Yes: TMultiAction;
+    actUpdate_inResolution_224_Yes: TdsdExecStoredProc;
+    actinResolution_224_No: TMultiAction;
+    mainResolution_224_No: TMultiAction;
+    actUpdate_inResolution_224_No: TdsdExecStoredProc;
+    bbisResolution_224_Yes: TdxBarButton;
+    bbtinResolution_224_No: TdxBarButton;
   private
     { Private declarations }
   public

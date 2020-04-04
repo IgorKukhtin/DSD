@@ -3478,10 +3478,6 @@
 				<Form>User_byMessageForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Promo.pas">
-				<Form>PromoForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsSeparate.pas">
 				<Form>GoodsSeparateForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -3894,6 +3890,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PromoStateKind.pas">
 				<Form>PromoStateKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Promo.pas">
+				<Form>PromoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

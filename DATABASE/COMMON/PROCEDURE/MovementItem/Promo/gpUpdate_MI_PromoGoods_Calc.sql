@@ -1,19 +1,21 @@
 -- Function: gpUpdate_MI_PromoGoods_Calc()
-
 DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PromoGoods_Calc(
     IN inId                       Integer   , -- Ключ объекта <Элемент документа>
     IN inPriceIn                  TFloat    , -- Себ-ть прод, грн/кг
     IN inNum                      TFloat    , -- номер строки
-    IN inAmountPlanMax            TFloat    , --
-    IN inSummaPlanMax             TFloat    , -- 
-    IN inAmountRetIn              TFloat    , -- 
-    IN inAmountContractCondition  TFloat    , -- 
-   OUT outSummaProfit             TFloat    , --сумма прибыли
+    IN inAmountSale               TFloat    , --
+    IN inSummaSale                TFloat    , -- 
+    IN inContractCondition        TFloat    , -- бонус
+    IN inTaxRetIn                 TFloat    , -- % возврат
+    IN inTaxPromo                 TFloat    , -- % Скидки, Компенсации
+   --OUT outSummaProfit             TFloat    , --сумма прибыли
     IN inSession                  TVarChar    -- сессия пользователя
 )
-AS
+RETURNS  void
+AS 
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -22,21 +24,36 @@ BEGIN
 
 
     -- Проверили уникальность товар/вид товара
-    IF inNum NOT IN (2, 4)
+    IF inNum IN (1)
     THEN
         RAISE EXCEPTION 'Ошибка. Строка № <%> не редактируется' , zfConvert_FloatToString (inNum);
     END IF;
     
+    -- ввод %
+    IF inNum = 1
+    THEN
+        -- сохраняем % Возврат
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), inId, inTaxRetIn);
+        -- сохраняем % бонус
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), inId, inTaxPromo);
+        -- сохраняем % скидка
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), inId, inContractCondition);
+    END IF;
+
     IF inNum = 2
     THEN
         -- сохраняем Себ-ть - 1 прод, грн/кг
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), inId, inPriceIn);
-    ELSE
+        -- сохраняем Кол-во отгрузка
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSale(), inId, inAmountSale);        
+    END IF;
+    IF inNum = 4
+    THEN
         -- сохраняем Себ-ть - 2 прод, грн/кг
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), inId, inPriceIn);
     END IF;
     
-    outSummaProfit := COALESCE (inSummaPlanMax, 0) - (COALESCE (inPriceIn, 0) + COALESCE (inAmountRetIn, 0) + COALESCE (inAmountContractCondition, 0)) * COALESCE (inAmountPlanMax, 0);
+    --outSummaProfit := COALESCE (inSummaSale, 0) - (COALESCE (inPriceIn, 0) + COALESCE (inAmountRetIn, 0) + COALESCE (inContractCondition, 0)) * COALESCE (inAmountSale, 0);
     
 END;
 $BODY$

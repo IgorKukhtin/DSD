@@ -46,7 +46,8 @@ BEGIN
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
 
     vbRemainsDate = CURRENT_TIMESTAMP;
-    vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin());
+    vbisAdmin := EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin()) 
+                 AND vbUserId NOT IN (183242);
 
     -- Результат
     RETURN QUERY

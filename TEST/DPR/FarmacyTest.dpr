@@ -838,7 +838,12 @@ uses
   Report_GeneralMovementGoodsDialog in '..\..\FormsFarmacy\Report\Report_GeneralMovementGoodsDialog.pas' {Report_GeneralMovementGoodsDialogForm: TParentForm},
   PromoCodeSignPercentDialog in '..\..\FormsFarmacy\Document\PromoCodeSignPercentDialog.pas' {PromoCodeSignPercentDialogForm: TParentForm},
   PromoCodeSignUnitNameDialog in '..\..\FormsFarmacy\Document\PromoCodeSignUnitNameDialog.pas' {PromoCodeSignUnitNameDialogForm: TParentForm},
-  LocalWorkUnit in '..\..\SOURCE\LocalWorkUnit.pas';
+  LocalWorkUnit in '..\..\SOURCE\LocalWorkUnit.pas',
+  GoodsTopDialog in '..\..\FormsFarmacy\Guides\GoodsTopDialog.pas' {GoodsTopDialogForm: TParentForm},
+  Report_Send_RemainsSun_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas' {Report_Send_RemainsSun_expressForm: TParentForm},
+  Report_Send_RemainsSunOut_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas' {Report_Send_RemainsSunOut_expressForm: TParentForm},
+  Report_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas' {Report_Send_RemainsSun_expressDialogForm: TParentForm};
+
 
 {$R *.res}
 {$R DevExpressRus.res}

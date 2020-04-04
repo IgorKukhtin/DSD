@@ -58,7 +58,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
-    -- получаем значения из справочника 
+    -- получаем значения из справочника
  /*   vbMonth_0 := (SELECT ObjectFloat_Month.ValueData
                   FROM Object  AS Object_PartionDateKind
                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
@@ -110,11 +110,11 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH 
+    WITH
         tmpUnit AS (SELECT inUnitId                                  AS UnitId
-                    WHERE COALESCE (inUnitId, 0) <> 0 
+                    WHERE COALESCE (inUnitId, 0) <> 0
                       AND inisUnitList = FALSE
-                   UNION 
+                   UNION
                     SELECT ObjectLink_Unit_Juridical.ObjectId        AS UnitId
                     FROM ObjectLink AS ObjectLink_Unit_Juridical
                          INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
@@ -135,19 +135,23 @@ BEGIN
                       AND ObjectBoolean_Report.ValueData = TRUE
                       AND inisUnitList = TRUE
                    )
-        
-      , tmpMovement AS (SELECT Movement.*
+
+      , tmpMovementAll AS (SELECT Movement.*
                              , MovementLinkObject_Unit.ObjectId AS UnitId
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                          --AND MovementLinkObject_Unit.ObjectId = inUnitId
-                             INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                           AND Movement.DescId = zc_Movement_Check()
                         )
 
+      , tmpMovement AS (SELECT Movement.*
+                        FROM tmpMovementAll AS Movement
+                             INNER JOIN tmpUnit ON tmpUnit.UnitId = Movement.UnitId
+                        WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                          AND Movement.DescId = zc_Movement_Check()
+                        )
       , tmpMI_Child AS (SELECT *
                         FROM MovementItem
                         WHERE MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
@@ -167,7 +171,7 @@ BEGIN
                               , COALESCE (MI_Income_find.Id,MI_Income.Id)                  AS MI_Id_Income
                               , CASE WHEN inIsExpirationDate = TRUE THEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) ELSE NULL END :: TDateTime AS ExpirationDate
 
-                              , CASE WHEN inIsPartionDateKind = TRUE 
+                              , CASE WHEN inIsPartionDateKind = TRUE
                                      THEN CASE WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbOperDate THEN zc_Enum_PartionDateKind_0()
                                                WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbOperDate AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate30 THEN zc_Enum_PartionDateKind_1()
                                                WHEN COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) > vbDate30   AND COALESCE (ObjectDate_PartionGoods.ValueData, zc_DateEnd()) <= vbDate180 THEN zc_Enum_PartionDateKind_6()
@@ -227,7 +231,7 @@ BEGIN
                            , tmpContainer.PartionDateKindId
                       FROM tmpContainer
                            LEFT JOIN tmpMLO_NDSKind ON tmpMLO_NDSKind.MovementId = tmpContainer.MovementId_Income
-        
+
                            LEFT JOIN tmpMovementBoolean AS MovementBoolean_PriceWithVAT
                                                         ON MovementBoolean_PriceWithVAT.MovementId = tmpContainer.MovementId_Income
 
@@ -322,7 +326,7 @@ BEGIN
              , CASE WHEN inIsExpirationDate = TRUE THEN DATE_PART ('DAY', (tmpData.ExpirationDate - tmpMovement.OperDate)) ELSE 0 END :: TFloat DaysDiff
              , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
              , CASE WHEN inIsExpirationDate = TRUE THEN tmpData.ExpirationDate ELSE NULL END :: TDateTime AS ExpirationDate
-        FROM tmpData 
+        FROM tmpData
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
 
            LEFT JOIN tmpMovement ON tmpMovement.Id = tmpData.MovementId
@@ -337,10 +341,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Шаблий О.В.
- 15.07.19                                                      * 
+ 15.07.19                                                      *
  04.07.19         *
  21.06.19         *
 */
 
 -- тест
 --SELECT * FROM gpReport_CheckPartionDate (inUnitId :=494882, inRetailId:= 0, inJuridicalId:=0, inStartDate := '21.06.2019' ::TDateTime, inEndDate := '23.07.2019' ::TDateTime, inIsExpirationDate:= TRUE, inIsPartionDateKind:=True, inisUnitList := false, inSession := '3' :: TVarChar);
+

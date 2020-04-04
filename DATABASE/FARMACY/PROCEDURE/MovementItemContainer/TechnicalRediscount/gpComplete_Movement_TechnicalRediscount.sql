@@ -4,16 +4,32 @@ DROP FUNCTION IF EXISTS gpComplete_Movement_TechnicalRediscount (Integer, TVarCh
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_TechnicalRediscount(
     IN inMovementId        Integer               , -- ключ Документа
+   OUT outOperDate         TDateTime             ,  
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
-RETURNS VOID
+RETURNS TDateTime
 AS
 $BODY$
   DECLARE vbUserId    Integer;
-  
+  DECLARE vbInvNumber TVarChar;  
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_TechnicalRediscount());
+
+    -- параметры документа
+    SELECT
+        Movement.OperDate,
+        Movement.InvNumber       
+    INTO
+        outOperDate,
+        vbInvNumber
+    FROM Movement
+    WHERE Movement.Id = inMovementId;
+
+    outOperDate:= CURRENT_DATE;
+
+    -- сохранили <Документ> c новой датой 
+    PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_TechnicalRediscount(), vbInvNumber, outOperDate, NULL);
 
     -- собственно проводки
     PERFORM lpComplete_Movement_TechnicalRediscount(inMovementId, -- ключ Документа

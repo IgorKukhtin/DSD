@@ -38,7 +38,7 @@ BEGIN
                     SELECT tmpMoneyBoxSun.ObjectId FROM tmpMoneyBoxSun)
 
      SELECT Unit.UnitId, tmpSUNSaleDates.Summa
-     FROM (SELECT tmpUnit.UnitId FROM tmpUnit) AS Unit
+     FROM (SELECT DISTINCT tmpUnit.UnitId FROM tmpUnit) AS Unit
 
           LEFT JOIN tmpSUNSaleDates ON tmpSUNSaleDates.UnitId = Unit.UnitId
 

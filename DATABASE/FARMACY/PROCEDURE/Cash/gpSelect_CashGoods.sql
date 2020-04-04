@@ -19,7 +19,8 @@ RETURNS TABLE (Id Integer,
                MCSValue TFloat,
                IsClose Boolean,
                isFirst  Boolean,
-               isSecond Boolean)
+               isSecond Boolean,
+               isResolution_224 Boolean)
 
 AS
 $BODY$
@@ -69,7 +70,8 @@ BEGIN
                              MCSValue TFloat,
                              IsClose Boolean,
                              isFirst  Boolean,
-                             isSecond Boolean) ON COMMIT DROP;
+                             isSecond Boolean,
+                             isResolution_224 Boolean) ON COMMIT DROP;
 
      WITH DD AS (SELECT DISTINCT
             Object_MarginCategoryItem_View.MarginPercent,
@@ -153,7 +155,8 @@ BEGIN
            GoodsPrice.MCSValue       AS MCSValue,
            Object_Goods.IsClose AS IsClose,
            Object_Goods_Retail.isFirst AS isFirst,
-           Object_Goods_Retail.issecond AS isSecond
+           Object_Goods_Retail.issecond AS isSecond,
+           Object_Goods.isResolution_224 AS isResolution_224
 
          FROM LoadPriceListItem
 
@@ -222,7 +225,8 @@ BEGIN
               _GoodsPriceAll.Price             AS Price,
               _GoodsPriceAll.isClose           AS isClose,
               _GoodsPriceAll.isFirst           AS isFirst,
-              _GoodsPriceAll.isSecond          AS isSecond
+              _GoodsPriceAll.isSecond          AS isSecond,
+              _GoodsPriceAll.isResolution_224  AS isResolution_224
          FROM _GoodsPriceAll)
 
      SELECT
@@ -240,7 +244,8 @@ BEGIN
               GoodsPriceAll.MCSValue            AS MCSValue,
               GoodsPriceAll.isClose             AS isClose,
               GoodsPriceAll.isFirst             AS isFirst,
-              GoodsPriceAll.isSecond            AS isSecond
+              GoodsPriceAll.isSecond            AS isSecond,
+              GoodsPriceAll.isResolution_224    AS isResolution_224
 
      FROM GoodsPriceAll
 

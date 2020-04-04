@@ -1,8 +1,8 @@
-object DataDialogForm: TDataDialogForm
+object Report_Send_RemainsSun_expressDialogForm: TReport_Send_RemainsSun_expressDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1042#1099#1073#1086#1088' '#1076#1072#1090#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  Caption = #1053#1072' '#1076#1072#1090#1091
   ClientHeight = 119
   ClientWidth = 285
   Color = clBtnFace
@@ -37,17 +37,18 @@ object DataDialogForm: TDataDialogForm
     TabOrder = 1
   end
   object deOperDate: TcxDateEdit
-    Left = 131
+    Left = 83
     Top = 29
     EditValue = 42705d
+    Properties.Kind = ckDateTime
     Properties.ShowTime = False
     TabOrder = 2
-    Width = 90
+    Width = 142
   end
   object cxLabel6: TcxLabel
     Left = 34
     Top = 30
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072':'
+    Caption = #1044#1072#1090#1072':'
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 207
@@ -63,8 +64,8 @@ object DataDialogForm: TDataDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 104
-    Top = 44
+    Left = 216
+    Top = 65524
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -76,12 +77,7 @@ object DataDialogForm: TDataDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 31
-    Top = 14
-  end
-  object PeriodChoice: TPeriodChoice
-    DateStart = deOperDate
-    Left = 144
-    Top = 64
+    Left = 39
+    Top = 54
   end
 end

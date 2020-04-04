@@ -307,7 +307,6 @@ inherited TechnicalRediscountForm: TTechnicalRediscountForm
       Left = 108
       EditValue = nil
       Properties.AssignedValues.DisplayFormat = True
-      Properties.ReadOnly = True
       ExplicitLeft = 108
     end
     inherited cxLabel2: TcxLabel

@@ -34,6 +34,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
       , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
       , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
+
+      , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
+      , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
+      , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
+      
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -118,7 +123,16 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                                     AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
         LEFT JOIN Object AS Object_Personal
                          ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
-                         
+
+        LEFT JOIN MovementFloat AS MovementFloat_PromoStateKind
+                                ON MovementFloat_PromoStateKind.MovementId = Movement_Promo.Id
+                               AND MovementFloat_PromoStateKind.DescId = zc_MovementFloat_PromoStateKind()
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
+                                     ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
+        LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
     WHERE Movement_Promo.DescId = zc_Movement_Promo()
    ;
 

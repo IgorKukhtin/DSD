@@ -19,6 +19,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , StatusName       TVarChar    --Статус
              , PromoKindId      Integer     --Вид акции
              , PromoKindName    TVarChar    --Вид акции
+             , PromoStateKindId Integer     -- Состояние Акции
+             , PromoStateKindName TVarChar  -- Состояние Акции
              , PriceListId      Integer     --Прайс лист
              , PriceListName    TVarChar    --Прайс лист
              , StartPromo       TDateTime   --Дата начала акции
@@ -31,6 +33,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
+             , PromoStateKind   TFloat      -- Приоритет для состояния
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           Integer     --Подразделение
@@ -48,6 +51,9 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ChangePercentName TVarChar    -- Скидка по договору
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
+             , isPromoStateKind_Head Boolean
+             , isPromoStateKind_Main Boolean
+             , Color_PromoStateKind Integer
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
               )
@@ -138,6 +144,8 @@ BEGIN
              , CASE WHEN Movement_PromoPartner.StatusId = zc_Enum_Status_Erased() THEN Movement_PromoPartner.StatusName ELSE Object_Status.ValueData END :: TVarChar AS StatusName  
              , MovementLinkObject_PromoKind.ObjectId       AS PromoKindId        --Вид акции
              , Object_PromoKind.ValueData                  AS PromoKindName      --Вид акции
+             , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
+             , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
              , MovementLinkObject_PriceList.ObjectId       AS PriceListId        --Прайс Лист
              , Object_PriceList.ValueData                  AS PriceListName      --Прайс Лист
              , MovementDate_StartPromo.ValueData           AS StartPromo         --Дата начала акции
@@ -150,6 +158,7 @@ BEGIN
              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
+             , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
              , MovementString_Comment.ValueData            AS Comment            --Примечание
              , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
              , MovementLinkObject_Unit.ObjectId            AS UnitId             --Подразделение
@@ -175,6 +184,16 @@ BEGIN
                 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
              , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
+
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Head
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Main
+             
+             , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() 
+                     THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN zc_Color_Warning_Red() ELSE zc_Color_Yelow() END   -- красный / желтый
+                    WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() 
+                     THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN 16764159 ELSE zc_Color_Cyan() END   -- розовый / серый
+                    ELSE zc_Color_White()
+               END AS Color_PromoStateKind
 
              , tmpSign.strSign
              , tmpSign.strSignNo    
@@ -223,7 +242,11 @@ BEGIN
              LEFT JOIN MovementFloat AS MovementFloat_CostPromo
                                      ON MovementFloat_CostPromo.MovementId = Movement_Promo.Id
                                     AND MovementFloat_CostPromo.DescId = zc_MovementFloat_CostPromo()
-             
+
+             LEFT JOIN MovementFloat AS MovementFloat_PromoStateKind
+                                     ON MovementFloat_PromoStateKind.MovementId = Movement_Promo.Id
+                                    AND MovementFloat_PromoStateKind.DescId = zc_MovementFloat_PromoStateKind()
+
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement_Promo.Id
                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
@@ -258,6 +281,11 @@ BEGIN
              LEFT JOIN Object AS Object_Personal
                               ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
                          
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_PromoStateKind
+                                          ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
+             LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
              LEFT JOIN tmpMovement_PromoPartner AS Movement_PromoPartner
                                                   ON Movement_PromoPartner.ParentId = Movement_Promo.Id
                                                   
@@ -274,6 +302,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+ 01.04.20         *
  01.08.17         *
  25.07.17         *
  05.10.16         * add inJuridicalBasisId

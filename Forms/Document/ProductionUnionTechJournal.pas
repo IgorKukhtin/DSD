@@ -146,6 +146,12 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    spUpdate_Movement_OperDate: TdsdStoredProc;
+    actUpdate_OperDate: TdsdExecStoredProc;
+    macUpdate_OperDate: TMultiAction;
+    macUpdate_OperDateList: TMultiAction;
+    ExecuteDialog_operdate: TExecuteDialog;
+    bbUpdate_OperDateList: TdxBarButton;
   private
     { Private declarations }
   public
