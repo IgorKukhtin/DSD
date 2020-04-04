@@ -650,6 +650,7 @@ order by 4*/
       ;
      RETURN NEXT Cursor1;
 
+
      -- Данные по строчной части налоговой
      OPEN Cursor2 FOR
      WITH tmpMI AS
@@ -732,7 +733,8 @@ order by 4*/
        (SELECT tmpObject_GoodsPropertyValue.GoodsId
              , tmpObject_GoodsPropertyValue.Article
              , tmpObject_GoodsPropertyValue.ArticleGLN
-        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' GROUP BY GoodsId
+             , tmpObject_GoodsPropertyValue.Name
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' OR ArticleGLN <> '' OR BarCode <> '' OR BarCodeGLN <> '' OR Name <> '' GROUP BY GoodsId
              ) AS tmpGoodsProperty_find
              LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
@@ -803,6 +805,8 @@ order by 4*/
                              END
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue.Name
+                             WHEN tmpObject_GoodsPropertyValueGroup.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValueGroup.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
@@ -815,6 +819,8 @@ order by 4*/
                              END
                    ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue.Name
+                             WHEN tmpObject_GoodsPropertyValueGroup.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValueGroup.Name
                              WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
                                   THEN tmpObject_GoodsPropertyValue_basis.Name
                              ELSE CASE WHEN vbOperDate_rus < zc_DateEnd_GoodsRus() AND ObjectString_Goods_RUS.ValueData <> '' THEN ObjectString_Goods_RUS.ValueData ELSE Object_Goods.ValueData END
@@ -841,7 +847,7 @@ order by 4*/
            , tmpMI.Price
            , tmpMI.CountForPrice
 
-           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Name, tmpObject_GoodsPropertyValueGroup.Name, '')                  AS GoodsName_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '')) AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
            , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical

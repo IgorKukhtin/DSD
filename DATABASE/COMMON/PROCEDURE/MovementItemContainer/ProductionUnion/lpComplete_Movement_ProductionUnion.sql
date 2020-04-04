@@ -539,7 +539,9 @@ BEGIN
                                                 AND (vbIsPartionGoodsKind_Unit_To = TRUE
                                                      -- ИЛИ это группа - ЦЕХ колбаса+дел-сы
                                                      OR (EXISTS (SELECT 1 FROM ObjectLink AS OL WHERE OL.ObjectId = vbUnitId_From AND OL.ChildObjectId = 8446 AND OL.DescId = zc_ObjectLink_Unit_Parent())
-                                                     AND _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_10102()  -- Основное сырье + Мясное сырье + Свинина - !!!надо для ШКУРА СВ замоч. Чапли!!!!
+                                                     -- select * from Object where DescId = zc_Object_Goods() and ObjectCode = 1256
+                                                     AND _tmpItem_pr.GoodsId = 1138737 -- !!!надо для 1256 ШКУРА СВ замоч. Чапли!!!!
+                                                   --AND _tmpItem_pr.InfoMoneyId = zc_Enum_InfoMoney_10102() -- Основное сырье + Мясное сырье + Свинина - !!!надо для ШКУРА СВ замоч. Чапли!!!!
                                                         )
                                                     )
                                                 AND vbIsPeresort = FALSE
