@@ -207,10 +207,14 @@ type
     cbGoodsListSale: TCheckBox;
     cbOnlyTwo: TCheckBox;
     cbPromo: TCheckBox;
-    PanelErr: TPanel;
     cbFillAuto: TCheckBox;
     cbCurrency: TCheckBox;
     BranchEdit: TEdit;
+    LogPanel: TPanel;
+    PanelErr: TPanel;
+    LogMemo: TMemo;
+    zConnection_vacuum: TZConnection;
+    Timer: TTimer;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -226,12 +230,16 @@ type
     procedure FormShow(Sender: TObject);
     procedure cbTaxIntClick(Sender: TObject);
     procedure DocumentPanelClick(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
     zc_Enum_PaidKind_FirstForm,zc_Enum_PaidKind_SecondForm:Integer;
 
     GroupId_branch : Integer;
+    beginVACUUM : Integer;
+    beginVACUUM_ii : Integer;
+    fStartProcess : Boolean;
 
     ArrayCurrencyList : TArrayCurrencyList;
 
@@ -482,6 +490,11 @@ type
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
+
+    procedure myLogMemo_add(str :String);
+    function fBeginVACUUM : Boolean;
+
+    function fBeginPack_oneDay : Boolean;
 
   public
     procedure StartProcess;
@@ -1328,6 +1341,18 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
 end;
+procedure TMainForm.TimerTimer(Sender: TObject);
+begin
+     if fStartProcess = true then exit;
+     try
+        Timer.Enabled:= false;
+        //
+        fBeginVACUUM;
+     finally
+        Timer.Enabled:= true;
+     end;
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
 begin
@@ -1691,6 +1716,11 @@ begin
             BranchEdit.Text:= '!!!ERROR!!! BranchId : ???';
      end;
      //
+     beginVACUUM:=0;
+     beginVACUUM_ii:=0;
+     Timer.Enabled:= (ParamStr(2)='autoALL') and (BranchEdit.Text = 'BranchId : 0');
+     fStartProcess:= false;
+     //
      Gauge.Visible:=false;
      Gauge.Progress:=0;
      //
@@ -1813,6 +1843,7 @@ procedure TMainForm.StartProcess;
                StartDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
                EndDateCompleteEdit.Text:=DateToStr(Date-1);
 
+               myLogMemo_add('autoALL('+IntToStr(Day_ReComplete)+'Day)');
                UnitCodeSendOnPriceEdit.Text:='autoALL('+IntToStr(Day_ReComplete)+'Day)';
 
                //Привязка Возвраты
@@ -1838,11 +1869,17 @@ end;
 
 var Day_ReComplete:Integer;
 begin
+  try
+     fStartProcess:= TRUE;
      // !!!важно!!!
      cbOnlySale.Checked:=  System.Pos('_SALE',ParamStr(2))>0;
 
+     if (ParamStr(2)='autoPack_oneDay')
+     then fBeginPack_oneDay;
+
      if (ParamStr(2)='autoFillSoldTable_curr')
      then pLoadFillSoldTable_curr;
+
 
      if (ParamStr(2)='autoFillSoldTable') or (ParamStr(2)='autoFillGoodsList')
      then begin
@@ -1897,6 +1934,9 @@ begin
      if ParamStr(2)='autoReComplete'
      then begin
           end;
+  finally
+     fStartProcess:= FALSE;
+  end;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -2034,7 +2074,9 @@ begin
      then
          if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').')
                   else ShowMessage('Справочники загружены. Time=('+StrTime+').')
-     else OKPOEdit.Text:=StrTime+':Guide' + ' ' + OKPOEdit.Text;
+     else begin myLogMemo_add(StrTime+':Guide');
+                OKPOEdit.Text:=StrTime+':Guide' + ' ' + OKPOEdit.Text;
+          end;
      //
      fStop:=true;
 end;
@@ -2196,7 +2238,9 @@ begin
      else
          if System.Pos('auto',ParamStr(2))<=0
          then ShowMessage('Документы загружены. Time=('+StrTime+').')
-         else OKPOEdit.Text:=StrTime+':Doc' + ' ' + OKPOEdit.Text;
+         else begin myLogMemo_add(StrTime+':Doc');
+                    OKPOEdit.Text:=StrTime+':Doc' + ' ' + OKPOEdit.Text;
+              end;
      //
      fStop:=true;
 end;
@@ -2316,6 +2360,133 @@ begin
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fBeginVACUUM : Boolean;
+var Second, MSec: word;
+    Hour_calc, Minute_calc: word;
+    ZQuery: TZQuery;
+
+          function lVACUUM (lStr : String): Boolean;
+          begin
+               ZQuery.Sql.Clear;;
+               ZQuery.Sql.Add (lStr);
+               ZQuery.ExecSql;
+               //myLogMemo_add(lStr);
+               //Sleep(500);
+          end;
+          function lVACUUM_all : Boolean;
+          begin
+               // System - FULL
+               lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_attribute');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_class');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_type');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_depend');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_shdepend');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_index');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_attrdef');
+               lVACUUM ('VACUUM FULL pg_catalog.pg_proc');
+               // System - ANALYZE
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_statistic');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attribute');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_class');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_type');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_depend');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_shdepend');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_index');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
+               lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
+               //
+               Sleep(500);
+               //
+               if beginVACUUM < 3 then
+               begin
+                   // Container
+                   lVACUUM ('VACUUM FULL Container');
+                   lVACUUM ('VACUUM ANALYZE Container');
+                   lVACUUM ('VACUUM FULL ObjectFloat');
+                   lVACUUM ('VACUUM ANALYZE ObjectFloat');
+                   //lVACUUM ('VACUUM FULL ContainerLinkObject');
+                   //lVACUUM ('VACUUM ANALYZE ContainerLinkObject');
+                   lVACUUM ('VACUUM ANALYZE MovementFloat');
+                   lVACUUM ('VACUUM ANALYZE MovementDate');
+                   lVACUUM ('VACUUM ANALYZE MovementBoolean');
+                   lVACUUM ('VACUUM ANALYZE MovementLinkObject');
+                   lVACUUM ('VACUUM ANALYZE MovementLinkMovement');
+               end;
+               //
+               Sleep(500);
+          end;
+begin
+     if beginVACUUM_ii = 0
+     then myLogMemo_add('beginVACUUM_ii = ' + IntToStr(beginVACUUM_ii))
+     else beginVACUUM_ii:=0;
+     //расчет начальные дата + время
+     DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
+     //
+     if (Hour_calc = 7) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
+     //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
+       and (BranchEdit.Text = 'BranchId : 0')
+     then
+          try
+              //
+              fOpenSqToQuery_two('select pId from pg_stat_activity as a'
+                               +' where state = ' + FormatToVarCharServer_notNULL('active')
+                               +'   and query ILIKE ' + FormatToVarCharServer_notNULL('%VACUUM%')
+                                 );
+              myLogMemo_add('rec1 = ' + IntToStr(toSqlQuery_two.RecordCount));
+              if toSqlQuery_two.RecordCount > 1 then
+              begin
+                   myLogMemo_add('rec1 = ' + IntToStr(toSqlQuery_two.RecordCount));
+                   exit;
+              end;
+              //
+              fOpenSqToQuery_two('select pId from pg_stat_activity as a'
+                               +' where state = ' + FormatToVarCharServer_notNULL('active')
+                                 );
+              //myLogMemo_add('rec2 = ' + IntToStr(toSqlQuery_two.RecordCount));
+              if toSqlQuery_two.RecordCount > 1 then exit;
+              //
+              with zConnection_vacuum do
+              try
+                  Connected:=false;
+                  HostName:='integer-srv.alan.dp.ua';
+                  User:='admin';
+                  Password:='vas6ok';
+                  Connected:=true;
+              except
+                  myLogMemo_add('!!! err zConnection_vacuum !!!');
+                  exit;
+              end;
+              ZQuery := TZQuery.Create(nil);
+              ZQuery.Connection := zConnection_vacuum;
+              ZQuery.Sql.Clear;
+               //
+               myLogMemo_add('('+IntToStr(Hour_calc)+') start all VACUUM ('+IntToStr(beginVACUUM)+')');
+               //
+               lVACUUM_all;
+               beginVACUUM:= beginVACUUM + 1;
+               //
+               myLogMemo_add('end all VACUUM');
+          finally
+                zConnection_vacuum.Connected := false;
+                ZQuery.Free;
+          end;
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fBeginPack_oneDay : Boolean;
+begin
+     cbPack.Checked:= true;
+     StartDateCompleteEdit.Text:= DateToStr(now-1);
+     EndDateCompleteEdit.Text:= DateToStr(now-1);
+     pCompleteDocument_Pack;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.myLogMemo_add(str :String);
+begin
+     LogMemo.Lines.Add(DateTimeToStr(now) + ' - ' + trim(str))
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2,tmpDate3:TDateTime;
     Year, Month, saveMonth, Day, Hour, Min, Sec, MSec: Word;
@@ -2324,6 +2495,7 @@ var tmpDate1,tmpDate2,tmpDate3:TDateTime;
     saveStartDate,saveEndDate:TDateTime;
     calcStartDate,calcEndDate:TDateTime;
 begin
+     LogMemo.Clear;
      {if (cbSelectData_afterLoad.Checked)
      then begin
                pSelectData_afterLoad;
@@ -2404,7 +2576,7 @@ begin
      end;
      //
      //
-     if saveMonth <> Month2 then begin
+     if (saveMonth <> Month2) and ((ParamStr(6)<>'next-')) then begin
        pInsertHistoryCost_Period(calcEndDate+1,saveEndDate,TRUE);
        //
        tmpDate3:=NOw;
@@ -2433,7 +2605,9 @@ begin
                else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
                     else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
      end
-     else OKPOEdit.Text:=StrTime+':Compl' + ' ' + OKPOEdit.Text;
+     else begin myLogMemo_add(StrTime+':Compl');
+                OKPOEdit.Text:=StrTime+':Compl' + ' ' + OKPOEdit.Text;
+          end;
      //
      fStop:=true;
 end;
@@ -10267,6 +10441,7 @@ begin
              //
              //
              //
+             myLogMemo_add('HistoryCost:BranchId='+FieldByName('BranchId').AsString);
              //
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
@@ -20717,6 +20892,7 @@ begin
      tmpDate2:=NOw;
      DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
      //
+     myLogMemo_add(IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      OKPOEdit.Text:= IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec)+':Doc' + '  ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -20738,6 +20914,7 @@ begin
           if Date2 = fromSqlQuery.FieldByName('RetV').AsDateTime
           then Date2:= Date-2;
           //
+          myLogMemo_add(trim(ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
           OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + ParamStr(2) + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      end
      else
@@ -20745,6 +20922,7 @@ begin
           Date1:= StrToDate (StartDateEdit.Text);
           Date2:= StrToDate (EndDateEdit.Text);
           //
+          myLogMemo_add(trim('pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2)));
           OKPOEdit.Text:= trim(OKPOEdit.Text + ' ' + 'pLoadFillSoldTable' + ' ' + DateToStr(Date1) + ' - ' + DateToStr(Date2));
      end;
      //
@@ -20929,6 +21107,9 @@ begin
              if cbComplete.Checked then
              begin
                   begin
+                       beginVACUUM_ii:= beginVACUUM_ii + 1;
+                       if beginVACUUM_ii > 50 then fBeginVACUUM;
+                       //
                        toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId').AsInteger;
                        toStoredProc_two.Params.ParamByName('inIsNoHistoryCost').Value:=cbLastComplete.Checked;
 
@@ -21112,7 +21293,7 @@ begin
                   try MSec_complete:=StrToInt(SessionIdEdit.Text);if MSec_complete<=0 then MSec_complete:=100;except MSec_complete:=100;end;
                   if cb100MSec.Checked then begin SessionIdEdit.Text:=IntToStr(MSec_complete); MyDelay(MSec_complete);end;
              end
-             else MyDelay(8 * 1000);
+             else MyDelay(4 * 1000);
              //
              //
              //

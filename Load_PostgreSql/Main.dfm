@@ -19,7 +19,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 396
+    Width = 364
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -121,13 +121,15 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 396
+    Left = 652
     Top = 0
-    Width = 265
+    Width = 9
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    Visible = False
+    ExplicitLeft = 651
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -721,19 +723,6 @@ object MainForm: TMainForm
       Enabled = False
       TabOrder = 53
     end
-    object PanelErr: TPanel
-      Left = 138
-      Top = 2
-      Width = 127
-      Height = 38
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 54
-    end
   end
   object DocumentPanel: TPanel
     Left = 661
@@ -1086,6 +1075,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 22
+      Visible = False
     end
     object cbDeleteFl: TCheckBox
       Tag = 20
@@ -1119,6 +1109,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 24
+      Visible = False
     end
     object cbTaxInt: TCheckBox
       Tag = 20
@@ -1152,6 +1143,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 26
+      Visible = False
     end
     object cbOnlyUpdateInt: TCheckBox
       Left = 3
@@ -1245,6 +1237,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 32
+      Visible = False
     end
     object cbIncomeNal: TCheckBox
       Tag = 20
@@ -1336,6 +1329,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 38
+      Visible = False
     end
     object cbCash: TCheckBox
       Tag = 20
@@ -1414,6 +1408,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 43
+      Visible = False
     end
     object UnitCodeSendOnPriceEdit: TEdit
       Left = 129
@@ -1500,6 +1495,7 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 49
+      Visible = False
     end
     object cbFillAuto: TCheckBox
       Left = 113
@@ -2331,6 +2327,59 @@ object MainForm: TMainForm
       OnClick = cbCompleteIncomeBNClick
     end
   end
+  object LogPanel: TPanel
+    Left = 364
+    Top = 0
+    Width = 288
+    Height = 664
+    Align = alRight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clRed
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 5
+    ExplicitLeft = 330
+    ExplicitTop = -6
+    object PanelErr: TPanel
+      Left = 1
+      Top = 1
+      Width = 286
+      Height = 38
+      Align = alTop
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      ExplicitLeft = 0
+      ExplicitTop = 2
+      ExplicitWidth = 127
+    end
+    object LogMemo: TMemo
+      Left = 1
+      Top = 39
+      Width = 286
+      Height = 624
+      Align = alClient
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      Lines.Strings = (
+        'LogMemo')
+      ParentFont = False
+      TabOrder = 1
+      ExplicitLeft = 16
+      ExplicitTop = 76
+      ExplicitWidth = 185
+      ExplicitHeight = 89
+    end
+  end
   object DataSource: TDataSource
     DataSet = fromQuery
     Left = 176
@@ -2465,5 +2514,26 @@ object MainForm: TMainForm
       'select * from Goods where HasChildren<>-1 order by 1 desc')
     Left = 168
     Top = 512
+  end
+  object zConnection_vacuum: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Catalog = 'public'
+    DesignConnection = True
+    HostName = 'localhost'
+    Port = 0
+    Database = 'project'
+    User = 'postgres'
+    Password = 'postgres'
+    Protocol = 'postgresql-9'
+    Left = 56
+    Top = 384
+  end
+  object Timer: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = TimerTimer
+    Left = 432
+    Top = 136
   end
 end
