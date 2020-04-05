@@ -43,8 +43,10 @@ BEGIN
                                                   SELECT UnitId, zc_MI_Child() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
                                                   WHERE lfSelect.UnitId <> inToId
-                                                     OR (inToId = 2790412 -- ЦЕХ Тушенка
-                                                     AND lfSelect.UnitId = inToId)
+                                                     OR (inToId          = 2790412 -- ЦЕХ Тушенка
+                                                     AND lfSelect.UnitId = inToId
+                                                     AND vbIsBasis       = FALSE
+                                                        )
                                                  )
                                       -- Документ Инвентаризации
                                     , tmpInventory AS (SELECT Movement.Id AS MovementId, Movement.OperDate, MLO_From.ObjectId AS UnitId
@@ -88,7 +90,9 @@ BEGIN
                                                   )
                                -- Элементы Инвентаризации - все (даже удаленные нужны) - и все это надо что б остатки разделить по видам, а в проводках этой инфы нет
                              , tmpMI_Inventory_all AS (SELECT MovementItem.ObjectId AS GoodsId
-                                                            , CASE WHEN tmpGoods.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье
+                                                            , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье
+                                                                                                          , zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                                            )
                                                                     AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis()
                                                                         THEN 0 
                                                                    ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
@@ -103,11 +107,19 @@ BEGIN
                                                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                       GROUP BY MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, MovementItem.isErased, tmpGoods.InfoMoneyDestinationId
+                                                       GROUP BY MovementItem.ObjectId
+                                                              , CASE WHEN tmpGoods.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- Основное сырье
+                                                                                                            , zc_Enum_InfoMoneyDestination_10200() -- Прочее сырье
+                                                                                                             )
+                                                                      AND MILinkObject_GoodsKind.ObjectId = zc_GoodsKind_Basis()
+                                                                          THEN 0 
+                                                                     ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                                END
+                                                              , MovementItem.isErased, tmpGoods.InfoMoneyDestinationId
                                                       )
-                                   -- Элементы Инвентаризации - НЕ все
-                                 , tmpMI_Inventory AS (SELECT tmp.GoodsId, tmp.GoodsKindId, SUM (tmp.Amount) AS Amount
-                                                       FROM 
+                            -- Элементы Инвентаризации - НЕ все - по которым надо считать ост вперед ... "по видам"
+                          , tmpMI_Inventory AS (SELECT tmp.GoodsId, tmp.GoodsKindId, SUM (tmp.Amount) AS Amount
+                                                FROM 
                                                       (-- добавили обычные остатки на начало - только для товаров с "видом"
                                                        SELECT tmpMI_Inventory_all.GoodsId, tmpMI_Inventory_all.GoodsKindId, tmpMI_Inventory_all.Amount
                                                        FROM tmpMI_Inventory_all
@@ -139,6 +151,7 @@ BEGIN
                                      INNER JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                                          AND Container.DescId = zc_Container_Count()
                                                          AND Container.ObjectId NOT IN (SELECT tmpMI_Inventory.GoodsId FROM tmpMI_Inventory)
+                                                         AND Container.Amount <> 0
                                      INNER JOIN ContainerLinkObject AS CLO_Unit
                                                                     ON CLO_Unit.ContainerId = Container.Id
                                                                    AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -174,6 +187,61 @@ BEGIN
                                                        ORDER BY Movement.OperDate DESC
                                                        LIMIT 1
                                                       )
+                  , tmpMIContainer AS (SELECT MovementItem.ObjectId AS GoodsId
+                                            , CASE -- !!!все!!! приходы - захардкодил, НЕ временно :)
+                                                   WHEN MLO_From.ObjectId = 8445 -- Склад МИНУСОВКА
+                                                        THEN 8338 -- морож.
+                                                   -- !!!только!!! если он в нашем списке, иначе свернем его движение в GoodsKindId = 0
+                                                   WHEN tmpContainer_Count.GoodsKindId > 0
+                                                        THEN tmpContainer_Count.GoodsKindId
+                                                   ELSE 0
+                                              END AS GoodsKindId
+                                            , SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MLO_From.ObjectId = tmpInventory.UnitId AND MLO_To.ObjectId <> tmpInventory.UnitId
+                                                             THEN -1 * MovementItem.Amount
+                                                        WHEN Movement.DescId = zc_Movement_Send() AND MLO_From.ObjectId <> tmpInventory.UnitId AND MLO_To.ObjectId = tmpInventory.UnitId
+                                                             THEN  1 * MovementItem.Amount
+                                                        WHEN Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Master()
+                                                             THEN  1 * MovementItem.Amount
+                                                        WHEN Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Child()
+                                                             THEN -1 * MovementItem.Amount
+                                                        ELSE 0
+                                                   END ) AS Amount
+                                       FROM tmpInventory
+                                            INNER JOIN Movement ON Movement.OperDate BETWEEN tmpInventory.OperDate + INTERVAL '1 DAY' AND inOperDate - INTERVAL '1 DAY'
+                                                               AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
+                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
+                                            INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id AND MLO_From.DescId = zc_MovementLinkObject_From()
+                                            INNER JOIN MovementLinkObject AS MLO_To   ON MLO_To.MovementId   = Movement.Id AND MLO_To.DescId   = zc_MovementLinkObject_To()
+                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                                   AND MovementItem.isErased   = FALSE
+                                                                   AND MovementItem.ObjectId IN (SELECT tmpContainer_Count.GoodsId FROM tmpContainer_Count WHERE tmpContainer_Count.ContainerId = 0)
+                                            LEFT JOIN MovementItem AS MI_Master
+                                                                   ON MI_Master.MovementId = Movement.Id
+                                                                  AND MI_Master.DescId     = zc_MI_Master()
+                                                                  AND MI_Master.Id         = MovementItem.ParentId
+                                                                  AND MI_Master.isErased   = FALSE	
+                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                                            LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                                 ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                                                AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                            LEFT JOIN tmpContainer_Count ON tmpContainer_Count.GoodsId     = MovementItem.ObjectId
+                                                                        AND tmpContainer_Count.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                                                        AND tmpContainer_Count.ContainerId = 0
+                                       WHERE (MLO_From.ObjectId = tmpInventory.UnitId OR MLO_To.ObjectId = tmpInventory.UnitId)
+                                         AND (MovementItem.DescId = zc_MI_Master()
+                                           OR (MovementItem.DescId = zc_MI_Child() AND MI_Master.Id > 0)
+                                             )
+                                       GROUP BY MovementItem.ObjectId
+                                              , CASE WHEN MLO_From.ObjectId = 8445 -- Склад МИНУСОВКА
+                                                          THEN 8338 -- морож.
+                                                     WHEN tmpContainer_Count.GoodsKindId > 0
+                                                          THEN tmpContainer_Count.GoodsKindId
+                                                     ELSE 0
+                                                END
+                                      )
                                   -- Результат
                                   SELECT   tmpContainer_Count.MIDescId
                                          , tmpContainer_Count.ContainerId
@@ -215,65 +283,15 @@ BEGIN
                                          , tmpContainer_Count.Amount + COALESCE (SUM (tmpMIContainer.Amount), 0)  AS Amount_start
                                          , 0 AS Amount_next
                                   FROM tmpContainer_Count
-                                       LEFT JOIN
-                                      (SELECT MovementItem.ObjectId AS GoodsId
-                                            , CASE -- !!!все!!! приходы - захардкодил, НЕ временно :)
-                                                   WHEN MLO_From.ObjectId = 8445 -- Склад МИНУСОВКА
-                                                        THEN 8338 -- морож.
-                                                   -- !!!только!!! если он в нашем списке, иначе свернем его движение в GoodsKindId = 0
-                                                   WHEN tmpContainer_Count.GoodsKindId > 0
-                                                        THEN tmpContainer_Count.GoodsKindId
-                                                   ELSE 0
-                                              END AS GoodsKindId
-                                            , SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MLO_From.ObjectId = tmpInventory.UnitId AND MLO_To.ObjectId <> tmpInventory.UnitId
-                                                             THEN -1 * MovementItem.Amount
-                                                        WHEN Movement.DescId = zc_Movement_Send() AND MLO_From.ObjectId <> tmpInventory.UnitId AND MLO_To.ObjectId = tmpInventory.UnitId
-                                                             THEN  1 * MovementItem.Amount
-                                                        WHEN Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Master()
-                                                             THEN  1 * MovementItem.Amount
-                                                        WHEN Movement.DescId = zc_Movement_ProductionUnion() AND MovementItem.DescId = zc_MI_Child()
-                                                             THEN -1 * MovementItem.Amount
-                                                        ELSE 0
-                                                   END ) AS Amount
-                                       FROM tmpInventory
-                                            INNER JOIN Movement ON Movement.OperDate BETWEEN tmpInventory.OperDate + INTERVAL '1 DAY' AND inOperDate - INTERVAL '1 DAY'
-                                                               AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion())
-                                                               AND Movement.StatusId = zc_Enum_Status_Complete()
-                                            INNER JOIN MovementLinkObject AS MLO_From ON MLO_From.MovementId = Movement.Id AND MLO_From.DescId = zc_MovementLinkObject_From()
-                                            INNER JOIN MovementLinkObject AS MLO_To   ON MLO_To.MovementId   = Movement.Id AND MLO_To.DescId   = zc_MovementLinkObject_To()
-                                            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                                   AND MovementItem.isErased   = FALSE
-                                                                   AND MovementItem.ObjectId IN (SELECT tmpContainer_Count.GoodsId FROM tmpContainer_Count WHERE tmpContainer_Count.ContainerId = 0)
-                                            LEFT JOIN MovementItem AS MI_Master
-                                                                   ON MI_Master.MovementId = Movement.Id
-                                                                  AND MI_Master.DescId     = zc_MI_Master()
-                                                                  AND MI_Master.Id         = MovementItem.ParentId
-                                                                  AND MI_Master.isErased   = FALSE	
-                                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                            LEFT JOIN tmpContainer_Count ON tmpContainer_Count.GoodsId     = MovementItem.ObjectId
-                                                                        AND tmpContainer_Count.GoodsKindId = MILinkObject_GoodsKind.ObjectId
-                                                                        AND tmpContainer_Count.ContainerId = 0
-                                       WHERE (MLO_From.ObjectId = tmpInventory.UnitId OR MLO_To.ObjectId = tmpInventory.UnitId)
-                                         AND (MovementItem.DescId = zc_MI_Master()
-                                           OR (MovementItem.DescId = zc_MI_Child() AND MI_Master.Id > 0)
-                                             )
-                                       GROUP BY MovementItem.ObjectId
-                                              , CASE WHEN MLO_From.ObjectId = 8445 -- Склад МИНУСОВКА
-                                                          THEN 8338 -- морож.
-                                                     WHEN tmpContainer_Count.GoodsKindId > 0
-                                                          THEN tmpContainer_Count.GoodsKindId
-                                                     ELSE 0
-                                                END
-                                      ) AS tmpMIContainer ON tmpMIContainer.GoodsId     = tmpContainer_Count.GoodsId
-                                                         AND tmpMIContainer.GoodsKindId = tmpContainer_Count.GoodsKindId
+                                       LEFT JOIN tmpMIContainer ON tmpMIContainer.GoodsId     = tmpContainer_Count.GoodsId
+                                                               AND tmpMIContainer.GoodsKindId = tmpContainer_Count.GoodsKindId
                                   WHERE tmpContainer_Count.ContainerId = 0
                                   GROUP BY tmpContainer_Count.MIDescId
                                          , tmpContainer_Count.ContainerId
                                          , tmpContainer_Count.GoodsId
                                          , tmpContainer_Count.GoodsKindId
                                          , tmpContainer_Count.Amount
+                                  HAVING tmpContainer_Count.Amount + COALESCE (SUM (tmpMIContainer.Amount), 0) <> 0
                                   ;
           --
           -- объединение существующих элементов документа + остатки
@@ -307,6 +325,7 @@ BEGIN
                                                    WHERE tmpContainer.MIDescId = zc_MI_Master()
                                                    GROUP BY tmpContainer.GoodsId
                                                           , tmpContainer.GoodsKindId
+                                                   HAVING SUM (tmpContainer.Amount_start) <> 0
                                                   )
                           , tmpContainer_child AS (-- остатки для zc_MI_Child
                                                    SELECT ContainerId, GoodsId, GoodsKindId, Amount_start, Amount_next FROM tmpContainer WHERE MIDescId = zc_MI_Child()
@@ -332,6 +351,24 @@ BEGIN
                       FROM tmpContainer_child AS tmpContainer
                            FULL JOIN tmpMI_child AS tmpMI ON tmpMI.ContainerId = tmpContainer.ContainerId
                      ;
+
+/*if inSession = '5'
+then
+    RAISE EXCEPTION 'Ошибка.<%>  %', (select lfGet_Object_ValueData_sh (max (tmpAll.GoodsKindId)) FROM tmpAll where tmpAll.GoodsId =  536184  )
+    , (    select count(*) 
+          FROM tmpAll
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpAll.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                  ON ObjectFloat_Weight.ObjectId = tmpAll.GoodsId
+                                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+       WHERE tmpAll.MIDescId = zc_MI_Master()
+and tmpAll.GoodsId =  536184  );
+-- select * from Object where id = 340523  
+-- 926389
+end if;
+*/
 
 
        -- добавили в мастер "новые" товары, т.к. по ним нет движения
@@ -369,6 +406,20 @@ BEGIN
             AND vbIsBasis = FALSE -- !!!только для производства!!!
        ;
 
+/*if inSession = '5'
+then
+    RAISE EXCEPTION 'Ошибка.<%> ', 
+(select lfGet_Object_ValueData_sh ((MovementItem.ObjectId))
+FROM MovementItem
+     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+where MovementItem.MovementId = inMovementId
+group by MovementItem.ObjectId
+having count(*) > 1
+limit 1
+);
+end if;*/
 
        -- сохранили zc_MI_Master
        PERFORM lpUpdate_MI_OrderInternal_Property (ioId                 := tmpAll.MovementItemId

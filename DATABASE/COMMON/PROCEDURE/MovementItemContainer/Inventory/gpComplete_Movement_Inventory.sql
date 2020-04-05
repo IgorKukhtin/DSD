@@ -422,10 +422,12 @@ BEGIN
                                        INNER JOIN Container ON Container.ObjectId = tmpMI.GoodsId
                                                            AND Container.DescId   = zc_Container_Count()
                                                            AND Container.Amount   > 0
-                                       INNER JOIN ContainerLinkObject AS CLO_Member
-                                                                      ON CLO_Member.ContainerId = Container.Id
-                                                                     AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
-                                                                     AND CLO_Member.ObjectId    = vbMemberId
+                                       LEFT JOIN ContainerLinkObject AS CLO_Member
+                                                                     ON CLO_Member.ContainerId = Container.Id
+                                                                    AND CLO_Member.DescId      = zc_ContainerLinkObject_Member()
+                                       LEFT JOIN ContainerLinkObject AS CLO_Unit
+                                                                     ON CLO_Unit.ContainerId = Container.Id
+                                                                    AND CLO_Unit.DescId      = zc_ContainerLinkObject_Unit()
                                        INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                                       ON CLO_PartionGoods.ContainerId = Container.Id
                                                                      AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
@@ -436,6 +438,9 @@ BEGIN
                                                                        , zc_Enum_InfoMoneyDestination_20300() -- ־בשופטנלוםםûו + ְּּֽ
                                                                         )
                                     AND tmpMI.PartionGoodsId = 0
+                                    AND ((CLO_Unit.ObjectId   = vbUnitId   AND vbUnitId    > 0)
+                                      OR (CLO_Member.ObjectId = vbMemberId AND vbMemberId  > 0)
+                                        )
                                  )
         SELECT (_tmp.MovementItemId) AS MovementItemId
 

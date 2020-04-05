@@ -1,4 +1,4 @@
-﻿-- Function: gpInsertUpdate_Object_ReportExternal()
+-- Function: gpInsertUpdate_Object_ReportExternal()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ReportExternal(Integer, TVarChar, TVarChar);
 
@@ -124,7 +124,8 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsTax',inSession:= zfCalc_UserAdmin()); -- +
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelectMobile_Object_GoodsListSale',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpSelectMobile_Object_Juridical',inSession:= zfCalc_UserAdmin()); -- +
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Personal',inSession:= zfCalc_UserAdmin()); -- +
 
--- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Sale_Olap',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_CheckAmount_ReturnInToSale',inSession:= zfCalc_UserAdmin()); -- +

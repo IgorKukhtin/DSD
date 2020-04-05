@@ -286,6 +286,7 @@ type
     procedure bbSetPartionGoodsClick(Sender: TObject);
     procedure EditPartionGoodsEnter(Sender: TObject);
   private
+    //aTest: Boolean;
     Scale_AP: IAPScale;
     Scale_BI: TCasBI;
     Scale_DB: TCasDB;
@@ -310,6 +311,7 @@ type
     function Save_Movement_PersonalComplete(execParams:TParams):Boolean;
     function Save_Movement_PersonalLoss(execParams:TParams):Boolean;
     function fGetScale_CurrentWeight:Double;
+    function fGetScale_AP_CurrentWeight_cycle : String;
 
     procedure RefreshDataSet;
     procedure WriteParamsMovement;
@@ -1108,9 +1110,49 @@ begin
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.bbView_allClick(Sender: TObject);
+var WeightStr_all, WeightStr : String;
 begin
-     GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
-     myActiveControl;
+    {aTest:= not aTest;
+    if aTest = false then begin MemoTest.Lines.Add(DateTimeToStr(now) + ' - STOP' );MemoTest2.Lines.Add(DateTimeToStr(now) + ' - STOP' );exit;end;
+    //
+    with MemoTest do
+    begin
+        Lines.Clear;
+        MemoTest2.Lines.Clear;
+        //
+        while aTest = true do begin
+          try Initialize_Scale except Lines.Add(DateTimeToStr(now) + ' -!!! err Initialize');end;
+          WeightStr_all:= '';
+          try
+              WeightStr_all:= Scale_AP.Data;
+              if WeightStr_all = '' then Lines.Add(DateTimeToStr(now) + ' -!!! err WeightStr_all = null');
+              //
+              //
+              try WeightStr:=trim(WeightStr_all[1]+WeightStr_all[2]+WeightStr_all[3]+WeightStr_all[4]+WeightStr_all[5]+WeightStr_all[6]);
+              except WeightStr:= ''
+              end;
+
+              if WeightStr <> ''
+              then
+                if AnsiUpperCase (WeightStr_all[1]) = AnsiUpperCase ('E')
+                then MemoTest2.Lines.Add(DateTimeToStr(now) + ' - err - ' + WeightStr)
+                else if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
+                     then MemoTest2.Lines.Add(DateTimeToStr(now) + ' - ' + WeightStr)
+                     else MemoTest2.Lines.Add(DateTimeToStr(now) + ' - err - ' + '('+WeightStr_all[8]+')' + WeightStr);
+          except Lines.Add(DateTimeToStr(now) + ' -!!! err Scale_AP.Data');
+          end;
+          //
+          if WeightStr_all <> ''
+          then Lines.Add(DateTimeToStr(now) + ' - ' + WeightStr_all);
+           //
+           Application.ProcessMessages;
+           MyDelay_two(400);
+        end;
+        exit;
+    end;}
+    //
+    GuideMovementForm.Execute(ParamsMovement,FALSE);//isChoice=FALSE
+    myActiveControl;
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.actRefreshExecute(Sender: TObject);
@@ -1386,6 +1428,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var i : Integer;
 begin
   fStartBarCode:= false;
+  //aTest:= false;
   // определили IP
   with TIdIPWatch.Create(nil) do
   begin
@@ -1724,7 +1767,7 @@ begin
      if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
      then try
              // !!! SCALE Zeus !!!
-             try Scale_AP.DisConnect; except end;
+//             try Scale_AP.DisConnect; except end;
              Scale_AP.Connect('COM' + IntToStr(Scale_Array[rgScale.ItemIndex].ComPort));
              //
              ScaleLabel.Caption:='AP.Connect = OK';
@@ -1751,8 +1794,55 @@ begin
    fGetScale_CurrentWeight;
 end;
 //------------------------------------------------------------------------------------------------
+function TMainForm.fGetScale_AP_CurrentWeight_cycle : String;
+var fGetTest : Boolean;
+    WeightStr_all, WeightStr : String;
+    i : Integer;
+begin
+     Result:='';
+     fGetTest:= false;
+     i:=0;
+     //
+     while (fGetTest = false) and (i < 125) do
+     begin
+          i:= i+1;
+          //try Initialize_Scale except PanelWeight_Scale.Caption:= 'err!=Initialize' end;
+          WeightStr_all:= '';
+          try
+              WeightStr_all:= Scale_AP.Data;
+              if WeightStr_all = '' then PanelWeight_Scale.Caption:= 'err!=null';
+              //
+              //
+              try WeightStr:=trim(WeightStr_all[1]+WeightStr_all[2]+WeightStr_all[3]+WeightStr_all[4]+WeightStr_all[5]+WeightStr_all[6]);
+              except WeightStr:= ''
+              end;
+
+              if WeightStr <> ''
+              then
+                if AnsiUpperCase (WeightStr_all[1]) = AnsiUpperCase ('E')
+                then PanelWeight_Scale.Caption:= 'err=' + WeightStr
+                else if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
+                     then begin Result:= WeightStr; fGetTest:= true; end
+                     else PanelWeight_Scale.Caption:= 'err=' + '('+WeightStr_all[8]+')' + WeightStr
+              else PanelWeight_Scale.Caption:= 'err=' + WeightStr_all;
+
+          except PanelWeight_Scale.Caption:= 'err!=Scale_AP.Data';
+          end;
+          //
+          if fGetTest = false then
+          begin
+            PanelWeight_Scale.Caption:= '('+IntToStr(i)+')'+PanelWeight_Scale.Caption;
+            Application.ProcessMessages;
+            MyDelay_two(200);
+          end;
+     end;
+     //
+     if Result = '' then Result:= PanelWeight_Scale.Caption;
+end;
+
+//------------------------------------------------------------------------------------------------
 function TMainForm.fGetScale_CurrentWeight:Double;
-var WeightStr_all, WeightStr : String;
+var WeightStr : String;
 begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
@@ -1766,12 +1856,8 @@ begin
                        then Result:=Scale_Zeus.Weight
                        else if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
                             then begin
-                                      WeightStr:='???';
-                                      WeightStr_all:= Scale_AP.Data;
-                                      WeightStr:=trim(WeightStr_all[1]+WeightStr_all[2]+WeightStr_all[3]+WeightStr_all[4]+WeightStr_all[5]+WeightStr_all[6]);
-                                      if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
-                                      then Result:= myStrToFloat(WeightStr)
-                                      else Result:= 0;
+                                      WeightStr:= fGetScale_AP_CurrentWeight_cycle;
+                                      Result:= myStrToFloat(WeightStr);
                                  end
                             else Result:=0;
      except Result:=0;end;
@@ -1787,16 +1873,8 @@ begin
      then Result:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
 //*****
      if Scale_Array[rgScale.ItemIndex].ScaleType = stAP
-     then try
-            if AnsiUpperCase (WeightStr_all[1]) = AnsiUpperCase ('E')
-            then PanelWeight_Scale.Caption:= WeightStr
-            else if AnsiUpperCase (WeightStr_all[8]) = AnsiUpperCase ('S')
-                 then PanelWeight_Scale.Caption:= WeightStr
-                 else PanelWeight_Scale.Caption:= '('+WeightStr_all[8]+')' + WeightStr
-          except
-               PanelWeight_Scale.Caption:= 'GetWeight = ' + WeightStr;
-               //ShowMessage(Scale_AP.Data);
-          end
+     then if Result = 0 then PanelWeight_Scale.Caption:= WeightStr
+          else PanelWeight_Scale.Caption:=FloatToStr(Result)
      else PanelWeight_Scale.Caption:=FloatToStr(Result);
 end;
 //------------------------------------------------------------------------------------------------

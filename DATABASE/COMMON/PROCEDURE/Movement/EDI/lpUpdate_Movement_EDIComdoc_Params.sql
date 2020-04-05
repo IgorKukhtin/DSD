@@ -155,6 +155,7 @@ BEGIN
                                  , CHR (13), vbInvNumberSaleLink, DATE (vbOperDateSaleLink), CHR (13), vbGLNPlace, lfGet_Object_ValueData (vbPartnerId), inOKPO
                                  , CHR (13), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), DATE ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                                  , CHR (13), vbMovementId_Master, (SELECT MovementString.MovementId FROM MovementString WHERE MovementString.MovementId = inMovementId AND MovementString.DescId = zc_MovementString_InvNumberTax())
+                                  ;
              END IF;
 
          ELSE

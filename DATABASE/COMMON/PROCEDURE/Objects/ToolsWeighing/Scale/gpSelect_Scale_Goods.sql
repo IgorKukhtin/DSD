@@ -1,4 +1,4 @@
--- Function: gpSelect_Scale_Goods()
+ -- Function: gpSelect_Scale_Goods()
 
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, TVarChar);
 -- DROP FUNCTION IF EXISTS gpSelect_Scale_Goods (TDateTime, Integer, Integer, Integer, Integer, TVarChar);
@@ -727,7 +727,7 @@ BEGIN
                                  SELECT View_InfoMoney.InfoMoneyDestinationId, View_InfoMoney.InfoMoneyId, FALSE AS isTare
                                  FROM Object_InfoMoney_View AS View_InfoMoney
                                  WHERE (inIsGoodsComplete = FALSE
-                                     OR inBranchCode IN (102, 103)
+                                     OR inBranchCode IN (103)
                                        )
                                    AND inBranchCode NOT BETWEEN 301 AND 310
                                    AND View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- ќсновное сырье + ћ€сное сырье
@@ -869,7 +869,7 @@ BEGIN
                              OR inBranchCode BETWEEN 302 AND 310
                              OR (inMovementId >= 0 AND inBranchCode NOT BETWEEN 301 AND 310)
                              OR tmpInfoMoney.isTare = TRUE
-                             OR inBranchCode IN (1, 102, 103)
+                             OR inBranchCode IN (103)
                                )
                         )
           , tmpPrice1 AS (SELECT tmpGoods.GoodsId

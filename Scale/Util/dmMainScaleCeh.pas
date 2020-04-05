@@ -8,7 +8,7 @@ type
   TDMMainScaleCehForm = class(TDataModule)
   public
     // !!!Scale + ScaleCeh!!!
-    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc:Integer): Boolean;
+    function gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc, ToId_calc:Integer): Boolean;
   end;
 
   // !!!Scale + ScaleCeh!!!
@@ -20,7 +20,7 @@ var
 implementation
 //uses DialogMovementDesc,UtilScale;
 {------------------------------------------------------------------------}
-function TDMMainScaleCehForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc:Integer): Boolean;
+function TDMMainScaleCehForm.gpGet_Scale_OrderExternal(var execParams:TParams;inBarCode:String;FromId_calc, ToId_calc:Integer): Boolean;
 begin
   Result:=false;
 end;

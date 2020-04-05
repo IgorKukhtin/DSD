@@ -33,6 +33,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_Balance, BusinessId_ProfitLoss, JuridicalId_Basis
                          , UnitId, PositionId, BranchId_Balance, BranchId_ProfitLoss, ServiceDateId, ContractId, PaidKindId
+                         , PartionMovementId
                          , CurrencyId
                          , IsActive, IsMaster
                           )
@@ -81,6 +82,8 @@ BEGIN
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
+             , CASE WHEN inMovementId = 16296541 THEN 0 ELSE 0 END AS PartionMovementId
 
                -- Валюта
              , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
@@ -163,6 +166,8 @@ BEGIN
 
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
+
+             , CASE WHEN inMovementId = 16296541 THEN 5081033 ELSE 0 END AS PartionMovementId
 
                -- Валюта
              , COALESCE (MILinkObject_Currency.ObjectId, zc_Enum_Currency_Basis()) AS CurrencyId
