@@ -572,10 +572,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
-
+    exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 
