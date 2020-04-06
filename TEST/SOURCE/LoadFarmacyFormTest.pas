@@ -128,6 +128,7 @@ type
     procedure LoadReturnOutFormTest;
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSeasonalityCoefficientFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -847,6 +848,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceDialogForm');
+    exit;
+
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsForm');
@@ -2191,6 +2198,12 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheckItemJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCheckItemJournalForm');
+end;
+
+procedure TLoadFormTest.LoadSeasonalityCoefficientFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSeasonalityCoefficientEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSeasonalityCoefficientEditForm');
 end;
 
 procedure TLoadFormTest.LoadSendFormTest;

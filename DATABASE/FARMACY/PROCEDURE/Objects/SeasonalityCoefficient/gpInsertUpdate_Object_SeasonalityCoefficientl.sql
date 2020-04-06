@@ -1,5 +1,3 @@
--- Function: gpInsertUpdate_Object_SeasonalityCoefficient()
-
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SeasonalityCoefficient(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SeasonalityCoefficient(
@@ -27,6 +25,14 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (inSession);
+
+   IF COALESCE(ioId, 0) = 0
+   THEN
+     IF EXISTS(SELECT 1 FROM Object WHERE Object.DescId = zc_Object_SeasonalityCoefficient())
+     THEN
+       ioId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_SeasonalityCoefficient());
+     END IF;
+   END IF;
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;

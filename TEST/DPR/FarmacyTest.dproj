@@ -2921,6 +2921,30 @@
 				<Form>GoodsTopDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas">
+				<Form>Report_Send_RemainsSun_expressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas">
+				<Form>Report_Send_RemainsSunOut_expressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas">
+				<Form>Report_Send_RemainsSun_expressDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\SeasonalityCoefficientEdit.pas">
+				<Form>SeasonalityCoefficientForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PharmacyPerformanceDialog.pas">
+				<Form>Report_PharmacyPerformanceDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas">
+				<Form>Report_PharmacyPerformanceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

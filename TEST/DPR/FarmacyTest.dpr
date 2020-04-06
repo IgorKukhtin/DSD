@@ -842,8 +842,10 @@ uses
   GoodsTopDialog in '..\..\FormsFarmacy\Guides\GoodsTopDialog.pas' {GoodsTopDialogForm: TParentForm},
   Report_Send_RemainsSun_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas' {Report_Send_RemainsSun_expressForm: TParentForm},
   Report_Send_RemainsSunOut_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas' {Report_Send_RemainsSunOut_expressForm: TParentForm},
-  Report_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas' {Report_Send_RemainsSun_expressDialogForm: TParentForm};
-
+  Report_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas' {Report_Send_RemainsSun_expressDialogForm: TParentForm},
+  SeasonalityCoefficientEdit in '..\..\FormsFarmacy\Guides\SeasonalityCoefficientEdit.pas' {SeasonalityCoefficientForm: TParentForm},
+  Report_PharmacyPerformanceDialog in '..\..\FormsFarmacy\Report\Report_PharmacyPerformanceDialog.pas' {Report_PharmacyPerformanceDialogForm: TParentForm},
+  Report_PharmacyPerformance in '..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas' {Report_PharmacyPerformanceForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
