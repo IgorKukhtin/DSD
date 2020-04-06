@@ -23,18 +23,12 @@ type
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
+    cbSeasonalityCoefficient: TcxCheckBox;
+    deEnd2: TcxDateEdit;
+    deStart2: TcxDateEdit;
     cxLabel3: TcxLabel;
     cxLabel5: TcxLabel;
-    ceJuridical1: TcxButtonEdit;
-    ceJuridical2: TcxButtonEdit;
-    Juridical1Guides: TdsdGuides;
-    Juridical2Guides: TdsdGuides;
-    cxLabel1: TcxLabel;
-    edUnit: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
-    cxLabel2: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    GuidesJuridical: TdsdGuides;
+    PeriodChoice2: TPeriodChoice;
   private
     { Private declarations }
   public

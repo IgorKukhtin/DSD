@@ -60,6 +60,8 @@ BEGIN
           UPDATE Object_Goods_Juridical SET MinimumLot = NULLIF(inMinimumLot, 0)
                                           , UserUpdateId = vbUserId
                                           , DateUpdate   = CURRENT_TIMESTAMP
+                                          , UserUpdateMinimumLotId = vbUserId
+                                          , DateUpdateMinimumLot   = CURRENT_TIMESTAMP
           WHERE Object_Goods_Juridical.Id = vbGoodsId
             AND COALESCE(Object_Goods_Juridical.MinimumLot, 0) <> COALESCE(inMinimumLot, 0);  
         EXCEPTION

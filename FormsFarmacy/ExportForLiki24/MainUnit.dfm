@@ -381,6 +381,7 @@ object MainForm: TMainForm
     Passive = True
     ConnectTimeout = 0
     Password = 'FsT3469Dv'
+    TransferType = ftBinary
     Username = 'K_shapiro'
     NATKeepAlive.UseKeepAlive = False
     NATKeepAlive.IdleTimeMS = 0

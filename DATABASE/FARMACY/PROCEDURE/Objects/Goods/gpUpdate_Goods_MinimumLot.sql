@@ -44,6 +44,8 @@ BEGIN
            UPDATE Object_Goods_Juridical SET isMinimumLot = inMinimumLot
                                            , UserUpdateId = vbUserId
                                            , DateUpdate   = CURRENT_TIMESTAMP
+                                           , UserUpdateMinimumLotId = vbUserId
+                                           , DateUpdateMinimumLot   = CURRENT_TIMESTAMP
            WHERE Object_Goods_Juridical.Id = inId;  
          EXCEPTION
             WHEN others THEN 
