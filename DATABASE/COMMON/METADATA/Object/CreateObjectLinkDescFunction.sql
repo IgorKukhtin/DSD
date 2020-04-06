@@ -2276,9 +2276,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PlanIventory_MemberReturn() RETURNS Int
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PlanIventory_MemberReturn', 'Связь с ФИО ответственного за возврат', zc_Object_PlanIventory(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PlanIventory_MemberReturn');
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SunExclusion_From() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SunExclusion_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SunExclusion_From', 'От кого', zc_Object_SunExclusion(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SunExclusion_From');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_SunExclusion_To() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SunExclusion_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_SunExclusion_To', 'Кому', zc_Object_SunExclusion(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SunExclusion_To');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 06.04.20         * zc_ObjectLink_SunExclusion_From
+                    zc_ObjectLink_SunExclusion_To
  17.02.20         * zc_ObjectLink_MemberBankAccount_BankAccount
                     zc_ObjectLink_MemberBankAccount_Member
  29.01.20         * zc_ObjectLink_PlanIventory_Unit
