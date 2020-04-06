@@ -657,6 +657,9 @@ type
     N227: TMenuItem;
     actReport_PharmacyPerformance: TdsdOpenForm;
     N229: TMenuItem;
+    actSunExclusion: TdsdOpenForm;
+    miSunExclusion: TMenuItem;
+    N230: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
