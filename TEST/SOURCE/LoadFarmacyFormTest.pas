@@ -136,6 +136,7 @@ type
     procedure LoadSPObjectFormTest;
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadSunExclusionFormTest;
     procedure LoadTaxUnitFormTest;
     procedure LoadTechnicalRediscountFormTest;
     procedure LoadUnitFormTest;
@@ -2279,6 +2280,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 
 end;
+
+
+procedure TLoadFormTest.LoadSunExclusionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSunExclusionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSunExclusionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSunExclusionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSunExclusionEditForm');
+end;
+
 
 procedure TLoadFormTest.LoadEmployeeScheduleFormTest;
 begin

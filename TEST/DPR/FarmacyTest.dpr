@@ -845,7 +845,9 @@ uses
   Report_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas' {Report_Send_RemainsSun_expressDialogForm: TParentForm},
   SeasonalityCoefficientEdit in '..\..\FormsFarmacy\Guides\SeasonalityCoefficientEdit.pas' {SeasonalityCoefficientForm: TParentForm},
   Report_PharmacyPerformanceDialog in '..\..\FormsFarmacy\Report\Report_PharmacyPerformanceDialog.pas' {Report_PharmacyPerformanceDialogForm: TParentForm},
-  Report_PharmacyPerformance in '..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas' {Report_PharmacyPerformanceForm: TParentForm};
+  Report_PharmacyPerformance in '..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas' {Report_PharmacyPerformanceForm: TParentForm},
+  SunExclusionEdit in '..\..\FormsFarmacy\Guides\SunExclusionEdit.pas' {SunExclusionEditForm: TParentForm},
+  SunExclusion in '..\..\FormsFarmacy\Guides\SunExclusion.pas' {SunExclusionForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
