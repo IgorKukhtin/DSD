@@ -1,9 +1,12 @@
 -- Function: gpUpdate_MI_PromoGoods_Calc()
 DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_MI_PromoGoods_Calc (Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_MI_PromoGoods_Calc(
     IN inId                       Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId               Integer   , -- документ
     IN inPriceIn                  TFloat    , -- Себ-ть прод, грн/кг
     IN inNum                      TFloat    , -- номер строки
     IN inAmountSale               TFloat    , --
@@ -11,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_PromoGoods_Calc(
     IN inContractCondition        TFloat    , -- бонус
     IN inTaxRetIn                 TFloat    , -- % возврат
     IN inTaxPromo                 TFloat    , -- % Скидки, Компенсации
+    IN inisTaxPromo               Boolean   , -- 
    --OUT outSummaProfit             TFloat    , --сумма прибыли
     IN inSession                  TVarChar    -- сессия пользователя
 )
@@ -24,7 +28,7 @@ BEGIN
 
 
     -- Проверили уникальность товар/вид товара
-    IF inNum IN (1)
+    IF inNum IN (3)
     THEN
         RAISE EXCEPTION 'Ошибка. Строка № <%> не редактируется' , zfConvert_FloatToString (inNum);
     END IF;
@@ -53,6 +57,10 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), inId, inPriceIn);
     END IF;
     
+    
+    --свойство документа - какая схема
+    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TaxPromo(), inMovementId, inisTaxPromo);
+
     --outSummaProfit := COALESCE (inSummaSale, 0) - (COALESCE (inPriceIn, 0) + COALESCE (inAmountRetIn, 0) + COALESCE (inContractCondition, 0)) * COALESCE (inAmountSale, 0);
     
 END;
@@ -62,5 +70,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.
+ 06.04.20         *
  06.08.17         *
 */

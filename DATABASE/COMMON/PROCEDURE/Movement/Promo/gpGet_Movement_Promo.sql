@@ -40,6 +40,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
+             , isTaxPromo       Boolean     -- схема % скидки
+             , isTaxPromo_Condition  Boolean     -- схема % компенсации
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              )
@@ -86,6 +88,8 @@ BEGIN
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
           , CAST (TRUE  AS Boolean)                           AS isPromo
           , CAST (FALSE AS Boolean)         		      AS Checked
+          , CAST (FALSE AS Boolean)         		      AS isTaxPromo            -- схема % скидки
+          , CAST (FALSE AS Boolean)         		      AS isTaxPromo_Condition  -- схема % компенсации
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
@@ -126,6 +130,8 @@ BEGIN
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
           , Movement_Promo.isPromo            --Акция
           , Movement_Promo.Checked            --согласовано
+          , Movement_Promo.isTaxPromo
+          , Movement_Promo.isTaxPromo_Condition
           , tmpSign.strSign
           , tmpSign.strSignNo             
         FROM Movement_Promo_View AS Movement_Promo

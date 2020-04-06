@@ -1,10 +1,12 @@
 -- Function: gpSelect_MI_PromoGoods_Calc()
 
-DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Calc (Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Calc (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_PromoGoods_Calc (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_PromoGoods_Calc(
     IN inMovementId  Integer      , -- ключ Документа
     IN inIsErased    Boolean      , --
+    IN inIsTaxPromo  Boolean      , -- схема
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (NUM Integer , GroupNum Integer --
@@ -46,11 +48,22 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
 AS
 $BODY$
     DECLARE vbUserId Integer;
+    DECLARE vbTaxPromo Boolean;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoGoods());
     vbUserId:= lpGetUserBySession (inSession);
+    
+    vbTaxPromo := (SELECT MovementBoolean.ValueData FROM MovementBoolean 
+                   WHERE MovementBoolean.MovementId = inMovementId
+                     AND MovementBoolean.DescId = zc_MovementBoolean_TaxPromo()
+                   ) :: Boolean;
 
+ /*   IF inIsTaxPromo <> vbTaxPromo
+    THEN
+        RETURN;
+    END IF;
+*/
     RETURN QUERY
     WITH
     ---- Значение (% скидки / % компенсации)
@@ -377,6 +390,7 @@ BEGIN
          , tmpData_All.Color_SummaProfit
          , tmpData_All.Text                    ::TVarChar
     FROM tmpData_All
+    WHERE (inIsTaxPromo = vbTaxPromo)
     ORDER BY  tmpData_All.Id, tmpData_All.NUM 
    ;
       
