@@ -849,7 +849,9 @@ uses
   SunExclusionEdit in '..\..\FormsFarmacy\Guides\SunExclusionEdit.pas' {SunExclusionEditForm: TParentForm},
   SunExclusion in '..\..\FormsFarmacy\Guides\SunExclusion.pas' {SunExclusionForm: TParentForm},
   Report_SummSP in '..\..\FormsFarmacy\Report\Report_SummSP.pas' {Report_SummSPForm: TParentForm},
-  Report_SummSP_Dialog in '..\..\FormsFarmacy\Report\Report_SummSP_Dialog.pas' {Report_SummSP_DialogForm: TParentForm};
+  Report_SummSP_Dialog in '..\..\FormsFarmacy\Report\Report_SummSP_Dialog.pas' {Report_SummSP_DialogForm: TParentForm},
+  Report_NomenclaturePeriodDialog in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriodDialog.pas' {Report_NomenclaturePeriodDialogForm: TParentForm},
+  Report_NomenclaturePeriod in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriod.pas' {Report_NomenclaturePeriodForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

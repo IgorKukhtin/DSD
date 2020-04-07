@@ -662,6 +662,8 @@ type
     N230: TMenuItem;
     actReport_SummSP: TdsdOpenForm;
     miReport_SummSP: TMenuItem;
+    actReport_NomenclaturePeriod: TdsdOpenForm;
+    N231: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

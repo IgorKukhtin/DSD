@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3531,6 +3531,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_NomenclaturePeriod: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1085#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072#1084' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1085#1086#1084#1077#1085#1082#1083#1072#1090#1091#1088#1072#1084' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_NomenclaturePeriodForm'
+      FormNameParam.Value = 'TReport_NomenclaturePeriodForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4111,6 +4123,9 @@ inherited MainForm: TMainForm
       end
       object N229: TMenuItem
         Action = actReport_PharmacyPerformance
+      end
+      object N231: TMenuItem
+        Action = actReport_NomenclaturePeriod
       end
       object N178: TMenuItem
         Caption = '-'

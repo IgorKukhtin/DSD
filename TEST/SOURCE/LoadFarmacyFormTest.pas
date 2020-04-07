@@ -850,12 +850,17 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceDialogForm');
     exit;
-
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsForm');
