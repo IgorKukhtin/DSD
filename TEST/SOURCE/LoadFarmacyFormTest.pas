@@ -856,12 +856,15 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodDialogForm');
     exit;
 
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceDialogForm');
     exit;
+
 {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsDialogForm'));
@@ -989,7 +992,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressForm');
 
@@ -998,7 +1001,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressDialogForm');
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
     exit;
@@ -1306,14 +1309,14 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-
+    }
     //отчет доходности
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
     exit;
-
+     {
     // средний чек за период
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailForm');

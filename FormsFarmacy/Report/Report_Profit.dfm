@@ -1153,6 +1153,11 @@ inherited Report_ProfitForm: TReport_ProfitForm
               Format = ',0.00;-,0.00;0.00;'
               Kind = skSum
               Column = chSummaProfitAll
+            end
+            item
+              Format = ',0.00;-,0.00;0.00;'
+              Kind = skAverage
+              Column = chPersentProfitAll
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1365,9 +1370,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
     object tsPivot: TcxTabSheet
       Caption = #1057#1074#1086#1076#1085#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxDBPivotGrid1: TcxDBPivotGrid
         Left = 0
         Top = 0
@@ -1497,17 +1499,17 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
     object cxLabel4: TcxLabel
       Left = 64
-      Top = 40
+      Top = 37
       Caption = #1050#1086#1085'.'#1076#1072#1090#1072':'
     end
     object cxLabel5: TcxLabel
       Left = 231
-      Top = 40
+      Top = 37
       Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082' 2:'
     end
     object ceJuridical2: TcxButtonEdit
       Left = 306
-      Top = 39
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
@@ -1540,12 +1542,12 @@ inherited Report_ProfitForm: TReport_ProfitForm
     end
     object cxLabel7: TcxLabel
       Left = 584
-      Top = 40
+      Top = 37
       Caption = #1070#1088'. '#1083#1080#1094#1086' ('#1085#1072#1096#1077'):'
     end
     object edJuridical: TcxButtonEdit
       Left = 676
-      Top = 39
+      Top = 36
       Properties.Buttons = <
         item
           Default = True
@@ -1554,6 +1556,22 @@ inherited Report_ProfitForm: TReport_ProfitForm
       Properties.ReadOnly = True
       TabOrder = 12
       Width = 349
+    end
+    object cxLabel9: TcxLabel
+      Left = 1054
+      Top = 19
+      Hint = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1087#1077#1088#1080#1086#1076#1072', '#1084#1077#1089'.'
+      Caption = #1055#1088#1086#1096#1083#1099#1081' '#1087#1077#1088#1080#1086#1076', '#1084#1077#1089'.'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ceMonth: TcxCurrencyEdit
+      Left = 1054
+      Top = 36
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.'
+      TabOrder = 14
+      Width = 119
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1737,6 +1755,13 @@ inherited Report_ProfitForm: TReport_ProfitForm
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Month'
+          Value = Null
+          Component = ceMonth
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
@@ -1844,6 +1869,13 @@ inherited Report_ProfitForm: TReport_ProfitForm
         Value = Null
         Component = GuidesUnit
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonth'
+        Value = Null
+        Component = ceMonth
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
