@@ -847,7 +847,9 @@ uses
   Report_PharmacyPerformanceDialog in '..\..\FormsFarmacy\Report\Report_PharmacyPerformanceDialog.pas' {Report_PharmacyPerformanceDialogForm: TParentForm},
   Report_PharmacyPerformance in '..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas' {Report_PharmacyPerformanceForm: TParentForm},
   SunExclusionEdit in '..\..\FormsFarmacy\Guides\SunExclusionEdit.pas' {SunExclusionEditForm: TParentForm},
-  SunExclusion in '..\..\FormsFarmacy\Guides\SunExclusion.pas' {SunExclusionForm: TParentForm};
+  SunExclusion in '..\..\FormsFarmacy\Guides\SunExclusion.pas' {SunExclusionForm: TParentForm},
+  Report_SummSP in '..\..\FormsFarmacy\Report\Report_SummSP.pas' {Report_SummSPForm: TParentForm},
+  Report_SummSP_Dialog in '..\..\FormsFarmacy\Report\Report_SummSP_Dialog.pas' {Report_SummSP_DialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

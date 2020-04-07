@@ -660,6 +660,8 @@ type
     actSunExclusion: TdsdOpenForm;
     miSunExclusion: TMenuItem;
     N230: TMenuItem;
+    actReport_SummSP: TdsdOpenForm;
+    miReport_SummSP: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

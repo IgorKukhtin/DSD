@@ -2343,6 +2343,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSPForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SummSPForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSP_DialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SummSP_DialogForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');

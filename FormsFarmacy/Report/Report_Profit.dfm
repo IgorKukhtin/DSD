@@ -450,8 +450,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
           object JuridicalMainName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalMainName'
-            PropertiesClassName = 'TcxDateEditProperties'
-            Properties.DisplayFormat = 'DD.MM.YYYY (DDD)'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 41
@@ -1258,7 +1256,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummSale_SP'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
@@ -1268,7 +1265,6 @@ inherited Report_ProfitForm: TReport_ProfitForm
             DataBinding.FieldName = 'SummSale_1303'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 107
