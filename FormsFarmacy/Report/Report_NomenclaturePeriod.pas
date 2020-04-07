@@ -48,6 +48,8 @@ type
     ConsumptionSum: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
     RemainsSum: TcxGridDBColumn;
+    edInvNumber: TcxTextEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

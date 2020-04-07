@@ -13,17 +13,17 @@ inherited Report_NomenclaturePeriodForm: TReport_NomenclaturePeriodForm
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
-    ExplicitWidth = 814
+    ExplicitWidth = 869
     ExplicitHeight = 422
     ClientRectBottom = 422
     ClientRectRight = 869
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 814
+      ExplicitWidth = 869
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
         Width = 869
         Height = 422
-        ExplicitWidth = 814
+        ExplicitWidth = 869
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -153,7 +153,7 @@ inherited Report_NomenclaturePeriodForm: TReport_NomenclaturePeriodForm
   inherited Panel: TPanel
     Width = 869
     Height = 32
-    ExplicitWidth = 814
+    ExplicitWidth = 869
     ExplicitHeight = 32
     inherited deStart: TcxDateEdit
       Left = 29
@@ -172,6 +172,19 @@ inherited Report_NomenclaturePeriodForm: TReport_NomenclaturePeriodForm
       Caption = #1087#1086':'
       ExplicitLeft = 120
       ExplicitWidth = 20
+    end
+    object edInvNumber: TcxTextEdit
+      Left = 337
+      Top = 5
+      Properties.ReadOnly = True
+      TabOrder = 4
+      Text = #1040#1055' 1 '#1087#1088'.'#1040'. '#1055#1086#1083#1103' 141'#1072' (Medical Plaza)'
+      Width = 264
+    end
+    object cxLabel3: TcxLabel
+      Left = 247
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
   end
   inherited ActionList: TActionList

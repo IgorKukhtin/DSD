@@ -4121,9 +4121,6 @@ inherited MainForm: TMainForm
       object N226: TMenuItem
         Action = actReport_GeneralMovementGoods
       end
-      object N229: TMenuItem
-        Action = actReport_PharmacyPerformance
-      end
       object N231: TMenuItem
         Action = actReport_NomenclaturePeriod
       end
@@ -4254,6 +4251,9 @@ inherited MainForm: TMainForm
       end
       object N153: TMenuItem
         Action = actReport_CheckMiddle_Detail
+      end
+      object N229: TMenuItem
+        Action = actReport_PharmacyPerformance
       end
       object N138: TMenuItem
         Caption = '-'
