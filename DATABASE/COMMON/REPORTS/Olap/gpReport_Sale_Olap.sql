@@ -22,6 +22,7 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar
              , Amount TFloat, Summ TFloat
+             , Sale_Summ TFloat
 
              , CountSale TFloat
              , CountSale_10500 TFloat
@@ -32,6 +33,8 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , CountSendOnPrice_40200 TFloat
              , CountSendOnPriceOut TFloat
              , SummSale TFloat
+             , SummSale_10250 TFloat
+             , SummSale_10300 TFloat
              , SummSale_10500 TFloat
              , SummSale_40208 TFloat
              , SummSaleReal TFloat
@@ -109,6 +112,20 @@ BEGIN
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE
                                           AND (MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10100() OR MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10200())
                                         THEN MIContainer.Amount ELSE 0 END)         AS Amount_Sum
+
+                             , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                        -- AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                         AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250() --  —ÛÏÏ‡ —ÍË‰Í‡ ¿ÍˆËˇ
+                                             THEN -1 * MIContainer.Amount
+                                        ELSE 0
+                                   END) AS SummSale_10250
+
+                             , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                          --AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                          AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() -- —ÛÏÏ‡ —ÍË‰Í‡ 
+                                             THEN -1 * MIContainer.Amount
+                                        ELSE 0
+                                   END) AS SummSale_10300
 
                              , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                           AND MIContainer.MovementDescId = zc_Movement_Sale()
@@ -293,6 +310,8 @@ BEGIN
                                        , SUM (tmpMI_ContainerIn.SummSale              )     AS SummSale
                                        , SUM (tmpMI_ContainerIn.SummSale_10500        )     AS SummSale_10500
                                        , SUM (tmpMI_ContainerIn.SummSale_40208        )     AS SummSale_40208
+                                       , SUM (tmpMI_ContainerIn.SummSale_10250        )     AS SummSale_10250
+                                       , SUM (tmpMI_ContainerIn.SummSale_10300        )     AS SummSale_10300
                                        , SUM (tmpMI_ContainerIn.SummSaleReal          )     AS SummSaleReal
                                        , SUM (tmpMI_ContainerIn.SummSendOnPriceIn     )     AS SummSendOnPriceIn
                                        , SUM (tmpMI_ContainerIn.SummSendOnPrice_10500 )     AS SummSendOnPrice_10500
@@ -319,9 +338,25 @@ BEGIN
                              , COALESCE (MIContainer.ObjectIntId_Analyzer, 0)       AS GoodsKindId
                              , CASE WHEN inIsPartion = TRUE THEN MIContainer.ContainerIntId_analyzer ELSE 0 END AS ContainerIntId_analyzer
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count() THEN  MIContainer.Amount ELSE 0 END)  AS Amount
+                             
                              , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Summ() AND MIContainer.isActive = TRUE
                                           AND (MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10100() OR MIContainer.AnalyzerId =  zc_Enum_AnalyzerId_SaleSumm_10200())
                                         THEN MIContainer.Amount ELSE 0 END)         AS Amount_Sum
+
+                             , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                        -- AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                         AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10250() --  —ÛÏÏ‡ —ÍË‰Í‡ ¿ÍˆËˇ
+                                             THEN -1 * MIContainer.Amount
+                                        ELSE 0
+                                   END) AS SummSale_10250
+
+                             , SUM (CASE WHEN MIContainer.DescId = zc_Container_Summ()
+                                        -- AND MIContainer.MovementDescId = zc_Movement_Sale()
+                                         AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_SaleSumm_10300() -- —ÛÏÏ‡ —ÍË‰Í‡ 
+                                             THEN -1 * MIContainer.Amount
+                                        ELSE 0
+                                   END) AS SummSale_10300
+
 
                              , SUM (CASE WHEN MIContainer.DescId = zc_Container_Count()
                                           AND MIContainer.MovementDescId = zc_Movement_Sale()
@@ -507,6 +542,8 @@ BEGIN
                                        , SUM (tmpMI_ContainerIn.SummSale              )     AS SummSale
                                        , SUM (tmpMI_ContainerIn.SummSale_10500        )     AS SummSale_10500
                                        , SUM (tmpMI_ContainerIn.SummSale_40208        )     AS SummSale_40208
+                                       , SUM (tmpMI_ContainerIn.SummSale_10250        )     AS SummSale_10250
+                                       , SUM (tmpMI_ContainerIn.SummSale_10300        )     AS SummSale_10300
                                        , SUM (tmpMI_ContainerIn.SummSaleReal          )     AS SummSaleReal
                                        , SUM (tmpMI_ContainerIn.SummSendOnPriceIn     )     AS SummSendOnPriceIn
                                        , SUM (tmpMI_ContainerIn.SummSendOnPrice_10500 )     AS SummSendOnPrice_10500
@@ -597,6 +634,8 @@ BEGIN
            
            , (tmpOperationGroup.OperCount * (CASE WHEN tmpGoodsParam.MeasureId= zc_Measure_Sh() THEN tmpGoodsParam.Weight ELSE 1 END ))  :: TFloat AS Amount
            , tmpOperationGroup.OperSumm  :: TFloat AS Summ
+           
+           , ( COALESCE (tmpOperationGroup.OperSumm,0) - (COALESCE (tmpOperationGroup.SummSale_10250,0) + COALESCE (tmpOperationGroup.SummSale_10300,0) ) )  :: TFloat AS Sale_Summ
 
            , tmpOperationGroup.CountSale                   :: TFloat
            , tmpOperationGroup.CountSale_10500             :: TFloat
@@ -607,6 +646,8 @@ BEGIN
            , tmpOperationGroup.CountSendOnPrice_40200      :: TFloat
            , tmpOperationGroup.CountSendOnPriceOut         :: TFloat
            , tmpOperationGroup.SummSale                    :: TFloat
+           , tmpOperationGroup.SummSale_10250              :: TFloat
+           , tmpOperationGroup.SummSale_10300              :: TFloat
            , tmpOperationGroup.SummSale_10500              :: TFloat
            , tmpOperationGroup.SummSale_40208              :: TFloat
            , tmpOperationGroup.SummSaleReal                :: TFloat
@@ -663,6 +704,7 @@ $BODY$
 /* -------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.04.20         *
  17.07.18         *
 */
 
