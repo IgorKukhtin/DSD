@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister(
     IN inCashRegisterKindId     Integer   ,     -- 
     IN inTimePUSHFinal1         TDateTime ,     -- 
     IN inTimePUSHFinal2         TDateTime ,     -- 
+    IN inGetHardwareData        Boolean ,     -- 
     IN inSession                TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -57,18 +59,22 @@ BEGIN
        PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashRegister_TimePUSHFinal2(), ioId, NULL);
    END IF;
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashRegister_GetHardwareData(), ioId, inGetHardwareData);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister (Integer, Integer, TVarChar, Integer, TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 -------------------------------------------------------------------------------
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.   Шаблий О.В.
+ 08.04.20                                                                      *  
  04.03.19                                                                      *  
  22.05.15                        *  
 */

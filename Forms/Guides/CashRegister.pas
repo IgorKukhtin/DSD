@@ -19,6 +19,19 @@ type
     TimePUSHFinal1: TcxGridDBColumn;
     TimePUSHFinal2: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
+    GetHardwareData: TcxGridDBColumn;
+    BaseBoardProduct: TcxGridDBColumn;
+    ProcessorName: TcxGridDBColumn;
+    DiskDriveModel: TcxGridDBColumn;
+    PhysicalMemoryCapacity: TcxGridDBColumn;
+    actUpdate_GetHardwareData_Yes: TMultiAction;
+    actUpdate_GetHardwareData_No: TMultiAction;
+    actExecUpdate_GetHardwareData_Yes: TdsdExecStoredProc;
+    actExecUpdate_GetHardwareData_No: TdsdExecStoredProc;
+    spUpdate_GetHardwareData_Yes: TdsdStoredProc;
+    spUpdate_GetHardwareData_No: TdsdStoredProc;
+    dxBarButton1: TdxBarButton;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

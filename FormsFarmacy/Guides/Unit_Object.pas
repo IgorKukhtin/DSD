@@ -136,6 +136,12 @@ type
     actUpdate_Unit_isSUN_v3_in: TdsdExecStoredProc;
     bbUpdate_Unit_isSUN_v3_in: TdxBarButton;
     bbUpdate_Unit_isSUN_v3_out: TdxBarButton;
+    actUpdate_ListDaySUN: TMultiAction;
+    actExecUpdate_ListDaySUN: TdsdExecStoredProc;
+    actEDListDaySUN: TExecuteDialog;
+    FormParams: TdsdFormParams;
+    dxBarButton4: TdxBarButton;
+    spUpdate_ListDaySUN: TdsdStoredProc;
   private
     { Private declarations }
   public

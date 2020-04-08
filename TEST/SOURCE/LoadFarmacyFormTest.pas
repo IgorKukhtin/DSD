@@ -348,6 +348,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterEditForm');
 
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashRegisterKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashRegisterKindForm');
 
@@ -1573,20 +1575,23 @@ end;
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
+ { TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_MCSForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_MCSForm');
- }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
-
+ }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TListDaySUNDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TListDaySUNDialogForm');
     {
     //
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_JuridicalAreaForm'));

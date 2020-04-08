@@ -1,23 +1,23 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 477
-  ClientWidth = 955
-  ExplicitWidth = 971
-  ExplicitHeight = 515
+  ClientWidth = 1158
+  ExplicitWidth = 1174
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 955
+    Width = 1158
     Height = 451
     ExplicitWidth = 955
     ExplicitHeight = 451
     ClientRectBottom = 451
-    ClientRectRight = 955
+    ClientRectRight = 1158
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 955
       ExplicitHeight = 451
       inherited cxGrid: TcxGrid
-        Width = 955
+        Width = 1158
         Height = 451
         ExplicitWidth = 955
         ExplicitHeight = 451
@@ -1366,6 +1366,51 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090
       ImageIndex = 79
     end
+    object actUpdate_ListDaySUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actEDListDaySUN
+      ActionList = <
+        item
+          Action = actExecUpdate_ListDaySUN
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 35
+    end
+    object actExecUpdate_ListDaySUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_ListDaySUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_ListDaySUN
+        end>
+      Caption = 'actExecUpdate_ListDaySUN'
+    end
+    object actEDListDaySUN: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actEDListDaySUN'
+      FormName = 'TListDaySUNDialogForm'
+      FormNameParam.Value = 'TListDaySUNDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ListDaySUN'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ListDaySUN'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1561,6 +1606,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1699,6 +1748,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdate_Unit_isSUN_v3_out: TdxBarButton
       Action = actUpdate_Unit_isSUN_v3_out
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdate_ListDaySUN
       Category = 0
     end
   end
@@ -2581,5 +2634,43 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 904
     Top = 323
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'ListDaySUN'
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 29
+    Top = 146
+  end
+  object spUpdate_ListDaySUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_ListDaySUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inListDaySUN'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ListDaySUN'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 704
+    Top = 387
   end
 end

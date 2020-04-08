@@ -169,7 +169,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 0
-      ExplicitHeight = 457
       object cbDividePartionDate: TcxCheckBox
         Left = 7
         Top = 69
@@ -471,7 +470,6 @@
     object cxTabSheet3: TcxTabSheet
       Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ExplicitHeight = 457
       object edUnitOverdue: TcxButtonEdit
         Left = 0
         Top = 27
@@ -707,7 +705,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1044#1083#1103' '#1074#1099#1075#1088#1091#1079#1086#1082
       ImageIndex = 1
-      ExplicitHeight = 457
       object cxLabel30: TcxLabel
         Left = 162
         Top = 12

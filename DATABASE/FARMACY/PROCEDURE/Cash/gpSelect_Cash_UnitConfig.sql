@@ -1,6 +1,5 @@
 -- Function: gpSelect_Cash_UnitConfig()
 
-DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Cash_UnitConfig (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Cash_UnitConfig (
@@ -23,7 +22,8 @@ RETURNS TABLE (id Integer, Code Integer, Name TVarChar,
                LoyaltySaveMoneyCount Integer, LoyaltySaveMoneyID Integer,
                SPKindId Integer, SPKindName TVarChar, SPTax TFloat, 
                PartnerMedicalID Integer, PartnerMedicalName TVarChar,
-               isPromoCodeDoctor boolean, isTechnicalRediscount Boolean
+               isPromoCodeDoctor boolean, isTechnicalRediscount Boolean, 
+               isGetHardwareData boolean
 
               ) AS
 $BODY$
@@ -241,6 +241,7 @@ BEGIN
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
        , COALESCE(tmpPromoCodeDoctor.ID, 0) <> 0           AS isPromoCodeDoctor
        , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
+       , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)                  AS isGetHardwareData
 
    FROM Object AS Object_Unit
 
@@ -290,6 +291,10 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_TimePUSHFinal2
                               ON ObjectDate_TimePUSHFinal2.ObjectId = vbCashRegisterId
                              AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GetHardwareData 
+                                ON ObjectBoolean_GetHardwareData.ObjectId = vbCashRegisterId
+                               AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SP
                                 ON ObjectBoolean_SP.ObjectId = Object_Unit.Id

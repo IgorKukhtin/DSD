@@ -44,7 +44,32 @@ BEGIN
                     FROM gpSelect_Object_Unit_ExportPriceForLiki24(inSession) AS Object_Unit
                     WHERE Object_Unit.Id = inUnitId OR inUnitId = 0
                    )
-     , tmpContainer AS
+   , tmpContainerPD AS
+                   (SELECT tmpUnit.UnitId
+                         , Container.ObjectId
+                         , Container.Id
+                         , Container.Amount
+                         , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
+                    FROM Container
+                         INNER JOIN tmpUnit ON tmpUnit.UnitId = Container.WhereObjectId
+                         LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                      AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                    WHERE Container.DescId        = zc_Container_CountPartionDate()
+                      AND Container.Amount        > 0
+                   )
+   , tmpRemainsPD AS
+                   (SELECT Container.UnitId
+                         , Container.ObjectId
+                         , Sum(Container.Amount)                                  AS Amount
+                    FROM tmpContainerPD AS Container
+                         LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                              ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                             AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                    WHERE ObjectDate_ExpirationDate.ValueData < CURRENT_DATE
+                    GROUP BY Container.UnitId
+                           , Container.ObjectId
+                   )
+   , tmpContainer AS
                    (SELECT tmpUnit.UnitId
                          , Container.ObjectId
                          , Container.Id
@@ -222,7 +247,7 @@ BEGIN
            , REPLACE(Remains.SertificatNumber, ',', ';')::TVarChar                AS RegistrationNumber
            , REPLACE(Object_Goods_Juridical_Optima.Code, ',', ';')::TVarChar      AS Optima
            , REPLACE(Object_Goods_Juridical_Badm.Code, ',', ';')::TVarChar        AS Badm
-           , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0),'FM9999990.0999')::TVarChar  AS Quantity
+           , to_char(Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0),'FM9999990.0999')::TVarChar  AS Quantity
            , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS Price
            , to_char(Object_Price.Price,'FM9999990.00')::TVarChar                   AS OfflinePrice
            , NULL::TVarChar                   AS PickupPrice
@@ -254,11 +279,14 @@ BEGIN
 
            LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
                                                       AND Reserve_Goods.UnitId = Remains.UnitId
+                                                      
+           LEFT OUTER JOIN tmpRemainsPD AS RemainsPD ON RemainsPD.ObjectId = Remains.ObjectId
+                                                    AND RemainsPD.UnitId = Remains.UnitId
 
            -- штрих-код производителя
            LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
 
-      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0;
+      WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0) - COALESCE (RemainsPD.Amount, 0)) > 0;
 
 END;
 $BODY$
