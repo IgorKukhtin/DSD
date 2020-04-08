@@ -42,14 +42,14 @@ type
     cxGridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
     chToName: TcxGridDBColumn;
-    chAmount: TcxGridDBColumn;
-    chSumm: TcxGridDBColumn;
+    chAmount_res: TcxGridDBColumn;
+    chSumm_res: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DBViewAddOn_Partion: TdsdDBViewAddOn;
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
     DBViewAddOn_Result_child: TdsdDBViewAddOn;
-    chAmount_next: TcxGridDBColumn;
+    chAmountIncome: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     spSendSUN: TdsdStoredProc;
     DefSUNCDS: TClientDataSet;
@@ -67,18 +67,11 @@ type
     cxGridLevel3: TcxGridLevel;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
-    Amount_next_res: TcxGridDBColumn;
-    Summ_next_res: TcxGridDBColumn;
-    AmountSunOnly_summ: TcxGridDBColumn;
-    Amount_notSold_summ: TcxGridDBColumn;
-    chAmountSunOnly_summ: TcxGridDBColumn;
-    chAmount_notSold_summ: TcxGridDBColumn;
-    chAmountResult: TcxGridDBColumn;
+    chAmountRemains_calc_all: TcxGridDBColumn;
     chAmountRemains: TcxGridDBColumn;
     chPrice: TcxGridDBColumn;
     chMCS: TcxGridDBColumn;
     chAmount_sale: TcxGridDBColumn;
-    chAmountSun_summ_save: TcxGridDBColumn;
     chAmountSun_summ: TcxGridDBColumn;
     actOpenReportPartionHistoryForm: TdsdOpenForm;
     actOpenReportPartionDateForm: TdsdOpenForm;
@@ -110,14 +103,8 @@ type
     Summ_in_partion: TcxGridDBColumn;
     Summ_out_partion_calc: TcxGridDBColumn;
     Summ_in_partion_calc: TcxGridDBColumn;
-    Amount_not_out_res: TcxGridDBColumn;
-    Summ_not_out_res: TcxGridDBColumn;
-    Amount_not_in_res: TcxGridDBColumn;
-    Summ_not_in_res: TcxGridDBColumn;
-    chAmount_not_out: TcxGridDBColumn;
-    chSumm_not_out: TcxGridDBColumn;
-    chAmount_not_in: TcxGridDBColumn;
-    chSumm_not_in: TcxGridDBColumn;
+    chAmountOrderExternal: TcxGridDBColumn;
+    AmountRemains_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

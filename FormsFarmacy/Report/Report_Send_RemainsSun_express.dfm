@@ -3,10 +3,8 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
   ClientHeight = 673
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -256
-  ExplicitTop = -37
   ExplicitWidth = 976
-  ExplicitHeight = 708
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2647,8 +2645,8 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 632
-    Top = 312
+    Left = 656
+    Top = 304
   end
   object PartionCDS: TClientDataSet
     Aggregates = <>

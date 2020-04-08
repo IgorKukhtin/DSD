@@ -15,6 +15,7 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -31,7 +32,12 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = PersonalServiceListName
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
@@ -255,6 +261,14 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpenForm'
         end
         item
@@ -320,6 +334,10 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1058#1058#1053
       Visible = ivAlways
       ImageIndex = 42
+    end
+    object bb: TdxBarButton
+      Action = macInsert
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -537,6 +555,25 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
         end>
       isShowModal = True
     end
+    object actMemberChoiceInsert: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'TMember_ObjectForm'
+      FormName = 'TMember_ObjectForm'
+      FormNameParam.Value = 'TMember_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inMemberId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actMemberChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -563,6 +600,34 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
           MultiSelectSeparator = ','
         end>
       isShowModal = True
+    end
+    object macInsert: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMemberChoiceInsert
+        end
+        item
+          Action = actMemberInsert
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091' '#1074#1089#1077' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1092#1080#1079'. '#1083#1080#1094#1091' '#1074#1089#1077' '#1074#1077#1076#1086#1084#1086#1089#1090#1080
+      ImageIndex = 27
+    end
+    object actMemberInsert: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert
+      StoredProcList = <
+        item
+          StoredProc = spInsert
+        end>
+      Caption = 'actMemberInsert'
     end
   end
   object spSelect: TdsdStoredProc
@@ -675,6 +740,28 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
       end>
     PackSize = 1
     Left = 459
-    Top = 118
+    Top = 126
+  end
+  object spInsert: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_MemberPersonalServiceList'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMemberId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inMemberId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 587
+    Top = 126
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 664
+    Top = 88
   end
 end
