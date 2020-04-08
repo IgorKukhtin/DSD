@@ -19,8 +19,13 @@ RETURNS TABLE (Id Integer, CommonCode Integer
              , IsUpload Boolean, IsPromo Boolean, isSpecCondition Boolean, isUploadBadm Boolean, isUploadTeva Boolean, isUploadYuriFarm Boolean
              , UpdateName TVarChar
              , UpdateDate TDateTime
-             , isErased boolean
 
+             , UserUpdateMinimumLotName TVarChar 
+             , DateUpdateMinimumLot     TDateTime
+             , UserUpdateisPromoName    TVarChar 
+             , DateUpdateisPromo        TDateTime
+             
+             , isErased boolean
 ) AS
 $BODY$
 BEGIN
@@ -76,7 +81,13 @@ BEGIN
                                           JOIN Object_Goods_View AS Object_Goods ON Object_Goods.Id = ObjectLink_LinkGoods_Goods.ChildObjectId
                                           
                                      WHERE ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
-                                       AND Object_Goods.ObjectId  = zc_Enum_GlobalConst_Marion())
+                                       AND Object_Goods.ObjectId  = zc_Enum_GlobalConst_Marion()
+                                     )
+                                     
+         , tmpObject_Goods_Juridical AS (SELECT *
+                                         FROM Object_Goods_Juridical
+                                         WHERE Object_Goods_Juridical.JuridicalId = inObjectId
+                                         ) 
                                     
       SELECT 
            ObjectLink_LinkGoods_GoodsMain.ObjectId AS Id
@@ -84,15 +95,15 @@ BEGIN
          , MainGoods.Id                            AS GoodsMainId
          , MainGoods.ObjectCode                    AS GoodsMainCode
          , MainGoods.ValueData                     AS GoodsMainName
-         , Object_Goods.Id                         AS GoodsId 
+         , Object_Goods.Id                         AS GoodsId
          , Object_Goods.ObjectCode                 AS GoodsCodeInt
          --, ObjectString.ValueData                  AS GoodsCode
          , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN Object_Goods.ValueData ELSE ObjectString.ValueData END :: TVarChar AS GoodsCode
          --, Object_Goods.ValueData                  AS GoodsName
          , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN tmpLPLI.GoodsName ELSE Object_Goods.ValueData END AS GoodsName
-         , ObjectString_Goods_UKTZED.ValueData     AS CodeUKTZED
+         , Object_Goods_Juridical.UKTZED           AS CodeUKTZED
          --, ObjectString_Goods_Maker.ValueData      AS MakerName
-         , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN COALESCE (ObjectString_Goods_Maker.ValueData, tmpLPLI.ProducerName) ELSE ObjectString_Goods_Maker.ValueData END MakerName
+         , CASE WHEN ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode() THEN COALESCE (Object_Goods_Juridical.MakerName, tmpLPLI.ProducerName) ELSE Object_Goods_Juridical.MakerName END MakerName
 
          , Object_ConditionsKeep.Id                AS ConditionsKeepId
          , Object_ConditionsKeep.ValueData         AS ConditionsKeepName
@@ -101,15 +112,20 @@ BEGIN
          , Object_Area.ValueData                   AS AreaName
 
          , ObjectFloat_Goods_MinimumLot.ValueData  AS MinimumLot
-         , COALESCE(ObjectBoolean_Goods_IsUpload.ValueData,FALSE)         AS IsUpload
-         , COALESCE(ObjectBoolean_Goods_IsPromo.ValueData,FALSE)          AS IsPromo
-         , COALESCE(ObjectBoolean_Goods_SpecCondition.ValueData,FALSE)    AS IsSpecCondition
-         , COALESCE(ObjectBoolean_Goods_UploadBadm.ValueData,FALSE)       AS IsUploadBadm
-         , COALESCE(ObjectBoolean_Goods_UploadTeva.ValueData,FALSE)       AS IsUploadTeva
-         , COALESCE(ObjectBoolean_Goods_UploadYuriFarm.ValueData,FALSE  ) AS isUploadYuriFarm
+         , COALESCE(Object_Goods_Juridical.IsUpload,FALSE)           AS IsUpload
+         , COALESCE(Object_Goods_Juridical.IsPromo,FALSE)            AS IsPromo
+         , COALESCE(Object_Goods_Juridical.IsSpecCondition,FALSE)    AS IsSpecCondition
+         , COALESCE(Object_Goods_Juridical.IsUploadBadm,FALSE)       AS IsUploadBadm
+         , COALESCE(Object_Goods_Juridical.IsUploadTeva,FALSE)       AS IsUploadTeva
+         , COALESCE(Object_Goods_Juridical.IsUploadYuriFarm,FALSE  ) AS isUploadYuriFarm
 
          , COALESCE(Object_Update.ValueData, '')                ::TVarChar  AS UpdateName
          , COALESCE(ObjectDate_Protocol_Update.ValueData, Null) ::TDateTime AS UpdateDate
+
+         , COALESCE(Object_UserUpdateMinimumLot.ValueData, '')         ::TVarChar  AS UserUpdateMinimumLotName
+         , COALESCE(Object_Goods_Juridical.DateUpdateMinimumLot, Null) ::TDateTime AS DateUpdateMinimumLot   
+         , COALESCE(Object_UserUpdateisPromo.ValueData, '')            ::TVarChar  AS UserUpdateisPromoName
+         , COALESCE(Object_Goods_Juridical.DateUpdateisPromo, Null)    ::TDateTime AS DateUpdateisPromo   
 
          , Object_Goods.isErased                   AS isErased 
       FROM ObjectLink AS ObjectLink_Goods_Object
@@ -118,21 +134,24 @@ BEGIN
                             ON Object_Goods.Id = ObjectLink_Goods_Object.ObjectId 
                            AND (Object_Goods.isErased = inIsErased OR inIsErased = True)
 
+          LEFT JOIN tmpObject_Goods_Juridical AS Object_Goods_Juridical
+                                              ON Object_Goods_Juridical.Id = ObjectLink_Goods_Object.ObjectId
+
           LEFT JOIN ObjectString ON ObjectString.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectString.DescId = zc_ObjectString_Goods_Code()
-          LEFT JOIN ObjectString AS ObjectString_Goods_Maker
+          /*LEFT JOIN ObjectString AS ObjectString_Goods_Maker
                                  ON ObjectString_Goods_Maker.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()
-
+          
           LEFT JOIN ObjectString AS ObjectString_Goods_UKTZED
                                  ON ObjectString_Goods_UKTZED.ObjectId = ObjectLink_Goods_Object.ObjectId
                                 AND ObjectString_Goods_UKTZED.DescId = zc_ObjectString_Goods_UKTZED()
-
+          */
           LEFT JOIN ObjectFloat AS ObjectFloat_Goods_MinimumLot
                                 ON ObjectFloat_Goods_MinimumLot.ObjectId = ObjectLink_Goods_Object.ObjectId
                                AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()   
 
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
+         /* LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsUpload
                                   ON ObjectBoolean_Goods_IsUpload.ObjectId = ObjectLink_Goods_Object.ObjectId
                                  AND ObjectBoolean_Goods_IsUpload.DescId = zc_ObjectBoolean_Goods_IsUpload()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
@@ -154,17 +173,21 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep 
                                ON ObjectLink_Goods_ConditionsKeep.ObjectId = ObjectLink_Goods_Object.ObjectId
                               AND ObjectLink_Goods_ConditionsKeep.DescId = zc_ObjectLink_Goods_ConditionsKeep()
-          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = ObjectLink_Goods_ConditionsKeep.ChildObjectId
+          */
+          LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = Object_Goods_Juridical.ConditionsKeepId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
+          /*LEFT JOIN ObjectLink AS ObjectLink_Goods_Area 
                                ON ObjectLink_Goods_Area.ObjectId = ObjectLink_Goods_Object.ObjectId
                               AND ObjectLink_Goods_Area.DescId = zc_ObjectLink_Goods_Area()
           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+          */
+          
+          LEFT JOIN Object AS Object_Area ON Object_Area.Id = Object_Goods_Juridical.AreaId
           
           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_Goods
                                ON ObjectLink_LinkGoods_Goods.DescId = zc_ObjectLink_LinkGoods_Goods()
                               AND ObjectLink_LinkGoods_Goods.ChildObjectId = Object_Goods.Id
-
+           
           LEFT JOIN ObjectLink AS ObjectLink_LinkGoods_GoodsMain 
                                ON ObjectLink_LinkGoods_GoodsMain.ObjectId = ObjectLink_LinkGoods_Goods.ObjectId 
                               AND ObjectLink_LinkGoods_GoodsMain.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
@@ -178,13 +201,16 @@ BEGIN
                              ON ObjectLink_Update.ObjectId = Object_Goods.Id
                             AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId 
-                         
+
+          LEFT JOIN Object AS Object_UserUpdateMinimumLot ON Object_UserUpdateMinimumLot.Id = Object_Goods_Juridical.UserUpdateMinimumLotId  
+          LEFT JOIN Object AS Object_UserUpdateisPromo    ON Object_UserUpdateisPromo.Id = Object_Goods_Juridical.UserUpdateisPromoId 
+          
           LEFT JOIN tmpObject_LinkGoods_View AS Object_LinkGoods_View 
-                                             ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_Goodsmain.ChildObjectId
+                                             ON Object_LinkGoods_View.GoodsmainId = ObjectLink_LinkGoods_GoodsMain.ChildObjectId
 
           LEFT JOIN tmpLoadPriceListItem AS tmpLPLI ON tmpLPLI.BarCode = Object_Goods.ValueData
                                         AND ObjectLink_Goods_Object.ChildObjectId = zc_Enum_GlobalConst_BarCode()
-                                        AND (COALESCE (ObjectString_Goods_Maker.ValueData,'')= '' OR tmpLPLI.ProducerName = ObjectString_Goods_Maker.ValueData)
+                                        AND (COALESCE (Object_Goods_Juridical.MakerName,'')= '' OR tmpLPLI.ProducerName = Object_Goods_Juridical.MakerName)
 
       WHERE ObjectLink_Goods_Object.ChildObjectId = inObjectId
      AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
@@ -201,6 +227,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».  ﬂÓ¯ÂÌÍÓ –.‘.   ÿ‡·ÎËÈ Œ.¬.
+ 06.04.20         *
  23.10.19                                                                      * isUploadYuriFarm
  11.12.17         * Goods_UKTZED
  21.10.17         * add Area

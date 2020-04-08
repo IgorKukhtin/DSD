@@ -1238,6 +1238,16 @@ CREATE OR REPLACE FUNCTION zc_Object_DriverSun() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_DriverSun', 'Водители СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_DriverSun');
 
+CREATE OR REPLACE FUNCTION zc_Object_SeasonalityCoefficient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SeasonalityCoefficient'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SeasonalityCoefficient', 'Коэффициента сезонности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SeasonalityCoefficient');
+ 
+ CREATE OR REPLACE FUNCTION zc_Object_SunExclusion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_SunExclusion', 'Исключения для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion');
+   
+
+
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ВРЕМЕННЫЕ ОБЪЕКТЫ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1254,6 +1264,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 06.04.20         * zc_Object_SunExclusion
+ 05.04.20                                                                                        * zc_Object_SeasonalityCoefficient
  31.03.20         * zc_Object_PromoStateKind
  05.03.20                                                                                        * zc_Object_DriverSun
  27.02.20                                                                                        * zc_Object_CommentTR

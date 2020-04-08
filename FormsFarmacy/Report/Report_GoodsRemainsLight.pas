@@ -52,6 +52,7 @@ type
     cbPartion: TcxCheckBox;
     cbPartionPrice: TcxCheckBox;
     cbJuridical: TcxCheckBox;
+    isResolution_224: TcxGridDBColumn;
   private
     { Private declarations }
   public

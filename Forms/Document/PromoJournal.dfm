@@ -102,6 +102,24 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 45
           end
+          object isTaxPromo: TcxGridDBColumn
+            Caption = '% '#1057#1082#1080#1076#1082#1080
+            DataBinding.FieldName = 'isTaxPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1093#1077#1084#1072' % '#1057#1082#1080#1076#1082#1080
+            Options.Editing = False
+            Width = 70
+          end
+          object isTaxPromo_Condition: TcxGridDBColumn
+            Caption = '% '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            DataBinding.FieldName = 'isTaxPromo_Condition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1089#1093#1077#1084#1072' % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+            Options.Editing = False
+            Width = 92
+          end
           object DayCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081
             DataBinding.FieldName = 'DayCount'

@@ -117,7 +117,7 @@ BEGIN
     -- таблица
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE '_tmpGoodsMinPrice_List')
     THEN
-        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpGoodsMinPrice_List (GoodsId Integer, GoodsId_retail Integer, GoodsGroupId Integer) ON COMMIT DROP;
     ELSE
         DELETE FROM _tmpGoodsMinPrice_List;
     END IF;
@@ -161,10 +161,11 @@ BEGIN
     -- парсим товары
     IF COALESCE(inGoodsId_list, '') <> ''
     THEN
-      vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
-                      SELECT  Retail4.Id, RetailAll.Id
+      vbQueryText := 'INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId)
+                      SELECT  Retail4.Id, RetailAll.Id, RetailMain.GoodsGroupId
                       FROM Object_Goods_Retail AS Retail4
                            INNER JOIN Object_Goods_Retail AS RetailAll ON RetailAll.GoodsMainId  = Retail4.GoodsMainId
+                           INNER JOIN Object_Goods_Main AS RetailMain ON RetailMain.Id  = Retail4.GoodsMainId
                       WHERE Retail4.Id IN ('||inGoodsId_list||')';
 
       EXECUTE vbQueryText;
@@ -177,12 +178,13 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM _tmpGoodsMinPrice_List WHERE GoodsId <> 0)
     THEN
          -- все остатки
-         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail)
+         INSERT INTO _tmpGoodsMinPrice_List (GoodsId, GoodsId_retail, GoodsGroupId)
            -- SELECT DISTINCT Container.ObjectId -- здесь товар "сети"
            -- !!!временно захардкодил, будет всегда товар ЌеЅолей!!!!
            SELECT DISTINCT
                   ObjectLink_Child_NB.ChildObjectId AS ObjectID -- здесь товар "сети"
                 , Container.ObjectId
+                , ObjectLink_Goods_GoodsGroup.ChildObjectId
            FROM _tmpUnitMinPrice_List
                 INNER JOIN Container ON Container.WhereObjectId = _tmpUnitMinPrice_List.UnitId
                                     AND Container.DescId = zc_Container_Count()
@@ -201,6 +203,9 @@ BEGIN
                                                           ON ObjectLink_Goods_Object.ObjectId = ObjectLink_Child_NB.ChildObjectId
                                                          AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
                                                          AND ObjectLink_Goods_Object.ChildObjectId = 4 -- !!!NeBoley!!!
+                                    LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                                         ON ObjectLink_Goods_GoodsGroup.ObjectId = Container.ObjectId
+                                                        AND ObjectLink_Goods_GoodsGroup.DescId        = zc_ObjectLink_Goods_GoodsGroup()
           ;
     END IF;
 
@@ -315,7 +320,8 @@ BEGIN
                                          Container.Amount                                        AS Amount,
                                          Container.Amount - COALESCE(ReserveContainer.Amount, 0) AS Remains,
                                          ContainerLinkObject.ObjectId                            AS PartionGoodsId,
-                                         ReserveContainer.Amount                                 AS Reserve
+                                         ReserveContainer.Amount                                 AS Reserve,
+                                         _tmpGoodsMinPrice_List.GoodsGroupId                     AS GoodsGroupId
                                   FROM _tmpGoodsMinPrice_List
 
                                        INNER JOIN Container ON Container.ObjectId = _tmpGoodsMinPrice_List.GoodsId_retail
@@ -356,6 +362,11 @@ BEGIN
                                     LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
                                                           ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
                                                          AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
+                               WHERE CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate0   THEN zc_Enum_PartionDateKind_0()  -- просрочено
+                                          WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- ћеньше 1 мес€ца
+                                          WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- ћеньше 6 мес€ца
+                                          ELSE zc_Enum_PartionDateKind_Good() END <> zc_Enum_PartionDateKind_Good()
+                                  OR Container.GoodsGroupId <> 394744
                                 )
         SELECT Container.WhereObjectId
              , Container.ObjectId
@@ -784,4 +795,5 @@ $BODY$
 
 --SELECT p.* FROM gpselect_goodsonunit_forsite ('183292,11769526,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375626,375627,11152911,10128935,472116', '24970,31333,393553,15610,5878,31561,1849,976003,31285,1594,4534,27658,6430,31000,14941,19093,38173,18922,18916,29449,19696,5486995,28516,26422,21748,15172,3002798,54604,358750,2503', TRUE, zfCalc_UserSite()) AS p
 -- SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '22579,54100,6994,352890,54649,29983,48988,964555,54625,54613,28849,54640,30310,34831,982510,1106785,1243320,2366715,1243457,34867,50134,4509209,22573,50725,1106995,1960400,50152,51202,34846,28858', TRUE, zfCalc_UserSite()) AS p
+--SELECT p.* FROM gpselect_goodsonunit_forsite ('375626,11769526,183292,4135547,377606,6128298,9951517,13338606,377595,12607257,377605,494882,10779386,394426,183289,8393158,6309262,13311246,377613,7117700,377610,377594,11300059,377574,12812109,183291,1781716,5120968,9771036,8698426,6608396,375627,11152911,10128935,472116', '4573005', TRUE, zfCalc_UserSite()) AS p
 

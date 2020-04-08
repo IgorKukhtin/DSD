@@ -41,6 +41,8 @@ BEGIN
            UPDATE Object_Goods_Juridical SET isPromo      = inisPromo
                                            , UserUpdateId = vbUserId
                                            , DateUpdate   = CURRENT_TIMESTAMP
+                                           , UserUpdateisPromoId = vbUserId
+                                           , DateUpdateisPromo   = CURRENT_TIMESTAMP
            WHERE Object_Goods_Juridical.Id = inId;  
          EXCEPTION
             WHEN others THEN 

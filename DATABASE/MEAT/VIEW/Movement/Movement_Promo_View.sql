@@ -38,7 +38,9 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
       , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
       , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
-      
+
+      , CASE WHEN MovementBoolean_TaxPromo.ValueData = TRUE  THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo -- 
+      , CASE WHEN MovementBoolean_TaxPromo.ValueData = FALSE THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo_Condition  --
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -105,7 +107,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
         LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                   ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                  AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
-                                     
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_TaxPromo
+                                  ON MovementBoolean_TaxPromo.MovementId = Movement_Promo.Id
+                                 AND MovementBoolean_TaxPromo.DescId = zc_MovementBoolean_TaxPromo()
+
         LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                      ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()

@@ -64,9 +64,10 @@ BEGIN
                                 , Container.Amount
                                 , Container.ObjectID          AS GoodsId
                                 , Container.WhereObjectId     AS UnitId
-                           FROM tmpGoods
-                              LEFT JOIN Container ON Container.ObjectID = tmpGoods.Id
-                           WHERE Container.descid = zc_container_count()
+                           FROM Container 
+                           WHERE Container.ObjectID in (SELECT tmpGoods.Id FROM tmpGoods)
+                             AND Container.descid = zc_container_count()
+                             AND Container.whereobjectid IN (SELECT T1.ID FROM gpSelect_Object_Unit(False, '3') AS T1)
                            )
 
       , tmpcontainerCount AS (SELECT ContainerCount.Amount - COALESCE(SUM(MIContainer.Amount), 0) AS Amount
@@ -390,3 +391,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_GoodsSearchRemains ('4282', 'глюкоз', inSession := '3')
 -- select * from gpSelect_GoodsSearchRemains(inCodeSearch := '' , inGoodsSearch := 'маска защит' ,  inSession := '3');
+

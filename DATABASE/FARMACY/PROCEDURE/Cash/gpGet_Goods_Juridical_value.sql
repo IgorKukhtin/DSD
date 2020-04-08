@@ -25,7 +25,9 @@ BEGIN
 
     WITH
         tmpContainerAll AS (SELECT Container.Id
+                                 , Object_Goods.ValueData ILIKE '%אבבמע%' AS NotReplace
                                FROM Container
+                                    LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
                                WHERE Container.DescId = zc_Container_Count()
                                  AND Container.Amount > 0
                                  AND Container.WhereObjectId = vbUnitId
@@ -33,7 +35,7 @@ BEGIN
                               )
        , tmpContainer AS (SELECT Container.id
                                , MovementLinkObject_From.ObjectId                       AS JuridicalID
-                               , COALESCE(ObjectFloat_CodeRazom.ValueData, 1)::Integer  AS CodeRazom
+                               , COALESCE(ObjectFloat_CodeRazom.ValueData, CASE WHEN Container.NotReplace THEN NULL ELSE 1 END)::Integer  AS CodeRazom
                                  FROM tmpContainerAll AS Container
                                       LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                                     ON ContainerLinkObject_MovementItem.Containerid = Container.Id
@@ -76,5 +78,5 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, TVarChar) OWNER TO postgres
 */
 
 -- עוסע
--- SELECT * from gpGet_Goods_Juridical_value (inGoodsId:= 5925154, inSession:= zfCalc_UserAdmin())
+-- SELECT * from gpGet_Goods_Juridical_value (inGoodsId:= 5925280, inSession:= zfCalc_UserAdmin())
 

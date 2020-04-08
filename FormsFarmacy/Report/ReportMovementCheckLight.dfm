@@ -5,7 +5,7 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -494,6 +494,14 @@ inherited ReportMovementCheckLightForm: TReportMovementCheckLightForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 60
+          end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
           end
         end
       end

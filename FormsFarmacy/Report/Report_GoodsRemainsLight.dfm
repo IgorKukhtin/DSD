@@ -5,7 +5,7 @@ inherited Report_GoodsRemainsLightForm: TReport_GoodsRemainsLightForm
   AddOnFormData.isSingle = False
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1150
-  ExplicitHeight = 402
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -24,6 +24,7 @@ inherited Report_GoodsRemainsLightForm: TReport_GoodsRemainsLightForm
       inherited cxGrid: TcxGrid
         Width = 1134
         Height = 273
+        ExplicitLeft = -3
         ExplicitWidth = 1134
         ExplicitHeight = 273
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -393,6 +394,14 @@ inherited Report_GoodsRemainsLightForm: TReport_GoodsRemainsLightForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 60
+          end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 84
           end
         end
       end

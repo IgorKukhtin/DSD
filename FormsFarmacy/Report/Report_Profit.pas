@@ -103,6 +103,8 @@ type
     cxLabel7: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridicalOur: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceMonth: TcxCurrencyEdit;
   private
     { Private declarations }
   public

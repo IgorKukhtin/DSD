@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TFloat,TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Profit (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION  gpReport_Profit(
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION  gpReport_Profit(
     IN inJuridical2Id     Integer,    -- поставщик фармпланета
     IN inJuridicalOurId   Integer,    -- наше юр.лицо
     IN inUnitId           Integer,    -- Подразделение
+    IN inMonth            Integer,    -- ввод  кол-ва месяцев от 0  до 1-6  - для периода второго грида, если =0 - не показываем
  --   IN inTax1             TFloat ,
  --   IN inTax2             TFloat ,
     IN inSession          TVarChar    -- сессия пользователя
@@ -35,22 +37,23 @@ BEGIN
     -- определяется <Торговая сеть>
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
-    vbStartDate:= DATE_TRUNC('month', inStartDate) -  Interval '5 MONTH';
+ /*   vbStartDate:= DATE_TRUNC('month', inStartDate) -  Interval '5 MONTH';
     vbEndDate:= DATE_TRUNC('month', inStartDate);                         --  Interval '1 Day';
+ */
+ 
+    -- проверка, если inMonth > 6, тогда переопределяем = 6
+    IF COALESCE (inMonth,0) > 6
+    THEN
+        inMonth := 6 :: Integer;
+    END IF;
+    
+    vbStartDate:= DATE_TRUNC('month', inStartDate) - (inMonth ||' MONTH' ):: Interval;
+    vbEndDate  := DATE_TRUNC('month', inStartDate);
 
     -- Результат
     OPEN Cursor1 FOR
           
     WITH
-          /*tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                        FROM ObjectLink AS ObjectLink_Unit_Juridical
-                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                       )*/
-
         -- список подразделений
           tmpUnit AS (SELECT inUnitId                                  AS UnitId
                       WHERE COALESCE (inUnitId, 0) <> 0 
@@ -664,16 +667,6 @@ BEGIN
     -- Результат 2
     OPEN Cursor2 FOR
     WITH
- /*         tmpUnit  AS  (SELECT ObjectLink_Unit_Juridical.ObjectId AS UnitId
-                        FROM ObjectLink AS ObjectLink_Unit_Juridical
-                           INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
-                                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
-                                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
-                                                AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
-                        WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                       )
-                       */
-
         -- список подразделений
           tmpUnit AS (SELECT inUnitId                                  AS UnitId
                       WHERE COALESCE (inUnitId, 0) <> 0 
@@ -709,6 +702,7 @@ BEGIN
                                    WHERE MIContainer.DescId = zc_MIContainer_Count()
                                      AND MIContainer.MovementDescId = zc_Movement_Check()
                                      AND MIContainer.OperDate >= vbStartDate AND MIContainer.OperDate < vbEndDate
+                                     AND (vbStartDate <> vbEndDate) 
                                    GROUP BY DATE_TRUNC('Month', MIContainer.OperDate)
                                           , MIContainer.ObjectId_analyzer
                                           , COALESCE (MIContainer.AnalyzerId,0)
@@ -938,5 +932,5 @@ $BODY$
 */
 -- тест
 -- SELECT * FROM gpReport_Profit (inUnitId:= 0, inStartDate:= '20150801'::TDateTime, inEndDate:= '20150810'::TDateTime, inIsPartion:= FALSE, inSession:= '3')
---select * from gpReport_Profit(inStartDate := ('01.06.2018')::TDateTime , inEndDate := ('30.06.2018')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 ,  inSession := '3');
---FETCH ALL "<unnamed portal 1>";
+--select * from gpReport_Profit22(inStartDate := ('01.02.2020')::TDateTime , inEndDate := ('01.02.2020')::TDateTime , inJuridical1Id := 59611 , inJuridical2Id := 183352 , inJuridicalOurId:= 0, inUnitId:= 0, inMonth:=1,  inSession := '3');
+--FETCH ALL "<unnamed portal 46>";

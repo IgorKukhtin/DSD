@@ -51,6 +51,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , ChangePercentName TVarChar    -- Скидка по договору
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
+             , isTaxPromo       Boolean     -- схема % скидки
+             , isTaxPromo_Condition  Boolean     -- схема % компенсации
              , isPromoStateKind_Head Boolean
              , isPromoStateKind_Main Boolean
              , Color_PromoStateKind Integer
@@ -184,6 +186,8 @@ BEGIN
                 
              , COALESCE (MovementBoolean_Promo.ValueData, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
              , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
+             , CASE WHEN MovementBoolean_TaxPromo.ValueData = TRUE  THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo -- 
+             , CASE WHEN MovementBoolean_TaxPromo.ValueData = FALSE THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo_Condition  --
 
              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Head
              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Main
@@ -262,7 +266,11 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Promo
                                        ON MovementBoolean_Promo.MovementId = Movement_Promo.Id
                                       AND MovementBoolean_Promo.DescId = zc_MovementBoolean_Promo()
-                                          
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_TaxPromo
+                                       ON MovementBoolean_TaxPromo.MovementId = Movement_Promo.Id
+                                      AND MovementBoolean_TaxPromo.DescId = zc_MovementBoolean_TaxPromo()
+
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                           ON MovementLinkObject_Unit.MovementId = Movement_Promo.Id
                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()

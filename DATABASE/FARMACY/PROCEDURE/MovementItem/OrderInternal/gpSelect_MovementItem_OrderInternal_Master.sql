@@ -25,6 +25,7 @@ RETURNS TABLE (Id                    Integer
              , isFirst               Boolean
              , isSecond              Boolean
              , isSP                  Boolean
+             , isResolution_224      Boolean
 
              , isMarketToday         Boolean
              , LastPriceDate         TDateTime
@@ -398,6 +399,7 @@ BEGIN
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
+                              , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224
                               , CAST ( (COALESCE (tmpGoodsSP.PriceOptSP,0) * 1.1) AS NUMERIC (16,2))    :: TFloat   AS PriceOptSP
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)                   ::TDateTime  AS LastPriceDate
@@ -417,6 +419,10 @@ BEGIN
                                 LEFT JOIN ObjectFloat AS ObjectFloat_CountPrice
                                                       ON ObjectFloat_CountPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                                      AND ObjectFloat_CountPrice.DescId = zc_ObjectFloat_Goods_CountPrice()
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Resolution_224
+                                                        ON ObjectBoolean_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                                       AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
+
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                          )
 
@@ -433,6 +439,7 @@ BEGIN
                        , CEIL (tmpMI.Amount / COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)) * COALESCE(ObjectFloat_Goods_MinimumLot.ValueData, 1)  AS CalcAmount
                        , COALESCE(Object_ConditionsKeep.ValueData, '')      :: TVarChar AS ConditionsKeepName
                        , tmpGoodsMain.isSP
+                       , tmpGoodsMain.isResolution_224
                        , tmpGoodsMain.PriceOptSP
                        , tmpGoodsMain.isMarketToday       -- CURRENT_DATE
                        , tmpGoodsMain.LastPriceDate
@@ -695,6 +702,7 @@ BEGIN
            , tmpMI.isFirst
            , tmpMI.isSecond
            , tmpMI.isSP
+           , tmpMI.isResolution_224 :: Boolean
 
            , tmpMI.isMarketToday
            , tmpMI.LastPriceDate
@@ -1875,6 +1883,7 @@ BEGIN
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
+                              , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224
                               , CAST ( (COALESCE (tmpGoodsSP.PriceOptSP,0) * 1.1) AS NUMERIC (16,2)) :: TFloat   AS PriceOptSP
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
@@ -1895,6 +1904,10 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                                      ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                                     AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Resolution_224
+                                                        ON ObjectBoolean_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                                       AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                          )
@@ -2185,6 +2198,7 @@ BEGIN
            , tmpMI.isFirst                                  AS isFirst
            , tmpMI.isSecond                                 AS isSecond
            , COALESCE (tmpGoodsMain.isSP,FALSE) :: Boolean  AS isSP
+           , COALESCE (tmpGoodsMain.isResolution_224, FALSE) ::Boolean AS isResolution_224
 
            , CASE WHEN DATE_TRUNC ('DAY', tmpGoodsMain.LastPriceDate) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday    --CURRENT_DATE
            , DATE_TRUNC ('DAY', tmpGoodsMain.LastPriceDate)                   ::TDateTime  AS LastPriceDate
@@ -3292,6 +3306,7 @@ BEGIN
 
       , tmpGoodsMain AS (SELECT tmpMI.GoodsId                                                           AS GoodsId
                               , COALESCE (tmpGoodsSP.isSP, False)                             ::Boolean AS isSP
+                              , COALESCE (ObjectBoolean_Resolution_224.ValueData, False)      ::Boolean AS isResolution_224 
                               , CAST ( (COALESCE (tmpGoodsSP.PriceOptSP,0) * 1.1) AS NUMERIC (16,2)) :: TFloat   AS PriceOptSP
                               , CASE WHEN DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData) = vbOperDate THEN TRUE ELSE FALSE END  AS isMarketToday
                               , DATE_TRUNC ('DAY', ObjectDate_LastPrice.ValueData)          ::TDateTime AS LastPriceDate
@@ -3312,6 +3327,10 @@ BEGIN
                                 LEFT JOIN ObjectDate AS ObjectDate_LastPrice
                                                      ON ObjectDate_LastPrice.ObjectId = ObjectLink_Main.ChildObjectId
                                                     AND ObjectDate_LastPrice.DescId = zc_ObjectDate_Goods_LastPrice()
+
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Resolution_224
+                                                        ON ObjectBoolean_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                                       AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                                 LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = ObjectLink_Main.ChildObjectId
                          )
@@ -3602,6 +3621,7 @@ BEGIN
            , tmpMI.isFirst                                  AS isFirst
            , tmpMI.isSecond                                 AS isSecond
            , COALESCE (tmpGoodsMain.isSP,FALSE) :: Boolean  AS isSP
+           , COALESCE (tmpGoodsMain.isResolution_224,FALSE) :: Boolean  AS isResolution_224
 
            , CASE WHEN DATE_TRUNC ('DAY', tmpGoodsMain.LastPriceDate) = vbOperDate THEN TRUE ELSE FALSE END AS isMarketToday    --CURRENT_DATE
            , DATE_TRUNC ('DAY', tmpGoodsMain.LastPriceDate)                   ::TDateTime  AS LastPriceDate

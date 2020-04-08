@@ -3,7 +3,7 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1044#1086#1093#1086#1076#1085#1086#1089#1090#1080'>'
-  ClientHeight = 248
+  ClientHeight = 290
   ClientWidth = 392
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,8 +18,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 78
-    Top = 213
+    Left = 70
+    Top = 257
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -28,8 +28,8 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 252
-    Top = 213
+    Left = 244
+    Top = 257
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -138,6 +138,19 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
     TabOrder = 13
     Width = 258
   end
+  object ceMonth: TcxCurrencyEdit
+    Left = 244
+    Top = 217
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.'
+    TabOrder = 14
+    Width = 92
+  end
+  object cxLabel9: TcxLabel
+    Left = 8
+    Top = 218
+    Caption = #1055#1086#1082#1072#1079#1099#1074#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1087#1088#1086#1096#1083#1086#1075#1086' '#1087#1077#1088#1080#1086#1076#1072', '#1084#1077#1089'.'
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -244,6 +257,13 @@ object Report_ProfitDialogForm: TReport_ProfitDialogForm
         Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Month'
+        Value = Null
+        Component = ceMonth
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

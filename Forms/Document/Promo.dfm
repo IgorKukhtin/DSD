@@ -2,28 +2,28 @@
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
-  ClientWidth = 1319
-  ExplicitWidth = 1335
+  ClientWidth = 1354
+  ExplicitWidth = 1370
   ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1319
+    Width = 1354
     Height = 545
     ExplicitTop = 139
-    ExplicitWidth = 1319
+    ExplicitWidth = 1354
     ExplicitHeight = 545
     ClientRectBottom = 545
-    ClientRectRight = 1319
+    ClientRectRight = 1354
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1319
+      ExplicitWidth = 1354
       ExplicitHeight = 521
       inherited cxGrid: TcxGrid
-        Width = 1319
+        Width = 1354
         Height = 176
-        ExplicitWidth = 1319
+        ExplicitWidth = 1354
         ExplicitHeight = 176
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -507,12 +507,12 @@
       object Panel1: TPanel
         Left = 0
         Top = 184
-        Width = 1319
+        Width = 1354
         Height = 173
         Align = alBottom
         TabOrder = 1
         object cxSplitter1: TcxSplitter
-          Left = 775
+          Left = 810
           Top = 1
           Width = 8
           Height = 171
@@ -523,21 +523,21 @@
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 774
+          Width = 809
           Height = 171
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
           ClientRectBottom = 171
-          ClientRectRight = 774
+          ClientRectRight = 809
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 774
+              Width = 809
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
@@ -688,13 +688,10 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 774
+              Width = 809
               Height = 147
               Align = alClient
               TabOrder = 0
@@ -792,7 +789,7 @@
           end
         end
         object cxPageControl2: TcxPageControl
-          Left = 783
+          Left = 818
           Top = 1
           Width = 264
           Height = 171
@@ -880,7 +877,7 @@
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 1055
+          Left = 1090
           Top = 1
           Width = 263
           Height = 171
@@ -969,7 +966,7 @@
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 1047
+          Left = 1082
           Top = 1
           Width = 8
           Height = 171
@@ -981,7 +978,7 @@
       object cxGrid2: TcxGrid
         Left = 0
         Top = 365
-        Width = 1319
+        Width = 1354
         Height = 156
         Align = alBottom
         PopupMenu = PopupMenu
@@ -1126,7 +1123,7 @@
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 176
-        Width = 1319
+        Width = 1354
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1135,7 +1132,7 @@
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 357
-        Width = 1319
+        Width = 1354
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1145,13 +1142,10 @@
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1319
+        Width = 1354
         Height = 521
         Align = alClient
         TabOrder = 0
@@ -1417,7 +1411,7 @@
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1319
+        Width = 1354
         Height = 521
         Align = alClient
         TabOrder = 0
@@ -1688,13 +1682,10 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1319
+        Width = 1354
         Height = 521
         Align = alClient
         TabOrder = 0
@@ -1784,13 +1775,10 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
-        Width = 1319
+        Width = 1354
         Height = 521
         Align = alClient
         TabOrder = 0
@@ -2031,13 +2019,10 @@
     object cxTabSheetPromoStateKind: TcxTabSheet
       Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1072#1082#1094#1080#1080
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPromoStateKind: TcxGrid
         Left = 0
         Top = 0
-        Width = 1319
+        Width = 1354
         Height = 521
         Align = alClient
         PopupMenu = PopupMenu
@@ -2134,10 +2119,10 @@
     end
   end
   inherited DataPanel: TPanel
-    Width = 1319
+    Width = 1354
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1319
+    ExplicitWidth = 1354
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -2437,6 +2422,22 @@
       TabOrder = 39
       Width = 97
     end
+    object cbisTaxPromo: TcxCheckBox
+      Left = 1195
+      Top = 45
+      Caption = '% '#1089#1082#1080#1076#1082#1080
+      Properties.ReadOnly = True
+      TabOrder = 40
+      Width = 86
+    end
+    object cbisTaxPromo_Condition: TcxCheckBox
+      Left = 1195
+      Top = 72
+      Caption = '% '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
+      Properties.ReadOnly = True
+      TabOrder = 41
+      Width = 110
+    end
   end
   object deMonthPromo: TcxDateEdit [2]
     Left = 918
@@ -2489,7 +2490,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 13
-    Width = 178
+    Width = 153
   end
   object cxLabel23: TcxLabel [9]
     Left = 1128
@@ -2497,8 +2498,8 @@
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
   end
   object cePromoStateKind_val: TcxCurrencyEdit [10]
-    Left = 1204
-    Top = 54
+    Left = 1287
+    Top = 18
     Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
     ParentShowHint = False
     Properties.DecimalPlaces = 0
@@ -2507,11 +2508,11 @@
     Properties.UseThousandSeparator = True
     ShowHint = True
     TabOrder = 15
-    Width = 102
+    Width = 59
   end
   object cxLabel24: TcxLabel [11]
-    Left = 1204
-    Top = 38
+    Left = 1287
+    Top = 4
     Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
     Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
     ParentShowHint = False
@@ -2613,6 +2614,9 @@
         end
         item
           StoredProc = spSelectCalc
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS2
@@ -2777,6 +2781,20 @@
           Value = ''
           Component = edCommentMain
           DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo'
+          Value = Null
+          Component = cbisTaxPromo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo_Condition'
+          Value = Null
+          Component = cbisTaxPromo_Condition
+          DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
       ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
@@ -4415,6 +4433,20 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTaxPromo'
+        Value = Null
+        Component = cbisTaxPromo
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isTaxPromo_Condition'
+        Value = Null
+        Component = cbisTaxPromo_Condition
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 320
     Top = 264
@@ -5902,9 +5934,16 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPormo'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1028
+    Left = 1012
     Top = 376
   end
   object spInsertUpdate_Calc: TdsdStoredProc
@@ -5916,6 +5955,14 @@
         Name = 'inId'
         Value = Null
         Component = CalcCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5980,6 +6027,13 @@
         Component = CalcCDS
         ComponentItem = 'TaxPromo'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPromo'
+        Value = 'true'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -6293,8 +6347,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 1236
-    Top = 24
+    Left = 1092
+    Top = 8
   end
   object PromoStateKindDS: TDataSource
     DataSet = PromoStateKindDCS
@@ -6487,6 +6541,13 @@
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPormo'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 1076
@@ -6501,6 +6562,14 @@
         Name = 'inId'
         Value = Null
         Component = CalcCDS2
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6565,6 +6634,13 @@
         Component = CalcCDS2
         ComponentItem = 'TaxPromo_Condition'
         DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPromo'
+        Value = 'false'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

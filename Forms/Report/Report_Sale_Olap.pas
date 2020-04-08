@@ -77,6 +77,7 @@ type
     cfPrice: TdsdPivotGridCalcFields;
     cfPriceSale: TdsdPivotGridCalcFields;
     cfPriceSaleReal: TdsdPivotGridCalcFields;
+    cfPriceSumSale: TdsdPivotGridCalcFields;
   private
   public
   end;

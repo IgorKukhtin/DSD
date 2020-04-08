@@ -261,14 +261,12 @@ object MainForm: TMainForm
     Host = 'ftp:\\ooobadm.dp.ua'
     Passive = True
     ConnectTimeout = 0
-    Password = 'FsT3469Dv'
-    Username = 'K_shapiro'
+    TransferType = ftBinary
     NATKeepAlive.UseKeepAlive = False
     NATKeepAlive.IdleTimeMS = 0
     NATKeepAlive.IntervalMS = 0
     ProxySettings.ProxyType = fpcmNone
     ProxySettings.Port = 0
-    ServerHOST = 'ftp:\\ooobadm.dp.ua'
     Left = 608
     Top = 56
   end

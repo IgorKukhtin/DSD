@@ -5,7 +5,7 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
   ExplicitWidth = 1273
-  ExplicitHeight = 568
+  ExplicitHeight = 567
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -188,6 +188,34 @@ inherited GoodsPartnerCodeForm: TGoodsPartnerCodeForm
           object UpdateName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object DateUpdateMinimumLot: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'. '#1052#1080#1085'. '#1086#1082#1088#1091#1075#1083')'
+            DataBinding.FieldName = 'DateUpdateMinimumLot'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 87
+          end
+          object UserUpdateMinimumLotName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'. '#1052#1080#1085'. '#1086#1082#1088#1091#1075#1083')'
+            DataBinding.FieldName = 'UserUpdateMinimumLotName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 101
+          end
+          object DateUpdateisPromo: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1082#1086#1088#1088'. '#1040#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'DateUpdateisPromo'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 81
+          end
+          object UserUpdateisPromoName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'. '#1040#1082#1094#1080#1103')'
+            DataBinding.FieldName = 'UserUpdateisPromoName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101

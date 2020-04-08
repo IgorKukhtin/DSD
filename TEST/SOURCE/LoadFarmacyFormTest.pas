@@ -128,6 +128,7 @@ type
     procedure LoadReturnOutFormTest;
     procedure LoadSaleFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSeasonalityCoefficientFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendPartionDateFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -135,6 +136,7 @@ type
     procedure LoadSPObjectFormTest;
     procedure LoadSPKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadSunExclusionFormTest;
     procedure LoadTaxUnitFormTest;
     procedure LoadTechnicalRediscountFormTest;
     procedure LoadUnitFormTest;
@@ -570,10 +572,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
-
+    }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
-
+    exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 
@@ -847,7 +850,21 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodDialogForm');
+    exit;
+
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PharmacyPerformanceDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_PharmacyPerformanceDialogForm');
+    exit;
+
 {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_GeneralMovementGoodsForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GeneralMovementGoodsDialogForm'));
@@ -975,7 +992,7 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressForm');
 
@@ -984,7 +1001,7 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressDialogForm');
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
     exit;
@@ -1292,14 +1309,14 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WageDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_WageDialogForm');
-
+    }
     //отчет доходности
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitDialogForm');
     exit;
-
+     {
     // средний чек за период
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckMiddle_DetailForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_CheckMiddle_DetailForm');
@@ -2193,6 +2210,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCheckItemJournalForm');
 end;
 
+procedure TLoadFormTest.LoadSeasonalityCoefficientFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSeasonalityCoefficientEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSeasonalityCoefficientEditForm');
+end;
+
 procedure TLoadFormTest.LoadSendFormTest;
 begin
  {
@@ -2267,6 +2290,16 @@ begin
 
 end;
 
+
+procedure TLoadFormTest.LoadSunExclusionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSunExclusionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSunExclusionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSunExclusionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSunExclusionEditForm');
+end;
+
+
 procedure TLoadFormTest.LoadEmployeeScheduleFormTest;
 begin
 
@@ -2318,6 +2351,11 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSPForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SummSPForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSP_DialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_SummSP_DialogForm');
+    exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TMedicSP_ObjectForm'));
     TdsdFormStorageFactory.GetStorage.Load('TMedicSP_ObjectForm');

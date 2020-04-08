@@ -263,7 +263,7 @@ begin
     end;
     try
       idFTP1.Put(SavePath + FileName + '.zip');
-      CopyFile(PChar(SavePath + FileName + '.zip'), PChar(SavePath + 'arc\' + FormatDateTime('YYYYMMDDHHNNSS', Now) + FileName + '.zip'), False);
+//      CopyFile(PChar(SavePath + FileName + '.zip'), PChar(SavePath + 'arc\' + FormatDateTime('YYYYMMDDHHNNSS', Now) + FileName + '.zip'), False);
       DeleteFile(SavePath + FileName + '.zip');
 
     except ON E: Exception DO

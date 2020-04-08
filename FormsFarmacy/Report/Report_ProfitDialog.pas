@@ -35,6 +35,8 @@ type
     cxLabel2: TcxLabel;
     edJuridical: TcxButtonEdit;
     GuidesJuridical: TdsdGuides;
+    ceMonth: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

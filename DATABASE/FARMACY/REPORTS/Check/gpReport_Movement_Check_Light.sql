@@ -53,7 +53,8 @@ RETURNS TABLE (
                
                IsClose Boolean, UpdateDate TDateTime,
                isTop boolean, isFirst boolean , isSecond boolean,
-               isSP Boolean, isPromo boolean
+               isSP Boolean, isPromo boolean,
+               isResolution_224 boolean
                )
 AS
 $BODY$
@@ -348,6 +349,7 @@ BEGIN
            
            , COALESCE (tmpGoodsSP.isSP, False)                     :: Boolean AS isSP
            , CASE WHEN COALESCE(GoodsPromo.GoodsId,0) <> 0 THEN TRUE ELSE FALSE END AS isPromo
+           , COALESCE(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean AS isResolution_224
         FROM tmpDataRez AS tmpData
              LEFT JOIN Object AS Object_From_Income ON Object_From_Income.Id = tmpData.JuridicalId_Income
              LEFT JOIN Object AS Object_NDSKind_Income ON Object_NDSKind_Income.Id = tmpData.NDSKindId_Income
@@ -410,6 +412,10 @@ BEGIN
                                    ON ObjectFloat_NDSKind_NDS.ObjectId = tmpData.NDSKindId_Income
                                   AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS() 
 
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
+                                     ON ObjectBoolean_Goods_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224() 
+                                    
         ORDER BY Object_GoodsGroup.ValueData
                , Object_Goods.ValueData
 ;

@@ -379,6 +379,8 @@ type
     actUpdateCalcDS2: TdsdUpdateDataSet;
     calcSummaProfit_Condition: TcxGridDBColumn;
     calcTaxPromo_Condition: TcxGridDBColumn;
+    cbisTaxPromo: TcxCheckBox;
+    cbisTaxPromo_Condition: TcxCheckBox;
   private
     { Private declarations }
   public
