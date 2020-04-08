@@ -98,6 +98,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     Date_Last: TcxGridDBColumn;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    bbItemProtocol: TdxBarButton;
   private
   public
   end;

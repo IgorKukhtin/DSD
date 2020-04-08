@@ -110,6 +110,8 @@ type
     edJuridicalBasis: TcxButtonEdit;
     cxLabel27: TcxLabel;
     PersonalServiceListName: TcxGridDBColumn;
+    MovementProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
   private
   public
   end;
