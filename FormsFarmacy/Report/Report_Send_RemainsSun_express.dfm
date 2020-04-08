@@ -1203,7 +1203,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
           end
           object chAmountRemains_calc: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090
-            DataBinding.FieldName = 'AmountSunOnly_summ'
+            DataBinding.FieldName = 'AmountRemains_calc'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
