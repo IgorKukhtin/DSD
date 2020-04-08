@@ -1068,10 +1068,24 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_DriverSun_Phone() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_DriverSun_Phone', zc_Object_DriverSun(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DriverSun_Phone');
  
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_BaseBoardProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_BaseBoardProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashRegister_BaseBoardProduct', zc_Object_CashRegister(), 'Материнская плата' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_BaseBoardProduct');
+ 
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_ProcessorName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_ProcessorName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashRegister_ProcessorName', zc_Object_CashRegister(), 'Процессор' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_ProcessorName');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_DiskDriveModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_DiskDriveModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashRegister_DiskDriveModel', zc_Object_CashRegister(), 'Жесткий Диск' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_DiskDriveModel');
+
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 08.03.20                                                                                                         * zc_ObjectString_CashRegister_ ...
  05.03.20                                                                                                         * zc_ObjectString_DriverSun_Phone
  25.02.20                                                                                                         * zc_ObjectString_User_Helsi_PasswordEHels
  29.01.20         * zc_ObjectString_Buyer_DateBirth

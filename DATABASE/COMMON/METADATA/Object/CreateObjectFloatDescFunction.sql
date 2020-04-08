@@ -1655,10 +1655,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_SeasonalityCoefficient_Koeff12() RETUR
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_SeasonalityCoefficient_Koeff12', zc_Object_SeasonalityCoefficient(), 'Коэффициент сезонности' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_SeasonalityCoefficient_Koeff12');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity', zc_Object_CashRegister(), 'Оперативная память' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 08.04.20                                                                                      * zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity
  05.04.20                                                                                      * zc_ObjectFloat_SeasonalityCoefficient_Koeff1..12
  31.03.20         * zc_ObjectFloat_Unit_KoeffOutSUN_v3
                     zc_ObjectFloat_Unit_KoeffInSUN_v3

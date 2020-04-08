@@ -9,7 +9,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CashRegister(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CashRegisterKindId Integer, CashRegisterKindName TVarChar
              , SerialNumber TVarChar
-             , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime) AS
+             , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
+             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemoryCapacity TFloat
+) AS
 $BODY$
 BEGIN
 
@@ -29,7 +31,13 @@ BEGIN
 
            , CAST ('' as TVarChar)     AS SerialNumber
            , CAST (Null as TDateTime)  AS TimePUSHFinal1
-           , CAST (Null as TDateTime)  AS TimePUSHFinal2;
+           , CAST (Null as TDateTime)  AS TimePUSHFinal2
+
+           , False                     AS GetHardwareData
+           , CAST ('' as TVarChar)     AS BaseBoardProduct
+           , CAST ('' as TVarChar)     AS ProcessorName
+           , CAST ('' as TVarChar)     AS DiskDriveModel
+           , CAST (Null as TFloat)     AS PhysicalMemoryCapacity;
 
    ELSE
        RETURN QUERY
@@ -44,6 +52,12 @@ BEGIN
            , ObjectString_SerialNumber.ValueData     AS SerialNumber
            , ObjectDate_TimePUSHFinal1.ValueData     AS TimePUSHFinal1
            , ObjectDate_TimePUSHFinal2.ValueData     AS TimePUSHFinal2
+
+           , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)  AS GetHardwareData
+           , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
+           , ObjectString_ProcessorName.ValueData                      AS ProcessorName
+           , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
+           , ObjectFloat_PhysicalMemoryCapacity.ValueData              AS PhysicalMemoryCapacity
 
        FROM Object AS Object_CashRegister
             LEFT JOIN ObjectLink AS ObjectLink_CashRegister_CashRegisterKind
@@ -63,6 +77,23 @@ BEGIN
                                  ON ObjectDate_TimePUSHFinal2.ObjectId = Object_CashRegister.Id
                                 AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_GetHardwareData 
+                                    ON ObjectBoolean_GetHardwareData.ObjectId = Object_CashRegister.Id
+                                   AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
+
+            LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
+                                   ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
+                                  AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()
+            LEFT JOIN ObjectString AS ObjectString_ProcessorName 
+                                   ON ObjectString_ProcessorName.ObjectId = Object_CashRegister.Id
+                                  AND ObjectString_ProcessorName.DescId = zc_ObjectString_CashRegister_ProcessorName()
+            LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
+                                   ON ObjectString_DiskDriveModel.ObjectId = Object_CashRegister.Id
+                                  AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_CashRegister_DiskDriveModel()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_PhysicalMemoryCapacity
+                                  ON ObjectFloat_PhysicalMemoryCapacity.ObjectId = Object_CashRegister.Id
+                                 AND ObjectFloat_PhysicalMemoryCapacity.DescId = zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity()
        WHERE Object_CashRegister.Id = inId;
    END IF;
 

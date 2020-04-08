@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SerialNumber TVarChar
              , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
              , UnitName TVarChar
+             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemoryCapacity TFloat
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -55,6 +56,12 @@ $BODY$BEGIN
         , ObjectDate_TimePUSHFinal2.ValueData    AS TimePUSHFinal2
         
         , Object_Unit.ValueData                  AS UnitName
+        
+        , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)  AS GetHardwareData
+        , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
+        , ObjectString_ProcessorName.ValueData                      AS ProcessorName
+        , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
+        , ObjectFloat_PhysicalMemoryCapacity.ValueData              AS PhysicalMemoryCapacity
 
         , Object_CashRegister.isErased           AS isErased
 
@@ -76,6 +83,24 @@ $BODY$BEGIN
                               ON ObjectDate_TimePUSHFinal2.ObjectId = Object_CashRegister.Id
                              AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
                              
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_GetHardwareData 
+                                ON ObjectBoolean_GetHardwareData.ObjectId = Object_CashRegister.Id
+                               AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
+
+        LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
+                               ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
+                              AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()
+        LEFT JOIN ObjectString AS ObjectString_ProcessorName 
+                               ON ObjectString_ProcessorName.ObjectId = Object_CashRegister.Id
+                              AND ObjectString_ProcessorName.DescId = zc_ObjectString_CashRegister_ProcessorName()
+        LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
+                               ON ObjectString_DiskDriveModel.ObjectId = Object_CashRegister.Id
+                              AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_CashRegister_DiskDriveModel()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_PhysicalMemoryCapacity
+                              ON ObjectFloat_PhysicalMemoryCapacity.ObjectId = Object_CashRegister.Id
+                             AND ObjectFloat_PhysicalMemoryCapacity.DescId = zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity()
+
         LEFT JOIN tmpUnit ON tmpUnit.Ord = 1 AND  tmpUnit.CashRegisterID = Object_CashRegister.Id 
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitID
 
@@ -92,6 +117,7 @@ ALTER FUNCTION gpSelect_Object_CashRegister(TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿.   ÿ‡·ÎËÈ Œ.¬.
+ 08.04.20                                                                      *  
  04.03.19                                                                      *  
  22.05.15                         *  
 */
