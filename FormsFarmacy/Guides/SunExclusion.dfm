@@ -26,7 +26,6 @@ object SunExclusionForm: TSunExclusionForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 544
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -88,7 +87,7 @@ object SunExclusionForm: TSunExclusionForm
         Width = 88
       end
       object isMSC_in: TcxGridDBColumn
-        Caption = #1054#1090#1082#1083'. '#1076#1083#1103' '#1053#1058#1047' = 0'
+        Caption = #1054#1090#1082#1083'. '#1076#1083#1103' '#1053#1058#1047' = 0 '#1076#1083#1103' '#1057#1059#1053'-2'
         DataBinding.FieldName = 'isMSC_in'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
