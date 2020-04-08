@@ -16,7 +16,7 @@ BEGIN
 
     IF CURRENT_DATE < '20.02.2020'
     THEN
-      PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', False, 'Пропущено по дата ранее старта'::TVarChar, vbUserId);
+      PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', FALSE, 'Пропущено по дата ранее старта'::TVarChar, vbUserId);
       RETURN;
     END IF;
 
@@ -30,7 +30,7 @@ BEGIN
     THEN
       vbOparDate := CURRENT_DATE - INTERVAL '6 day';
     ELSE
-      PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', False, 'Пропущено по дню недели'::TVarChar, vbUserId);
+      PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', FALSE, 'Пропущено по дню недели'::TVarChar, vbUserId);
       RETURN;
     END IF;
 
@@ -49,9 +49,12 @@ BEGIN
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_V2
-                                             ON MovementBoolean_SUN_V2.MovementId = Movement.Id
-                                            AND MovementBoolean_SUN_V2.DescId = zc_MovementBoolean_SUN_V2()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                             ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                             ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
                    LEFT JOIN MovementBoolean AS MovementBoolean_Sent
                                              ON MovementBoolean_Sent.MovementId = Movement.Id
                                             AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
@@ -65,13 +68,14 @@ BEGIN
                 AND Movement.DescId = zc_Movement_Send()
                 AND Movement.StatusId <> zc_Enum_Status_Complete()
                 AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
-                AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
-                AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = False
-                AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = False
-                AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = False
+                AND COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
               GROUP BY MovementLinkObject_From.ObjectId) AS T1;
 
-        PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', False, 'Выполнено'::TVarChar, vbUserId);
+        PERFORM lpLog_Run_Schedule_Function('gpRun_MovementItem_WagesSUN1', FALSE, 'Выполнено'::TVarChar, vbUserId);
     EXCEPTION
         WHEN others THEN
           GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;

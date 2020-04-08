@@ -111,28 +111,9 @@ BEGIN
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
 
 
-
-     -- !!!второй водитель!!!
-   /*vbDriverId_2 := (SELECT MAX (ObjectLink_Unit_Driver.ChildObjectId)
-                      FROM ObjectLink AS ObjectLink_Unit_Driver
-                           JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Unit_Driver.ObjectId AND Object_Unit.isErased = FALSE
-                      WHERE ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                        AND ObjectLink_Unit_Driver.ChildObjectId <> vbDriverId_1
-                     );
-     -- !!!2 - сформировали данные во временные табл!!!
-     PERFORM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= inOperDate
-                                                   , inDriverId:= vbDriverId_2
-                                                   , inStep    := 1
-                                                   , inUserId  := vbUserId
-                                                    );
-     -- !!!2 - перенесли данные
-     INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
-     INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;*/
-      
-
-     -- !!!Удаляем предыдущие документы - SUN-v2 !!!
+     -- !!!Удаляем предыдущие документы - SUN-v3 !!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, FALSE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, FALSE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v3(), tmp.MovementId, FALSE)
      FROM (SELECT Movement.Id AS MovementId
            FROM Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -148,36 +129,15 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData  = TRUE
-                INNER JOIN MovementBoolean AS MovementBoolean_SUN_v2
-                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
-                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                INNER JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                           ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                          AND MovementBoolean_SUN_v3.ValueData  = TRUE
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
           ) AS tmp;
 
-     -- !!!Удаляем предыдущие документы - DefSUN!!!
-    /*PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, FALSE)
-     FROM (SELECT Movement.Id AS MovementId
-           FROM Movement
-                INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                              ON MovementLinkObject_From.MovementId = Movement.Id
-                                             AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
-                INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement.Id
-                                             AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                -- !!!только для таких Аптек!!!
-                INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_From.ObjectId
-                --
-                INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                           ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                          AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
-                                          AND MovementBoolean_DefSUN.ValueData = TRUE
-           WHERE Movement.OperDate = CURRENT_DATE
-             AND Movement.DescId   = zc_Movement_Send()
-             AND Movement.StatusId = zc_Enum_Status_Erased()
-          ) AS tmp;*/
 
 
      -- создали документы
@@ -203,21 +163,13 @@ BEGIN
        AND _tmpResult_Partion_a.UnitId_to   = tmp.UnitId_to
           ;
 
-     -- сохранили свойство <Перемещение по СУН-v2> + isAuto + zc_Enum_PartionDateKind_6
+     -- сохранили свойство <Перемещение по СУН-v3> + isAuto
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, TRUE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v3(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
      FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount > 0
           ) AS tmp;
-     -- сохранили свойство <Отложено перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
-     /*PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
-     FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount_next > 0
-          ) AS tmp;*/
 
 
      -- 6.1. создали строки - Перемещение по СУН
@@ -240,50 +192,6 @@ BEGIN
        AND _tmpResult_Partion_a.GoodsId    = tmp.GoodsId
           ;
 
-     -- 6.2. создали строки - Отложено перемещение по СУН
-     /*UPDATE _tmpResult_Partion_a SET MovementItemId = tmp.MovementItemId
-     FROM (SELECT _tmpResult_Partion.MovementId
-                , _tmpResult_Partion.GoodsId
-                , lpInsertUpdate_MovementItem_Send (ioId                   := 0
-                                                  , inMovementId           := _tmpResult_Partion.MovementId
-                                                  , inGoodsId              := _tmpResult_Partion.GoodsId
-                                                  , inAmount               := _tmpResult_Partion.Amount_next
-                                                  , inAmountManual         := 0
-                                                  , inAmountStorage        := 0
-                                                  , inReasonDifferencesId  := 0
-                                                  , inUserId               := vbUserId
-                                                   ) AS MovementItemId
-           FROM _tmpResult_Partion_a AS _tmpResult_Partion
-           WHERE _tmpResult_Partion.Amount_next > 0
-          ) AS tmp
-     WHERE _tmpResult_Partion_a.MovementId = tmp.MovementId
-       AND _tmpResult_Partion_a.GoodsId    = tmp.GoodsId
-          ;*/
-
-
-
-     -- 7.2. создали строки Child - по СУН
-     /*PERFORM lpInsertUpdate_MovementItem_Send_Child (ioId         := 0
-                                                   , inParentId   := tmpResult_Partion.ParentId   -- _tmpResult_child.ParentId
-                                                   , inMovementId := tmpResult_Partion.MovementId -- _tmpResult_child.MovementId
-                                                   , inGoodsId    := _tmpResult_child.GoodsId
-                                                   , inAmount     := _tmpResult_child.Amount
-                                                   , inContainerId:= _tmpResult_child.ContainerId
-                                                   , inUserId     := vbUserId
-                                                    )
-     FROM _tmpResult_child_A AS _tmpResult_child
-          LEFT JOIN (SELECT DISTINCT
-                            _tmpResult_Partion.MovementId
-                          , _tmpResult_Partion.UnitId_from
-                          , _tmpResult_Partion.UnitId_to
-                          , _tmpResult_Partion.MovementItemId AS ParentId
-                          , _tmpResult_Partion.GoodsId
-                     FROM _tmpResult_Partion_a AS _tmpResult_Partion
-                    ) AS tmpResult_Partion
-                      ON tmpResult_Partion.UnitId_from = _tmpResult_child .UnitId_from
-                     AND tmpResult_Partion.UnitId_to   = _tmpResult_child .UnitId_to
-                     AND tmpResult_Partion.GoodsId     = _tmpResult_child .GoodsId
-                    ;*/
 
 
      -- 8. Удаляем документы, что б не мешали

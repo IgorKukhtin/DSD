@@ -53,13 +53,17 @@ BEGIN
                                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
                                                            AND (MovementLinkObject_To.ObjectId = inUnitId OR inUnitId = 0)
 
-                              LEFT JOIN MovementBoolean AS MovementBoolean_SUN_V2
-                                                        ON MovementBoolean_SUN_V2.MovementId = Movement.Id
-                                                       AND MovementBoolean_SUN_V2.DescId = zc_MovementBoolean_SUN_V2()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                        ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                       AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+                              LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                                        ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                                       AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
 
                          WHERE Movement.DescId = zc_Movement_Send()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
-                           AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
+                           AND COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
+                           AND COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = FALSE
                            AND MovementLinkObject_To.ObjectId <> 11299914)
 
        , tmpMovementContainer  AS (SELECT Movement.UnitId
@@ -185,13 +189,17 @@ BEGIN
                                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                                 AND (MovementLinkObject_From.ObjectId = inUnitId OR inUnitId = 0)
 
-                                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_V2
-                                                             ON MovementBoolean_SUN_V2.MovementId = Movement.Id
-                                                            AND MovementBoolean_SUN_V2.DescId = zc_MovementBoolean_SUN_V2()
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                             ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                            AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+                                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                                             ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                                            AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
 
                               WHERE Movement.DescId = zc_Movement_Send()
                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                                AND COALESCE (MovementBoolean_SUN_V2.ValueData, False) = False
+                                AND COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
+                                AND COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = FALSE
                                 AND Movement.OperDate >= DATE_TRUNC ('DAY', inStartDate)
                                 AND Movement.OperDate < DATE_TRUNC ('DAY', inEndDate) + INTERVAL '1 DAY'
                                 AND MovementLinkObject_From.ObjectId <> 11299914

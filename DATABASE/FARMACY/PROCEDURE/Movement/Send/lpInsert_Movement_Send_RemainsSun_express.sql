@@ -462,11 +462,18 @@ BEGIN
              , CASE WHEN 0 < FLOOR (-- продажи - статистика за Х*24 часов
                                     (COALESCE (_tmpSale_express.Amount_sum, 0)
                                      -- МИНУС остаток
-                                   - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
-                                    + COALESCE (tmpMI_Send_in.Amount, 0)
-                                    + COALESCE (tmpMI_Income.Amount, 0)
-                                    + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                     ))
+                                   - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                               ) > 0
+                                          THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                               )
+                                          ELSE 0
+                                     END)
                                     -- делим на кратность
                                     / _tmpGoods_express.KoeffSUN
                                    ) * _tmpGoods_express.KoeffSUN

@@ -159,6 +159,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                          ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                         AND MovementBoolean_SUN_v3.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
                 -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
@@ -166,8 +170,9 @@ BEGIN
              AND Movement.StatusId = zc_Enum_Status_Erased()
            --AND _tmpUnit_SUN_over.UnitId IS NULL
              AND MovementBoolean_SUN_v2.MovementId IS NULL
+             AND MovementBoolean_SUN_v3.MovementId IS NULL
           ) AS tmp;
-
+          
      -- !!!Удаляем предыдущие документы - DefSUN!!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, FALSE)
      FROM (SELECT Movement.Id AS MovementId
@@ -190,6 +195,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                          ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                         AND MovementBoolean_SUN_v3.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
                 -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
@@ -197,6 +206,7 @@ BEGIN
              AND Movement.StatusId = zc_Enum_Status_Erased()
            --AND _tmpUnit_SUN_over.UnitId IS NULL
              AND MovementBoolean_SUN_v2.MovementId IS NULL
+             AND MovementBoolean_SUN_v3.MovementId IS NULL
           ) AS tmp;
 
 

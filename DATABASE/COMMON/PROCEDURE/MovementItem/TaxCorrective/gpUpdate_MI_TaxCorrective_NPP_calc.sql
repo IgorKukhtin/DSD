@@ -308,6 +308,7 @@ BEGIN
                   FROM MovementLinkMovement AS MovementLinkMovement_Child
                        INNER JOIN Movement ON Movement.Id       = MovementLinkMovement_Child.MovementId
                                           AND Movement.StatusId = zc_Enum_Status_Complete()
+                                          AND Movement.OperDate < DATE_TRUNC ('MONTH', vbOperDate) + INTERVAL '1 MONTH'
                        INNER JOIN MovementString AS MovementString_InvNumberRegistered
                                                 ON MovementString_InvNumberRegistered.MovementId = MovementLinkMovement_Child.MovementId
                                                AND MovementString_InvNumberRegistered.DescId     = zc_MovementString_InvNumberRegistered()

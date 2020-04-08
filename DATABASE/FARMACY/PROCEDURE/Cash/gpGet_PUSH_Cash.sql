@@ -273,6 +273,10 @@ BEGIN
                                              ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                             AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                             AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                             ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                            AND MovementBoolean_SUN_v3.ValueData  = TRUE
                    LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                              ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
                                             AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
@@ -286,6 +290,7 @@ BEGIN
                AND Movement.StatusId = zc_Enum_Status_Erased()
                AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
                AND MovementBoolean_SUN_v2.MovementId IS NULL
+               AND MovementBoolean_SUN_v3.MovementId IS NULL
             )
       AND (DATE_PART('HOUR',    CURRENT_TIME)::Integer <= 12
         OR (DATE_PART('HOUR',    CURRENT_TIME)::Integer > 12
@@ -306,6 +311,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                          ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                         AND MovementBoolean_SUN_v3.ValueData  = TRUE
                 LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                           ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
                                          AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
@@ -319,6 +328,7 @@ BEGIN
             AND Movement.StatusId = zc_Enum_Status_Erased()
             AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
             AND MovementBoolean_SUN_v2.MovementId IS NULL
+            AND MovementBoolean_SUN_v3.MovementId IS NULL
          ) >= 1
       THEN
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
@@ -337,6 +347,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                          ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                         AND MovementBoolean_SUN_v3.ValueData  = TRUE
                 LEFT JOIN MovementBoolean AS MovementBoolean_NotDisplaySUN
                                           ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
                                          AND MovementBoolean_NotDisplaySUN.DescId     = zc_MovementBoolean_NotDisplaySUN()
@@ -350,6 +364,7 @@ BEGIN
             AND Movement.StatusId = zc_Enum_Status_Erased()
             AND MovementBoolean_NotDisplaySUN.ValueData IS NULL
             AND MovementBoolean_SUN_v2.MovementId IS NULL
+            AND MovementBoolean_SUN_v3.MovementId IS NULL
           LIMIT 1;
       ELSE
         INSERT INTO _PUSH (Id, Text, FormName, Button, Params, TypeParams, ValueParams)
@@ -372,6 +387,10 @@ BEGIN
                                              ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                             AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                             AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                             ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                            AND MovementBoolean_SUN_v3.ValueData  = TRUE
                    INNER JOIN MovementBoolean AS MovementBoolean_Sent
                                               ON MovementBoolean_Sent.MovementId = Movement.Id
                                              AND MovementBoolean_Sent.DescId     = zc_MovementBoolean_Sent()
@@ -392,6 +411,7 @@ BEGIN
                AND Movement.StatusId = zc_Enum_Status_UnComplete()
                AND MovementBoolean_Received.ValueData IS NULL
                AND MovementBoolean_SUN_v2.MovementId IS NULL
+               AND MovementBoolean_SUN_v3.MovementId IS NULL
             )
    THEN
      INSERT INTO _PUSH (Id, Text) VALUES (7, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
@@ -412,6 +432,10 @@ BEGIN
                                                 ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                                AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                                AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                      LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                                ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                               AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                               AND MovementBoolean_SUN_v3.ValueData  = TRUE
                       INNER JOIN MovementBoolean AS MovementBoolean_Sent
                                                  ON MovementBoolean_Sent.MovementId = Movement.Id
                                                 AND MovementBoolean_Sent.DescId     = zc_MovementBoolean_Sent()
@@ -428,6 +452,7 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_UnComplete()
                   AND MovementBoolean_Received.ValueData IS NULL
                   AND MovementBoolean_SUN_v2.MovementId IS NULL
+                  AND MovementBoolean_SUN_v3.MovementId IS NULL
                )
       THEN
         INSERT INTO _PUSH (Id, Text) VALUES (8, 'Коллеги, ожидайте, на вас следует перемещение по СУН!');
