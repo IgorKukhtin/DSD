@@ -58,7 +58,7 @@ object MemberPersonalServiceListForm: TMemberPersonalServiceListForm
         DataBinding.FieldName = 'isAll'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1082#1086' '#1074#1089#1077#1084' '#1074#1077#1076#1086#1084#1086#1090#1103#1084
+        HeaderHint = #1044#1086#1089#1090#1091#1087' '#1082#1086' '#1074#1089#1077#1084' '#1074#1077#1076#1086#1084#1086#1089#1090#1103#1084
         Width = 54
       end
       object MemberName: TcxGridDBColumn

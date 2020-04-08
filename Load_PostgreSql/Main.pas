@@ -2417,9 +2417,6 @@ var Second, MSec: word;
                Sleep(500);
           end;
 begin
-     if beginVACUUM_ii = 0
-     then myLogMemo_add('beginVACUUM_ii = ' + IntToStr(beginVACUUM_ii))
-     else beginVACUUM_ii:=0;
      //расчет начальные дата + время
      DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
      //
@@ -2428,6 +2425,9 @@ begin
        and (BranchEdit.Text = 'BranchId : 0')
      then
           try
+              if beginVACUUM_ii = 0
+              then myLogMemo_add('beginVACUUM_ii = ' + IntToStr(beginVACUUM_ii))
+              else beginVACUUM_ii:=0;
               //
               fOpenSqToQuery_two('select pId from pg_stat_activity as a'
                                +' where state = ' + FormatToVarCharServer_notNULL('active')

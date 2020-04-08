@@ -137,6 +137,9 @@ BEGIN
                           UNION
                            -- Кисличная Т.А. видит ВСЕХ
                            SELECT vbUserId WHERE vbUserId = 80830
+                          UNION
+                           -- Любарский Г.О. видит ВСЕХ
+                           SELECT vbUserId WHERE vbUserId = 2573318
                           )
           
           , tmpPersonal AS (SELECT 0 AS MovementItemId

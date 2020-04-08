@@ -228,7 +228,7 @@ BEGIN
                            JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_Goods.ObjectId
                                              AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem() 
-                                             AND vbOperDate BETWEEN ObjectHistory_PriceListItem.StartDate AND ObjectHistory_PriceListItem.EndDate
+                                             AND vbOperDate >= ObjectHistory_PriceListItem.StartDate AND vbOperDate < ObjectHistory_PriceListItem.EndDate
                            JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()

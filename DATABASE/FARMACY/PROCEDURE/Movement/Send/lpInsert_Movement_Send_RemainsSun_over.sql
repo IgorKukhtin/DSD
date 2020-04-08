@@ -421,7 +421,7 @@ BEGIN
                     WHEN 1.0 <= FLOOR (-- продажи у у получателя в разрезе T2=45
                                        COALESCE (_tmpSale_over.Amount_t2, 0)
                                        -- МИНУС остаток
-                                     - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                     - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
                                       + COALESCE (tmpMI_Send_in.Amount, 0)
                                       + COALESCE (tmpMI_Income.Amount, 0)
                                       + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -431,7 +431,7 @@ BEGIN
                               FLOOR (-- продажи у у получателя в разрезе T2=45
                                      COALESCE (_tmpSale_over.Amount_t2, 0)
                                      -- МИНУС остаток
-                                   - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0)
+                                   - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
                                     + COALESCE (tmpMI_Send_in.Amount, 0)
                                     + COALESCE (tmpMI_Income.Amount, 0)
                                     + COALESCE (tmpMI_OrderExternal.Amount, 0)
@@ -801,27 +801,32 @@ BEGIN
                , tmp.UnitId
                , tmp.GoodsId
                , COALESCE (tmpMCS.MCSValue, 0) AS MCSValue
+
                  -- продажи у отправителя в разрезе T1=60 дней;
                , COALESCE (_tmpSale.Amount_t1, 0) AS Amount_sale
+
                  -- остатки, OVER (Сверх запас)
                , tmp.Amount_notSold
-                   -- уменьшаем - отложенные Чеки + не проведенные с CommentError
-                 - COALESCE (_tmpRemains_all.AmountReserve, 0)
-                   -- уменьшаем - Перемещение - расход (ожидается)
-                 - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                 -- уменьшаем - отложенные Чеки + не проведенные с CommentError
+               - COALESCE (_tmpRemains_all.AmountReserve, 0)
+                 -- уменьшаем - Перемещение - расход (ожидается)
+               - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                  AS Amount
+
                  -- остатки, OVER (Сверх запас) без корректировки
                , tmp.Amount             AS Amount_save
+
                  --
                , tmp.Amount             AS Amount_real
                  --
                , 0 AS Amount_sun
+
                  --
                , tmp.Amount_notSold
-                   -- уменьшаем - отложенные Чеки + не проведенные с CommentError
-                 - COALESCE (_tmpRemains_all.AmountReserve, 0)
-                   -- уменьшаем - Перемещение - расход (ожидается)
-                 - COALESCE (_tmpRemains_all.AmountSend_out, 0)
+                 -- уменьшаем - отложенные Чеки + не проведенные с CommentError
+               - COALESCE (_tmpRemains_all.AmountReserve, 0)
+                 -- уменьшаем - Перемещение - расход (ожидается)
+               - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                  AS Amount_notSold
 
           FROM tmpGoods_sum AS tmp

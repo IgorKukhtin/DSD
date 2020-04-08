@@ -44,8 +44,9 @@ IF inOperDate IS NULL THEN inOperDate:= CURRENT_DATE; END IF;
    vbUserId:= lpGetUserBySession (inSession);
 
    vbIsAllUnit:= NOT EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UnitId_PersonalService <> 0 AND UserId = vbUserId)
-                 OR vbUserId = 80373 -- Прохорова С.А.
-                 OR vbUserId = 80830 -- Кисличная Т.А.
+                 OR vbUserId = 80373   -- Прохорова С.А.
+                 OR vbUserId = 80830   -- Кисличная Т.А.
+                 OR vbUserId = 2573318 -- Любарский Г.О.
                ;
 
    -- определяется уровень доступа

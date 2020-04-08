@@ -115,7 +115,7 @@ BEGIN
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Order
                                           ON ObjectHistory_PriceListItem_Order.ObjectId = Object_PriceListItem.Id
                                          AND ObjectHistory_PriceListItem_Order.DescId = zc_ObjectHistory_PriceListItem() 
-                                         AND CURRENT_DATE BETWEEN ObjectHistory_PriceListItem_Order.StartDate AND ObjectHistory_PriceListItem_Order.EndDate
+                                         AND CURRENT_DATE >= ObjectHistory_PriceListItem_Order.StartDate AND CURRENT_DATE < ObjectHistory_PriceListItem_Order.EndDate
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Order
                                                ON ObjectHistoryFloat_PriceListItem_Value_Order.ObjectHistoryId = ObjectHistory_PriceListItem_Order.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value_Order.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -123,7 +123,7 @@ BEGIN
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Sale
                                           ON ObjectHistory_PriceListItem_Sale.ObjectId = Object_PriceListItem.Id
                                          AND ObjectHistory_PriceListItem_Sale.DescId = zc_ObjectHistory_PriceListItem() 
-                                         AND (CURRENT_DATE + 1) BETWEEN ObjectHistory_PriceListItem_Sale.StartDate AND ObjectHistory_PriceListItem_Sale.EndDate
+                                         AND (CURRENT_DATE + INTERVAL '1 DAY') >= ObjectHistory_PriceListItem_Sale.StartDate AND (CURRENT_DATE + INTERVAL '1 DAY') < ObjectHistory_PriceListItem_Sale.EndDate
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Sale
                                                ON ObjectHistoryFloat_PriceListItem_Value_Sale.ObjectHistoryId = ObjectHistory_PriceListItem_Sale.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value_Sale.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -131,7 +131,7 @@ BEGIN
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
                                           ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
                                          AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
-                                         AND vbReturnDate BETWEEN ObjectHistory_PriceListItem_Return.StartDate AND ObjectHistory_PriceListItem_Return.EndDate
+                                         AND vbReturnDate <= ObjectHistory_PriceListItem_Return.StartDate AND vbReturnDate < ObjectHistory_PriceListItem_Return.EndDate
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
                                                ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()

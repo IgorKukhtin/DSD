@@ -1,15 +1,15 @@
 -- Function: gpSelect_SheetWorkTime_Period()
 
 -- DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_SheetWorkTime_Period22 (TDateTime, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period(
+CREATE OR REPLACE FUNCTION gpSelect_SheetWorkTime_Period22(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inJuridicalBasisId  Integer   , -- гл. юр.лицо
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete Boolean
+RETURNS TABLE (OperDate TDateTime, UnitId Integer, UnitName TVarChar, isComplete Boolean, MovementId Integer
               )
 AS
 $BODY$
@@ -91,7 +91,8 @@ BEGIN
                              INNER JOIN Object ON Object.Id       = ObjectLink.ObjectId
                                               AND Object.isErased = FALSE
                         WHERE ObjectLink.DescId        = zc_ObjectLink_MemberSheetWorkTime_Member()
-                          AND ObjectLink.ChildObjectId = vbMemberId
+                          AND (ObjectLink.ChildObjectId = vbMemberId OR vbMemberId = 0)
+                          AND ObjectLink_Unit.ChildObjectId > 0
                        )
              /*tmpList AS (SELECT DISTINCT Object_Personal_View.UnitId
                         FROM Object_Personal_View
@@ -99,6 +100,7 @@ BEGIN
                        )*/
 
           , tmpMovement AS (SELECT DISTINCT MovementLinkObject_Unit.ObjectId AS UnitId, DATE_TRUNC ('MONTH', Movement.OperDate) AS OperDate
+                                          , CASE WHEN inSession = zfCalc_UserAdmin() THEN Movement.Id ELSE 0 END AS MovementId
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -117,6 +119,7 @@ BEGIN
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
            , CASE WHEN tmpMovement.UnitId IS NOT NULL THEN TRUE ELSE FALSE END :: Boolean AS isComplete
+           , tmpMovement.MovementId
        FROM tmpPeriod
             FULL JOIN tmpMovement ON tmpMovement.UnitId   = tmpPeriod.UnitId
                                  AND tmpMovement.OperDate = tmpPeriod.OperDate

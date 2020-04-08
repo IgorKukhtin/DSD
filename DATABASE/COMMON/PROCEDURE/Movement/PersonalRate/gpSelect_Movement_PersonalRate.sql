@@ -31,13 +31,50 @@ BEGIN
                          UNION
                           SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                          )
-          , tmpRoleAccessKey AS (SELECT AccessKeyId 
-                                 FROM Object_RoleAccessKey_View
-                                 WHERE UserId = vbUserId 
-                                 GROUP BY AccessKeyId
-                                 )
-       
- 
+         , tmpUserAll AS (SELECT UserId FROM Constant_User_LevelMax01_View WHERE UserId = vbUserId /*AND UserId <> 9464*/) -- Документы-меню (управленцы) AND <> Рудик Н.В. + ЗП просмотр ВСЕ
+         , tmpMemberPersonalServiceList
+                      AS (SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                          FROM ObjectLink AS ObjectLink_User_Member
+                               INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
+                                                     ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                    AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                               INNER JOIN Object AS Object_MemberPersonalServiceList
+                                                 ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                AND Object_MemberPersonalServiceList.isErased = FALSE
+                               LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                      AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
+                               LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
+                                                    ON ObjectLink_PersonalServiceList.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
+                                                   AND ObjectLink_PersonalServiceList.DescId   = zc_ObjectLink_MemberPersonalServiceList_PersonalServiceList()
+                               LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                             AND (Object_PersonalServiceList.Id    = ObjectLink_PersonalServiceList.ChildObjectId
+                                                                               OR ObjectBoolean.ValueData          = TRUE)
+                          WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                            AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                         UNION
+                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                          FROM ObjectLink AS ObjectLink_User_Member
+                               INNER JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
+                                                     ON ObjectLink_PersonalServiceList_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                    AND ObjectLink_PersonalServiceList_Member.DescId        = zc_ObjectLink_PersonalServiceList_Member()
+                               LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                                                                             AND Object_PersonalServiceList.Id     = ObjectLink_PersonalServiceList_Member.ObjectId
+                          WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                            AND ObjectLink_User_Member.DescId   = zc_ObjectLink_User_Member()
+                         UNION
+                          -- Админ и другие видят ВСЕХ
+                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                          FROM Object AS Object_PersonalServiceList
+                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                            AND EXISTS (SELECT 1 FROM tmpUserAll)
+                         UNION
+                          -- Админ и другие видят ВСЕХ
+                          SELECT Object_PersonalServiceList.Id AS PersonalServiceListId
+                          FROM Object AS Object_PersonalServiceList
+                          WHERE Object_PersonalServiceList.DescId = zc_Object_PersonalServiceList()
+                            AND EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE UserId = vbUserId AND AccessKeyId_PersonalService = zc_Enum_Process_AccessKey_PersonalServiceAdmin())
+                         )
+       -- 
        SELECT Movement.Id                        AS Id
             , Movement.InvNumber                 AS InvNumber
             , Movement.OperDate                  AS OperDate
@@ -52,8 +89,6 @@ BEGIN
             INNER JOIN Movement ON Movement.DescId = zc_Movement_PersonalRate()
                                AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                                AND Movement.StatusId = tmpStatus.StatusId
- 
-            ---INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -69,7 +104,8 @@ BEGIN
                                          ON MovementLinkObject_PersonalServiceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalServiceList.DescId = zc_MovementLinkObject_PersonalServiceList()
             LEFT JOIN Object AS Object_PersonalServiceList ON Object_PersonalServiceList.Id = MovementLinkObject_PersonalServiceList.ObjectId
- ;
+            INNER JOIN tmpMemberPersonalServiceList ON tmpMemberPersonalServiceList.PersonalServiceListId = MovementLinkObject_PersonalServiceList.ObjectId
+       ;
   
 END;
 $BODY$

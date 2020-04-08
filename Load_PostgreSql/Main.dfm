@@ -129,7 +129,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 651
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -2340,8 +2339,6 @@ object MainForm: TMainForm
     Font.Style = []
     ParentFont = False
     TabOrder = 5
-    ExplicitLeft = 330
-    ExplicitTop = -6
     object PanelErr: TPanel
       Left = 1
       Top = 1
@@ -2355,9 +2352,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 2
-      ExplicitWidth = 127
     end
     object LogMemo: TMemo
       Left = 1
@@ -2374,10 +2368,6 @@ object MainForm: TMainForm
         'LogMemo')
       ParentFont = False
       TabOrder = 1
-      ExplicitLeft = 16
-      ExplicitTop = 76
-      ExplicitWidth = 185
-      ExplicitHeight = 89
     end
   end
   object DataSource: TDataSource

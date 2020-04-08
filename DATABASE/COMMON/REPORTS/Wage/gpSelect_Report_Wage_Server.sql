@@ -281,6 +281,9 @@ BEGIN
                               INNER JOIN ObjectLink AS ObjectLink_MemberPersonalServiceList
                                                     ON ObjectLink_MemberPersonalServiceList.ChildObjectId = ObjectLink_User_Member.ChildObjectId
                                                    AND ObjectLink_MemberPersonalServiceList.DescId        = zc_ObjectLink_MemberPersonalServiceList_Member()
+                              INNER JOIN Object AS Object_MemberPersonalServiceList
+                                                ON Object_MemberPersonalServiceList.Id       = ObjectLink_MemberPersonalServiceList.ObjectId
+                                               AND Object_MemberPersonalServiceList.isErased = FALSE
                               LEFT JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_MemberPersonalServiceList.ObjectId
                                                      AND ObjectBoolean.DescId   = zc_ObjectBoolean_MemberPersonalServiceList_All()
                               LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList
