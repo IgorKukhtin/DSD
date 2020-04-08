@@ -320,10 +320,10 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
-                                                           ON MB_SUN_v2.MovementId = Movement.Id
-                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v3
+                                                           ON MB_SUN_v3.MovementId = Movement.Id
+                                                          AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                                          AND MB_SUN_v3.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                                  -- !!!только для таких товаров!!!
                                  INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
@@ -332,7 +332,7 @@ BEGIN
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
-                              AND MB_SUN_v2.MovementId IS NULL
+                              AND MB_SUN_v3.MovementId IS NULL
                             GROUP BY MovementLinkObject_From.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
