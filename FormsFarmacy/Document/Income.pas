@@ -169,6 +169,10 @@ type
     edComment: TcxTextEdit;
     spUpdate_BranchDate: TdsdStoredProc;
     actUpdate_BranchDate: TdsdExecStoredProc;
+    actUpdateOperDate: TdsdExecStoredProc;
+    actExecuteDataDialog: TExecuteDialog;
+    spUpdateIncome_OperData: TdsdStoredProc;
+    dxBarButton2: TdxBarButton;
   private
     { Private declarations }
   public

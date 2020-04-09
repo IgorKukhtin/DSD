@@ -1085,6 +1085,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_TaxRate() RETURNS Intege
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashRegister_TaxRate', zc_Object_CashRegister(), 'Налоговые ставки' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_TaxRate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_PhysicalMemory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_PhysicalMemory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashRegister_PhysicalMemory', zc_Object_CashRegister(), 'Оперативная память' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_PhysicalMemory');
  
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

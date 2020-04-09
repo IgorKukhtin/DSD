@@ -23,7 +23,7 @@ type
     BaseBoardProduct: TcxGridDBColumn;
     ProcessorName: TcxGridDBColumn;
     DiskDriveModel: TcxGridDBColumn;
-    PhysicalMemoryCapacity: TcxGridDBColumn;
+    PhysicalMemory: TcxGridDBColumn;
     actUpdate_GetHardwareData_Yes: TMultiAction;
     actUpdate_GetHardwareData_No: TMultiAction;
     actExecUpdate_GetHardwareData_Yes: TdsdExecStoredProc;
@@ -32,6 +32,7 @@ type
     spUpdate_GetHardwareData_No: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    TaxRate: TcxGridDBColumn;
   private
     { Private declarations }
   public

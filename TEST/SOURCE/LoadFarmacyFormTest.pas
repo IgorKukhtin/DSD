@@ -1970,6 +1970,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeOperDataDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeOperDataDialogForm');
  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomePharmacyForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomePharmacyForm');

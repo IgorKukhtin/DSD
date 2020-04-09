@@ -9,8 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CashRegisterKindId Integer, CashRegisterKindName TVarChar
              , SerialNumber TVarChar
              , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
-             , UnitName TVarChar
-             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemoryCapacity TFloat
+             , UnitName TVarChar, TaxRate TVarChar
+             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -56,12 +56,13 @@ $BODY$BEGIN
         , ObjectDate_TimePUSHFinal2.ValueData    AS TimePUSHFinal2
         
         , Object_Unit.ValueData                  AS UnitName
+        , ObjectString_TaxRate.ValueData         AS TaxRate
         
         , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)  AS GetHardwareData
         , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
         , ObjectString_ProcessorName.ValueData                      AS ProcessorName
         , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
-        , ObjectFloat_PhysicalMemoryCapacity.ValueData              AS PhysicalMemoryCapacity
+        , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
 
         , Object_CashRegister.isErased           AS isErased
 
@@ -83,6 +84,10 @@ $BODY$BEGIN
                               ON ObjectDate_TimePUSHFinal2.ObjectId = Object_CashRegister.Id
                              AND ObjectDate_TimePUSHFinal2.DescId = zc_ObjectDate_CashRegister_TimePUSHFinal2()
                              
+        LEFT JOIN ObjectString AS ObjectString_TaxRate 
+                               ON ObjectString_TaxRate.ObjectId = Object_CashRegister.Id
+                              AND ObjectString_TaxRate.DescId = zc_ObjectString_CashRegister_TaxRate()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_GetHardwareData 
                                 ON ObjectBoolean_GetHardwareData.ObjectId = Object_CashRegister.Id
                                AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
@@ -97,9 +102,9 @@ $BODY$BEGIN
                                ON ObjectString_DiskDriveModel.ObjectId = Object_CashRegister.Id
                               AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_CashRegister_DiskDriveModel()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_PhysicalMemoryCapacity
-                              ON ObjectFloat_PhysicalMemoryCapacity.ObjectId = Object_CashRegister.Id
-                             AND ObjectFloat_PhysicalMemoryCapacity.DescId = zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity()
+        LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
+                              ON ObjectString_PhysicalMemory.ObjectId = Object_CashRegister.Id
+                             AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_CashRegister_PhysicalMemory()
 
         LEFT JOIN tmpUnit ON tmpUnit.Ord = 1 AND  tmpUnit.CashRegisterID = Object_CashRegister.Id 
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitID

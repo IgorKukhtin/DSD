@@ -27,7 +27,7 @@ BEGIN
            , CAST (FALSE AS Boolean) AS isExplanation
            , CAST (FALSE AS Boolean) AS isResort
            , CAST (FALSE AS Boolean) AS isDifferenceSum
-           , Null                    AS DifferenceSum
+           , CAST (Null AS TFloat)   AS DifferenceSum
            , CAST (FALSE AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 

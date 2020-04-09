@@ -44,6 +44,7 @@ type
     function JuridicalName : string;
     function ZReport : Integer;
     function SummaReceipt : Currency;
+    function GetTaxRate : string;
   public
     constructor Create;
   end;
@@ -773,6 +774,11 @@ end;
 function TCashFP3530T.SummaReceipt : Currency;
 begin
   Result := 0;
+end;
+
+function TCashFP3530T.GetTaxRate : string;
+begin
+  Result := '';
 end;
 
 end.

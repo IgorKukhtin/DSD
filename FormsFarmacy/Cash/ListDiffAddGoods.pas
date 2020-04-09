@@ -313,6 +313,26 @@ begin
         end;
       end;
 
+      WaitForSingleObject(MutexGoods, INFINITE);
+      try
+        if FileExists(Goods_lcl) then LoadLocalData(ListGoodsCDS, Goods_lcl);
+        if not ListGoodsCDS.Active then ListGoodsCDS.Open;
+      finally
+        ReleaseMutex(MutexGoods);
+      end;
+      if not ListGoodsCDS.Active then
+      begin
+        ShowMessage('Ошибка открытия прайсов поставщиков.');
+        Exit;
+      end;
+
+      if not ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) then
+      begin
+        ListGoodsCDS.Close;
+        ShowMessage('Ошибка медикамент не найден в прайсах поставщиков.');
+        Exit;
+      end;
+
       S := '';
       if AmountDiff <> 0 Then S := S +  #13#10'Отказы сегодня: ' + CurrToStr(AmountDiff);
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + CurrToStr(AmountDiffPrev);
@@ -328,38 +348,15 @@ begin
       if AmountIncome > 0 then S := S +  #13#10'Товар в пути: ' + CurrToStr(AmountIncome) + ' Цена (в пути): ' + CurrToStr(PriceSaleIncome);
       if S <> '' then S := S +  #13#10;
       S := S + 'ВНИМАНИЕ  У ВАС НТЗ = ' + CurrToStr(GoodsCDS.FieldByName('MCSValue').AsCurrency) + ' упк. ОСТАТОК = ' + CurrToStr(Remains) + ' упк.';
+      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
+      begin
+        if S <> '' then S := S +  #13#10;
+        S := S + 'ВНИМАНИЕ!!!! позиция из пост 224 - '#13#10'                СТАВИТЬ в ЗАКАЗ из рассчета на 1день продаж!';
+      end;
       if S <> '' then S := S +  #13#10;
       S := S + '                ВАМ ДЕЙСТВИТЕЛЬНО НУЖНО БОЛЬШЕ ?!';
       Label7.Caption := S;
       Label7.Visible := Label7.Caption <> '';
-
-      WaitForSingleObject(MutexGoods, INFINITE);
-      try
-        if FileExists(Goods_lcl) then LoadLocalData(ListGoodsCDS, Goods_lcl);
-        if not ListGoodsCDS.Active then ListGoodsCDS.Open;
-      finally
-        ReleaseMutex(MutexGoods);
-      end;
-
-      if not ListGoodsCDS.Active then
-      begin
-        ShowMessage('Ошибка открытия прайсов поставщиков.');
-        Exit;
-      end;
-
-      if not ListGoodsCDS.Locate('Id', GoodsCDS.FieldByName('ID').AsInteger, []) then
-      begin
-        ListGoodsCDS.Close;
-        ShowMessage('Ошибка медикамент не найден в прайсах поставщиков.');
-        Exit;
-      end;
-
-      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
-      begin
-        ListGoodsCDS.Close;
-        ShowMessage('Временная блокировка товара.');
-        Exit;
-      end;
 
       if not ListGoodsCDS.FieldByName('ExpirationDate').IsNull then
       begin

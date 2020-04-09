@@ -105,12 +105,14 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 125
       end
       object colAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
         HeaderAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 76
       end
       object colGoodsNDS: TcxGridDBColumn
@@ -173,6 +175,7 @@ inherited ListGoodsForm: TListGoodsForm
         Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
         DataBinding.FieldName = 'isResolution_224'
         HeaderAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 72
       end
     end

@@ -47,6 +47,7 @@ type
     function JuridicalName : string;
     function ZReport : Integer;
     function SummaReceipt : Currency;
+    function GetTaxRate : string;
   public
     constructor Create;
     function ShowError: boolean;
@@ -480,6 +481,11 @@ end;
 function TCashIKC_E810T.SummaReceipt : Currency;
 begin
   Result := FPrinter.prSumTotal / 100;
+end;
+
+function TCashIKC_E810T.GetTaxRate : string;
+begin
+  Result := '';
 end;
 
 end.

@@ -123,7 +123,8 @@ uses
   EnterLoyaltySaveMoney in '..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas' {EnterLoyaltySaveMoneyForm},
   LoyaltySMList in '..\FormsFarmacy\Cash\LoyaltySMList.pas' {LoyaltySMListForm: TParentForm},
   BuyerList in '..\FormsFarmacy\Cash\BuyerList.pas' {BuyerListForm},
-  EnterLoyaltySMDiscount in '..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas' {EnterLoyaltySMDiscountForm};
+  EnterLoyaltySMDiscount in '..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas' {EnterLoyaltySMDiscountForm},
+  GetSystemInfo in '..\SOURCE\GetSystemInfo.pas';
 
 {$R *.res}
 

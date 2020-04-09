@@ -3,7 +3,7 @@
   ClientHeight = 516
   ClientWidth = 1083
   ExplicitWidth = 1099
-  ExplicitHeight = 554
+  ExplicitHeight = 555
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1726,6 +1726,47 @@
       Category = 'Union'
       MoveParams = <>
     end
+    object actUpdateOperDate: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteDataDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateIncome_OperData
+      StoredProcList = <
+        item
+          StoredProc = spUpdateIncome_OperData
+        end>
+      Caption = 'actUpdateOperDate'
+      ImageIndex = 43
+    end
+    object actExecuteDataDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteDataDialog'
+      FormName = 'TIncomeOperDataDialogForm'
+      FormNameParam.Value = 'TIncomeOperDataDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InvNumberUpdate'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'OperDateUpdate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Top = 448
@@ -1818,6 +1859,10 @@
         item
           Visible = True
           ItemName = 'bbMovementItemProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton2'
         end
         item
           Visible = True
@@ -1980,6 +2025,10 @@
     end
     object bbComplete: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object dxBarButton2: TdxBarButton
+      Action = actUpdateOperDate
       Category = 0
     end
   end
@@ -2290,6 +2339,18 @@
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumberUpdate'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDateUpdate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 416
@@ -2533,6 +2594,22 @@
         Value = Null
         Component = edComment
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberUpdate'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'OperDateUpdate'
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -3667,5 +3744,54 @@
     PackSize = 1
     Left = 504
     Top = 448
+  end
+  object spUpdateIncome_OperData: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Income_OperData'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inInvNumber'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InvNumberUpdate'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42144d
+        Component = FormParams
+        ComponentItem = 'OperDateUpdate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvNumber'
+        Value = Null
+        Component = edInvNumber
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outOperDate'
+        Value = 'NULL'
+        Component = edOperDate
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 792
+    Top = 424
   end
 end

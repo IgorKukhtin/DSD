@@ -10,17 +10,17 @@ inherited CashRegisterForm: TCashRegisterForm
   inherited PageControl: TcxPageControl
     Width = 833
     Height = 348
-    ExplicitWidth = 769
+    ExplicitWidth = 833
     ExplicitHeight = 348
     ClientRectBottom = 348
     ClientRectRight = 833
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 769
+      ExplicitWidth = 833
       ExplicitHeight = 348
       inherited cxGrid: TcxGrid
         Width = 833
         Height = 348
-        ExplicitWidth = 769
+        ExplicitWidth = 833
         ExplicitHeight = 348
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -55,7 +55,7 @@ inherited CashRegisterForm: TCashRegisterForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 74
           end
           object clCashRegisterKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1082#1072#1089#1089#1099
@@ -63,7 +63,7 @@ inherited CashRegisterForm: TCashRegisterForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 104
+            Width = 93
           end
           object TimePUSHFinal1: TcxGridDBColumn
             Caption = #1042#1077#1095#1077#1088#1085#1077#1077' PUSH 1'
@@ -89,7 +89,15 @@ inherited CashRegisterForm: TCashRegisterForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 203
+            Width = 163
+          end
+          object TaxRate: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'TaxRate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
           end
           object GetHardwareData: TcxGridDBColumn
             Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -124,9 +132,9 @@ inherited CashRegisterForm: TCashRegisterForm
             Options.Editing = False
             Width = 91
           end
-          object PhysicalMemoryCapacity: TcxGridDBColumn
+          object PhysicalMemory: TcxGridDBColumn
             Caption = #1054#1087#1077#1088#1072#1090#1080#1074#1085#1072#1103' '#1087#1072#1084#1103#1090#1100', '#1043#1041
-            DataBinding.FieldName = 'PhysicalMemoryCapacity'
+            DataBinding.FieldName = 'PhysicalMemory'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False

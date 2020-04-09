@@ -1,22 +1,26 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(
     IN inSerial                  TVarChar,      -- Серийный номер аппарата
+    IN inTaxRate                 TVarChar,      -- Налоговые ставки
     IN inBaseBoardProduct        TVarChar,      -- Материнская плата
     IN inProcessorName           TVarChar,      -- Процессор
     IN inDiskDriveModel          TVarChar,      -- Жесткий Диск
-    IN inPhysicalMemoryCapacity  TFloat,      -- Оперативная память, ГБ
+    IN inPhysicalMemory          TVarChar,      -- Оперативная память, ГБ
     IN inSession                 TVarChar       -- сессия пользователя
 )
-RETURNS Integer
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbId integer;
+  DECLARE vbUserId Integer;
   DECLARE vbCashRegisterKindId integer;
   DECLARE vbCashRegisterKindName TVarChar;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+
+  vbUserId := inSession;
 
   vbCashRegisterKindName := 'Datecs FP 3141';
   Select Id INTO vbCashRegisterKindId
@@ -40,6 +44,9 @@ BEGIN
   END IF;
 
   -- сохранили свойство <>
+  PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_TaxRate(), vbId, inTaxRate);
+
+  -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_BaseBoardProduct(), vbId, inBaseBoardProduct);
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_ProcessorName(), vbId, inProcessorName);
@@ -47,17 +54,20 @@ BEGIN
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_DiskDriveModel(), vbId, inDiskDriveModel);
 
   -- сохранили свойство <>
-  PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity(), vbId, inPhysicalMemoryCapacity);
+  PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_PhysicalMemory(), vbId, inPhysicalMemory);
 
   
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashRegister_GetHardwareData(), vbId, False);
+
+  -- сохранили протокол
+  PERFORM lpInsert_ObjectProtocol (vbId, vbUserId);
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -67,4 +77,4 @@ ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarCha
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_CashRegister_HardwareData ('002', '2')
+-- SELECT * FROM gpInsertUpdate_Object_CashRegister_HardwareData ('148', '', '', '', '', 0, '3')

@@ -1225,7 +1225,7 @@ inherited MainCashForm2: TMainCashForm2
         Left = 1
         Top = 1
         Width = 204
-        Height = 13
+        Height = 19
         Align = alLeft
         Caption = '     '#1060#1080#1083#1100#1090#1088' '#1087#1086' '#1089#1088#1088#1086#1082#1091' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072'.'
         Font.Charset = DEFAULT_CHARSET
@@ -1234,6 +1234,7 @@ inherited MainCashForm2: TMainCashForm2
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
+        ExplicitHeight = 13
       end
       object Label14: TLabel
         Left = 500
@@ -1272,7 +1273,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 71
-      Height = 13
+      Height = 15
       Align = alLeft
       Caption = '     '#1052#1077#1085#1077#1076#1078#1077#1088' '
       Font.Charset = DEFAULT_CHARSET
@@ -1281,12 +1282,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblCashMember: TLabel
       Left = 72
       Top = 1
-      Width = 12
-      Height = 13
+      Width = 453
+      Height = 15
       Align = alClient
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -1295,12 +1297,14 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsItalic]
       ParentFont = False
+      ExplicitWidth = 12
+      ExplicitHeight = 13
     end
     object Label2: TLabel
       Left = 525
       Top = 1
       Width = 64
-      Height = 13
+      Height = 15
       Align = alRight
       Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' '
       Font.Charset = DEFAULT_CHARSET
@@ -1309,6 +1313,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblBayer: TLabel
       Left = 589
@@ -1341,7 +1346,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 55
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1055#1088#1086#1077#1082#1090' '
       Font.Charset = DEFAULT_CHARSET
@@ -1350,6 +1355,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountExternalName: TLabel
       Left = 56
@@ -1370,7 +1376,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 265
       Top = 1
       Width = 114
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #8470' '#1076#1080#1089#1082#1086#1085#1090#1085#1086#1081' '#1082#1072#1088#1090#1099' '
       Font.Charset = DEFAULT_CHARSET
@@ -1379,6 +1385,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblDiscountCardNumber: TLabel
       Left = 379
@@ -1399,7 +1406,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 489
       Top = 1
       Width = 74
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
       Font.Charset = DEFAULT_CHARSET
@@ -1408,6 +1415,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblAmount: TLabel
       Left = 650
@@ -1702,7 +1710,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 53
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1040#1082#1094#1080#1103': '
       Font.Charset = DEFAULT_CHARSET
@@ -1711,6 +1719,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoName: TLabel
       Left = 54
@@ -1731,7 +1740,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 219
       Top = 1
       Width = 57
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
       Font.Charset = DEFAULT_CHARSET
@@ -1740,6 +1749,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoCode: TLabel
       Left = 276
@@ -1774,7 +1784,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 355
       Top = 1
       Width = 30
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1060#1048#1054': '
       Font.Charset = DEFAULT_CHARSET
@@ -1783,6 +1793,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoBayerName: TLabel
       Left = 385
@@ -1824,7 +1835,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 94
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1056#1091#1095#1085#1072#1103' '#1089#1082#1080#1076#1082#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1833,6 +1844,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label15: TLabel
       Left = 522
@@ -1883,7 +1895,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 127
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1057#1082#1080#1076#1082#1072' '#171#1095#1077#1088#1077#1079' '#1089#1072#1081#1090#187'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1892,6 +1904,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label17: TLabel
       Left = 522
@@ -1942,7 +1955,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 173
-      Height = 14
+      Height = 19
       Align = alLeft
       Caption = '     '#1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1085#1086#1095#1085#1072#1103' '#1094#1077#1085#1072'.'
       Font.Charset = DEFAULT_CHARSET
@@ -1951,6 +1964,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitHeight = 14
     end
     object edTaxUnitNight: TcxTextEdit
       Left = 567
@@ -2054,7 +2068,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 197
-      Height = 13
+      Height = 16
       Align = alLeft
       Caption = '     '#1054#1096#1080#1073#1082#1072' '#1087#1086#1075#1072#1096#1077#1085#1080#1103' '#1088#1077#1094#1077#1087#1090#1072' '#1093#1077#1083#1089#1080': '
       Font.Charset = DEFAULT_CHARSET
@@ -2064,6 +2078,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Style = []
       ParentFont = False
       OnClick = Label4Click
+      ExplicitHeight = 13
     end
     object edHelsiError: TcxTextEdit
       Left = 204
@@ -2131,7 +2146,7 @@ inherited MainCashForm2: TMainCashForm2
       Left = 1
       Top = 1
       Width = 134
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = '     '#1055#1088#1086#1075#1088#1072#1084#1084#1072' '#1083#1086#1103#1083#1100#1085#1086#1089#1090#1080' '
       Font.Charset = DEFAULT_CHARSET
@@ -2140,12 +2155,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object Label25: TLabel
       Left = 135
       Top = 1
       Width = 57
-      Height = 13
+      Height = 19
       Align = alLeft
       Caption = #1055#1088#1086#1084#1086#1082#1086#1076': '
       Font.Charset = DEFAULT_CHARSET
@@ -2154,12 +2170,13 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 13
     end
     object lblPromoCodeLoyalty: TLabel
       Left = 192
       Top = 1
       Width = 12
-      Height = 14
+      Height = 19
       Align = alLeft
       Caption = '...'
       Font.Charset = DEFAULT_CHARSET
@@ -2168,6 +2185,7 @@ inherited MainCashForm2: TMainCashForm2
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentFont = False
+      ExplicitHeight = 14
     end
     object Label27: TLabel
       Left = 488
@@ -5504,7 +5522,7 @@ inherited MainCashForm2: TMainCashForm2
     Enabled = False
     Interval = 200
     OnTimer = TimerDroppedDownTimer
-    Left = 520
+    Left = 512
     Top = 463
   end
   object TimerAnalogFilter: TTimer
@@ -5826,5 +5844,60 @@ inherited MainCashForm2: TMainCashForm2
     PackSize = 1
     Left = 785
     Top = 485
+  end
+  object spUpdateHardwareData: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_CashRegister_HardwareData'
+    DataSet = PUSHDS
+    DataSets = <
+      item
+        DataSet = PUSHDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inSerial'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTaxRate'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBaseBoardProduct'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcessorName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiskDriveModel'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhysicalMemory'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 104
   end
 end
