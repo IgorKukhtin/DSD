@@ -256,6 +256,14 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 132
           end
+          object SignInternalName: TcxGridDBColumn
+            Caption = #1052#1086#1076#1077#1083#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1080
+            DataBinding.FieldName = 'SignInternalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080' '#9
+            Options.Editing = False
+          end
           object strSign: TcxGridDBColumn
             Caption = #1060#1048#1054' '#1087#1086#1083#1100#1079'. - '#1077#1089#1090#1100' '#1101#1083'. '#1087#1086#1076#1087#1080#1089#1100
             DataBinding.FieldName = 'strSign'

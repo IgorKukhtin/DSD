@@ -19,23 +19,29 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbMovementDescId Integer;
+  DECLARE vbSignInternalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalService());
      vbUserId := inSession;
 
-
      -- Параметры из документа - для определения <Модель электронной подписи>
-     SELECT Movement.DescId  AS MovementDescId
-            INTO vbMovementDescId
+     SELECT Movement.DescId             AS MovementDescId
+          , MovementLinkObject.ObjectId AS SignInternalId
+            INTO vbMovementDescId, vbSignInternalId
      FROM Movement
+          LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_SignInternal()
      WHERE Movement.Id = inMovementId;
-
      
      -- Результат
      RETURN QUERY 
         WITH -- данные из Модели для данного документа
-             tmpObject AS (SELECT * FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0))
+             tmpObject AS (SELECT * 
+                           FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0) AS tmp
+                           WHERE tmp.SignInternalId = vbSignInternalId
+                              OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
+                           )
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
                             , MovementItem.ObjectId   AS SignInternalId

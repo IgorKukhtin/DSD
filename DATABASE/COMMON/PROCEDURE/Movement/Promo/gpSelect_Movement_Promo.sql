@@ -138,7 +138,7 @@ BEGIN
                               , tmpSign.strSign
                               , tmpSign.strSignNo
                          FROM tmpMovement
-                              LEFT JOIN lpSelect_MI_Promo_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
+                              LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                          )
                             
         SELECT Movement_Promo.Id                                                 --Идентификатор

@@ -87,6 +87,7 @@ type
     Color_PromoStateKind: TcxGridDBColumn;
     isTaxPromo: TcxGridDBColumn;
     isTaxPromo_Condition: TcxGridDBColumn;
+    SignInternalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
