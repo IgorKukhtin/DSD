@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 204
+  ExplicitHeight = 203
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -63,7 +63,7 @@ inherited MainForm: TMainForm
     object actReport_SendSUN_SUNv2: TdsdOpenForm [0]
       Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2'
+      Caption = #1054#1090#1095#1077#1090' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' v.1/ '#1057#1059#1053' v2 / '#1057#1059#1053' v3'
       FormName = 'TReport_SendSUN_SUNv2Form'
       FormNameParam.Value = 'TReport_SendSUN_SUNv2Form'
       FormNameParam.DataType = ftString

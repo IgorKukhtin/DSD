@@ -22,6 +22,7 @@ RETURNS TABLE (OperDate  TDateTime
              , GoodsGroupName  TVarChar
              , Amount TFloat
              , Amount_v2 TFloat
+             , Amount_v3 TFloat
              , ExpirationDate      TDateTime
              , OperDate_Income     TDateTime
              , Invnumber_Income    TVarChar
@@ -47,6 +48,7 @@ BEGIN
                           , MovementLinkObject_PartionDateKind.ObjectId AS PartionDateKindId
                           , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     AS isSUN
                           , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)  AS isSUN_v2
+                          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)  AS isSUN_v3
                      FROM Movement
                           INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                         ON MovementLinkObject_To.MovementId = Movement.Id
@@ -61,6 +63,10 @@ BEGIN
                                                     ON MovementBoolean_SUN_v2.MovementId = Movement.Id
                                                    AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
  
+                          LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                                    ON MovementBoolean_SUN_v3.MovementId = Movement.Id
+                                                   AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+
                           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -78,6 +84,7 @@ BEGIN
    , tmpMI_Master AS (SELECT MovementItem.*
                            , Movement.isSUN
                            , Movement.isSUN_v2
+                           , Movement.isSUN_v3
                            , Movement.FromId
                            , Movement.ToId
                            , Movement.PartionDateKindId
@@ -89,15 +96,20 @@ BEGIN
                                                   AND COALESCE (MovementItem.Amount,0) <> 0
                       )
 
-   -- пересекающиеся товары СУН и СУН2
+   -- пересекающиеся товары СУН и СУН2 и по СУН и СУН3
    , tmpGoods AS (SELECT DISTINCT tmpMI_Master.ObjectId
                   FROM tmpMI_Master
                        INNER JOIN tmpMI_Master AS tmpMI_Master_V2 
                                                ON tmpMI_Master_V2.ObjectId = tmpMI_Master.ObjectId
                                               AND tmpMI_Master_V2.isSUN_v2 = TRUE
-                                              --AND tmpMI_Master_V2.FromId = tmpMI_Master.FromId
-                  WHERE tmpMI_Master.isSUN_v2 = FALSE
-                  --and tmpMI_Master.ObjectId = 7090596
+                  WHERE tmpMI_Master.isSUN_v2 = FALSE AND tmpMI_Master.isSUN_v3 = FALSE
+                 UNION 
+                  SELECT DISTINCT tmpMI_Master.ObjectId
+                  FROM tmpMI_Master
+                       INNER JOIN tmpMI_Master AS tmpMI_Master_V3 
+                                               ON tmpMI_Master_V3.ObjectId = tmpMI_Master.ObjectId
+                                              AND tmpMI_Master_V3.isSUN_v3 = TRUE
+                  WHERE tmpMI_Master.isSUN_v2 = FALSE AND tmpMI_Master.isSUN_v3 = FALSE
                   )
    --MI - только пересекающихся товаров  
    , tmpConfluence AS (SELECT tmpMI_Master.*
@@ -179,9 +191,11 @@ BEGIN
            , Object_GoodsGroup.ValueData                    AS GoodsGroupName
 
            -- стат "проведен" - знач. перемещение  прошло  SUN
-           , CASE WHEN Movement.isSUN_v2 = FALSE THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount
+           , CASE WHEN Movement.isSUN = TRUE AND Movement.isSUN_v2 = FALSE AND Movement.isSUN_v3 = FALSE THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount
            -- стат "проведен" - знач. перемещение  прошло  SUN_v2
            , CASE WHEN Movement.isSUN_v2 = TRUE THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount_v2
+           -- стат "проведен" - знач. перемещение  прошло  SUN_v3
+           , CASE WHEN Movement.isSUN_v3 = TRUE THEN tmpMI_Master.Amount ELSE 0 END ::TFloat AS Amount_v3
 
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime AS OperDate_Income

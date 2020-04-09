@@ -897,11 +897,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalRemainsDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalRemainsDialogForm');
     exit;
-
+     }
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SendSUN_SUNv2Form'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SendSUN_SUNv2Form');
     exit;
-
+     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SUNSaleDatesForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SUNSaleDatesDialogForm'));

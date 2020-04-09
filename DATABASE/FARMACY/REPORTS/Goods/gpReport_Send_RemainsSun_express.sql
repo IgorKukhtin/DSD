@@ -245,6 +245,8 @@ BEGIN
                , tmp.Amount                     AS Amount_res
                , tmp.Amount * _tmpRemains.Price AS Summ_res
 
+               , tmpUnit_str.UnitName_str       AS UnitName_str_in
+               , tmpSumm_str.Summ_str           AS Summ_str_in
 
           FROM _tmpResult_Partion_a AS tmp
                LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
@@ -262,6 +264,21 @@ BEGIN
                                           AND _tmpRemains.GoodsId = tmp.GoodsId
                
                LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id  = tmp.GoodsId
+               
+            -- список сумм
+            LEFT JOIN (SELECT _tmpResult.UnitId, STRING_AGG (zfConvert_FloatToString (_tmpResult.Summ_res), ';') AS Summ_str
+                       FROM _tmpResult
+                       WHERE _tmpResult.Summ_res > 0
+                       GROUP BY _tmpResult.UnitId
+                      ) AS tmpSumm_str ON tmpSumm_str.UnitId = tmp.UnitId_to
+            -- список аптек куда может уходить 
+            LEFT JOIN (SELECT _tmpResult.UnitId, STRING_AGG (Object.ValueData, ';') AS UnitName_str
+                       FROM _tmpResult
+                            LEFT JOIN Object ON Object.Id = _tmpResult.UnitId
+                       WHERE _tmpResult.Summ_res > 0
+                       GROUP BY _tmpResult.UnitId
+                      ) AS tmpUnit_str ON tmpUnit_str.UnitId = tmp.UnitId_to
+
               ;
      RETURN NEXT Cursor2;
 
