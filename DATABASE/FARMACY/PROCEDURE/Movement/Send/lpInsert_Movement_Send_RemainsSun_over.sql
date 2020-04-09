@@ -149,6 +149,56 @@ BEGIN
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
        ;
 
+
+     -- исключаем такие перемещени€
+     INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to, isMCS_to)
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
+             , FALSE                                                              AS isMCS_to
+        FROM Object
+             INNER JOIN ObjectBoolean AS OB
+                                      ON OB.ObjectId  = Object.Id
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v2()
+                                     AND OB.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_From
+                                  ON ObjectLink_From.ObjectId = Object.Id
+                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+                                                        
+             LEFT JOIN ObjectLink AS ObjectLink_To
+                                  ON ObjectLink_To.ObjectId = Object.Id
+                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+
+        WHERE Object.DescId   = zc_Object_SunExclusion()
+          AND Object.isErased = FALSE
+
+       UNION ALL
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
+             , OB.ValueData                                                       AS isMCS_to
+        FROM Object
+             INNER JOIN ObjectBoolean AS OB
+                                      ON OB.ObjectId  = Object.Id
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_MSC_in()
+                                     AND OB.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_From
+                                  ON ObjectLink_From.ObjectId = Object.Id
+                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+                                                        
+             LEFT JOIN ObjectLink AS ObjectLink_To
+                                  ON ObjectLink_To.ObjectId = Object.Id
+                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+
+        WHERE Object.DescId   = zc_Object_SunExclusion()
+          AND Object.isErased = FALSE
+           ;
        
      -- 1.1. вс€ статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
@@ -934,10 +984,26 @@ BEGIN
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
                                 -- AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
              --LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        WHERE (tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+
+             -- отбросили !!исключени€!!
+             LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = _tmpRemains_Partion.UnitId
+                                            AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
+                                            AND _tmpUnit_SunExclusion.isMCS_to    = FALSE
+             -- отбросили !!исключени€!!
+             LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
+                                             ON _tmpUnit_SunExclusion_MCS.UnitId_from = _tmpRemains_Partion.UnitId
+                                            AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
+                                            AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
+                                            AND COALESCE (_tmpRemains_calc.MCS, 0)    = 0
+
+        WHERE ((tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
+            AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+               )
+            OR tmpConditionsKeep.ValueData IS NULL
               )
-           OR tmpConditionsKeep.ValueData IS NULL
+          AND _tmpUnit_SunExclusion.UnitId_to IS NULL
+          AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
+
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
@@ -979,8 +1045,18 @@ BEGIN
                                AND _tmpSumm_limit.Summ >= vbSumm_limit
                              GROUP BY _tmpSumm_limit.UnitId_to
                             ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
+
+                 -- отбросили !!исключени€!!
+                 LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
+                                                 ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
+                                                AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
+                                                AND COALESCE (_tmpRemains_calc.MCS, 0)     = 0
+
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
+              AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
+
             ORDER BY --начинаем с аптек, где ѕќ“–≈ЅЌќ—“№ - максимальным
                      _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) DESC
                    , tmpSumm_limit.Summ DESC
@@ -1320,6 +1396,9 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
      -- 7.1. распредел€ем перемещени€ - по парти€м со сроками
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+
+     -- 8. исключаем такие перемещени€
+     CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */

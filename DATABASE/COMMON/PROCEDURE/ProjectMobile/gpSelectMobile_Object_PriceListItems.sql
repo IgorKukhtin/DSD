@@ -131,7 +131,7 @@ BEGIN
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
                                           ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
                                          AND ObjectHistory_PriceListItem_Return.DescId = zc_ObjectHistory_PriceListItem() 
-                                         AND vbReturnDate <= ObjectHistory_PriceListItem_Return.StartDate AND vbReturnDate < ObjectHistory_PriceListItem_Return.EndDate
+                                         AND vbReturnDate >= ObjectHistory_PriceListItem_Return.StartDate AND vbReturnDate < ObjectHistory_PriceListItem_Return.EndDate
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
                                                ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()

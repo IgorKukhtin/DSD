@@ -179,7 +179,7 @@ BEGIN
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
               )
           AND OB.DescId = zc_ObjectBoolean_Goods_SUN_v3()
-       UNION
+      /*UNION
         SELECT Object.Id AS GoodsId
                -- Кратность по Э-СУН  
              , CASE WHEN COALESCE (OF_KoeffSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffSUN.ValueData  END AS KoeffSUN
@@ -187,6 +187,7 @@ BEGIN
              LEFT JOIN ObjectFloat AS OF_KoeffSUN ON OF_KoeffSUN.ObjectId = Object.Id AND OF_KoeffSUN.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
         WHERE Object.DescId = zc_Object_Goods()
         --AND Object.ValueData ILIKE 'маска защит%'
+       */
        ;
 
 
@@ -480,11 +481,18 @@ BEGIN
                         THEN FLOOR (-- продажи - статистика за Х*24 часов
                                     (COALESCE (_tmpSale_express.Amount_sum, 0)
                                      -- МИНУС остаток
-                                   - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
-                                    + COALESCE (tmpMI_Send_in.Amount, 0)
-                                    + COALESCE (tmpMI_Income.Amount, 0)
-                                    + COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                     ))
+                                   - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                               ) > 0
+                                          THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
+                                              + COALESCE (tmpMI_Income.Amount, 0)
+                                              + COALESCE (tmpMI_OrderExternal.Amount, 0)
+                                               )
+                                          ELSE 0
+                                     END)
                                     -- делим на кратность
                                     / _tmpGoods_express.KoeffSUN
                                    ) * _tmpGoods_express.KoeffSUN
@@ -493,16 +501,18 @@ BEGIN
 
                -- Остаток у Отправителя, EXPRESS - можно отдать с учетом кратности
              , CASE WHEN 0 < FLOOR (-- остаток
-                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0))
-                                    -- МИНУС продажи - статистика за Х*24 часов
-                                  - COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                     -- МИНУС продажи - статистика за Х*24 часов
+                                   - COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    )
                                     -- делим на кратность
                                     / _tmpGoods_express.KoeffSUN
                                    ) * _tmpGoods_express.KoeffSUN
                         THEN FLOOR (-- остаток
-                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0))
-                                    -- МИНУС продажи - статистика за Х*24 часов
-                                  - COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
+                                     -- МИНУС продажи - статистика за Х*24 часов
+                                   - COALESCE (_tmpSale_express.Amount_sum, 0)
+                                    )
                                     -- делим на кратность
                                     / _tmpGoods_express.KoeffSUN
                                    ) * _tmpGoods_express.KoeffSUN

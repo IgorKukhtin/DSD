@@ -18,6 +18,8 @@ $BODY$
    DECLARE vbId Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbStatusId Integer;
+   DECLARE vbPriceListId Integer;
+   DECLARE vbPrice_find  TFloat;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_...());
@@ -39,6 +41,23 @@ BEGIN
       IF COALESCE (vbMovementId, 0) = 0 THEN
          RAISE EXCEPTION 'Ошибка. Не сохранена шапка документа.';
       END IF; 
+
+      vbPriceListId:= (SELECT tmp.PriceListId
+                       FROM lfGet_Object_Partner_PriceList_onDate (inContractId     := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_Contract())
+                                                           , inPartnerId      := (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = vbMovementId AND MLO.DescId = zc_MovementLinkObject_From())
+                                                           , inMovementDescId := zc_Movement_ReturnIn()
+                                                           , inOperDate_order := NULL
+                                                           , inOperDatePartner:= (SELECT MD.ValueData FROM MovementDate AS MD WHERE MD.MovementId = vbMovementId AND MD.DescId = zc_MovementDate_OperDatePartner())
+                                                           , inDayPrior_PriceReturn:= 0
+                                                           , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
+                                                           ) AS tmp);
+      -- исправили ошибку
+      vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, ingoodsId:= ingoodsId, inSession := inSession) AS tmp);
+      IF vbPrice_find > 0
+      THEN 
+           inPrice:= vbPrice_find;
+      END IF;
+      
 
       -- поиск Id строки документа по GUID
       vbId:= (SELECT MIString_GUID.MovementItemId 

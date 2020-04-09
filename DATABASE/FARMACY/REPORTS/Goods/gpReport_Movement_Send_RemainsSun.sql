@@ -138,6 +138,9 @@ BEGIN
      CREATE TEMP TABLE _tmpResult_child   (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpResult_child_a (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
+     -- 8. исключаем такие перемещения
+     CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer) ON COMMIT DROP;
+
 
      -- Результат
      CREATE TEMP TABLE _tmpResult (DriverId Integer, DriverName TVarChar

@@ -131,6 +131,7 @@ BEGIN
 
      -- все Подразделения для схемы SUN
      DELETE FROM _tmpUnit_SUN;
+     DELETE FROM _tmpUnit_SunExclusion;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      IF inStep = 1
      THEN
@@ -182,6 +183,33 @@ BEGIN
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
        ;
+
+
+     -- исключаем такие перемещения
+     INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to)
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
+        FROM Object
+             INNER JOIN ObjectBoolean AS OB
+                                      ON OB.ObjectId  = Object.Id
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v1()
+                                     AND OB.ValueData = TRUE
+             LEFT JOIN ObjectLink AS ObjectLink_From
+                                  ON ObjectLink_From.ObjectId = Object.Id
+                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+                                                        
+             LEFT JOIN ObjectLink AS ObjectLink_To
+                                  ON ObjectLink_To.ObjectId = Object.Id
+                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             -- в этом случае возьмем всех
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+    
+        WHERE Object.DescId   = zc_Object_SunExclusion()
+          AND Object.isErased = FALSE
+           ;
+
 
      IF inStep = 1
      THEN
@@ -1491,10 +1519,18 @@ BEGIN
              LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = _tmpRemains_calc.GoodsId
                                 -- AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
              --LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-        WHERE (tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
-           AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+
+             -- отбросили !!исключения!!
+             LEFT JOIN _tmpUnit_SunExclusion ON _tmpUnit_SunExclusion.UnitId_from = _tmpRemains_Partion.UnitId
+                                            AND _tmpUnit_SunExclusion.UnitId_to   = _tmpRemains_calc.UnitId
+
+        WHERE ((tmpConditionsKeep.ValueData NOT ILIKE '%холод%'
+            AND tmpConditionsKeep.ValueData NOT ILIKE '%прохладное%'
+               )
+            OR tmpConditionsKeep.ValueData IS NULL
               )
-           OR tmpConditionsKeep.ValueData IS NULL
+          AND _tmpUnit_SunExclusion.UnitId_to IS NULL
+
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains_calc.UnitId
        ;
@@ -1719,6 +1755,7 @@ BEGIN
                         -- WHERE _tmpSumm_limit.Summ >= vbSumm_limit
                         GROUP BY _tmpSumm_limit.UnitId_from
                        ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
+
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
@@ -1759,6 +1796,11 @@ BEGIN
                                              AND _tmpResult_Partion.GoodsId     = vbGoodsId
                                              AND _tmpResult_Partion.Amount      > 0
 
+                 -- отбросили !!исключения!!
+                 LEFT JOIN _tmpUnit_SunExclusion AS _tmpUnit_SunExclusion_MCS
+                                                 ON _tmpUnit_SunExclusion_MCS.UnitId_from = vbUnitId_from
+                                                AND _tmpUnit_SunExclusion_MCS.UnitId_to   = _tmpRemains_calc.UnitId
+
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               -- !!!НЕ распределяем
@@ -1769,6 +1811,10 @@ BEGIN
               --AND _tmpList_DefSUN_all.GoodsId IS NULL
               -- !!!без лимита
               -- AND _tmpRemains_calc.UnitId IN (SELECT DISTINCT _tmpSumm_limit.UnitId_to FROM _tmpSumm_limit WHERE _tmpSumm_limit.UnitId_from = vbUnitId_from AND _tmpSumm_limit.Summ >= vbSumm_limit)
+
+              -- !!!
+              AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
+
             ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_calc.UnitId
            ;
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти Автозаказ
@@ -2464,6 +2510,9 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
      -- 7.1. распределяем перемещения - по партиям со сроками
      CREATE TEMP TABLE _tmpResult_child (MovementId Integer, UnitId_from Integer, UnitId_to Integer, ParentId Integer, ContainerId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+
+     -- 8. исключаем такие перемещения
+     CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
 
  SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
