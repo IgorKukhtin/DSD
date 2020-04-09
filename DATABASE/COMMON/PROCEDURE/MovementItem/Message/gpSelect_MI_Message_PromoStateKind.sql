@@ -56,9 +56,13 @@ BEGIN
        AND MovementItem.DescId     = zc_MI_Message()
        AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
        AND Object_PromoStateKind.DescId = zc_Object_PromoStateKind()
-    UNION
+  /*  UNION
      SELECT 0                  AS Id
-          , 0  :: Integer      AS Ord
+          , (SELECT COUNT(*)+1 
+             FROM MovementItem
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Message()
+               AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE))  :: Integer AS Ord
           , '' :: TVarChar     AS Comment
           , 0                  AS PromoStateKindId
           , '' :: TVarChar     AS PromoStateKindName
@@ -66,6 +70,7 @@ BEGIN
           , NULL :: TDateTime  AS InsertDate
           , FALSE              AS isQuickly
           , FALSE              AS isErased
+   */
      ;
 
 END;

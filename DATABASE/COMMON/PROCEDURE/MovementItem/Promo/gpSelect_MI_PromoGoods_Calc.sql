@@ -390,7 +390,7 @@ BEGIN
          , tmpData_All.Color_SummaProfit
          , tmpData_All.Text                    ::TVarChar
     FROM tmpData_All
-    WHERE (inIsTaxPromo = vbTaxPromo)
+    WHERE inIsTaxPromo = vbTaxPromo OR vbTaxPromo IS NULL
     ORDER BY  tmpData_All.Id, tmpData_All.NUM 
    ;
       

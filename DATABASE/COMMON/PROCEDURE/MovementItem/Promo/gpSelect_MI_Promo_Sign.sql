@@ -72,7 +72,10 @@ BEGIN
           FULL JOIN tmpMI ON tmpMI.SignInternalId = tmpObject.SignInternalId
                          AND tmpMI.UserId         = tmpObject.UserId
                          AND tmpMI.isErased       = FALSE
-          LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
+          LEFT JOIN Object AS Object_SignInternal 
+                           ON Object_SignInternal.Id = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
+                          AND Object_SignInternal.DescId = zc_Object_SignInternal()
+                          
           LEFT JOIN Object AS Object_User         ON Object_User.Id         = COALESCE (tmpObject.UserId,         tmpMI.UserId)
      ;
 
