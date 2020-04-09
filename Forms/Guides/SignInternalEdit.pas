@@ -39,6 +39,7 @@ type
     cxLabel3: TcxLabel;
     ceComment: TcxTextEdit;
     ceObjectDesc: TcxButtonEdit;
+    cbMain: TcxCheckBox;
   private
     { Private declarations }
   public
