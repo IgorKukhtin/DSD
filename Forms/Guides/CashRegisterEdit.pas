@@ -26,6 +26,7 @@ type
     cxLabel20: TcxLabel;
     edSerialNumber: TcxTextEdit;
     cxLabel2: TcxLabel;
+    cbGetHardwareData: TcxCheckBox;
   private
     { Private declarations }
   public

@@ -851,7 +851,8 @@ uses
   Report_SummSP in '..\..\FormsFarmacy\Report\Report_SummSP.pas' {Report_SummSPForm: TParentForm},
   Report_SummSP_Dialog in '..\..\FormsFarmacy\Report\Report_SummSP_Dialog.pas' {Report_SummSP_DialogForm: TParentForm},
   Report_NomenclaturePeriodDialog in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriodDialog.pas' {Report_NomenclaturePeriodDialogForm: TParentForm},
-  Report_NomenclaturePeriod in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriod.pas' {Report_NomenclaturePeriodForm: TParentForm};
+  Report_NomenclaturePeriod in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriod.pas' {Report_NomenclaturePeriodForm: TParentForm},
+  ListDaySUNDialog in '..\..\FormsFarmacy\Guides\ListDaySUNDialog.pas' {ListDaySUNDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

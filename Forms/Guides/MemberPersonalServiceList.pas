@@ -63,6 +63,12 @@ type
     actPersonalServiceListChoice: TOpenChoiceForm;
     bbOpenFormTTN: TdxBarButton;
     isAll: TcxGridDBColumn;
+    spInsert: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actMemberChoiceInsert: TOpenChoiceForm;
+    macInsert: TMultiAction;
+    actMemberInsert: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

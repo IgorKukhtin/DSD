@@ -16,9 +16,6 @@ $BODY$
 
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
-  DECLARE Cursor3 refcursor;
-  DECLARE Cursor4 refcursor;
-  DECLARE Cursor5 refcursor;
 
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -267,42 +264,6 @@ BEGIN
                LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id  = tmp.GoodsId
               ;
      RETURN NEXT Cursor2;
-
-
-     OPEN Cursor4 FOR
-          SELECT 0    :: Integer  AS GoodsId
-               , 0    :: Integer  AS GoodsCode
-               , ''   :: TVarChar AS GoodsName
-               , 0    :: Integer  AS FrimId
-               , ''   :: TVarChar AS FromName
-               , 0    :: Integer  AS ToId
-               , ''   :: TVarChar AS ToName
-          --FROM _tmpList_DefSUN_a AS tmp
-          --     LEFT JOIN Object AS Object_UnitFrom ON Object_UnitFrom.Id = tmp.UnitId_from
-          --     LEFT JOIN Object AS Object_UnitTo   ON Object_UnitTo.Id   = tmp.UnitId_to
-          --   LEFT JOIN Object AS Object_Goods    ON Object_Goods.Id    = tmp.GoodsId
-          WHERE 1=0
-          ;
-     RETURN NEXT Cursor4;
-
-     OPEN Cursor5 FOR
-          SELECT Object_Unit.Id        AS UnitId
-               , Object_Unit.ValueData AS UnitName
-               , 0.0  :: TFloat AS Summ_out
-               , 0.0  :: TFloat AS Summ_in
-               , 0.0  :: TFloat AS KoeffOutSUN
-               , 0.0  :: TFloat AS KoeffInSUN
-               , 0.0  :: TFloat AS Summ_out_partion
-               , 0.0  :: TFloat AS Summ_in_partion
-               , 0.0  :: TFloat AS Summ_out_partion_calc
-               , 0.0  :: TFloat AS Summ_in_partion_calc
-          FROM _tmpUnit_SUN
-               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmpUnit_SUN.UnitId
-          /*WHERE tmp1.Summ_out      <> 0 OR tmp1.Summ_in      <> 0
-             OR tmp2.Summ_out      <> 0 OR tmp2.Summ_in      <> 0
-             OR tmp2.Summ_out_calc <> 0 OR tmp2.Summ_in_calc <> 0*/
-          ;
-     RETURN NEXT Cursor5;
 
 END;
 $BODY$

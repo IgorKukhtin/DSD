@@ -1,24 +1,24 @@
 ﻿inherited CashRegisterEditForm: TCashRegisterEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090'>'
-  ClientHeight = 279
+  ClientHeight = 310
   ClientWidth = 303
   ExplicitWidth = 309
-  ExplicitHeight = 308
+  ExplicitHeight = 339
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 33
-    Top = 233
+    Top = 265
     TabOrder = 2
     ExplicitLeft = 33
-    ExplicitTop = 233
+    ExplicitTop = 265
   end
   inherited bbCancel: TcxButton
     Left = 166
-    Top = 233
+    Top = 265
     TabOrder = 3
     ExplicitLeft = 166
-    ExplicitTop = 233
+    ExplicitTop = 265
   end
   object edMeasureName: TcxTextEdit [2]
     Left = 7
@@ -110,6 +110,16 @@
     Top = 90
     Caption = #1057#1077#1088#1080#1081#1085#1099#1081' '#1085#1086#1084#1077#1088
   end
+  object cbGetHardwareData: TcxCheckBox [14]
+    Left = 8
+    Top = 230
+    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 233
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 115
     Top = 136
@@ -191,6 +201,14 @@
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGetHardwareData'
+        Value = Null
+        Component = cbGetHardwareData
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 224
     Top = 48
@@ -253,6 +271,13 @@
         Value = 'NULL'
         Component = edTimePUSHFinal2
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GetHardwareData'
+        Value = Null
+        Component = cbGetHardwareData
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 184

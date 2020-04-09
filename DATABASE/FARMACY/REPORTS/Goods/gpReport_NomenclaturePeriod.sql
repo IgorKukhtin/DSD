@@ -26,7 +26,7 @@ BEGIN
     vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
 
      -- Результат
-     RETURN QUERY
+    RETURN QUERY
     WITH
        tmpMovement AS (SELECT Movement.Id
                         FROM Movement
@@ -45,38 +45,82 @@ BEGIN
                           AND Movement.StatusId = zc_Enum_Status_Complete()
                           AND MovementLinkObject_Unit.ObjectId = zc_DirectorPartner_UnitID()
                      )
-     , tmpContener AS (SELECT Container.ObjectId                                                            AS GoodsId
+     , tmpContener AS (SELECT Container.Id                                                                  AS Id
+                            , Container.ObjectId                                                            AS GoodsId
                             , MovementItemContainer.Amount                                                  AS Coming
-                            , MovementItemContainer.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0)   AS ComingSum
-                            , (MovementItemContainer.Amount - Container.Amount)                             AS Consumption
-                            , (MovementItemContainer.Amount - Container.Amount) * COALESCE (MIFloat_PriceWithVAT.ValueData, 0) AS ConsumptionSum
                             , Container.Amount                                                              AS Remains
-                            , Container.Amount * COALESCE (MIFloat_PriceWithVAT.ValueData, 0)               AS RemainsSum
+                            , COALESCE (MIFloat_PriceWithVAT.ValueData, 0)                                  AS PriceIn
                        FROM tmpMovement
                             INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmpMovement.Id
                                                             AND MovementItemContainer.DescId = zc_MIContainer_Count()
                             LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                         ON MIFloat_PriceWithVAT.MovementItemId = MovementItemContainer.MovementItemId
                                                        AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
-                            INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId)
+                            INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                       )
+     , tmpObject_Price AS (SELECT CASE WHEN ObjectBoolean_Goods_TOP.ValueData = TRUE
+                                     AND ObjectFloat_Goods_Price.ValueData > 0
+                                    THEN ROUND (ObjectFloat_Goods_Price.ValueData, 2)
+                                    ELSE ROUND (Price_Value.ValueData, 2)
+                               END :: TFloat                           AS Price
+                             , Price_Goods.ChildObjectId               AS GoodsId
+                        FROM ObjectLink AS ObjectLink_Price_Unit
+                           LEFT JOIN ObjectLink AS Price_Goods
+                                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                           LEFT JOIN ObjectFloat AS Price_Value
+                                                 ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                           -- Фикс цена для всей Сети
+                           LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_Price
+                                                  ON ObjectFloat_Goods_Price.ObjectId = Price_Goods.ChildObjectId
+                                                 AND ObjectFloat_Goods_Price.DescId   = zc_ObjectFloat_Goods_Price()
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
+                                                   ON ObjectBoolean_Goods_TOP.ObjectId = Price_Goods.ChildObjectId
+                                                  AND ObjectBoolean_Goods_TOP.DescId   = zc_ObjectBoolean_Goods_TOP()
+                        WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                          AND ObjectLink_Price_Unit.ChildObjectId = zc_DirectorPartner_UnitID()
+                        )
+     , tmpData AS (SELECT tmpContener.GoodsId                                       AS GoodsId
+                        , tmpContener.Coming                                        AS Coming
+                        , tmpContener.Coming * tmpContener.PriceIn                  AS ComingSum
+                        , tmpContener.Remains                                       AS Remains
+                        , tmpContener.Remains * COALESCE(tmpObject_Price.Price,0)   AS RemainsSum
+                   FROM tmpContener
+                   
+                        INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = tmpContener.GoodsId
+                   )
+     , tmpCheck AS (SELECT Contener.GoodsId                                                                     AS GoodsId
+                        , Sum(-1.0 * MovementItemContainer.Amount)                                              AS Consumption
+                        , Sum(-1.0 * MovementItemContainer.Amount * COALESCE (MovementItemContainer.Price, 0))  AS ConsumptionSum
+                    FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
+                    
+                         INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
+                                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                         AND MovementItemContainer.MovementDescId = zc_Movement_Check()
+                    GROUP BY Contener.GoodsId     
+                    )
 
 
      SELECT Object_Goods.Id
           , Object_Goods.ObjectCode
           , Object_Goods.ValueData
 
-          , Sum(tmpContener.Coming)::TFloat            AS Coming
-          , Sum(tmpContener.ComingSum)::TFloat         AS ComingSum
-          , Sum(tmpContener.Consumption)::TFloat       AS Consumption
-          , Sum(tmpContener.ConsumptionSum)::TFloat    AS ConsumptionSum
-          , Sum(tmpContener.Remains)::TFloat           AS Remains
-          , Sum(tmpContener.RemainsSum)::TFloat        AS RemainsSum
+          , Sum(tmpData.Coming)::TFloat            AS Coming
+          , Sum(tmpData.ComingSum)::TFloat         AS ComingSum
+          , tmpCheck.Consumption::TFloat       AS Consumption
+          , tmpCheck.ConsumptionSum::TFloat    AS ConsumptionSum
+          , Sum(tmpData.Remains)::TFloat           AS Remains
+          , Sum(tmpData.RemainsSum)::TFloat        AS RemainsSum
 
-     FROM tmpContener
-          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpContener.GoodsId
+     FROM tmpData
+          INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
+          LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpData.GoodsId
      GROUP BY Object_Goods.Id
             , Object_Goods.ObjectCode
             , Object_Goods.ValueData
+            , tmpCheck.Consumption
+            , tmpCheck.ConsumptionSum
      ;
 
 
