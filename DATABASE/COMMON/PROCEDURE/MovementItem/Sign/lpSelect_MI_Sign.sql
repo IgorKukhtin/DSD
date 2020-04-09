@@ -1,8 +1,8 @@
--- Function: lpSelect_MI_Promo_Sign (Integer, Boolean, Boolean, TVarChar)
+-- Function: lpSelect_MI_Sign (Integer, Boolean, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS lpSelect_MI_Promo_Sign (Integer);
+DROP FUNCTION IF EXISTS lpSelect_MI_Sign (Integer);
 
-CREATE OR REPLACE FUNCTION lpSelect_MI_Promo_Sign(
+CREATE OR REPLACE FUNCTION lpSelect_MI_Sign(
     IN inMovementId  Integer       -- ключ Документа
 )
 RETURNS TABLE (Id             Integer
@@ -21,7 +21,7 @@ BEGIN
    
      -- Параметры из документа - для определения <Модель электронной подписи>
      SELECT Movement.DescId              AS MovementDescId
-          , MovementLinkObject.ObjectId  AS SignInternalId
+          , MovementLinkObject.ObjectId AS SignInternalId
             INTO vbMovementDescId, vbSignInternalId
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
@@ -33,7 +33,7 @@ BEGIN
      RETURN QUERY 
      
      WITH -- данные из Модели для данного документа
-          tmpObject AS (SELECT * 
+          tmpObject AS (SELECT *
                         FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0) AS tmp
                         WHERE tmp.SignInternalId = vbSignInternalId
                            OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)

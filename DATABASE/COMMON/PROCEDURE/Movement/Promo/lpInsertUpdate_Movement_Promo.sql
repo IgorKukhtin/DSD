@@ -4,9 +4,13 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+/*DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer);
+*/
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -31,6 +35,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Promo(
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
+    IN inSignInternalId        Integer    , 
     IN inUserId                Integer      -- пользователь
 )
 RETURNS Integer AS
@@ -123,7 +128,9 @@ BEGIN
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalTrade(), ioId, inPersonalTradeId);
     -- Ответственный представитель маркетингового отдела
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
-    
+    -- модель подписи
+    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
+        
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 

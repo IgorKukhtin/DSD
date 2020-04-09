@@ -38,6 +38,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
              , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела	
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
+             , SignInternalId   Integer
+             , SignInternalName TVarChar
              , isPromo          Boolean     --Акция (да/нет)
              , Checked          Boolean     --Согласовано (да/нет)
              , isTaxPromo       Boolean     -- схема % скидки
@@ -47,7 +49,14 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              )
 AS
 $BODY$
+  DECLARE vbSignInternalId Integer;
 BEGIN
+        -- данные из Модели для данного документа
+        vbSignInternalId := (SELECT tmp.SignInternalId
+                             FROM lpSelect_Object_SignInternalItem ((SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId), 0, 0) AS tmp
+                             WHERE tmp.isMain = TRUE
+                             LIMIT 1 -- только 1  значение
+                             );
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
     IF COALESCE (inMovementId, 0) = 0
@@ -86,6 +95,9 @@ BEGIN
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
           , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела	
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
+          , Object_SignInternal.Id                            AS SignInternalId
+          , Object_SignInternal.ValueData :: TVarChar         AS SignInternalName
+             
           , CAST (TRUE  AS Boolean)                           AS isPromo
           , CAST (FALSE AS Boolean)         		      AS Checked
           , CAST (FALSE AS Boolean)         		      AS isTaxPromo            -- схема % скидки
@@ -93,7 +105,9 @@ BEGIN
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-            LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
+            LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+            LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
+        ;
     ELSE
         RETURN QUERY
         SELECT
@@ -128,6 +142,8 @@ BEGIN
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalId         --Ответственный представитель маркетингового отдела	
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
+          , COALESCE (Movement_Promo.SignInternalId, Object_SignInternal.Id)          AS SignInternalId
+          , COALESCE (Movement_Promo.SignInternalName, Object_SignInternal.ValueData) AS SignInternalName
           , Movement_Promo.isPromo            --Акция
           , Movement_Promo.Checked            --согласовано
           , Movement_Promo.isTaxPromo
@@ -136,6 +152,7 @@ BEGIN
           , tmpSign.strSignNo             
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Promo_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
+             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
         WHERE Movement_Promo.Id =  inMovementId;
     END IF;
 

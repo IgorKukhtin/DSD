@@ -391,6 +391,9 @@ type
     bbSetUnErasedPromoStateKind: TdxBarButton;
     actOpenProtocoPromoStateKind: TdsdOpenForm;
     bbProtocoPromoStateKind: TdxBarButton;
+    cxLabel25: TcxLabel;
+    edSignInternal: TcxButtonEdit;
+    GuidesSignInternal: TdsdGuides;
   private
     { Private declarations }
   public

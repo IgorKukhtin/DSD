@@ -41,6 +41,9 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
 
       , CASE WHEN MovementBoolean_TaxPromo.ValueData = TRUE  THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo -- 
       , CASE WHEN MovementBoolean_TaxPromo.ValueData = FALSE THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo_Condition  --
+
+      , Object_SignInternal.Id                      AS SignInternalId
+      , Object_SignInternal.ValueData               AS SignInternalName
     FROM Movement AS Movement_Promo 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Promo.StatusId
 
@@ -138,6 +141,11 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
                                      ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
                                     AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
         LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
+                                     ON MovementLinkObject_SignInternal.MovementId = Movement_Promo.Id
+                                    AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
+        LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
 
     WHERE Movement_Promo.DescId = zc_Movement_Promo()
    ;
