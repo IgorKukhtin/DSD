@@ -8,14 +8,44 @@ uses System.SysUtils, System.Types, System.Variants, System.UITypes, System.Clas
 function GetWMIInfo(const WMIClass, WMIProperty :string): string;
 function GetWMISum(const WMIClass, WMIProperty :string): Int64;
 function GetWMIInt64(const WMIClass, WMIProperty :string): Int64;
-
-const MemoryType : array[0..25] of string = ('Unknown', 'Other', 'DRAM', 'Synchronous DRAM', 'Cache DRAM',
-                                             'EDO', 'EDRAM', 'VRAM', 'SRAM', 'RAM',
-                                             'ROM', 'FLASH', 'EEPROM', 'FEPROM', 'EPROM',
-                                             'CDRAM', '3DRAM', 'SDRAM', 'SGRAM', 'RDRAM',
-                                             'DDR', 'DDR2', 'DDR2 FB-DIMM', '', 'DDR3', 'FBD2');
+function GetMemoryType(AType : Integer) : string;
 
 implementation
+
+function GetMemoryType(AType : Integer) : string;
+begin
+  case AType of
+    $01 : Result := '';
+    $02 : Result := '';
+    $03 : Result := 'DRAM';
+    $04 : Result := 'EDRAM';
+    $05 : Result := 'VRAM';
+    $06 : Result := 'SRAM';
+    $07 : Result := 'RAM';
+    $08 : Result := 'ROM';
+    $09 : Result := 'FLASH';
+    $0A : Result := 'EEPROM';
+    $0B : Result := 'FEPROM';
+    $0C : Result := 'EPROM';
+    $0D : Result := 'CDRAM';
+    $0E : Result := '3DRAM';
+    $0F : Result := 'SDRAM';
+    $10 : Result := 'SGRAM';
+    $11 : Result := 'RDRAM';
+    $12 : Result := 'DDR';
+    $13 : Result := 'DDR2';
+    $14 : Result := 'DDR2 FB-DIMM';
+    $18 : Result := 'DDR3';
+    $19 : Result := 'FBD2';
+    $1A : Result := 'DDR4';
+    $1B : Result := 'LPDDR';
+    $1C : Result := 'LPDDR2';
+    $1D : Result := 'LPDDR3';
+    $1E : Result := 'LPDDR4';
+    ELSE Result := '';
+  end;
+  if Result <> '' then Result := Result + ' ';
+end;
 
 function GetWMIInfo(const WMIClass, WMIProperty :string): string;
 var
@@ -35,8 +65,8 @@ begin;
       oEnum         := IUnknown(sWbemObjectSet._NewEnum) as IEnumVariant;
       if oEnum.Next(1, sWbemObject, iValue) = 0 then
         case VarType(sWbemObject.Properties_.Item(WMIProperty).Value) of
-          varEmpty    : Result := 'Empty';
-          varNull     : Result := 'Null';
+          varEmpty    : Result := '';
+          varNull     : Result := '';
           varArray    : Result := sWbemObject.Properties_.Item(WMIProperty).Value[0];
           8204        : Result := sWbemObject.Properties_.Item(WMIProperty).Value[0];
           else Result := sWbemObject.Properties_.Item(WMIProperty).Value;

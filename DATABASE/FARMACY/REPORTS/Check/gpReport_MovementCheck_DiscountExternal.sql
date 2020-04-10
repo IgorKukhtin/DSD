@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_MovementCheck_DiscountExternal(
     IN inDiscountExternalId Integer,    -- Подразделение
     IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer
              , UnitName TVarChar, MainJuridicalId Integer, MainJuridicalName TVarChar, RetailId Integer, RetailName TVarChar
              , CashRegisterName TVarChar, PaidTypeName TVarChar
              , DiscountCardName TVarChar, DiscountExternalName TVarChar

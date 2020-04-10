@@ -11,6 +11,7 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
 
               Coming TFloat,  ComingSum TFloat,
               Consumption TFloat,  ConsumptionSum TFloat,
+              Send TFloat,  Inventory TFloat,  ReturnOut TFloat,  Loss TFloat,
               Remains TFloat,  RemainsSum TFloat
               )
 AS
@@ -87,19 +88,56 @@ BEGIN
                         , tmpContener.Remains                                       AS Remains
                         , tmpContener.Remains * COALESCE(tmpObject_Price.Price,0)   AS RemainsSum
                    FROM tmpContener
-                   
+
                         INNER JOIN tmpObject_Price ON tmpObject_Price.GoodsId = tmpContener.GoodsId
                    )
      , tmpCheck AS (SELECT Contener.GoodsId                                                                     AS GoodsId
                         , Sum(-1.0 * MovementItemContainer.Amount)                                              AS Consumption
                         , Sum(-1.0 * MovementItemContainer.Amount * COALESCE (MovementItemContainer.Price, 0))  AS ConsumptionSum
                     FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
-                    
+
                          INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
                                                          AND MovementItemContainer.DescId = zc_MIContainer_Count()
                                                          AND MovementItemContainer.MovementDescId = zc_Movement_Check()
-                    GROUP BY Contener.GoodsId     
+                    GROUP BY Contener.GoodsId
                     )
+     , tmpSend AS (SELECT Contener.GoodsId                                                                     AS GoodsId
+                        , Sum(-1.0 * MovementItemContainer.Amount)                                             AS Send
+                    FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
+
+                         INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
+                                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                         AND MovementItemContainer.MovementDescId = zc_Movement_Send()
+                                                         AND  MovementItemContainer.Amount < 0
+                    GROUP BY Contener.GoodsId
+                    )
+     , tmpInventory AS (SELECT Contener.GoodsId                                                                     AS GoodsId
+                             , Sum(-1.0 * MovementItemContainer.Amount)                                              AS Inventory
+                         FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
+
+                              INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
+                                                              AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                              AND MovementItemContainer.MovementDescId = zc_Movement_Inventory()
+                         GROUP BY Contener.GoodsId
+                         )
+     , tmpReturnOut AS (SELECT Contener.GoodsId                                                                     AS GoodsId
+                             , Sum(-1.0 * MovementItemContainer.Amount)                                              AS ReturnOut
+                         FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
+
+                              INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
+                                                              AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                              AND MovementItemContainer.MovementDescId = zc_Movement_ReturnOut()
+                         GROUP BY Contener.GoodsId
+                         )
+     , tmpLoss AS (SELECT Contener.GoodsId                                                                     AS GoodsId
+                         , Sum(-1.0 * MovementItemContainer.Amount)                                              AS Loss
+                    FROM (SELECT tmpContener.Id, tmpContener.GoodsId FROM  tmpContener GROUP BY tmpContener.Id, tmpContener.GoodsId) AS Contener
+
+                          INNER JOIN MovementItemContainer ON MovementItemContainer.ContainerId = Contener.Id
+                                                         AND MovementItemContainer.DescId = zc_MIContainer_Count()
+                                                         AND MovementItemContainer.MovementDescId = zc_Movement_Loss()
+                    GROUP BY Contener.GoodsId
+                     )
 
 
      SELECT Object_Goods.Id
@@ -108,19 +146,31 @@ BEGIN
 
           , Sum(tmpData.Coming)::TFloat            AS Coming
           , Sum(tmpData.ComingSum)::TFloat         AS ComingSum
-          , tmpCheck.Consumption::TFloat       AS Consumption
-          , tmpCheck.ConsumptionSum::TFloat    AS ConsumptionSum
+          , tmpCheck.Consumption::TFloat           AS Consumption
+          , tmpCheck.ConsumptionSum::TFloat        AS ConsumptionSum
+          , tmpSend.Send::TFloat                   AS Send
+          , tmpInventory.Inventory::TFloat         AS Inventory
+          , tmpReturnOut.ReturnOut::TFloat         AS ReturnOut
+          , tmpLoss.Loss::TFloat                   AS Loss
           , Sum(tmpData.Remains)::TFloat           AS Remains
           , Sum(tmpData.RemainsSum)::TFloat        AS RemainsSum
 
      FROM tmpData
           INNER JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
           LEFT JOIN tmpCheck ON tmpCheck.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpSend ON tmpSend.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpInventory ON tmpInventory.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpReturnOut ON tmpReturnOut.GoodsId = tmpData.GoodsId
+          LEFT JOIN tmpLoss ON tmpLoss.GoodsId = tmpData.GoodsId
      GROUP BY Object_Goods.Id
             , Object_Goods.ObjectCode
             , Object_Goods.ValueData
             , tmpCheck.Consumption
             , tmpCheck.ConsumptionSum
+            , tmpSend.Send
+            , tmpInventory.Inventory
+            , tmpReturnOut.ReturnOut
+            , tmpLoss.Loss
      ;
 
 

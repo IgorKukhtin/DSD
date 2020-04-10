@@ -197,6 +197,13 @@ object DiscountServiceForm: TDiscountServiceForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outJuridicalID'
         Value = Null
         MultiSelectSeparator = ','

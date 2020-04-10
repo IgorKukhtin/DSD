@@ -1759,9 +1759,10 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
         spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value := GetWMIInfo('Win32_BaseBoard', 'Product');;
         spUpdateHardwareData.ParamByName('inProcessorName').Value := GetWMIInfo('Win32_Processor', 'Name');
         spUpdateHardwareData.ParamByName('inDiskDriveModel').Value := GetWMIInfo('Win32_DiskDrive', 'Model') + ' ' +
-                                                                      CurrToStr(GetWMIInt64('Win32_DiskDrive', 'Size') / 1024 / 1024 / 1024) + ' รม.';;
-        spUpdateHardwareData.ParamByName('inPhysicalMemory').Value := MemoryType[GetWMIInt64('Win32_PhysicalMemory', 'MemoryType')] + ' ' +
-                                                                      CurrToStr(GetWMISum('Win32_PhysicalMemory', 'Capacity') / 1024 / 1024 / 1024) + ' รม.';
+                                                                      IntToStr(GetWMIInt64('Win32_DiskDrive', 'Size') div 1000 div 1000 div 1000) + ' รม';
+        spUpdateHardwareData.ParamByName('inPhysicalMemory').Value := GetMemoryType(GetWMIInt64('Win32_PhysicalMemory', 'MemoryType')) +
+                                                                      CurrToStr(GetWMISum('Win32_PhysicalMemory', 'Capacity') / 1024 / 1024 / 1024) + ' รม ' +
+                                                                      GetWMIInfo('Win32_PhysicalMemory', 'Speed') + ' ฬร๖ ';
         spUpdateHardwareData.Execute;
       end;
 

@@ -50,6 +50,10 @@ type
     RemainsSum: TcxGridDBColumn;
     edInvNumber: TcxTextEdit;
     cxLabel3: TcxLabel;
+    Send: TcxGridDBColumn;
+    Inventory: TcxGridDBColumn;
+    ReturnOut: TcxGridDBColumn;
+    Loss: TcxGridDBColumn;
   private
     { Private declarations }
   public

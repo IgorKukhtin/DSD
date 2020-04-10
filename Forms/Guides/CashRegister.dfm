@@ -133,7 +133,7 @@ inherited CashRegisterForm: TCashRegisterForm
             Width = 91
           end
           object PhysicalMemory: TcxGridDBColumn
-            Caption = #1054#1087#1077#1088#1072#1090#1080#1074#1085#1072#1103' '#1087#1072#1084#1103#1090#1100', '#1043#1041
+            Caption = #1054#1087#1077#1088#1072#1090#1080#1074#1085#1072#1103' '#1087#1072#1084#1103#1090#1100
             DataBinding.FieldName = 'PhysicalMemory'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
