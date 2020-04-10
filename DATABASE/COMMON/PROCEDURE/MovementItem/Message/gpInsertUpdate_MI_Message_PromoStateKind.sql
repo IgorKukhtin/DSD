@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Message_PromoStateKind(
  INOUT ioId                  Integer   , -- 
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inPromoStateKindId    Integer   ,
-    IN inisQuickly           Boolean   ,
+    IN inIsQuickly           Boolean   ,
     IN inComment             TVarChar  ,
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -16,15 +16,28 @@ $BODY$
   DECLARE vbIsInsert Boolean;
   DECLARE vbAmount   TFloat;
 BEGIN
-     
-     -- 
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo());
      
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
  
-     vbAmount := (CASE WHEN inisQuickly = TRUE THEN 1 ELSE 0 END);
+     vbAmount := (CASE WHEN inIsQuickly = TRUE THEN 1 ELSE 0 END);
+
+
+     -- Проверка
+     IF COALESCE (inPromoStateKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Состояние не может быть пустым.';
+     END IF;
+
+     -- Проверка
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = zc_Enum_PromoStateKind_Start())
+        AND inPromoStateKindId <> zc_Enum_PromoStateKind_Start()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Start()), lfGet_Object_ValueData_sh (inPromoStateKindId);
+     END IF;
+
      
      -- сохранили <Элемент документа>
      ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Message(), inPromoStateKindId, inMovementId, vbAmount, NULL);
@@ -40,6 +53,21 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
      END IF;
+
+
+     -- нашли последний - и сохранили в шапку
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
+     FROM (SELECT MI.ObjectId, MI.Amount
+           FROM MovementItem AS MI
+                JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+           WHERE MI.MovementId = inMovementId
+             AND MI.DescId     = zc_MI_Message()
+             AND MI.isErased   = FALSE
+           ORDER BY MI.Id DESC
+           LIMIT 1
+          ) AS tmp;
+     
 
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);

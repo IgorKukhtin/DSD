@@ -157,10 +157,16 @@ BEGIN
                                                   , inUserId               := vbUserId
                                                    );
 
-     -- сохранили <Элемент> - Состояние акции
-     IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign())
+     -- сохранили <Элемент> - Состояние Акции
+     IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Message())
      THEN 
-         PERFORM lpInsertUpdate_MovementItem (0, zc_MI_Message(), zc_Enum_PromoStateKind_Start(), inMovementId, 0, NULL);
+         PERFORM gpInsertUpdate_MI_Message_PromoStateKind (ioId               := 0
+                                                         , inMovementId       := inMovementId
+                                                         , inPromoStateKindId := zc_Enum_PromoStateKind_Start()
+                                                         , inIsQuickly        := FALSE
+                                                         , inComment          := ''
+                                                         , inSession          := inSession
+                                                          );
      END IF;
 
 END;
