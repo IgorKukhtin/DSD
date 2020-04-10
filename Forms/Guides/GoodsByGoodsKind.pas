@@ -47,6 +47,8 @@ type
     spUpdate_isParam: TdsdStoredProc;
     GoodsKindPackChoiceForm: TOpenChoiceForm;
     GoodsPackOpenChoice: TOpenChoiceForm;
+    GoodsSubSendOpenChoice: TOpenChoiceForm;
+    GoodsKindSubSendChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
