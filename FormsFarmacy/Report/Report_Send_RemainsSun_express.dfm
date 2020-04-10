@@ -4,7 +4,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 601
+  ExplicitHeight = 598
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -444,7 +444,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             Width = 50
           end
           object UnitName: TcxGridDBColumn
-            Caption = #1040#1087#1090#1077#1082#1072
+            Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -454,6 +454,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
           object DriverName: TcxGridDBColumn
             Caption = #1042#1086#1076#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'DriverName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
@@ -509,6 +510,27 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             HeaderHint = #1056#1077#1079#1091#1083#1100#1090#1072#1090': '#1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
             Width = 80
           end
+          object AmountResult: TcxGridDBColumn
+            Caption = #1055#1086#1090#1088#1077#1073#1085'. '#1074' '#1090'. '#1087#1086#1083#1091#1095'.'
+            DataBinding.FieldName = 'AmountResult'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1074' '#1090#1086#1095#1082#1077' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            Width = 70
+          end
+          object AmountResult_summ: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085'. '#1087#1086' '#1074#1089#1077#1084' '#1090'. '#1087#1086#1083#1091#1095'.'
+            DataBinding.FieldName = 'AmountResult_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1080#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1087#1086' '#1042#1057#1045#1052' '#1090#1086#1095#1082#1072#1084' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103#1084
+            Width = 100
+          end
           object AmountRemains_calc: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountRemains_calc'
@@ -534,6 +556,28 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1103
             Width = 58
+          end
+          object Amount_sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'Amount_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1103
+            Width = 55
+          end
+          object Summ_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'Summ_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074
+            Width = 70
           end
           object AmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103')'
@@ -594,53 +638,12 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             HeaderHint = #1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084' '#1074' '#1090#1086#1095#1082#1077' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1103
             Width = 87
           end
-          object Amount_sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078
-            DataBinding.FieldName = 'Amount_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1103
-            Width = 55
-          end
-          object Summ_sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
-            DataBinding.FieldName = 'Summ_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074
-            Width = 70
-          end
-          object AmountResult: TcxGridDBColumn
-            Caption = #1055#1086#1090#1088#1077#1073#1085'. '#1091' '#1090'. '#1087#1086#1083#1091#1095'.'
-            DataBinding.FieldName = 'AmountResult'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1091' '#1090#1086#1095#1082#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
-            Width = 70
-          end
-          object AmountResult_summ: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085'. '#1087#1086' '#1074#1089#1077#1084' '#1090'. '#1087#1086#1083#1091#1095'.'
-            DataBinding.FieldName = 'AmountResult_summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1080#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1087#1086' '#1042#1057#1045#1052' '#1090#1086#1095#1082#1072#1084' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103#1084
-            Width = 100
-          end
           object AmountSun_summ: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1082#1086#1083'. '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
             DataBinding.FieldName = 'AmountSun_summ'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1074#1089#1077#1084' '#1090#1086#1095#1082#1072#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103#1084
@@ -711,6 +714,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
           object Unit_count_1: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1082#1083', '#1087#1077#1088#1077#1084#1077#1097'. '#1087#1086#1083#1085#1086#1077
             DataBinding.FieldName = 'Unit_count_1'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
@@ -1124,7 +1128,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object chFromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
+            Caption = #1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1100
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1161,17 +1165,6 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             HeaderHint = #1062#1077#1085#1072' '#1074' '#1040#1087#1090#1077#1082#1077' "'#1054#1090' '#1082#1086#1075#1086'"'
             Width = 70
           end
-          object chAmountSun_summ: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
-            DataBinding.FieldName = 'AmountSun_summ'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1090#1086#1095#1082#1077' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 80
-          end
           object chAmount_res: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1077#1079'. '#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'Amount_res'
@@ -1199,6 +1192,17 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
               #1088#1072#1074#1080#1090#1077#1083#1103
             Width = 80
           end
+          object chAmountSun_summ: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088'.'
+            DataBinding.FieldName = 'AmountSun_summ'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1090#1086#1095#1082#1077' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            Width = 80
+          end
           object chAmountRemains_calc: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountRemains_calc'
@@ -1211,29 +1215,6 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
               #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1089' '#1091#1095#1077#1090#1086#1084': - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076 +
               #1072#1077#1090#1089#1103') - '#1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084
             Width = 80
-          end
-          object chAmount_sale: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076#1072#1078
-            DataBinding.FieldName = 'Amount_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 80
-          end
-          object chSumm_sale: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
-            DataBinding.FieldName = 'Summ_sale'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 70
           end
           object chAmountRemains_calc_all: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095'. ('#1087#1086#1083#1085#1099#1081')'
@@ -1261,6 +1242,29 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             Width = 55
+          end
+          object chAmount_sale: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1088#1086#1076'.'
+            DataBinding.FieldName = 'Amount_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            Width = 80
+          end
+          object chSumm_sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
+            DataBinding.FieldName = 'Summ_sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
+            Width = 70
           end
           object chAmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103')'
@@ -1346,7 +1350,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 43466d
+      EditValue = 43831d
       Properties.Kind = ckDateTime
       ExplicitLeft = 29
       ExplicitWidth = 124
@@ -1354,7 +1358,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
     end
     inherited deEnd: TcxDateEdit
       Left = 692
-      EditValue = 43466d
+      EditValue = 43831d
       Properties.Kind = ckDateTime
       TabOrder = 2
       Visible = False
