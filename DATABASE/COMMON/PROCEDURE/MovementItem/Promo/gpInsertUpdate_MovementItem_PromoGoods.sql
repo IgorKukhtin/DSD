@@ -157,6 +157,12 @@ BEGIN
                                                   , inUserId               := vbUserId
                                                    );
 
+     -- сохранили <Элемент> - Состояние акции
+     IF NOT EXISTS (SELECT 1 FROM MovementItem AS MI JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind() WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Sign())
+     THEN 
+         PERFORM lpInsertUpdate_MovementItem (0, zc_MI_Message(), zc_Enum_PromoStateKind_Start(), inMovementId, 0, NULL);
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
