@@ -276,7 +276,7 @@ type
     mactUpdate_Movement_Promo_Calc: TMultiAction;
     actUpdate_Movement_Promo_Calc: TdsdExecStoredProc;
     spUpdate_Movement_Promo_Calc: TdsdStoredProc;
-    bb: TdxBarButton;
+    bbUpdate_Movement_Promo_Calc: TdxBarButton;
     AmountRetInWeight: TcxGridDBColumn;
     AmountRetIn: TcxGridDBColumn;
     GoodsKindName_List: TcxGridDBColumn;
@@ -325,7 +325,7 @@ type
     PromoStateKindDS: TDataSource;
     PromoStateKindDCS: TClientDataSet;
     cxGridPromoStateKind: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableViewPromoStateKind: TcxGridDBTableView;
     psOrd: TcxGridDBColumn;
     psisQuickly: TcxGridDBColumn;
     psPromoStateKindName: TcxGridDBColumn;
@@ -381,6 +381,19 @@ type
     calcTaxPromo_Condition: TcxGridDBColumn;
     cbisTaxPromo: TcxCheckBox;
     cbisTaxPromo_Condition: TcxCheckBox;
+    InsertRecordPromoStateKind: TInsertRecord;
+    actMISetErasedPromoStateKind: TdsdUpdateErased;
+    actMISetUnErasedPromoStateKind: TdsdUpdateErased;
+    spErasedPromoStateKind: TdsdStoredProc;
+    spUnErasedPromoStateKind: TdsdStoredProc;
+    bbInsertRecordPromoStateKind: TdxBarButton;
+    bbSetErasedPromoStateKind: TdxBarButton;
+    bbSetUnErasedPromoStateKind: TdxBarButton;
+    actOpenProtocoPromoStateKind: TdsdOpenForm;
+    bbProtocoPromoStateKind: TdxBarButton;
+    cxLabel25: TcxLabel;
+    edSignInternal: TcxButtonEdit;
+    GuidesSignInternal: TdsdGuides;
   private
     { Private declarations }
   public

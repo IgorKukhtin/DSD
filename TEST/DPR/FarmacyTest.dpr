@@ -852,7 +852,8 @@ uses
   Report_SummSP_Dialog in '..\..\FormsFarmacy\Report\Report_SummSP_Dialog.pas' {Report_SummSP_DialogForm: TParentForm},
   Report_NomenclaturePeriodDialog in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriodDialog.pas' {Report_NomenclaturePeriodDialogForm: TParentForm},
   Report_NomenclaturePeriod in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriod.pas' {Report_NomenclaturePeriodForm: TParentForm},
-  ListDaySUNDialog in '..\..\FormsFarmacy\Guides\ListDaySUNDialog.pas' {ListDaySUNDialogForm: TParentForm};
+  ListDaySUNDialog in '..\..\FormsFarmacy\Guides\ListDaySUNDialog.pas' {ListDaySUNDialogForm: TParentForm},
+  IncomeOperDataDialog in '..\..\FormsFarmacy\Document\IncomeOperDataDialog.pas' {IncomeOperDataDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

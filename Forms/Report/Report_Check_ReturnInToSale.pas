@@ -69,6 +69,8 @@ type
     isDiffContract: TcxGridDBColumn;
     MovementDescName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
+    PaidKindName_Sale: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

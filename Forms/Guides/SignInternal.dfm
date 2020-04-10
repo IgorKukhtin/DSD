@@ -54,6 +54,15 @@ object SignInternalForm: TSignInternalForm
         Options.Editing = False
         Width = 39
       end
+      object isMain: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1072#1103' '#1084#1086#1076#1077#1083#1100
+        DataBinding.FieldName = 'isMain'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1043#1083#1072#1074#1085#1072#1103' '#1084#1086#1076#1077#1083#1100' '#1076#1083#1103' '#1076#1072#1085#1085#1086#1075#1086' '#1090#1080#1087#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        Options.Editing = False
+        Width = 60
+      end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -1194,7 +1203,6 @@ object SignInternalForm: TSignInternalForm
     Top = 429
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Receipt'
     DataSets = <>
     OutputType = otResult
     Params = <

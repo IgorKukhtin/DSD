@@ -1246,7 +1246,7 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
 
@@ -1259,7 +1259,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnIn_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnIn_PartnerJournalForm');
    exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalChoiceForm');
 
@@ -1275,13 +1275,13 @@ begin
   //Выбор
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_SalebyReturnIn_ChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_SalebyReturnIn_ChoiceForm');
-
+  }
   //Отчет Проверка привязки возврата к продажам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Check_ReturnInToSaleDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Check_ReturnInToSaleDialogForm');
-
+  {
   //Отчет Проверка количества в привязке возврата к продажам
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckAmount_ReturnInToSaleForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckAmount_ReturnInToSaleForm');

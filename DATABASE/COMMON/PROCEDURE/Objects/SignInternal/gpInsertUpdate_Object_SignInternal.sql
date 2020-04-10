@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_SignInternal(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SignInternal (Integer, Integer, TVarChar, Tfloat, Tfloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SignInternal (Integer, Integer, TVarChar, Tfloat, Tfloat, TVarChar, Integer, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SignInternal(
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SignInternal(
     IN inObjectDescId     Tfloat    , -- 
     IN inComment          TVarChar  , -- 
     IN inObjectId         Integer   , -- ссылка на Подразделение
+    IN inisMain           Boolean   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -44,7 +46,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_SignInternal_ObjectDesc(), ioId, inObjectDescId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_SignInternal_Comment(), ioId, inComment);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_SignInternal_Main(), ioId, inisMain);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -57,6 +60,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.20         *
  22.08.16         *
  
 */

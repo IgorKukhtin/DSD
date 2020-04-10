@@ -1,5 +1,5 @@
 inherited Report_SendSUN_SUNv2Form: TReport_SendSUN_SUNv2Form
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' / '#1057#1059#1053'2>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' / '#1057#1059#1053'2 / '#1057#1059#1053'3>'
   ClientHeight = 359
   ClientWidth = 886
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
@@ -53,28 +53,17 @@ inherited Report_SendSUN_SUNv2Form: TReport_SendSUN_SUNv2Form
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_v3
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
             item
               Format = #1057#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = GoodsName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -85,6 +74,11 @@ inherited Report_SendSUN_SUNv2Form: TReport_SendSUN_SUNv2Form
               Format = ',0.####'
               Kind = skSum
               Column = Amount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_v3
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -191,6 +185,18 @@ inherited Report_SendSUN_SUNv2Form: TReport_SendSUN_SUNv2Form
           object Amount_v2: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'  '#1087#1088#1086#1096#1083#1086', '#1082#1086#1083'. V2'
             DataBinding.FieldName = 'Amount_v2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object Amount_v3: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'  '#1087#1088#1086#1096#1083#1086', '#1082#1086#1083'. V3'
+            DataBinding.FieldName = 'Amount_v3'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

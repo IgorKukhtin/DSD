@@ -42,6 +42,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
              , PersonalId       Integer     --Ответственный представитель маркетингового отдела	
              , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
+             , SignInternalId   Integer
+             , SignInternalName TVarChar
              , PartnerName      TVarChar     --Партнер
              , PartnerDescName  TVarChar     --тип Партнера
              , ContractName     TVarChar     --№ договора
@@ -136,7 +138,7 @@ BEGIN
                               , tmpSign.strSign
                               , tmpSign.strSignNo
                          FROM tmpMovement
-                              LEFT JOIN lpSelect_MI_Promo_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
+                              LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                          )
                             
         SELECT Movement_Promo.Id                                                 --Идентификатор
@@ -170,6 +172,9 @@ BEGIN
              , MovementLinkObject_Personal.ObjectId        AS PersonalId         --Ответственный представитель маркетингового отдела	
              , Object_Personal.ValueData                   AS PersonalName       --Ответственный представитель маркетингового отдела	
       
+             , Object_SignInternal.Id                      AS SignInternalId
+             , Object_SignInternal.ValueData               AS SignInternalName
+
              , Movement_PromoPartner.PartnerName     --Партнер
              , Movement_PromoPartner.PartnerDescName --Тип партнера
              , Movement_PromoPartner.ContractName    --Название контракта
@@ -293,6 +298,11 @@ BEGIN
                                           ON MovementLinkObject_PromoStateKind.MovementId = Movement_Promo.Id
                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
+
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
+                                          ON MovementLinkObject_SignInternal.MovementId = Movement_Promo.Id
+                                         AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
+             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
 
              LEFT JOIN tmpMovement_PromoPartner AS Movement_PromoPartner
                                                   ON Movement_PromoPartner.ParentId = Movement_Promo.Id

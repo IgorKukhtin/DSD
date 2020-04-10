@@ -58,7 +58,7 @@ object SignInternalEditForm: TSignInternalEditForm
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 309
+    Width = 135
   end
   object cxLabel4: TcxLabel
     Left = 10
@@ -121,6 +121,16 @@ object SignInternalEditForm: TSignInternalEditForm
     Properties.ReadOnly = True
     TabOrder = 13
     Width = 309
+  end
+  object cbMain: TcxCheckBox
+    Left = 207
+    Top = 30
+    Hint = #1043#1083#1072#1074#1085#1072#1103' '#1084#1086#1076#1077#1083#1100', '#1076#1083#1103' '#1076#1072#1085#1085#1086#1075#1086' '#1090#1080#1087#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = #1043#1083#1072#1074#1085#1072#1103' '#1084#1086#1076#1077#1083#1100
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    Width = 112
   end
   object ActionList: TActionList
     Left = 152
@@ -215,6 +225,14 @@ object SignInternalEditForm: TSignInternalEditForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMain'
+        Value = Null
+        Component = cbMain
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 104
@@ -307,6 +325,13 @@ object SignInternalEditForm: TSignInternalEditForm
         Component = GuidesObject
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isMain'
+        Value = Null
+        Component = cbMain
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

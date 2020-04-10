@@ -83,7 +83,7 @@ BEGIN
      WHERE MovementItem.MovementId = inMovementId
        AND MovementItem.DescId     = zc_MI_Message()
        AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
-       AND Object_User.DescId <> zc_Object_PromoStateKind()
+       AND Object_User.DescId = zc_Object_User()
     UNION
      SELECT 0                  AS Id
           , 0  :: Integer      AS Ord

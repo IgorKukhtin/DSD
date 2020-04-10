@@ -457,6 +457,7 @@ type
     actPromoCodeDoctor: TAction;
     actChoicePromoCodeDoctor: TOpenChoiceForm;
     pmPromoCodeDoctor: TMenuItem;
+    spUpdateHardwareData: TdsdStoredProc;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -752,7 +753,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
      EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash, EnterLoyaltySaveMoney,
-     LoyaltySMList, EnterLoyaltySMDiscount;
+     LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo;
 
 const
   StatusUnCompleteCode = 1;
@@ -1746,6 +1747,31 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
     end else Inc(FLoadPUSH);
   end;
 
+  procedure SaveHardwareData;
+  begin
+    if gc_User.Local then Exit;
+    if not UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then Exit;
+    try
+      if Assigned(Cash) then
+      begin
+        spUpdateHardwareData.ParamByName('inSerial').Value := Cash.FiscalNumber;
+        spUpdateHardwareData.ParamByName('inTaxRate').Value := Cash.GetTaxRate;
+        spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value := GetWMIInfo('Win32_BaseBoard', 'Product');;
+        spUpdateHardwareData.ParamByName('inProcessorName').Value := GetWMIInfo('Win32_Processor', 'Name');
+        spUpdateHardwareData.ParamByName('inDiskDriveModel').Value := GetWMIInfo('Win32_DiskDrive', 'Model') + ' ' +
+                                                                      CurrToStr(GetWMIInt64('Win32_DiskDrive', 'Size') / 1024 / 1024 / 1024) + ' ца.';;
+        spUpdateHardwareData.ParamByName('inPhysicalMemory').Value := MemoryType[GetWMIInt64('Win32_PhysicalMemory', 'MemoryType')] + ' ' +
+                                                                      CurrToStr(GetWMISum('Win32_PhysicalMemory', 'Capacity') / 1024 / 1024 / 1024) + ' ца.';
+        spUpdateHardwareData.Execute;
+      end;
+
+      UnitConfigCDS.Edit;
+      UnitConfigCDS.FindField('isGetHardwareData').AsBoolean := False;
+      UnitConfigCDS.Post;
+    except ON E:Exception do Add_Log('SaveHardwareData err=' + E.Message);
+    end;
+  end;
+
 begin
   TimerPUSH.Enabled := False;
   TimerPUSH.Interval := 60 * 1000;
@@ -1802,6 +1828,7 @@ begin
       end;
     end;
     Load_PUSH(False);
+    SaveHardwareData;
   finally
     FPUSHStart := False;
     TimerPUSH.Enabled := True;

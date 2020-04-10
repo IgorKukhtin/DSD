@@ -42,6 +42,16 @@ BEGIN
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), inId, inTaxPromo);
         -- сохраняем % скидка
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), inId, inContractCondition);
+        
+        --свойство документа - какая схема
+        IF COALESCE (inTaxPromo,0) <> 0
+        THEN
+            --свойство документа - какая схема
+            PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TaxPromo(), inMovementId, inisTaxPromo);  
+        ELSE
+            -- если 0
+            PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TaxPromo(), inMovementId, NULL :: Boolean);  
+        END IF;
     END IF;
 
     IF inNum = 2
@@ -58,8 +68,7 @@ BEGIN
     END IF;
     
     
-    --свойство документа - какая схема
-    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TaxPromo(), inMovementId, inisTaxPromo);
+
 
     --outSummaProfit := COALESCE (inSummaSale, 0) - (COALESCE (inPriceIn, 0) + COALESCE (inAmountRetIn, 0) + COALESCE (inContractCondition, 0)) * COALESCE (inAmountSale, 0);
     

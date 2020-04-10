@@ -105,6 +105,7 @@ type
     MovementDescChoiceForm: TOpenChoiceForm;
     ObjectDescChoiceForm: TOpenChoiceForm;
     UserId: TcxGridDBColumn;
+    isMain: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -12,14 +12,14 @@ CREATE OR REPLACE FUNCTION gpReport_Check_ReturnInToSale (
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Movement_ReturnId Integer, MovementDescName TVarChar, StatusCode Integer
-             , OperDate TDateTime, InvNumber TVarChar                   --, OperDatePartner TDateTime   ---InvNumberPartner TVarChar, 
+             , OperDate TDateTime, InvNumber TVarChar , PaidKindName TVarChar                  --, OperDatePartner TDateTime   ---InvNumberPartner TVarChar, 
              , ContractCode Integer, ContractName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Amount TFloat, Price TFloat
 
              , Movement_SaleId Integer, StatusCode_Sale Integer
-             , OperDate_Sale TDateTime, InvNumber_Sale TVarChar
+             , OperDate_Sale TDateTime, InvNumber_Sale TVarChar, PaidKindName_Sale TVarChar
              , ContractCode_Sale Integer, ContractName_Sale TVarChar
 
              , MovementId_Tax Integer, StatusCode_Tax Integer
@@ -231,12 +231,25 @@ BEGIN
                                                AND MovementLinkObject_To.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
             --   WHERE Movement_Sale.StatusId <> zc_Enum_Status_Complete()
              )
+ 
+   , tmpMLO_PaidKind_return AS (SELECT MovementLinkObject.*
+                                FROM MovementLinkObject
+                                WHERE MovementLinkObject.DescId = zc_MovementLinkObject_PaidKind()
+                                  AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpData.Id FROM tmpData)
+                                )
+   , tmpMLO_PaidKind_sale AS (SELECT MovementLinkObject.*
+                              FROM MovementLinkObject
+                              WHERE MovementLinkObject.DescId = zc_MovementLinkObject_PaidKind()
+                                AND MovementLinkObject.MovementId IN (SELECT DISTINCT tmpData.Sale_Id FROM tmpData)
+                              )            
+
 
              SELECT Movement_Return.Id          AS Movement_ReturnId
                   , MovementDesc.ItemName AS MovementDescName
                   , Object_Status.ObjectCode    AS StatusCode
                   , Movement_Return.OperDate    AS OperDate
                   , Movement_Return.InvNumber   AS InvNumber
+                  , Object_PaidKind_return.ValueData           AS PaidKindName
                   , View_Contract_InvNumber.ContractCode       AS ContractCode
                   , View_Contract_InvNumber.InvNumber          AS ContractName
                   , Object_Partner.ObjectCode   AS PartnerCode
@@ -251,6 +264,7 @@ BEGIN
                   , Object_StatusSale.ObjectCode                    AS StatusCode_Sale
                   , Movement_Sale.OperDate                          AS OperDate_Sale
                   , Movement_Sale.InvNumber                         AS InvNumber_Sale
+                  , Object_PaidKind_sale.ValueData                  AS PaidKindName_Sale
                   , View_Contract_InvNumber_Sale.ContractCode       AS ContractCode_Sale
                   , View_Contract_InvNumber_Sale.InvNumber          AS ContractName_Sale
 
@@ -340,6 +354,12 @@ BEGIN
                                          ON MS_InvNumberPartner_Tax.MovementId = Movement_Tax.Id
                                         AND MS_InvNumberPartner_Tax.DescId = zc_MovementString_InvNumberPartner()
 
+                LEFT JOIN tmpMLO_PaidKind_return ON tmpMLO_PaidKind_return.MovementId = tmpData.Id
+                LEFT JOIN Object AS Object_PaidKind_return ON Object_PaidKind_return.Id = tmpMLO_PaidKind_return.ObjectId
+                
+                LEFT JOIN tmpMLO_PaidKind_sale ON tmpMLO_PaidKind_sale.MovementId = tmpData.Sale_Id
+                LEFT JOIN Object AS Object_PaidKind_sale ON Object_PaidKind_sale.Id = tmpMLO_PaidKind_sale.ObjectId
+
             WHERE (tmpData.GoodsId <> tmpData.GoodsId_Sale
                 OR tmpData.GoodsKindId <> tmpData.GoodsKindId_Sale 
                 OR tmpData.PartnerId <> tmpData.PartnerId_Sale 
@@ -359,6 +379,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.20         *
  30.05.15         * 
 */
 

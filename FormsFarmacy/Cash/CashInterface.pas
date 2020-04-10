@@ -40,6 +40,7 @@ type
      function JuridicalName : string;
      function ZReport : Integer;
      function SummaReceipt : Currency;
+     function GetTaxRate : string;
 
      property AlwaysSold: boolean read GetAlwaysSold write SetAlwaysSold;
    end;

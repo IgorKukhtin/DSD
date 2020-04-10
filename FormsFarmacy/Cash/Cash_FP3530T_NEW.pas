@@ -46,6 +46,7 @@ type
     function JuridicalName : string;
     function ZReport : Integer;
     function SummaReceipt : Currency;
+    function GetTaxRate : string;
   public
     constructor Create;
   end;
@@ -255,7 +256,11 @@ function TCashFP3530T_NEW.ProgrammingGoods(const GoodsCode: integer;
   const GoodsName: string; const Price, NDS: double): boolean;
 var NDSType: Integer;
 begin//  if NDS = 0 then NDSType := 1 .033.+else NDSType := 0;
-  if NDS = 20 then NDSType := 0 else NDSType := 1;
+
+  if NDS = 20 then NDSType := 0
+  else if NDS =  0 then NDSType := 2
+  else NDSType := 1;
+
   // программирование артикула
   Logger.AddToLog(' WRITEARTICLE (GoodsCode := ' + IntToStr(GoodsCode) +
                  ', GoodsName := ' + GoodsName +
@@ -634,6 +639,25 @@ begin
   Result := 0;
   if TryStrToCurr(Trim(StringReplace(FPrinter.SUMCHEQUE[3, 1, Password], '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), nSum) then Result := Result + nSum;
   if not СообщениеКА(FPrinter.GETERROR) then Exit;
+end;
+
+function TCashFP3530T_NEW.GetTaxRate : string;
+  var I : Integer; S : string; C : Currency;
+  const TaxName : String = 'АБВГ';
+begin
+  Result := '';
+
+  for I := 0 to 3 do
+  begin
+    S := FPrinter.READTAXRATE[I, 2, Password];
+    if not СообщениеКА(FPrinter.GETERROR) then Exit;
+    if TryStrToCurr(Trim(StringReplace(S, '.', FormatSettings.DecimalSeparator, [rfReplaceAll])), C) then
+    begin
+      if Result <> '' then Result := Result + '; ';
+      Result := Result + TaxName[I + 1] + ' ' + FormatCurr('0.00', C) + '%';
+    end;
+  end;
+
 end;
 
 end.
