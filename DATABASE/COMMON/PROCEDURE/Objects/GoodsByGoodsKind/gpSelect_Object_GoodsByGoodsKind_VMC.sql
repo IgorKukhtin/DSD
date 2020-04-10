@@ -30,6 +30,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
+             , GoodsSubSendId Integer, GoodsSubSendCode Integer, GoodsSubSendName TVarChar
+             , MeasureSubSendName TVarChar
+             , GoodsKindSubSendId Integer, GoodsKindSubSendName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
@@ -360,6 +363,13 @@ BEGIN
            , Object_GoodsKindSub.Id           AS GoodsKindSubId
            , Object_GoodsKindSub.ValueData    AS GoodsKindSubName
 
+           , Object_GoodsSubSend.Id               AS GoodsSubSendId
+           , Object_GoodsSubSend.ObjectCode       AS GoodsSubSendCode
+           , Object_GoodsSubSend.ValueData        AS GoodsSubSendName
+           , Object_MeasureSubSend.ValueData      AS MeasureSubSendName
+           , Object_GoodsKindSubSend.Id           AS GoodsKindSubSendId
+           , Object_GoodsKindSubSend.ValueData    AS GoodsKindSubSendName
+
            , Object_GoodsPack.Id              AS GoodsPackId
            , Object_GoodsPack.ObjectCode      AS GoodsPackCode
            , Object_GoodsPack.ValueData       AS GoodsPackName
@@ -616,7 +626,22 @@ BEGIN
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKindSub.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKindSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub()
             LEFT JOIN Object AS Object_GoodsKindSub ON Object_GoodsKindSub.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
+            --
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSubSend
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend()
+            LEFT JOIN Object AS Object_GoodsSubSend ON Object_GoodsSubSend.Id = ObjectLink_GoodsByGoodsKind_GoodsSubSend.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsSubSend_Measure
+                                 ON ObjectLink_GoodsSubSend_Measure.ObjectId = Object_GoodsSubSend.Id
+                                AND ObjectLink_GoodsSubSend_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_MeasureSubSend ON Object_MeasureSubSend.Id = ObjectLink_GoodsSubSend_Measure.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKindSubSend
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend()
+            LEFT JOIN Object AS Object_GoodsKindSubSend ON Object_GoodsKindSubSend.Id = ObjectLink_GoodsByGoodsKind_GoodsKindSubSend.ChildObjectId
+            --
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsPack
                                  ON ObjectLink_GoodsByGoodsKind_GoodsPack.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsPack.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsPack()

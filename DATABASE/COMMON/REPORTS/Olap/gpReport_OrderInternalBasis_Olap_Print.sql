@@ -111,6 +111,7 @@ BEGIN
          , _tmpReport.GoodsGroupName
          , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
+         , _tmpReport.GoodsKindName
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount1_fr --"морож."  freeze
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount2_fr --"морож."  freeze
          , SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) :: TFloat AS Amount3_fr --"морож."  freeze
@@ -131,6 +132,7 @@ BEGIN
            , _tmpReport.GoodsGroupName
            , _tmpReport.GoodsName
            , _tmpReport.GoodsCode
+           , _tmpReport.GoodsKindName
     HAVING SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 1 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 2 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0 
         OR SUM (CASE WHEN _tmpReport.DayOfWeekNumber = 3 AND COALESCE (_tmpReport.GoodsKindId,0) = 8338 THEN _tmpReport.Amount ELSE 0 END) <> 0
