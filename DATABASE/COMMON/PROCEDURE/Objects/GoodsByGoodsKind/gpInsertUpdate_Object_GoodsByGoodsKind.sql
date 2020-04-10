@@ -3,7 +3,8 @@
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind (Integer , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
  INOUT ioId                   Integer  , -- ключ объекта <Товар>
@@ -11,6 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind(
     IN inGoodsKindId          Integer  , -- Виды товаров
     IN inGoodsSubId           Integer  , -- Товары
     IN inGoodsKindSubId       Integer  , -- Виды товаров
+    IN inGoodsSubSendId       Integer  , -- Товары
+    IN inGoodsKindSubSendId   Integer  , -- Виды товаров
     IN inGoodsPackId          Integer  , -- Главный Товар в планировании прихода с упаковки
     IN inGoodsKindPackId      Integer  , -- Главный Вид в планировании прихода с упаковки
     IN inReceiptId            Integer  , -- Рецептуры
@@ -82,6 +85,11 @@ BEGIN
    -- сохранили связь с <Виды товаров  (пересортица - расход)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSub(), ioId, inGoodsKindSubId);
 
+   -- сохранили связь с <Товары  (перемещ.пересортица - расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend(), ioId, inGoodsSubSendId);
+   -- сохранили связь с <Виды товаров  (перемещ.пересортица - расход)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend(), ioId, inGoodsKindSubSendId);
+
    -- сохранили связь с <Товары  (для упаковки)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsPack(), ioId, inGoodsPackId);
    -- сохранили связь с <Виды товаров  (для упаковки)>
@@ -114,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  
+ 10.04.20         *
  20.02.18         * inWeightPackageSticker 
  21.12.17         * 
  22.02.17         * ChangePercentAmount

@@ -617,6 +617,7 @@ begin
           //получение кода дистрибьюторов
           with spGet_Goods_CodeRazom do begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
              Execute;
              CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);
@@ -740,6 +741,7 @@ begin
           //получение кода дистрибьюторов
           with spGet_Goods_CodeRazom do begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
              Execute;
              CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);
@@ -1227,6 +1229,7 @@ begin
           //получение кода дистрибьюторов
           with spGet_Goods_CodeRazom do begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
              Execute;
              CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);
@@ -1343,6 +1346,7 @@ begin
           //получение кода дистрибьюторов
           with spGet_Goods_CodeRazom do begin
              ParamByName('inGoodsId').Value  := CheckCDS.FieldByName('GoodsId').AsInteger;
+             ParamByName('inAmount').Value  := CheckCDS.FieldByName('Amount').AsCurrency;
              ParamByName('outCodeRazom').Value := 0;
              Execute;
              CodeRazom := Trunc(ParamByName('outCodeRazom').AsFloat);

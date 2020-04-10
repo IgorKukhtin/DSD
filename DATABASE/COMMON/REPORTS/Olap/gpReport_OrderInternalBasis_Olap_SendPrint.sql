@@ -67,6 +67,7 @@ BEGIN
          , _tmpReport.GoodsGroupName
          , _tmpReport.GoodsCode
          , _tmpReport.GoodsName
+         , _tmpReport.GoodsKindName
          , SUM (_tmpReport.Amount)           :: TFloat AS Amount
          , SUM (_tmpReport.AmountSendIn_or)  :: TFloat AS AmountSendIn_or
          , SUM (_tmpReport.AmountSendOut_or) :: TFloat AS AmountSendOut_or
@@ -79,6 +80,7 @@ BEGIN
            , _tmpReport.GoodsGroupName
            , _tmpReport.GoodsName
            , _tmpReport.GoodsCode
+           , _tmpReport.GoodsKindName
     ;
     
     RETURN NEXT Cursor2;

@@ -150,8 +150,25 @@ BEGIN
                                      AND Object_GoodsCategory.isErased = FALSE
                                    )
 
+             -- товары постановления 224
+            , tmpGoods_224 AS (SELECT tmpPrice.GoodsId
+                               FROM tmpPrice
+                                -- получаем GoodsMainId
+                                LEFT JOIN  ObjectLink AS ObjectLink_Child
+                                                      ON ObjectLink_Child.ChildObjectId = tmpPrice.GoodsId
+                                                     AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                LEFT JOIN  ObjectLink AS ObjectLink_Main
+                                                      ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                     AND ObjectLink_Main.DescId = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                                INNER JOIN ObjectBoolean AS ObjectBoolean_Resolution_224
+                                                         ON ObjectBoolean_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                                        AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
+                                                        AND COALESCE (ObjectBoolean_Resolution_224.ValueData, FALSE) = TRUE
+                              )
+            
             -- подменяем НТЗ на значение из ассорт. матрицы, если в ассотр. матрице значение больше
-            , Object_Price AS (SELECT COALESCE (tmpPrice.UnitId, inUnitId) AS UnitId
+            , Object_Price1 AS (SELECT COALESCE (tmpPrice.UnitId, inUnitId) AS UnitId
                                          , COALESCE (tmpPrice.GoodsId, tmpGoodsCategory.GoodsId) AS GoodsId
                                          , COALESCE (tmpPrice.Price, 0)                :: TFloat AS Price
                                          --, COALESCE (tmpPrice.MCSValue, 0)  ::TFloat AS MCSValue
@@ -165,6 +182,21 @@ BEGIN
                                          FULL JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpPrice.GoodsId
                                     WHERE COALESCE (tmpGoodsCategory.Value, 0) <> 0
                                        OR COALESCE (tmpPrice.MCSValue, 0) <> 0
+                               )
+            -- подменяем НТЗ для товаров пост. 224 берем 25% от полного НТЗ
+            --например, если есть НТЗ=100шт, на остатке 20шт, то в колонке Итого с округлением должно стоять 5шт  (чтобы вышло 25% от их полного нтз)
+            , Object_Price AS (SELECT tmpPrice.UnitId
+                                         , tmpPrice.GoodsId
+                                         , tmpPrice.Price
+
+                                         , CASE WHEN tmpGoods_224.GoodsId IS NOT NULL
+                                                THEN COALESCE (tmpPrice.MCSValue,0) * 0.25  -- 25%
+                                                ELSE COALESCE (tmpPrice.MCSValue,0)
+                                           END ::TFloat AS MCSValue
+
+                                         , tmpPrice.MCSValue_min
+                                    FROM Object_Price1 AS tmpPrice
+                                         LEFT JOIN tmpGoods_224 ON tmpGoods_224.GoodsId = tmpPrice.GoodsId
                                )
 
             , MovementItemSaved AS (SELECT T1.Id,
@@ -361,7 +393,7 @@ BEGIN
 
               HAVING CASE WHEN (COALESCE (Object_Price.MCSValue_min, 0) = 0 OR (COALESCE (Container.Amount, 0) <= COALESCE (Object_Price.MCSValue_min, 0)))
                               AND 0.5 <= ROUND (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
-                          THEN CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND (1 >= ROUND (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
+                          THEN CASE WHEN Object_Price.MCSValue >= 0.1 AND Object_Price.MCSValue < 10 AND (1 >= ROUND (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0)))
                                          THEN CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                                     WHEN Object_Price.MCSValue >= 10 AND 1 >= CEIL (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
                                          THEN ROUND  (Object_Price.MCSValue - (COALESCE (Container.Amount, 0) - COALESCE (tmpReserve.Amount, 0)) - COALESCE (tmpMI_Send.Amount, 0) - COALESCE (Income.Amount_Income, 0) - COALESCE (tmpMI_OrderExternal.Amount,0))
