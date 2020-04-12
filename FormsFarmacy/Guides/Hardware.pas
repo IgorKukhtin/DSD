@@ -1,4 +1,4 @@
-unit CashRegister;
+unit Hardware;
 
 interface
 
@@ -13,27 +13,15 @@ uses
   dxSkinsdxBarPainter, Vcl.Menus, dxBarBuiltInMenu, cxNavigator, cxCalendar;
 
 type
-  TCashRegisterForm = class(TAncestorGuidesForm)
-    clCashRegisterKindName: TcxGridDBColumn;
-    SerialNumber: TcxGridDBColumn;
-    TimePUSHFinal1: TcxGridDBColumn;
-    TimePUSHFinal2: TcxGridDBColumn;
+  THardwareForm = class(TAncestorGuidesForm)
+    isCashRegister: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
-    GetHardwareData: TcxGridDBColumn;
     BaseBoardProduct: TcxGridDBColumn;
     ProcessorName: TcxGridDBColumn;
     DiskDriveModel: TcxGridDBColumn;
     PhysicalMemory: TcxGridDBColumn;
-    actUpdate_GetHardwareData_Yes: TMultiAction;
-    actUpdate_GetHardwareData_No: TMultiAction;
-    actExecUpdate_GetHardwareData_Yes: TdsdExecStoredProc;
-    actExecUpdate_GetHardwareData_No: TdsdExecStoredProc;
-    spUpdate_GetHardwareData_Yes: TdsdStoredProc;
-    spUpdate_GetHardwareData_No: TdsdStoredProc;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
-    TaxRate: TcxGridDBColumn;
-    ComputerName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -45,6 +33,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCashRegisterForm);
+  RegisterClass(THardwareForm);
 
 end.

@@ -5,10 +5,11 @@ interface
 uses System.SysUtils, System.Types, System.Variants, System.UITypes, System.Classes,
      Winapi.Windows, System.Win.ComObj, Winapi.ActiveX;
 
-function GetWMIInfo(const WMIClass, WMIProperty :string): string;
-function GetWMISum(const WMIClass, WMIProperty :string): Int64;
-function GetWMIInt64(const WMIClass, WMIProperty :string): Int64;
-function GetMemoryType(AType : Integer) : string;
+function GetComputerName : string;
+function GetBaseBoardProduct : string;
+function GetProcessorName : string;
+function GetDiskDriveModel : string;
+function GetPhysicalMemory : string;
 
 implementation
 
@@ -44,7 +45,6 @@ begin
     $1E : Result := 'LPDDR4';
     ELSE Result := '';
   end;
-  if Result <> '' then Result := Result + ' ';
 end;
 
 function GetWMIInfo(const WMIClass, WMIProperty :string): string;
@@ -132,6 +132,36 @@ begin;
   finally
     sWbemLocator := Unassigned;
   end
+end;
+
+function GetComputerName : string;
+begin
+  Result := GetWMIInfo('Win32_ComputerSystem', 'Name');
+end;
+
+function GetBaseBoardProduct : string;
+begin
+  Result := GetWMIInfo('Win32_BaseBoard', 'Product');
+end;
+
+function GetProcessorName : string;
+begin
+  Result := GetWMIInfo('Win32_Processor', 'Name');
+end;
+
+function GetDiskDriveModel : string;
+begin
+  Result := GetWMIInfo('Win32_DiskDrive', 'Model') + ' ' + IntToStr(GetWMIInt64('Win32_DiskDrive', 'Size') div 1000 div 1000 div 1000) + ' รม';
+end;
+
+function GetPhysicalMemory : string;
+  var S : String;
+begin
+  Result := GetMemoryType(GetWMIInt64('Win32_PhysicalMemory', 'MemoryType'));
+  if Result <> '' then Result := Result + ' ';
+  Result := Result + CurrToStr(GetWMISum('Win32_PhysicalMemory', 'Capacity') / 1024 / 1024 / 1024) + ' รม';
+  S := GetWMIInfo('Win32_PhysicalMemory', 'Speed');
+  if S <> '' THEN  Result := Result + ' ' + S + ' ฬร๖';
 end;
 
 end.

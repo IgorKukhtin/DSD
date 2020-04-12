@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CashRegisterKindId Integer, CashRegisterKindName TVarChar
              , SerialNumber TVarChar
              , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime, TaxRate TVarChar
-             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
+             , GetHardwareData Boolean, ComputerName TVarChar, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -35,10 +35,11 @@ BEGIN
 
            , CAST ('' as TVarChar)     AS TaxRate
            , False                     AS GetHardwareData
+           , CAST ('' as TVarChar)     AS ComputerName
            , CAST ('' as TVarChar)     AS BaseBoardProduct
            , CAST ('' as TVarChar)     AS ProcessorName
            , CAST ('' as TVarChar)     AS DiskDriveModel
-           , CAST ('' as TFloat)       AS PhysicalMemory;
+           , CAST ('' as TVarChar)     AS PhysicalMemory;
 
    ELSE
        RETURN QUERY
@@ -56,6 +57,7 @@ BEGIN
    
            , ObjectString_TaxRate.ValueData         AS TaxRate
            , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)  AS GetHardwareData
+           , ObjectString_ComputerName.ValueData                       AS ComputerName
            , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
            , ObjectString_ProcessorName.ValueData                      AS ProcessorName
            , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
@@ -87,6 +89,9 @@ BEGIN
                                     ON ObjectBoolean_GetHardwareData.ObjectId = Object_CashRegister.Id
                                    AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
 
+            LEFT JOIN ObjectString AS ObjectString_ComputerName
+                                   ON ObjectString_ComputerName.ObjectId = Object_CashRegister.Id
+                                  AND ObjectString_ComputerName.DescId = zc_ObjectString_CashRegister_ComputerName()
             LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
                                    ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
                                   AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()

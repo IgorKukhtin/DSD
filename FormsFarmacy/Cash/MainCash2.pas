@@ -457,7 +457,10 @@ type
     actPromoCodeDoctor: TAction;
     actChoicePromoCodeDoctor: TOpenChoiceForm;
     pmPromoCodeDoctor: TMenuItem;
+    spUpdateHardwareDataCash: TdsdStoredProc;
     spUpdateHardwareData: TdsdStoredProc;
+    actSaveHardwareData: TAction;
+    N40: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -587,6 +590,7 @@ type
     procedure edLoyaltySMSummaExit(Sender: TObject);
     procedure actTechnicalRediscountExecute(Sender: TObject);
     procedure actPromoCodeDoctorExecute(Sender: TObject);
+    procedure actSaveHardwareDataExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: boolean;
@@ -712,6 +716,7 @@ type
     procedure Check_LoyaltySumma(ASumma : Currency);
     procedure Check_LoyaltySM(ASumma : Currency);
     function CheckShareFromPrice(Amount, Price : Currency; GoodsCode : Integer; GoodsName : string) : boolean;
+    procedure SaveHardwareData;
 
   public
     procedure pGet_OldSP(var APartnerMedicalId: Integer; var APartnerMedicalName, AMedicSP: String; var AOperDateSP : TDateTime);
@@ -1163,6 +1168,7 @@ begin
   FormParams.ParamByName('LoyaltySMID').Value := 0;
   FormParams.ParamByName('LoyaltySMText').Value := '';
   FormParams.ParamByName('LoyaltySMSumma').Value := 0;
+  FormParams.ParamByName('Price1303').Value := 0;
 
   ClearFilterAll;
 
@@ -1729,6 +1735,40 @@ begin
  end;
 end;
 
+procedure TMainCashForm2.SaveHardwareData;
+begin
+  if gc_User.Local then Exit;
+  try
+    if Assigned(Cash) then
+    begin
+      spUpdateHardwareDataCash.ParamByName('inSerial').Value := Cash.FiscalNumber;
+      spUpdateHardwareDataCash.ParamByName('inTaxRate').Value := Cash.GetTaxRate;
+      spUpdateHardwareDataCash.ParamByName('inComputerName').Value := GetComputerName;
+      spUpdateHardwareDataCash.ParamByName('inBaseBoardProduct').Value := GetBaseBoardProduct;
+      spUpdateHardwareDataCash.ParamByName('inProcessorName').Value := GetProcessorName;
+      spUpdateHardwareDataCash.ParamByName('inDiskDriveModel').Value := GetDiskDriveModel;
+      spUpdateHardwareDataCash.ParamByName('inPhysicalMemory').Value := GetPhysicalMemory;
+      spUpdateHardwareDataCash.Execute;
+    end else
+    begin
+      spUpdateHardwareData.ParamByName('inComputerName').Value := GetComputerName;
+      spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value := GetBaseBoardProduct;
+      spUpdateHardwareData.ParamByName('inProcessorName').Value := GetProcessorName;
+      spUpdateHardwareData.ParamByName('inDiskDriveModel').Value := GetDiskDriveModel;
+      spUpdateHardwareData.ParamByName('inPhysicalMemory').Value := GetPhysicalMemory;
+      spUpdateHardwareData.Execute;
+    end;
+
+    if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
+    begin
+      UnitConfigCDS.Edit;
+      UnitConfigCDS.FindField('isGetHardwareData').AsBoolean := False;
+      UnitConfigCDS.Post;
+    end;
+  except ON E:Exception do Add_Log('SaveHardwareData err=' + E.Message);
+  end;
+end;
+
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
   var cResult : string;
 
@@ -1745,32 +1785,6 @@ procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
       except ON E:Exception do Add_Log('Load_PUSH err=' + E.Message);
       end;
     end else Inc(FLoadPUSH);
-  end;
-
-  procedure SaveHardwareData;
-  begin
-    if gc_User.Local then Exit;
-    if not UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then Exit;
-    try
-      if Assigned(Cash) then
-      begin
-        spUpdateHardwareData.ParamByName('inSerial').Value := Cash.FiscalNumber;
-        spUpdateHardwareData.ParamByName('inTaxRate').Value := Cash.GetTaxRate;
-        spUpdateHardwareData.ParamByName('inBaseBoardProduct').Value := GetWMIInfo('Win32_BaseBoard', 'Product');;
-        spUpdateHardwareData.ParamByName('inProcessorName').Value := GetWMIInfo('Win32_Processor', 'Name');
-        spUpdateHardwareData.ParamByName('inDiskDriveModel').Value := GetWMIInfo('Win32_DiskDrive', 'Model') + ' ' +
-                                                                      IntToStr(GetWMIInt64('Win32_DiskDrive', 'Size') div 1000 div 1000 div 1000) + ' ГБ';
-        spUpdateHardwareData.ParamByName('inPhysicalMemory').Value := GetMemoryType(GetWMIInt64('Win32_PhysicalMemory', 'MemoryType')) +
-                                                                      CurrToStr(GetWMISum('Win32_PhysicalMemory', 'Capacity') / 1024 / 1024 / 1024) + ' ГБ ' +
-                                                                      GetWMIInfo('Win32_PhysicalMemory', 'Speed') + ' МГц ';
-        spUpdateHardwareData.Execute;
-      end;
-
-      UnitConfigCDS.Edit;
-      UnitConfigCDS.FindField('isGetHardwareData').AsBoolean := False;
-      UnitConfigCDS.Post;
-    except ON E:Exception do Add_Log('SaveHardwareData err=' + E.Message);
-    end;
   end;
 
 begin
@@ -1829,7 +1843,8 @@ begin
       end;
     end;
     Load_PUSH(False);
-    SaveHardwareData;
+
+    if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then SaveHardwareData;
   finally
     FPUSHStart := False;
     TimerPUSH.Enabled := True;
@@ -2521,6 +2536,11 @@ begin
 end;
 
 
+
+procedure TMainCashForm2.actSaveHardwareDataExecute(Sender: TObject);
+begin
+  SaveHardwareData;
+end;
 
 procedure TMainCashForm2.actSelectLocalVIPCheckExecute(Sender: TObject);
 var
@@ -4889,6 +4909,16 @@ begin
   //
   if SoldRegim = TRUE then
   begin
+      //
+      //23.01.2018 - Нужно опять вернуть  проверку, чтобы в один чек пробивался только один пр-т
+      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+       and(CheckCDS.RecordCount >= 1)
+      then begin
+        ShowMessage('Ошибка.В чеке для Соц.проекта уже есть <'+IntToStr(CheckCDS.RecordCount)+'> Товар.Запрещено больше чем <1>.');
+        exit;
+      end;
+      FormParams.ParamByName('Price1303').Value := 0;
+
 
       if (Self.FormParams.ParamByName('SPKindId').Value <> 4823010)
        and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
@@ -4901,28 +4931,30 @@ begin
 
       // проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
       if (Self.FormParams.ParamByName('SPKindId').Value = 4823010)
-      then 
+      then
       begin
         spCheckItem_SPKind_1303.ParamByName('inSPKindId').Value := Self.FormParams.ParamByName('SPKindId').Value;
         spCheckItem_SPKind_1303.ParamByName('inGoodsId').Value := SourceClientDataSet.FieldByName('Id').AsInteger;
         spCheckItem_SPKind_1303.ParamByName('inPriceSale').Value := SourceClientDataSet.FieldByName('Price').asCurrency;
         spCheckItem_SPKind_1303.ParamByName('outError').Value := '';
         spCheckItem_SPKind_1303.ParamByName('outError2').Value := '';
+        spCheckItem_SPKind_1303.ParamByName('outSentence').Value := '';
+        spCheckItem_SPKind_1303.ParamByName('outPrice').Value := 0;
         spCheckItem_SPKind_1303.Execute;
-        if spCheckItem_SPKind_1303.ParamByName('outError').Value <> '' then
+        if (spCheckItem_SPKind_1303.ParamByName('outSentence').Value <> '') and
+           (spCheckItem_SPKind_1303.ParamByName('outPrice').AsFloat <> 0) then
+        begin
+           if MessageDlg(spCheckItem_SPKind_1303.ParamByName('outError').Value+#13#10#13#10 +
+             'Yes - ' + spCheckItem_SPKind_1303.ParamByName('outSentence').Value
+             ,mtConfirmation,[mbYes,mbNo], 0) = mrYes then
+           begin
+             FormParams.ParamByName('Price1303').Value := spCheckItem_SPKind_1303.ParamByName('outPrice').AsFloat;
+           end else exit;
+        end else if spCheckItem_SPKind_1303.ParamByName('outError').Value <> '' then
         begin
           ShowMessage(spCheckItem_SPKind_1303.ParamByName('outError').Value + spCheckItem_SPKind_1303.ParamByName('outError2').Value);
           exit;
         end;
-      end;
-
-      //
-      //23.01.2018 - Нужно опять вернуть  проверку, чтобы в один чек пробивался только один пр-т
-      if  (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
-       and(CheckCDS.RecordCount >= 1)
-      then begin
-        ShowMessage('Ошибка.В чеке для Соц.проекта уже есть <'+IntToStr(CheckCDS.RecordCount)+'> Товар.Запрещено больше чем <1>.');
-        exit;
       end;
   end;
 
@@ -4935,6 +4967,15 @@ begin
              lGoodsId_bySoldRegim   := SourceClientDataSet.FieldByName('Id').asInteger;
              lTypeDiscount := 0;
 
+             if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+                 and (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+                 and (FormParams.ParamByName('Price1303').Value <> 0)
+             then begin
+                       // цена БЕЗ скидки
+                       lPriceSale := FormParams.ParamByName('Price1303').Value;
+                       // цена СО скидкой - с процентом SPTax
+                       lPrice := FormParams.ParamByName('Price1303').Value * (1 - Self.FormParams.ParamByName('SPTax').Value/100);
+             end else
              if (Self.FormParams.ParamByName('SPTax').Value <> 0)
                  and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
              then begin
@@ -5742,6 +5783,7 @@ begin
   FormParams.ParamByName('LoyaltySMID').Value := 0;
   FormParams.ParamByName('LoyaltySMText').Value := '';
   FormParams.ParamByName('LoyaltySMSumma').Value := 0;
+  FormParams.ParamByName('Price1303').Value := 0;
 
   FiscalNumber := '';
   pnlVIP.Visible := False;
@@ -6417,6 +6459,20 @@ begin
             checkCDS.FieldByName('SummChangePercent').asCurrency :=DiscountServiceForm.gSummChangePercent;
         end
         else}
+        if (Self.FormParams.ParamByName('SPTax').Value <> 0)
+            and (Self.FormParams.ParamByName('InvNumberSP').Value <> '')
+            and (FormParams.ParamByName('Price1303').Value <> 0)
+        then begin
+            // на всяк случай - УСТАНОВИМ скидку еще разок
+            checkCDS.FieldByName('PriceSale').asCurrency:= FormParams.ParamByName('Price1303').Value;
+            checkCDS.FieldByName('Price').asCurrency    := GetPrice(FormParams.ParamByName('Price1303').Value *
+                                                           (1 - Self.FormParams.ParamByName('SPTax').Value/100), 0);
+            // и УСТАНОВИМ скидку - с процентом SPTax
+            checkCDS.FieldByName('ChangePercent').asCurrency     := Self.FormParams.ParamByName('SPTax').Value;
+            checkCDS.FieldByName('SummChangePercent').asCurrency :=
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('PriceSale').asCurrency,FormParams.ParamByName('RoundingDown').Value) -
+                GetSumm(CheckCDS.FieldByName('Amount').asCurrency, CheckCDS.FieldByName('Price').asCurrency,FormParams.ParamByName('RoundingDown').Value);
+        end else
         if (Self.FormParams.ParamByName('SPTax').Value <> 0)
           and(Self.FormParams.ParamByName('InvNumberSP').Value <> '')
         then begin

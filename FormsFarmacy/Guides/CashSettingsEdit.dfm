@@ -61,6 +61,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Top = 67
     Caption = #1055#1077#1088#1077#1095#1077#1085#1100' '#1082#1086#1076#1086#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1082#1086#1090#1086#1088#1099#1077' '#1084#1086#1078#1085#1086' '#1076#1077#1083#1080#1090#1100' '#1089' '#1083#1102#1073#1086#1081' '#1094#1077#1085#1086#1081
   end
+  object cbGetHardwareData: TcxCheckBox
+    Left = 16
+    Top = 118
+    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    Caption = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+    Width = 233
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -114,6 +124,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGetHardwareData'
+        Value = Null
+        Component = cbGetHardwareData
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -136,6 +154,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = 0.000000000000000000
         Component = edShareFromPriceCode
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGetHardwareData'
+        Value = Null
+        Component = cbGetHardwareData
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

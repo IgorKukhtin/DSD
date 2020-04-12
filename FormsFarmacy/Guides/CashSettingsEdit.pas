@@ -11,7 +11,7 @@ uses
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TCashSettingsEditForm = class(TParentForm)
@@ -30,6 +30,7 @@ type
     edShareFromPriceCode: TcxTextEdit;
     cxLabel2: TcxLabel;
     FormParams: TdsdFormParams;
+    cbGetHardwareData: TcxCheckBox;
   private
     { Private declarations }
   public

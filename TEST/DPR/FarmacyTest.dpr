@@ -853,7 +853,9 @@ uses
   Report_NomenclaturePeriodDialog in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriodDialog.pas' {Report_NomenclaturePeriodDialogForm: TParentForm},
   Report_NomenclaturePeriod in '..\..\FormsFarmacy\Report\Report_NomenclaturePeriod.pas' {Report_NomenclaturePeriodForm: TParentForm},
   ListDaySUNDialog in '..\..\FormsFarmacy\Guides\ListDaySUNDialog.pas' {ListDaySUNDialogForm: TParentForm},
-  IncomeOperDataDialog in '..\..\FormsFarmacy\Document\IncomeOperDataDialog.pas' {IncomeOperDataDialogForm: TParentForm};
+  IncomeOperDataDialog in '..\..\FormsFarmacy\Document\IncomeOperDataDialog.pas' {IncomeOperDataDialogForm: TParentForm},
+  Hardware in '..\..\FormsFarmacy\Guides\Hardware.pas' {HardwareForm: TParentForm},
+  HardwareEdit in '..\..\FormsFarmacy\Guides\HardwareEdit.pas' {HardwareEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

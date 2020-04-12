@@ -1,10 +1,11 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
     IN inShareFromPriceCode      TVarChar  ,     -- Перечень кодов товаров которые можно делить с любой ценой
+    IN inisGetHardwareData       Boolean   ,     -- Получить данные аппаратной части
     IN inSession                 TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -32,6 +33,9 @@ BEGIN
    
    -- сохранили Перечень кодов товаров которые можно делить с любой ценой
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashSettings_ShareFromPriceCode(), vbID, inShareFromPriceCode);
+
+   -- сохранилиПолучить данные аппаратной части
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_GetHardwareData(), vbID, inisGetHardwareData);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

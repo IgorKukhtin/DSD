@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_CheckItem_SPKind_1303(
     IN inPriceSale           TFloat    , -- Цена без скидки
    OUT outError              TVarChar  , -- Результат
    OUT outError2             TVarChar  , -- Результат
+   OUT outSentence           TVarChar  , -- Предложение по цене
+   OUT outPrice              TFloat    , -- Допустимая цена
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS record
@@ -28,8 +30,11 @@ BEGIN
        vbUnitKey := '0';
     END IF;
     vbUnitId := vbUnitKey::Integer;
+
     outError := '';
     outError2 := '';
+    outSentence := '';
+    outPrice := 0;
     
     -- проверка ЗАПРЕТ на отпуск препаратов у которых ндс 20%, для пост. 1303
     IF inSPKindId = zc_Enum_SPKind_1303()
@@ -100,6 +105,13 @@ BEGIN
                    IF vbPersent = 15 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 15 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой от 500грн до 1000грн)'; END IF;
                    IF vbPersent = 10 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой свыше 1000грн)'; END IF;
                    outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
+            END IF;
+
+            -- Предложение по цене
+            IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
+            THEN
+                   outPrice := trunc(vbPriceCalc * 10) / 10;
+                   outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
             END IF;
     END IF;
 

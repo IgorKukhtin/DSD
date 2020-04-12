@@ -2294,10 +2294,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_SunExclusion_To() RETURNS Integer AS $B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_SunExclusion_To', 'Кому', zc_Object_SunExclusion(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_SunExclusion_To');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Hardware_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Hardware_Unit', 'Связь с Подразделением', zc_Object_Hardware(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_Unit');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 12.04.20                                                                                      * zc_ObjectLink_Hardware_Unit
  10.04.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend
                     zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend
  06.04.20         * zc_ObjectLink_SunExclusion_From
