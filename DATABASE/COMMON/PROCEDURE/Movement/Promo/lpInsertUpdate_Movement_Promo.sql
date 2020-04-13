@@ -130,11 +130,7 @@ BEGIN
     -- Ответственный представитель маркетингового отдела
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
     -- модель подписи
-<<<<<<< HEAD
-  --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
-=======
     --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
->>>>>>> origin/master
         
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

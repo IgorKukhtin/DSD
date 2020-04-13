@@ -1919,6 +1919,10 @@ begin
 
      if (ParamStr(2)='autoALL')or(ParamStr(2)='autoALL_SALE')
      then begin
+               cbPack.Checked:=TRUE;
+               cbKopchenie.Checked:=TRUE;
+               cbPartion.Checked:=TRUE;
+               //
                autoALL(true);
      end;
      if (ParamStr(2)='autoALLLAST')or(ParamStr(2)='autoALLLAST_SALE')
@@ -2373,7 +2377,7 @@ var Second, MSec: word;
                //myLogMemo_add(lStr);
                //Sleep(500);
           end;
-          function lVACUUM_all : Boolean;
+          function lVACUUM_all (isVA : Boolean) : Boolean;
           begin
                // System - FULL
                lVACUUM ('VACUUM FULL pg_catalog.pg_statistic');
@@ -2396,7 +2400,13 @@ var Second, MSec: word;
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_attrdef');
                lVACUUM ('VACUUM ANALYZE pg_catalog.pg_proc');
                //
-               Sleep(500);
+               MyDelay(1 * 1000);
+               //
+               if (beginVACUUM = 3) and (isVA = TRUE) then
+               begin
+                    lVACUUM ('VACUUM ANALYZE');
+                    MyDelay(1 * 1000);
+               end;
                //
                if beginVACUUM < 3 then
                begin
@@ -2414,13 +2424,17 @@ var Second, MSec: word;
                    lVACUUM ('VACUUM ANALYZE MovementLinkMovement');
                end;
                //
-               Sleep(500);
+               MyDelay(500);
           end;
 begin
      //расчет начальные дата + врем€
      DecodeTime(NOW, Hour_calc, Minute_calc, Second, MSec);
      //
-     if (Hour_calc = 7) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
+     if (Hour_calc = 22) and (beginVACUUM > 0) then beginVACUUM:= 0;
+     if (Hour_calc = 0) and (beginVACUUM > 0) then beginVACUUM:= 0;
+     //
+     if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23))
+        and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
        and (BranchEdit.Text = 'BranchId : 0')
      then
@@ -2437,6 +2451,7 @@ begin
               if toSqlQuery_two.RecordCount > 1 then
               begin
                    myLogMemo_add('rec1 = ' + IntToStr(toSqlQuery_two.RecordCount));
+                   MyDelay(1 * 1000);
                    exit;
               end;
               //
@@ -2444,7 +2459,11 @@ begin
                                +' where state = ' + FormatToVarCharServer_notNULL('active')
                                  );
               //myLogMemo_add('rec2 = ' + IntToStr(toSqlQuery_two.RecordCount));
-              if toSqlQuery_two.RecordCount > 1 then exit;
+              if toSqlQuery_two.RecordCount > 1 then
+              begin
+                   MyDelay(1 * 1000);
+                   exit;
+              end;
               //
               with zConnection_vacuum do
               try
@@ -2463,7 +2482,7 @@ begin
                //
                myLogMemo_add('('+IntToStr(Hour_calc)+') start all VACUUM ('+IntToStr(beginVACUUM)+')');
                //
-               lVACUUM_all;
+               lVACUUM_all (Hour_calc = 23);
                beginVACUUM:= beginVACUUM + 1;
                //
                myLogMemo_add('end all VACUUM');
@@ -2484,7 +2503,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.myLogMemo_add(str :String);
 begin
-     LogMemo.Lines.Add(DateTimeToStr(now) + ' - ' + trim(str))
+     LogMemo.Lines.Add(DateTimeToStr(now) + ' - ' + trim(str));
+     LogMemo.Lines.Add('');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
@@ -2627,6 +2647,15 @@ begin
 
      //if not fStop then pCompleteDocument_Cash;
 
+     //
+     //
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
+     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
+     //
+     //
+
      if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
          // и - если необходимо 2 раза
          and (cbOnlyTwo.Checked = FALSE)
@@ -2653,12 +2682,6 @@ begin
            if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_List(TRUE, FALSE, FALSE);
 
      end;
-     //
-     //
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Partion;
-     if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
      //
      // сам расчет с/с - 2-ой - производство + ‘»Ћ»јЋџ
      if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(FALSE);
@@ -10343,6 +10366,7 @@ var calcStartDate,calcEndDate:TDateTime;
     saveStartDate,saveEndDate:TDateTime;
     Year, Month, Day: Word;
     myComponent:TADOQuery;
+    ii : Integer;
 begin
      if (not cbInsertHistoryCost.Checked)or(not cbInsertHistoryCost.Enabled) then exit;
      //
@@ -10454,6 +10478,9 @@ begin
              //
              //
              MyDelay(5 * 1000);
+             //
+             // vacuum
+             for ii:= 0 to 1000 do begin fBeginVACUUM;end;
              //
              //
              if cbInsertHistoryCost_andReComplete.Checked
@@ -20993,6 +21020,8 @@ begin
      //
      myEnabledCB(cbComplete_List);
      //
+     myLogMemo_add('start cbComplete_List');
+     //
      if cbOnlySale.Checked = true then isSale_str:=',TRUE' else isSale_str:=',FALSE';
      //
      // !!!заливка в сибасе!!!
@@ -21233,6 +21262,7 @@ begin
      //
      myEnabledCB(cbPack);
      //
+     myLogMemo_add('start cbPack');
      //
      DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
      //
@@ -21320,6 +21350,7 @@ begin
      //
      myEnabledCB(cbKopchenie);
      //
+     myLogMemo_add('start cbKopchenie');
      //
      DBGrid.DataSource.DataSet:=fromQueryDate_recalc;
      //
@@ -21756,6 +21787,8 @@ end;
 procedure TMainForm.pCompleteDocument_Partion;
 begin
      if (not cbPartion.Checked)or(not cbPartion.Enabled) then exit;
+     //
+     myLogMemo_add('start cbPartion');
      //
      myEnabledCB(cbPartion);
      //

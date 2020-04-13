@@ -65,7 +65,7 @@ BEGIN
           -- В работе Исполнительный Директор ИЛИ Согласован
           IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
           THEN
-              -- если еше никто не подписывал И №п/п = 1 И Согласован
+              -- если еще никто не подписывал И №п/п = 1 И Согласован
               IF vbStrIdSign = '' AND vbIndexNo = 1 AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
               THEN
                   -- надо поменять Модель - находим с isMain = FALSE, там по идее только один подписант = inUserId
@@ -77,12 +77,30 @@ BEGIN
                                                               WHERE gpSelect.MovementDescId = zc_Movement_Promo()
                                                                 AND gpSelect.isMain         = FALSE
                                                             ));
+              ELSEIF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main()
+              THEN
+                  -- надо удалить Модель
+                  PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, NULL);
               END IF;
-              ELSEIF
 
               -- подписали
               PERFORM gpInsertUpdate_MI_IncomeFuel_Sign (inMovementId, TRUE, inUserId :: TVarChar);
 
+          END IF;
+      END IF;
+
+      -- если есть среди - кто уже подписал
+      IF vbIndex > 0
+      THEN
+          -- НЕ В работе Исполнительный Директор ИЛИ Согласован
+          IF inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+          THEN
+              -- убрали подпись
+              PERFORM gpInsertUpdate_MI_IncomeFuel_Sign (inMovementId, FALSE, inUserId :: TVarChar);
+          END IF;
+      END IF;
+      
+      
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

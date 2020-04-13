@@ -473,7 +473,7 @@ BEGIN
 
 
      -- кроме Админа - для сырья
-     IF vbUserId <> zfCalc_UserAdmin() :: Integer
+     IF 1=1 -- vbUserId <> zfCalc_UserAdmin() :: Integer
      THEN
          -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
          PERFORM lpComplete_Movement_Send_Recalc_sub (inMovementId := inMovementId

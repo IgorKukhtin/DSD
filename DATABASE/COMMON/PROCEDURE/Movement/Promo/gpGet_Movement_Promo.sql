@@ -36,8 +36,8 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , UnitName         TVarChar    --Подразделение
              , PersonalTradeId  INTEGER     --Ответственный представитель коммерческого отдела
              , PersonalTradeName TVarChar   --Ответственный представитель коммерческого отдела
-             , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела
-             , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела
+             , PersonalId       INTEGER     --Ответственный представитель маркетингового отдела	
+             , PersonalName     TVarChar    --Ответственный представитель маркетингового отдела	
              , SignInternalId   Integer
              , SignInternalName TVarChar
              , isPromo          Boolean     --Акция (да/нет)
@@ -54,8 +54,6 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
-
-    --
     IF COALESCE (inMovementId, 0) = 0
     THEN
         -- данные из Модели для данного документа
@@ -96,11 +94,11 @@ BEGIN
           , NULL::TVarChar                                    AS UnitName            --Подразделение
           , NULL::Integer                                     AS PersonalTradeId     --Ответственный представитель коммерческого отдела
           , NULL::TVarChar                                    AS PersonalTradeName   --Ответственный представитель коммерческого отдела
-          , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела
+          , NULL::Integer                                     AS PersonalId          --Ответственный представитель маркетингового отдела	
           , NULL::TVarChar                                    AS PersonalName        --Ответственный представитель маркетингового отдела
           , Object_SignInternal.Id                            AS SignInternalId
           , Object_SignInternal.ValueData :: TVarChar         AS SignInternalName
-
+             
           , CAST (TRUE  AS Boolean)                           AS isPromo
           , CAST (FALSE AS Boolean)         		      AS Checked
           , CAST (FALSE AS Boolean)         		      AS isTaxPromo            -- схема % скидки
@@ -108,13 +106,11 @@ BEGIN
           , CAST (FALSE AS Boolean)                           AS isPromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
-        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
+        FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
             LEFT OUTER JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
         ;
     ELSE
-
-        -- Результат
         RETURN QUERY
         SELECT
             Movement_Promo.Id                 --Идентификатор
@@ -145,7 +141,7 @@ BEGIN
           , Movement_Promo.UnitName           --Подразделение
           , Movement_Promo.PersonalTradeId    --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
-          , Movement_Promo.PersonalId         --Ответственный представитель маркетингового отдела
+          , Movement_Promo.PersonalId         --Ответственный представитель маркетингового отдела	
           , Movement_Promo.PersonalName       --Ответственный представитель маркетингового отдела
           , COALESCE (Movement_Promo.SignInternalId, Object_SignInternal.Id)          AS SignInternalId
           , COALESCE (Movement_Promo.SignInternalName, Object_SignInternal.ValueData) AS SignInternalName
@@ -156,21 +152,17 @@ BEGIN
           , Movement_Promo.isPromoStateKind :: Boolean AS isPromoStateKind  -- Приоритет для состояния
 
           , tmpSign.strSign
-          , tmpSign.strSignNo
+          , tmpSign.strSignNo             
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
-<<<<<<< HEAD
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
-=======
-             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
->>>>>>> origin/master
         WHERE Movement_Promo.Id =  inMovementId;
+
     END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Promo (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
