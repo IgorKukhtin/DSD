@@ -48,7 +48,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isNotCashMCS Boolean, isNotCashListDiff Boolean,
                UnitOldId  Integer, UnitOldName TVarChar,
                MorionCode Integer, AccessKeyYF TVarChar,
-               isTechnicalRediscount Boolean
+               isTechnicalRediscount Boolean, isAlertRecounting Boolean     
                ) AS
 $BODY$
 BEGIN
@@ -153,7 +153,8 @@ BEGIN
            
            , CAST (0 as Integer)   AS MorionCode
            , CAST ('' as TVarChar) AS AccessKeyYF
-           , FALSE                 AS isTechnicalRediscount           
+           , FALSE                 AS isTechnicalRediscount     
+           , FALSE                 AS isAlertRecounting      
 ;
    ELSE
        RETURN QUERY 
@@ -257,6 +258,7 @@ BEGIN
       , ObjectFloat_MorionCode.ValueData::Integer          AS MorionCode
       , ObjectString_AccessKeyYF.ValueData                 AS AccessKeyYF
       , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount      
+      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE):: Boolean   AS isAlertRecounting   
 
     FROM Object AS Object_Unit
         LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
@@ -505,6 +507,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_AlertRecounting
+                                ON ObjectBoolean_AlertRecounting.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_AlertRecounting.DescId = zc_ObjectBoolean_Unit_AlertRecounting()
 
     WHERE Object_Unit.Id = inId;
 

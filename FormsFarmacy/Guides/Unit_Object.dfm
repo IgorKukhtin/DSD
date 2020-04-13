@@ -9,17 +9,17 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited PageControl: TcxPageControl
     Width = 1158
     Height = 451
-    ExplicitWidth = 955
+    ExplicitWidth = 1158
     ExplicitHeight = 451
     ClientRectBottom = 451
     ClientRectRight = 1158
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 955
+      ExplicitWidth = 1158
       ExplicitHeight = 451
       inherited cxGrid: TcxGrid
         Width = 1158
         Height = 451
-        ExplicitWidth = 955
+        ExplicitWidth = 1158
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -597,6 +597,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
           object isTechnicalRediscount: TcxGridDBColumn
             Caption = #1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1081' '#1087#1077#1088#1077#1091#1095#1077#1090' '#1080' '#1055#1057' '
             DataBinding.FieldName = 'isTechnicalRediscount'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 91
+          end
+          object isAlertRecounting: TcxGridDBColumn
+            Caption = #1054#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1077#1088#1077#1076' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1084
+            DataBinding.FieldName = 'isAlertRecounting'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1411,6 +1419,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actUpdate_Unit_AlertRecounting: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_AlertRecounting
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_AlertRecounting
+        end>
+      Caption = ' '#1054#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1077#1088#1077#1076' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1084' '
+      Hint = ' '#1054#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1077#1088#1077#1076' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1084' '
+      ImageIndex = 53
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1606,6 +1627,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarButton4'
         end
         item
@@ -1752,6 +1777,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object dxBarButton4: TdxBarButton
       Action = actUpdate_ListDaySUN
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdate_Unit_AlertRecounting
       Category = 0
     end
   end
@@ -2672,5 +2701,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 704
     Top = 387
+  end
+  object spUpdate_Unit_AlertRecounting: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_AlertRecounting'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisAlertRecounting'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAlertRecounting'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisAlertRecounting'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isAlertRecounting'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 403
   end
 end

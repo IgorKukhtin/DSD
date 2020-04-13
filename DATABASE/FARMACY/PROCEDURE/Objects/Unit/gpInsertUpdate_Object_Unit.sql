@@ -21,6 +21,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -82,6 +89,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inAccessKeyYF             TVarChar  ,    -- Ключ ХО для отправки данных Юрия-Фарм
     
     IN inisTechnicalRediscount   Boolean   ,    -- Технический переучет и ПС 
+    IN inisAlertRecounting       Boolean   ,    -- Оповещение перед переучетом
 
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -300,6 +308,8 @@ BEGIN
 
    --сохранили <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_TechnicalRediscount(), ioId, inisTechnicalRediscount);
+   --сохранили <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Unit_AlertRecounting(), ioId, inisAlertRecounting);
 
    -- сохранили связь с подразделением
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitOverdue(), ioId, inUnitOverdueId);
