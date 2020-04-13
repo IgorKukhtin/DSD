@@ -107,7 +107,7 @@ BEGIN
         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, inCheckDate);
     ELSE 
         -- дата согласования 
-        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, Null);
+        PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, NULL);
     END IF;
     
     -- сохранили свойство <Согласовано>
@@ -129,7 +129,7 @@ BEGIN
     -- Ответственный представитель маркетингового отдела
     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
     -- модель подписи
-    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
+  --PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), ioId, inSignInternalId);
         
     -- сохранили протокол
     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);

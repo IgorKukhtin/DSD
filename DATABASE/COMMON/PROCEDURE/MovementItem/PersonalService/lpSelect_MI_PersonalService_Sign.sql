@@ -34,9 +34,9 @@ BEGIN
      
      WITH -- данные из Модели для данного документа
           tmpObject AS (SELECT * 
-                        FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0) AS tmp
-                        WHERE tmp.SignInternalId = vbSignInternalId
-                           OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
+                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
+                      --WHERE tmp.SignInternalId = vbSignInternalId
+                      --   OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
                         )
           -- данные из уже сохраненных элементов подписи
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
@@ -81,7 +81,7 @@ BEGIN
           , tmpSignNo.strIdSignNo :: TVarChar AS strIdSignNo
           , tmpSign.strMIIdSign   :: TVarChar AS strMIIdSign
      FROM tmpSign
-          LEFT JOIN tmpSignNo ON 1=1
+          FULL JOIN tmpSignNo ON 1=1
     ;
 
 END;

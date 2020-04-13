@@ -46,7 +46,7 @@ BEGIN
      -- Результат
      RETURN QUERY 
         WITH -- данные из Модели для данного документа
-             tmpObject AS (SELECT * FROM lpSelect_Object_SignInternalItem (vbMovementDescId, vbObjectDescId, 0))
+             tmpObject AS (SELECT * FROM lpSelect_Object_SignInternalItem (0, vbMovementDescId, vbObjectDescId, 0))
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
                             , MovementItem.ObjectId   AS SignInternalId

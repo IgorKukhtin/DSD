@@ -5,7 +5,7 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1100
-  ExplicitHeight = 468
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1042,7 +1042,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 48
   end
   object spInsertUpdateMISign_Yes: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    StoredProcName = 'gpInsertUpdate_MI_Sign'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1066,7 +1066,7 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 179
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    StoredProcName = 'gpInsertUpdate_MI_Sign'
     DataSets = <>
     OutputType = otResult
     Params = <

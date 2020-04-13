@@ -49,6 +49,7 @@ BEGIN
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Send_CreateTemp();
 
+
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, CarId_From, BranchId_From, UnitId_To, MemberId_To, CarId_To, BranchId_To
                          , MIContainerId_To, MIContainerId_count_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, ContainerId_countFrom, ContainerId_countTo, ObjectDescId, GoodsId, GoodsKindId, GoodsKindId_complete, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
@@ -470,6 +471,16 @@ BEGIN
                                         ));
      END IF;
 
+
+     -- кроме Админа - для сырья
+     IF vbUserId <> zfCalc_UserAdmin() :: Integer
+     THEN
+         -- !!!Синхронно - пересчитали/провели Пересортица!!! - на основании "Перемещения" - !!!важно - здесь очищается _tmpMIContainer_insert, поэтому делаем ДО проводок!!!, но после заполнения _tmpItem
+         PERFORM lpComplete_Movement_Send_Recalc_sub (inMovementId := inMovementId
+                                                    , inUnitId     := (SELECT DISTINCT _tmpItem.UnitId_From FROM _tmpItem)
+                                                    , inUserId     := vbUserId
+                                                     );
+     END IF;
 
 
      -- формируются Партии товара, ЕСЛИ надо ...

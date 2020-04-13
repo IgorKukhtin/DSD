@@ -4,7 +4,7 @@
   ClientHeight = 684
   ClientWidth = 1360
   ExplicitWidth = 1376
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -12,18 +12,18 @@
     Width = 1360
     Height = 545
     ExplicitTop = 139
-    ExplicitWidth = 1354
+    ExplicitWidth = 1360
     ExplicitHeight = 545
     ClientRectBottom = 545
     ClientRectRight = 1360
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
-      ExplicitWidth = 1354
+      ExplicitWidth = 1360
       ExplicitHeight = 521
       inherited cxGrid: TcxGrid
         Width = 1360
         Height = 176
-        ExplicitWidth = 1354
+        ExplicitWidth = 1360
         ExplicitHeight = 176
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -511,7 +511,6 @@
         Height = 173
         Align = alBottom
         TabOrder = 1
-        ExplicitWidth = 1354
         object cxSplitter1: TcxSplitter
           Left = 816
           Top = 1
@@ -520,7 +519,6 @@
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
-          ExplicitLeft = 810
         end
         object cxPageControl1: TcxPageControl
           Left = 1
@@ -531,13 +529,11 @@
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
-          ExplicitWidth = 809
           ClientRectBottom = 171
           ClientRectRight = 815
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
-            ExplicitWidth = 809
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
@@ -546,7 +542,6 @@
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
-              ExplicitWidth = 809
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -693,7 +688,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitWidth = 809
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -703,7 +697,6 @@
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
-              ExplicitWidth = 809
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -804,7 +797,6 @@
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 818
           ClientRectBottom = 171
           ClientRectRight = 264
           ClientRectTop = 24
@@ -893,7 +885,6 @@
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
-          ExplicitLeft = 1090
           ClientRectBottom = 171
           ClientRectRight = 263
           ClientRectTop = 24
@@ -982,7 +973,6 @@
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
-          ExplicitLeft = 1082
         end
       end
       object cxGrid2: TcxGrid
@@ -993,7 +983,6 @@
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 1354
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MessageDS
@@ -1010,6 +999,7 @@
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
@@ -1139,7 +1129,6 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = Panel1
-        ExplicitWidth = 1354
       end
       object cxSplitter2: TcxSplitter
         Left = 0
@@ -1149,13 +1138,11 @@
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitWidth = 1354
       end
     end
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
-      ExplicitWidth = 1354
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
@@ -1164,7 +1151,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1354
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1423,7 +1409,6 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
-      ExplicitWidth = 1354
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
@@ -1432,7 +1417,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1354
         object cxGridDBTableViewCalc2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS2
@@ -1699,7 +1683,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitWidth = 1354
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1708,7 +1691,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1354
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1794,7 +1776,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitWidth = 1354
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -1803,7 +1784,6 @@
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
-        ExplicitWidth = 1354
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -2040,7 +2020,6 @@
     object cxTabSheetPromoStateKind: TcxTabSheet
       Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1072#1082#1094#1080#1080
       ImageIndex = 6
-      ExplicitWidth = 1354
       object cxGridPromoStateKind: TcxGrid
         Left = 0
         Top = 0
@@ -2049,7 +2028,6 @@
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitWidth = 1354
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PromoStateKindDS
@@ -2067,6 +2045,7 @@
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
+          OptionsView.CellAutoHeight = True
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
@@ -2146,7 +2125,7 @@
     Width = 1360
     Height = 113
     TabOrder = 3
-    ExplicitWidth = 1354
+    ExplicitWidth = 1360
     ExplicitHeight = 113
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -5940,7 +5919,7 @@
     Top = 256
   end
   object spInsertUpdateMISign_No: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    StoredProcName = 'gpInsertUpdate_MI_Sign'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -5964,7 +5943,7 @@
     Top = 259
   end
   object spInsertUpdateMISign_Yes: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_IncomeFuel_Sign'
+    StoredProcName = 'gpInsertUpdate_MI_Sign'
     DataSets = <>
     OutputType = otResult
     Params = <

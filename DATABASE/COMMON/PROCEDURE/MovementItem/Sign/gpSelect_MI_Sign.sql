@@ -1,5 +1,6 @@
 -- Function: gpSelect_MI_Sign (Integer, Boolean, Boolean, TVarChar)
 
+DROP FUNCTION IF EXISTS gpSelect_MI_Promo_Sign (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_Sign (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Sign(
@@ -16,9 +17,9 @@ RETURNS TABLE (Id Integer, SignInternalId Integer, SignInternalName TVarChar
               )
 AS
 $BODY$
-  DECLARE vbUserId Integer;
-  DECLARE vbSignInternalId Integer;
+  DECLARE vbUserId         Integer;
   DECLARE vbMovementDescId Integer;
+  DECLARE vbSignInternalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Promo());
@@ -26,12 +27,12 @@ BEGIN
 
 
      -- Параметры из документа - для определения <Модель электронной подписи>
-     SELECT Movement.DescId             AS MovementDescId
-          , MovementLinkObject.ObjectId AS SignInternalId
+     SELECT Movement.DescId                           AS MovementDescId
+          , COALESCE (MovementLinkObject.ObjectId, 0) AS SignInternalId
             INTO vbMovementDescId, vbSignInternalId
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                      AND MovementLinkObject.DescId = zc_MovementLinkObject_SignInternal()
+                                      AND MovementLinkObject.DescId     = zc_MovementLinkObject_SignInternal()
      WHERE Movement.Id = inMovementId;
 
      
@@ -39,9 +40,9 @@ BEGIN
      RETURN QUERY 
         WITH -- данные из Модели для данного документа
           tmpObject AS (SELECT *
-                        FROM lpSelect_Object_SignInternalItem (vbMovementDescId, 0, 0) AS tmp
-                        WHERE tmp.SignInternalId = vbSignInternalId
-                           OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
+                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
+                      --WHERE tmp.SignInternalId = vbSignInternalId
+                      --   OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
                         )
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
@@ -59,6 +60,7 @@ BEGIN
                                                             AND MILO_Insert.DescId = zc_MILinkObject_Insert()
                        WHERE MovementItem.MovementId = inMovementId
                          AND MovementItem.DescId     = zc_MI_Sign()
+                         AND MovementItem.isErased   = FALSE
                       )
      -- Результат
      SELECT tmpMI.Id                      AS Id
@@ -80,10 +82,10 @@ BEGIN
                          AND tmpMI.UserId         = tmpObject.UserId
                          AND tmpMI.isErased       = FALSE
           LEFT JOIN Object AS Object_SignInternal 
-                           ON Object_SignInternal.Id = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
+                           ON Object_SignInternal.Id     = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
                           AND Object_SignInternal.DescId = zc_Object_SignInternal()
                           
-          LEFT JOIN Object AS Object_User         ON Object_User.Id         = COALESCE (tmpObject.UserId,         tmpMI.UserId)
+          LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE (tmpObject.UserId, tmpMI.UserId)
      ;
 
 END;
@@ -98,4 +100,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_Sign (inMovementId:= 4135607, inIsErased:= TRUE,  inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MI_Sign (inMovementId:= 4135607, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MI_Sign (inMovementId:= 15644701, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

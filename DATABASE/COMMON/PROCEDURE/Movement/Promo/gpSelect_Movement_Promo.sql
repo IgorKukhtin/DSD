@@ -66,6 +66,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+
+    -- Результат
     RETURN QUERY
         WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
                      UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
@@ -137,6 +139,7 @@ BEGIN
            , tmpSign AS (SELECT tmpMovement.Id
                               , tmpSign.strSign
                               , tmpSign.strSignNo
+                              , tmpSign.SignInternalId
                          FROM tmpMovement
                               LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                          )
@@ -299,17 +302,14 @@ BEGIN
                                          AND MovementLinkObject_PromoStateKind.DescId = zc_MovementLinkObject_PromoStateKind()
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
 
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_SignInternal
-                                          ON MovementLinkObject_SignInternal.MovementId = Movement_Promo.Id
-                                         AND MovementLinkObject_SignInternal.DescId = zc_MovementLinkObject_SignInternal()
-             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = MovementLinkObject_SignInternal.ObjectId
-
              LEFT JOIN tmpMovement_PromoPartner AS Movement_PromoPartner
                                                   ON Movement_PromoPartner.ParentId = Movement_Promo.Id
                                                   
              LEFT JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = Movement_Promo.Id
          
              LEFT JOIN tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
+
+             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
          ;
 
 END;

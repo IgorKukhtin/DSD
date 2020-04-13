@@ -55,9 +55,18 @@ BEGIN
      END IF;
 
 
+     -- !!!пересчитали кто подписал/отменил + изменение модели!!!
+     PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, tmp.ObjectId)
+
+
      -- нашли последний - и сохранили в шапку
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
+
+--           , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, inCheckDate);
+              -- сохранили свойство <Согласовано>
+  --         , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
+
      FROM (SELECT MI.ObjectId, MI.Amount
            FROM MovementItem AS MI
                 JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()

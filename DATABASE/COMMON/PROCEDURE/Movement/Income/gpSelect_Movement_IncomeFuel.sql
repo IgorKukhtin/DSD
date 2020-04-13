@@ -286,7 +286,7 @@ BEGIN
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
                   JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = COALESCE (Movement.AccessKeyId, 0)
-             ) AS tmpMovement
+            ) AS tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -401,7 +401,8 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
-            LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement.Id ) AS tmpSign ON tmpSign.Id = Movement.Id   -- ˝Î.ÔÓ‰ÔËÒË
+            -- ˝Î.ÔÓ‰ÔËÒË
+            LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id
 
     -- WHERE COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!
        WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401() -- !!!—¿ÃŒ≈ Õ≈ –¿—»¬Œ≈ –≈ÿ≈Õ»≈!!!

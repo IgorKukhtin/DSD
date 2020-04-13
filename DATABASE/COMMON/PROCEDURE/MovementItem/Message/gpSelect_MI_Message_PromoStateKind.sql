@@ -27,7 +27,7 @@ BEGIN
      RETURN QUERY 
 
      SELECT MovementItem.Id                        AS Id
-          , ROW_NUMBER() OVER (ORDER BY MovementItem.Id DESC) :: Integer AS Ord
+          , ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) :: Integer AS Ord
           , MIString_Comment.ValueData :: TVarChar AS Comment
           , Object_PromoStateKind.Id               AS PromoStateKindId
           , Object_PromoStateKind.ValueData        AS PromoStateKindName

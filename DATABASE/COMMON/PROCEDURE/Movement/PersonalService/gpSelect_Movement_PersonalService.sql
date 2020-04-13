@@ -161,7 +161,7 @@ BEGIN
                            , tmpSign.strSign
                            , tmpSign.strSignNo
                       FROM tmpMovement
-                           LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= tmpMovement.Id ) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
+                           LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= tmpMovement.Id) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                       )
         , tmpMember AS (SELECT tmp.PersonalServiceListId 
                              , ObjectLink_PersonalServiceList_Member.ChildObjectId AS MemberId
@@ -389,7 +389,8 @@ BEGIN
                                       ON MovementBoolean_isAuto.MovementId = Movement.Id
                                      AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
 
-            LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
+            -- эл.подписи
+            LEFT JOIN tmpSign ON tmpSign.Id = Movement.Id
             ;
 
 END;

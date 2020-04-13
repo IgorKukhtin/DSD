@@ -103,7 +103,7 @@ BEGIN
              END IF;
 
 
-             -- создаетс€ документ - <ѕроизводство смешивание> - ѕересортица
+             -- создаетс€ документ - <Send>
              vbMovementId_Send_out:= lpInsertUpdate_Movement_Send
                                           (ioId               := vbMovementId_Send_out
                                          , inInvNumber        := CASE WHEN vbMovementId_Send_out <> 0 THEN (SELECT InvNumber FROM Movement WHERE Id = vbMovementId_Send_out) ELSE CAST (NEXTVAL ('movement_Send_seq') AS TVarChar) END
