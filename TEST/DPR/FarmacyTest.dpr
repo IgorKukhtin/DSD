@@ -855,7 +855,8 @@ uses
   ListDaySUNDialog in '..\..\FormsFarmacy\Guides\ListDaySUNDialog.pas' {ListDaySUNDialogForm: TParentForm},
   IncomeOperDataDialog in '..\..\FormsFarmacy\Document\IncomeOperDataDialog.pas' {IncomeOperDataDialogForm: TParentForm},
   Hardware in '..\..\FormsFarmacy\Guides\Hardware.pas' {HardwareForm: TParentForm},
-  HardwareEdit in '..\..\FormsFarmacy\Guides\HardwareEdit.pas' {HardwareEditForm: TParentForm};
+  HardwareEdit in '..\..\FormsFarmacy\Guides\HardwareEdit.pas' {HardwareEditForm: TParentForm},
+  Report_Send_RemainsSunOut_express_v2 in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express_v2.pas' {Report_Send_RemainsSunOut_express_v2Form: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
