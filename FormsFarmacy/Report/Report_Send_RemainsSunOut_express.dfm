@@ -3,9 +3,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
   ClientHeight = 561
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -324
   ExplicitWidth = 976
-  ExplicitHeight = 596
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
