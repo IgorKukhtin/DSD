@@ -33,7 +33,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
-             , PromoStateKind   TFloat      -- Приоритет для состояния
+
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           Integer     --Подразделение
@@ -57,6 +57,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , isTaxPromo_Condition  Boolean     -- схема % компенсации
              , isPromoStateKind_Head Boolean
              , isPromoStateKind_Main Boolean
+             , isPromoStateKind   Boolean      -- Приоритет для состояния
              , Color_PromoStateKind Integer
              , strSign        TVarChar -- ФИО пользователей. - есть эл. подпись
              , strSignNo      TVarChar -- ФИО пользователей. - ожидается эл. подпись
@@ -165,7 +166,7 @@ BEGIN
              , MovementDate_Month.ValueData                AS MonthPromo         -- месяц акции
              , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
              , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
-             , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
+
              , MovementString_Comment.ValueData            AS Comment            --Примечание
              , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
              , MovementLinkObject_Unit.ObjectId            AS UnitId             --Подразделение
@@ -200,6 +201,8 @@ BEGIN
              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Head
              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() THEN TRUE ELSE FALSE END :: Boolean AS isPromoStateKind_Main
              
+             , CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN  TRUE ELSE FALSE END :: Boolean AS isPromoStateKind  -- Приоритет для состояния
+
              , CASE WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Head() 
                      THEN CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN zc_Color_Warning_Red() ELSE zc_Color_Yelow() END   -- красный / желтый
                     WHEN Object_PromoStateKind.Id = zc_Enum_PromoStateKind_Main() 

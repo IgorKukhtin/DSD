@@ -29,7 +29,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , MonthPromo       TDateTime   --Месяц акции
              , CheckDate        TDateTime   --Дата Согласования
              , CostPromo        TFloat      --Стоимость участия в акции
-             , PromoStateKind   TFloat      -- Приоритет для состояния
+
              , Comment          TVarChar    --Примечание
              , CommentMain      TVarChar    --Примечание (Общее)
              , UnitId           INTEGER     --Подразделение
@@ -44,6 +44,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , Checked          Boolean     --Согласовано (да/нет)
              , isTaxPromo       Boolean     -- схема % скидки
              , isTaxPromo_Condition  Boolean     -- схема % компенсации
+             , isPromoStateKind   Boolean      -- Приоритет для состояния
              , strSign          TVarChar    -- ФИО пользователей. - есть эл. подпись
              , strSignNo        TVarChar    -- ФИО пользователей. - ожидается эл. подпись
              )
@@ -89,7 +90,6 @@ BEGIN
           , NULL::TDateTime                                   AS MonthPromo          --Месяц акции
           , inOperDate                                        AS CheckDate           --Дата Согласования
           , NULL::TFloat                                      AS CostPromo           --Стоимость участия в акции
-          , 0   ::TFloat                                      AS PromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS Comment             --Примечание
           , NULL::TVarChar                                    AS CommentMain         --Примечание (Общее)
           , NULL::Integer                                     AS UnitId              --Подразделение
@@ -105,6 +105,7 @@ BEGIN
           , CAST (FALSE AS Boolean)         		      AS Checked
           , CAST (FALSE AS Boolean)         		      AS isTaxPromo            -- схема % скидки
           , CAST (FALSE AS Boolean)         		      AS isTaxPromo_Condition  -- схема % компенсации
+          , CAST (FALSE AS Boolean)                           AS isPromoStateKind  -- Приоритет для состояния
           , NULL::TVarChar                                    AS strSign
           , NULL::TVarChar                                    AS strSignNo
         FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
@@ -138,7 +139,6 @@ BEGIN
           , Movement_Promo.MonthPromo         -- месяц акции
           , Movement_Promo.CheckDate          --Дата Согласования
           , Movement_Promo.CostPromo          --Стоимость участия в акции
-          , Movement_Promo.PromoStateKind     -- Приоритет для состояния
           , Movement_Promo.Comment            --Примечание
           , Movement_Promo.CommentMain        --Примечание (Общее)
           , Movement_Promo.UnitId             --Подразделение
@@ -153,11 +153,17 @@ BEGIN
           , Movement_Promo.Checked            --согласовано
           , Movement_Promo.isTaxPromo
           , Movement_Promo.isTaxPromo_Condition
+          , Movement_Promo.isPromoStateKind :: Boolean AS isPromoStateKind  -- Приоритет для состояния
+
           , tmpSign.strSign
           , tmpSign.strSignNo
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
+<<<<<<< HEAD
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
+=======
+             LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = vbSignInternalId
+>>>>>>> origin/master
         WHERE Movement_Promo.Id =  inMovementId;
     END IF;
 

@@ -59,14 +59,12 @@ inherited PromoJournalForm: TPromoJournalForm
             Options.Editing = False
             Width = 111
           end
-          object PromoStateKind: TcxGridDBColumn
-            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
-            DataBinding.FieldName = 'PromoStateKind'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object isPromoStateKind: TcxGridDBColumn
+            Caption = #1057#1088#1086#1095#1085#1086
+            DataBinding.FieldName = 'isPromoStateKind'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1076#1083#1103' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
+            HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
             Options.Editing = False
             Width = 70
           end

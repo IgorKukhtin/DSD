@@ -2,29 +2,42 @@
   ActiveControl = edOperDate
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
+<<<<<<< HEAD
   ClientWidth = 1360
   ExplicitWidth = 1376
   ExplicitHeight = 719
+=======
+  ClientWidth = 1393
+  ExplicitWidth = 1409
+  ExplicitHeight = 722
+>>>>>>> origin/master
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 139
-    Width = 1360
+    Width = 1393
     Height = 545
     ExplicitTop = 139
     ExplicitWidth = 1360
     ExplicitHeight = 545
     ClientRectBottom = 545
-    ClientRectRight = 1360
+    ClientRectRight = 1393
     inherited tsMain: TcxTabSheet
       Caption = '&1. '#1058#1086#1074#1072#1088#1099
       ExplicitWidth = 1360
       ExplicitHeight = 521
       inherited cxGrid: TcxGrid
+<<<<<<< HEAD
         Width = 1360
         Height = 176
         ExplicitWidth = 1360
         ExplicitHeight = 176
+=======
+        Width = 1393
+        Height = 156
+        ExplicitWidth = 1360
+        ExplicitHeight = 156
+>>>>>>> origin/master
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -506,42 +519,62 @@
       end
       object Panel1: TPanel
         Left = 0
-        Top = 184
-        Width = 1360
+        Top = 164
+        Width = 1393
         Height = 173
         Align = alBottom
         TabOrder = 1
+<<<<<<< HEAD
+=======
+        ExplicitWidth = 1360
+>>>>>>> origin/master
         object cxSplitter1: TcxSplitter
-          Left = 816
+          Left = 849
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl2
+<<<<<<< HEAD
+=======
+          ExplicitLeft = 816
+>>>>>>> origin/master
         end
         object cxPageControl1: TcxPageControl
           Left = 1
           Top = 1
-          Width = 815
+          Width = 848
           Height = 171
           Align = alClient
           TabOrder = 1
           Properties.ActivePage = tsPartner
           Properties.CustomButtons.Buttons = <>
+<<<<<<< HEAD
+=======
+          ExplicitWidth = 815
+>>>>>>> origin/master
           ClientRectBottom = 171
-          ClientRectRight = 815
+          ClientRectRight = 848
           ClientRectTop = 24
           object tsPartner: TcxTabSheet
             Caption = '2.1. '#1055#1072#1088#1090#1085#1077#1088#1099
+<<<<<<< HEAD
+=======
+            ExplicitWidth = 815
+>>>>>>> origin/master
             object cxGridPartner: TcxGrid
               Left = 0
               Top = 0
-              Width = 815
+              Width = 848
               Height = 147
               Align = alClient
               PopupMenu = pmPartner
               TabOrder = 0
+<<<<<<< HEAD
+=======
+              ExplicitWidth = 815
+>>>>>>> origin/master
               object cxGridDBTableViewPartner: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerDS
@@ -688,15 +721,23 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
+<<<<<<< HEAD
+=======
+            ExplicitWidth = 815
+>>>>>>> origin/master
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
-              Width = 815
+              Width = 848
               Height = 147
               Align = alClient
               TabOrder = 0
               LookAndFeel.NativeStyle = True
               LookAndFeel.SkinName = 'UserSkin'
+<<<<<<< HEAD
+=======
+              ExplicitWidth = 815
+>>>>>>> origin/master
               object grtvPartnerList: TcxGridDBTableView
                 Navigator.Buttons.CustomButtons = <>
                 DataController.DataSource = PartnerLisrDS
@@ -789,7 +830,7 @@
           end
         end
         object cxPageControl2: TcxPageControl
-          Left = 824
+          Left = 857
           Top = 1
           Width = 264
           Height = 171
@@ -797,6 +838,10 @@
           TabOrder = 2
           Properties.ActivePage = tsConditionPromo
           Properties.CustomButtons.Buttons = <>
+<<<<<<< HEAD
+=======
+          ExplicitLeft = 824
+>>>>>>> origin/master
           ClientRectBottom = 171
           ClientRectRight = 264
           ClientRectTop = 24
@@ -877,7 +922,7 @@
           end
         end
         object cxPageControl3: TcxPageControl
-          Left = 1096
+          Left = 1129
           Top = 1
           Width = 263
           Height = 171
@@ -885,6 +930,10 @@
           TabOrder = 3
           Properties.ActivePage = tsAdvertising
           Properties.CustomButtons.Buttons = <>
+<<<<<<< HEAD
+=======
+          ExplicitLeft = 1096
+>>>>>>> origin/master
           ClientRectBottom = 171
           ClientRectRight = 263
           ClientRectTop = 24
@@ -966,26 +1015,56 @@
           end
         end
         object cxSplitter3: TcxSplitter
-          Left = 1088
+          Left = 1121
           Top = 1
           Width = 8
           Height = 171
           HotZoneClassName = 'TcxMediaPlayer8Style'
           AlignSplitter = salRight
           Control = cxPageControl3
+<<<<<<< HEAD
+=======
+          ExplicitLeft = 1088
+>>>>>>> origin/master
         end
       end
-      object cxGrid2: TcxGrid
+      object cxSplitter4: TcxSplitter
         Left = 0
-        Top = 365
-        Width = 1360
-        Height = 156
+        Top = 156
+        Width = 1393
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = Panel1
+        ExplicitWidth = 1360
+      end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 337
+        Width = 1393
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGridPromoStateKind
+        ExplicitWidth = 1360
+      end
+      object cxGridPromoStateKind: TcxGrid
+        Left = 0
+        Top = 345
+        Width = 1393
+        Height = 176
         Align = alBottom
         PopupMenu = PopupMenu
+<<<<<<< HEAD
         TabOrder = 2
         object cxGridDBTableView2: TcxGridDBTableView
+=======
+        TabOrder = 4
+        ExplicitWidth = 1360
+        object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
+>>>>>>> origin/master
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = MessageDS
+          DataController.DataSource = PromoStateKindDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
@@ -999,117 +1078,73 @@
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
+<<<<<<< HEAD
           OptionsView.CellAutoHeight = True
+=======
+          OptionsData.Inserting = False
+>>>>>>> origin/master
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object msOrd: TcxGridDBColumn
+          object psOrd: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
             DataBinding.FieldName = 'Ord'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 25
+            Width = 54
           end
-          object msisQuestion: TcxGridDBColumn
-            Caption = #1054#1090#1087#1088'. '#1074#1086#1087#1088#1086#1089
-            DataBinding.FieldName = 'isQuestion'
+          object psisQuickly: TcxGridDBColumn
+            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
+            DataBinding.FieldName = 'isQuickly'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1086#1087#1088#1086#1089
-            Width = 43
+            HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
+            Width = 70
           end
-          object msisAnswer: TcxGridDBColumn
-            Caption = #1054#1090#1087#1088'. '#1086#1090#1074#1077#1090
-            DataBinding.FieldName = 'isAnswer'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1086#1090#1074#1077#1090
-            Width = 42
-          end
-          object msisQuestionRead: TcxGridDBColumn
-            Caption = #1055#1088#1086#1095'. '#1074#1086#1087#1088#1086#1089
-            DataBinding.FieldName = 'isQuestionRead'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1074#1086#1087#1088#1086#1089
-            Width = 43
-          end
-          object msisAnswerRead: TcxGridDBColumn
-            Caption = #1055#1088#1086#1095'. '#1086#1090#1074#1077#1090
-            DataBinding.FieldName = 'isAnswerRead'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1086#1090#1074#1077#1090
-            Width = 42
-          end
-          object msOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1087#1088#1086#1095#1080#1090#1072#1085#1086')'
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 79
-          end
-          object msUserName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1084#1091')'
-            DataBinding.FieldName = 'UserName'
+          object psPromoStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+            DataBinding.FieldName = 'PromoStateKindName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actUserChoice
+                Action = actPromoStateKindChoice
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 114
+            Width = 344
           end
-          object msComment: TcxGridDBColumn
-            Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
+          object psComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 602
+            Width = 316
           end
-          object msInsertName: TcxGridDBColumn
+          object psInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 97
+            Width = 142
           end
-          object msUpdateName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 97
-          end
-          object msUpdateDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'UpdateDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 67
-          end
-          object msInsertDate: TcxGridDBColumn
+          object psInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 168
           end
-          object msIsErased: TcxGridDBColumn
+          object psIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
-            DataBinding.FieldName = 'IsErased'
+            DataBinding.FieldName = 'isErased'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -1117,10 +1152,11 @@
             Width = 294
           end
         end
-        object cxGridLevel3: TcxGridLevel
-          GridView = cxGridDBTableView2
+        object cxGridLevel4: TcxGridLevel
+          GridView = cxGridDBTableViewPromoStateKind
         end
       end
+<<<<<<< HEAD
       object cxSplitter4: TcxSplitter
         Left = 0
         Top = 176
@@ -1139,18 +1175,28 @@
         AlignSplitter = salBottom
         Control = cxGrid2
       end
+=======
+>>>>>>> origin/master
     end
     object cxTabSheetCalc: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 2
+<<<<<<< HEAD
+=======
+      ExplicitWidth = 1360
+>>>>>>> origin/master
       object cxGridCalc: TcxGrid
         Left = 0
         Top = 0
-        Width = 1360
+        Width = 1393
         Height = 521
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+<<<<<<< HEAD
+=======
+        ExplicitWidth = 1360
+>>>>>>> origin/master
         object cxGridDBTableViewCalc: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS
@@ -1409,14 +1455,22 @@
     object cxTabSheetCalc2: TcxTabSheet
       Caption = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103
       ImageIndex = 2
+<<<<<<< HEAD
+=======
+      ExplicitWidth = 1360
+>>>>>>> origin/master
       object cxGridCalc2: TcxGrid
         Left = 0
         Top = 0
-        Width = 1360
+        Width = 1393
         Height = 521
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+<<<<<<< HEAD
+=======
+        ExplicitWidth = 1360
+>>>>>>> origin/master
         object cxGridDBTableViewCalc2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = CalcDS2
@@ -1683,14 +1737,22 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
+<<<<<<< HEAD
+=======
+      ExplicitWidth = 1360
+>>>>>>> origin/master
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
-        Width = 1360
+        Width = 1393
         Height = 521
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+<<<<<<< HEAD
+=======
+        ExplicitWidth = 1360
+>>>>>>> origin/master
         object cxGridDBTableViewSign: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = SignDS
@@ -1776,14 +1838,22 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
+<<<<<<< HEAD
+=======
+      ExplicitWidth = 1360
+>>>>>>> origin/master
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
-        Width = 1360
+        Width = 1393
         Height = 521
         Align = alClient
         TabOrder = 0
         LookAndFeel.NativeStyle = False
+<<<<<<< HEAD
+=======
+        ExplicitWidth = 1360
+>>>>>>> origin/master
         object cxGridDBTableViewPlan: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PlanDS
@@ -2018,19 +2088,29 @@
       end
     end
     object cxTabSheetPromoStateKind: TcxTabSheet
-      Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1072#1082#1094#1080#1080
+      Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
+<<<<<<< HEAD
       object cxGridPromoStateKind: TcxGrid
+=======
+      ExplicitWidth = 1360
+      object cxGrid2: TcxGrid
+>>>>>>> origin/master
         Left = 0
         Top = 0
-        Width = 1360
+        Width = 1393
         Height = 521
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
+<<<<<<< HEAD
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
+=======
+        ExplicitWidth = 1360
+        object cxGridDBTableView2: TcxGridDBTableView
+>>>>>>> origin/master
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = PromoStateKindDS
+          DataController.DataSource = MessageDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
@@ -2044,36 +2124,71 @@
           OptionsCustomize.DataRowSizing = True
           OptionsData.CancelOnExit = False
           OptionsData.DeletingConfirmation = False
+<<<<<<< HEAD
           OptionsData.Inserting = False
           OptionsView.CellAutoHeight = True
+=======
+>>>>>>> origin/master
           OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object psOrd: TcxGridDBColumn
+          object msOrd: TcxGridDBColumn
             Caption = #8470' '#1087'.'#1087'.'
             DataBinding.FieldName = 'Ord'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 54
+            Width = 25
           end
-          object psisQuickly: TcxGridDBColumn
-            Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
-            DataBinding.FieldName = 'isQuickly'
+          object msisQuestion: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088'. '#1074#1086#1087#1088#1086#1089
+            DataBinding.FieldName = 'isQuestion'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1057#1088#1086#1095#1085#1086' ('#1044#1072'/'#1053#1077#1090')'
-            Width = 70
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1074#1086#1087#1088#1086#1089
+            Width = 43
           end
-          object psPromoStateKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
-            DataBinding.FieldName = 'PromoStateKindName'
+          object msisAnswer: TcxGridDBColumn
+            Caption = #1054#1090#1087#1088'. '#1086#1090#1074#1077#1090
+            DataBinding.FieldName = 'isAnswer'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1086#1090#1074#1077#1090
+            Width = 42
+          end
+          object msisQuestionRead: TcxGridDBColumn
+            Caption = #1055#1088#1086#1095'. '#1074#1086#1087#1088#1086#1089
+            DataBinding.FieldName = 'isQuestionRead'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1074#1086#1087#1088#1086#1089
+            Width = 43
+          end
+          object msisAnswerRead: TcxGridDBColumn
+            Caption = #1055#1088#1086#1095'. '#1086#1090#1074#1077#1090
+            DataBinding.FieldName = 'isAnswerRead'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1088#1086#1095#1080#1090#1072#1085' '#1086#1090#1074#1077#1090
+            Width = 42
+          end
+          object msOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1087#1088#1086#1095#1080#1090#1072#1085#1086')'
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object msUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'UserName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = actPromoStateKindChoice
+                Action = actUserChoice
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -2082,30 +2197,46 @@
             HeaderAlignmentVert = vaCenter
             Width = 114
           end
-          object psComment: TcxGridDBColumn
-            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          object msComment: TcxGridDBColumn
+            Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 413
+            Width = 602
           end
-          object psInsertName: TcxGridDBColumn
+          object msInsertName: TcxGridDBColumn
             Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 142
+            Width = 97
           end
-          object psInsertDate: TcxGridDBColumn
+          object msUpdateName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 97
+          end
+          object msUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'UpdateDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 67
+          end
+          object msInsertDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' / '#1074#1088#1077#1084#1103' ('#1089#1086#1079#1076'.)'
             DataBinding.FieldName = 'InsertDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 168
+            Width = 67
           end
-          object psIsErased: TcxGridDBColumn
+          object msIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'IsErased'
             Visible = False
@@ -2115,14 +2246,14 @@
             Width = 294
           end
         end
-        object cxGridLevel4: TcxGridLevel
-          GridView = cxGridDBTableViewPromoStateKind
+        object cxGridLevel3: TcxGridLevel
+          GridView = cxGridDBTableView2
         end
       end
     end
   end
   inherited DataPanel: TPanel
-    Width = 1360
+    Width = 1393
     Height = 113
     TabOrder = 3
     ExplicitWidth = 1360
@@ -2441,6 +2572,17 @@
       TabOrder = 41
       Width = 110
     end
+    object cbPromoStateKind: TcxCheckBox
+      Left = 1287
+      Top = 18
+      Hint = #1057#1088#1086#1095#1085#1086' '#1044#1072'/'#1053#1077#1090
+      Caption = #1057#1088#1086#1095#1085#1086
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 42
+      Width = 66
+    end
   end
   object deMonthPromo: TcxDateEdit [2]
     Left = 918
@@ -2500,28 +2642,7 @@
     Top = 4
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
   end
-  object cePromoStateKind_val: TcxCurrencyEdit [10]
-    Left = 1287
-    Top = 18
-    Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
-    ParentShowHint = False
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    Properties.ReadOnly = True
-    Properties.UseThousandSeparator = True
-    ShowHint = True
-    TabOrder = 15
-    Width = 59
-  end
-  object cxLabel24: TcxLabel [11]
-    Left = 1287
-    Top = 4
-    Hint = #1055#1088#1080#1086#1088#1080#1090#1077#1090' '#1089#1086#1089#1090#1086#1103#1085#1080#1103
-    Caption = #1055#1088#1080#1086#1088#1080#1090#1077#1090
-    ParentShowHint = False
-    ShowHint = True
-  end
-  object cxLabel25: TcxLabel [12]
+  object cxLabel25: TcxLabel [10]
     Left = 1182
     Top = 74
     Hint = #1052#1086#1076#1077#1083#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1086#1081' '#1087#1086#1076#1087#1080#1089#1080
@@ -2529,16 +2650,17 @@
     ParentShowHint = False
     ShowHint = True
   end
-  object edSignInternal: TcxButtonEdit [13]
+  object edSignInternal: TcxButtonEdit [11]
     Left = 1182
     Top = 90
     Properties.Buttons = <
       item
         Default = True
+        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 17
+    TabOrder = 15
     Width = 178
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -2551,9 +2673,8 @@
     Top = 311
     object InsertRecordPromoStateKind: TInsertRecord [0]
       Category = 'PromoStateKind'
-      TabSheet = cxTabSheetPromoStateKind
+      TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPromoStateKind
       Action = actPromoStateKindChoice
@@ -2581,9 +2702,8 @@
     end
     object actMISetErasedPromoStateKind: TdsdUpdateErased [2]
       Category = 'PromoStateKind'
-      TabSheet = cxTabSheetPromoStateKind
+      TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spErasedPromoStateKind
       StoredProcList = <
         item
@@ -2613,9 +2733,8 @@
     end
     object actMISetUnErasedPromoStateKind: TdsdUpdateErased [4]
       Category = 'PromoStateKind'
-      TabSheet = cxTabSheetPromoStateKind
+      TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       StoredProc = spUnErasedPromoStateKind
       StoredProcList = <
         item
@@ -2629,7 +2748,7 @@
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = MasterDS
+      DataSource = PromoStateKindDS
     end
     object mactUpdate_Movement_Promo_Calc: TMultiAction [5]
       Category = 'Update_Promo_Data'
@@ -2814,6 +2933,37 @@
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS
     end
+    object actOpenProtocoPromoStateKind: TdsdOpenForm [16]
+      Category = 'PromoStateKind'
+      TabSheet = tsMain
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = PromoStateKindDCS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = PromoStateKindDCS
+          ComponentItem = 'PromoStateKindName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     inherited actMISetErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
@@ -2828,7 +2978,7 @@
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [17]
+    object actPrint_Calc: TdsdPrintAction [18]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
@@ -2898,7 +3048,7 @@
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [19]
+    object UpdateConditionDS: TdsdUpdateDataSet [20]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2912,11 +3062,10 @@
       Caption = 'actUpdateMainDS'
       DataSource = ConditionPromoDS
     end
-    object actOpenProtocoPromoStateKind: TdsdOpenForm [20]
+    object actOpenProtocoPromoStateKind1: TdsdOpenForm [21]
       Category = 'PromoStateKind'
-      TabSheet = cxTabSheetPromoStateKind
+      TabSheet = tsMain
       MoveParams = <>
-      Enabled = False
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1057#1086#1089#1090#1086#1103#1085#1080#1103'>'
       ImageIndex = 34
@@ -2964,9 +3113,12 @@
         end
         item
           StoredProc = spSelect_MovementItem_PromoCondition
+        end
+        item
+          StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [23]
+    object macInsertUpdate_MI_Param: TMultiAction [24]
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
@@ -2991,7 +3143,7 @@
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [26]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [27]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3038,7 +3190,7 @@
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
-    object actPromoStateKindChoice: TOpenChoiceForm [30]
+    object actPromoStateKindChoice: TOpenChoiceForm [31]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3068,7 +3220,7 @@
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [34]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [35]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3099,7 +3251,7 @@
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [35]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [36]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3130,7 +3282,7 @@
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [36]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -4072,6 +4224,10 @@
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertRecordPromoStateKind'
         end
         item
@@ -4081,6 +4237,10 @@
         item
           Visible = True
           ItemName = 'bbSetUnErasedPromoStateKind'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -4252,7 +4412,7 @@
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = -1
       end>
-    Left = 62
+    Left = 78
     Top = 361
   end
   inherited PopupMenu: TPopupMenu
@@ -4568,10 +4728,10 @@
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PromoStateKind'
+        Name = 'isPromoStateKind'
         Value = Null
-        Component = cePromoStateKind_val
-        DataType = ftFloat
+        Component = cbPromoStateKind
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -4796,14 +4956,6 @@
         Name = 'inPersonalId'
         Value = Null
         Component = GuidesPersonal
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSignInternalId'
-        Value = Null
-        Component = GuidesSignInternal
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -5416,20 +5568,20 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 142
-    Top = 361
+    Left = 134
+    Top = 385
   end
   object ConditionPromoDS: TDataSource
     DataSet = ConditionPromoCDS
-    Left = 784
-    Top = 504
+    Left = 776
+    Top = 552
   end
   object ConditionPromoCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 744
-    Top = 504
+    Left = 720
+    Top = 552
   end
   object spSelect_MovementItem_PromoCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoCondition'
@@ -5577,8 +5729,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 270
-    Top = 385
+    Left = 254
+    Top = 377
   end
   object pmPartner: TPopupMenu
     Images = dmMain.ImageList
@@ -5606,7 +5758,7 @@
   object pmCondition: TPopupMenu
     Images = dmMain.ImageList
     Left = 632
-    Top = 488
+    Top = 448
     object MenuItem7: TMenuItem
       Action = InsertCondition
     end
@@ -5839,8 +5991,8 @@
   end
   object PartnerLisrDS: TDataSource
     DataSet = PartnerListCDS
-    Left = 344
-    Top = 520
+    Left = 336
+    Top = 536
   end
   object spSelect_MovementItem_PromoPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PromoPartner'
@@ -5991,8 +6143,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 1128
-    Top = 271
+    Left = 1272
+    Top = 295
   end
   object spSelectMISign: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Sign'
@@ -6019,8 +6171,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 956
-    Top = 392
+    Left = 1084
+    Top = 552
   end
   object CalcCDS: TClientDataSet
     Aggregates = <>
@@ -6373,8 +6525,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 920
-    Top = 463
+    Left = 16
+    Top = 423
   end
   object MessageDS: TDataSource
     DataSet = MessageDCS
@@ -6557,8 +6709,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 1208
-    Top = 231
+    Left = 272
+    Top = 591
   end
   object spSelectMIPromoStateKind: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Message_PromoStateKind'
@@ -6579,6 +6731,7 @@
       item
         Name = 'inIsErased'
         Value = False
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -6589,7 +6742,11 @@
   end
   object spInsertUpdate_MI_PromoStateKind: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Message_PromoStateKind'
-    DataSets = <>
+    DataSet = PromoStateKindDCS
+    DataSets = <
+      item
+        DataSet = PromoStateKindDCS
+      end>
     OutputType = otResult
     Params = <
       item
@@ -6635,8 +6792,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1192
-    Top = 507
+    Left = 1232
+    Top = 531
   end
   object dsdDBViewAddOnCalc2: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

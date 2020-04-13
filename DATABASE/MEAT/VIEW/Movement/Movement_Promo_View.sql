@@ -38,7 +38,8 @@ CREATE OR REPLACE VIEW Movement_Promo_View AS
       , Object_PromoStateKind.Id                    AS PromoStateKindId        --Состояние акции
       , Object_PromoStateKind.ValueData             AS PromoStateKindName      --Состояние акции
       , COALESCE (MovementFloat_PromoStateKind.ValueData,0) ::TFloat  AS PromoStateKind  -- Приоритет для состояния
-
+      , CASE WHEN COALESCE (MovementFloat_PromoStateKind.ValueData,0) = 1 THEN  TRUE ELSE FALSE END :: Boolean AS isPromoStateKind  -- Приоритет для состояния
+      
       , CASE WHEN MovementBoolean_TaxPromo.ValueData = TRUE  THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo -- 
       , CASE WHEN MovementBoolean_TaxPromo.ValueData = FALSE THEN TRUE ELSE FALSE END :: Boolean AS isTaxPromo_Condition  --
 

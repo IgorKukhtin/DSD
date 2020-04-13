@@ -666,6 +666,8 @@ type
     N231: TMenuItem;
     actHardware: TdsdOpenForm;
     N232: TMenuItem;
+    actReport_Send_RemainsSunOut_expressV2: TdsdOpenForm;
+    miReport_Send_RemainsSunOut_expressV2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

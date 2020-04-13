@@ -1,33 +1,33 @@
-inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expressForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1088#1072#1089#1093#1086#1076#1099')'
-  ClientHeight = 561
-  ClientWidth = 960
+inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_express_v2Form
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1088#1072#1089#1093#1086#1076#1099') V2'
+  ClientHeight = 673
+  ClientWidth = 848
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 976
-  ExplicitHeight = 599
+  ExplicitWidth = 864
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 960
-    Height = 502
+    Width = 848
+    Height = 614
     TabOrder = 2
     ExplicitTop = 59
-    ExplicitWidth = 960
-    ExplicitHeight = 502
-    ClientRectBottom = 502
-    ClientRectRight = 960
+    ExplicitWidth = 848
+    ExplicitHeight = 614
+    ClientRectBottom = 614
+    ClientRectRight = 848
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 960
-      ExplicitHeight = 502
+      ExplicitWidth = 848
+      ExplicitHeight = 614
       inherited cxGrid: TcxGrid
-        Top = 351
-        Width = 960
-        Height = 151
+        Top = 252
+        Width = 848
+        Height = 180
         Align = alBottom
-        ExplicitTop = 351
-        ExplicitWidth = 960
-        ExplicitHeight = 151
+        ExplicitTop = 252
+        ExplicitWidth = 848
+        ExplicitHeight = 180
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -231,56 +231,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00;-,0.00; ;'
-              Kind = skSum
-            end
-            item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -325,19 +277,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Summ_min
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Summ_max
             end
             item
@@ -358,36 +297,12 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = Amount_res
             end
             item
               Format = ',0.####'
               Kind = skSum
               Column = Summ_res
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -402,14 +317,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSend_out
             end
             item
@@ -420,23 +327,12 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountRemains_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Summ_min
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -752,17 +648,17 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           end
         end
       end
-      object cxGrid1: TcxGrid
+      object cxGrid2: TcxGrid
         Left = 0
-        Top = 0
-        Width = 960
-        Height = 343
-        Align = alClient
+        Top = 440
+        Width = 848
+        Height = 174
+        Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        object cxGridDBTableViewPartion: TcxGridDBTableView
+        object cxGridDBTableViewResult_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = PartionDS
+          DataController.DataSource = Result_childDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -772,7 +668,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chSumm_res
             end
             item
               Format = ',0.####'
@@ -781,7 +676,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmount_res
             end
             item
               Format = ',0.00'
@@ -854,81 +748,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountIncome
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSumm_sale
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc_all
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmount_sale
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountSun_summ
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountReserve
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountSend_in
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountSend_out
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountOrderExternal
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc
+              Column = ch2Amount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -938,7 +758,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chSumm_res
             end
             item
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
@@ -955,7 +774,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmount_res
             end
             item
               Format = ',0.00'
@@ -1024,26 +842,78 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountIncome
+              Column = ch2Amount
             end
             item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSumm_sale
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc_all
-            end
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = ch2FromName
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object ch2FromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object ch2ToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 200
+          end
+          object ch2Amount: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1077#1079#1091#1083#1100#1090#1072#1090' - '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
+            Options.Editing = False
+            Width = 99
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableViewResult_child
+        end
+      end
+      object cxGrid1: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 848
+        Height = 244
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 2
+        object cxGridDBTableViewPartion: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = PartionDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
@@ -1052,16 +922,23 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmount_sale
+              Column = chAmountReserve
             end
             item
               Format = ',0.####'
               Kind = skSum
+              Column = chAmountSend_in
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountSun_summ
+              Column = chAmountSend_out
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountRemains
             end
             item
               Format = ',0.####'
@@ -1082,28 +959,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
               Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
               Kind = skCount
               Column = chFromName
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountOrderExternal
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1359,10 +1214,19 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           GridView = cxGridDBTableViewPartion
         end
       end
+      object cxSplitter2: TcxSplitter
+        Left = 0
+        Top = 432
+        Width = 848
+        Height = 8
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salBottom
+        Control = cxGrid2
+      end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 343
-        Width = 960
+        Top = 244
+        Width = 848
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -1371,45 +1235,42 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     end
   end
   inherited Panel: TPanel
-    Width = 960
+    Width = 848
     Height = 33
     TabOrder = 4
-    ExplicitWidth = 960
+    ExplicitWidth = 848
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
       EditValue = 43466d
-      Properties.Kind = ckDateTime
       ExplicitLeft = 29
-      ExplicitWidth = 132
-      Width = 132
     end
     inherited deEnd: TcxDateEdit
-      Left = 404
-      EditValue = 43831d
+      Left = 173
+      EditValue = 43466d
       TabOrder = 2
       Visible = False
-      ExplicitLeft = 404
+      ExplicitLeft = 173
     end
     inherited cxLabel1: TcxLabel
       Caption = #1057':'
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 378
+      Left = 149
       Caption = #1087#1086':'
       Visible = False
-      ExplicitLeft = 378
+      ExplicitLeft = 149
       ExplicitWidth = 20
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 91
-    Top = 232
+    Left = 83
+    Top = 280
   end
   inherited ActionList: TActionList
-    Left = 103
-    Top = 287
+    Left = 143
+    Top = 335
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1443,8 +1304,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_RemainsSun_expressDialogForm'
-      FormNameParam.Value = 'TReport_Send_RemainsSun_expressDialogForm'
+      FormName = 'TReport_Movement_Send_RemainsSunDialogForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSunDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1836,8 +1697,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 280
+    Left = 248
+    Top = 160
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -1968,8 +1829,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Left = 400
-    Top = 232
+    Left = 416
+    Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     Left = 440
@@ -2002,8 +1863,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 472
-    Top = 24
+    Left = 456
+    Top = 32
   end
   object DBViewAddOn_Partion: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2012,7 +1873,136 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
+    ColorRuleList = <
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UnitName_str
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_sale
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MCS
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UnitName
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsCode
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountRemains
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountResult_summ
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountResult
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Price
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_sale
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountIncome
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountOrderExternal
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountReserve
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountSend_in
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_min
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_max
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Unit_count
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_max_1
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountSun_summ
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_min_1
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end>
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
@@ -2031,8 +2021,163 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     Left = 552
     Top = 168
   end
+  object DBViewAddOn_Result_child: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewResult_child
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UnitName_str
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Amount_sale
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MCS
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = UnitName
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsCode
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = GoodsName
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountRemains
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountResult_summ
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountResult
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Price
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_sale
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountIncome
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountOrderExternal
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountReserve
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountSend_in
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_min
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_max
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Unit_count
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_max_1
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = AmountSun_summ
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = Summ_min_1
+        ValueColumn = Unit_count_1
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 208
+    Top = 528
+  end
+  object Result_childCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 320
+    Top = 560
+  end
+  object Result_childDS: TDataSource
+    DataSet = Result_childCDS
+    Left = 432
+    Top = 552
+  end
   object spSendSUN: TdsdStoredProc
-    StoredProcName = 'gpInsert_Movement_Send_RemainsSun_express'
+    StoredProcName = 'gpInsert_Movement_Send_RemainsSun'
     DataSets = <
       item
       end>
@@ -2047,7 +2192,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 752
-    Top = 192
+    Left = 680
+    Top = 176
   end
 end

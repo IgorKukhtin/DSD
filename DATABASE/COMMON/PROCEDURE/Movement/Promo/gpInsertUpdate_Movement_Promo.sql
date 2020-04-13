@@ -4,12 +4,14 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateT
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
-                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
-                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
+
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
                                                      , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
                                                      , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Promo (Integer, TVarChar, TDateTime, Integer, Integer
+                                                     , TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime
+                                                     , Boolean, Boolean, TFloat, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -34,7 +36,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Promo(
     IN inUnitId                Integer    , -- Подразделение
     IN inPersonalTradeId       Integer    , -- Ответственный представитель коммерческого отдела
     IN inPersonalId            Integer    , -- Ответственный представитель маркетингового отдела
-    IN inSignInternalId        Integer    , -- модель подписи	
+    --IN inSignInternalId        Integer    , -- модель подписи
     IN inSession               TVarChar     -- сессия пользователя
 )
 RETURNS Integer
@@ -69,7 +71,7 @@ BEGIN
                                         , inUnitId         := inUnitId          --Подразделение
                                         , inPersonalTradeId:= inPersonalTradeId --Ответственный представитель коммерческого отдела
                                         , inPersonalId     := inPersonalId      --Ответственный представитель маркетингового отдела
-                                        , inSignInternalId := inSignInternalId  -- модель подписи
+                                        --, inSignInternalId := inSignInternalId  -- модель подписи
                                         , inUserId         := vbUserId
                                         );
 
@@ -81,7 +83,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
- 09.04.20         * inSignInternalId
+-- 09.04.20         * inSignInternalId
  01.08.17         * add inCheckDate
  27.07.17         *
  31.10.15                                                                    *
