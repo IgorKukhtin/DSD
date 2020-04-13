@@ -1242,9 +1242,13 @@ CREATE OR REPLACE FUNCTION zc_Object_SeasonalityCoefficient() RETURNS Integer AS
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SeasonalityCoefficient', 'Коэффициента сезонности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SeasonalityCoefficient');
  
- CREATE OR REPLACE FUNCTION zc_Object_SunExclusion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_SunExclusion() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_SunExclusion', 'Исключения для СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_SunExclusion');
+   
+CREATE OR REPLACE FUNCTION zc_Object_Hardware() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Hardware'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Hardware', 'Аппаратная часть' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Hardware');
    
 
 
@@ -1264,6 +1268,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 12.04.20                                                                                        * zc_Object_Hardware
  06.04.20         * zc_Object_SunExclusion
  05.04.20                                                                                        * zc_Object_SeasonalityCoefficient
  31.03.20         * zc_Object_PromoStateKind

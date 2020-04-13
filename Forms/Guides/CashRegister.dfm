@@ -108,6 +108,14 @@ inherited CashRegisterForm: TCashRegisterForm
             Options.Editing = False
             Width = 72
           end
+          object ComputerName: TcxGridDBColumn
+            Caption = #1048#1084#1103' '#1082#1086#1084#1087#1102#1090#1077#1088#1072
+            DataBinding.FieldName = 'ComputerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 94
+          end
           object BaseBoardProduct: TcxGridDBColumn
             Caption = #1052#1072#1090#1077#1088#1080#1085#1089#1082#1072#1103' '#1087#1083#1072#1090#1072' '
             DataBinding.FieldName = 'BaseBoardProduct'

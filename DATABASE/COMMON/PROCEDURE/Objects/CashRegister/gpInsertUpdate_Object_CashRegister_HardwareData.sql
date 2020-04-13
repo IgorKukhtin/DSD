@@ -1,8 +1,10 @@
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(
     IN inSerial                  TVarChar,      -- Серийный номер аппарата
     IN inTaxRate                 TVarChar,      -- Налоговые ставки
+    IN inComputerName            TVarChar,      -- Имя компютера
     IN inBaseBoardProduct        TVarChar,      -- Материнская плата
     IN inProcessorName           TVarChar,      -- Процессор
     IN inDiskDriveModel          TVarChar,      -- Жесткий Диск
@@ -39,6 +41,50 @@ BEGIN
     AND
     ValueData = inSerial;
 
+  IF COALESCE(vbId, 0) <> 0 AND
+     EXISTS(SELECT
+                   ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
+                 , ObjectString_ProcessorName.ValueData                      AS ProcessorName
+                 , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
+                 , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
+
+             FROM Object AS Object_CashRegister
+                  
+                  LEFT JOIN ObjectString AS ObjectString_TaxRate 
+                                         ON ObjectString_TaxRate.ObjectId = Object_CashRegister.Id
+                                        AND ObjectString_TaxRate.DescId = zc_ObjectString_CashRegister_TaxRate()
+
+                  LEFT JOIN ObjectString AS ObjectString_ComputerName
+                                         ON ObjectString_ComputerName.ObjectId = Object_CashRegister.Id
+                                        AND ObjectString_ComputerName.DescId = zc_ObjectString_CashRegister_ComputerName()
+                  LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
+                                         ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
+                                        AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()
+                  LEFT JOIN ObjectString AS ObjectString_ProcessorName 
+                                         ON ObjectString_ProcessorName.ObjectId = Object_CashRegister.Id
+                                        AND ObjectString_ProcessorName.DescId = zc_ObjectString_CashRegister_ProcessorName()
+                  LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
+                                         ON ObjectString_DiskDriveModel.ObjectId = Object_CashRegister.Id
+                                        AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_CashRegister_DiskDriveModel()
+
+                  LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
+                                        ON ObjectString_PhysicalMemory.ObjectId = Object_CashRegister.Id
+                                       AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_CashRegister_PhysicalMemory()
+                                       
+             WHERE Object_CashRegister.Id = vbId 
+               AND ((COALESCE(ObjectString_TaxRate.ValueData, '') <> COALESCE(inTaxRate, '')) OR
+                    (COALESCE(ObjectString_ComputerName.ValueData, '') <> COALESCE(inComputerName, '')) OR
+                    (COALESCE(ObjectString_ProcessorName.ValueData, '') <> COALESCE(inProcessorName, '')) OR
+                    (COALESCE(ObjectString_DiskDriveModel.ValueData , '') <> COALESCE(inDiskDriveModel, '')) OR
+                    (COALESCE(ObjectString_PhysicalMemory.ValueData , '') <> COALESCE(inPhysicalMemory, ''))))
+  THEN
+    -- сохранили свойство <>
+    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashRegister_GetHardwareData(), vbId, False);
+    
+    RETURN;
+  END IF;
+
+
   IF COALESCE(vbId, 0) = 0 THEN
     vbId := gpInsertUpdate_Object_CashRegister(0,0,inSerial,vbCashRegisterKindId,CURRENT_DATE,CURRENT_DATE,False,inSession);
   END IF;
@@ -46,6 +92,8 @@ BEGIN
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_TaxRate(), vbId, inTaxRate);
 
+  -- сохранили свойство <>
+  PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_ComputerName(), vbId, inComputerName);
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_BaseBoardProduct(), vbId, inBaseBoardProduct);
   -- сохранили свойство <>
@@ -67,7 +115,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -77,4 +125,4 @@ ALTER FUNCTION gpInsertUpdate_Object_CashRegister_HardwareData(TVarChar, TVarCha
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_CashRegister_HardwareData ('148', '', '', '', '', 0, '3')
+-- SELECT * FROM gpInsertUpdate_Object_CashRegister_HardwareData ('3000061890', '', '', '', '', '', '', '3')

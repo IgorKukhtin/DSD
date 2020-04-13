@@ -1068,6 +1068,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_DriverSun_Phone() RETURNS Integer AS 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_DriverSun_Phone', zc_Object_DriverSun(), 'Телефон' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DriverSun_Phone');
  
+CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_ComputerName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_ComputerName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_CashRegister_ComputerName', zc_Object_CashRegister(), 'Имя компютера' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_ComputerName');
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_BaseBoardProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_BaseBoardProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1089,9 +1092,28 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_CashRegister_PhysicalMemory() RETURNS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_CashRegister_PhysicalMemory', zc_Object_CashRegister(), 'Оперативная память' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_CashRegister_PhysicalMemory');
  
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_BaseBoardProduct() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_BaseBoardProduct'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Hardware_BaseBoardProduct', zc_Object_Hardware(), 'Материнская плата' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_BaseBoardProduct');
+ 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_ProcessorName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_ProcessorName'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Hardware_ProcessorName', zc_Object_Hardware(), 'Процессор' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_ProcessorName');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_DiskDriveModel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_DiskDriveModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Hardware_DiskDriveModel', zc_Object_Hardware(), 'Жесткий Диск' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_DiskDriveModel');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_PhysicalMemory() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_PhysicalMemory'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Hardware_PhysicalMemory', zc_Object_Hardware(), 'Оперативная память' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_PhysicalMemory');
+   
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 12.03.20                                                                                                         * zc_ObjectString_Hardware_ ...
  08.03.20                                                                                                         * zc_ObjectString_CashRegister_ ...
  05.03.20                                                                                                         * zc_ObjectString_DriverSun_Phone
  25.02.20                                                                                                         * zc_ObjectString_User_Helsi_PasswordEHels

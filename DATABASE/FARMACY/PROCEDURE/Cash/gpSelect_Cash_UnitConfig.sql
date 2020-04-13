@@ -166,6 +166,7 @@ BEGIN
                                   , Object_CashSettings.ValueData              AS Name
                                   , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
                                   , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
+                                  , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
                              FROM Object AS Object_CashSettings
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                                          ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id
@@ -173,6 +174,9 @@ BEGIN
                                   LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceCode
                                                          ON ObjectString_CashSettings_ShareFromPriceCode.ObjectId = Object_CashSettings.Id
                                                         AND ObjectString_CashSettings_ShareFromPriceCode.DescId = zc_ObjectString_CashSettings_ShareFromPriceCode()
+                                  LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_GetHardwareData
+                                                          ON ObjectBoolean_CashSettings_GetHardwareData.ObjectId = Object_CashSettings.Id 
+                                                         AND ObjectBoolean_CashSettings_GetHardwareData.DescId = zc_ObjectBoolean_CashSettings_GetHardwareData()
                              WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
                              LIMIT 1)
        , tmpPromoCodeDoctor AS (SELECT PromoUnit.ID
@@ -241,7 +245,8 @@ BEGIN
        , Object_PartnerMedical.ValueData                   AS PartnerMedicalName
        , COALESCE(tmpPromoCodeDoctor.ID, 0) <> 0           AS isPromoCodeDoctor
        , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
-       , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)                  AS isGetHardwareData
+       , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False) OR
+         COALESCE(tmpCashSettings.isGetHardwareData, False)                        AS isGetHardwareData
 
    FROM Object AS Object_Unit
 

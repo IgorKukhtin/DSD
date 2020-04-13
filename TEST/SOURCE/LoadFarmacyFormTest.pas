@@ -59,6 +59,7 @@ type
     procedure LoadGoodsCategoryFormTest;
     procedure LoadGoodsSPMovementFormTest;
     procedure LoadGoodsRepriceFormTest;
+    procedure LoadHardwareFormTest;
     procedure LoadImportSettingsFormTest;
     procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
@@ -1537,12 +1538,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TImportGroupEditForm');
 end;
 
- procedure TLoadFormTest.LoadGoodsRepriceFormTest;
+procedure TLoadFormTest.LoadGoodsRepriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRepriceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsRepriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRepriceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsRepriceEditForm');
+end;
+
+procedure TLoadFormTest.LoadHardwareFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('THardwareForm'));
+  TdsdFormStorageFactory.GetStorage.Load('THardwareForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('THardwareEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('THardwareEditForm');
 end;
 
 procedure TLoadFormTest.LoadTaxUnitFormTest;
@@ -2424,22 +2433,19 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
-    TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
-     exit;
-
-
-     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashSettingsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TCashSettingsEditForm');
   Exit;
 
+       {
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCheck_CashRegisterForm');
-  Exit;
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('THelsiUserForm'));
+    TdsdFormStorageFactory.GetStorage.Load('THelsiUserForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TLog_CashRemainsForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TLog_CashRemainsForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TCheck_CashRegisterForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TCheck_CashRegisterForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TFormsForm');

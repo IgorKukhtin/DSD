@@ -33,6 +33,7 @@ type
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
     TaxRate: TcxGridDBColumn;
+    ComputerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

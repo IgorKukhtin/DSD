@@ -3705,6 +3705,11 @@ inherited MainCashForm2: TMainCashForm2
         end>
       isShowModal = True
     end
+    object actSaveHardwareData: TAction
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' '
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' '
+      OnExecute = actSaveHardwareDataExecute
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -3919,6 +3924,9 @@ inherited MainCashForm2: TMainCashForm2
       end
       object N33: TMenuItem
         Caption = '-'
+      end
+      object N40: TMenuItem
+        Action = actSaveHardwareData
       end
       object N34: TMenuItem
         Action = actInventoryEveryMonth
@@ -4337,6 +4345,12 @@ inherited MainCashForm2: TMainCashForm2
         Name = 'LoyaltySMText'
         Value = Null
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Price1303'
+        Value = Null
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 32
@@ -5826,6 +5840,18 @@ inherited MainCashForm2: TMainCashForm2
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSentence'
+        Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outPrice'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 785
@@ -5845,7 +5871,7 @@ inherited MainCashForm2: TMainCashForm2
     Left = 785
     Top = 485
   end
-  object spUpdateHardwareData: TdsdStoredProc
+  object spUpdateHardwareDataCash: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_CashRegister_HardwareData'
     DataSet = PUSHDS
     DataSets = <
@@ -5863,6 +5889,13 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inTaxRate'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComputerName'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -5897,7 +5930,55 @@ inherited MainCashForm2: TMainCashForm2
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 688
-    Top = 104
+    Left = 608
+    Top = 96
+  end
+  object spUpdateHardwareData: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Hardware_HardwareData'
+    DataSet = PUSHDS
+    DataSets = <
+      item
+        DataSet = PUSHDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inComputerName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBaseBoardProduct'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProcessorName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDiskDriveModel'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPhysicalMemory'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 608
+    Top = 144
   end
 end

@@ -147,6 +147,11 @@ BEGIN
           END IF;
         END IF;
 
+        IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
+        THEN
+          RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
+        END IF;
+
 /*        IF EXISTS(SELECT 1 FROM MovementBoolean
                   WHERE MovementBoolean.MovementId = inMovementId
                     AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()

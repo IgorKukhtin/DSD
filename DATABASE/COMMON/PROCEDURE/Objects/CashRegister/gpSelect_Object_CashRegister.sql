@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SerialNumber TVarChar
              , TimePUSHFinal1 TDateTime, TimePUSHFinal2 TDateTime
              , UnitName TVarChar, TaxRate TVarChar
-             , GetHardwareData Boolean, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
+             , GetHardwareData Boolean, ComputerName TVarChar, BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -59,6 +59,7 @@ $BODY$BEGIN
         , ObjectString_TaxRate.ValueData         AS TaxRate
         
         , COALESCE(ObjectBoolean_GetHardwareData.ValueData, False)  AS GetHardwareData
+        , ObjectString_ComputerName.ValueData                       AS ComputerName
         , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
         , ObjectString_ProcessorName.ValueData                      AS ProcessorName
         , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
@@ -92,6 +93,9 @@ $BODY$BEGIN
                                 ON ObjectBoolean_GetHardwareData.ObjectId = Object_CashRegister.Id
                                AND ObjectBoolean_GetHardwareData.DescId = zc_ObjectBoolean_CashRegister_GetHardwareData()
 
+        LEFT JOIN ObjectString AS ObjectString_ComputerName
+                               ON ObjectString_ComputerName.ObjectId = Object_CashRegister.Id
+                              AND ObjectString_ComputerName.DescId = zc_ObjectString_CashRegister_ComputerName()
         LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
                                ON ObjectString_BaseBoardProduct.ObjectId = Object_CashRegister.Id
                               AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_CashRegister_BaseBoardProduct()
