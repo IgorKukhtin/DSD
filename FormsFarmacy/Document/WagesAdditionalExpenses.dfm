@@ -148,7 +148,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             end
             item
               Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080' (1-2 '#1084#1072#1103' '#1091#1078#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1055#1057')'
-              Width = 316
+              Width = 350
             end
             item
             end>
@@ -263,6 +263,16 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Position.ColIndex = 2
             Position.RowIndex = 0
           end
+          object SummaFullChargeFact: TcxGridDBBandedColumn
+            Caption = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090
+            DataBinding.FieldName = 'SummaFullChargeFact'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 76
+            Position.BandIndex = 2
+            Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
           object SummaMoneyBoxUsed: TcxGridDBBandedColumn
             Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1086' '#1080#1079' '#1082#1086#1087#1080#1083#1082#1080
             DataBinding.FieldName = 'SummaMoneyBoxUsed'
@@ -272,7 +282,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             HeaderAlignmentVert = vaCenter
             Width = 76
             Position.BandIndex = 2
-            Position.ColIndex = 3
+            Position.ColIndex = 4
             Position.RowIndex = 0
           end
           object SummaTotal: TcxGridDBBandedColumn
@@ -317,6 +327,12 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Width = 227
             Position.BandIndex = 3
             Position.ColIndex = 3
+            Position.RowIndex = 0
+          end
+          object Color_Calc: TcxGridDBBandedColumn
+            DataBinding.FieldName = 'Color_Calc'
+            Position.BandIndex = 0
+            Position.ColIndex = 1
             Position.RowIndex = 0
           end
         end
@@ -468,6 +484,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         end>
       isShowModal = False
     end
+    object actClearSummaFullChargeFact: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spClearSummaFullChargeFact
+      StoredProcList = <
+        item
+          StoredProc = spClearSummaFullChargeFact
+        end>
+      Caption = #1054#1095#1080#1089#1090#1082#1072' "'#1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090'"'
+      Hint = #1054#1095#1080#1089#1090#1082#1072' "'#1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090'"'
+      ImageIndex = 77
+      QuestionBeforeExecute = #1054#1095#1080#1089#1090#1082#1072' '#1074#1074#1077#1076#1077#1085#1085#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' "'#1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited MasterDS: TDataSource
     Top = 224
@@ -550,6 +582,10 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton13'
         end
         item
           Visible = True
@@ -665,9 +701,19 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       Action = actWagesTechnicalRediscount
       Category = 0
     end
+    object dxBarButton13: TdxBarButton
+      Action = actClearSummaFullChargeFact
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
+    ColorRuleList = <
+      item
+        ColorColumn = SummaFullChargeFact
+        BackGroundValueColumn = Color_Calc
+        ColorValueList = <>
+      end>
     SummaryItemList = <
       item
         Param.Value = Null
@@ -678,7 +724,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         DataSummaryItemIndex = 20
       end>
     SearchAsFilter = False
-    Left = 334
+    Left = 358
     Top = 241
   end
   inherited FormParams: TdsdFormParams
@@ -979,6 +1025,15 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inSummaFullChargeFact'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaFullChargeFact'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisIssuedBy'
         Value = Null
         Component = MasterCDS
@@ -1035,5 +1090,22 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     NeedResetData = True
     Left = 704
     Top = 368
+  end
+  object spClearSummaFullChargeFact: TdsdStoredProc
+    StoredProcName = 'gpDelete_MovementItem_SummaFullChargeFact'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 550
+    Top = 352
   end
 end
