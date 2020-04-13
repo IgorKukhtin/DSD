@@ -304,8 +304,6 @@ type
     edPromoStateKind: TcxButtonEdit;
     cxLabel23: TcxLabel;
     GuidesPromoStateKind: TdsdGuides;
-    cePromoStateKind_val: TcxCurrencyEdit;
-    cxLabel24: TcxLabel;
     PromoStateKindDS: TDataSource;
     PromoStateKindDCS: TClientDataSet;
     dsdDBViewAddOnPromoStateKind: TdsdDBViewAddOn;
@@ -395,6 +393,7 @@ type
     msIsErased: TcxGridDBColumn;
     cxGridLevel3: TcxGridLevel;
     actOpenProtocoPromoStateKind: TdsdOpenForm;
+    cbPromoStateKind: TcxCheckBox;
   private
     { Private declarations }
   public
