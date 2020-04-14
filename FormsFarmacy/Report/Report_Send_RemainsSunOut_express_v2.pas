@@ -33,7 +33,7 @@ type
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
+    actRefreshSend: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
@@ -57,8 +57,8 @@ type
     Result_childDS: TDataSource;
     cxSplitter2: TcxSplitter;
     cxSplitter1: TcxSplitter;
-    spSendSUN: TdsdStoredProc;
-    actSendSUN: TdsdExecStoredProc;
+    spSendSUN_express2: TdsdStoredProc;
+    actSendSUN_ex2: TdsdExecStoredProc;
     macSendSUN: TMultiAction;
     bbSendSUN: TdxBarButton;
     Amount_res: TcxGridDBColumn;
@@ -79,6 +79,11 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
+    spSelectSend: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
+    macSendSUN_List: TMultiAction;
   private
     { Private declarations }
   public

@@ -1,9 +1,11 @@
 -- Function: gpReport_Send_RemainsSun_express_v2()
 
 DROP FUNCTION IF EXISTS gpReport_Send_RemainsSun_express_v2 (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_RemainsSun_express_v2 (TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_RemainsSun_express_v2(
     IN inOperDate      TDateTime,
+    IN inGoodsId       Integer,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -16,7 +18,6 @@ $BODY$
 
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
-  DECLARE Cursor3 refcursor;
 
 BEGIN
     -- проверка прав пользователя на вызов процедуры
@@ -163,6 +164,7 @@ BEGIN
                                                         , inStep     := 1
                                                         , inUserId   := vbUserId
                                                          ) AS tmp
+          WHERE COALESCE (tmp.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0
          ;
      -- !!!1 - перенесли данные
      INSERT INTO _tmpUnit_SUN_a SELECT * FROM _tmpUnit_SUN;
@@ -230,6 +232,8 @@ BEGIN
                , _tmpRemains.AmountResult_in * _tmpRemains.Price AS Summ_res
           FROM _tmpRemains_all AS _tmpRemains
               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id  = _tmpRemains.UnitId
+          WHERE COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0
+            AND _tmpRemains.AmountResult_in <> 0
          ;
      RETURN NEXT Cursor1;
 
@@ -246,7 +250,8 @@ BEGIN
              --, tmp.UnitId_to
              --, tmp.UnitId_from
              --, tmp.GoodsId
-                Object_UnitFrom.ValueData AS FromName
+                 Object_UnitFrom.Id        AS UnitId_from
+               , Object_UnitFrom.ValueData AS FromName
                , _tmpRemains.GoodsId
                , Object_Goods.ObjectCode   AS GoodsCode
                , Object_Goods.ValueData    AS GoodsName
@@ -296,41 +301,10 @@ BEGIN
                                      AND tmp_sum.GoodsId = _tmpRemains.GoodsId
                
           WHERE _tmpRemains.AmountResult_out <> 0
+          AND (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
                
            ;
      RETURN NEXT Cursor2;
-     
-     OPEN Cursor3 FOR
-      SELECT MovementLinkObject_From.ObjectId AS UnitId_from
-           , Object_To.Id                     AS UnitId_to
-           , Object_To.ValueData              AS ToName
-           , MovementItem.ObjectId            AS GoodsId
-           , MovementItem.Amount              AS Amount
-      FROM Movement AS Movement_Send
-            INNER JOIN MovementBoolean AS MovementBoolean_SUN_v3
-                                       ON MovementBoolean_SUN_v3.MovementId = Movement_Send.Id
-                                      AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
-                                      AND MovementBoolean_SUN_v3.ValueData = TRUE
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement_Send.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement_Send.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
-            INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Send.Id
-                                   AND MovementItem.DescId     = zc_MI_Master()
-                                   AND MovementItem.isErased   = FALSE
-
-      WHERE Movement_Send.DescId = zc_Movement_Send()
-        AND Movement_Send.StatusId <> zc_Enum_Status_Erased()
-        AND Movement_Send.OperDate = inOperDate
-      ;
-
-     RETURN NEXT Cursor3;
      
 END;
 $BODY$

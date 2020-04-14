@@ -1,32 +1,32 @@
 inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_express_v2Form
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1088#1072#1089#1093#1086#1076#1099') V2'
   ClientHeight = 673
-  ClientWidth = 784
+  ClientWidth = 782
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 800
+  ExplicitWidth = 798
   ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 784
+    Width = 782
     Height = 614
     TabOrder = 2
     ExplicitTop = 59
-    ExplicitWidth = 848
+    ExplicitWidth = 784
     ExplicitHeight = 614
     ClientRectBottom = 614
-    ClientRectRight = 784
+    ClientRectRight = 782
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 848
+      ExplicitWidth = 784
       ExplicitHeight = 614
       inherited cxGrid: TcxGrid
         Top = 252
-        Width = 784
+        Width = 782
         Height = 180
         Align = alBottom
         ExplicitTop = 252
-        ExplicitWidth = 848
+        ExplicitWidth = 784
         ExplicitHeight = 180
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -486,12 +486,12 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       object cxGrid2: TcxGrid
         Left = 0
         Top = 440
-        Width = 784
+        Width = 782
         Height = 174
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 848
+        ExplicitWidth = 784
         object cxGridDBTableViewResult_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = Result_childDS
@@ -705,7 +705,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object ch2FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+            DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -740,12 +740,12 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       object cxGrid1: TcxGrid
         Left = 0
         Top = 0
-        Width = 784
+        Width = 782
         Height = 244
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 848
+        ExplicitWidth = 784
         object cxGridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -1024,30 +1024,30 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       object cxSplitter2: TcxSplitter
         Left = 0
         Top = 432
-        Width = 784
+        Width = 782
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitWidth = 848
+        ExplicitWidth = 784
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 244
-        Width = 784
+        Width = 782
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid
-        ExplicitWidth = 848
+        ExplicitWidth = 784
       end
     end
   end
   inherited Panel: TPanel
-    Width = 784
+    Width = 782
     Height = 33
     TabOrder = 4
-    ExplicitWidth = 848
+    ExplicitWidth = 784
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
@@ -1058,22 +1058,38 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       Width = 140
     end
     inherited deEnd: TcxDateEdit
-      Left = 317
+      Left = 699
       EditValue = 43466d
       TabOrder = 2
       Visible = False
-      ExplicitLeft = 317
+      ExplicitLeft = 699
     end
     inherited cxLabel1: TcxLabel
       Caption = #1057':'
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 293
+      Left = 675
       Caption = #1087#1086':'
       Visible = False
-      ExplicitLeft = 293
+      ExplicitLeft = 675
       ExplicitWidth = 20
+    end
+    object cxLabel3: TcxLabel
+      Left = 186
+      Top = 6
+      Caption = #1058#1086#1074#1072#1088': '
+    end
+    object edGoods: TcxButtonEdit
+      Left = 233
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 312
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1083,6 +1099,15 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
   inherited ActionList: TActionList
     Left = 143
     Top = 335
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectSend
+        end>
+    end
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1094,20 +1119,16 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         end>
       Caption = 'actGet_UserUnit'
     end
-    object actRefreshStart: TdsdDataSetRefresh
+    object actRefreshSend: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spSelectSend
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
-        end
-        item
-          StoredProc = spSelect
+          StoredProc = spSelectSend
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -1116,8 +1137,8 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_RemainsSun_expressDialogForm'
-      FormNameParam.Value = 'TReport_Send_RemainsSun_expressDialogForm'
+      FormName = 'TReport_Send_RemainsSun_expressV2DialogForm'
+      FormNameParam.Value = 'TReport_Send_RemainsSun_expressV2DialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1126,6 +1147,23 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
           Value = 42370d
           Component = deStart
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = GuidesGoods
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -1146,16 +1184,16 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actSendSUN: TdsdExecStoredProc
+    object actSendSUN_ex2: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spSendSUN
+      StoredProc = spSendSUN_express2
       StoredProcList = <
         item
-          StoredProc = spSendSUN
+          StoredProc = spSendSUN_express2
         end>
-      Caption = 'actSendSUN'
+      Caption = 'actSendSUN_ex2'
       ImageIndex = 41
     end
     object macSendSUN: TMultiAction
@@ -1163,7 +1201,10 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       MoveParams = <>
       ActionList = <
         item
-          Action = actSendSUN
+          Action = macSendSUN_List
+        end
+        item
+          Action = actRefreshSend
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086'  '#1069'-'#1057#1059#1053'>? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086'  '#1069'-'#1057#1059#1053'> '#1089#1086#1079#1076#1072#1085#1099
@@ -1477,6 +1518,16 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         end>
       isShowModal = False
     end
+    object macSendSUN_List: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSendSUN_ex2
+        end>
+      View = cxGridDBTableView
+      Caption = 'macSendSUN_List'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 120
@@ -1498,9 +1549,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       end
       item
         DataSet = PartionCDS
-      end
-      item
-        DataSet = Result_childCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1509,6 +1557,14 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         Value = 41395d
         Component = deStart
         DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1648,8 +1704,15 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Top = 184
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 440
-    Top = 304
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GuidesGoods
+      end>
+    Left = 480
+    Top = 320
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -1725,8 +1788,8 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UnitId_from;GoodsId'
-    MasterFields = 'UnitId;GoodsId'
-    MasterSource = MasterDS
+    MasterFields = 'UnitId_from;GoodsId'
+    MasterSource = PartionDS
     PacketRecords = 0
     Params = <>
     Left = 320
@@ -1737,8 +1800,8 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Left = 432
     Top = 552
   end
-  object spSendSUN: TdsdStoredProc
-    StoredProcName = 'gpInsert_Movement_Send_RemainsSun_express'
+  object spSendSUN_express2: TdsdStoredProc
+    StoredProcName = 'gpInsert_Movement_Send_express2'
     DataSets = <
       item
       end>
@@ -1761,15 +1824,126 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inUnitId_to'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         Component = PartionCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Amount_res'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRemains_from'
+        Value = Null
+        Component = PartionCDS
+        ComponentItem = 'AmountRemains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRemains_to'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'AmountRemains'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCS_from'
+        Value = Null
+        Component = PartionCDS
+        ComponentItem = 'MCS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMCS_to'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MCS'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 680
     Top = 176
+  end
+  object spSelectSend: TdsdStoredProc
+    StoredProcName = 'gpReport_Send_by_express_v2'
+    DataSet = Result_childCDS
+    DataSets = <
+      item
+        DataSet = Result_childCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 43466d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 576
+  end
+  object GuidesGoods: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edGoods
+    FormNameParam.Value = 'TGoodsLiteForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TGoodsLiteForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesGoods
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 572
+    Top = 3
   end
 end
