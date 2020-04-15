@@ -379,6 +379,8 @@ begin
       AddIntField(LocalDataBaseDiff,   'COLORCALC'); //цвет
       AddFloatField(LocalDataBaseDiff, 'DEFERENDS'); //В отложенных перемещениях
       AddFloatField(LocalDataBaseDiff, 'REMAINSSUN'); //Остатки SUN
+      AddFloatField(LocalDataBaseDiff, 'NDS'); //НДС
+      AddIntField(LocalDataBaseDiff,   'NDSKINDID'); //Ставка НДС
 
       LocalDataBaseDiff.CreateTable;
     end;
@@ -392,6 +394,7 @@ begin
         (FindField('GOODSCODE') = nil) or
         (FindField('GOODSNAME') = nil) or
         (FindField('PRICE') = nil) or
+        (FindField('NDS') = nil) or
         (FindField('REMAINS') = nil) or
         (FindField('MCSVALUE') = nil) or
         (FindField('RESERVED') = nil) or

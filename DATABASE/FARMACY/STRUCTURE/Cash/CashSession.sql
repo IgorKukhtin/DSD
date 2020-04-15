@@ -35,6 +35,7 @@ CREATE TABLE CashSessionSnapShot
 (
   CashSessionId       TVarChar    NOT NULL,
   ObjectId            INTEGER     NOT NULL, -- Товар
+  NDSKindId           Integer     NOT NULL, -- Типы НДС
   PartionDateKindId   Integer     NOT NULL, -- Типы срок/не срок
   Price               TFloat      NOT NULL, -- цена
   Remains             TFloat      NOT NULL, -- Остаток

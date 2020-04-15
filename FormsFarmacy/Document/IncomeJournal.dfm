@@ -4,7 +4,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
   ClientWidth = 896
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 912
-  ExplicitHeight = 519
+  ExplicitHeight = 520
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -473,6 +473,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1072#1090#1072' '#1087#1088#1086#1074#1077#1088#1082#1080' '#1091#1087'. '#1083#1080#1094#1086#1084
             Width = 78
+          end
+          object UseNDSKind: TcxGridDBColumn
+            Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1090#1072#1074#1082#1091' '#1053#1044#1057' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+            DataBinding.FieldName = 'UseNDSKind'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 95
           end
         end
       end

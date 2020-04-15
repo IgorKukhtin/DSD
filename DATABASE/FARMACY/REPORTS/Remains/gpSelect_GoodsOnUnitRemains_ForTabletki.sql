@@ -130,6 +130,23 @@ BEGIN
                                                      ON Price_Value.ObjectId = tmpPrice.Id
                                                     AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
                           )
+        -- Штрих-коды производителя
+      , tmpGoodsBarCode AS (SELECT ObjectLink_Main_BarCode.ChildObjectId AS GoodsMainId
+                                 , string_agg(Object_Goods_BarCode.ValueData, ',' ORDER BY Object_Goods_BarCode.ID desc)           AS BarCode
+                            FROM ObjectLink AS ObjectLink_Main_BarCode
+                                 JOIN ObjectLink AS ObjectLink_Child_BarCode
+                                                 ON ObjectLink_Child_BarCode.ObjectId = ObjectLink_Main_BarCode.ObjectId
+                                                AND ObjectLink_Child_BarCode.DescId = zc_ObjectLink_LinkGoods_Goods()
+                                 JOIN ObjectLink AS ObjectLink_Goods_Object_BarCode
+                                                 ON ObjectLink_Goods_Object_BarCode.ObjectId = ObjectLink_Child_BarCode.ChildObjectId
+                                                AND ObjectLink_Goods_Object_BarCode.DescId = zc_ObjectLink_Goods_Object()
+                                                AND ObjectLink_Goods_Object_BarCode.ChildObjectId = zc_Enum_GlobalConst_BarCode()
+                                 LEFT JOIN Object AS Object_Goods_BarCode ON Object_Goods_BarCode.Id = ObjectLink_Goods_Object_BarCode.ObjectId
+                            WHERE ObjectLink_Main_BarCode.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                              AND ObjectLink_Main_BarCode.ChildObjectId > 0
+                              AND TRIM (Object_Goods_BarCode.ValueData) <> ''
+                            GROUP BY ObjectLink_Main_BarCode.ChildObjectId
+                           )
        , tmpResult AS (
                       --Шапка
                       SELECT '<?xml version="1.0" encoding="utf-8"?>'::TVarChar AS RowData
@@ -138,23 +155,27 @@ BEGIN
                       UNION ALL
                       --Тело
                         SELECT
-                            '<Offer Code="'||CAST(Object_Goods.ObjectCode AS TVarChar)
-                               ||'" Name="'||replace(replace(replace(Object_Goods.ValueData, '"', ''),'&','&amp;'),'''','')
+                            '<Offer Code="'||CAST(Object_Goods_Main.ObjectCode AS TVarChar)
+                               ||'" Name="'||replace(replace(replace(Object_Goods_Main.Name, '"', ''),'&','&amp;'),'''','')
                                ||'" Producer="'||replace(replace(replace(COALESCE(Remains.MakerName,''),'"',''),'&','&amp;'),'''','')
                                ||'" Price="'||to_char(Object_Price.Price,'FM9999990.00')
                                ||'" Quantity="'||CAST((Remains.Amount - coalesce(Reserve_Goods.ReserveAmount, 0)) AS TVarChar)
                                ||'" PriceReserve="'||to_char(Object_Price.PriceReserve,'FM9999990.00')
+                               ||'" Barcode="'||COALESCE (tmpGoodsBarCode.BarCode, '')
                                ||'" />'
 
                         FROM Remains
                              INNER JOIN T1 ON T1.ObjectId = Remains.ObjectId
 
-                             INNER JOIN Object AS Object_Goods ON Object_Goods.Id = Remains.ObjectId
+                             INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = Remains.ObjectId
+                             INNER JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                              LEFT OUTER JOIN tmpPrice_View AS Object_Price ON Object_Price.GoodsId = Remains.ObjectId
 
                              LEFT OUTER JOIN tmpReserve AS Reserve_Goods ON Reserve_Goods.GoodsId = Remains.ObjectId
 
+                             -- штрих-код производителя
+                             LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
                         WHERE (Remains.Amount - COALESCE (Reserve_Goods.ReserveAmount, 0)) > 0
                       UNION ALL
                       -- подва
@@ -214,6 +235,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletki (Integer, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 14.04.20                                                                                      *
  18.02.19                                                                                      *
  29.01.19                                                                                      *
  23.07.18                                                                                      *

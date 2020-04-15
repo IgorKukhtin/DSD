@@ -30,7 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UpdateName TVarChar, UpdateDate TDateTime
              , PaymentDays TFloat
              , MemberIncomeCheckId Integer, MemberIncomeCheckName TVarChar, CheckDate TDateTime
-             , Comment TVarChar
+             , Comment TVarChar, isUseNDSKind Boolean
              )
 
 AS
@@ -215,6 +215,7 @@ BEGIN
              , Object_MemberIncomeCheck.ValueData   AS MemberIncomeCheckName
              , MovementDate_Check.ValueData         AS CheckDate
              , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
+             , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)            AS isUseNDSKind 
         FROM Movement_Income
 
         LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement_Income.StatusId
@@ -271,6 +272,10 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_Document
                                   ON MovementBoolean_Document.MovementId = Movement_Income.Id
                                  AND MovementBoolean_Document.DescId = zc_MovementBoolean_Document()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                  ON MovementBoolean_UseNDSKind.MovementId = Movement_Income.Id
+                                 AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
 
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement_Income.Id
@@ -395,6 +400,7 @@ BEGIN
                , COALESCE (MovementDate_Update_Order.ValueData, NULL)
                , Object_OrderKind.ValueData
                , COALESCE (MovementString_Comment.ValueData,'')
+               , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)
 ;
 
 END;
@@ -405,7 +411,8 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 14.04.20                                                                                     * UseNDSKind
  09.09.19         *
  23.07.19         *
  24.09.18         *
