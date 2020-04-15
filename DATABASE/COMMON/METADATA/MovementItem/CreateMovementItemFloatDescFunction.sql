@@ -1319,11 +1319,16 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_AmountSale() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_AmountSale', 'Кол-во отгрузка' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountSale');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFullChargeFact() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFullChargeFact'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaFullChargeFact', 'Полное списание факт' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFullChargeFact');
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 13.04.20                                                                                                     * zc_MIFloat_SummaFullChargeFact
  31.03.20         * zc_MIFloat_ValueTo
                     zc_MIFloat_ValueFrom
                     zc_MIFloat_RemainsTo

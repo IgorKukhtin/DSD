@@ -173,6 +173,7 @@ type
     actExecuteDataDialog: TExecuteDialog;
     spUpdateIncome_OperData: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
+    cbUseNDSKind: TcxCheckBox;
   private
     { Private declarations }
   public

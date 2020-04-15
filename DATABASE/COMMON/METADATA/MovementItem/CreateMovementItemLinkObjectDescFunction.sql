@@ -303,10 +303,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_CommentTR() RETURNS Integer AS $BODY$
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_CommentTR', 'Комментарий строк технического переучета' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_CommentTR');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_NDSKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_NDSKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_NDSKind', 'Типы НДС' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_NDSKind');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Шаблий О.В.
+ 14.04.20                                                                    * zc_MILinkObject_NDSKind
  27.02.20                                                                    * zc_MILinkObject_CommentTR
  27.01.20         * zc_MILinkObject_MemberExternal
  26.08.19                                                                    * zc_MILinkObject_PayrollType

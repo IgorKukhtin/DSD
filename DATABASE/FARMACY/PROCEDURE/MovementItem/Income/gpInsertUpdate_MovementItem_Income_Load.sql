@@ -269,17 +269,20 @@ BEGIN
        END IF;
 
 
-       vbMovementId := lpInsertUpdate_Movement_Income (ioId          := vbMovementId
-                                                     , inInvNumber   := inInvNumber
-                                                     , inOperDate    := inOperDate
-                                                     , inPriceWithVAT:= inPriceWithVAT
-                                                     , inFromId      := inJuridicalId_from
-                                                     , inToId        := vbUnitId
-                                                     , inNDSKindId   := vbNDSKindId
-                                                     , inContractId  := vbContractId 
-                                                     , inPaymentDate := inPaymentDate
-                                                     , inJuridicalId := inJuridicalId_to
-                                                     , inUserId      := vbUserId);
+       vbMovementId := lpInsertUpdate_Movement_Income (ioId           := vbMovementId
+                                                     , inInvNumber    := inInvNumber
+                                                     , inOperDate     := inOperDate
+                                                     , inPriceWithVAT := inPriceWithVAT
+                                                     , inFromId       := inJuridicalId_from
+                                                     , inToId         := vbUnitId
+                                                     , inNDSKindId    := vbNDSKindId
+                                                     , inContractId   := vbContractId 
+                                                     , inPaymentDate  := inPaymentDate
+                                                     , inJuridicalId  := inJuridicalId_to
+                                                     , inisDifferent  := False
+                                                     , inComment      := '' 
+                                                     , inisUseNDSKind := False
+                                                     , inUserId       := vbUserId);
      END IF;
 
 
@@ -464,6 +467,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий О.В.
+ 14.04.20                                                                                     * UseNDSKind
  11.05.18                                                                                     * 
  21.12.17         * del inCodeUKTZED
  11.12.17         * inCodeUKTZED

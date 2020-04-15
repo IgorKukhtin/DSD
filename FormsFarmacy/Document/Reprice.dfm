@@ -66,7 +66,7 @@ inherited RepriceForm: TRepriceForm
             Width = 181
           end
           object NDS: TcxGridDBColumn
-            Caption = #1053#1044#1057
+            Caption = #1053#1044#1057' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'NDS'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = '0.## %'
@@ -191,7 +191,7 @@ inherited RepriceForm: TRepriceForm
             Properties.DisplayFormat = ',0.00;-0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 50
+            Width = 79
           end
           object IsTop_Goods: TcxGridDBColumn
             Caption = #1058#1086#1087' '#1089#1077#1090#1080
@@ -199,6 +199,14 @@ inherited RepriceForm: TRepriceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 44
+          end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 86
           end
           object Color_calc: TcxGridDBColumn
             DataBinding.FieldName = 'Color_calc'

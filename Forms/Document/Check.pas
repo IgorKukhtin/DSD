@@ -172,6 +172,7 @@ type
     actChoicePromoCodeDoctor: TOpenChoiceForm;
     dxBarButton11: TdxBarButton;
     dxBarButton12: TdxBarButton;
+    colNDS: TcxGridDBColumn;
   private
     { Private declarations }
   public

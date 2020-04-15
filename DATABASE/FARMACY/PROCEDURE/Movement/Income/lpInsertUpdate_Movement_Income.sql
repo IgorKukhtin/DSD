@@ -19,6 +19,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income
      Integer, Integer, Integer, Integer, TDateTime, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Income (Integer, TVarChar, TDateTime, Boolean, Integer, Integer, Integer, Integer, TDateTime, Integer, Boolean, Boolean, TVarChar, Integer);
 
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
@@ -33,6 +34,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Income(
  -- IN inOrderId             Integer   , -- Сcылка на заявку поставщику 
     IN inPaymentDate         TDateTime , -- Дата платежа
     IN inJuridicalId         Integer   , -- Юрлицо покупатель
+    IN inisDifferent         Boolean   , -- точка др. юр. лица
+    IN inComment             TVarChar  , -- Примечание
+    IN inisUseNDSKind        Boolean   , -- Использовать ставку НДС по приходу
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -66,6 +70,13 @@ BEGIN
      -- сохранили связь с <Юрлицо покупатель>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      
+     -- сохранили свойство <точка др. юр.лица>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Different(), ioId, inisDifferent);
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     -- сохранили <Примечание>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_UseNDSKind(), ioId, inisUseNDSKind);
+
      -- сохранили связь с <документом заявка поставщику>
      --PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Order(), ioId, inOrderId);
 
@@ -101,7 +112,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 14.04.20                                                                                    * UseNDSKind
  06.05.16         * del inOrderId
  22.04.16         *
  21.12.15                                                                       *

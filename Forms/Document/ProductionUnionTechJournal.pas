@@ -152,6 +152,9 @@ type
     macUpdate_OperDateList: TMultiAction;
     ExecuteDialog_operdate: TExecuteDialog;
     bbUpdate_OperDateList: TdxBarButton;
+    spPrintDays: TdsdStoredProc;
+    actPrintDays: TdsdPrintAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

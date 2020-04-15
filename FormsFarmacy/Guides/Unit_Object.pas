@@ -142,6 +142,10 @@ type
     FormParams: TdsdFormParams;
     dxBarButton4: TdxBarButton;
     spUpdate_ListDaySUN: TdsdStoredProc;
+    isAlertRecounting: TcxGridDBColumn;
+    actUpdate_Unit_AlertRecounting: TdsdExecStoredProc;
+    spUpdate_Unit_AlertRecounting: TdsdStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

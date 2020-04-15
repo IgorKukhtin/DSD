@@ -5028,6 +5028,12 @@ inherited MainCashForm2: TMainCashForm2
     object MemDataPRICE: TFloatField
       FieldName = 'PRICE'
     end
+    object MemDataNDS: TFloatField
+      FieldName = 'NDS'
+    end
+    object MemDataNDSKINDID: TIntegerField
+      FieldName = 'NDSKINDID'
+    end
     object MemDataREMAINS: TFloatField
       FieldName = 'REMAINS'
     end

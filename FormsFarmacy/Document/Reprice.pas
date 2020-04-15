@@ -53,6 +53,7 @@ type
     bbRepriceMIAll: TdxBarButton;
     dxBarSubItem1: TdxBarSubItem;
     dxBarStatic1: TdxBarStatic;
+    isResolution_224: TcxGridDBColumn;
   private
     { Private declarations }
   public

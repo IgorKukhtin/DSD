@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_WagesAdditionalExpenses()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaSP             TFloat    , -- СП
     IN inSummaOther          TFloat    , -- Прочее
     IN inValidationResults   TFloat    , -- Результаты проверки
+    IN inSummaFullChargeFact TFloat    , -- Полное списание факт
     IN inisIssuedBy          Boolean   , -- Выдано
     IN inComment             TVarChar  , -- Примечание
    OUT outSummaTotal         TFloat    , -- Итого
@@ -101,6 +102,7 @@ BEGIN
                                                                , inSummaSP             := inSummaSP             -- СП
                                                                , inSummaOther          := inSummaOther          -- Прочее
                                                                , inValidationResults   := inValidationResults   -- Результаты проверки
+                                                               , inSummaFullChargeFact := inSummaFullChargeFact -- Полное списание факт 
                                                                , inisIssuedBy          := inisIssuedBy          -- Выдано
                                                                , inComment             := inComment             -- Примечание
                                                                , inUserId              := vbUserId              -- пользователь

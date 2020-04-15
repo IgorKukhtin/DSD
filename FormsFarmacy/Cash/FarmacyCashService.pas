@@ -804,6 +804,8 @@ begin
              FLocalDataBaseDiff.Fields[15].AsVariant:=DiffCDS.Fields[15].AsVariant;
              FLocalDataBaseDiff.Fields[16].AsVariant:=DiffCDS.Fields[16].AsVariant;
              FLocalDataBaseDiff.Fields[17].AsVariant:=DiffCDS.Fields[17].AsVariant;
+             FLocalDataBaseDiff.Fields[18].AsVariant:=DiffCDS.Fields[18].AsVariant;
+             FLocalDataBaseDiff.Fields[19].AsVariant:=DiffCDS.Fields[19].AsVariant;
              FLocalDataBaseDiff.Post;
              DiffCDS.Next;
           end;

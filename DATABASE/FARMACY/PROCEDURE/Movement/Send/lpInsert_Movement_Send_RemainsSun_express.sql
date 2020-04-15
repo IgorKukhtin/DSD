@@ -449,7 +449,10 @@ BEGIN
                           AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                        )
      -- 2.1. Результат: EXPRESS - все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
-     INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale, AmountResult_in, AmountResult_out, AmountRemains, AmountRemains_calc_in, AmountRemains_calc_out, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
+     INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale
+                                 , AmountResult_in, AmountResult_out
+                                 , AmountRemains, AmountRemains_calc_in, AmountRemains_calc_out
+                                 , AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price

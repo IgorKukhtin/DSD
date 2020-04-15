@@ -22,6 +22,11 @@ type
     PhysicalMemory: TcxGridDBColumn;
     dxBarButton1: TdxBarButton;
     dxBarButton2: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
+    spDeleteHardware: TdsdStoredProc;
+    actDeleteHardware: TdsdExecStoredProc;
+    dxBarButton3: TdxBarButton;
   private
     { Private declarations }
   public

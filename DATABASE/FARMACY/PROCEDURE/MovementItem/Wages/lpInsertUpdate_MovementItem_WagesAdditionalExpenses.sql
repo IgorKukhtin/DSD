@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_WagesAdditionalExpenses ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inSummaSP             TFloat    , -- СП
     IN inSummaOther          TFloat    , -- Прочее
     IN inValidationResults   TFloat    , -- Результаты проверки
+    IN inSummaFullChargeFact TFloat    , -- Полное списание факт
     IN inisIssuedBy          Boolean   , -- Выдано
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer   -- пользователь
@@ -39,6 +40,9 @@ BEGIN
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaOther(), ioId, inSummaOther);
+
+     -- сохранили свойство <Прочее>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);

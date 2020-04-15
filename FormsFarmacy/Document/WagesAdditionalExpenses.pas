@@ -61,6 +61,11 @@ type
     cxGridDBBandedTableView1: TcxGridDBBandedTableView;
     SummaFullCharge: TcxGridDBBandedColumn;
     SummaMoneyBoxUsed: TcxGridDBBandedColumn;
+    SummaFullChargeFact: TcxGridDBBandedColumn;
+    Color_Calc: TcxGridDBBandedColumn;
+    actClearSummaFullChargeFact: TdsdExecStoredProc;
+    spClearSummaFullChargeFact: TdsdStoredProc;
+    dxBarButton13: TdxBarButton;
   private
     { Private declarations }
   public

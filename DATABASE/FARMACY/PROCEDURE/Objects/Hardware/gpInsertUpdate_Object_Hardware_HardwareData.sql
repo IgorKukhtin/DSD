@@ -41,7 +41,7 @@ BEGIN
     AND Object.ValueData = inComputerName;
     
   IF COALESCE(vbId, 0) <> 0 AND
-     EXISTS(SELECT
+     NOT EXISTS(SELECT
                    ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
                  , ObjectString_ProcessorName.ValueData                      AS ProcessorName
                  , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel

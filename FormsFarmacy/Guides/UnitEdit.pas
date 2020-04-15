@@ -147,6 +147,7 @@ type
     cxLabel41: TcxLabel;
     cxLabel42: TcxLabel;
     cbTechnicalRediscount: TcxCheckBox;
+    cbAlertRecounting: TcxCheckBox;
   private
     { Private declarations }
   public

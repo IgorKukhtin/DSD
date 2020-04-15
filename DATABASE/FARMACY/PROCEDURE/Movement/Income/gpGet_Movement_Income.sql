@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDifferent Boolean
              , UpdateDate_Order TDateTime
              , OrderKindId Integer, OrderKindName TVarChar
-             , Comment TVarChar
+             , Comment TVarChar, isUseNDSKind Boolean
               )
 AS
 $BODY$
@@ -79,6 +79,7 @@ BEGIN
              , 0                                                AS OrderKindId
              , CAST('' as TVarChar)                             AS OrderKindName
              , CAST ('' AS TVarChar) 		                    AS Comment
+             , false                                            AS isUseNDSKind  
              
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -165,6 +166,7 @@ BEGIN
           , Object_OrderKind.Id                            AS OrderKindId
           , Object_OrderKind.ValueData                     AS OrderKindName
           , COALESCE (MovementString_Comment.ValueData,'')        :: TVarChar AS Comment
+          , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)            AS isUseNDSKind 
 
         FROM Movement_Income
              LEFT JOIN Movement AS Movement_Order ON Movement_Order.Id = Movement_Income.Movement_OrderId
@@ -178,6 +180,10 @@ BEGIN
              LEFT JOIN MovementBoolean AS MovementBoolean_Different
                                        ON MovementBoolean_Different.MovementId = Movement_Income.Id
                                       AND MovementBoolean_Different.DescId = zc_MovementBoolean_Different()
+
+             LEFT JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                       ON MovementBoolean_UseNDSKind.MovementId = Movement_Income.Id
+                                      AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
 
              LEFT JOIN MovementString AS MovementString_Comment
                                       ON MovementString_Comment.MovementId = Movement_Income.Id
@@ -229,6 +235,7 @@ BEGIN
           , Object_OrderKind.Id
           , Object_OrderKind.ValueData
           , COALESCE (MovementString_Comment.ValueData,'')
+          , COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE)
           ;
     END IF;
 
@@ -240,7 +247,8 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.  Шаблий О.В.
+ 14.04.20                                                                                    * UseNDSKind
  09.09.19         * isDifferent
  23.07.19         *
  18.10.16         * add isRegistered

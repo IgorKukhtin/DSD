@@ -2,6 +2,7 @@ inherited HardwareForm: THardwareForm
   Caption = #1040#1087#1087#1072#1088#1072#1090#1085#1072#1103' '#1095#1072#1089#1090#1100' '
   ClientHeight = 374
   ClientWidth = 833
+  AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 849
   ExplicitHeight = 413
@@ -144,9 +145,53 @@ inherited HardwareForm: THardwareForm
           MultiSelectSeparator = ','
         end>
     end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object actDeleteHardware: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spDeleteHardware
+      StoredProcList = <
+        item
+          StoredProc = spDeleteHardware
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100
+      ImageIndex = 52
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1072#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100'?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Hardware'
+    Params = <
+      item
+        Name = 'inIsErased'
+        Value = Null
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -171,6 +216,15 @@ inherited HardwareForm: THardwareForm
         item
           Visible = True
           ItemName = 'bbUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           BeginGroup = True
@@ -209,6 +263,10 @@ inherited HardwareForm: THardwareForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton3'
         end>
     end
     object dxBarButton1: TdxBarButton
@@ -225,11 +283,45 @@ inherited HardwareForm: THardwareForm
       Visible = ivAlways
       ImageIndex = 76
     end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
+    object dxBarButton3: TdxBarButton
+      Action = actDeleteHardware
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
         Action = actUpdate
       end>
+  end
+  object spDeleteHardware: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_Hardware'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisCashRegister'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isCashRegister'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 280
+    Top = 152
   end
 end

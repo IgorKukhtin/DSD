@@ -50,7 +50,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
-             , isTechnicalRediscount Boolean
+             , isTechnicalRediscount Boolean, isAlertRecounting Boolean
              , TimeWork TVarChar
 
 ) AS
@@ -169,6 +169,7 @@ BEGIN
       , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
       , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
       , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
+      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE):: Boolean   AS isAlertRecounting
 
       , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
              THEN 'Ïí-Ïò '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
@@ -337,6 +338,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_TechnicalRediscount
                                 ON ObjectBoolean_TechnicalRediscount.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_TechnicalRediscount.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_AlertRecounting
+                                ON ObjectBoolean_AlertRecounting.ObjectId = Object_Unit.Id
+                               AND ObjectBoolean_AlertRecounting.DescId = zc_ObjectBoolean_Unit_AlertRecounting()
 
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id

@@ -1021,6 +1021,16 @@
       TabOrder = 40
       Width = 550
     end
+    object cbUseNDSKind: TcxCheckBox
+      Left = 564
+      Top = 85
+      Hint = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1090#1072#1074#1082#1091' '#1053#1044#1057' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+      Caption = #1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1090#1072#1074#1082#1091' '#1053#1044#1057' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 41
+      Width = 222
+    end
   end
   object edInvNumberOrder: TcxButtonEdit [2]
     Left = 564
@@ -2611,6 +2621,13 @@
         ComponentItem = 'OperDateUpdate'
         DataType = ftDateTime
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUseNDSKind'
+        Value = Null
+        Component = cbUseNDSKind
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
       end>
     Left = 240
     Top = 280
@@ -2745,6 +2762,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUseNDSKind'
+        Value = Null
+        Component = cbUseNDSKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 162
     Top = 312
@@ -2800,6 +2825,9 @@
       end
       item
         Control = edComment
+      end
+      item
+        Control = cbUseNDSKind
       end
       item
       end
