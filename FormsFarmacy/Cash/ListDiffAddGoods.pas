@@ -333,6 +333,13 @@ begin
         Exit;
       end;
 
+      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
+      begin
+        ListGoodsCDS.Close;
+        ShowMessage('Временная блокировка товара.');
+        Exit;
+      end;
+
       S := '';
       if AmountDiff <> 0 Then S := S +  #13#10'Отказы сегодня: ' + CurrToStr(AmountDiff);
       if AmountDiffPrev <> 0 Then S := S +  #13#10'Отказы вчера: ' + CurrToStr(AmountDiffPrev);

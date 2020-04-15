@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Juridical_Percent TFloat, Contract_Percent TFloat
              , MarginPercent TFloat
              , IsTop_Goods Boolean
+             , isResolution_224 boolean
              , Color_calc Integer
              )
 AS
@@ -96,8 +97,8 @@ BEGIN
 
         SELECT MovementItem.Id                                   AS Id
              , MovementItem.ObjectId                             AS GoodsId
-             , Object_Goods.ObjectCode::INTEGER                  AS GoodsCode
-             , Object_Goods.ValueData                            AS GoodsName
+             , Object_Goods_Main.ObjectCode::INTEGER             AS GoodsCode
+             , Object_Goods_Main.Name                            AS GoodsName
              , COALESCE(MovementItem.Amount,0)::TFloat           AS Amount
              , MIFloat_Price.ValueData                           AS PriceOld
              , MIFloat_PriceSale.ValueData                       AS PriceNew
@@ -122,7 +123,7 @@ BEGIN
              , MIFloat_JuridicalPercent.ValueData  ::TFloat   AS Juridical_Percent
              , MIFloat_ContractPercent.ValueData   ::TFloat   AS Contract_Percent
 
-             , CASE WHEN COALESCE(ObjectBoolean_Goods_TOP.ValueData, false) = TRUE
+             , CASE WHEN COALESCE(Object_Goods.IsTop, false) = TRUE
                          THEN COALESCE (NULLIF (SelectMinPrice_AllGoods.PercentMarkup, 0), COALESCE (ObjectFloat_Goods_PercentMarkup.ValueData, 0))
                     ELSE CASE WHEN COALESCE (MarginCondition.MarginPercent, 0) <> 0
                                 THEN COALESCE (MarginCondition.MarginPercent,0) + COALESCE (MIFloat_ContractPercent.ValueData, 0)
@@ -130,7 +131,8 @@ BEGIN
                       END
                END::TFloat AS MarginPercent
 
-             , COALESCE(ObjectBoolean_Goods_TOP.ValueData, false)               AS IsTop_Goods
+             , COALESCE(Object_Goods.IsTop, false)                              AS IsTop_Goods
+             , Object_Goods_Main.isResolution_224                               AS isResolution_224
              , CASE WHEN COALESCE(MIBoolean_ClippedReprice.ValueData, False) = TRUE THEN zc_Color_Yelow() ELSE zc_Color_White() END AS Color_calc
         FROM  MovementItem
             LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -150,8 +152,10 @@ BEGIN
                                         ON MIFloat_ContractPercent.MovementItemId = MovementItem.Id
                                        AND MIFloat_ContractPercent.DescId = zc_MIFloat_ContractPercent()
 
-            LEFT JOIN Object AS Object_Goods
-                             ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object_Goods_Retail AS Object_Goods
+                                          ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+
             LEFT JOIN MovementItemDate AS MIDate_ExpirationDate
                                        ON MIDate_ExpirationDate.MovementItemId = MovementItem.Id
                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_ExpirationDate()
@@ -207,10 +211,6 @@ BEGIN
                                           ON MIBoolean_ClippedReprice.MovementItemId = MovementItem.Id
                                          AND MIBoolean_ClippedReprice.DescId         = zc_MIBoolean_ClippedReprice()
 
-            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_TOP
-                                    ON ObjectBoolean_Goods_TOP.ObjectId = MovementItem.ObjectId
-                                   AND ObjectBoolean_Goods_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-
             LEFT JOIN GoodsPrice AS SelectMinPrice_AllGoods
                                  ON SelectMinPrice_AllGoods.GoodsId = MovementItem.ObjectId
 
@@ -237,5 +237,5 @@ ALTER FUNCTION gpSelect_MovementItem_Reprice (Integer, TVarChar) OWNER TO postgr
  27.11.15                                                          *
 */
 
---реяр
+-- реяр
 -- select * from gpSelect_MovementItem_Reprice(inMovementId := 11512270 ,  inSession := '3') where GoodsCode = 23901;

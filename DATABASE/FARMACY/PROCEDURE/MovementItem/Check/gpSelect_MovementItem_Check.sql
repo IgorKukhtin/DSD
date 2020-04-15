@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, ParentId integer
              , PriceRetSP TFloat
              , PaymentSP TFloat
              , PartionDateKindId Integer, PartionDateKindName TVarChar
+             , NDSKindId Integer
               )
 AS
 $BODY$
@@ -130,6 +131,11 @@ BEGIN
                                  WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
                                    AND MovementItemLinkObject.DescId = zc_MILinkObject_PartionDateKind()
                                 )
+   , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                         , ObjectFloat_NDSKind_NDS.ValueData
+                   FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                   WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                  )
 
        SELECT
              MovementItem.Id
@@ -141,7 +147,7 @@ BEGIN
            , MovementItem.Amount
            , MovementItem.Price
            , MovementItem.AmountSumm
-           , MovementItem.NDS
+           , ObjectFloat_NDSKind_NDS.ValueData AS NDS
            , MovementItem.PriceSale
            , (MovementItem.PriceSale * MovementItem.Amount) :: TFloat AS SummSale
            , MovementItem.ChangePercent
@@ -167,6 +173,8 @@ BEGIN
            , Object_PartionDateKind.Id                    AS PartionDateKindId
            , Object_PartionDateKind.ValueData :: TVarChar AS PartionDateKindName
 
+           , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)    AS NDSKindId
+
            /*, MIFloat_ContainerId.ContainerId  ::TFloat                         AS ContainerId
            , COALESCE (tmpContainer.ExpirationDate, NULL)      :: TDateTime      AS ExpirationDate
            , COALESCE (tmpPartion.BranchDate, NULL)            :: TDateTime      AS OperDate_Income
@@ -188,10 +196,19 @@ BEGIN
             LEFT JOIN Object AS Object_IntenalSP ON Object_IntenalSP.Id = ObjectLink_Goods_IntenalSP.ChildObjectId
 
             -- 
+
             LEFT JOIN tmpMILO_PartionDateKind AS MILinkObject_PartionDateKind
                                               ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MILinkObject_PartionDateKind.ObjectId
+
+            LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.GoodsId
+            LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                             ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+            LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)
 
             /*LEFT JOIN tmpMIFloat_ContainerId AS MIFloat_ContainerId
                                              ON MIFloat_ContainerId.MovementItemId = MovementItem.Id
@@ -227,4 +244,5 @@ ALTER FUNCTION gpSelect_MovementItem_Check (Integer, TVarChar) OWNER TO postgres
 */
 
 -- тест
--- select * from gpSelect_MovementItem_Check(inMovementId := 3959328 ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_Check(inMovementId := 3959328 ,  inSession := '3');

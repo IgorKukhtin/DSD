@@ -57,7 +57,8 @@ RETURNS TABLE (
     IsTop_Goods         Boolean ,   -- Топ сети
     isTopNo_Unit        Boolean ,   -- Не учитывать ТОП для подразделения
     IsPromo             Boolean ,   -- Акция
-    Reprice             Boolean ,    --
+    isResolution_224    Boolean ,   -- Постановление 224
+    Reprice             Boolean ,   --
     isGoodsReprice      Boolean
     )
 
@@ -306,6 +307,7 @@ BEGIN
             Object_Price.IsTop    AS IsTop,
             Object_Goods.IsTop    AS IsTop_Goods,
             Coalesce(ObjectBoolean_Goods_IsPromo.ValueData, False) :: Boolean   AS IsPromo,
+            Coalesce(ObjectBoolean_Goods_Resolution_224.ValueData, False) :: Boolean   AS isResolution_224,
             Object_Goods.Price    AS PriceFix_Goods
         FROM
             lpSelectMinPrice_AllGoods(inUnitId   := inUnitId
@@ -357,6 +359,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_IsPromo
                                     ON ObjectBoolean_Goods_IsPromo.ObjectId = SelectMinPrice_AllGoods.Partner_GoodsId
                                    AND ObjectBoolean_Goods_IsPromo.DescId = zc_ObjectBoolean_Goods_Promo()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
+                                    ON ObjectBoolean_Goods_Resolution_224.ObjectId = Object_Price.GoodsMainId
+                                   AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
         WHERE Object_Goods.isSp = FALSE
     )
@@ -459,7 +465,8 @@ BEGIN
              ELSE FALSE
         END  AS Reprice,
 
-        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
+        ResultSet.isResolution_224
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId

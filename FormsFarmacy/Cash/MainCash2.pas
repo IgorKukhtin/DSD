@@ -462,6 +462,7 @@ type
     actSaveHardwareData: TAction;
     N40: TMenuItem;
     MemDataNDS: TFloatField;
+    MemDataNDSKINDID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -983,6 +984,7 @@ begin
         MemData.FieldByName('GOODSNAME').AsString:=Trim(FLocalDataBaseDiff.FieldByName('GOODSNAME').AsString);
         MemData.FieldByName('PRICE').AsFloat:=FLocalDataBaseDiff.FieldByName('PRICE').AsFloat;
         MemData.FieldByName('NDS').AsFloat:=FLocalDataBaseDiff.FieldByName('NDS').AsFloat;
+        MemData.FieldByName('NDSKINDID').AsInteger:=FLocalDataBaseDiff.FieldByName('NDSKINDID').AsInteger;
         MemData.FieldByName('REMAINS').AsFloat:=FLocalDataBaseDiff.FieldByName('REMAINS').AsFloat;
         MemData.FieldByName('MCSVALUE').AsFloat:=FLocalDataBaseDiff.FieldByName('MCSVALUE').AsFloat;
         MemData.FieldByName('RESERVED').AsFloat:=FLocalDataBaseDiff.FieldByName('RESERVED').AsFloat;
@@ -3321,6 +3323,7 @@ begin
         RemainsCDS.FieldByName('GoodsName').AsString := MemData.FieldByName('GoodsName').AsString;
         RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
         RemainsCDS.FieldByName('NDS').asCurrency := MemData.FieldByName('NDS').asCurrency;
+        RemainsCDS.FieldByName('NDSKindId').AsInteger := MemData.FieldByName('NDSKINDID').AsInteger;
         RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency;
         RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
         RemainsCDS.FieldByName('Reserved').AsVariant := MemData.FieldByName('Reserved').AsVariant;
@@ -3346,6 +3349,7 @@ begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := MemData.FieldByName('Price').asCurrency;
           RemainsCDS.FieldByName('NDS').asCurrency := MemData.FieldByName('NDS').asCurrency;
+          RemainsCDS.FieldByName('NDSKindId').AsInteger := MemData.FieldByName('NDSKINDID').AsInteger;
           RemainsCDS.FieldByName('Remains').asCurrency := MemData.FieldByName('Remains').asCurrency - Amount_find;
           RemainsCDS.FieldByName('MCSValue').asCurrency := MemData.FieldByName('MCSValue').asCurrency;
           RemainsCDS.FieldByName('Reserved').asCurrency := MemData.FieldByName('Reserved').asCurrency;
