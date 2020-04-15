@@ -32,12 +32,13 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                NotSold boolean, NotSold60 boolean,
                DeferredSend TFloat,
                RemainsSUN TFloat
-               
+
              , PartionDateKindId_check   Integer
              , Price_check               TFloat
              , PriceWithVAT_check        TFloat
              , PartionDateDiscount_check TFloat
              , NotTransferTime boolean
+             , NDSKindId Integer
               )
 AS
 $BODY$
@@ -162,7 +163,7 @@ BEGIN
     ELSE
       vbDividePartionDate := False;
     END IF;
-    
+
     -- Объявили новую сессию кассового места / обновили дату последнего обращения
     PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
                                       , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
@@ -175,10 +176,11 @@ BEGIN
 
     -- Данные
     --залили снапшот
-    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
+    INSERT INTO CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,AccommodationId,PartionDateDiscount,PriceWithVAT
     )
     SELECT inCashSessionId                                                  AS CashSession
           , CashRemains.GoodsId
+          , CashRemains.NDSKindId
           , CashRemains.PartionDateKindId
           , CashRemains.Price
           , CashRemains.Remains
@@ -452,7 +454,7 @@ BEGIN
                                        AND Container.Amount > 0
                                      )
                , tmpContainerIn AS (SELECT Container.ID
-                                         , Container.GoodsID 
+                                         , Container.GoodsID
                                          , Container.Amount
                                          , Container.Amount - COALESCE(SUM(MovementItemContainer.Amount), 0) AS AmountIn
                                          , SUM(CASE WHEN MovementItemContainer.MovementDescId = zc_Movement_Check() THEN 1 ELSE 0 END) AS Check
@@ -491,12 +493,12 @@ BEGIN
 
 
                                 WHERE Movement.DescId = zc_Movement_Send()
-                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE 
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                 )
                    -- Перемещения по СУН основные контейнера
                  , tmpRenainsSUNCount AS (SELECT Container.Id
-                                               , Container.ObjectId   
+                                               , Container.ObjectId
                                                , SUM(Container.Amount) AS Amount
                                           FROM tmpSendAll AS Movement
 
@@ -512,7 +514,7 @@ BEGIN
                                                                    AND Container.WhereObjectId = vbUnitId
 
                                           WHERE Container.Amount <> 0
-                                          GROUP BY Container.Id, Container.ObjectId 
+                                          GROUP BY Container.Id, Container.ObjectId
                                           )
                    -- Перемещения по СУН полный набор
                  , tmpRenainsSUNAll AS (SELECT Container.Id                                       AS ID
@@ -536,7 +538,7 @@ BEGIN
                                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.Id
                                                                        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
                                           LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                                                               AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                                                   ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
@@ -549,11 +551,16 @@ BEGIN
                                           , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
                                      FROM tmpRenainsSUNAll AS Container
 
-                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
+                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0)
                                       )
                    -- Без Продажи за последнии 60 дней
                  , tmpIlliquidUnit AS (SELECT * FROM lpReport_IlliquidReductionPlanUser(inUserID := vbUserId))
 
+                 , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                       , ObjectFloat_NDSKind_NDS.ValueData
+                                 FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                 WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                )
 
         -- Результат
         SELECT
@@ -811,8 +818,9 @@ BEGIN
           , CashSessionSnapShot.Price               AS Price_check
           , CashSessionSnapShot.PriceWithVAT        AS PriceWithVAT_check
           , CashSessionSnapShot.PartionDateDiscount AS PartionDateDiscount_check
-          
+
           , COALESCE (ObjectBoolean_Goods_NotTransferTime.ValueData, False)      AS NotTransferTime
+          , COALESCE(CashSessionSnapShot.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) AS NDSKindId
 
          FROM
             CashSessionSnapShot
@@ -824,8 +832,8 @@ BEGIN
             LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                        ON ObjectLink_Goods_NDSKind.ObjectId = Goods.Id
                                       AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-            LEFT OUTER JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                        ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+            LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(CashSessionSnapShot.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId)
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_First
                                     ON ObjectBoolean_First.ObjectId = Goods.Id
@@ -880,19 +888,19 @@ BEGIN
 
            -- Без Продажи за последнии 100 дней
            LEFT JOIN tmpNotSold ON tmpNotSold.GoodsID = Goods.Id
-           
+
            -- Без Продажи за последнии 60 дней
            LEFT JOIN tmpIlliquidUnit ON tmpIlliquidUnit.GoodsID = Goods.Id
-           
+
            -- Остаток товара по СУН
            LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = CashSessionSnapShot.ObjectId
                                   AND tmpRenainsSUN.PartionDateKindId = CashSessionSnapShot.PartionDateKindId
-                                  
+
            -- Не перевдить в сроки
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_NotTransferTime
                                    ON ObjectBoolean_Goods_NotTransferTime.ObjectId = CashSessionSnapShot.ObjectId
                                   AND ObjectBoolean_Goods_NotTransferTime.DescId = zc_ObjectBoolean_Goods_NotTransferTime()
-                                  
+
 
         WHERE
             CashSessionSnapShot.CashSessionId = inCashSessionId
@@ -952,4 +960,4 @@ ALTER FUNCTION gpSelect_CashRemains_ver2 (TVarChar, TVarChar) OWNER TO postgres;
 -- тест
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '10411288')
 -- SELECT * FROM gpSelect_CashRemains_ver2 ('{85E257DE-0563-4B9E-BE1C-4D5C123FB33A}-', '3998773') WHERE GoodsCode = 1240
--- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') where notsold = True
+-- SELECT * FROM gpSelect_CashRemains_ver2 ('{0B05C610-B172-4F81-99B8-25BF5385ADD6}', '3') -- where notsold = True
