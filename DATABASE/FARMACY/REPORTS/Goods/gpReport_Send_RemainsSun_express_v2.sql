@@ -159,7 +159,7 @@ BEGIN
                , tmp.UnitName_str
                , tmp.Amount_res
                , tmp.Summ_res
-          FROM lpInsert_Movement_Send_RemainsSun_express (inOperDate := inOperDate   
+          FROM lpInsert_Movement_Send_RemainsSun_express22 (inOperDate := inOperDate   
                                                         , inDriverId := 0 -- vbDriverId_1
                                                         , inStep     := 1
                                                         , inUserId   := vbUserId
@@ -198,6 +198,43 @@ BEGIN
                         ;
      END IF;
 
+
+     -- получаем данные по перемещению
+     CREATE TEMP TABLE _tmpSend (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpSend (UnitId_from, UnitId_to, GoodsId, Amount)
+           SELECT MovementLinkObject_From.ObjectId AS UnitId_from
+                , MovementLinkObject_To.ObjectId   AS UnitId_to
+                , MovementItem.ObjectId            AS GoodsId
+                , SUM (MovementItem.Amount)        AS Amount
+           FROM Movement AS Movement_Send
+                 INNER JOIN MovementBoolean AS MovementBoolean_SUN_v3
+                                            ON MovementBoolean_SUN_v3.MovementId = Movement_Send.Id
+                                           AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+                                           AND MovementBoolean_SUN_v3.ValueData = TRUE
+     
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                              ON MovementLinkObject_From.MovementId = Movement_Send.Id
+                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                 
+                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                              ON MovementLinkObject_To.MovementId = Movement_Send.Id
+                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                 
+                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Send.Id
+                                        AND MovementItem.DescId     = zc_MI_Master()
+                                        AND MovementItem.isErased   = FALSE
+                                        AND (MovementItem.ObjectId = inGoodsId OR inGoodsId =0)
+     
+           WHERE Movement_Send.DescId = zc_Movement_Send()
+             AND Movement_Send.StatusId <> zc_Enum_Status_Erased()
+             AND Movement_Send.OperDate > inOperDate - INTERVAL '1 DAY'
+           GROUP BY MovementLinkObject_From.ObjectId
+                  , MovementLinkObject_To.ObjectId
+                  , MovementItem.ObjectId
+      ;
+
+
+
      OPEN Cursor1 FOR
           SELECT Object_Unit.Id            AS UnitId
                , Object_Unit.ValueData     AS UnitName
@@ -228,12 +265,20 @@ BEGIN
                , _tmpRemains.Price
                , _tmpRemains.MCS
                
-               , _tmpRemains.AmountResult_in                         AS Amount_res
+               , _tmpRemains.AmountResult_in                     AS Amount_res
                , _tmpRemains.AmountResult_in * _tmpRemains.Price AS Summ_res
-          FROM _tmpRemains_all AS _tmpRemains
+               
+               , COALESCE (_tmpRemains.AmountResult_in, 0) - COALESCE (tmpSend_Child.Amount, 0) AS AmountNeed  -- потребность
+          FROM _tmpRemains_all_a AS _tmpRemains
               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id  = _tmpRemains.UnitId
-          WHERE COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0
-            AND _tmpRemains.AmountResult_in <> 0
+              
+              LEFT JOIN (SELECT _tmpSend.UnitId_from, _tmpSend.GoodsId, SUM (_tmpSend.Amount) AS Amount 
+                         FROM _tmpSend
+                         GROUP BY _tmpSend.UnitId_from, _tmpSend.GoodsId) AS tmpSend_Child
+                                                                          ON tmpSend_Child.UnitId_from = _tmpRemains.UnitId
+                                                                         AND tmpSend_Child.GoodsId = _tmpRemains.GoodsId
+          WHERE (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+            AND COALESCE (_tmpRemains.AmountResult_in,0) > 0
          ;
      RETURN NEXT Cursor1;
 
@@ -300,7 +345,7 @@ BEGIN
                          ) AS tmp_sum ON tmp_sum.UnitId  = _tmpRemains.UnitId
                                      AND tmp_sum.GoodsId = _tmpRemains.GoodsId
                
-          WHERE _tmpRemains.AmountResult_out <> 0
+          WHERE COALESCE (_tmpRemains.AmountResult_out,0) > 0
           AND (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
                
            ;

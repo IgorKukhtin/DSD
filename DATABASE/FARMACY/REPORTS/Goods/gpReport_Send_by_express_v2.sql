@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpReport_Send_by_express_v2 (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Send_by_express_v2 (TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Send_by_express_v2(
-    IN inOperDate      TDateTime
+    IN inOperDate      TDateTime,
     IN inGoodsId       Integer,
     IN inSession       TVarChar    -- сессия пользователя
 )
@@ -24,9 +24,12 @@ BEGIN
      OPEN Cursor1 FOR
       SELECT MovementLinkObject_From.ObjectId AS UnitId_from
            , Object_To.Id                     AS UnitId_to
+           , Object_From.ValueData            AS FromName
            , Object_To.ValueData              AS ToName
            , MovementItem.ObjectId            AS GoodsId
            , MovementItem.Amount              AS Amount
+           , Movement_Send.Id                 AS MovementId
+           , MovementItem.Id                  AS MovementItemId
       FROM Movement AS Movement_Send
             INNER JOIN MovementBoolean AS MovementBoolean_SUN_v3
                                        ON MovementBoolean_SUN_v3.MovementId = Movement_Send.Id
@@ -36,6 +39,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement_Send.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement_Send.Id
