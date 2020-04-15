@@ -161,7 +161,7 @@ BEGIN
                            , tmpSign.strSign
                            , tmpSign.strSignNo
                       FROM tmpMovement
-                           LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= tmpMovement.Id) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
+                           LEFT JOIN lpSelect_MI_Sign (inMovementId:= tmpMovement.Id) AS tmpSign ON tmpSign.Id = tmpMovement.Id 
                       )
         , tmpMember AS (SELECT tmp.PersonalServiceListId 
                              , ObjectLink_PersonalServiceList_Member.ChildObjectId AS MemberId

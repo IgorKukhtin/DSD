@@ -52,7 +52,7 @@ BEGIN
                                                            , inIsPrior        := FALSE -- !!!отказались от старых цен!!!
                                                            ) AS tmp);
       -- исправили ошибку
-      vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, ingoodsId:= ingoodsId, inSession := inSession) AS tmp);
+       vbPrice_find:= (SELECT tmp.ReturnPrice FROM gpSelectMobile_Object_PriceListItems_test (inPriceListId:= vbPriceListId, ingoodsId:= ingoodsId, inSession := inSession) AS tmp);
       IF vbPrice_find > 0
       THEN 
            inPrice:= vbPrice_find;

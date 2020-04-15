@@ -111,6 +111,11 @@ BEGIN
                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                   JOIN tmpPriceList ON tmpPriceList.PriceListId = ObjectLink_PriceListItem_PriceList.ChildObjectId
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                       ON ObjectLink_PriceListItem_GoodsKind.ObjectId = Object_PriceListItem.Id
+                                      AND ObjectLink_PriceListItem_GoodsKind.DescId = zc_ObjectLink_PriceListItem_GoodsKind()
+
                   -- Цены заявки
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Order
                                           ON ObjectHistory_PriceListItem_Order.ObjectId = Object_PriceListItem.Id
@@ -135,9 +140,12 @@ BEGIN
                   LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value_Return
                                                ON ObjectHistoryFloat_PriceListItem_Value_Return.ObjectHistoryId = ObjectHistory_PriceListItem_Return.Id
                                               AND ObjectHistoryFloat_PriceListItem_Value_Return.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+
              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                AND ((ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Order.ValueData, 0.0)) 
                    + ABS (COALESCE (ObjectHistoryFloat_PriceListItem_Value_Sale.ValueData, 0.0))) <> 0.0)
+               AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
+
              ORDER BY ObjectLink_PriceListItem_PriceList.ChildObjectId
                     , ObjectLink_PriceListItem_Goods.ChildObjectId
                     , ObjectHistory_PriceListItem_Return.StartDate DESC

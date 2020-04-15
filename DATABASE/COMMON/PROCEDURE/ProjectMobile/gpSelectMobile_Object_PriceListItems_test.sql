@@ -45,6 +45,11 @@ BEGIN
                                   ON ObjectLink_PriceListItem_PriceList.ObjectId = Object_PriceListItem.Id
                                  AND ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
                                  AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId
+
+                  LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_GoodsKind
+                                       ON ObjectLink_PriceListItem_GoodsKind.ObjectId = Object_PriceListItem.Id
+                                      AND ObjectLink_PriceListItem_GoodsKind.DescId = zc_ObjectLink_PriceListItem_GoodsKind()
+
                   -- Цены возврата
                   LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem_Return
                                           ON ObjectHistory_PriceListItem_Return.ObjectId = Object_PriceListItem.Id
@@ -56,6 +61,7 @@ BEGIN
 
              WHERE Object_PriceListItem.DescId = zc_Object_PriceListItem()
                AND ObjectHistoryFloat_PriceListItem_Value_Return.ValueData <> 0.0
+               AND ObjectLink_PriceListItem_GoodsKind.ChildObjectId IS NULL
             ;
 
 END; 

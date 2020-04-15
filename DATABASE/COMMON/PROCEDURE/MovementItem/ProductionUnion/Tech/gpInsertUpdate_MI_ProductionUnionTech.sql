@@ -309,7 +309,7 @@ BEGIN
    UPDATE _tmpChild SET MovementItemId = lpInsertUpdate_MI_ProductionUnionTech_Child (ioId                 := _tmpChild.MovementItemId
                                                                                     , inMovementId         := ioMovementId
                                                                                     , inGoodsId            := _tmpChild.GoodsId
-                                                                                    , inAmount             := _tmpChild.Amount
+                                                                                    , inAmount             := COALESCE (_tmpChild.Amount, 0)
                                                                                     , inParentId           := ioMovementItemId
                                                                                     , inAmountReceipt      := _tmpChild.AmountReceipt
                                                                                     , inPartionGoodsDate   := CASE WHEN _tmpChild.MovementItemId > 0 THEN (SELECT MovementItemDate.ValueData FROM MovementItemDate WHERE MovementItemDate.MovementItemId = _tmpChild.MovementItemId AND MovementItemDate.DescId = zc_MIDate_PartionGoods()) ELSE NULL END

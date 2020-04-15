@@ -202,7 +202,7 @@ BEGIN
            , tmpTransportGoods.CarTrailerModelName
            , tmpTransportGoods.PersonalDriverName
            , COALESCE (ObjectString_DriverCertificate_external.ValueData, ObjectString_DriverCertificate.ValueData) :: TVarChar AS DriverCertificate
-           , tmpTransportGoods.MemberName1
+           , CASE WHEN TRIM (COALESCE (tmpTransportGoods.MemberName1, '')) = '' THEN tmpTransportGoods.PersonalDriverName ELSE tmpTransportGoods.MemberName1 END :: TVarChar AS MemberName1
            , tmpTransportGoods.MemberName2
            , tmpTransportGoods.MemberName3
            , tmpTransportGoods.MemberName4

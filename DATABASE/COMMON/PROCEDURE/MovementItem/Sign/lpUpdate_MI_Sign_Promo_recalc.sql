@@ -9,13 +9,17 @@ CREATE OR REPLACE FUNCTION lpUpdate_MI_Sign_Promo_recalc(
 )
 RETURNS VOID AS
 $BODY$
-  DECLARE vbSignInternalId Integer;
-  DECLARE vbStrMIIdSign    TVarChar;
-  DECLARE vbStrIdSign      TVarChar;
-  DECLARE vbStrIdSignNo    TVarChar;
-  DECLARE vbIndex          Integer; -- № п/п в очереди - кто уже подписал
-  DECLARE vbIndexNo        Integer; -- № п/п в очереди - кто остался подписать
+  DECLARE vbSignInternalId       Integer;
+  DECLARE vbStrMIIdSign          TVarChar;
+  DECLARE vbStrIdSign            TVarChar;
+  DECLARE vbStrIdSignNo          TVarChar;
+  DECLARE vbIndex                Integer; -- № п/п в очереди - кто уже подписал
+  DECLARE vbIndexNo              Integer; -- № п/п в очереди - кто остался подписать
+  DECLARE vbPromoStateKindId_old Integer;
 BEGIN
+
+     -- данные
+     vbPromoStateKindId_old:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_SignInternal());
 
      -- данные - кто подписал/не подписал
      SELECT -- Модель для подписи
@@ -33,71 +37,71 @@ BEGIN
 
             INTO vbSignInternalId, vbStrMIIdSign, vbStrIdSign, vbStrIdSignNo, vbIndex, vbIndexNo
 
-      FROM lpSelect_MI_IncomeFuel_Sign (inMovementId:= inMovementId) AS tmp;
+      FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp;
 
 
 
       -- проверка - если все подписано
       IF vbStrIdSign <> '' AND vbStrIdSignNo = ''
       THEN
-          RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <%>.'
+          RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.'
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                         , lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Complete())
                          ;
       END IF;
-
+/*
       -- проверка - если нельзя ставить <Согласован>
       IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()) AND vbIndex = 0 AND vbIndexNo = 0
       THEN
           RAISE EXCEPTION 'Ошибка.У пользователя <%> нет прав устанавливать значение <%> в документе № <%> от <%>.'
-                        , lfGet_Object_ValueData_sh (vbUserId)
+                        , lfGet_Object_ValueData_sh (inUserId)
                         , lfGet_Object_ValueData_sh (inPromoStateKindId)
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
                          ;
-      END IF;
+      END IF;*/
 
 
       -- если есть среди - кто остался подписать
-      IF vbIndexNo > 0
+--    IF vbIndexNo > 0
+      -- В работе Исполнительный Директор ИЛИ Согласован
+      IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
       THEN
-          -- В работе Исполнительный Директор ИЛИ Согласован
-          IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+          -- если еще никто не подписывал И №п/п = 1 И Согласован
+          IF (vbIndex = 1 OR vbIndexNo = 1) AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
           THEN
-              -- если еще никто не подписывал И №п/п = 1 И Согласован
-              IF vbStrIdSign = '' AND vbIndexNo = 1 AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
-              THEN
-                  -- надо поменять Модель - находим с isMain = FALSE, там по идее только один подписант = inUserId
-                  PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal()
-                                                           , inMovementId
-                                                           , -- нашли модель
-                                                             (SELECT gpSelect.Id
-                                                              FROM gpSelect_Object_SignInternal (FALSE, inSession) AS gpSelect
-                                                              WHERE gpSelect.MovementDescId = zc_Movement_Promo()
-                                                                AND gpSelect.isMain         = FALSE
-                                                            ));
-              ELSEIF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main()
-              THEN
-                  -- надо удалить Модель
-                  PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, NULL);
-              END IF;
-
-              -- подписали
-              PERFORM gpInsertUpdate_MI_IncomeFuel_Sign (inMovementId, TRUE, inUserId :: TVarChar);
-
+              -- надо поменять Модель - находим с isMain = FALSE, там по идее только один подписант = inUserId
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal()
+                                                       , inMovementId
+                                                       , -- нашли модель
+                                                         (SELECT gpSelect.Id
+                                                          FROM gpSelect_Object_SignInternal (FALSE, inUserId :: TVarChar) AS gpSelect
+                                                          WHERE gpSelect.MovementDescId = zc_Movement_Promo()
+                                                            AND gpSelect.isMain         = FALSE
+                                                        ));
+          ELSEIF inPromoStateKindId = zc_Enum_PromoStateKind_Main()
+          THEN
+              -- надо удалить Модель
+              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, NULL);
           END IF;
+
+          IF vbIndex = 0
+          THEN
+              -- подписали
+              PERFORM gpInsertUpdate_MI_Sign (inMovementId, TRUE, inUserId :: TVarChar);
+          END IF;
+
       END IF;
 
-      -- если есть среди - кто уже подписал
-      IF vbIndex > 0
+
+      -- если надо убрать подпись
+      IF vbPromoStateKindId_old IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+         AND inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+         AND vbIndexNo = 0
       THEN
-          -- НЕ В работе Исполнительный Директор ИЛИ Согласован
-          IF inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
-          THEN
-              -- убрали подпись
-              PERFORM gpInsertUpdate_MI_IncomeFuel_Sign (inMovementId, FALSE, inUserId :: TVarChar);
-          END IF;
+          -- убрали подпись
+          PERFORM gpInsertUpdate_MI_Sign (inMovementId, FALSE, inUserId :: TVarChar);
       END IF;
       
       

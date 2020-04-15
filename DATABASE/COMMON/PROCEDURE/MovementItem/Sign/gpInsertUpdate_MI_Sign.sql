@@ -41,7 +41,7 @@ BEGIN
 
             INTO vbSignInternalId, vbStrMIIdSign, vbStrIdSign, vbStrIdSignNo, vbIndex, vbIndexNo
 
-      FROM lpSelect_MI_IncomeFuel_Sign (inMovementId:= inMovementId) AS tmp;
+      FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp;
 
 
      -- проверка

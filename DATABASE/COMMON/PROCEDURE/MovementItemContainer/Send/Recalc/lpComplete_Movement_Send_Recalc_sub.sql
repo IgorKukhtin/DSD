@@ -25,21 +25,29 @@ BEGIN
                      )
          AND '01.11.2016' <= vbOperDate -- Дата когда стартанула схема для этих 3-х складов
         )*/
-        AND inUserId = 5
+      --AND inUserId = 5
      THEN
 
      -- Поиск "Пересортица" или "Обычный"
      vbMovementId_Peresort:= (SELECT MLM.MovementId FROM MovementLinkMovement AS MLM WHERE MLM.MovementChildId = inMovementId AND MLM.DescId = zc_MovementLinkMovement_Production());
 
-     -- таблица - элементы
-     CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
+
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpItemPeresort_new'))
+     THEN
+         DELETE FROM _tmpItemPeresort_new;
+     ELSE
+         -- таблица - элементы
+         CREATE TEMP TABLE _tmpItemPeresort_new (MovementItemId_to Integer, MovementItemId_from Integer, GoodsId_to Integer, GoodsKindId_to Integer, PartionGoods TVarChar, GoodsId_from Integer, GoodsKindId_from Integer, ReceipId_to Integer, Amount_to TFloat) ON COMMIT DROP;
+     END IF;
+
 
      -- элементы
-     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
+     INSERT INTO _tmpItemPeresort_new (MovementItemId_to, MovementItemId_from, GoodsId_to, GoodsKindId_to, PartionGoods, GoodsId_from, GoodsKindId_from, ReceipId_to, Amount_to)
         SELECT 0                                                      AS MovementItemId_to
              , 0                                                      AS MovementItemId_from
              , _tmpItem.GoodsId                                       AS GoodsId_to
              , _tmpItem.GoodsKindId                                   AS GoodsKindId_to
+             , _tmpItem.PartionGoods                                  AS PartionGoods
              , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId     AS GoodsId_from
              , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0) AS GoodsKindId_from
              , 0                                                      AS ReceipId_to
@@ -65,6 +73,7 @@ BEGIN
            OR _tmpItem.GoodsKindId  <> COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId, 0)
         GROUP BY _tmpItem.GoodsId
                , _tmpItem.GoodsKindId
+               , _tmpItem.PartionGoods
                , ObjectLink_GoodsByGoodsKind_GoodsSub.ChildObjectId
                , ObjectLink_GoodsByGoodsKind_GoodsKindSub.ChildObjectId
                 ;
@@ -78,17 +87,22 @@ BEGIN
          FROM (SELECT MovementItem.Id                                     AS MovementItemId_to
                     , MovementItem.ObjectId                               AS GoodsId_to
                     , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId_to
-                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0)) AS Ord
+                    , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
+                    , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId, COALESCE (MILinkObject_GoodsKind.ObjectId, 0), COALESCE (MIString_PartionGoods.ValueData, '')) AS Ord
                FROM MovementItem
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
+                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                WHERE MovementItem.MovementId = vbMovementId_Peresort
                  AND MovementItem.DescId     = zc_MI_Master()
                  AND MovementItem.isErased   = FALSE
               ) AS tmpMI
          WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
            AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
+           AND _tmpItemPeresort_new.PartionGoods   = tmpMI.PartionGoods
            AND tmpMI.Ord                           = 1
         ;
 
@@ -98,11 +112,15 @@ BEGIN
                     , MI_Child.Id                                         AS MovementItemId_from
                     , MI_Child.ObjectId                                   AS GoodsId_from
                     , COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0) AS GoodsKindId_from
-                    , ROW_NUMBER() OVER (PARTITION BY MI_Child.ParentId, MI_Child.ObjectId, COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0)) AS Ord
+                    , COALESCE (MIString_PartionGoods.ValueData, '')      AS PartionGoods
+                    , ROW_NUMBER() OVER (PARTITION BY MI_Child.ParentId, MI_Child.ObjectId, COALESCE (MILinkObject_GoodsKind_Child.ObjectId, 0), COALESCE (MIString_PartionGoods.ValueData, '')) AS Ord
                FROM MovementItem AS MI_Child
                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Child
                                                      ON MILinkObject_GoodsKind_Child.MovementItemId = MI_Child.Id
                                                     AND MILinkObject_GoodsKind_Child.DescId         = zc_MILinkObject_GoodsKind()
+                    LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                 ON MIString_PartionGoods.MovementItemId = MI_Child.Id
+                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
                WHERE MI_Child.MovementId = vbMovementId_Peresort
                  AND MI_Child.DescId     = zc_MI_Child()
                  AND MI_Child.isErased   = FALSE
@@ -110,6 +128,7 @@ BEGIN
          WHERE _tmpItemPeresort_new.MovementItemId_to = tmpMI.MovementItemId_to
            AND _tmpItemPeresort_new.GoodsId_from      = tmpMI.GoodsId_from
            AND _tmpItemPeresort_new.GoodsKindId_from  = tmpMI.GoodsKindId_from
+           AND _tmpItemPeresort_new.PartionGoods      = tmpMI.PartionGoods
            AND tmpMI.Ord                              = 1
         ;
 
@@ -163,7 +182,7 @@ BEGIN
 
             -- Админу только отладка
             -- if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE MovementItemId_to = 0 OR MovementItemId_from = 0); end if;
-            if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE GoodsKindId_to is null OR GoodsKindId_from is null); end if;
+            if inUserId = 5 then RAISE EXCEPTION 'Ошибка - НЕТ Проверки - что б ничего не делать  <%>', (SELECT COUNT(*) FROM _tmpItemPeresort_new WHERE GoodsKindId_to IS NULL OR GoodsKindId_from IS NULL); end if;
 
          END IF;
 
@@ -206,33 +225,34 @@ BEGIN
 
          -- сохранили в табл. элементы - Master
          UPDATE _tmpItemPeresort_new SET MovementItemId_to = tmpMI.MovementItemId_new
-         FROM (SELECT tmp.MovementItemId_new, tmp.GoodsId_to, tmp.GoodsKindId_to
+         FROM (SELECT tmp.MovementItemId_new, tmp.GoodsId_to, tmp.GoodsKindId_to, tmp.PartionGoods
                     , -- еще св-во связь с <Рецептуры>
                       lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), tmp.MovementItemId_new, tmp.ReceipId_to)
-               FROM
-              (SELECT tmp.GoodsId_to, tmp.GoodsKindId_to, tmp.ReceipId_to
-                    , -- сохранили элементы - Master
-                      lpInsertUpdate_MI_ProductionUnion_Master
-                                                  (ioId                     := tmp.MovementItemId_to
-                                                 , inMovementId             := vbMovementId_Peresort
-                                                 , inGoodsId                := tmp.GoodsId_to
-                                                 , inAmount                 := tmp.Amount_to
-                                                 , inCount                  := 0
-                                                 , inCuterWeight            := 0
-                                                 , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
-                                                 , inGoodsKindId            := tmp.GoodsKindId_to
-                                                 , inUserId                 := inUserId
-                                                  ) AS MovementItemId_new
-               FROM (-- обязательно взяли только там где нет составляющих
-                     SELECT DISTINCT _tmpItemPeresort_new.MovementItemId_to, _tmpItemPeresort_new.GoodsId_to, _tmpItemPeresort_new.GoodsKindId_to, _tmpItemPeresort_new.ReceipId_to, _tmpItemPeresort_new.Amount_to
-                     FROM _tmpItemPeresort_new
-                     WHERE _tmpItemPeresort_new.ReceipId_to >= 0
+
+               FROM (SELECT tmp.GoodsId_to, tmp.GoodsKindId_to, tmp.ReceipId_to, tmp.PartionGoods
+                          , -- сохранили элементы - Master
+                            lpInsertUpdate_MI_ProductionUnion_Master
+                                                        (ioId                     := tmp.MovementItemId_to
+                                                       , inMovementId             := vbMovementId_Peresort
+                                                       , inGoodsId                := tmp.GoodsId_to
+                                                       , inAmount                 := tmp.Amount_to
+                                                       , inCount                  := 0
+                                                       , inCuterWeight            := 0
+                                                       , inPartionGoodsDate       := NULL
+                                                       , inPartionGoods           := tmp.PartionGoods
+                                                       , inGoodsKindId            := tmp.GoodsKindId_to
+                                                       , inUserId                 := inUserId
+                                                        ) AS MovementItemId_new
+                     FROM (-- обязательно взяли только там где нет составляющих
+                           SELECT DISTINCT _tmpItemPeresort_new.MovementItemId_to, _tmpItemPeresort_new.GoodsId_to, _tmpItemPeresort_new.GoodsKindId_to, _tmpItemPeresort_new.PartionGoods, _tmpItemPeresort_new.ReceipId_to, _tmpItemPeresort_new.Amount_to
+                           FROM _tmpItemPeresort_new
+                           WHERE _tmpItemPeresort_new.ReceipId_to >= 0
+                          ) AS tmp
                     ) AS tmp
-              ) AS tmp
               ) AS tmpMI
          WHERE _tmpItemPeresort_new.GoodsId_to     = tmpMI.GoodsId_to
            AND _tmpItemPeresort_new.GoodsKindId_to = tmpMI.GoodsKindId_to
+           AND _tmpItemPeresort_new.PartionGoods   = tmpMI.PartionGoods
           ;
          -- сохранили элементы - Child
          PERFORM lpInsertUpdate_MI_ProductionUnion_Child
@@ -253,7 +273,7 @@ BEGIN
                                                                                END
                                                  , inParentId               := _tmpItemPeresort_new.MovementItemId_to
                                                  , inPartionGoodsDate       := NULL
-                                                 , inPartionGoods           := NULL
+                                                 , inPartionGoods           := _tmpItemPeresort_new.PartionGoods
                                                  , inGoodsKindId            := _tmpItemPeresort_new.GoodsKindId_from
                                                  , inGoodsKindCompleteId    := NULL
                                                  , inCount_onCount          := 0
@@ -306,7 +326,7 @@ BEGIN
      END IF; -- if ... Временно захардкодил - !!!только для этого склада!!!
 
      -- Админу только отладка
-     if inUserId = 5 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
+   --if inUserId = 5 then RAISE EXCEPTION 'Нет Прав и нет Проверки - что б ничего не делать'; end if;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

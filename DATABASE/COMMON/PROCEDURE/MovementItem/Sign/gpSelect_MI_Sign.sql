@@ -1,11 +1,11 @@
 -- Function: gpSelect_MI_Sign (Integer, Boolean, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_MI_Promo_Sign (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_PersonalService_Sign (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_Sign (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Sign(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inIsErased    Boolean      , -- 
+    IN inIsErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, SignInternalId Integer, SignInternalName TVarChar
@@ -18,7 +18,10 @@ RETURNS TABLE (Id Integer, SignInternalId Integer, SignInternalName TVarChar
 AS
 $BODY$
   DECLARE vbUserId         Integer;
+
   DECLARE vbMovementDescId Integer;
+  DECLARE vbObjectDescId   Integer;
+  DECLARE vbObjectId       Integer;
   DECLARE vbSignInternalId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -27,26 +30,35 @@ BEGIN
 
 
      -- Параметры из документа - для определения <Модель электронной подписи>
-     SELECT Movement.DescId                           AS MovementDescId
+     SELECT Movement.DescId                                AS MovementDescId
+          , COALESCE (Object_To.DescId,0)                  AS ObjectDescId
+          , COALESCE (MovementLinkObject_From.ObjectId,0)  AS ObjectId
           , COALESCE (MovementLinkObject.ObjectId, 0) AS SignInternalId
-            INTO vbMovementDescId, vbSignInternalId
+            INTO vbMovementDescId, vbObjectDescId, vbObjectId, vbSignInternalId
      FROM Movement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                      AND Movement.DescId                    = zc_Movement_Income()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                      AND Movement.DescId                  = zc_Movement_Income()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                      AND MovementLinkObject.DescId     = zc_MovementLinkObject_SignInternal()
+                                        AND MovementLinkObject.DescId     = zc_MovementLinkObject_SignInternal()
      WHERE Movement.Id = inMovementId;
 
-     
+
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
         WITH -- данные из Модели для данного документа
           tmpObject AS (SELECT *
-                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
-                      --WHERE tmp.SignInternalId = vbSignInternalId
-                      --   OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
+                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, vbObjectDescId, 0) AS tmp
                         )
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
-                            , MovementItem.ObjectId   AS SignInternalId
+                            , CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
                             , MovementItem.Amount     AS Ord
                             , MILO_Insert.ObjectId    AS UserId
                             , MIDate_Insert.ValueData AS OperDate
@@ -66,14 +78,14 @@ BEGIN
      SELECT tmpMI.Id                      AS Id
           , Object_SignInternal.Id        AS SignInternalId
           , Object_SignInternal.ValueData AS SignInternalName
-       
+
           , COALESCE (tmpMI.Ord, tmpObject.Ord) :: Integer AS Ord
           , Object_User.Id         AS UserId
           , Object_User.ObjectCode AS UserCode
           , Object_User.ValueData  AS UserName
- 
+
           , tmpMI.OperDate
-       
+
           , CASE WHEN tmpMI.Ord > 0 THEN TRUE ELSE FALSE END AS isSign
 
           , COALESCE (tmpMI.isErased, FALSE) AS isErased
@@ -81,10 +93,10 @@ BEGIN
           FULL JOIN tmpMI ON tmpMI.SignInternalId = tmpObject.SignInternalId
                          AND tmpMI.UserId         = tmpObject.UserId
                          AND tmpMI.isErased       = FALSE
-          LEFT JOIN Object AS Object_SignInternal 
+          LEFT JOIN Object AS Object_SignInternal
                            ON Object_SignInternal.Id     = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
                           AND Object_SignInternal.DescId = zc_Object_SignInternal()
-                          
+
           LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE (tmpObject.UserId, tmpMI.UserId)
      ;
 
@@ -95,7 +107,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 23.08.16         * 
+ 23.08.16         *
 */
 
 -- тест

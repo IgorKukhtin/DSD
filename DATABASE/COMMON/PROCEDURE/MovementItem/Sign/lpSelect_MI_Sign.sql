@@ -1,6 +1,5 @@
 -- Function: lpSelect_MI_Sign (Integer, Boolean, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS lpSelect_MI_Promo_Sign (Integer);
 DROP FUNCTION IF EXISTS lpSelect_MI_Sign (Integer);
 
 CREATE OR REPLACE FUNCTION lpSelect_MI_Sign(
@@ -17,16 +16,29 @@ RETURNS TABLE (Id             Integer
 AS
 $BODY$
   DECLARE vbMovementDescId Integer;
+  DECLARE vbObjectDescId   Integer;
+  DECLARE vbObjectId       Integer;  
   DECLARE vbSignInternalId Integer;
 BEGIN
    
      -- Параметры из документа - для определения <Модель электронной подписи>
-     SELECT Movement.DescId                           AS MovementDescId
-          , COALESCE (MovementLinkObject.ObjectId, 0) AS SignInternalId
-            INTO vbMovementDescId, vbSignInternalId
+     SELECT Movement.DescId                                AS MovementDescId
+          , COALESCE (Object_To.DescId,0)                  AS ObjectDescId
+          , COALESCE (MovementLinkObject_From.ObjectId,0)  AS ObjectId
+          , COALESCE (MovementLinkObject.ObjectId, 0)      AS SignInternalId
+            INTO vbMovementDescId, vbObjectDescId, vbObjectId, vbSignInternalId
      FROM Movement
           LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                       AND MovementLinkObject.DescId     = zc_MovementLinkObject_SignInternal()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                      AND Movement.DescId                    = zc_Movement_Income()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                      AND Movement.DescId                    = zc_Movement_Income()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
      WHERE Movement.Id = inMovementId;
 
      
@@ -35,13 +47,11 @@ BEGIN
      
      WITH -- данные из Модели для данного документа
           tmpObject AS (SELECT *
-                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, 0, 0) AS tmp
-                      --WHERE tmp.SignInternalId = vbSignInternalId
-                      --   OR (COALESCE (vbSignInternalId,0) = 0 AND tmp.isMain = TRUE)
-                        )
+                        FROM lpSelect_Object_SignInternalItem (vbSignInternalId, vbMovementDescId, vbObjectDescId, 0) AS tmp
+                       )
           -- данные из уже сохраненных элементов подписи
         , tmpMI AS (SELECT MovementItem.Id                    AS MovementItemId
-                         , MovementItem.ObjectId              AS SignInternalId
+                         , CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
                          , MILO_Insert.ObjectId               AS UserId
                          , Object_User.ValueData              AS UserName
                     FROM MovementItem 
@@ -77,13 +87,13 @@ BEGIN
                        GROUP BY tmp.SignInternalId
                       )
      -- Результат
-     SELECT inMovementId                      AS Id
+     SELECT inMovementId                                     AS Id
           , COALESCE (tmpSignNo.SignInternalId, tmpSign.SignInternalId) :: Integer AS SignInternalId
-          , tmpSign.strSign       :: TVarChar AS strSign
-          , tmpSignNo.strSignNo   :: TVarChar AS strSignNo
-          , tmpSign.strIdSign     :: TVarChar AS strIdSign
-          , tmpSignNo.strIdSignNo :: TVarChar AS strIdSignNo
-          , tmpSign.strMIIdSign   :: TVarChar AS strMIIdSign
+          , COALESCE (tmpSign.strSign, '')       :: TVarChar AS strSign
+          , COALESCE (tmpSignNo.strSignNo, '')   :: TVarChar AS strSignNo
+          , COALESCE (tmpSign.strIdSign, '')     :: TVarChar AS strIdSign
+          , COALESCE (tmpSignNo.strIdSignNo, '') :: TVarChar AS strIdSignNo
+          , COALESCE (tmpSign.strMIIdSign, '')   :: TVarChar AS strMIIdSign
      FROM tmpSign
           FULL JOIN tmpSignNo ON tmpSignNo.SignInternalId = tmpSign.SignInternalId
     ;

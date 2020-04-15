@@ -32,7 +32,7 @@ BEGIN
           , zfCalc_WordNumber_Split (tmp.strIdSign,   ',', vbUserId :: TVarChar)
           , zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', vbUserId :: TVarChar)
             INTO vbSignInternalId, vbStrMIIdSign, vbStrIdSign, vbStrIdSignNo, vbIndex, vbIndexNo
-      FROM lpSelect_MI_PersonalService_Sign (inMovementId:= inMovementId) AS tmp;
+      FROM lpSelect_MI_Sign (inMovementId:= inMovementId) AS tmp;
 
 
      -- проверка

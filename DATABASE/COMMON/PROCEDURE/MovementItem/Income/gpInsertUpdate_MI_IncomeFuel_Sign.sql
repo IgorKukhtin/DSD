@@ -16,7 +16,7 @@ BEGIN
      vbUserId := inSession;
 
      -- сохранили
-     PERFORM gpInsertUpdate_MI_IncomeFuel_Sign (inMovementId, inIsSign, inSession);
+     PERFORM gpInsertUpdate_MI_Sign (inMovementId, inIsSign, inSession);
 
 END;
 $BODY$

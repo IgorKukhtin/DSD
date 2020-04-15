@@ -31,15 +31,20 @@ BEGIN
      SELECT Movement.DescId                                AS MovementDescId
           , COALESCE (Object_To.DescId,0)                  AS ObjectDescId
           , COALESCE (MovementLinkObject_From.ObjectId,0)  AS ObjectId
-            INTO vbMovementDescId, vbObjectDescId, vbObjectId
+          , COALESCE (MovementLinkObject.ObjectId, 0) AS SignInternalId
+            INTO vbMovementDescId, vbObjectDescId, vbObjectId, vbSignInternalId
      FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                        AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+                                        AND Movement.DescId                    = zc_Movement_Income()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                        AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                        AND Movement.DescId                  = zc_Movement_Income()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                        AND MovementLinkObject.DescId     = zc_MovementLinkObject_SignInternal()
      WHERE Movement.Id = inMovementId;
 
      

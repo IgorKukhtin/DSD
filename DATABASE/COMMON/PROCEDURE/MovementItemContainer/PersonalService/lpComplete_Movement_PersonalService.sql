@@ -196,7 +196,7 @@ BEGIN
                                    AND COALESCE (ObjectDate_DateOut.ValueData + INTERVAL'1 MONTH', zc_DateEnd()) < DATE_TRUNC ('MONTH', vbServiceDate) + INTERVAL'1 MONTH'
                                  LIMIT 1
                                 );
-         IF vbMovementItemId_err > 0 -- AND 1=0
+          IF vbMovementItemId_err > 0 -- AND 1=0
          THEN RAISE EXCEPTION 'Ошибка.Сотрудник <%> <%> <%> уволен <%>. Необходимо его удалить в ведомости за <%> № <%> от <%>.' --  id=%
                        , lfGet_Object_ValueData_sh ((SELECT MI.ObjectId FROM MovementItem AS MI WHERE MI.Id = vbMovementItemId_err))
                        , lfGet_Object_ValueData_sh ((SELECT MILO.ObjectId FROM MovementItemLinkObject AS MILO WHERE MILO.MovementItemId = vbMovementItemId_err AND MILO.DescId = zc_MILinkObject_Position()))

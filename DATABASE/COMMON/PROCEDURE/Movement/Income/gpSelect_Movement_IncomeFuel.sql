@@ -402,7 +402,7 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
             -- ЩК.ОНДОХЯХ
-            LEFT JOIN lpSelect_MI_IncomeFuel_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id
+            LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id
 
     -- WHERE COALESCE (Object_To.DescId, 0) IN (0, zc_Object_Car(), zc_Object_Member(), zc_Object_Founder()) -- !!!яюлне мейпюяхбне пеьемхе!!!
        WHERE View_InfoMoney.InfoMoneyId = zc_Enum_InfoMoney_20401() -- !!!яюлне мейпюяхбне пеьемхе!!!

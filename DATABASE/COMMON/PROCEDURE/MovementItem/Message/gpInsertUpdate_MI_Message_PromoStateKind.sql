@@ -56,16 +56,20 @@ BEGIN
 
 
      -- !!!пересчитали кто подписал/отменил + изменение модели!!!
-     PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, tmp.ObjectId)
+     PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, inPromoStateKindId, vbUserId);
 
 
      -- нашли последний - и сохранили в шапку
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
-
---           , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), ioId, inCheckDate);
+              -- сохранили свойство <Дата согласования>
+           , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
+                                        , CASE WHEN inPromoStateKindId = zc_Enum_PromoStateKind_Complete() THEN CURRENT_DATE ELSE NULL END
+                                         )
               -- сохранили свойство <Согласовано>
-  --         , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
+                                           , CASE WHEN inPromoStateKindId = zc_Enum_PromoStateKind_Complete() THEN TRUE ELSE FALSE END
+                                            )
 
      FROM (SELECT MI.ObjectId, MI.Amount
            FROM MovementItem AS MI

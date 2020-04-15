@@ -99,7 +99,7 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
-            LEFT JOIN lpSelect_MI_PersonalService_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
+            LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement.Id) AS tmpSign ON tmpSign.Id = Movement.Id   -- эл.подписи  --
 
             LEFT JOIN ObjectLink AS ObjectLink_PersonalServiceList_Member
                                  ON ObjectLink_PersonalServiceList_Member.ObjectId = Object_PersonalServiceList.Id
