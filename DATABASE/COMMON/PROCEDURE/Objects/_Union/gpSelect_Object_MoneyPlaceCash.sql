@@ -264,7 +264,8 @@ BEGIN
      WHERE Object_BankAccount_View.JuridicalId IN (zc_Juridical_Basis()
                                                  , 15505 -- дсйн рнб 
                                                   )
-       AND vbIsConstraint = FALSE
+     --AND vbIsConstraint = FALSE
+
     UNION ALL
      SELECT Object_Member.Id
           , Object_Member.ObjectCode     

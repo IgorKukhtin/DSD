@@ -42,12 +42,11 @@ BEGIN
 
 
       -- проверка - если все подписано
-      IF vbStrIdSign <> '' AND vbStrIdSignNo = ''
+      IF vbStrIdSign <> '' AND vbStrIdSignNo = '' AND inPromoStateKindId <> zc_Enum_PromoStateKind_Main()
       THEN
           RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.'
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
-                        , lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Complete())
                          ;
       END IF;
 /*
@@ -63,8 +62,6 @@ BEGIN
       END IF;*/
 
 
-      -- если есть среди - кто остался подписать
---    IF vbIndexNo > 0
       -- В работе Исполнительный Директор ИЛИ Согласован
       IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
       THEN

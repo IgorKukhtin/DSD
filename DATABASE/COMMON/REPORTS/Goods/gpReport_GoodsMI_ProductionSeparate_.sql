@@ -1,4 +1,4 @@
--- Function: gpReport_GoodsMI_ProductionSeparate ()
+   -- Function: gpReport_GoodsMI_ProductionSeparate ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_ProductionSeparate (TDateTime, TDateTime, Integer, Boolean, TVarChar);

@@ -18,9 +18,9 @@ BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_ProductionUnionTech_OperDate());
 
-    vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_Update_Movement_ProductionUnionTech_OperDate());
-    
-    
+    -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_Update_Movement_ProductionUnionTech_OperDate());
+
+
     IF COALESCE(inMovementId,0) = 0
     THEN
         RAISE EXCEPTION 'ќшибка. ƒокумент не сохранен!';
@@ -28,26 +28,28 @@ BEGIN
 
     IF inOperDate IS NOT NULL
     THEN
-      vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
-      
-      IF vbStatusId = zc_Enum_Status_Complete()
-      THEN 
-          -- распроводим
-          PERFORM gpUnComplete_Movement_ProductionUnion (inMovementId:= inMovementId, inSession:= inSession);
-      END IF;
+        vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
 
-      -- сохранили <ƒокумент> c новой датой
-      PERFORM lpInsertUpdate_Movement (inMovementId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+        IF vbStatusId = zc_Enum_Status_Complete()
+        THEN
+            -- распроводим
+            PERFORM gpUnComplete_Movement_ProductionUnion (inMovementId:= inMovementId, inSession:= inSession);
+        END IF;
+
+        -- сохранили <ƒокумент> c новой датой
+        PERFORM lpInsertUpdate_Movement (inMovementId, Movement.DescId, Movement.InvNumber, inOperDate, NULL, Movement.AccessKeyId)
+        FROM Movement
+        WHERE Movement.Id = inMovementId;
 
 
-      IF vbStatusId = zc_Enum_Status_Complete() 
-      THEN
-          --если документ был проведен тогда проводим 
-          PERFORM gpComplete_Movement_ProductionUnion (inMovementId:= inMovementId, inIsLastComplete:= FALSE, inSession:= inSession);
-      END IF;
-      
-      -- сохранили протокол
-      PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+        IF vbStatusId = zc_Enum_Status_Complete()
+        THEN
+            --если документ был проведен тогда проводим
+            PERFORM gpComplete_Movement_ProductionUnion (inMovementId:= inMovementId, inIsLastComplete:= FALSE, inSession:= inSession);
+        END IF;
+
+        -- сохранили протокол
+        PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
     END IF;
 

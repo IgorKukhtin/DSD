@@ -110,4 +110,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpSelect_MI_Sign (inMovementId:= 15644701)
+-- SELECT * FROM lpSelect_MI_Sign (inMovementId:= 16390310)

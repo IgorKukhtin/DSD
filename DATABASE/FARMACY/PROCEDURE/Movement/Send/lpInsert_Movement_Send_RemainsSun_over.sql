@@ -211,15 +211,15 @@ BEGIN
              , tmp.Amount_t2, tmp.Summ_t2
         FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                    , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '45 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '35 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '35 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '25 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '25 DAY'  AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '60 DAY' AND inOperDate
+                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - INTERVAL '35 DAY' AND inOperDate
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0

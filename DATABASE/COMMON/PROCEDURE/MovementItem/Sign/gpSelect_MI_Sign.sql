@@ -1,6 +1,7 @@
 -- Function: gpSelect_MI_Sign (Integer, Boolean, Boolean, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_MI_PersonalService_Sign (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_MI_IncomeFuel_Sign (Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_MI_PersonalService_Sign (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MI_Sign (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Sign(
@@ -33,7 +34,7 @@ BEGIN
      SELECT Movement.DescId                                AS MovementDescId
           , COALESCE (Object_To.DescId,0)                  AS ObjectDescId
           , COALESCE (MovementLinkObject_From.ObjectId,0)  AS ObjectId
-          , COALESCE (MovementLinkObject.ObjectId, 0) AS SignInternalId
+          , COALESCE (MovementLinkObject.ObjectId, 0)      AS SignInternalId
             INTO vbMovementDescId, vbObjectDescId, vbObjectId, vbSignInternalId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -58,7 +59,8 @@ BEGIN
                         )
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
-                            , CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
+                          --, CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
+                            , MovementItem.ObjectId AS SignInternalId
                             , MovementItem.Amount     AS Ord
                             , MILO_Insert.ObjectId    AS UserId
                             , MIDate_Insert.ValueData AS OperDate
@@ -93,11 +95,8 @@ BEGIN
           FULL JOIN tmpMI ON tmpMI.SignInternalId = tmpObject.SignInternalId
                          AND tmpMI.UserId         = tmpObject.UserId
                          AND tmpMI.isErased       = FALSE
-          LEFT JOIN Object AS Object_SignInternal
-                           ON Object_SignInternal.Id     = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
-                          AND Object_SignInternal.DescId = zc_Object_SignInternal()
-
-          LEFT JOIN Object AS Object_User ON Object_User.Id = COALESCE (tmpObject.UserId, tmpMI.UserId)
+          LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = COALESCE (tmpObject.SignInternalId, tmpMI.SignInternalId)
+          LEFT JOIN Object AS Object_User ON Object_User.Id                 = COALESCE (tmpObject.UserId, tmpMI.UserId)
      ;
 
 END;
