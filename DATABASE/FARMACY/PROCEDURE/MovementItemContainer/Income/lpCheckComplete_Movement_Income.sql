@@ -24,20 +24,26 @@ BEGIN
    WHERE MovementLinkObject_NDSKind.MovementId = inMovementId
      AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind();
 
-   -- Проверяем у всех ли товаров совпадает НДС. 
-   vbGoodsId:= (SELECT MovementItem.ObjectId
-                FROM MovementItem
-                    JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                    ON ObjectLink_Goods_NDSKind.ObjectId = MovementItem.ObjectId
-                                   AND ObjectLink_Goods_NDSKind.ChildObjectId <> vbNDSKindId
-                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                WHERE MovementItem.MovementId = inMovementId
-                  AND MovementItem.DescId     = zc_MI_Master()
-                  AND MovementItem.IsErased   = FALSE
-                LIMIT 1);
-   IF vbGoodsId <> 0
-   THEN 
-       RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', lfGet_Object_ValueData (vbGoodsId);
+   IF COALESCE((SELECT MovementBoolean_UseNDSKind.ValueData
+                FROM MovementBoolean AS MovementBoolean_UseNDSKind
+                WHERE MovementBoolean_UseNDSKind.MovementId = inMovementId
+                  AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()), FALSE) = FALSE
+   THEN
+     -- Проверяем у всех ли товаров совпадает НДС. 
+     vbGoodsId:= (SELECT MovementItem.ObjectId
+                  FROM MovementItem
+                      JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                      ON ObjectLink_Goods_NDSKind.ObjectId = MovementItem.ObjectId
+                                     AND ObjectLink_Goods_NDSKind.ChildObjectId <> vbNDSKindId
+                                     AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+                  WHERE MovementItem.MovementId = inMovementId
+                    AND MovementItem.DescId     = zc_MI_Master()
+                    AND MovementItem.IsErased   = FALSE
+                  LIMIT 1);
+     IF vbGoodsId <> 0
+     THEN 
+         RAISE EXCEPTION 'У "%" не совпадает тип НДС с документом', lfGet_Object_ValueData (vbGoodsId);
+     END IF;
    END IF;
 
 

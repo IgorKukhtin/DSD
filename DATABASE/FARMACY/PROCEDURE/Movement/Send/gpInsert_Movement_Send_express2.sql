@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_express2(
     IN inOperDate            TDateTime , -- Дата начала отчета
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_express2(
     IN inAmountRemains_to    TFloat,
     IN inMCS_from            TFloat,
     IN inMCS_to              TFloat,
+    IN inAmountRemains_calc  TFloat,     -- расч. ост. с учетом перемещения (от кого)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -26,6 +28,11 @@ BEGIN
      vbUserId := inSession;
      
      inOperDate := inOperDate :: Date;
+     
+     
+     -- переопределяем значение для перемещение, учитывая сколько на точке отправителе есть товара в остатке
+     inAmount := (CASE WHEN inAmountRemains_calc < inAmount THEN inAmountRemains_calc ELSE inAmount END) ::TFloat;
+     
      --  -- создали документы если нужно
      vbMovementId := gpInsertUpdate_Movement_Send (ioId               := COALESCE (tmp.MovementId,0) :: Integer
                                                  , inInvNumber        := COALESCE (tmp.Invnumber, CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)) :: TVarChar
@@ -66,7 +73,6 @@ BEGIN
                                        AND Movement.StatusId = zc_Enum_Status_UnComplete()
                                       ) AS tmp ON tmp.UnitId_to = tmpUnit.UnitId_to
         ;    
-
 
      -- сохранили свойство <Перемещение по СУН-v3> + isAuto
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    vbMovementId, TRUE);

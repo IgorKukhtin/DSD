@@ -13,12 +13,12 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Height = 614
     TabOrder = 2
     ExplicitTop = 59
-    ExplicitWidth = 784
+    ExplicitWidth = 782
     ExplicitHeight = 614
     ClientRectBottom = 614
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 784
+      ExplicitWidth = 782
       ExplicitHeight = 614
       inherited cxGrid: TcxGrid
         Top = 252
@@ -26,7 +26,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         Height = 180
         Align = alBottom
         ExplicitTop = 252
-        ExplicitWidth = 784
+        ExplicitWidth = 782
         ExplicitHeight = 180
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -220,6 +220,11 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
               Format = ',0.####'
               Kind = skSum
               Column = AmountRemains_calc
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNeed
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -317,6 +322,11 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = AmountNeed
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -332,11 +342,13 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 241
           end
           object MCS: TcxGridDBColumn
             Caption = #1053#1058#1047
             DataBinding.FieldName = 'MCS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1053#1058#1047' '#1089' '#1091#1095#1077#1090#1086#1084' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1074' '#1072#1089#1089#1086#1088#1090'. '#1084#1072#1090#1088#1080#1094#1077
@@ -377,9 +389,22 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
             HeaderHint = #1056#1077#1079#1091#1083#1100#1090#1072#1090': '#1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
             Width = 88
           end
+          object AmountNeed: TcxGridDBColumn
+            Caption = #1055#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100
+            DataBinding.FieldName = 'AmountNeed'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1055#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1087#1077#1088#1077#1084#1077#1097'.)'
+            Width = 87
+          end
           object AmountRemains_calc: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountRemains_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
@@ -387,7 +412,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
               #1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') + '#1047#1072#1082#1072 +
               #1079' ('#1086#1078#1080#1076#1072#1077#1084#1099#1081') - '#1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084
             Options.Editing = False
-            Width = 70
+            Width = 82
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -491,7 +516,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 784
         object cxGridDBTableViewResult_child: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = Result_childDS
@@ -695,7 +719,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
           OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
           OptionsView.GroupByBox = False
@@ -705,20 +728,19 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object ch2FromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'ToName'
+            DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 236
           end
           object ch2ToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 235
           end
           object ch2Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -729,7 +751,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1079#1091#1083#1100#1090#1072#1090' - '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076
-            Options.Editing = False
             Width = 99
           end
         end
@@ -745,7 +766,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitWidth = 784
         object cxGridDBTableViewPartion: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = PartionDS
@@ -820,7 +840,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 158
+            Width = 244
           end
           object chToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
@@ -1029,7 +1049,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid2
-        ExplicitWidth = 784
       end
       object cxSplitter1: TcxSplitter
         Left = 0
@@ -1039,7 +1058,6 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
         Control = cxGrid
-        ExplicitWidth = 784
       end
     end
   end
@@ -1047,7 +1065,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Width = 782
     Height = 33
     TabOrder = 4
-    ExplicitWidth = 784
+    ExplicitWidth = 782
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
@@ -1129,6 +1147,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
       RefreshOnTabSetChanges = False
     end
     object ExecuteDialog: TExecuteDialog
@@ -1201,7 +1220,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       MoveParams = <>
       ActionList = <
         item
-          Action = macSendSUN_List
+          Action = actSendSUN_ex2
         end
         item
           Action = actRefreshSend
@@ -1527,6 +1546,21 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         end>
       View = cxGridDBTableView
       Caption = 'macSendSUN_List'
+    end
+    object actUpdateResult_childDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMISend
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMISend
+        end
+        item
+          StoredProc = spSelectSend
+        end>
+      Caption = 'actUpdateResult_childDS'
+      DataSource = Result_childDS
     end
   end
   inherited MasterDS: TDataSource
@@ -1883,6 +1917,14 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountRemains_calc'
+        Value = Null
+        Component = PartionCDS
+        ComponentItem = 'AmountRemains_calc'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 680
@@ -1945,5 +1987,49 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       end>
     Left = 572
     Top = 3
+  end
+  object spUpdateMISend: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MI_Send_express2'
+    DataSets = <
+      item
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = Result_childCDS
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = 43466d
+        Component = Result_childCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = Null
+        Component = Result_childCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        Component = Result_childCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 528
   end
 end

@@ -1,6 +1,5 @@
 -- Function: gpSelect_CashRemains_Diff_ver2()
 
--- DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2_test (Integer, TVarChar, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_CashRemains_Diff_ver2 (TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_CashRemains_Diff_ver2(
@@ -25,7 +24,9 @@ RETURNS TABLE (
     PricePartionDate TFloat,
     Color_calc Integer,
     DeferredSend TFloat,
-    RemainsSun TFloat
+    RemainsSun TFloat,
+    NDS TFloat,
+    NDSKindId Integer
 )
 AS
 $BODY$
@@ -151,6 +152,7 @@ BEGIN
                            , GoodsCode Integer
                            , GoodsName TVarChar
                            , Price     TFloat
+                           , NDSKindId Integer
                            , Remains   TFloat
                            , MinExpirationDate TDateTime
                            , PartionDateKindId  Integer
@@ -166,6 +168,7 @@ BEGIN
     -- Данные
     WITH
          GoodsRemains AS ( SELECT CashRemains.GoodsId                     AS ObjectId
+                                , CashRemains.NDSKindId
                                 , CashRemains.PartionDateKindId
                                 , CashRemains.Price
                                 , CashRemains.Remains
@@ -180,6 +183,7 @@ BEGIN
                          )
                  -- состояние в сессии
        , SESSIONDATA AS (SELECT CashSessionSnapShot.ObjectId
+                              , CashSessionSnapShot.NDSKindId
                               , CashSessionSnapShot.Price
                               , CashSessionSnapShot.Remains
                               , CashSessionSnapShot.MCSValue
@@ -195,10 +199,11 @@ BEGIN
                         )
 
     -- РЕЗУЛЬТАТ - заливаем разницу
-    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, Remains, MinExpirationDate, PartionDateKindId,
+    INSERT INTO _DIFF (ObjectId, GoodsCode, GoodsName, Price, NDSKindId, Remains, MinExpirationDate, PartionDateKindId,
                        MCSValue, Reserved, DeferredSend, NewRow, AccommodationId, PartionDateDiscount, PriceWithVAT, Color_calc)
        WITH tmpDiff AS (SELECT GoodsRemains.ObjectId                                            AS ObjectId
                              , GoodsRemains.Price                                               AS Price
+                             , GoodsRemains.NDSKindId                                           AS NDSKindId
                              , GoodsRemains.MCSValue                                            AS MCSValue
                              , GoodsRemains.Remains                                             AS Remains
                              , GoodsRemains.Reserved                                            AS Reserved
@@ -215,7 +220,8 @@ BEGIN
                         FROM GoodsRemains
                              LEFT JOIN SESSIONDATA ON SESSIONDATA.ObjectId  = GoodsRemains.ObjectId
                                                    AND COALESCE (SESSIONDATA.PartionDateKindId,0) = COALESCE (GoodsRemains.PartionDateKindId, 0)
-                        WHERE COALESCE (GoodsRemains.Price, 0)    <> COALESCE (SESSIONDATA.Price, 0)
+                        WHERE COALESCE (GoodsRemains.Price, 0) <> COALESCE (SESSIONDATA.Price, 0)
+                           OR COALESCE (GoodsRemains.NDSKindId, 0) <> COALESCE (SESSIONDATA.NDSKindId, 0)
                            OR COALESCE (GoodsRemains.MCSValue, 0) <> COALESCE (SESSIONDATA.MCSValue, 0)
                            OR COALESCE (GoodsRemains.Remains, 0) <> COALESCE (SESSIONDATA.Remains, 0)
                            OR COALESCE (GoodsRemains.Reserved, 0) <> COALESCE (SESSIONDATA.Reserved, 0)
@@ -228,6 +234,7 @@ BEGIN
                         UNION ALL
                         SELECT SESSIONDATA.ObjectId                                                AS ObjectId
                              , SESSIONDATA.Price                                                   AS Price
+                             , SESSIONDATA.NDSKindId                                               AS NDSKindId
                              , SESSIONDATA.MCSValue                                                AS MCSValue
                              , 0                                                                   AS Remains
                              , NULL                                                                AS Reserved
@@ -239,8 +246,9 @@ BEGIN
                              , SESSIONDATA.PartionDateDiscount                                     AS PartionDateDiscount
                              , SESSIONDATA.PriceWithVAT                                            AS PriceWithVAT
                         FROM SESSIONDATA
-                             LEFT JOIN GoodsRemains  ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
+                             LEFT JOIN GoodsRemains ON GoodsRemains.ObjectId = SESSIONDATA.ObjectId
                                                    AND COALESCE (GoodsRemains.PartionDateKindId, 0) = COALESCE (SESSIONDATA.PartionDateKindId, 0)
+                                                   AND COALESCE (GoodsRemains.NDSKindId, 0) = COALESCE (SESSIONDATA.NDSKindId, 0)
                         WHERE COALESCE(GoodsRemains.ObjectId, 0) = 0
                           AND (COALESCE(SESSIONDATA.Remains, 0) <> 0
                                OR
@@ -254,6 +262,7 @@ BEGIN
             , Object_Goods.ObjectCode     AS GoodsCode
             , Object_Goods.ValueData      AS GoodsName
             , tmpDiff.Price
+            , tmpDiff.NDSKindId
             , tmpDiff.Remains
             , tmpDiff.MinExpirationDate
             , NULLIF (tmpDiff.PartionDateKindId, 0)  AS PartionDateKindId
@@ -289,15 +298,17 @@ BEGIN
         _DIFF
     WHERE CashSessionSnapShot.CashSessionId = inCashSessionId
       AND CashSessionSnapShot.ObjectId = _DIFF.ObjectId
+      AND  COALESCE(CashSessionSnapShot.NDSKindId, 0) =  COALESCE(_DIFF.NDSKindId, 0)
       AND COALESCE(CashSessionSnapShot.PartionDateKindId, 0) = COALESCE(_DIFF.PartionDateKindId, 0)
     ;
 
     --доливаем те, что появились
-    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,
+    Insert Into CashSessionSnapShot(CashSessionId,ObjectId,NDSKindId,PartionDateKindId,Price,Remains,MCSValue,Reserved,DeferredSend,MinExpirationDate,
                                     AccommodationId,PartionDateDiscount,PriceWithVAT)
     SELECT
         inCashSessionId
        ,_DIFF.ObjectId
+       ,_DIFF.NDSKindId
        ,COALESCE (_DIFF.PartionDateKindId, 0)
        ,_DIFF.Price
        ,_DIFF.Remains
@@ -377,12 +388,12 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
 
 
                                 WHERE Movement.DescId = zc_Movement_Send()
-                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE 
+                                  AND COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
                                   AND Movement.StatusId = zc_Enum_Status_Complete()
                                 )
                    -- Перемещения по СУН основные контейнера
                  , tmpRenainsSUNCount AS (SELECT Container.Id
-                                               , Container.ObjectId   
+                                               , Container.ObjectId
                                                , SUM(Container.Amount) AS Amount
                                           FROM tmpSendAll AS Movement
 
@@ -398,7 +409,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                                                    AND Container.WhereObjectId = vbUnitId
 
                                           WHERE Container.Amount <> 0
-                                          GROUP BY Container.Id, Container.ObjectId 
+                                          GROUP BY Container.Id, Container.ObjectId
                                           )
                    -- Перемещения по СУН полный набор
                  , tmpRenainsSUNAll AS (SELECT Container.Id                                       AS ID
@@ -422,7 +433,7 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = ContainerPD.Id
                                                                        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
                                           LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                               ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                                                               AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
                                           LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
                                                                   ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = ContainerLinkObject.ObjectId
@@ -435,9 +446,14 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                                           , SUM(COALESCE(Container.AmountPD, Container.Amount)) AS Amount
                                      FROM tmpRenainsSUNAll AS Container
 
-                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0) 
+                                     GROUP BY Container.GoodsID, COALESCE(Container.PartionDateKindId, 0)
                                       )
 
+                 , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                                       , ObjectFloat_NDSKind_NDS.ValueData
+                                 FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                 WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                )
         SELECT
             _DIFF.ObjectId,
             _DIFF.GoodsCode,
@@ -470,13 +486,20 @@ WITH tmp as (SELECT tmp.*, ROW_NUMBER() OVER (PARTITION BY TextValue_calc ORDER 
                  ELSE NULL END::TFloat                                  AS PricePartionDate,
             _DIFF.Color_calc,
             _DIFF.DeferredSend,
-            RemainsSUN TFloat
+            RemainsSUN TFloat,
+            ObjectFloat_NDSKind_NDS.ValueData AS NDS,
+            COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId) AS NDSKindId
         FROM _DIFF
             LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (_DIFF.PartionDateKindId, 0)
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = _DIFF.AccommodationId
             -- Остаток товара по СУН
             LEFT JOIN tmpRenainsSUN ON tmpRenainsSUN.GoodsID = _DIFF.ObjectId
-                                   AND tmpRenainsSUN.PartionDateKindId = _DIFF.PartionDateKindId;
+                                   AND tmpRenainsSUN.PartionDateKindId = _DIFF.PartionDateKindId
+            LEFT OUTER JOIN ObjectLink AS ObjectLink_Goods_NDSKind
+                                       ON ObjectLink_Goods_NDSKind.ObjectId = _DIFF.ObjectId
+                                      AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
+            LEFT OUTER JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                       ON ObjectFloat_NDSKind_NDS.ObjectId = COALESCE(_DIFF.NDSKindId, ObjectLink_Goods_NDSKind.ChildObjectId);
 
     -- !!!Протокол - отладка Скорости!!!
     PERFORM lpInsert_ResourseProtocol (inOperDate     := vbOperDate_StartBegin

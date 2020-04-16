@@ -1,12 +1,14 @@
 -- Function: gpSelect_Movement_ProductionUnionTech_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inStartDate         TDateTime,
     IN inEndDate           TDateTime,
     IN inFromId            Integer,
     IN inToId              Integer,
+    IN inGroupNum          Integer,
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -364,7 +366,7 @@ BEGIN
             , tmpData.GoodsKindCompleteName
             , tmpData.MeasureName*/
        FROM tmpData
-       WHERE tmpData.GroupNumber = 1
+       WHERE tmpData.GroupNumber = inGroupNum
       ;
     
 

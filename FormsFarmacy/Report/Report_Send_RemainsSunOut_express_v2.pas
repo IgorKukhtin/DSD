@@ -84,6 +84,8 @@ type
     edGoods: TcxButtonEdit;
     GuidesGoods: TdsdGuides;
     macSendSUN_List: TMultiAction;
+    spUpdateMISend: TdsdStoredProc;
+    actUpdateResult_childDS: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

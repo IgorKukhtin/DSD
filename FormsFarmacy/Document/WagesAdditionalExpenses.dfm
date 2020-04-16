@@ -331,6 +331,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
           end
           object Color_Calc: TcxGridDBBandedColumn
             DataBinding.FieldName = 'Color_Calc'
+            Visible = False
             Position.BandIndex = 0
             Position.ColIndex = 1
             Position.RowIndex = 0

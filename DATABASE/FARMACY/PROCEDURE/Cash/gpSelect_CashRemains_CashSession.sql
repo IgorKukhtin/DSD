@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_CashRemains_CashSession(
 
 RETURNS TABLE (GoodsId             Integer,    -- Товар
                PartionDateKindId   Integer,    -- Типы срок/не срок
+               NDSKindId           Integer,    -- Ставка НДС
                Price               TFloat,     -- цена
                Remains             TFloat,     -- Остаток
                MCSValue            TFloat,     -- неснижаемый товарный остаток
@@ -16,7 +17,7 @@ RETURNS TABLE (GoodsId             Integer,    -- Товар
                MinExpirationDate   TDateTime,  -- Срок годн. ост.
                AccommodationId     Integer,    -- Размещение товара
                PartionDateDiscount TFloat,     -- Скидка на партионный товар
-               PriceWithVAT        TFloat      -- Цена последней закупки
+               PriceWithVAT        TFloat     -- Цена последней закупки
               )
 AS
 $BODY$
@@ -165,7 +166,8 @@ BEGIN
 
                                   INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
 
-                             GROUP BY Container.Id, Container.ParentId
+                             GROUP BY Container.Id
+                                    , Container.ParentId
                               )
          , tmpDeferredSendParrent  AS (SELECT tmpDeferredSendAll.ParentId
                                             , SUM(tmpDeferredSendAll.Amount) AS Amount
@@ -183,6 +185,37 @@ BEGIN
                                      LEFT OUTER JOIN tmpDeferredSendParrent ON tmpDeferredSendParrent.ParentId = tmpDeferredSendID.Id
                                 WHERE tmpDeferredSendID.Amount - COALESCE(tmpDeferredSendParrent.Amount, 0) <> 0
                                 )
+         , tmpDeferredSendNDSKindId AS (SELECT Movement.ParentId
+                                             , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                                       OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                                     THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                                         FROM (SELECT DISTINCT tmpDeferredSendAll.ParentId FROM tmpDeferredSendAll) AS Movement
+
+                                              INNER JOIN Container ON Container.Id = Movement.ParentId
+
+                                              LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                            ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                                           AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                              -- элемент прихода
+                                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                                              LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                                              LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
+                                              LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                                              ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                                                             AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                                              LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                                           ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                                                          AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                          )
          -- Отложенные чеки
        , tmpMovementCheck AS (SELECT Movement.Id
                               FROM Movement
@@ -208,89 +241,100 @@ BEGIN
                                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                                 AND MovementLinkObject_Unit.ObjectId = vbUnitId
                              )
-       , tmpReserve AS (SELECT MovementItemMaster.ObjectId                                                   AS GoodsId
-                                      , SUM(COALESCE (MovementItemChild.Amount, MovementItemMaster.Amount))  AS Amount
-                                      , MIFloat_ContainerId.ValueData::Integer                               AS ContainerId
-                              FROM tmpMovReserveId AS Movement
+       , tmpReserve AS (SELECT MovementItemMaster.ObjectId                                          AS GoodsId
+                             , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)     AS NDSKindId
+                             , SUM(COALESCE (MovementItemChild.Amount, MovementItemMaster.Amount))  AS Amount
+                             , MIFloat_ContainerId.ValueData::Integer                               AS ContainerId
+                        FROM tmpMovReserveId AS Movement
 
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-                                                                AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                             INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                           ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                          AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                                          AND MovementLinkObject_Unit.ObjectId = vbUnitId
 
-                                   INNER JOIN MovementItem AS MovementItemMaster
-                                                           ON MovementItemMaster.MovementId = Movement.Id
-                                                          AND MovementItemMaster.DescId     = zc_MI_Master()
-                                                          AND MovementItemMaster.isErased   = FALSE
+                             INNER JOIN MovementItem AS MovementItemMaster
+                                                     ON MovementItemMaster.MovementId = Movement.Id
+                                                    AND MovementItemMaster.DescId     = zc_MI_Master()
+                                                    AND MovementItemMaster.isErased   = FALSE
 
-                                   LEFT JOIN MovementItem AS MovementItemChild
-                                                          ON MovementItemChild.MovementId = Movement.Id
-                                                         AND MovementItemChild.ParentId = MovementItemMaster.Id
-                                                         AND MovementItemChild.DescId     = zc_MI_Child()
-                                                         AND MovementItemChild.Amount     > 0
-                                                         AND MovementItemChild.isErased   = FALSE
+                             LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItemMaster.ObjectId
+                             LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
 
-                                   LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
-                                                               ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
-                                                              AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
-                              GROUP BY MovementItemMaster.ObjectId, MIFloat_ContainerId.ValueData
-                              )
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                              ON MILinkObject_NDSKind.MovementItemId = MovementItemMaster.Id
+                                                             AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
+                             LEFT JOIN MovementItem AS MovementItemChild
+                                                    ON MovementItemChild.MovementId = Movement.Id
+                                                   AND MovementItemChild.ParentId = MovementItemMaster.Id
+                                                   AND MovementItemChild.DescId     = zc_MI_Child()
+                                                   AND MovementItemChild.Amount     > 0
+                                                   AND MovementItemChild.isErased   = FALSE
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
+                                                         ON MIFloat_ContainerId.MovementItemId = MovementItemChild.Id
+                                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+                        GROUP BY MovementItemMaster.ObjectId
+                               , MIFloat_ContainerId.ValueData
+                               , COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId)
+                        )
        , tmpContainerAll AS (SELECT Container.DescId
-                                    , Container.Id
-                                    , Container.ParentId
-                                    , Container.ObjectId
-                                    , Container.Amount + COALESCE (tmpDeferredSend.Amount, 0)           AS Amount
-                                    , tmpDeferredSend.Amount                                            AS DeferredSend
-                                    , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
-                               FROM Container
+                                  , Container.Id
+                                  , Container.ParentId
+                                  , Container.ObjectId
+                                  , Container.Amount + COALESCE (tmpDeferredSend.Amount, 0)           AS Amount
+                                  , tmpDeferredSend.Amount                                            AS DeferredSend
+                                  , ContainerLinkObject.ObjectId                                      AS PartionGoodsId
+                             FROM Container
 
-                                    LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                                                                 AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                  LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                               AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
 
-                                    LEFT JOIN tmpDeferredSend ON tmpDeferredSend.ID = Container.ID
+                                  LEFT JOIN tmpDeferredSend ON tmpDeferredSend.ID = Container.ID
 
-                               WHERE Container.DescId  IN (zc_Container_Count(), zc_Container_CountPartionDate())
-                                 AND (Container.Amount <> 0 OR COALESCE (tmpDeferredSend.Amount, 0) <> 0)
-                                 AND Container.WhereObjectId = vbUnitId
-                              )
+                             WHERE Container.DescId  IN (zc_Container_Count(), zc_Container_CountPartionDate())
+                               AND (Container.Amount <> 0 OR COALESCE (tmpDeferredSend.Amount, 0) <> 0)
+                               AND Container.WhereObjectId = vbUnitId
+                            )
+
 
        , tmpContainerPD AS (SELECT Container.Id
-                                      , Container.ParentId
-                                      , Container.ObjectId
-                                      , Container.Amount
-                                      , Container.DeferredSend
-                                      , Reserve.Amount                                                AS Reserve
-                                      , COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
-                                      , COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin
-                                      , COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent
-                                      , COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT
-                                      , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
-                                                  COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
-                                                                                                   THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
-                                             WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
-                                             WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
-                                             WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
-                                             ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
-                                 FROM tmpContainerAll AS Container
-                                      LEFT JOIN tmpReserve AS Reserve
-                                                           ON Reserve.ContainerId = Container.ID
-                                      LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                           ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
-                                                          AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                      LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
-                                                              ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = Container.PartionGoodsId
-                                                             AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueMin
-                                                            ON ObjectFloat_PartionGoods_ValueMin.ObjectId =  Container.PartionGoodsId
-                                                           AND ObjectFloat_PartionGoods_ValueMin.DescId = zc_ObjectFloat_PartionGoods_ValueMin()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
-                                                            ON ObjectFloat_PartionGoods_Value.ObjectId =  Container.PartionGoodsId
-                                                           AND ObjectFloat_PartionGoods_Value.DescId = zc_ObjectFloat_PartionGoods_Value()
-                                      LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
-                                                            ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
-                                                           AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
-                                 WHERE Container.DescId = zc_Container_CountPartionDate()
-                                 )
+                                 , Container.ParentId
+                                 , Container.ObjectId
+                                 , Container.Amount
+                                 , Container.DeferredSend
+                                 , Reserve.Amount                                                AS Reserve
+                                 , COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
+                                 , COALESCE (ObjectFloat_PartionGoods_ValueMin.ValueData, 0)     AS PercentMin
+                                 , COALESCE (ObjectFloat_PartionGoods_Value.ValueData, 0)        AS Percent
+                                 , COALESCE (ObjectFloat_PartionGoods_PriceWithVAT.ValueData, 0) AS PriceWithVAT
+                                 , CASE WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0 AND
+                                             COALESCE (ObjectBoolean_PartionGoods_Cat_5.ValueData, FALSE) = TRUE
+                                                                                              THEN zc_Enum_PartionDateKind_Cat_5()  -- 5 кат (просрочка без наценки)
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_0  THEN zc_Enum_PartionDateKind_0()      -- просрочено
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_1  THEN zc_Enum_PartionDateKind_1()      -- Меньше 1 месяца
+                                        WHEN ObjectDate_ExpirationDate.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
+                                        ELSE  zc_Enum_PartionDateKind_Good() END  AS PartionDateKindId                              -- Востановлен с просрочки
+                            FROM tmpContainerAll AS Container
+                                 LEFT JOIN (SELECT tmpReserve.ContainerId, SUM(tmpReserve.Amount) AS Amount FROM tmpReserve GROUP BY tmpReserve.ContainerId) AS Reserve
+                                                      ON Reserve.ContainerId = Container.ID
+                                 LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                      ON ObjectDate_ExpirationDate.ObjectId = Container.PartionGoodsId
+                                                     AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionGoods_Cat_5
+                                                         ON ObjectBoolean_PartionGoods_Cat_5.ObjectId = Container.PartionGoodsId
+                                                        AND ObjectBoolean_PartionGoods_Cat_5.DescID = zc_ObjectBoolean_PartionGoods_Cat_5()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_ValueMin
+                                                       ON ObjectFloat_PartionGoods_ValueMin.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_ValueMin.DescId = zc_ObjectFloat_PartionGoods_ValueMin()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_Value
+                                                       ON ObjectFloat_PartionGoods_Value.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_Value.DescId = zc_ObjectFloat_PartionGoods_Value()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_PartionGoods_PriceWithVAT
+                                                       ON ObjectFloat_PartionGoods_PriceWithVAT.ObjectId =  Container.PartionGoodsId
+                                                      AND ObjectFloat_PartionGoods_PriceWithVAT.DescId = zc_ObjectFloat_PartionGoods_PriceWithVAT()
+                            WHERE Container.DescId = zc_Container_CountPartionDate()
+                             )
        , tmpContainerPDAll AS (SELECT tmpContainerPD.ParentId
                                       , SUM(tmpContainerPD.Amount - COALESCE (tmpContainerPD.DeferredSend, 0)) AS Amount
                                  FROM tmpContainerPD
@@ -523,13 +567,70 @@ BEGIN
                                FROM tmpContainerPD AS Container
                                     LEFT JOIN tmpCashGoodsPriceWithVAT ON tmpCashGoodsPriceWithVAT.ID = Container.ObjectId
                                )
+
+       , tmpContainerIncome AS (SELECT Container.Id
+                                     , Container.ObjectId
+                                     , Container.Amount - COALESCE (tmpContainerPDAll.Amount, 0)       AS Amount
+                                     , Container.DeferredSend
+                                     , COALESCE (MI_Income_find.Id,MI_Income.Id)                       AS MI_IncomeId
+                                     , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)       AS M_IncomeId
+                                FROM tmpContainerAll AS Container
+                                     LEFT JOIN  tmpContainerPDAll on tmpContainerPDAll.ParentId = Container.Id
+                                     LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                   ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                                  AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                     LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                     -- элемент прихода
+                                     LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                     -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                     LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                 ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                     -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                     LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                          -- AND 1=0
+                                WHERE Container.DescId = zc_Container_Count()
+                                )
+       , tmpContainer AS (SELECT Container.Id
+                               , Container.ObjectId
+                               , Container.Amount
+                               , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                        OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                 THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                               , Container.DeferredSend
+                               , MIDate_ExpirationDate.ValueData                                           AS ExpirationDate
+                          FROM tmpContainerIncome AS Container
+                               LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                               LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                               LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
+                                                                ON MIDate_ExpirationDate.MovementItemId = Container.MI_IncomeId
+                                                               AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                               LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                               ON MovementBoolean_UseNDSKind.MovementId = Container.M_IncomeId
+                                                              AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                            ON MovementLinkObject_NDSKind.MovementId = Container.M_IncomeId
+                                                           AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                         )
+       , tmpGoodsRemains AS (SELECT Container.ObjectId
+                                  , Container.NDSKindId
+                                  , SUM(Container.Amount)                                   AS Remains
+                                  , SUM(Container.DeferredSend)                             AS DeferredSend
+                                  , MIN(COALESCE (Container.ExpirationDate, zc_DateEnd()))  AS MinExpirationDate
+                             FROM tmpContainer AS Container
+                             WHERE Container.Amount <> 0
+                             GROUP BY Container.ObjectId
+                                    , Container.NDSKindId
+                             HAVING SUM(Container.Amount) <> 0 OR SUM(Container.DeferredSend) <> 0
+                             )
        , tmpPDGoodsRemains AS (SELECT Container.ObjectId
-                                    , Container.PartionDateKindId                                       AS PartionDateKindId
-                                    , SUM (Container.Amount)                                            AS Remains
-                                    , SUM (Container.Reserve)                                           AS Reserve
-                                    , SUM (Container.DeferredSend)                                      AS DeferredSend
-                                    , MIN (Container.ExpirationDate)::TDateTime                         AS MinExpirationDate
-                                    , MAX (tmpPDPriceWithVAT.PriceWithVAT)                              AS PriceWithVAT
+                                    , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId) AS NDSKindId
+                                    , Container.PartionDateKindId                                          AS PartionDateKindId
+                                    , SUM (Container.Amount)                                               AS Remains
+                                    , SUM (Container.Reserve)                                              AS Reserve
+                                    , SUM (Container.DeferredSend)                                         AS DeferredSend
+                                    , MIN (Container.ExpirationDate)::TDateTime                            AS MinExpirationDate
+                                    , MAX (tmpPDPriceWithVAT.PriceWithVAT)                                 AS PriceWithVAT
 
                                     , MIN (CASE WHEN Container.PartionDateKindId = zc_Enum_PartionDateKind_Good()
                                                 THEN 0
@@ -538,57 +639,21 @@ BEGIN
                                                 ELSE Container.PercentMin END)::TFloat                  AS PartionDateDiscount
                                FROM tmpContainerPD AS Container
 
+                                    LEFT JOIN tmpContainer ON tmpContainer.Id = Container.ParentId
+
+                                    LEFT JOIN tmpDeferredSendNDSKindId ON tmpDeferredSendNDSKindId.ParentId = Container.ParentId
+
                                     LEFT JOIN tmpPDPriceWithVAT ON tmpPDPriceWithVAT.ObjectId = Container.ObjectId
                                                                AND tmpPDPriceWithVAT.PartionDateKindId = Container.PartionDateKindId
                                                                AND tmpPDPriceWithVAT.Ord = 1
 
                                GROUP BY Container.ObjectId
+                                      , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId)
                                       , Container.PartionDateKindId
                                )
-
-
-
-       , tmpContainerIncome AS (SELECT Container.ObjectId
-                                      , Container.Amount - COALESCE (tmpContainerPDAll.Amount, 0)       AS Amount
-                                      , Container.DeferredSend
-                                      , COALESCE (MI_Income_find.Id,MI_Income.Id)                       AS MI_IncomeId 
-                                 FROM tmpContainerAll AS Container
-                                      LEFT JOIN  tmpContainerPDAll on tmpContainerPDAll.ParentId = Container.Id
-                                      LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                                    ON ContainerLinkObject_MovementItem.Containerid = Container.Id
-                                                                   AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                      LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                      -- элемент прихода
-                                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                      -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                      -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                           -- AND 1=0
-                                 WHERE Container.DescId = zc_Container_Count()
-                                 )
-       , tmpContainer AS (SELECT Container.ObjectId
-                                      , Container.Amount 
-                                      , Container.DeferredSend
-                                      , MIDate_ExpirationDate.ValueData                                 AS ExpirationDate
-                                 FROM tmpContainerIncome AS Container
-                                      LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
-                                                                       ON MIDate_ExpirationDate.MovementItemId = Container.MI_IncomeId
-                                                                      AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
-                                 )
-       , tmpGoodsRemains AS (SELECT Container.ObjectId
-                                      , SUM(Container.Amount)                                   AS Remains
-                                      , SUM(Container.DeferredSend)                             AS DeferredSend
-                                      , MIN(COALESCE (Container.ExpirationDate, zc_DateEnd()))  AS MinExpirationDate
-                                 FROM tmpContainer AS Container
-                                 WHERE Container.Amount <> 0
-                                 GROUP BY Container.ObjectId
-                                 HAVING SUM(Container.Amount) <> 0 OR SUM(Container.DeferredSend) <> 0
-                                 )
           -- Непосредственно остатки
        , GoodsRemains AS (SELECT Container.ObjectId
+                               , Container.NDSKindId
                                , Container.Remains - COALESCE(Reserve.Amount, 0) -
                                             COALESCE(Container.DeferredSend, 0)    AS Remains
                                , Reserve.Amount                                    AS Reserve
@@ -600,9 +665,11 @@ BEGIN
                           FROM tmpGoodsRemains AS Container
                                LEFT JOIN tmpReserve AS Reserve
                                                     ON Reserve.GoodsId = Container.ObjectId
+                                                   AND Reserve.NDSKindId = Container.NDSKindId
                                                    AND COALESCE (Reserve.ContainerId, 0 ) = 0
                           UNION ALL
                           SELECT Container.ObjectId
+                               , Container.NDSKindId
                                , Container.Remains - COALESCE(Container.Reserve, 0) -
                                                      COALESCE(Container.DeferredSend, 0)
                                , Container.Reserve
@@ -614,6 +681,7 @@ BEGIN
                           FROM tmpPDGoodsRemains AS Container
                           UNION ALL
                           SELECT Reserve.GoodsId                                                       AS GoodsId
+                               , Reserve.NDSKindId                                                     AS NDSKindId
                                , -Reserve.Amount                                                       AS Remains
                                , Reserve.Amount                                                        AS Reserved
                                , NULL                                                                  AS DeferredSend
@@ -657,6 +725,7 @@ BEGIN
 
     SELECT GoodsRemains.ObjectId                                             AS GoodsId
          , COALESCE (GoodsRemains.PartionDateKindId, 0)                      AS PartionDateKindId
+         , GoodsRemains.NDSKindId                                            AS NDSKindId
          , COALESCE(tmpObject_Price.Price,0)::TFloat                         AS Price
          , GoodsRemains.Remains::TFloat                                      AS Remains
          , tmpObject_Price.MCSValue                                          AS MCSValue
@@ -665,7 +734,7 @@ BEGIN
          , GoodsRemains.MinExpirationDate::TDateTime                         AS MinExpirationDate
          , Accommodation.AccommodationId                                     AS AccommodationId
          , CASE WHEN COALESCE (GoodsRemains.PartionDateKindId, 0) <> 0
-                THEN GoodsRemains.PartionDateDiscount ELSE NULL END::TFloat   AS PartionDateDiscount
+                THEN GoodsRemains.PartionDateDiscount ELSE NULL END::TFloat  AS PartionDateDiscount
          , GoodsRemains.PriceWithVAT::TFloat                                 AS PriceWithVAT
     FROM
         GoodsRemains
@@ -674,7 +743,6 @@ BEGIN
         LEFT OUTER JOIN AccommodationLincGoods AS Accommodation
                                                ON Accommodation.UnitId = vbUnitId
                                               AND Accommodation.GoodsId = GoodsRemains.ObjectId;
-
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -710,5 +778,4 @@ ALTER FUNCTION gpSelect_CashRemains_CashSession (TVarChar) OWNER TO postgres;
 */
 
 --тест
-SELECT * FROM gpSelect_CashRemains_CashSession ('3')
-
+-- SELECT * FROM gpSelect_CashRemains_CashSession ('3')

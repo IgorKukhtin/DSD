@@ -36,6 +36,7 @@ RETURNS TABLE (Id Integer
              , AmountMonth TFloat
              , TypeDiscount Integer
              , PriceDiscount TFloat
+             , NDSKindId Integer
               )
 AS
 $BODY$
@@ -138,6 +139,7 @@ BEGIN
            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
+           , MovementItem.NDSKindId                                              AS NDSKindId
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
@@ -180,3 +182,5 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 3959328 ,  inSession := '3');
+
+select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18360515 ,  inSession := '3');
