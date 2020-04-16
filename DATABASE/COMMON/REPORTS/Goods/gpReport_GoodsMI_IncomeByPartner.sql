@@ -19,11 +19,11 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_IncomeByPartner (
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, PartionGoods TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
-             , LocationCode Integer, LocationName TVarChar
+             , LocationId Integer, LocationCode Integer, LocationName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -133,8 +133,10 @@ BEGIN
                  AND COALESCE (inUnitId, 0)      = 0
           )
     -- Результат
-    SELECT Object_GoodsGroup.ValueData AS GoodsGroupName
+    SELECT Object_GoodsGroup.Id        AS GoodsGroupId
+         , Object_GoodsGroup.ValueData AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.id             AS GoodsId
          , Object_Goods.ObjectCode     AS GoodsCode
          , Object_Goods.ValueData      AS GoodsName
          , Object_GoodsKind.ValueData  AS GoodsKindName
@@ -142,6 +144,7 @@ BEGIN
          , Object_Measure.ValueData    AS MeasureName
          , Object_TradeMark.ValueData  AS TradeMarkName
 
+         , Object_Location.Id         AS LocationId
          , Object_Location.ObjectCode AS LocationCode
          , Object_Location.ValueData  AS LocationName
 

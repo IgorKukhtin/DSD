@@ -18,7 +18,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , isPeresort Boolean, DocumentKindName TVarChar
              , SubjectDocName  TVarChar
-             , PartionGoods TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , PartionGoods TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
@@ -180,7 +182,9 @@ BEGIN
 
            , Object_PartionGoods.ValueData AS PartionGoods
            
-           , Object_GoodsGroup.ValueData AS GoodsGroupName 
+           , Object_GoodsGroup.Id        AS GoodsGroupId
+           , Object_GoodsGroup.ValueData AS GoodsGroupName
+           , Object_Goods.Id             AS GoodsId
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName  
            , Object_GoodsKind.ValueData  AS GoodsKindName

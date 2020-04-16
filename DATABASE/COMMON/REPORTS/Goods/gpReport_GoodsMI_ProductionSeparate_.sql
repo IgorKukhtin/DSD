@@ -28,7 +28,7 @@ BEGIN
     IF inGoodsGroupId <> 0 
     THEN 
         INSERT INTO _tmpGoods (GoodsId)
-           SELECT lfObject_Goods_byGoodsGroup.GoodsId
+           SELECT lfObject_Goods_byGoodsGroup.GoodsId 
            FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE 
         INSERT INTO _tmpGoods (GoodsId)

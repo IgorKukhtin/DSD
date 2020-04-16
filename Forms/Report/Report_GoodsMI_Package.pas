@@ -24,7 +24,7 @@ type
     Amount_Production: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
-    UnitGuides: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     edUnit: TcxButtonEdit;
     Weight_diff: TcxGridDBColumn;
     Amount_Send_out: TcxGridDBColumn;
@@ -52,6 +52,8 @@ type
     WeightTotal: TcxGridDBColumn;
     cbisDate: TcxCheckBox;
     actRefreshData: TdsdDataSetRefresh;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

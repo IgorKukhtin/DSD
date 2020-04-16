@@ -74,6 +74,8 @@ type
     Num: TcxGridDBColumn;
     cbStorageLine: TcxCheckBox;
     cbCalculated: TcxCheckBox;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

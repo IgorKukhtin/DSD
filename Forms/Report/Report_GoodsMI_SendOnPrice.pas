@@ -108,6 +108,8 @@ type
     Summ_pl_real: TcxGridDBColumn;
     cbSubjectDoc: TcxCheckBox;
     bbcbSubjectDoc: TdxBarControlContainerItem;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Internal (
     IN inisSubjectDoc Boolean   , --показывать основания Да/Нет
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+RETURNS TABLE (GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
@@ -296,7 +296,8 @@ BEGIN
     -- ANALYZE _tmpUnit;
     
     -- Результат
-    SELECT Object_GoodsGroup.ValueData                AS GoodsGroupName
+    SELECT Object_GoodsGroup.Id                       AS GoodsGroupId
+         , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
