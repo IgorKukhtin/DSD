@@ -432,6 +432,7 @@ BEGIN
         ResultSet.IsTop_Goods,
         vbisTopNo_Unit AS isTopNo_Unit,
         ResultSet.IsPromo,
+        ResultSet.isResolution_224,
         CASE WHEN COALESCE (ResultSet.IsTop_Goods, FALSE) = FALSE
                         AND ResultSet.MinExpirationDate > zc_DateStart()
                         AND ResultSet.MinExpirationDate <= CURRENT_DATE
@@ -465,8 +466,7 @@ BEGIN
              ELSE FALSE
         END  AS Reprice,
 
-        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice,
-        ResultSet.isResolution_224
+        CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
     FROM
         ResultSet
         LEFT OUTER JOIN MarginCondition ON MarginCondition.MarginCategoryId = vbMarginCategoryId

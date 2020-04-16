@@ -4,7 +4,8 @@
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar);
 -- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
  INOUT ioId                  Integer   , -- Ключ объекта <строка документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Check_ver2(
     IN inSummChangePercent   TFloat    , -- Сумма Скидки
     IN inPartionDateKindID   Integer   , -- Тип срок/не срок
     IN inPricePartionDate    TFloat    , -- Цена отпускная согласно срока
+    IN inNDSKindId           Integer   , -- Ставка НДС
     IN inList_UID            TVarChar  , -- UID строки
     -- IN inDiscountExternalId  Integer  DEFAULT 0,  -- Проект дисконтных карт
     -- IN inDiscountCardNumber  TVarChar DEFAULT '', -- № Дисконтной карты
@@ -58,11 +60,17 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                          ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND MovementItem.isErased   = FALSE
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
+                      AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
                    );
         ELSE
@@ -75,10 +83,16 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                          ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
+                      AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
                       AND MovementItem.isErased   = FALSE
                    );
         END IF;
@@ -95,10 +109,16 @@ BEGIN
                          LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionDateKind
                                                           ON MILinkObject_PartionDateKind.MovementItemId = MovementItem.Id
                                                          AND MILinkObject_PartionDateKind.DescId         = zc_MILinkObject_PartionDateKind()
+                         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                          ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId   = inGoodsId
                       AND MovementItem.DescId     = zc_MI_Master()
                       AND COALESCE (MILinkObject_PartionDateKind.ObjectId, 0) = COALESCE (inPartionDateKindID, 0)
+                      AND COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) = COALESCE (inNDSKindId, 0)
                       AND MovementItem.isErased   = FALSE
                     LIMIT 1
                    );
@@ -140,6 +160,8 @@ BEGIN
       END IF;
     END IF;
 
+    -- сохранили свойство <Тип срок/не срок>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), ioId, inNDSKindId);
 
     -- сохранили свойство <UID строки продажи>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_UID(), ioId, inList_UID);
@@ -164,7 +186,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_MovementItem_Check_ver2 (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TFloat, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
