@@ -5,7 +5,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -782,7 +782,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deStart: TcxDateEdit
       Left = 52
       Top = 7
-      EditValue = 42522d
+      EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 11
@@ -796,7 +796,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
     object deEnd: TcxDateEdit
       Left = 198
       Top = 7
-      EditValue = 42522d
+      EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 13
@@ -887,7 +887,6 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           Action = actUpdate_OperDate
         end>
-      View = cxGridDBTableView
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 67
@@ -915,8 +914,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           StoredProc = spPrintDays1
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103
+      Caption = #1047#1072#1082#1083#1072#1076#1082#1072' '#1089#1099#1088#1100#1103' ('#1087#1086' '#1076#1085#1103#1084')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1082#1083#1072#1076#1082#1080' '#1089#1099#1088#1100#1103' ('#1087#1086' '#1076#1085#1103#1084')'
       ImageIndex = 17
       DataSets = <
         item
@@ -1009,8 +1008,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           StoredProc = spPrintDays2
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1087#1077#1094#1080#1081
-      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1087#1077#1094#1080#1081
+      Caption = #1047#1072#1082#1083#1072#1076#1082#1072' '#1089#1087#1077#1094#1080#1081' ('#1087#1086' '#1076#1085#1103#1084')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1082#1083#1072#1076#1082#1080' '#1089#1087#1077#1094#1080#1081' ('#1087#1086' '#1076#1085#1103#1084')'
       ImageIndex = 20
       DataSets = <
         item
@@ -1103,8 +1102,8 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
         item
           StoredProc = spPrintDays3
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1086#1073#1086#1083#1086#1095#1082#1080
-      Hint = #1055#1077#1095#1072#1090#1100' '#1055#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1086#1073#1086#1083#1086#1095#1082#1080
+      Caption = #1047#1072#1082#1083#1072#1076#1082#1072' '#1086#1073#1086#1083#1086#1095#1082#1080' ('#1087#1086' '#1076#1085#1103#1084')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1047#1072#1082#1083#1072#1076#1082#1080' '#1086#1073#1086#1083#1086#1095#1082#1080' ('#1087#1086' '#1076#1085#1103#1084')'
       ImageIndex = 15
       DataSets = <
         item
