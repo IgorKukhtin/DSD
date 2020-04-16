@@ -464,7 +464,9 @@ BEGIN
                   THEN TRUE
 
              ELSE FALSE
-        END  AS Reprice,
+        END 
+        -- Временно прикрыл товар постановление для переоценки
+        AND ResultSet.isResolution_224 = FALSE AS Reprice,
 
         CASE WHEN tmpGoodsReprice.GoodsId IS NOT NULL THEN TRUE ELSE FALSE END AS isGoodsReprice
     FROM
