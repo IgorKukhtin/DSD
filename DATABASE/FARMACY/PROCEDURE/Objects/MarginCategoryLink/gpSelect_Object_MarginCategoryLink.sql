@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MarginCategoryLink(
 
 RETURNS TABLE (Id Integer, MarginCategoryId Integer, MarginCategoryName TVarChar
              , UnitId Integer, UnitName TVarChar, JuridicalId Integer, JuridicalName TVarChar
-             , JuridicalName_our TVarChar, RetailName TVarChar
+             , JuridicalName_our TVarChar
+             , RetailId Integer, RetailName TVarChar
              , isSite Boolean
              , isErased boolean
               )
@@ -32,6 +33,7 @@ BEGIN
         Object_MarginCategoryLink.JuridicalName,
         
         Object_Juridical.ValueData  AS JuridicalName_our,
+        Object_Retail.Id            AS RetailId,
         Object_Retail.ValueData     AS RetailName,
         
         COALESCE(ObjectBoolean_Site.ValueData, FALSE) AS isSite,
@@ -64,6 +66,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.20         *
  10.04.19         *
  31.08.16         * 
  13.04.16         *

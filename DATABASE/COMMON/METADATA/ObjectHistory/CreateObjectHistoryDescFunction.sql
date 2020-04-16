@@ -18,9 +18,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistory_PriceChange() RETURNS Integer AS $BO
 INSERT INTO ObjectHistoryDesc(Code, ItemName)
 SELECT 'zc_ObjectHistory_PriceChange', 'Данные по ценам СО СКИДКОЙ' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_PriceChange());
 
+CREATE OR REPLACE FUNCTION zc_ObjectHistory_PesentSalary() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryDesc WHERE Code = 'zc_ObjectHistory_PesentSalary'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectHistoryDesc(Code, ItemName)
+SELECT 'zc_ObjectHistory_PesentSalary', 'Данные по % для Фонда ЗП' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryDesc WHERE Id = zc_ObjectHistory_PesentSalary());
+
+ 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.
+ 16.04.20         * zc_ObjectHistory_PesentSalary
  16.08.18         * zc_ObjectHistory_PriceChange
  09.02.17         * add zc_ObjectHistory_MarginCategoryItem
  22.12.15                                                          *zc_ObjectHistory_Price
