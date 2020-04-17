@@ -278,7 +278,7 @@ BEGIN
                                                                           ON tmpSend_Child.UnitId_from = _tmpRemains.UnitId
                                                                          AND tmpSend_Child.GoodsId = _tmpRemains.GoodsId
           WHERE (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
-            AND COALESCE (_tmpRemains.AmountResult_in,0) > 0
+--          AND COALESCE (_tmpRemains.AmountResult_in,0) > 0
          ;
      RETURN NEXT Cursor1;
 

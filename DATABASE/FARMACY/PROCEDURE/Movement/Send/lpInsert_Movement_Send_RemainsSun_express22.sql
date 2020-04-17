@@ -153,7 +153,7 @@ BEGIN
           AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v3()
           -- если указан день недели - проверим его
         --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-      UNION 
+    /*  UNION 
         SELECT Object.Id AS UnitId
                -- коэф суточного запаса получателя - определяется приход
              , CASE WHEN COALESCE (OF_KoeffInSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffInSUN.ValueData  END AS KoeffInSUN
@@ -165,7 +165,7 @@ BEGIN
         WHERE Object.DescId = zc_Object_Unit()
           -- если указан день недели - проверим его
         --AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
-        
+      */  
        ;
 
      -- все Товары для схемы SUN-v3
@@ -179,7 +179,7 @@ BEGIN
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
               )
           AND OB.DescId = zc_ObjectBoolean_Goods_SUN_v3()
-      UNION
+      /*UNION
         SELECT Object.Id AS GoodsId
                -- Кратность по Э-СУН  
              , CASE WHEN COALESCE (OF_KoeffSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffSUN.ValueData  END AS KoeffSUN
@@ -188,7 +188,7 @@ BEGIN
         WHERE Object.DescId = zc_Object_Goods()
         --AND Object.ValueData ILIKE 'маска защит%'
         and Object.ObjectCode = 1054 --1163
-       
+       */
        ;
 
 
@@ -429,9 +429,9 @@ BEGIN
                         FROM ObjectLink AS OL_Price_Unit
                              -- !!!только для таких Аптек!!!
                              INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
-                             LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                     ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
-                                                    AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                           --LEFT JOIN ObjectBoolean AS MCS_isClose
+                           --                        ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
+                           --                       AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
                              LEFT JOIN ObjectLink AS OL_Price_Goods
                                                   ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                  AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -447,7 +447,7 @@ BEGIN
                                                    ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
                                                   AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
                         WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                          AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                        --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                        )
      -- 2.1. Результат: EXPRESS - все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale
@@ -582,8 +582,8 @@ BEGIN
              LEFT JOIN tmpMI_Reserve ON tmpMI_Reserve.UnitId  = tmpObject_Price.UnitId
                                     AND tmpMI_Reserve.GoodsId = tmpObject_Price.GoodsId
              -- отбросили !!закрытые!!
-             INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-                                         AND Object_Goods_View.IsClose = FALSE
+           --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
+           --                            AND Object_Goods_View.IsClose = FALSE
              -- отбросили !!акционные!!
            --INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
            --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%'

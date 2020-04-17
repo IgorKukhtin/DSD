@@ -59,8 +59,10 @@ BEGIN
                         )
              -- данные из уже сохраненных элементов подписи
            , tmpMI AS (SELECT MovementItem.Id
+                              -- !!!замена
                           --, CASE WHEN vbSignInternalId > 0 THEN vbSignInternalId ELSE MovementItem.ObjectId END AS SignInternalId
                             , MovementItem.ObjectId AS SignInternalId
+                              --
                             , MovementItem.Amount     AS Ord
                             , MILO_Insert.ObjectId    AS UserId
                             , MIDate_Insert.ValueData AS OperDate
