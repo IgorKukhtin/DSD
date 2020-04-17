@@ -268,15 +268,10 @@ BEGIN
                , _tmpRemains.AmountResult_in                     AS Amount_res
                , _tmpRemains.AmountResult_in * _tmpRemains.Price AS Summ_res
                
-               , COALESCE (_tmpRemains.AmountResult_in, 0) - COALESCE (tmpSend_Child.Amount, 0) AS AmountNeed  -- потребность
+               , COALESCE (_tmpRemains.AmountResult_in, 0) - COALESCE (_tmpRemains.AmountSend_in, 0) AS AmountNeed  -- потребность
           FROM _tmpRemains_all_a AS _tmpRemains
               LEFT JOIN Object AS Object_Unit ON Object_Unit.Id  = _tmpRemains.UnitId
               
-              LEFT JOIN (SELECT _tmpSend.UnitId_from, _tmpSend.GoodsId, SUM (_tmpSend.Amount) AS Amount 
-                         FROM _tmpSend
-                         GROUP BY _tmpSend.UnitId_from, _tmpSend.GoodsId) AS tmpSend_Child
-                                                                          ON tmpSend_Child.UnitId_from = _tmpRemains.UnitId
-                                                                         AND tmpSend_Child.GoodsId = _tmpRemains.GoodsId
           WHERE (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
             AND COALESCE (_tmpRemains.AmountResult_in,0) > 0
          ;
@@ -332,7 +327,8 @@ BEGIN
                  -- –езультат -  ол-во распределено - перемещение расход
                , _tmpRemains.AmountResult_out    AS Amount_res
                , _tmpRemains.AmountResult_out * _tmpRemains.Price AS Summ_res
-
+               -- факт. излишек после перемещени€
+               , COALESCE (_tmpRemains.AmountResult_out,0) - COALESCE (_tmpRemains.AmountSend_out,0)   AS AmountExcess   --избыток
           FROM _tmpRemains_all AS _tmpRemains
                LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = _tmpRemains.UnitId
                LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id  = _tmpRemains.GoodsId

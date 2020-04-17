@@ -1935,6 +1935,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     end
     object bbSendSUN: TdxBarButton
       Action = macSendSUN
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053'>'
       Category = 0
     end
     object bbReportPartionDate: TdxBarButton

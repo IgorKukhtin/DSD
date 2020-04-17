@@ -3,25 +3,30 @@
 DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Send_express2 (TDateTime, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_express2(
-    IN inOperDate            TDateTime , -- ƒата начала отчета
-    IN inUnitId_from         Integer,
-    IN inUnitId_to           Integer,
-    IN inGoodsId             Integer,
-    IN inAmount              TFloat,
-    IN inAmountRemains_from  TFloat,
-    IN inAmountRemains_to    TFloat,
-    IN inMCS_from            TFloat,
-    IN inMCS_to              TFloat,
-    IN inAmountRemains_calc  TFloat,     -- расч. ост. с учетом перемещени€ (от кого)
-    IN inSession             TVarChar    -- сесси€ пользовател€
+     IN inOperDate            TDateTime , -- ƒата начала отчета
+     IN inUnitId_from         Integer,
+     IN inUnitId_to           Integer,
+     IN inGoodsId             Integer,
+     IN inAmount              TFloat,
+     IN inAmountRemains_from  TFloat,
+     IN inAmountRemains_to    TFloat,
+     IN inMCS_from            TFloat,
+     IN inMCS_to              TFloat,
+  INOUT ioAmountExcess        TFloat,  -- факт. излишек с учетом перемещени€ (от кого)
+  INOUT ioAmountNeed          TFloat,  -- факт. потребность с учетом перемещени€ (кому)
+  INOUT ioAmountSend_out      TFloat,  -- ѕеремещ. расх. (ожидаетс€)   - 1-ый грид
+  INOUT ioAmountSend_in       TFloat,  -- ѕеремещ. приход. (ожидаетс€) - 2-ый грид
+     IN inSession             TVarChar -- сесси€ пользовател€
 )
-RETURNS VOID
+RETURNS record
 AS
 $BODY$
    DECLARE vbUserId     Integer;
    DECLARE vbMovementId Integer;
+   DECLARE vbId         Integer;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -31,7 +36,7 @@ BEGIN
      
      
      -- переопредел€ем значение дл€ перемещение, учитыва€ сколько на точке отправителе есть товара в остатке
-     inAmount := (CASE WHEN inAmountRemains_calc < inAmount THEN inAmountRemains_calc ELSE inAmount END) ::TFloat;
+     inAmount := (CASE WHEN ioAmountExcess < inAmount THEN ioAmountExcess ELSE inAmount END) ::TFloat;
      
      --  -- создали документы если нужно
      vbMovementId := gpInsertUpdate_Movement_Send (ioId               := COALESCE (tmp.MovementId,0) :: Integer
@@ -79,16 +84,19 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v3(), vbMovementId, TRUE);
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), vbMovementId, TRUE);
 
+     --- ищем есть ли уже така€ строка
+     vbId := (SELECT MovementItem.Id FROM MovementItem WHERE MovementItem.MovementId = vbMovementId AND MovementItem.ObjectId = inGoodsId AND MovementItem.isErased = FALSE);
+     
      -- создали строки документа - ѕеремещение по —”Ќ, если уже есть обновили значени€
-     PERFORM lpInsertUpdate_MovementItem_Send (ioId                   := 0
-                                                  , inMovementId           := vbMovementId
-                                                  , inGoodsId              := inGoodsId
-                                                  , inAmount               := inAmount
-                                                  , inAmountManual         := 0
-                                                  , inAmountStorage        := 0
-                                                  , inReasonDifferencesId  := 0
-                                                  , inUserId               := vbUserId
-                                                   );
+     vbId := lpInsertUpdate_MovementItem_Send (ioId                   := COALESCE (vbId,0)
+                                             , inMovementId           := vbMovementId
+                                             , inGoodsId              := inGoodsId
+                                             , inAmount               := inAmount
+                                             , inAmountManual         := 0
+                                             , inAmountStorage        := 0
+                                             , inReasonDifferencesId  := 0
+                                             , inUserId               := vbUserId
+                                              );
      
      
      -- сохран€ем остальные свойства строки
@@ -98,8 +106,17 @@ BEGIN
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValueTo(), MovementItem.Id, inMCS_to)
      FROM MovementItem
      WHERE MovementItem.MovementId = vbMovementId
-       AND MovementItem.ObjectId = inGoodsId;
+       AND MovementItem.ObjectId = inGoodsId
+       AND MovementItem.Id = vbId
+       AND MovementItem.isErased = FALSE;
 
+
+     -- рассчитываем данные дл€ 1-го и 2-го грида
+     ioAmountNeed     := (COALESCE (ioAmountNeed,0)     - COALESCE (inAmount,0)) ::TFloat;
+     ioAmountExcess   := (COALESCE (ioAmountExcess,0)   - COALESCE (inAmount,0)) ::TFloat;
+     ioAmountSend_out := (COALESCE (ioAmountSend_out,0) + COALESCE (inAmount,0)) ::TFloat;
+     ioAmountSend_in  := (COALESCE (ioAmountSend_in,0)  + COALESCE (inAmount,0)) ::TFloat;
+      
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
