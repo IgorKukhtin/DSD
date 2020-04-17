@@ -857,7 +857,8 @@ uses
   Hardware in '..\..\FormsFarmacy\Guides\Hardware.pas' {HardwareForm: TParentForm},
   HardwareEdit in '..\..\FormsFarmacy\Guides\HardwareEdit.pas' {HardwareEditForm: TParentForm},
   Report_Send_RemainsSunOut_express_v2 in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express_v2.pas' {Report_Send_RemainsSunOut_express_v2Form: TParentForm},
-  Report_Send_RemainsSun_expressV2Dialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressV2Dialog.pas' {Report_Send_RemainsSun_expressV2DialogForm: TParentForm};
+  Report_Send_RemainsSun_expressV2Dialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressV2Dialog.pas' {Report_Send_RemainsSun_expressV2DialogForm: TParentForm},
+  PersentSalaryDialog in '..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas' {PersentSalaryDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

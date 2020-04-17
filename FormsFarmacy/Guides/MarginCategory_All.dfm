@@ -1,30 +1,31 @@
 inherited MarginCategory_AllForm: TMarginCategory_AllForm
   Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1086#1082
-  ClientHeight = 338
-  ClientWidth = 1145
+  ClientHeight = 598
+  ClientWidth = 1227
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1161
-  ExplicitHeight = 376
+  ExplicitWidth = 1243
+  ExplicitHeight = 636
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1145
-    Height = 312
-    ExplicitWidth = 1145
-    ExplicitHeight = 312
-    ClientRectBottom = 312
-    ClientRectRight = 1145
+    Width = 1227
+    Height = 572
+    ExplicitWidth = 1227
+    ExplicitHeight = 572
+    ClientRectBottom = 572
+    ClientRectRight = 1227
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1145
-      ExplicitHeight = 312
+      ExplicitWidth = 1227
+      ExplicitHeight = 572
       inherited cxGrid: TcxGrid
-        Width = 1145
-        Height = 312
-        ExplicitWidth = 1145
-        ExplicitHeight = 312
+        Width = 1064
+        Height = 572
+        ExplicitWidth = 1064
+        ExplicitHeight = 572
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsData.Appending = True
-          OptionsData.Inserting = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -67,6 +68,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object Value_1: TcxGridDBColumn
@@ -136,18 +138,266 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
           end
         end
       end
+      object cxSplitter2: TcxSplitter
+        Left = 1064
+        Top = 0
+        Width = 8
+        Height = 572
+        HotZoneClassName = 'TcxMediaPlayer8Style'
+        AlignSplitter = salRight
+        Control = cxGrid2
+      end
+      object cxGrid2: TcxGrid
+        Left = 1072
+        Top = 0
+        Width = 155
+        Height = 572
+        Align = alRight
+        PopupMenu = PopupMenu
+        TabOrder = 2
+        object cxGridDBTableView_child: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = #1042#1089#1077#1075#1086' '#1089#1090#1088#1086#1082': ,0'
+              Kind = skCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = 'C'#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = chStartDate
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object chStartDate: TcxGridDBColumn
+            Caption = #1089' '#1076#1072#1090#1099
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
+          object chPersentSalary: TcxGridDBColumn
+            Caption = '% '#1092#1086#1085#1076#1072' '#1079#1087
+            DataBinding.FieldName = 'PersentSalary'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1092#1086#1085#1076#1072' '#1079#1087
+            Options.Editing = False
+            Width = 60
+          end
+        end
+        object cxGridLevel2: TcxGridLevel
+          GridView = cxGridDBTableView_child
+        end
+      end
     end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectPersentSalary
+        end>
+    end
     object actInsertUpdate: TdsdUpdateDataSet
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
+      StoredProcList = <>
       Caption = 'actInsertUpdate'
       DataSource = MasterDS
     end
@@ -397,6 +647,97 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end>
       isShowModal = False
     end
+    object actUpdatePersentSalary: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdatePersentSalary
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdatePersentSalary
+        end>
+      Caption = #1042#1074#1077#1089#1090#1080' % '#1060#1047#1055
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082' '#1085#1072' % '#1092#1086#1085#1076#1072' '#1079#1087
+      ImageIndex = 77
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogPersentSalary: TExecuteDialog
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1042#1074#1077#1089#1090#1080' % '#1060#1047#1055' '#1080' '#1080#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1042#1074#1077#1089#1090#1080' % '#1092#1086#1085#1076#1072' '#1047#1055' '#1080' '#1080#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
+      ImageIndex = 77
+      FormName = 'TPersentSalaryDialogForm'
+      FormNameParam.Value = 'TPersentSalaryDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 44166d
+          Component = FormParams
+          ComponentItem = 'StartDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'RetailId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'RetailId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MaterRetailId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterRetailName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'RetailName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PersentSalary'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PersentSalary'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdatePersentSalary: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogPersentSalary
+        end
+        item
+          Action = actUpdatePersentSalary
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086' '#1042#1057#1045#1052'  %% '#1085#1072#1094#1077#1085#1086#1082' % '#1092#1086#1085#1076#1072' '#1047#1055'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1080#1079#1084#1077#1085#1077#1085#1099
+      Caption = #1042#1074#1077#1089#1090#1080' % '#1060#1047#1055' '#1080' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1082#1086' '#1042#1057#1045#1052' %% '#1085#1072#1094#1077#1085#1086#1082' '
+      Hint = #1042#1074#1077#1089#1090#1080' % '#1060#1047#1055' '#1080' '#1076#1086#1073#1072#1074#1080#1090#1100' '#1082#1086' '#1042#1057#1045#1052' %% '#1085#1072#1094#1077#1085#1086#1082' '
+      ImageIndex = 77
+    end
     object actUpdateParam: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -408,7 +749,6 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' %% '#1085#1072#1094#1077#1085#1086#1082
       ImageIndex = 76
-      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialog: TExecuteDialog
@@ -607,8 +947,8 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
     Top = 80
   end
   inherited BarManager: TdxBarManager
-    Left = 112
-    Top = 80
+    Left = 152
+    Top = 72
     DockControlHeights = (
       0
       0
@@ -694,7 +1034,15 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateParam'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdatePersentSalary'
         end
         item
           Visible = True
@@ -749,8 +1097,12 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       Action = ProtocolOpenForm7
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateParam: TdxBarButton
       Action = macUpdateParam
+      Category = 0
+    end
+    object bbUpdatePersentSalary: TdxBarButton
+      Action = macUpdatePersentSalary
       Category = 0
     end
   end
@@ -1077,7 +1429,7 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
       end>
     PackSize = 1
     Left = 728
-    Top = 240
+    Top = 153
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -1146,8 +1498,127 @@ inherited MarginCategory_AllForm: TMarginCategory_AllForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'OperDate'
+        Value = 44166d
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 344
     Top = 88
+  end
+  object spInsertUpdatePersentSalary: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_MarginCategory_PersentSalary'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inRetailId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'RetailId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPersentSalary'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersentSalary'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1104
+    Top = 201
+  end
+  object ChildCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'RetailId'
+    MasterFields = 'RetailId'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 1168
+    Top = 409
+  end
+  object ChildDS: TDataSource
+    DataSet = ChildCDS
+    Left = 1116
+    Top = 402
+  end
+  object ChildDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView_child
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end
+      item
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 1166
+    Top = 321
+  end
+  object spSelectPersentSalary: TdsdStoredProc
+    StoredProcName = 'gpSelect_ObjectHistory_PersentSalary'
+    DataSet = ChildCDS
+    DataSets = <
+      item
+        DataSet = ChildCDS
+      end>
+    Params = <
+      item
+        Name = 'inRetailId'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1064
+    Top = 288
   end
 end

@@ -5,23 +5,23 @@ inherited PriceChangeHistoryForm: TPriceChangeHistoryForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 655
-  ExplicitHeight = 445
+  ExplicitHeight = 444
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 639
     Height = 380
-    ExplicitWidth = 533
+    ExplicitWidth = 639
     ExplicitHeight = 380
     ClientRectBottom = 380
     ClientRectRight = 639
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 533
+      ExplicitWidth = 639
       ExplicitHeight = 380
       inherited cxGrid: TcxGrid
         Width = 639
         Height = 380
-        ExplicitWidth = 533
+        ExplicitWidth = 639
         ExplicitHeight = 380
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Deleting = False

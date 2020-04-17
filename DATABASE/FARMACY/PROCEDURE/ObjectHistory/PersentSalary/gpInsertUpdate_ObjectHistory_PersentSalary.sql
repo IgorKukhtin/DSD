@@ -1,12 +1,12 @@
--- Function: gpInsertUpdate_ObjectHistory_PesentSalary ()
+-- Function: gpInsertUpdate_ObjectHistory_PersentSalary ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PesentSalary (Integer, Integer, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectHistory_PersentSalary (Integer, Integer, TDateTime, TFloat, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PesentSalary(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PersentSalary(
  INOUT ioId                 Integer,    -- ключ объекта <Элемент истории % фонда зп>
     IN inRetailId           Integer,    -- торговя сеть
     IN inOperDate           TDateTime,  -- Дата действия %
-    IN inPesentSalary       TFloat,     -- % фонда зп
+    IN inPersentSalary       TFloat,     -- % фонда зп
     IN inSession            TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -25,9 +25,9 @@ BEGIN
 
 
    -- Вставляем или меняем объект историю
-   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PesentSalary(), inRetailId, inOperDate, vbUserId);
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PersentSalary(), inRetailId, inOperDate, vbUserId);
    -- 
-   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PesentSalary_Value(), ioId, inPesentSalary);
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PersentSalary_Value(), ioId, inPersentSalary);
 
 
 END;

@@ -5,7 +5,7 @@
   ClientWidth = 562
   AddOnFormData.isSingle = False
   ExplicitWidth = 568
-  ExplicitHeight = 327
+  ExplicitHeight = 330
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -814,6 +814,21 @@
         Name = 'GoodsKindName'
         Value = ''
         Component = GooodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReceiptId'
+        Value = Null
+        Component = ReceiptGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReceiptName'
+        Value = Null
+        Component = ReceiptGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','

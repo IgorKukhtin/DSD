@@ -48,15 +48,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PriceChange_FixDiscount() RETUR
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
  SELECT zc_ObjectHistory_PriceChange(), 'zc_ObjectHistoryFloat_PriceChange_FixDiscount','фиксированная сумма скидки' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PriceChange_FixDiscount());
 
-CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PesentSalary_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_PesentSalary_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PersentSalary_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectHistoryFloatDesc WHERE Code = 'zc_ObjectHistoryFloat_PersentSalary_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectHistoryFloatDesc (DescId, Code ,itemname)
- SELECT zc_ObjectHistory_PesentSalary(), 'zc_ObjectHistoryFloat_PesentSalary_Value','% фонда зп' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PesentSalary_Value());
+ SELECT zc_ObjectHistory_PersentSalary(), 'zc_ObjectHistoryFloat_PersentSalary_Value','% фонда зп' WHERE NOT EXISTS (SELECT * FROM ObjectHistoryFloatDesc WHERE Id = zc_ObjectHistoryFloat_PersentSalary_Value());
+
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.   Шаблий О.В.
- 16.04.20         * zc_ObjectHistoryFloat_PesentSalary_Value
+ 16.04.20         * zc_ObjectHistoryFloat_PersentSalary_Value
  04.12.19                                                                        * zc_ObjectHistoryFloat_PriceChange_FixDiscount
  07.02.19         * zc_ObjectHistoryFloat_PriceChange_FixPercent
  16.08.18         * zc_ObjectHistoryFloat_PriceChange_Value

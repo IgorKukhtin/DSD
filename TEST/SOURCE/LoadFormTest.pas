@@ -1471,13 +1471,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  {exit;
+  exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
-
+  {
   // 11,12,14 Инна
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
@@ -3477,12 +3478,13 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptDialogForm');
   // Рецептуры
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptEditForm');
   // Затраты в рецептурах
@@ -3496,11 +3498,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceipt_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceipt_ObjectForm');
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptGoods_ObjectForm');
   // составляющие рецептур
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
+  {TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptComponentsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptComponentsForm');
   }
 end;
