@@ -28,6 +28,13 @@ type
     cxLabel4: TcxLabel;
     edPhysicalMemory: TcxTextEdit;
     cxLabel5: TcxLabel;
+    ceCashRegister: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    GuidesCashRegister: TdsdGuides;
+    edComment: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edIdentifier: TcxTextEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

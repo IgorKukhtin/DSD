@@ -624,7 +624,8 @@ BEGIN
                              HAVING SUM(Container.Amount) <> 0 OR SUM(Container.DeferredSend) <> 0
                              )
        , tmpPDGoodsRemains AS (SELECT Container.ObjectId
-                                    , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId) AS NDSKindId
+                                    , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId, 
+                                                                                  Object_Goods.NDSKindId) AS NDSKindId
                                     , Container.PartionDateKindId                                          AS PartionDateKindId
                                     , SUM (Container.Amount)                                               AS Remains
                                     , SUM (Container.Reserve)                                              AS Reserve
@@ -647,8 +648,11 @@ BEGIN
                                                                AND tmpPDPriceWithVAT.PartionDateKindId = Container.PartionDateKindId
                                                                AND tmpPDPriceWithVAT.Ord = 1
 
+                                    LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                                    LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
                                GROUP BY Container.ObjectId
-                                      , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId)
+                                      , COALESCE(tmpContainer.NDSKindId, tmpDeferredSendNDSKindId.NDSKindId, Object_Goods.NDSKindId)
                                       , Container.PartionDateKindId
                                )
           -- Непосредственно остатки

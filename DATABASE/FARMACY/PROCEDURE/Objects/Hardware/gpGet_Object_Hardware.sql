@@ -1,15 +1,16 @@
 -- Function: gpGet_Object_Hardware()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Hardware(integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Hardware(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Hardware(
     IN inId            Integer,       -- ключ объекта <Города>
-    IN isCashRegister  Boolean,       -- касса
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitName TVarChar
+             , CashRegisterID Integer, CashRegisterName TVarChar
              , BaseBoardProduct TVarChar, ProcessorName TVarChar, DiskDriveModel TVarChar, PhysicalMemory TVarChar
+             , Identifier TVarChar, Comment TVarChar
 ) AS
 $BODY$
 BEGIN
@@ -17,11 +18,6 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    
-   IF isCashRegister = True
-   THEN
-      RAISE EXCEPTION 'Ошибка. Изменение данных по кассам запрещено...';
-   END IF;
-
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY
@@ -31,13 +27,18 @@ BEGIN
            , CAST ('' as TVarChar)     AS Name
 
            , CAST (0 as Integer)       AS UnitId
+           , CAST ('' as TVarChar)     AS CashRegisterName
+
+           , CAST (0 as Integer)       AS CashRegisterID
            , CAST ('' as TVarChar)     AS UnitName
 
            , CAST ('' as TVarChar)     AS BaseBoardProduct
            , CAST ('' as TVarChar)     AS ProcessorName
            , CAST ('' as TVarChar)     AS DiskDriveModel
-           , CAST ('' as TVarChar)     AS PhysicalMemory;
+           , CAST ('' as TVarChar)     AS PhysicalMemory
 
+           , CAST ('' as TVarChar)     AS Identifier
+           , CAST ('' as TVarChar)     AS Comment;
    ELSE
        RETURN QUERY
        SELECT
@@ -48,10 +49,16 @@ BEGIN
            , Object_Unit.Id            AS UnitId
            , Object_Unit.ValueData     AS UnitName
 
+           , Object_CashRegister.Id             AS CashRegisterID
+           , Object_CashRegister.ValueData      AS CashRegisterName
+
            , ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
            , ObjectString_ProcessorName.ValueData                      AS ProcessorName
            , ObjectString_DiskDriveModel.ValueData                     AS DiskDriveModel
            , ObjectString_PhysicalMemory.ValueData                     AS PhysicalMemory
+
+           , ObjectString_Identifier.ValueData                         AS Identifier
+           , ObjectString_Comment.ValueData                            AS Comment
 
        FROM Object AS Object_Hardware
             LEFT JOIN ObjectLink AS ObjectLink_Hardware_Unit
@@ -59,6 +66,11 @@ BEGIN
                                 AND ObjectLink_Hardware_Unit.DescId = zc_ObjectLink_Hardware_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Hardware_Unit.ChildObjectId
             
+            LEFT JOIN ObjectLink AS ObjectLink_Hardware_CashRegister
+                                 ON ObjectLink_Hardware_CashRegister.ObjectId = Object_Hardware.Id
+                                AND ObjectLink_Hardware_CashRegister.DescId = zc_ObjectLink_Hardware_CashRegister()
+            LEFT JOIN Object AS Object_CashRegister ON Object_CashRegister.Id = ObjectLink_Hardware_CashRegister.ChildObjectId
+
             LEFT JOIN ObjectString AS ObjectString_BaseBoardProduct 
                                    ON ObjectString_BaseBoardProduct.ObjectId = Object_Hardware.Id
                                   AND ObjectString_BaseBoardProduct.DescId = zc_ObjectString_Hardware_BaseBoardProduct()
@@ -68,10 +80,16 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_DiskDriveModel 
                                    ON ObjectString_DiskDriveModel.ObjectId = Object_Hardware.Id
                                   AND ObjectString_DiskDriveModel.DescId = zc_ObjectString_Hardware_DiskDriveModel()
-
             LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
                                   ON ObjectString_PhysicalMemory.ObjectId = Object_Hardware.Id
                                  AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_Hardware_PhysicalMemory()
+
+            LEFT JOIN ObjectString AS ObjectString_Identifier
+                                  ON ObjectString_Identifier.ObjectId = Object_Hardware.Id
+                                 AND ObjectString_Identifier.DescId = zc_ObjectString_Hardware_Identifier()
+            LEFT JOIN ObjectString AS ObjectString_Comment
+                                  ON ObjectString_Comment.ObjectId = Object_Hardware.Id
+                                 AND ObjectString_Comment.DescId = zc_ObjectString_Hardware_Comment()
        WHERE Object_Hardware.Id = inId;
    END IF;
 
@@ -79,7 +97,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Hardware(integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Hardware(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -89,4 +107,4 @@ ALTER FUNCTION gpGet_Object_Hardware(integer, Boolean, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Hardware (0, True, '3')
+-- SELECT * FROM gpGet_Object_Hardware (0, '3')

@@ -1,10 +1,9 @@
 -- Function: gpDelete_Object_Hardware()
 
-DROP FUNCTION IF EXISTS gpDelete_Object_Hardware(integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpDelete_Object_Hardware(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpDelete_Object_Hardware(
     IN inId            Integer,       -- ключ объекта <Города>
-    IN isCashRegister  Boolean,       -- касса
     IN inSession       TVarChar       -- сессия пользователя
 )
 RETURNS VOID AS
@@ -16,11 +15,6 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    vbUserId:= lpGetUserBySession (inSession);
    
-   IF isCashRegister = True
-   THEN
-      RAISE EXCEPTION 'Ошибка. Изменение данных по кассам запрещено...';
-   END IF;
-
     -- Разрешаем только сотрудникам с правами админа    
    IF NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
    THEN
@@ -36,7 +30,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpDelete_Object_Hardware(integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpDelete_Object_Hardware(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -46,4 +40,4 @@ ALTER FUNCTION gpDelete_Object_Hardware(integer, Boolean, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpDelete_Object_Hardware (0, True, '3')
+-- SELECT * FROM gpDelete_Object_Hardware (0, '3')

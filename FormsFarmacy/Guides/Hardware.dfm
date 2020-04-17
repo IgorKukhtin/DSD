@@ -98,6 +98,20 @@ inherited HardwareForm: THardwareForm
             Options.Editing = False
             Width = 90
           end
+          object Identifier: TcxGridDBColumn
+            Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+            DataBinding.FieldName = 'Identifier'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object Comment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
           object clErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -111,39 +125,9 @@ inherited HardwareForm: THardwareForm
   inherited ActionList: TActionList
     inherited actInsert: TInsertUpdateChoiceAction
       FormName = 'THardwareEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isCashRegister'
-          Value = False
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'THardwareEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'isCashRegister'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'isCashRegister'
-          DataType = ftBoolean
-          ParamType = ptInput
-          MultiSelectSeparator = ','
-        end>
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -308,15 +292,6 @@ inherited HardwareForm: THardwareForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisCashRegister'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isCashRegister'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
