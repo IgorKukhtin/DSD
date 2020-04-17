@@ -65,6 +65,7 @@ BEGIN
       istop boolean,
       istop_goods boolean,
       ispromo boolean,
+      isResolution_224 Boolean,
       reprice boolean
     ) ON COMMIT DROP;
   END IF;
@@ -162,6 +163,7 @@ BEGIN
                                 istop,
                                 istop_goods,
                                 ispromo,
+                                isResolution_224,
                                 reprice
                                )
   SELECT id,
@@ -203,6 +205,7 @@ BEGIN
          istop,
          istop_goods,
          ispromo,
+         isResolution_224,
          reprice 
  FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := inUnitId_to, inMinPercent := vbPercentDifference,
     inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession);
@@ -251,7 +254,8 @@ BEGIN
   FROM tmpAllGoodsPrice
   WHERE Reprice = True
     AND (PriceDiff_to > vbEqualRepriceMax
-    OR PriceDiff_to < - vbEqualRepriceMin);
+    OR PriceDiff_to < - vbEqualRepriceMin)
+    OR Reprice = False AND isResolution_224 = True;
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice where Reprice = True);

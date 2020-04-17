@@ -333,7 +333,8 @@ begin
         Exit;
       end;
 
-      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean then
+      if ListGoodsCDS.FieldByName('isResolution_224').AsBoolean and
+        (Now < EncodeDateTime(2020, 04, 20, 16, 0, 0, 0)) then
       begin
         ListGoodsCDS.Close;
         ShowMessage('Временная блокировка товара.');

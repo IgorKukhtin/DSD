@@ -2299,9 +2299,15 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Hardware_Unit', 'Связь с Подразделением', zc_Object_Hardware(), zc_Object_Unit() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_Unit');
 
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Hardware_CashRegister() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_CashRegister'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Hardware_CashRegister', 'Связь с Подразделением', zc_Object_Hardware(), zc_Object_CashRegister() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Hardware_CashRegister');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 17.04.20                                                                                      * zc_ObjectLink_Hardware_CashRegister
  12.04.20                                                                                      * zc_ObjectLink_Hardware_Unit
  10.04.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend
                     zc_ObjectLink_GoodsByGoodsKind_GoodsKindSubSend

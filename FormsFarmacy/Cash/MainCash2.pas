@@ -463,6 +463,8 @@ type
     N40: TMenuItem;
     MemDataNDS: TFloatField;
     MemDataNDSKINDID: TIntegerField;
+    CheckGridNDS: TcxGridDBColumn;
+    mdCheckNDSKINDID: TIntegerField;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -635,7 +637,7 @@ type
     //Обновить остаток согласно пришедшей разнице
     procedure UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
     //Возвращает товар в верхний грид
-    procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0; APartionDateKindId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+    procedure UpdateRemainsFromCheck(AGoodsId: Integer = 0; APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
 
     //Находится "ИТОГО" кол-во - сколько уже набрали в продаже и к нему плюсуется или минусуется "новое" кол-во
     function fGetCheckAmountTotal(AGoodsId: Integer = 0; AAmount: Currency = 0) : Currency;
@@ -1316,7 +1318,7 @@ end;
 
 procedure TMainCashForm2.LoadVIPCheck;
   var lMsg: String; APoint : TPoint;
-      GoodsId, nRecNo: Integer; PartionDateKindId : Variant;
+      GoodsId, nRecNo: Integer; PartionDateKindId, NDSKindId : Variant;
 begin
   inherited;
 
@@ -1465,6 +1467,7 @@ begin
   CheckCDS.Filtered := False;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := False;
   try
@@ -1472,8 +1475,8 @@ begin
     CheckCDS.First;
     while not CheckCDS.Eof do
     begin
-      if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
-        checkCDS.FieldByName('PartionDateKindId').AsVariant]),[]) and
+      if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
+        checkCDS.FieldByName('PartionDateKindId').AsVariant, checkCDS.FieldByName('NDSKindId').AsVariant]),[]) and
         (((checkCDS.FieldByName('Amount').asCurrency + checkCDS.FieldByName('Remains').asCurrency) <>
         RemainsCDS.FieldByName('Remains').asCurrency) or
         (checkCDS.FieldByName('Color_calc').AsInteger <> RemainsCDS.FieldByName('Color_calc').asInteger) or
@@ -1505,7 +1508,7 @@ begin
     CheckCDS.Filtered := True;
     CheckCDS.EnableControls;
     RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([GoodsId, PartionDateKindId, NDSKindId]),[]);
     RemainsCDS.EnableControls;
   end;
 
@@ -1562,7 +1565,7 @@ begin
 end;
 
 procedure TMainCashForm2.ClearFilterAll;
- var Id : Integer; PartionDateKindId : Variant;
+ var Id : Integer; PartionDateKindId, NDSKindId : Variant;
 begin
   if RemainsCDS.Active and (
     (RemainsCDS.Filter <> 'Remains <> 0 or Reserved <> 0 or DeferredSend <> 0') or
@@ -1570,6 +1573,7 @@ begin
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
     PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+    NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
     try
@@ -1579,7 +1583,7 @@ begin
       pnlAnalogFilter.Visible := False;
     finally
       RemainsCDS.Filtered := True;
-      if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+      if not RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([Id, PartionDateKindId, NDSKindId]),[]) then
         RemainsCDS.Locate('Id', Id,[]);
       RemainsCDS.EnableControls;
       edlExpirationDateFilter.Text := '';
@@ -1668,11 +1672,12 @@ begin
 end;
 
 function TMainCashForm2.ExistsLessAmountMonth(AGoodsID : Integer; AAmountMonth : Currency) : boolean;
-  var nPos : Integer; cFilter, S : string; GoodsId: Integer; PartionDateKindId : Variant;
+  var nPos : Integer; cFilter, S : string; GoodsId: Integer; PartionDateKindId, NDSKindId : Variant;
 begin
   Result := False;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   RemainsCDS.DisableControls;
   cFilter := RemainsCDS.Filter;
   RemainsCDS.Filtered := False;
@@ -1700,7 +1705,7 @@ begin
   finally
     RemainsCDS.Filter := cFilter;
     RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([GoodsId, PartionDateKindId, NDSKindId]),[]);
     RemainsCDS.EnableControls;
   end;
 end;
@@ -2549,7 +2554,7 @@ end;
 procedure TMainCashForm2.actSelectLocalVIPCheckExecute(Sender: TObject);
 var
   vip,vipList: TClientDataSet;
-  GoodsId: Integer; PartionDateKindId : Variant;
+  GoodsId: Integer; PartionDateKindId, NDSKindId : Variant;
 begin
   inherited;
 
@@ -2580,6 +2585,7 @@ begin
         CheckCDS.FieldByName('Price').AsFloat := VipList.FieldByName('Price').AsFloat;
         CheckCDS.FieldByName('Summ').AsFloat := VipList.FieldByName('Summ').AsFloat;
         CheckCDS.FieldByName('NDS').AsFloat := VipList.FieldByName('NDS').AsFloat;
+        CheckCDS.FieldByName('NDSKindId').AsInteger := VipList.FieldByName('NDSKindId').AsInteger;
         //***20.07.16
         checkCDS.FieldByName('PriceSale').asCurrency         :=VipList.FieldByName('PriceSale').asCurrency;
         checkCDS.FieldByName('ChangePercent').asCurrency     :=VipList.FieldByName('ChangePercent').asCurrency;
@@ -2599,10 +2605,12 @@ begin
         //***21.10.18
         GoodsId := RemainsCDS.FieldByName('Id').asInteger;
         PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+        NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
         RemainsCDS.DisableControls;
         RemainsCDS.Filtered := False;
         try
-          if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger, checkCDS.FieldByName('PartionDateKindId').AsVariant]),[]) then
+          if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
+             checkCDS.FieldByName('PartionDateKindId').AsVariant, checkCDS.FieldByName('NDSKindId').AsVariant]),[]) then
           begin
             checkCDS.FieldByName('Remains').asCurrency:=RemainsCDS.FieldByName('Remains').asCurrency;
             checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
@@ -2616,7 +2624,7 @@ begin
           end;
         finally
           RemainsCDS.Filtered := True;
-          RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+          RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([GoodsId, PartionDateKindId, NDSKindId]),[]);
           RemainsCDS.EnableControls;
         end;
         //***05.11.18
@@ -2633,7 +2641,7 @@ begin
         if FormParams.ParamByName('CheckId').Value <> 0 then
           //UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('Amount').AsFloat);
           //маленькая ошибочка, попробуем с VipList, ***20.07.16
-          UpdateRemainsFromCheck(VipList.FieldByName('GoodsId').AsInteger, VipList.FieldByName('PartionDateKindId').AsInteger, VipList.FieldByName('Amount').AsFloat, VipList.FieldByName('PriceSale').asCurrency);
+          UpdateRemainsFromCheck(VipList.FieldByName('GoodsId').AsInteger, VipList.FieldByName('PartionDateKindId').AsInteger, VipList.FieldByName('NDSKindId').AsInteger, VipList.FieldByName('Amount').AsFloat, VipList.FieldByName('PriceSale').asCurrency);
         vipList.Next;
       End;
     End;
@@ -3275,7 +3283,7 @@ end;
 
 procedure TMainCashForm2.actSetRimainsFromMemdataExecute(Sender: TObject);  // только 2 форма
 var
-  GoodsId, nCheckId: Integer; PartionDateKindId : Variant;
+  GoodsId, nCheckId: Integer; PartionDateKindId, NDSKindId : Variant;
   Amount_find: Currency;
   oldFilter:String;
   oldFiltered:Boolean;
@@ -3286,6 +3294,7 @@ begin
   RemainsCDS.AfterScroll := Nil;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   RemainsCDS.DisableControls;
   nCheckId := 0;
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
@@ -3302,7 +3311,8 @@ begin
         // сначала найдем кол-во в чеках
         Amount_find:=0;
         CheckCDS.Filter:='GoodsId = ' + IntToStr(MemData.FieldByName('Id').AsInteger) +
-                         ' and PartionDateKindId = ' + IntToStr(MemData.FieldByName('PDKINDID').AsInteger);
+                         ' and PartionDateKindId = ' + IntToStr(MemData.FieldByName('PDKINDID').AsInteger) +
+                         ' and NDSKindId = ' + IntToStr(MemData.FieldByName('NDSKindId').AsInteger);
         CheckCDS.Filtered:=true;
         CheckCDS.First;
         while not CheckCDS.EOF do begin
@@ -3312,8 +3322,8 @@ begin
         CheckCDS.Filter := oldFilter;
         CheckCDS.Filtered:= oldFiltered;
 
-      if not RemainsCDS.Locate('Id;PartionDateKindId',
-        VarArrayOf([MemData.FieldByName('Id').AsInteger, MemData.FieldByName('PDKINDID').AsVariant]),[]) and
+      if not RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId',
+        VarArrayOf([MemData.FieldByName('Id').AsInteger, MemData.FieldByName('PDKINDID').AsVariant, MemData.FieldByName('NDSKINDID').AsVariant]),[]) and
         MemData.FieldByName('NewRow').AsBoolean then
       Begin
 //        Add_Log('    Add ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' + MemData.FieldByName('Remains').AsString);
@@ -3341,8 +3351,8 @@ begin
       End
       else
       Begin
-        if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
-          MemData.FieldByName('PDKINDID').AsVariant]),[]) then
+        if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([MemData.FieldByName('Id').AsInteger,
+          MemData.FieldByName('PDKINDID').AsVariant, MemData.FieldByName('NDSKINDID').AsVariant]),[]) then
         Begin
 //          Add_Log('    Update ' + MemData.FieldByName('GoodsCode').AsString + ' - ' + MemData.FieldByName('GoodsName').AsString + '; ' +
 //            RemainsCDS.FieldByName('Remains').AsString + ' = ' + MemData.FieldByName('Remains').AsString);
@@ -3388,7 +3398,7 @@ begin
     MemData.Close;
   finally
     RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKINDID', VarArrayOf([GoodsId, PartionDateKindId, NDSKINDID]),[]);
     RemainsCDS.EnableControls;
 //    AlternativeCDS.Filtered := true;
 //    AlternativeCDS.EnableControls;
@@ -4462,7 +4472,6 @@ begin
     checkCDS.FieldByName('PartionDateKindId').AsVariant := Null;
     checkCDS.FieldByName('PartionDateKindName').AsVariant := Null;
     checkCDS.FieldByName('PricePartionDate').AsVariant := Null;
-    checkCDS.FieldByName('PartionDateDiscount').AsVariant := Null;
   end;
 end;
 
@@ -4529,12 +4538,13 @@ begin
 end;
 
 procedure TMainCashForm2.cxButton7Click(Sender: TObject);
- var Id : Integer; PartionDateKindId : Variant;
+ var Id : Integer; PartionDateKindId, NDSKindId : Variant;
 begin
   if Assigned(RemainsCDS.OnFilterRecord) or pnlAnalogFilter.Visible then
   begin
     Id := RemainsCDS.FieldByName('Id').AsInteger;
     PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+    NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
     RemainsCDS.DisableControls;
     RemainsCDS.Filtered := False;
     try
@@ -4542,7 +4552,7 @@ begin
       pnlAnalogFilter.Visible := False;
     finally
       RemainsCDS.Filtered := True;
-      if not RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([Id, PartionDateKindId]),[]) then
+      if not RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([Id, PartionDateKindId, NDSKindId]),[]) then
         RemainsCDS.Locate('Id', Id,[]);
       RemainsCDS.EnableControls;
       edAnalogFilter.Text := '';
@@ -5177,8 +5187,8 @@ begin
     try
       CheckCDS.Filtered := False;
       // попытка добавить препарат с другой ценой. обновляем цену у уже существующего и обнуляем суммы для пересчета
-      if checkCDS.Locate('GoodsId;PartionDateKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
-                                                                 SourceClientDataSet.FindField('PartionDateKindId').AsVariant]),[])
+      if checkCDS.Locate('GoodsId;PartionDateKindId;NDSKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
+                         SourceClientDataSet.FindField('PartionDateKindId').AsVariant, SourceClientDataSet.FindField('NDSKindId').AsVariant]),[])
         and ((checkCDS.FieldByName('PriceSale').asCurrency <> lPriceSale) or
              (checkCDS.FieldByName('Price').asCurrency <> lPrice)) then
       Begin
@@ -5201,6 +5211,8 @@ begin
         checkCDS.FieldByName('PartionDateKindName').AsVariant:=SourceClientDataSet.FindField('PartionDateKindName').AsVariant;
         checkCDS.FieldByName('PricePartionDate').AsVariant   :=SourceClientDataSet.FieldByName('PricePartionDate').AsVariant;
         checkCDS.FieldByName('AmountMonth').AsVariant        :=SourceClientDataSet.FieldByName('AmountMonth').AsVariant;
+        checkCDS.FieldByName('NDS').AsVariant                :=SourceClientDataSet.FindField('NDS').AsVariant;
+        checkCDS.FieldByName('NDSKindId').AsVariant          :=SourceClientDataSet.FindField('NDSKindId').AsVariant;
         checkCDS.FieldByName('PriceDiscount').AsVariant      := lPrice;
         checkCDS.FieldByName('TypeDiscount').AsVariant       := lTypeDiscount;
 
@@ -5210,7 +5222,8 @@ begin
           RemainsCDS.Filtered := False;
           nRecNo := RemainsCDS.RecNo;
           try
-            if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger, checkCDS.FieldByName('PartionDateKindId').AsVariant]),[]) and
+            if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
+              checkCDS.FieldByName('PartionDateKindId').AsVariant, checkCDS.FieldByName('NDSKindId').AsVariant]),[]) and
               (RemainsCDS.FieldByName('Color_calc').asInteger  <> 0) then
             begin
               checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
@@ -5240,8 +5253,8 @@ begin
         end;
         checkCDS.Post;
       End
-      else if not checkCDS.Locate('GoodsId;PartionDateKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
-                                                                 SourceClientDataSet.FindField('PartionDateKindId').AsVariant]),[]) then
+      else if not checkCDS.Locate('GoodsId;PartionDateKindId;NDSKindId',VarArrayOf([SourceClientDataSet.FieldByName('Id').asInteger,
+                    SourceClientDataSet.FindField('PartionDateKindId').AsVariant, SourceClientDataSet.FindField('NDSKindId').AsVariant]),[]) then
       Begin
         checkCDS.Append;
         checkCDS.FieldByName('Id').AsInteger:=0;
@@ -5253,6 +5266,7 @@ begin
         checkCDS.FieldByName('Price').asCurrency:= lPrice;
         checkCDS.FieldByName('Summ').asCurrency:=0;
         checkCDS.FieldByName('NDS').asCurrency:=SourceClientDataSet.FieldByName('NDS').asCurrency;
+        checkCDS.FieldByName('NDSKindId').AsInteger:=SourceClientDataSet.FieldByName('NDSKindId').AsInteger;
         checkCDS.FieldByName('isErased').AsBoolean:=False;
         //***20.07.16
         checkCDS.FieldByName('PriceSale').asCurrency         :=lPriceSale;
@@ -5284,7 +5298,8 @@ begin
           RemainsCDS.Filtered := False;
           nRecNo := RemainsCDS.RecNo;
           try
-            if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger, checkCDS.FieldByName('PartionDateKindId').AsVariant]),[]) and
+            if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
+               checkCDS.FieldByName('PartionDateKindId').AsVariant, checkCDS.FieldByName('NDSKindId').AsVariant]),[]) and
               (RemainsCDS.FieldByName('Color_calc').asInteger  <> 0) then
             begin
               checkCDS.FieldByName('Color_calc').AsInteger:=RemainsCDS.FieldByName('Color_calc').asInteger;
@@ -5331,7 +5346,8 @@ begin
       CheckCDS.Filtered := True;
       CheckCDS.EnableControls;
     end;
-    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger, SourceClientDataSet.FindField('PartionDateKindId').AsInteger, nAmount, lPriceSale);
+    UpdateRemainsFromCheck(SourceClientDataSet.FieldByName('Id').asInteger, SourceClientDataSet.FindField('PartionDateKindId').AsInteger,
+      SourceClientDataSet.FindField('NDSKindId').AsInteger, nAmount, lPriceSale);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -5351,7 +5367,8 @@ begin
       end;
     end;
 
-    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FindField('PartionDateKindId').AsInteger,nAmount,CheckCDS.FieldByName('PriceSale').asCurrency);
+    UpdateRemainsFromCheck(CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FindField('PartionDateKindId').AsInteger, CheckCDS.FindField('NDSKindId').AsInteger,
+      nAmount,CheckCDS.FieldByName('PriceSale').asCurrency);
     //Update Дисконт в CDS - по всем "обновим" Дисконт
     if FormParams.ParamByName('DiscountExternalId').Value > 0
     then DiscountServiceForm.fUpdateCDS_Discount (CheckCDS, lMsg, FormParams.ParamByName('DiscountExternalId').Value, FormParams.ParamByName('DiscountCardNumber').Value);
@@ -5376,7 +5393,7 @@ end;
 
 procedure TMainCashForm2.UpdateRemainsFromDiff(ADiffCDS : TClientDataSet);
 var
-  GoodsId : Integer; PartionDateKindId : Variant;
+  GoodsId : Integer; PartionDateKindId, NDSKindId : Variant;
   nCheckId: integer;
   Amount_find: Currency;
   oldFilter:String;
@@ -5394,6 +5411,7 @@ begin
   RemainsCDS.AfterScroll := Nil;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   RemainsCDS.DisableControls;
   nCheckId := 0;
   if CheckCDS.Active and (CheckCDS.RecordCount > 0) then
@@ -5412,7 +5430,8 @@ begin
           // сначала найдем кол-во в чеках
       Amount_find:=0;
       CheckCDS.Filter:='GoodsId = ' + IntToStr(ADIffCDS.FieldByName('Id').AsInteger) +
-                       ' and PartionDateKindId = ' + IntToStr(ADIffCDS.FieldByName('PDKINDID').AsInteger);
+                       ' and PartionDateKindId = ' + IntToStr(ADIffCDS.FieldByName('PDKINDID').AsInteger) +
+                       ' and NDSKindId = ' + IntToStr(ADIffCDS.FieldByName('NDSKindId').AsInteger);
       CheckCDS.Filtered:=true;
       CheckCDS.First;
       Amount_find:=0;
@@ -5428,6 +5447,8 @@ begin
         RemainsCDS.Append;
         RemainsCDS.FieldByName('Id').AsInteger := ADIffCDS.FieldByName('Id').AsInteger;
         RemainsCDS.FieldByName('PartionDateKindId').AsInteger := ADIffCDS.FieldByName('PDKINDID').AsInteger;
+        RemainsCDS.FieldByName('NDSKindId').AsInteger := ADIffCDS.FieldByName('NDSKINDId').AsInteger;
+        RemainsCDS.FieldByName('NDS').AsCurrency := ADIffCDS.FieldByName('NDS').AsCurrency;
         RemainsCDS.FieldByName('GoodsCode').AsInteger := ADIffCDS.FieldByName('GoodsCode').AsInteger;
         RemainsCDS.FieldByName('GoodsName').AsString := ADIffCDS.FieldByName('GoodsName').AsString;
         RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
@@ -5438,7 +5459,8 @@ begin
       End
       else
       Begin
-        if RemainsCDS.Locate('Id;PartionDateKindId',VarArrayOf([ADIffCDS.FieldByName('Id').AsInteger, ADIffCDS.FieldByName('PDKINDID').AsVariant]),[]) then
+        if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId',VarArrayOf([ADIffCDS.FieldByName('Id').AsInteger,
+            ADIffCDS.FieldByName('PDKINDID').AsVariant, ADIffCDS.FieldByName('NDSKINDId').AsVariant]),[]) then
         Begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Price').asCurrency := ADIffCDS.FieldByName('Price').asCurrency;
@@ -5468,7 +5490,7 @@ begin
 //    End;
   finally
     RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([GoodsId, PartionDateKindId, NDSKindId]),[]);
     RemainsCDS.EnableControls;
 //    AlternativeCDS.Filtered := true;
 //    AlternativeCDS.EnableControls;
@@ -6319,9 +6341,9 @@ begin
   end;
 end;
 
-procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0; APartionDateKindId: Integer = 0; AAmount: Currency = 0; APriceSale: Currency = 0);
+procedure TMainCashForm2.UpdateRemainsFromCheck(AGoodsId: Integer = 0; APartionDateKindId: Integer = 0; ANDSKindId: Integer = 0;  AAmount: Currency = 0; APriceSale: Currency = 0);
 var
-  GoodsId : Integer; PartionDateKindId : variant;
+  GoodsId : Integer; PartionDateKindId, NDSKindId : variant;
   nDelta : Currency;
   oldFilterExpirationDate : String;
   //lPriceSale : Currency;
@@ -6342,6 +6364,7 @@ begin
   RemainsCDS.AfterScroll := Nil;
   GoodsId := RemainsCDS.FieldByName('Id').asInteger;
   PartionDateKindId := RemainsCDS.FieldByName('PartionDateKindId').AsVariant;
+  NDSKindId := RemainsCDS.FieldByName('NDSKindId').AsVariant;
   RemainsCDS.DisableControls;
   RemainsCDS.Filtered := False;
 //  AlternativeCDS.Filtered := False;
@@ -6352,9 +6375,11 @@ begin
       if (CheckCDS.FieldByName('Id').AsInteger = 0) AND
          ((AGoodsId = 0) or ((CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and
                              (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId) and
+                             (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId) and
                              (CheckCDS.FieldByName('PriceSale').AsCurrency = APriceSale))) then
       Begin
-        if RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger, CheckCDS.FieldByName('PartionDateKindID').AsVariant]),[]) then
+        if RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+           CheckCDS.FieldByName('PartionDateKindID').AsVariant, CheckCDS.FieldByName('NDSKindId').AsVariant]),[]) then
         Begin
           RemainsCDS.Edit;
           if (AAmount = 0) or ((AAmount < 0) AND (ABS(AAmount) >= CheckCDS.FieldByName('Amount').asCurrency)) then
@@ -6435,9 +6460,10 @@ begin
     begin
       if ((AGoodsId = 0) or (CheckCDS.FieldByName('GoodsId').AsInteger = AGoodsId) and
                             (CheckCDS.FieldByName('PartionDateKindId').AsInteger = APartionDateKindId) and
+                            (CheckCDS.FieldByName('NDSKindId').AsInteger = ANDSKindId) and
                             (CheckCDS.FieldByName('PriceSale').asCurrency = APriceSale)) and
-          RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
-                                                    CheckCDS.FieldByName('PartionDateKindID').AsVariant]),[]) then
+          RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([CheckCDS.FieldByName('GoodsId').AsInteger,
+            CheckCDS.FieldByName('PartionDateKindID').AsVariant, CheckCDS.FieldByName('NDSKindId').AsVariant]),[]) then
       Begin
         CheckCDS.Edit;
 
@@ -6639,7 +6665,7 @@ begin
     end;
   finally
     RemainsCDS.Filtered := True;
-    RemainsCDS.Locate('Id;PartionDateKindId', VarArrayOf([GoodsId, PartionDateKindId]),[]);
+    RemainsCDS.Locate('Id;PartionDateKindId;NDSKindId', VarArrayOf([GoodsId, PartionDateKindId, NDSKindId]),[]);
     RemainsCDS.EnableControls;
 //    AlternativeCDS.Filtered := true;
 //    AlternativeCDS.EnableControls;
@@ -6968,6 +6994,8 @@ begin
         MyVipListCDS.FieldByname('PartionDateKindName').Value := ADS.FieldByName('PartionDateKindName').AsVariant;
         MyVipListCDS.FieldByname('PricePartionDate').Value := ADS.FieldByName('PricePartionDate').AsVariant;
         MyVipListCDS.FieldByname('AmountMonth').Value := ADS.FieldByName('AmountMonth').AsVariant;
+        MyVipListCDS.FieldByname('NDS').Value := ADS.FieldByName('NDS').AsVariant;
+        MyVipListCDS.FieldByname('NDSKindId').Value := ADS.FieldByName('NDSKindId').AsVariant;
 
         MyVipListCDS.Post;
         ADS.Next;
@@ -7173,18 +7201,22 @@ begin
                                            //***03.06.19
                                            ADS.FieldByName('PartionDateKindId').asCurrency, // Тип срок/не срок
                                            //***24.06.19
-                                           ADS.FieldByName('PricePartionDate').asCurrency // Отпускная цена согласно партии
+                                           ADS.FieldByName('PricePartionDate').asCurrency, // Отпускная цена согласно партии
+                                           //***03.06.19
+                                           ADS.FieldByName('NDSKindId').AsInteger // Ставка НДС
                                            ]));
           // сохранили отгруженные препараты для корректировки полных остатков
           if FSaveCheckToMemData then
           begin
-            if mdCheck.Locate('ID;PDKINDID', VarArrayOf([ADS.FieldByName('GoodsId').AsInteger, ADS.FieldByName('PartionDateKindId').AsVariant]), []) then
+            if mdCheck.Locate('ID;PDKINDID;NDSKINDId', VarArrayOf([ADS.FieldByName('GoodsId').AsInteger,
+              ADS.FieldByName('PartionDateKindId').AsVariant,ADS.FieldByName('NDSKindId').AsVariant]), []) then
               mdCheck.Edit
             else
             begin
               mdCheck.Append;
               mdCheck.FieldByName('ID').AsInteger := ADS.FieldByName('GoodsId').AsInteger;
               mdCheck.FieldByName('PDKINDID').AsVariant := ADS.FieldByName('PartionDateKindId').AsVariant;
+              mdCheck.FieldByName('NDSKINDID').AsVariant := ADS.FieldByName('NDSKindId').AsVariant;
             end;
             mdCheck.FieldByName('Amount').AsCurrency := mdCheck.FieldByName('Amount').AsCurrency
                                                         + ADS.FieldByName('Amount').asCurrency;
@@ -7202,6 +7234,8 @@ begin
                               + '<Price>"' + FloatToStr(ADS.FieldByName('Price').asCurrency) + '"</Price>'
                               + '<List_UID>"' + ADS.FieldByName('List_UID').AsString + '"</List_UID>'
                               + '<PartionDateKindId>"' + ADS.FieldByName('PartionDateKindId').AsString + '"</PartionDateKindId>'
+                              + '<NDSKindId>"' + ADS.FieldByName('NDSKindId').AsString + '"</NDSKindId>'
+                              + '<NDS>"' + ADS.FieldByName('NDS').AsString + '"</NDS>'
                               + '</Items>';
                   except
                   str_log_xml:= str_log_xml
@@ -7662,8 +7696,8 @@ begin
       CheckCDS.First;
       while not CheckCDS.EOF do
       begin
-        if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
-          checkCDS.FieldByName('PartionDateKindId').AsVariant]),[])  then
+        if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([checkCDS.FieldByName('GoodsId').AsInteger,
+          checkCDS.FieldByName('PartionDateKindId').AsVariant, checkCDS.FieldByName('NDSKindId').AsVariant]),[])  then
         begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency
@@ -7676,8 +7710,8 @@ begin
       mdCheck.First;
       while not mdCheck.EOF do
       begin
-        if RemainsCDS.Locate('ID;PartionDateKindId', VarArrayOf([mdCheck.FieldByName('Id').AsInteger,
-          mdCheck.FieldByName('PDKINDID').AsVariant]),[])  then
+        if RemainsCDS.Locate('ID;PartionDateKindId;NDSKindId', VarArrayOf([mdCheck.FieldByName('Id').AsInteger,
+          mdCheck.FieldByName('PDKINDID').AsVariant, mdCheck.FieldByName('NDSKINDId').AsVariant]),[])  then
         begin
           RemainsCDS.Edit;
           RemainsCDS.FieldByName('Remains').asCurrency := RemainsCDS.FieldByName('Remains').asCurrency

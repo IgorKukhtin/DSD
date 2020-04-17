@@ -158,21 +158,10 @@ BEGIN
                                GROUP BY MIContainer_Count.MovementItemId
                               )
                                  
-      , tmpMI_Child AS (SELECT MovementItem.ParentId
-                             , MIN(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
-                        FROM MovementItem
-                             INNER JOIN MovementItemFloat AS MIFloat_Container
-                                                          ON MIFloat_Container.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_Container.DescId = zc_MIFloat_ContainerId()
-                             INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIFloat_Container.ValueData::Integer
-                                                           AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-                             LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                  ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
-                                                 AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                        WHERE MovementItem.MovementId = inMovementId
-                          AND MovementItem.DescId = zc_MI_Child()
-                          AND MovementItem.IsErased = FALSE
-                        GROUP BY MovementItem.ParentId
+      , tmpMI_Child AS (SELECT MI_Child.ParentId
+                             , MIN(COALESCE (MI_Child.ExpirationDate, zc_DateEnd()))  AS ExpirationDate
+                        FROM gpSelect_MovementItem_Send_Child(inMovementId := inMovementId,  inSession := inSession) AS MI_Child
+                        GROUP BY MI_Child.ParentId
                        )
 
        SELECT
