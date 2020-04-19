@@ -11,7 +11,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, cxCheckBox;
+  dxSkinsdxBarPainter, cxCheckBox, cxCurrencyEdit, cxSplitter;
 
 type
   TMarginCategory_AllForm = class(TAncestorEnumForm)
@@ -48,8 +48,23 @@ type
     ExecuteDialog: TExecuteDialog;
     macUpdateParam: TMultiAction;
     FormParams: TdsdFormParams;
-    bb: TdxBarButton;
+    bbUpdateParam: TdxBarButton;
     macUpdateParam_list: TMultiAction;
+    spInsertUpdatePersentSalary: TdsdStoredProc;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    ChildDBViewAddOn: TdsdDBViewAddOn;
+    cxSplitter2: TcxSplitter;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView_child: TcxGridDBTableView;
+    chStartDate: TcxGridDBColumn;
+    chPersentSalary: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    spSelectPersentSalary: TdsdStoredProc;
+    actUpdatePersentSalary: TdsdDataSetRefresh;
+    ExecuteDialogPersentSalary: TExecuteDialog;
+    macUpdatePersentSalary: TMultiAction;
+    bbUpdatePersentSalary: TdxBarButton;
   private
     { Private declarations }
   public

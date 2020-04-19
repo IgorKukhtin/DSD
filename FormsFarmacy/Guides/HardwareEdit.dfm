@@ -1,24 +1,24 @@
 ﻿inherited HardwareEditForm: THardwareEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1087#1087#1072#1088#1072#1090#1085#1091#1102' '#1095#1072#1089#1090#1100' >'
-  ClientHeight = 369
+  ClientHeight = 439
   ClientWidth = 467
   ExplicitWidth = 473
-  ExplicitHeight = 398
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 105
-    Top = 329
+    Left = 97
+    Top = 399
     TabOrder = 2
-    ExplicitLeft = 105
-    ExplicitTop = 329
+    ExplicitLeft = 97
+    ExplicitTop = 399
   end
   inherited bbCancel: TcxButton
-    Left = 286
-    Top = 329
+    Left = 270
+    Top = 399
     TabOrder = 3
-    ExplicitLeft = 286
-    ExplicitTop = 329
+    ExplicitLeft = 270
+    ExplicitTop = 399
   end
   object edName: TcxTextEdit [2]
     Left = 7
@@ -59,7 +59,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 6
-    Width = 441
+    Width = 272
   end
   object edBaseBoardProduct: TcxTextEdit [8]
     Left = 8
@@ -105,6 +105,45 @@
     Top = 265
     Caption = #1054#1087#1077#1088#1072#1090#1080#1074#1085#1072#1103' '#1087#1072#1084#1103#1090#1100
   end
+  object ceCashRegister: TcxButtonEdit [16]
+    Left = 301
+    Top = 110
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 16
+    Width = 148
+  end
+  object cxLabel6: TcxLabel [17]
+    Left = 301
+    Top = 93
+    Caption = #1050#1072#1089#1089#1086#1074#1099#1081' '#1072#1087#1087#1072#1088#1072#1090
+  end
+  object edComment: TcxTextEdit [18]
+    Left = 8
+    Top = 364
+    TabOrder = 18
+    Width = 441
+  end
+  object cxLabel8: TcxLabel [19]
+    Left = 8
+    Top = 348
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edIdentifier: TcxTextEdit [20]
+    Left = 8
+    Top = 321
+    TabOrder = 20
+    Width = 441
+  end
+  object cxLabel9: TcxLabel [21]
+    Left = 8
+    Top = 305
+    Caption = #1048#1076#1077#1085#1090#1080#1092#1080#1082#1072#1090#1086#1088
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 176
@@ -135,20 +174,6 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'isCashRegister'
-        Value = Null
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
     Left = 328
     Top = 168
   end
@@ -187,6 +212,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inCashRegisterId'
+        Value = Null
+        Component = GuidesCashRegister
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBaseBoardProduct'
         Value = 'NULL'
         Component = edBaseBoardProduct
@@ -217,6 +250,22 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIdentifier'
+        Value = Null
+        Component = edIdentifier
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inComment'
+        Value = Null
+        Component = edComment
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 328
     Top = 32
@@ -229,15 +278,6 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisCashRegister'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isCashRegister'
-        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -270,6 +310,21 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'CashRegisterId'
+        Value = Null
+        Component = GuidesCashRegister
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CashRegisterName'
+        Value = Null
+        Component = GuidesCashRegister
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'BaseBoardProduct'
         Value = Null
         Component = edBaseBoardProduct
@@ -294,6 +349,20 @@
         Name = 'PhysicalMemory'
         Value = Null
         Component = edPhysicalMemory
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Identifier'
+        Value = Null
+        Component = edIdentifier
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Comment'
+        Value = Null
+        Component = edComment
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -329,5 +398,35 @@
       end>
     Left = 176
     Top = 96
+  end
+  object GuidesCashRegister: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceCashRegister
+    FormNameParam.Value = 'TCashRegisterForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TCashRegisterForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCashRegister
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCashRegister
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 392
+    Top = 104
   end
 end

@@ -15,17 +15,17 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     Height = 253
     TabOrder = 3
     ExplicitTop = 99
-    ExplicitWidth = 1076
+    ExplicitWidth = 1183
     ExplicitHeight = 253
     ClientRectBottom = 253
     ClientRectRight = 1183
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1076
+      ExplicitWidth = 1183
       ExplicitHeight = 253
       inherited cxGrid: TcxGrid
         Width = 1183
         Height = 253
-        ExplicitWidth = 1076
+        ExplicitWidth = 1183
         ExplicitHeight = 253
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -743,7 +743,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
   inherited Panel: TPanel
     Width = 1183
     Height = 73
-    ExplicitWidth = 1076
+    ExplicitWidth = 1183
     ExplicitHeight = 73
     inherited deStart: TcxDateEdit
       Left = 121
@@ -1611,6 +1611,110 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actReport_Goods: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      Hint = #1054#1090#1095#1077#1090' <'#1044#1077#1090#1072#1083#1100#1085#1086' '#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+      ImageIndex = 26
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 42370d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42370d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupId'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitGroupName'
+          Value = ''
+          Component = FromGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'LocationName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'LocationName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsGroupName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'IsPartner'
+          Value = 'TRUE'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -1754,6 +1858,14 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -1832,6 +1944,10 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
     end
     object bbPrintArticleLossGroup: TdxBarButton
       Action = actPrintArticleLossGroup
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
   end

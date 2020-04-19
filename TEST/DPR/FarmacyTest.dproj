@@ -2993,6 +2993,10 @@
 				<Form>Report_Send_RemainsSun_expressV2DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas">
+				<Form>PersentSalaryDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

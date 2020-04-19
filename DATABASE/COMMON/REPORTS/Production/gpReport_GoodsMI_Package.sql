@@ -11,9 +11,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Package(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (OperDate TDateTime
-             , GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
+             , GoodsGroupNameFull TVarChar, GoodsGroupId Integer, GoodsGroupName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsKindName TVarChar, MeasureName TVarChar
 
              , ReceiptCode_code Integer, ReceiptCode TVarChar, ReceiptName TVarChar
@@ -160,9 +160,11 @@ BEGIN
     -- Результат
     SELECT tmpMI_Union.OperDate         :: TDateTime  AS OperDate
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_GoodsGroup.Id                       AS GoodsGroupId
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , Object_Goods_basis.ObjectCode              AS GoodsCode_basis
          , Object_Goods_basis.ValueData               AS GoodsName_basis
+         , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
          , Object_GoodsKind.ValueData                 AS GoodsKindName

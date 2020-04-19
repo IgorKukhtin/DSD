@@ -18,7 +18,9 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionUnion (
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
              , isPeresort Boolean, DocumentKindName TVarChar
              , SubjectDocName  TVarChar
-             , PartionGoods TVarChar, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , PartionGoods TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildPartionGoods TVarChar, ChildGoodsGroupName TVarChar, ChildGoodsCode Integer, ChildGoodsName TVarChar, ChildGoodsKindName TVarChar
              , ChildAmount TFloat, ChildSumm TFloat
@@ -38,7 +40,7 @@ BEGIN
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+          SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE IF inGoodsId <> 0
          THEN
              INSERT INTO _tmpGoods (GoodsId)
@@ -52,7 +54,7 @@ BEGIN
     IF inChildGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpChildGoods (ChildGoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+          SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE IF inChildGoodsId <> 0
          THEN
              INSERT INTO _tmpChildGoods (ChildGoodsId)
@@ -180,7 +182,9 @@ BEGIN
 
            , Object_PartionGoods.ValueData AS PartionGoods
            
-           , Object_GoodsGroup.ValueData AS GoodsGroupName 
+           , Object_GoodsGroup.Id        AS GoodsGroupId
+           , Object_GoodsGroup.ValueData AS GoodsGroupName
+           , Object_Goods.Id             AS GoodsId
            , Object_Goods.ObjectCode     AS GoodsCode
            , Object_Goods.ValueData      AS GoodsName  
            , Object_GoodsKind.ValueData  AS GoodsKindName

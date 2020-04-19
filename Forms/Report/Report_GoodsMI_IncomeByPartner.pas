@@ -87,6 +87,8 @@ type
     cbPartner: TcxCheckBox;
     bbPartner: TdxBarControlContainerItem;
     Amount: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    ddReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

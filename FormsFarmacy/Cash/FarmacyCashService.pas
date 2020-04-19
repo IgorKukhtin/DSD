@@ -95,6 +95,8 @@ type
     PDKINDID: Integer;      // Тип срок/не срок
     //***24.06.19
     PRICEPD: Currency;      // Отпускная цена согласно партии
+    //***16.04.20
+    NDSKINDId: Integer;     // Тип срок/не срок
     //***10.08.16
     LIST_UID: String[50]    // UID строки продажи
   end;
@@ -1387,7 +1389,9 @@ begin
                     // ***03.06.19
                     PDKINDID := FieldByName('PDKINDID').AsInteger;
                     // ***24.06.19
-                    PRICEPD := FieldByName('PRICEPD').AsInteger;
+                    PRICEPD := FieldByName('PRICEPD').AsCurrency;
+                    // ***16.04.20
+                    NDSKINDID := FieldByName('NDSKINDID').AsInteger;
                     // ***10.08.16
                     LIST_UID := trim(FieldByName('LIST_UID').AsString);
                   End;
@@ -1558,6 +1562,8 @@ begin
                   dsdSave.Params.AddParam('inPartionDateKindID', ftInteger, ptInput, Null);
                   // ***24.06.19
                   dsdSave.Params.AddParam('inPricePartionDate', ftFloat, ptInput, Null);
+                  // ***16.04.20
+                  dsdSave.Params.AddParam('inNDSKindId', ftInteger, ptInput, Null);
                   // ***10.08.16
                   dsdSave.Params.AddParam('inList_UID', ftString, ptInput, Null);
                   //
@@ -1581,6 +1587,8 @@ begin
                     dsdSave.ParamByName('inPartionDateKindID').Value := Body[I].PDKINDID;
                     // ***24.06.19
                     dsdSave.ParamByName('inPricePartionDate').Value := Body[I].PRICEPD;
+                    // ***16.04.20
+                    dsdSave.ParamByName('inNDSKindId').Value := Body[I].NDSKINDId;
                     // ***10.08.16
                     dsdSave.ParamByName('inList_UID').Value := Body[I].LIST_UID;
                     //

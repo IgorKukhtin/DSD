@@ -5,7 +5,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 720
+  ExplicitHeight = 723
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -444,7 +444,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       inherited cxGridChild: TcxGrid
         Top = 297
         Width = 1076
-        ExplicitTop = 297
+        ExplicitTop = 298
         ExplicitWidth = 1076
         inherited cxGridDBTableViewChild: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <

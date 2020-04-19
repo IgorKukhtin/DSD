@@ -152,6 +152,8 @@ type
     SummOut_Promo_110000_A: TcxGridDBColumn;
     SummOut_Promo_110000_P: TcxGridDBColumn;
     SummOut_Promo_real: TcxGridDBColumn;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

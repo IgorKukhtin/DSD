@@ -278,9 +278,11 @@ begin
       //***10.08.16
       AddStrField(LocalDataBaseBody,   'LIST_UID', 50); //UID строки продажи
       //***03.06.19
-      AddIntField(LocalDataBaseBody,  'PDKINDID');    //Тип срок/не срок
+      AddIntField(LocalDataBaseBody,   'PDKINDID');    //Тип срок/не срок
       //***24.06.19
-      AddFloatField(LocalDataBaseBody,  'PRICEPD');    //Отпускная цена согласно партии
+      AddFloatField(LocalDataBaseBody, 'PRICEPD');    //Отпускная цена согласно партии
+      //***15.04.20
+      AddIntField(LocalDataBaseBody,   'NDSKINDID'); //Ставка НДС
 
       LocalDataBaseBody.CreateTable;
     end
@@ -306,9 +308,12 @@ begin
         //***03.06.19
         if FindField('PDKINDID') = nil then
           AddIntField(LFieldDefs, 'PDKINDID');
-      //***24.06.19
+        //***24.06.19
         if FindField('PRICEPD') = nil then
           AddFloatField(LFieldDefs, 'PRICEPD');
+        //***15.04.20
+        if FindField('NDSKINDID') = nil then
+          AddIntField(LFieldDefs, 'NDSKINDID');
 
         if LFieldDefs.Count <> 0 then
           AddFields(LFieldDefs, 1000);
@@ -337,7 +342,9 @@ begin
         (FindField('PDKINDID') = nil) or
         (FindField('PRICEPD') = nil) or
         //***10.08.16
-        (FindField('LIST_UID') = nil));
+        (FindField('LIST_UID') = nil) or
+        //***15.04.20
+        (FindField('NDSKINDID') = nil));
 
       Close;
 

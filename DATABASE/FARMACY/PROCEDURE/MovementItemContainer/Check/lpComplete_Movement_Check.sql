@@ -1,4 +1,4 @@
--- Function: lpComplete_Movement_Income (Integer, Integer)
+-- Function: lpComplete_Movement_Check (Integer, Integer)
 
 DROP FUNCTION IF EXISTS lpComplete_Movement_Check (Integer, Integer);
 
@@ -20,6 +20,7 @@ $BODY$
    DECLARE vbMovementItemId_partion Integer;
    DECLARE vbContainerId Integer;
    DECLARE vbGoodsId Integer;
+   DECLARE vbNDSKindId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbAmount_remains TFloat;
 
@@ -89,12 +90,11 @@ BEGIN
            outMessageText:= 'Ошибка.Партионного товара: ' || outMessageText;
 
            -- кроме Админа
-           IF 0 = 1 OR inUserId <> 3
+           IF 0 = 0/* OR inUserId <> 3*/
            THEN
                -- больше ничего не делаем
                RETURN;
            END IF;
-
 
      END IF;
 
@@ -134,15 +134,15 @@ BEGIN
         -- DELETE FROM _tmpItem_remains;
         DROP TABLE _tmpItem_remains;
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
     ELSE
         -- таблица - данные почти все
-        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
+        CREATE TEMP TABLE _tmpItem_remains (MovementItemId_partion Integer, GoodsId Integer, ContainerId Integer, NDSKindId Integer, Amount TFloat, OperDate TDateTime) ON COMMIT DROP;
     END IF;
 
     -- предварительно сохранили продажи
-    INSERT INTO _tmpItem (MovementItemId, ObjectId, OperSumm, Price)
-       SELECT MI.Id, MI.ObjectId, MI.Amount, COALESCE (MIFloat_Price.ValueData, 0)
+    INSERT INTO _tmpItem (MovementItemId, ObjectId, NDSKindId, OperSumm, Price)
+       SELECT MI.Id, MI.ObjectId, COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId), MI.Amount, COALESCE (MIFloat_Price.ValueData, 0)
        FROM MovementItem AS MI
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MI.Id
@@ -156,15 +156,26 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ContainerId
                                         ON MIFloat_ContainerId.MovementItemId = MIChild.Id
                                        AND MIFloat_ContainerId.DescId = zc_MIFloat_ContainerId()
+
+            LEFT JOIN Object_Goods_Retail AS Object_Goods ON Object_Goods.Id = MI.ObjectId
+            LEFT JOIN Object_Goods_Main AS Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods.GoodsMainId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                             ON MILinkObject_NDSKind.MovementItemId = MI.Id
+                                            AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
        WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.Amount > 0 AND MI.isErased = FALSE
          AND COALESCE (MIChild.Id, 0) = 0;
 
     -- предварительно сохранили остаток
-    INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, Amount, OperDate)
+    INSERT INTO _tmpItem_remains (MovementItemId_partion, GoodsId, ContainerId, NDSKindId, Amount, OperDate)
        SELECT CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIFloat_MovementItem.ValueData > 0 THEN MIFloat_MovementItem.ValueData :: Integer ELSE MovementItem.Id END AS MovementItemId_partion
             , Container.ObjectId AS GoodsId
             , Container.Id       AS ContainerId
-            , Container.Amount
+            , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                     OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                   THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+            , Container.Amount                                                               AS Amount
             , Movement.OperDate
        FROM (SELECT DISTINCT ObjectId FROM _tmpItem) AS tmp
             INNER JOIN Container ON Container.DescId = zc_Container_Count()
@@ -177,6 +188,9 @@ BEGIN
                                AND PDContainer.WhereObjectId = vbUnitId
                                AND PDContainer.ObjectId = tmp.ObjectId
                                AND PDContainer.Amount > 0
+            LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+            LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
             -- партия
             INNER JOIN ContainerLinkObject AS CLI_MI
                                            ON CLI_MI.ContainerId = Container.Id
@@ -189,17 +203,32 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
                                         ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
                                        AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-            WHERE COALESCE (PDContainer.id, 0) = 0
-           ;
+            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
 
+            LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                            ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                           AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                         ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                        AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+       WHERE COALESCE (PDContainer.id, 0) = 0
+       ;
 
     -- Проверим что б БЫЛ остаток в целом
-    IF EXISTS (SELECT 1 FROM (SELECT ObjectId AS GoodsId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0))
+    IF EXISTS (SELECT 1
+               FROM (SELECT ObjectId AS GoodsId, NDSKindId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId, NDSKindId) AS tmpFrom
+                     LEFT JOIN (SELECT _tmpItem_remains.GoodsId, _tmpItem_remains.NDSKindId, SUM (Amount) AS Amount
+                                FROM _tmpItem_remains
+                                GROUP BY _tmpItem_remains.GoodsId, _tmpItem_remains.NDSKindId) AS tmpTo
+                                                                                               ON tmpTo.GoodsId = tmpFrom.GoodsId
+                                                                                              AND tmpTo.NDSKindId = tmpFrom.NDSKindId
+               WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0))
     THEN
            -- Ошибка расч/факт остаток :
            outMessageText:= '' || (SELECT STRING_AGG (tmp.Value, ' (***) ')
                                     FROM (SELECT '(' || COALESCE (Object.ObjectCode, 0) :: TVarChar || ')' || COALESCE (Object.ValueData, '') || ' в чеке: ' || zfConvert_FloatToString (AmountFrom) || COALESCE (Object_Measure.ValueData, '') || '; остаток: ' || zfConvert_FloatToString (AmountTo) || COALESCE (Object_Measure.ValueData, '') AS Value
-                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo FROM (SELECT ObjectId AS GoodsId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
+                                          FROM (SELECT tmpFrom.GoodsId, tmpFrom.Amount AS AmountFrom, COALESCE (tmpTo.Amount, 0) AS AmountTo FROM (SELECT ObjectId AS GoodsId, NDSKindId, SUM (OperSumm) AS Amount FROM _tmpItem GROUP BY ObjectId, NDSKindId) AS tmpFrom LEFT JOIN (SELECT _tmpItem_remains.GoodsId, _tmpItem_remains.NDSKindId, SUM (Amount) AS Amount FROM _tmpItem_remains GROUP BY _tmpItem_remains.GoodsId, _tmpItem_remains.NDSKindId) AS tmpTo ON tmpTo.GoodsId = tmpFrom.GoodsId AND tmpTo.NDSKindId = tmpFrom.NDSKindId WHERE tmpFrom.Amount > COALESCE (tmpTo.Amount, 0)) AS tmp
                                                LEFT JOIN Object ON Object.Id = tmp.GoodsId
                                                LEFT JOIN ObjectLink ON ObjectLink.ObjectId = tmp.GoodsId
                                                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Measure()
@@ -215,7 +244,7 @@ BEGIN
            outMessageText:= 'Ошибка.Товара нет в наличии: ' || outMessageText;
 
            -- кроме Админа
-           IF 1 = 0 OR inUserId <> 3
+           IF 1 = 1 /*OR inUserId <> 3*/
            THEN
                -- больше ничего не делаем
                RETURN;
@@ -224,14 +253,14 @@ BEGIN
      END IF;
 
     -- !!!Только если товар дублируется - Распределим по старинке!!!
-    IF EXISTS (SELECT 1 FROM _tmpItem GROUP BY ObjectId HAVING COUNT (*) > 1)
+    IF EXISTS (SELECT 1 FROM _tmpItem GROUP BY ObjectId, NDSKindId HAVING COUNT (*) > 1)
     THEN
         -- курсор1 - элементы продажи
-        OPEN curSale FOR SELECT MovementItemId, ObjectId, OperSumm AS Amount FROM _tmpItem;
+        OPEN curSale FOR SELECT MovementItemId, ObjectId, NDSKindId, OperSumm AS Amount FROM _tmpItem;
         -- начало цикла по курсору1 - возвраты
         LOOP
                 -- данные по продажам
-                FETCH curSale INTO vbMovementItemId, vbGoodsId, vbAmount;
+                FETCH curSale INTO vbMovementItemId, vbGoodsId, vbNDSKindId, vbAmount;
                 -- если данные закончились, тогда выход
                 IF NOT FOUND THEN EXIT; END IF;
 
@@ -242,6 +271,7 @@ BEGIN
                         LEFT JOIN (SELECT ContainerId, -1 * SUM (_tmpMIContainer_insert.Amount) AS Amount FROM _tmpMIContainer_insert GROUP BY ContainerId
                                   ) AS tmp ON tmp.ContainerId = _tmpItem_remains.ContainerId
                    WHERE _tmpItem_remains.GoodsId = vbGoodsId
+                     AND _tmpItem_remains.NDSKindId = vbNDSKindId
                      AND _tmpItem_remains.Amount - COALESCE (tmp.Amount, 0) > 0
                    ORDER BY _tmpItem_remains.OperDate DESC, _tmpItem_remains.ContainerId DESC
                   ;
@@ -316,11 +346,12 @@ BEGIN
                                       , Container.Amount        AS ContainerAmount
                                       , Container.ContainerId
                                       , Container.MovementItemId_partion
-                                      , SUM (Container.Amount) OVER (PARTITION BY Container.GoodsId ORDER BY Container.OperDate, Container.ContainerId, MI_Sale.MovementItemId) AS ContainerAmountSUM
+                                      , SUM (Container.Amount) OVER (PARTITION BY Container.GoodsId, Container.NDSKindId ORDER BY Container.OperDate, Container.ContainerId, MI_Sale.MovementItemId) AS ContainerAmountSUM
                                       , ROW_NUMBER() OVER (PARTITION BY /*MI_Sale.ObjectId*/ MI_Sale.MovementItemId ORDER BY Container.OperDate DESC, Container.ContainerId DESC, MI_Sale.MovementItemId DESC) AS DOrd
                                  FROM _tmpItem AS MI_Sale
                                       INNER JOIN _tmpItem_remains AS Container
                                                                   ON Container.GoodsId = MI_Sale.ObjectId
+                                                                 AND Container.NDSKindId = MI_Sale.NDSKindId
                                 )
            -- Результат
            SELECT zc_MIContainer_Count()
@@ -464,7 +495,7 @@ BEGIN
        WHERE MovementFloat_LoyaltySMID.DescID = zc_MovementFloat_LoyaltySMID()
          AND MovementFloat_LoyaltySMID. MovementId = inMovementId;
      END IF;
-      
+
      -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
                                 , inDescId     := zc_Movement_Check()

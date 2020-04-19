@@ -43,7 +43,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
-
+    
+    IF COALESCE (inNDSKindId, 0) = 0
+    THEN
+      inNDSKindId := COALESCE((SELECT Object_Goods_Main.NDSKindId FROM  Object_Goods_Retail
+                                      LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                               WHERE Object_Goods_Retail.Id = inGoodsId), zc_Enum_NDSKind_Medical());
+    
+    END IF;
 
     -- Находим элемент по документу и товару
     IF COALESCE (ioId, 0) = 0

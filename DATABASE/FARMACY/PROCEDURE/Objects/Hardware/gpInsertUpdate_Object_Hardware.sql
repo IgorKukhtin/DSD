@@ -1,16 +1,19 @@
 -- Function: gpInsertUpdate_Object_City()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Hardware(
  INOUT ioId                     Integer   ,     -- ключ объекта <Город>
     IN inCode                   Integer   ,     -- Код объекта
     IN inName                   TVarChar  ,     -- Название объекта
     IN inUnitId                 Integer   ,     -- Подразделение
+    IN inCashRegisterID         Integer   ,     -- Подразделение
     IN inBaseBoardProduct       TVarChar ,      -- Материнская плата
     IN inProcessorName          TVarChar ,      -- Процессор
     IN inDiskDriveModel         TVarChar ,      -- Жесткий Диск
     IN inPhysicalMemory         TVarChar ,      -- Оперативная память
+    IN inIdentifier             TVarChar ,      -- Идентификатор
+    IN inComment                TVarChar ,      -- Примечание
     IN inSession                TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -49,6 +52,8 @@ BEGIN
 
   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_Unit(), ioId, inUnitId);
+  -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_CashRegister(), ioId, inCashRegisterID);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_BaseBoardProduct(), ioId, inBaseBoardProduct);
@@ -62,12 +67,17 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_PhysicalMemory(), ioId, inPhysicalMemory);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_Identifier(), ioId, inIdentifier);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_Comment(), ioId, inComment);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Hardware (Integer, Integer, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 -------------------------------------------------------------------------------

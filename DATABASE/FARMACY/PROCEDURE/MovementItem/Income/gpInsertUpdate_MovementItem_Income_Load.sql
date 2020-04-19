@@ -281,7 +281,7 @@ BEGIN
                                                      , inJuridicalId  := inJuridicalId_to
                                                      , inisDifferent  := False
                                                      , inComment      := '' 
-                                                     , inisUseNDSKind := False
+                                                     , inisUseNDSKind := vbNDSKindId = zc_Enum_NDSKind_Special_0()
                                                      , inUserId       := vbUserId);
      END IF;
 

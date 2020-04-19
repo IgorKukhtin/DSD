@@ -22,6 +22,7 @@ BEGIN
                                   , tmpMarginCategoryLink.JuridicalName_our AS JuridicalName
                                   , tmpMarginCategoryLink.UnitId
                                   , tmpMarginCategoryLink.UnitName
+                                  , tmpMarginCategoryLink.RetailId
                                   , tmpMarginCategoryLink.RetailName
                                   , Object_ProvinceCity.ValueData  AS ProvinceCityName
                             FROM gpSelect_Object_MarginCategoryLink (inShowAll := FALSE, inSession := '3') AS tmpMarginCategoryLink
@@ -52,6 +53,7 @@ BEGIN
                        , _tmpMarginCategory.UnitId
                        , _tmpMarginCategory.UnitName
                        , _tmpMarginCategory.ProvinceCityName
+                       , _tmpMarginCategory.RetailId
                        , _tmpMarginCategory.RetailName
                        , _tmpminPrice.num AS Num
                        , tmpMarginCategoryItem.Id AS MarginCategoryItemId 
@@ -82,6 +84,7 @@ BEGIN
                          , tmp.UnitName
                          , tmp.ProvinceCityName
                          , tmp.JuridicalName
+                         , tmp.RetailId
                          , tmp.RetailName
                          , MAX (tmp.Id_1) AS Id_1
                          , MAX (tmp.Id_2) AS Id_2
@@ -114,6 +117,7 @@ BEGIN
                               , tmpData.UnitName
                               , tmpData.ProvinceCityName
                               , tmpData.JuridicalName
+                              , tmpData.RetailId
                               , tmpData.RetailName
                               , CASE WHEN tmpData.Num = 1 THEN tmpData.MarginCategoryItemId ELSE 0 END AS Id_1
                               , CASE WHEN tmpData.Num = 2 THEN tmpData.MarginCategoryItemId ELSE 0 END AS Id_2
@@ -150,6 +154,7 @@ BEGIN
                           , tmp.ProvinceCityName
                           , tmp.JuridicalName
                           , tmp.RetailName
+                          , tmp.RetailId
                    )
 
          --результат
@@ -159,6 +164,7 @@ BEGIN
               , tmpDataAll.UnitName
               , tmpDataAll.ProvinceCityName
               , tmpDataAll.JuridicalName
+              , tmpDataAll.RetailId
               , tmpDataAll.RetailName
               , tmpDataAll.Id_1
               , tmpDataAll.Id_2

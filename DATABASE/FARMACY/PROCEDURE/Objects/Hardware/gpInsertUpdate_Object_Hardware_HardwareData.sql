@@ -6,16 +6,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Hardware_HardwareData(
     IN inProcessorName           TVarChar,      -- Процессор
     IN inDiskDriveModel          TVarChar,      -- Жесткий Диск
     IN inPhysicalMemory          TVarChar,      -- Оперативная память
+   OUT outId                     INTEGER,       -- ID записи
     IN inSession                 TVarChar       -- сессия пользователя
 )
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
-  DECLARE vbId integer;
   DECLARE vbCode integer;
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserId Integer;
   DECLARE vbUnitId Integer;
+  DECLARE vbCode_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -32,7 +33,7 @@ BEGIN
   END IF;
 
   SELECT Object.Id, Object.ObjectCode 
-  INTO vbId, vbCode
+  INTO outId, vbCode
   FROM Object
        INNER JOIN ObjectLink AS ObjectLink_Hardware_Unit
                              ON ObjectLink_Hardware_Unit.ObjectId = Object.Id
@@ -40,7 +41,7 @@ BEGIN
   WHERE Object.DescId = zc_Object_Hardware()
     AND Object.ValueData = inComputerName;
     
-  IF COALESCE(vbId, 0) <> 0 AND
+  IF COALESCE(outId, 0) <> 0 AND
      NOT EXISTS(SELECT
                    ObjectString_BaseBoardProduct.ValueData                   AS BaseBoardProduct
                  , ObjectString_ProcessorName.ValueData                      AS ProcessorName
@@ -62,7 +63,7 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_PhysicalMemory
                                         ON ObjectString_PhysicalMemory.ObjectId = Object_Hardware.Id
                                        AND ObjectString_PhysicalMemory.DescId = zc_ObjectString_Hardware_PhysicalMemory()
-             WHERE Object_Hardware.Id = vbId 
+             WHERE Object_Hardware.Id = outId 
                AND ((COALESCE(ObjectString_BaseBoardProduct.ValueData, '') <> COALESCE(inBaseBoardProduct, '')) OR
                     (COALESCE(ObjectString_ProcessorName.ValueData, '') <> COALESCE(inProcessorName, '')) OR
                     (COALESCE(ObjectString_DiskDriveModel.ValueData , '') <> COALESCE(inDiskDriveModel, '')) OR
@@ -71,7 +72,38 @@ BEGIN
     RETURN;
   END IF;
 
-  vbId := gpInsertUpdate_Object_Hardware(vbId,vbCode,inComputerName,vbUnitId,inBaseBoardProduct,inProcessorName,inDiskDriveModel,inPhysicalMemory,inSession);
+   -- пытаемся найти код
+   IF outId <> 0 AND COALESCE (vbCode, 0) = 0 THEN vbCode := (SELECT ObjectCode FROM Object WHERE Id = outId); END IF;
+
+   -- Если код не установлен, определяем его каи последний+1
+   vbCode_calc:=lfGet_ObjectCode (COALESCE (vbCode, 0), zc_Object_Hardware());
+
+   -- проверка уникальности для свойства <Наименование> 
+   PERFORM lpCheckUnique_Object_ValueData (outId, zc_Object_Hardware(), inComputerName);
+   -- проверка уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (outId, zc_Object_Hardware(), vbCode_calc);
+
+   -- сохранили <Объект>
+   outId := lpInsertUpdate_Object (outId, zc_Object_Hardware(), vbCode_calc, inComputerName);
+
+  -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_Unit(), outId, vbUnitId);
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_BaseBoardProduct(), outId, inBaseBoardProduct);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_ProcessorName(), outId, inProcessorName);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_DiskDriveModel(), outId, inDiskDriveModel);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Hardware_PhysicalMemory(), outId, inPhysicalMemory);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (outId, vbUserId);
+  
   
 END;
 $BODY$

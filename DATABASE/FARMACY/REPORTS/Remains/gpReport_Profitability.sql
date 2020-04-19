@@ -297,19 +297,19 @@ BEGIN
         SELECT tmpUnit.UnitId
              , Object_Unit.ObjectCode
              , Object_Unit.ValueData
-             , tmpRealization.AmountSumJuridical ::TFloat
-             , tmpRealization.AmountSum ::TFloat
-             , tmpSPKind.SummChange ::TFloat
-             , (COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0)) ::TFloat
+             , ROUND(tmpRealization.AmountSumJuridical, 2) ::TFloat
+             , ROUND(tmpRealization.AmountSum, 2) ::TFloat
+             , ROUND(tmpSPKind.SummChange, 2) ::TFloat
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0), 2)::TFloat ::TFloat
 
-             , tmpRemains.Saldo::TFloat
-             , tmpRemains.SaldoSum::TFloat
+             , ROUND(tmpRemains.Saldo, 2)::TFloat
+             , ROUND(tmpRemains.SaldoSum, 2)::TFloat
 
-             , tmpWages.Amount::TFloat
-             , (COALESCE(tmpAdditionalExpenses.Amount, 0) + COALESCE(tmpWagesRest.Amount, 0))::TFloat
+             , ROUND(tmpWages.Amount, 2)::TFloat
+             , ROUND(COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat + COALESCE(tmpWagesRest.Amount, 0)::TFloat, 2)::TFloat
              
-             , (COALESCE(tmpRealization.AmountSum, 0) + COALESCE(tmpSPKind.SummChange, 0) - COALESCE(tmpRealization.AmountSumJuridical, 0) - 
-                COALESCE(tmpWages.Amount, 0) - COALESCE(tmpAdditionalExpenses.Amount, 0)) ::TFloat
+             , ROUND(COALESCE(tmpRealization.AmountSum, 0)::TFloat + COALESCE(tmpSPKind.SummChange, 0)::TFloat - COALESCE(tmpRealization.AmountSumJuridical, 0)::TFloat - 
+                COALESCE(tmpWages.Amount, 0)::TFloat - COALESCE(tmpAdditionalExpenses.Amount, 0)::TFloat, 2) ::TFloat
         FROM tmpUnit
 
              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmpUnit.UnitId
@@ -343,3 +343,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpReport_Profitability (inDateStart:= '01.08.2019'::TDateTime, inDateFinal:= '31.08.2019'::TDateTime, inUnitID := 11300059, inSession:= zfCalc_UserAdmin())
+

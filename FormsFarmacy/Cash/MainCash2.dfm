@@ -134,6 +134,12 @@ inherited MainCashForm2: TMainCashForm2
           HeaderAlignmentHorz = taCenter
           Width = 62
         end
+        object CheckGridNDS: TcxGridDBColumn
+          Caption = #1053#1044#1057
+          DataBinding.FieldName = 'NDS'
+          HeaderAlignmentHorz = taCenter
+          Width = 46
+        end
       end
       object CheckGridLevel: TcxGridLevel
         GridView = CheckGridDBTableView
@@ -4515,6 +4521,10 @@ inherited MainCashForm2: TMainCashForm2
       item
         Name = 'PriceDiscount'
         DataType = ftFloat
+      end
+      item
+        Name = 'NDSKindId'
+        DataType = ftInteger
       end>
     IndexDefs = <>
     Params = <>
@@ -5090,6 +5100,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object mdCheckPDKINDID: TIntegerField
       FieldName = 'PDKINDID'
+    end
+    object mdCheckNDSKINDID: TIntegerField
+      FieldName = 'NDSKINDID'
     end
     object mdCheckAMOUNT: TCurrencyField
       FieldName = 'AMOUNT'

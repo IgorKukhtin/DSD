@@ -18,6 +18,7 @@ $BODY$
   DECLARE vbUserId Integer;
   DECLARE vbCashRegisterKindId integer;
   DECLARE vbCashRegisterKindName TVarChar;
+  DECLARE vbHardware Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -40,6 +41,15 @@ BEGIN
     DescId = zc_Object_CashRegister()
     AND
     ValueData = inSerial;
+    
+  -- Сохранили в отчет аппаратной части
+  
+  vbHardware := gpInsertUpdate_Object_Hardware_HardwareData(inComputerName      := inComputerName,
+                                                            inBaseBoardProduct  := inBaseBoardProduct,
+                                                            inProcessorName     := inProcessorName,
+                                                            inDiskDriveModel    := inDiskDriveModel,
+                                                            inPhysicalMemory    := inPhysicalMemory,
+                                                            inSession           := inSession);
 
   IF COALESCE(vbId, 0) <> 0 AND
      NOT EXISTS(SELECT
@@ -78,6 +88,12 @@ BEGIN
                     (COALESCE(ObjectString_DiskDriveModel.ValueData , '') <> COALESCE(inDiskDriveModel, '')) OR
                     (COALESCE(ObjectString_PhysicalMemory.ValueData , '') <> COALESCE(inPhysicalMemory, ''))))
   THEN
+  
+    -- сохранили связь с <Аппаратная часть с кассой>
+    IF COALESCE(vbHardware, 0) <> 0
+    THEN
+      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_CashRegister(), vbHardware, vbId);
+    END IF;
     -- сохранили свойство <>
     PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashRegister_GetHardwareData(), vbId, False);
     
@@ -104,6 +120,11 @@ BEGIN
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_CashRegister_PhysicalMemory(), vbId, inPhysicalMemory);
 
+  -- сохранили связь с <Аппаратная часть с кассой>
+  IF COALESCE(vbHardware, 0) <> 0
+  THEN
+    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Hardware_CashRegister(), vbHardware, vbId);
+  END IF;
   
   -- сохранили свойство <>
   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashRegister_GetHardwareData(), vbId, False);

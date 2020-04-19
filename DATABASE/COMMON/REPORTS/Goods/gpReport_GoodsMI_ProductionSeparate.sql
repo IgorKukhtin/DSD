@@ -25,7 +25,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_ProductionSeparate (
     IN inSession            TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, PartionGoods  TVarChar 
-             , GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , StorageLineName TVarChar
              , Amount TFloat, HeadCount TFloat, Summ TFloat
              , ChildGoodsGroupName TVarChar, ChildGoodsCode Integer,  ChildGoodsName TVarChar
@@ -283,7 +284,9 @@ BEGIN
            , CAST (tmpOperationGroup.OperDate AS TDateTime)    AS OperDate
            , CAST (tmpOperationGroup.PartionGoods AS TVarChar) AS PartionGoods
 
-           , Object_GoodsGroup.ValueData                       AS GoodsGroupName 
+           , Object_GoodsGroup.Id                              AS GoodsGroupId
+           , Object_GoodsGroup.ValueData                       AS GoodsGroupName
+           , Object_Goods.Id                                   AS GoodsId
            , Object_Goods.ObjectCode                           AS GoodsCode
            , Object_Goods.ValueData                            AS GoodsName  
 

@@ -27,6 +27,8 @@ type
     spDeleteHardware: TdsdStoredProc;
     actDeleteHardware: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    Identifier: TcxGridDBColumn;
+    Comment: TcxGridDBColumn;
   private
     { Private declarations }
   public

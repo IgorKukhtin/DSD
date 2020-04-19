@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , MeasureName TVarChar
              , GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
+             , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
              , isErased Boolean
               )
 AS
@@ -23,6 +24,31 @@ BEGIN
 
    RETURN QUERY
      WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE AND NOT EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_GuideTech()))
+     
+        , tmpReceiptMain AS (SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
+                                  , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
+                                  , Object_Receipt.Id                          AS ReceiptId
+                                  , Object_Receipt.ObjectCode                  AS ReceiptCode
+                                  , Object_Receipt.ValueData                   AS ReceiptName
+                             FROM Object AS Object_Receipt
+                                      INNER JOIN ObjectBoolean AS ObjectBoolean_Main
+                                                               ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
+                                                              AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
+                                                              AND ObjectBoolean_Main.ValueData = TRUE
+                            
+                                      LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
+                                                           ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
+                                                          AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+                            
+                                      LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                           ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                          AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                            
+                                  WHERE Object_Receipt.DescId = zc_Object_Receipt()
+                                    AND Object_Receipt.isErased = FALSE
+                            )
+
+
      SELECT
            Object_Goods.Id          AS Id
          , Object_Goods.ObjectCode  AS Code
@@ -38,6 +64,9 @@ BEGIN
          , Object_GoodsTag.ValueData                   AS GoodsTagName
          , Object_TradeMark.ValueData                  AS TradeMarkName
 
+         , tmpReceiptMain.ReceiptId   :: Integer
+         , tmpReceiptMain.ReceiptCode :: Integer
+         , tmpReceiptMain.ReceiptName :: TVarChar
          , Object_Goods.isErased AS isErased
 
      FROM (SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
@@ -90,6 +119,9 @@ BEGIN
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
+          LEFT JOIN tmpReceiptMain ON tmpReceiptMain.GoodsId = tmpGoods.GoodsId
+                                  AND tmpReceiptMain.GoodsKindId = tmpGoods.GoodsKindId
      ;
 
 END;

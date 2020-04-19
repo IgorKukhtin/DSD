@@ -105,6 +105,16 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object ReceiptName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099
+        DataBinding.FieldName = 'ReceiptName'
+        FooterAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1053#1072#1079#1074#1072#1085#1080#1077' '#1088#1077#1094#1077#1087#1090#1091#1088#1099' ('#1075#1083#1072#1074#1085#1072#1103')'
+        Options.Editing = False
+        Width = 130
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -306,11 +316,15 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         item
           Name = 'ReceiptId'
           Value = 0
+          Component = MasterCDS
+          ComponentItem = 'ReceiptId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'ReceiptCode'
           Value = 0
+          Component = MasterCDS
+          ComponentItem = 'ReceiptCode'
           MultiSelectSeparator = ','
         end
         item
@@ -322,6 +336,8 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         item
           Name = 'ReceiptName'
           Value = ''
+          Component = MasterCDS
+          ComponentItem = 'ReceiptName'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

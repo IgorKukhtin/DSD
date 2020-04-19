@@ -18,8 +18,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SendOnPrice (
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
-             , GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , FromCode Integer, FromName TVarChar
              , ToCode Integer, ToName TVarChar
@@ -234,9 +234,11 @@ BEGIN
        -- Результат
        SELECT Movement.InvNumber
          , Movement.OperDate
-         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-         , Object_GoodsGroup.ValueData             AS GoodsGroupName
+         , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+         , Object_GoodsGroup.Id                       AS GoodsGroupId
+         , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
+         , Object_Goods.Id                            AS GoodsId
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
          , Object_GoodsKind.ValueData                 AS GoodsKindName
@@ -335,7 +337,7 @@ BEGIN
      FROM (SELECT tmpContainer.MovementId
                 , tmpContainer.FromId
                 , tmpContainer.ToId
-                , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') END :: TVarChar  AS SubjectDocName
+                , STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ')  :: TVarChar  AS SubjectDocName
                 , CASE WHEN inIsGoods = TRUE THEN tmpContainer.GoodsId ELSE 0 END AS GoodsId
                 , tmpContainer.GoodsKindId
                 , _tmpGoods.InfoMoneyId AS InfoMoneyId_goods
@@ -577,7 +579,7 @@ BEGIN
                              , tmpContainer.GoodsKindId
                              , _tmpGoods.InfoMoneyId
                              , CASE WHEN inIsTradeMark = TRUE OR inIsGoods = TRUE THEN _tmpGoods.TradeMarkId ELSE 0 END
-                             , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE STRING_AGG (DISTINCT tmpContainer.SubjectDocName, '; ') END
+                             , CASE WHEN inIsSubjectDoc = TRUE THEN tmpContainer.SubjectDocName ELSE '' END
 
                     ) AS tmpOperationGroup
 

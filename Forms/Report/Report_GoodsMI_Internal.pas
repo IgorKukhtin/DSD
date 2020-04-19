@@ -109,6 +109,8 @@ type
     Summ_ProfitLoss_loss: TcxGridDBColumn;
     Summ_ProfitLoss_send: TcxGridDBColumn;
     cbSubjectDoc: TcxCheckBox;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

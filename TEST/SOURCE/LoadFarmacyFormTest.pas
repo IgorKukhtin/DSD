@@ -671,21 +671,26 @@ end;
 
 procedure TLoadFormTest.LoadMargineCategory;
 begin
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategory_AllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategory_AllForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersentSalaryDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersentSalaryDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryAllDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryAllDialogForm');
   exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemHistoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemHistoryForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryEditForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMarginCategoryItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMarginCategoryLinkForm'));

@@ -53,6 +53,7 @@ type
     GoodsTagName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    ReceiptName: TcxGridDBColumn;
   private
     { Private declarations }
   public

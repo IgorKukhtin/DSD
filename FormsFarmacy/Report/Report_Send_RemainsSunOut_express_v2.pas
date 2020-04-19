@@ -86,6 +86,7 @@ type
     macSendSUN_List: TMultiAction;
     spUpdateMISend: TdsdStoredProc;
     actUpdateResult_childDS: TdsdUpdateDataSet;
+    AmountExcess: TcxGridDBColumn;
   private
     { Private declarations }
   public
