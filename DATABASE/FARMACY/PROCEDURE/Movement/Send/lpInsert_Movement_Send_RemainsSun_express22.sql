@@ -315,9 +315,10 @@ BEGIN
                                                             ON MovementBoolean_isAuto.MovementId = Movement.Id
                                                            AND MovementBoolean_isAuto.DescId     = zc_MovementBoolean_isAuto()
                                                            AND MovementBoolean_isAuto.ValueData  = TRUE*/
-                                 /*LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                 LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                                            ON MovementBoolean_Deferred.MovementId = Movement.Id
-                                                          AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()*/
+                                                          AND MovementBoolean_Deferred.DescId     = zc_MovementBoolean_Deferred()
+                                                          AND MovementBoolean_Deferred.ValueData  = TRUE
                                  INNER JOIN MovementItem AS MovementItem
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
@@ -333,7 +334,7 @@ BEGIN
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                           -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
+                              AND MovementBoolean_Deferred.MovementId IS NULL
                               AND MB_SUN_v3.MovementId IS NULL
                             GROUP BY MovementLinkObject_From.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
