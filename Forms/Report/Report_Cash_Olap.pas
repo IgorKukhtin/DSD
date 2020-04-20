@@ -47,7 +47,7 @@ type
     pvBranchName: TcxDBPivotGridField;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    pvMonthDate: TcxDBPivotGridField;
+    pvMonthName: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     PivotAddOn: TPivotAddOn;
@@ -57,7 +57,6 @@ type
     pvUnitCode: TcxDBPivotGridField;
     dxBarStatic: TdxBarStatic;
     pvCashName: TcxDBPivotGridField;
-    pvEndAmountD: TcxDBPivotGridField;
     cxLabel3: TcxLabel;
     edCash: TcxButtonEdit;
     cxLabel4: TcxLabel;
