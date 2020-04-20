@@ -1102,6 +1102,8 @@ type
     miReport_Promo_Trade: TMenuItem;
     actPromoStateKind: TdsdOpenForm;
     N216: TMenuItem;
+    actReport_Cash_olap: TdsdOpenForm;
+    miReport_Cash_olap: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
