@@ -15,9 +15,19 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Promo());
 
- 
+     -- определили признак
+     inisTaxPromo:= NOT inisTaxPromo;
+
+     -- сохранили свойство
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_TaxPromo(), inMovementId, inisTaxPromo);
+     
+     outisTaxPromo := inisTaxPromo;
+     outisTaxPromo_Condition := NOT inisTaxPromo;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
      
 
 END;

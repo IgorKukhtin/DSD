@@ -124,11 +124,11 @@ BEGIN
                           WHERE Object_Account.DescId = zc_Object_Account()
                          )  
                                    
-        , tmpInfoMoney AS (SELECT Object_InfoMoneyGroup.ValueData                          AS InfoMoneyGroupName
-                                , Object_InfoMoneyDestination.ValueData                    AS InfoMoneyDestinationName
+        , tmpInfoMoney AS (SELECT '(' || CAST (Object_InfoMoneyGroup.ObjectCode AS TVarChar) || ') '|| Object_InfoMoneyGroup.ValueData              AS InfoMoneyGroupName
+                                , '(' || CAST (Object_InfoMoneyDestination.ObjectCode AS TVarChar) || ') '|| Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
                                 , Object_InfoMoney.Id                                      AS InfoMoneyId
                                 , Object_InfoMoney.ObjectCode                              AS InfoMoneyCode
-                                , Object_InfoMoney.ValueData                               AS InfoMoneyName
+                                , '(' || CAST (Object_InfoMoney.ObjectCode AS TVarChar) || ') '|| Object_InfoMoney.ValueData AS InfoMoneyName
                          
                                 , CAST ('(' || CAST (Object_InfoMoney.ObjectCode AS TVarChar)
                                     || ') '|| Object_InfoMoneyGroup.ValueData
@@ -360,8 +360,8 @@ BEGIN
         CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer  AS GroupId,
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Object_Branch.ValueData                                                                     AS BranchName,
-        tmpInfoMoney.InfoMoneyGroupName                                                             AS InfoMoneyGroupName,
-        tmpInfoMoney.InfoMoneyDestinationName                                                       AS InfoMoneyDestinationName,
+        tmpInfoMoney.InfoMoneyGroupName           :: TVarChar                                       AS InfoMoneyGroupName,
+        tmpInfoMoney.InfoMoneyDestinationName     :: TVarChar                                       AS InfoMoneyDestinationName,
         tmpInfoMoney.InfoMoneyCode                                                                  AS InfoMoneyCode,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName     END :: TVarChar AS InfoMoneyName,
         CASE WHEN COALESCE (Operation.InfoMoneyId, 0) = 0 AND (Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0) THEN 'Курсовая разница' ELSE tmpInfoMoney.InfoMoneyName_all END :: TVarChar AS InfoMoneyName_all,
@@ -389,7 +389,7 @@ BEGIN
 
         Operation.OperDate         :: TDateTime,
         
-        zfCalc_MonthName (Operation.OperDate)  ::TVarChar AS MonthName,
+        (EXTRACT (MONTH FROM Operation.OperDate)||'. ' ||zfCalc_MonthName (Operation.OperDate))  ::TVarChar AS MonthName,
         EXTRACT (YEAR FROM Operation.OperDate) ::TVarChar AS Year
      FROM tmpOperation AS Operation
 

@@ -17,6 +17,7 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       
       , GoodsKindName           TVarChar --Наименование обьекта <Вид товара>
       , GoodsKindCompleteName   TVarChar --Наименование обьекта <Вид товара(примечание)>
+      , MeasureName             TVarChar -- ед.изм
 
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
       --, AmountRetIn             TFloat --Кол-во возврат грн/кг
@@ -24,8 +25,9 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , TaxRetIn                TFloat --
       , TaxPromo                TFloat --
       , TaxPromo_Condition      TFloat --
-      , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (в кг)
-      , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период (в кг)
+      , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (шт)
+      , AmountSaleWeight        TFloat -- вес
+      , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период 
       , Price                   TFloat --Цена в прайсе
       , PriceWithVAT            TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , PromoCondition          TFloat --
@@ -370,6 +372,7 @@ BEGIN
          , tmpData_All.GoodsName               ::TVarChar  
          , tmpData_All.GoodsKindName           ::TVarChar
          , tmpData_All.GoodsKindCompleteName   ::TVarChar
+         , Object_Measure.ValueData            ::TVarChar AS MeasureName             --Единица измерения
 
          , tmpData_All.PriceIn                 :: TFloat
         -- , tmpData_All.AmountRetIn             :: TFloat
@@ -378,6 +381,8 @@ BEGIN
          , tmpData_All.TaxPromo                :: TFloat
          , tmpData_All.TaxPromo_Condition      :: TFloat
          , tmpData_All.AmountSale              :: TFloat
+         , (tmpData_All.AmountSale
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес
          , tmpData_All.SummaSale               :: TFloat
          , tmpData_All.Price                   :: TFloat
          , tmpData_All.PriceWithVAT            :: TFloat
@@ -398,6 +403,14 @@ BEGIN
          , tmpData_All.Color_SummaProfit
          , tmpData_All.Text                    ::TVarChar
     FROM tmpData_All
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                              ON ObjectLink_Goods_Measure.ObjectId = tmpData_All.GoodsId
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                     ON ObjectFloat_Goods_Weight.ObjectId = tmpData_All.GoodsId
+                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
     WHERE inIsTaxPromo = vbTaxPromo OR vbTaxPromo IS NULL
     ORDER BY  tmpData_All.Id, tmpData_All.NUM 
    ;
