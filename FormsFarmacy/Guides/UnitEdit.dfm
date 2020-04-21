@@ -712,7 +712,7 @@
       object cxLabel43: TcxLabel
         Left = 240
         Top = 152
-        Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053' 2 - '#1087#1077#1088#1077#1084#1077#1097'.'#1080#1079#1083#1080#1096#1082#1086#1074
+        Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053' 2 - '#1055#1048
       end
       object edListDaySUN_pi: TcxTextEdit
         Left = 240
@@ -876,8 +876,8 @@
     end
   end
   object ActionList: TActionList
-    Left = 356
-    Top = 393
+    Left = 332
+    Top = 417
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -2014,8 +2014,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 304
-    Top = 357
+    Left = 232
+    Top = 341
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'
@@ -2043,8 +2043,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 368
-    Top = 345
+    Left = 392
+    Top = 377
   end
   object GuidesArea: TdsdGuides
     KeyField = 'Id'

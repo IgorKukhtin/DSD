@@ -330,11 +330,11 @@ inherited SendJournalForm: TSendJournalForm
             Width = 55
           end
           object isSUN_v4: TcxGridDBColumn
-            Caption = #1057#1059#1053'-'#1055#1048
+            Caption = #1057#1059#1053'2-'#1055#1048
             DataBinding.FieldName = 'isSUN_v4'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+            HeaderHint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
             Options.Editing = False
             Width = 55
           end

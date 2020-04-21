@@ -89,8 +89,11 @@ BEGIN
                      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                
                      , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
-                     , (MIFloat_AmountSale.ValueData * MIFloat_PriceWithVAT.ValueData)
-                                                              AS SummaSale           --сумма плана продаж
+                     , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE 
+                            THEN (MIFloat_Price.ValueData * (100-MIFloat_TaxPromo.ValueData) /100)*MIFloat_AmountSale.ValueData
+                            ELSE (MIFloat_AmountSale.ValueData * MIFloat_Price.ValueData)
+                       END AS SummaSale           --сумма плана продаж
+
                      --, MIFloat_AmountRetIn.ValueData          AS AmountRetIn            --Кол-во возврат (факт)
                     /* , CAST (CASE WHEN COALESCE (MIFloat_AmountReal.ValueData, 0) <> 0 
                             THEN MIFloat_AmountRetIn.ValueData * 100 / MIFloat_AmountReal.ValueData
@@ -116,7 +119,8 @@ BEGIN
              
                      LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                  ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                                AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
+                                                
                                    
                       LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
                                                   ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
@@ -200,26 +204,28 @@ BEGIN
 
                          , tmpData.PriceIn1            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * (100-tmpData.TaxPromo) /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
                          
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
                          , tmpData.Price  
                          , tmpData.PriceWithVAT
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
-                         , tmpData.SummaSale - (COALESCE (tmpData.PriceIn1, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                  ) 
+                         , tmpData.SummaSale
+                                               - (
+                                                   COALESCE (tmpData.PriceIn1, 0) 
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 ) 
                                                   * tmpData.AmountSale    AS SummaProfit               -- прибыль
 
                          , tmpData.SummaSale - (COALESCE (tmpData.PriceIn1, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
 
@@ -281,26 +287,28 @@ BEGIN
 
                          , tmpData.PriceIn2            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS ContractCondition
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * (100-tmpData.TaxPromo) /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
-
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         
                          , tmpData.AmountSale       AS AmountSale
-                         , tmpData.SummaSale        AS SummaSale
+                         , tmpData.SummaSale
                          , tmpData.Price               AS Price
                          , tmpData.PriceWithVAT        AS PriceWithVAT
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
-                         , tmpData.SummaSale - (COALESCE (tmpData.PriceIn2, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
+                         , tmpData.SummaSale
+                                               - (
+                                                   COALESCE (tmpData.PriceIn2, 0) 
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
-                                                 * tmpData.AmountSale    AS SummaProfit               -- прибыль
+                                                  * tmpData.AmountSale    AS SummaProfit               -- прибыль
 
                          , tmpData.SummaSale - (COALESCE (tmpData.PriceIn2, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
                          
@@ -401,6 +409,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 21.04.20         *
  30.11.17         *
  03.08.17         *
 */

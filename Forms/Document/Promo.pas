@@ -397,6 +397,8 @@ type
     MenuItem21: TMenuItem;
     MenuItem22: TMenuItem;
     MenuItem23: TMenuItem;
+    actPrint_Calc2: TdsdPrintAction;
+    bbPrint_Calc2: TdxBarButton;
   private
     { Private declarations }
   public
