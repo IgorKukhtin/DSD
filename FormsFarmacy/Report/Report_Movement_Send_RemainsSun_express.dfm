@@ -1,33 +1,30 @@
-inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expressForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1088#1072#1089#1093#1086#1076#1099')'
-  ClientHeight = 561
+inherited Report_Movement_Send_RemainsSun_expressForm: TReport_Movement_Send_RemainsSun_expressForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1087#1088#1080#1093#1086#1076#1099')'
+  ClientHeight = 563
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 599
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
     Width = 960
-    Height = 502
+    Height = 504
     TabOrder = 2
     ExplicitTop = 59
     ExplicitWidth = 960
-    ExplicitHeight = 502
-    ClientRectBottom = 502
+    ExplicitHeight = 504
+    ClientRectBottom = 504
     ClientRectRight = 960
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 960
-      ExplicitHeight = 502
+      ExplicitHeight = 504
       inherited cxGrid: TcxGrid
-        Top = 351
         Width = 960
-        Height = 151
-        Align = alBottom
-        ExplicitTop = 351
+        Height = 327
         ExplicitWidth = 960
-        ExplicitHeight = 151
+        ExplicitHeight = 327
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -202,10 +199,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSend_out
             end
             item
@@ -406,10 +399,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = AmountSend_out
             end
             item
@@ -441,6 +430,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
+          OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -449,18 +439,9 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
-          end
-          object GoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
           end
           object UnitName: TcxGridDBColumn
             Caption = #1055#1086#1083#1091#1095#1072#1090#1077#1083#1100
@@ -479,6 +460,13 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderHint = #1042#1086#1076#1080#1090#1077#1083#1100' '#1076#1083#1103' '#1088#1072#1079#1074#1086#1079#1082#1080' '#1090#1086#1074#1072#1088#1072
             Options.Editing = False
             Width = 111
+          end
+          object GoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object MCS: TcxGridDBColumn
             Caption = #1053#1058#1047
@@ -509,7 +497,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderHint = 
               #1056#1077#1079#1091#1083#1100#1090#1072#1090': '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076' '#1074' '#1090#1086#1095#1082#1091' '#1087#1086#1083#1091 +
               #1095#1072#1090#1077#1083#1100
-            Width = 85
+            Width = 70
           end
           object Summ_res: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1079'. '#1087#1088#1080#1093'.'
@@ -517,11 +505,10 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1056#1077#1079#1091#1083#1100#1090#1072#1090': '#1057#1091#1084#1084#1072' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076
-            Width = 88
+            Width = 80
           end
           object AmountResult: TcxGridDBColumn
             Caption = #1055#1086#1090#1088#1077#1073#1085'. '#1074' '#1090'. '#1087#1086#1083#1091#1095'.'
@@ -531,7 +518,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1074' '#1090#1086#1095#1082#1077' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
-            Width = 78
+            Width = 70
           end
           object AmountResult_summ: TcxGridDBColumn
             Caption = #1048#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085'. '#1087#1086' '#1074#1089#1077#1084' '#1090'. '#1087#1086#1083#1091#1095'.'
@@ -542,24 +529,27 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1086#1083'-'#1074#1086' '#1080#1090#1086#1075#1086' '#1087#1086#1090#1088#1077#1073#1085#1086#1089#1090#1100' '#1087#1086' '#1042#1057#1045#1052' '#1090#1086#1095#1082#1072#1084' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103#1084
-            Width = 88
+            Width = 100
           end
           object AmountRemains_calc: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'AmountRemains_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = 
               #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1055#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1089' '#1091#1095#1077#1090#1086#1084': '#1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1084#1099#1081') + '#1055#1077#1088#1077#1084#1077 +
               #1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') + '#1047#1072#1082#1072 +
               #1079' ('#1086#1078#1080#1076#1072#1077#1084#1099#1081') - '#1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084
-            Options.Editing = False
             Width = 70
           end
           object AmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
             DataBinding.FieldName = 'AmountRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
@@ -657,7 +647,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1048#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1087#1086' '#1074#1089#1077#1084' '#1090#1086#1095#1082#1072#1084' '#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103#1084
-            Width = 95
+            Width = 70
           end
           object Summ_min: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1089#1091#1084#1084#1072', '#1087#1077#1088#1077#1084#1077#1097'. ('#1089#1090#1072#1088#1090')'
@@ -729,12 +719,11 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1090#1086#1075#1086' '#1082#1086#1083'-'#1074#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
             Options.Editing = False
-            Width = 30
+            Width = 100
           end
           object Summ_str: TcxGridDBColumn
             Caption = #1089#1087#1080#1089#1086#1082' '#1089#1091#1084#1084' '#1087#1077#1088#1077#1084#1077#1097'. '#1087#1086#1083#1085#1086#1077
             DataBinding.FieldName = 'Summ_str'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1087#1080#1089#1086#1082' '#1089#1091#1084#1084' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
@@ -744,7 +733,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           object UnitName_str: TcxGridDBColumn
             Caption = #1089#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082' '#1087#1077#1088#1077#1084#1077#1097'. '#1087#1086#1083#1085#1086#1077
             DataBinding.FieldName = 'UnitName_str'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1089#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
@@ -754,10 +742,10 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
       end
       object cxGrid1: TcxGrid
         Left = 0
-        Top = 0
+        Top = 335
         Width = 960
-        Height = 343
-        Align = alClient
+        Height = 169
+        Align = alBottom
         PopupMenu = PopupMenu
         TabOrder = 1
         object cxGridDBTableViewPartion: TcxGridDBTableView
@@ -854,12 +842,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountIncome
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSumm_sale
             end
             item
               Format = ',0.####'
@@ -868,11 +850,16 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
+              Column = chAmountRemains_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountRemains_calc_all
+              Column = chAmountSun_summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -891,7 +878,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountSun_summ
+              Column = chAmountIncome
             end
             item
               Format = ',0.####'
@@ -915,20 +902,29 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumm_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountRemains_calc_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = chAmountOrderExternal
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -1024,12 +1020,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountIncome
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chSumm_sale
             end
             item
               Format = ',0.####'
@@ -1038,11 +1028,16 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
+              Column = chAmountRemains_calc
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountRemains_calc_all
+              Column = chAmountSun_summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
             end
             item
               Format = ',0.####'
@@ -1061,7 +1056,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
-              Column = chAmountSun_summ
+              Column = chAmountIncome
             end
             item
               Format = ',0.####'
@@ -1090,20 +1085,29 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chSumm_sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = chAmountRemains_calc_all
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = chAmountOrderExternal
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = chAmountRemains_calc
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1118,6 +1122,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
           OptionsData.Editing = False
           OptionsData.Inserting = False
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -1128,26 +1133,12 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 158
+            Width = 200
           end
           object chToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object chGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object chGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -1185,7 +1176,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderHint = 
               #1056#1077#1079#1091#1083#1100#1090#1072#1090': '#1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1086' - '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' '#1076#1083#1103' '#1090#1086#1095#1082#1080' '#1086#1090 +
               #1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 75
+            Width = 80
           end
           object chSumm_res: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1088#1077#1079'. '#1088#1072#1089#1093'.'
@@ -1223,7 +1214,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderHint = 
               #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1089' '#1091#1095#1077#1090#1086#1084': - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076 +
               #1072#1077#1090#1089#1103') - '#1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084
-            Width = 70
+            Width = 80
           end
           object chAmountRemains_calc_all: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1088#1072#1089#1095'. ('#1087#1086#1083#1085#1099#1081')'
@@ -1238,7 +1229,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
               #1054#1089#1090#1072#1090#1086#1082' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103' '#1089' '#1091#1095#1077#1090#1086#1084': '#1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1084#1099#1081') + '#1055#1077#1088#1077#1084 +
               #1077#1097#1077#1085#1080#1077' '#1087#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') - '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1088#1072#1089#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') + '#1047#1072#1082 +
               #1072#1079' ('#1086#1078#1080#1076#1072#1077#1084#1099#1081') - '#1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084
-            Width = 60
+            Width = 70
           end
           object chAmountRemains: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082
@@ -1261,7 +1252,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 60
+            Width = 80
           end
           object chSumm_sale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1086#1076#1072#1078
@@ -1273,7 +1264,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1057#1090#1072#1090#1080#1089#1090#1080#1082#1072' '#1079#1072' '#1061'*24 '#1095#1072#1089#1086#1074' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 88
+            Width = 70
           end
           object chAmountIncome: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103')'
@@ -1285,7 +1276,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1088#1080#1093#1086#1076' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 82
+            Width = 80
           end
           object chAmountOrderExternal: TcxGridDBColumn
             Caption = #1047#1072#1082#1072#1079' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103')'
@@ -1297,7 +1288,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1047#1072#1082#1072#1079' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1086#1078#1080#1076#1072#1077#1090#1089#1103') '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
-            Width = 88
+            Width = 70
           end
           object chAmountSend_in: TcxGridDBColumn
             Caption = #1055#1077#1088#1077#1084#1077#1097'. '#1087#1088#1080#1093'. ('#1086#1078#1080#1076#1072#1077#1090#1089#1103')'
@@ -1335,25 +1326,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
             HeaderHint = #1056#1077#1079#1077#1088#1074' '#1087#1086' '#1095#1077#1082#1072#1084' '#1074' '#1090#1086#1095#1082#1077' '#1054#1090#1087#1088#1072#1074#1080#1090#1077#1083#1103
             Width = 55
           end
-          object chSumm_str: TcxGridDBColumn
-            Caption = #1089#1087#1080#1089#1086#1082' '#1089#1091#1084#1084' '#1087#1077#1088#1077#1084#1077#1097'. '#1087#1086#1083#1085#1086#1077
-            DataBinding.FieldName = 'Summ_str'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1087#1080#1089#1086#1082' '#1089#1091#1084#1084' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
-            Options.Editing = False
-            Width = 100
-          end
-          object chUnitName_str: TcxGridDBColumn
-            Caption = #1089#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082' '#1087#1077#1088#1077#1084#1077#1097'. '#1087#1086#1083#1085#1086#1077
-            DataBinding.FieldName = 'UnitName_str'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1089#1087#1080#1089#1086#1082' '#1072#1087#1090#1077#1082' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
-            Width = 100
-          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableViewPartion
@@ -1361,7 +1333,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
       end
       object cxSplitter1: TcxSplitter
         Left = 0
-        Top = 343
+        Top = 327
         Width = 960
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
@@ -1378,38 +1350,41 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 29
-      EditValue = 43466d
+      EditValue = 43831d
       Properties.Kind = ckDateTime
       ExplicitLeft = 29
-      ExplicitWidth = 132
-      Width = 132
+      ExplicitWidth = 124
+      Width = 124
     end
     inherited deEnd: TcxDateEdit
-      Left = 404
+      Left = 692
       EditValue = 43831d
+      Properties.Kind = ckDateTime
       TabOrder = 2
       Visible = False
-      ExplicitLeft = 404
+      ExplicitLeft = 692
+      ExplicitWidth = 125
+      Width = 125
     end
     inherited cxLabel1: TcxLabel
       Caption = #1057':'
       ExplicitWidth = 15
     end
     inherited cxLabel2: TcxLabel
-      Left = 378
+      Left = 666
       Caption = #1087#1086':'
       Visible = False
-      ExplicitLeft = 378
+      ExplicitLeft = 666
       ExplicitWidth = 20
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 91
-    Top = 232
+    Top = 256
   end
   inherited ActionList: TActionList
-    Left = 103
-    Top = 287
+    Left = 311
+    Top = 279
     object actGet_UserUnit: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -1443,8 +1418,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_RemainsSun_expressDialogForm'
-      FormNameParam.Value = 'TReport_Send_RemainsSun_expressDialogForm'
+      FormName = 'TReport_Movement_Send_RemainsSun_expressDialogForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_expressDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1806,19 +1781,15 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     end
   end
   inherited MasterDS: TDataSource
-    Left = 176
-    Top = 216
+    Left = 112
+    Top = 200
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'UnitId;GoodsId'
-    MasterFields = 'UnitId_to;GoodsId'
-    MasterSource = PartionDS
-    PacketRecords = 0
-    Left = 80
-    Top = 160
+    Left = 56
+    Top = 200
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Send_RemainsSun_express'
+    StoredProcName = 'gpReport_Movement_Send_RemainsSun_express'
     DataSets = <
       item
         DataSet = MasterCDS
@@ -1836,8 +1807,8 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 280
-    Top = 280
+    Left = 192
+    Top = 176
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -1935,7 +1906,6 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     end
     object bbSendSUN: TdxBarButton
       Action = macSendSUN
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053'>'
       Category = 0
     end
     object bbReportPartionDate: TdxBarButton
@@ -1960,7 +1930,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 352
+    Left = 272
     Top = 184
   end
   inherited PopupMenu: TPopupMenu
@@ -1969,12 +1939,12 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Left = 400
-    Top = 232
+    Left = 408
+    Top = 168
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    Left = 440
-    Top = 304
+    Left = 464
+    Top = 216
   end
   object rdUnit: TRefreshDispatcher
     IdParam.Value = Null
@@ -2017,20 +1987,24 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 632
-    Top = 312
+    Left = 656
+    Top = 304
   end
   object PartionCDS: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'UnitId_to;GoodsId'
+    MasterFields = 'UnitId;GoodsId'
+    MasterSource = MasterDS
+    PacketRecords = 0
     Params = <>
-    Left = 144
-    Top = 168
+    Left = 456
+    Top = 456
   end
   object PartionDS: TDataSource
     DataSet = PartionCDS
     Left = 552
-    Top = 168
+    Top = 464
   end
   object spSendSUN: TdsdStoredProc
     StoredProcName = 'gpInsert_Movement_Send_RemainsSun_express'
@@ -2048,7 +2022,7 @@ inherited Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expr
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 752
-    Top = 192
+    Left = 712
+    Top = 200
   end
 end

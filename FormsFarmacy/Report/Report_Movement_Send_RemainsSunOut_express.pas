@@ -1,4 +1,4 @@
-unit Report_Send_RemainsSunOut_express_v2;
+unit Report_Movement_Send_RemainsSunOut_express;
 
 interface
 
@@ -28,43 +28,40 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_Send_RemainsSunOut_express_v2Form = class(TAncestorReportForm)
+  TReport_Movement_Send_RemainsSunOut_expressForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
     actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshSend: TdsdDataSetRefresh;
+    actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     bbPrint: TdxBarButton;
     actRefreshOnDay: TdsdDataSetRefresh;
-    cxGrid2: TcxGrid;
-    cxGridDBTableViewResult_child: TcxGridDBTableView;
-    ch2FromName: TcxGridDBColumn;
-    ch2ToName: TcxGridDBColumn;
-    ch2Amount: TcxGridDBColumn;
-    cxGridLevel2: TcxGridLevel;
     cxGrid1: TcxGrid;
     cxGridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
     chToName: TcxGridDBColumn;
+    chAmount_res: TcxGridDBColumn;
+    chSumm_res: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DBViewAddOn_Partion: TdsdDBViewAddOn;
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
-    DBViewAddOn_Result_child: TdsdDBViewAddOn;
-    Result_childCDS: TClientDataSet;
-    Result_childDS: TDataSource;
-    cxSplitter2: TcxSplitter;
+    chAmountIncome: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
-    spSendSUN_express2: TdsdStoredProc;
-    actSendSUN_ex2: TdsdExecStoredProc;
+    spSendSUN: TdsdStoredProc;
+    actSendSUN: TdsdExecStoredProc;
     macSendSUN: TMultiAction;
     bbSendSUN: TdxBarButton;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
+    chAmountRemains_calc_all: TcxGridDBColumn;
     chAmountRemains: TcxGridDBColumn;
+    chPrice: TcxGridDBColumn;
     chMCS: TcxGridDBColumn;
+    chAmount_sale: TcxGridDBColumn;
+    chAmountSun_summ: TcxGridDBColumn;
     actOpenReportPartionHistoryForm: TdsdOpenForm;
     actOpenReportPartionDateForm: TdsdOpenForm;
     bbReportPartionDate: TdxBarButton;
@@ -79,14 +76,8 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
-    spSelectSend: TdsdStoredProc;
-    cxLabel3: TcxLabel;
-    edGoods: TcxButtonEdit;
-    GuidesGoods: TdsdGuides;
-    macSendSUN_List: TMultiAction;
-    spUpdateMISend: TdsdStoredProc;
-    actUpdateResult_childDS: TdsdUpdateDataSet;
-    AmountExcess: TcxGridDBColumn;
+    chAmountOrderExternal: TcxGridDBColumn;
+    AmountRemains_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -94,7 +85,7 @@ type
   end;
 
 var
-  Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_express_v2Form;
+  Report_Movement_Send_RemainsSunOut_expressForm: TReport_Movement_Send_RemainsSunOut_expressForm;
 
 implementation
 
@@ -102,5 +93,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_Send_RemainsSunOut_express_v2Form)
+  RegisterClass(TReport_Movement_Send_RemainsSunOut_expressForm)
 end.

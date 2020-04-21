@@ -1,11 +1,10 @@
--- Function: gpReport_Send_RemainsSun_express_v2()
+-- Function: gpReport_Send_RemainsSun_express()
 
-DROP FUNCTION IF EXISTS gpReport_Send_RemainsSun_express_v2 (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Send_RemainsSun_express_v2 (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Send_RemainsSun_express (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Movement_Send_RemainsSun_express (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Send_RemainsSun_express_v2(
+CREATE OR REPLACE FUNCTION gpReport_Movement_Send_RemainsSun_express(
     IN inOperDate      TDateTime,
-    IN inGoodsId       Integer,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -159,12 +158,11 @@ BEGIN
                , tmp.UnitName_str
                , tmp.Amount_res
                , tmp.Summ_res
-          FROM lpInsert_Movement_Send_RemainsSun_express22 (inOperDate := inOperDate   
+          FROM lpInsert_Movement_Send_RemainsSun_express (inOperDate := inOperDate   
                                                         , inDriverId := 0 -- vbDriverId_1
                                                         , inStep     := 1
                                                         , inUserId   := vbUserId
                                                          ) AS tmp
-          WHERE COALESCE (tmp.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0
          ;
      -- !!!1 - перенесли данные
      INSERT INTO _tmpUnit_SUN_a SELECT * FROM _tmpUnit_SUN;
@@ -199,105 +197,25 @@ BEGIN
      END IF;
 
 
-     -- получаем данные по перемещению
-     CREATE TEMP TABLE _tmpSend (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpSend (UnitId_from, UnitId_to, GoodsId, Amount)
-           SELECT MovementLinkObject_From.ObjectId AS UnitId_from
-                , MovementLinkObject_To.ObjectId   AS UnitId_to
-                , MovementItem.ObjectId            AS GoodsId
-                , SUM (MovementItem.Amount)        AS Amount
-           FROM Movement AS Movement_Send
-                 INNER JOIN MovementBoolean AS MovementBoolean_SUN_v3
-                                            ON MovementBoolean_SUN_v3.MovementId = Movement_Send.Id
-                                           AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
-                                           AND MovementBoolean_SUN_v3.ValueData = TRUE
-     
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                              ON MovementLinkObject_From.MovementId = Movement_Send.Id
-                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                 
-                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                              ON MovementLinkObject_To.MovementId = Movement_Send.Id
-                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                 
-                 INNER JOIN MovementItem ON MovementItem.MovementId = Movement_Send.Id
-                                        AND MovementItem.DescId     = zc_MI_Master()
-                                        AND MovementItem.isErased   = FALSE
-                                        AND (MovementItem.ObjectId = inGoodsId OR inGoodsId =0)
-     
-           WHERE Movement_Send.DescId = zc_Movement_Send()
-             AND Movement_Send.StatusId <> zc_Enum_Status_Erased()
-             AND Movement_Send.OperDate > inOperDate - INTERVAL '1 DAY'
-           GROUP BY MovementLinkObject_From.ObjectId
-                  , MovementLinkObject_To.ObjectId
-                  , MovementItem.ObjectId
-      ;
-
-
 
      OPEN Cursor1 FOR
-          SELECT Object_Unit.Id            AS UnitId
-               , Object_Unit.ValueData     AS UnitName
-               , _tmpRemains.GoodsId
-
-                 -- Статистика за Х*24 часов в точке Отправителя
-               , _tmpRemains.Amount_sale
-               , _tmpRemains.Summ_sale
-
-                 -- Остаток без корректировки
-               , _tmpRemains.AmountRemains
-                 -- Остаток - для расчета "кол-во для распределения"
-               , _tmpRemains.AmountRemains_calc_out AS AmountRemains_calc
-                 -- Остаток - расчет "после" всех оперций
-               , _tmpRemains.AmountRemains_calc_in  AS AmountRemains_calc_all
-
-                 -- Приход (ожидаемый)--инф
-               , _tmpRemains.AmountIncome
-                 -- Перемещение - приход (ожидается)--инф
-               , _tmpRemains.AmountSend_in
-                 -- Перемещение - расход (ожидается)--инф
-               , _tmpRemains.AmountSend_out
-                 -- Заказ (ожидаемый)--инф
-               , _tmpRemains.AmountOrderExternal
-                 -- Резерв по чекам + не проведенные с CommentError--инф
-               , _tmpRemains.AmountReserve
-
-               , _tmpRemains.Price
-               , _tmpRemains.MCS
-               
-               , _tmpRemains.AmountResult_in                     AS Amount_res
-               , _tmpRemains.AmountResult_in * _tmpRemains.Price AS Summ_res
-               
-               , COALESCE (_tmpRemains.AmountResult_in, 0) - COALESCE (_tmpRemains.AmountSend_in, 0) AS AmountNeed  -- потребность
-          FROM _tmpRemains_all_a AS _tmpRemains
-              LEFT JOIN Object AS Object_Unit ON Object_Unit.Id  = _tmpRemains.UnitId
-              
-          WHERE (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
---          AND COALESCE (_tmpRemains.AmountResult_in,0) > 0
-         ;
+          SELECT *
+          FROM _tmpResult AS tmp;
      RETURN NEXT Cursor1;
 
-
-/*
- (UnitId, GoodsId, Price, MCS, Amount_sale, Summ_sale
-, AmountResult_in, AmountResult_out
-, AmountRemains, AmountRemains_calc_in, AmountRemains_calc_out
-, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
-
-*/
      OPEN Cursor2 FOR
-          SELECT 
+          SELECT tmp.*
              --, tmp.UnitId_to
              --, tmp.UnitId_from
              --, tmp.GoodsId
-                 Object_UnitFrom.Id        AS UnitId_from
                , Object_UnitFrom.ValueData AS FromName
-               , _tmpRemains.GoodsId
+               , tmp.UnitId_to
+               , Object_UnitTo.ValueData   AS ToName
                , Object_Goods.ObjectCode   AS GoodsCode
                , Object_Goods.ValueData    AS GoodsName
 
                  -- Итого кол-во для распределения в точке Отправителя
-               , tmp_sum.AmountResult AS AmountSun_summ
+               , tmpRemains_Partion_sum.AmountResult AS AmountSun_summ
 
                  -- Статистика за Х*24 часов в точке Отправителя
                , _tmpRemains.Amount_sale
@@ -325,28 +243,46 @@ BEGIN
                , _tmpRemains.MCS
 
                  -- Результат - Кол-во распределено - перемещение расход
-               , _tmpRemains.AmountResult_out    AS Amount_res
-               , _tmpRemains.AmountResult_out * _tmpRemains.Price AS Summ_res
-               -- факт. излишек после перемещения
-               , COALESCE (_tmpRemains.AmountResult_out,0) - COALESCE (_tmpRemains.AmountSend_out,0)   AS AmountExcess   --избыток
-          FROM _tmpRemains_all AS _tmpRemains
-               LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = _tmpRemains.UnitId
-               LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id  = _tmpRemains.GoodsId
+               , tmp.Amount                     AS Amount_res
+               , tmp.Amount * _tmpRemains.Price AS Summ_res
 
+               , tmpUnit_str.UnitName_str       AS UnitName_str_in
+               , tmpSumm_str.Summ_str           AS Summ_str_in
+
+          FROM _tmpResult_Partion_a AS tmp
+               LEFT JOIN Object AS Object_UnitFrom  ON Object_UnitFrom.Id  = tmp.UnitId_from
+               LEFT JOIN Object AS Object_UnitTo  ON Object_UnitTo.Id  = tmp.UnitId_to
                -- Итого кол-во для распределения по точкам отправителям
-               INNER JOIN (SELECT _tmpRemains_all_a.UnitId, _tmpRemains_all_a.GoodsId
-                                , SUM (_tmpRemains_all_a.AmountResult_in) AS AmountResult
-                          FROM _tmpRemains_all_a
-                          GROUP BY _tmpRemains_all_a.UnitId, _tmpRemains_all_a.GoodsId
-                         ) AS tmp_sum ON tmp_sum.UnitId  = _tmpRemains.UnitId
-                                     AND tmp_sum.GoodsId = _tmpRemains.GoodsId
+               INNER JOIN (SELECT _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+                                , SUM (_tmpRemains_Partion.AmountResult) AS AmountResult
+                          FROM _tmpRemains_Partion_a AS _tmpRemains_Partion
+                          GROUP BY _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
+                         ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.UnitId  = tmp.UnitId_from
+                                                    AND tmpRemains_Partion_sum.GoodsId = tmp.GoodsId
+               -- все остатки, НТЗ
+               LEFT JOIN _tmpRemains_all_a AS _tmpRemains
+                                           ON _tmpRemains.UnitId  = tmp.UnitId_from
+                                          AND _tmpRemains.GoodsId = tmp.GoodsId
                
-          WHERE COALESCE (_tmpRemains.AmountResult_out,0) > 0
-          AND (COALESCE (_tmpRemains.GoodsId, 0) = inGoodsId OR COALESCE (inGoodsId, 0) = 0)
+               LEFT JOIN  Object AS Object_Goods ON Object_Goods.Id  = tmp.GoodsId
                
-           ;
+            -- список сумм
+            LEFT JOIN (SELECT _tmpResult.UnitId, STRING_AGG (zfConvert_FloatToString (_tmpResult.Summ_res), ';') AS Summ_str
+                       FROM _tmpResult
+                       WHERE _tmpResult.Summ_res > 0
+                       GROUP BY _tmpResult.UnitId
+                      ) AS tmpSumm_str ON tmpSumm_str.UnitId = tmp.UnitId_to
+            -- список аптек куда может уходить 
+            LEFT JOIN (SELECT _tmpResult.UnitId, STRING_AGG (Object.ValueData, ';') AS UnitName_str
+                       FROM _tmpResult
+                            LEFT JOIN Object ON Object.Id = _tmpResult.UnitId
+                       WHERE _tmpResult.Summ_res > 0
+                       GROUP BY _tmpResult.UnitId
+                      ) AS tmpUnit_str ON tmpUnit_str.UnitId = tmp.UnitId_to
+
+              ;
      RETURN NEXT Cursor2;
-     
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -359,4 +295,4 @@ $BODY$
 
 -- тест
 -- FETCH ALL "<unnamed portal 1>";
--- select * from gpReport_Send_RemainsSun_express_v2(inOperDate := ('05.04.2020 12:00:00')::TDateTime ,  inSession := '3');
+-- select * from gpReport_Movement_Send_RemainsSun_express(inOperDate := ('05.04.2020 12:00:00')::TDateTime ,  inSession := '3');

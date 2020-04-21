@@ -1,4 +1,4 @@
-unit Report_Send_RemainsSunOut_express;
+unit Report_Movement_Send_RemainsSun_express;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_Send_RemainsSunOut_expressForm = class(TAncestorReportForm)
+  TReport_Movement_Send_RemainsSun_expressForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
@@ -48,7 +48,6 @@ type
     DBViewAddOn_Partion: TdsdDBViewAddOn;
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
-    chAmountIncome: TcxGridDBColumn;
     cxSplitter1: TcxSplitter;
     spSendSUN: TdsdStoredProc;
     actSendSUN: TdsdExecStoredProc;
@@ -56,12 +55,13 @@ type
     bbSendSUN: TdxBarButton;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
-    chAmountRemains_calc_all: TcxGridDBColumn;
+    chAmountRemains_calc: TcxGridDBColumn;
+    chAmountSun_summ: TcxGridDBColumn;
     chAmountRemains: TcxGridDBColumn;
     chPrice: TcxGridDBColumn;
     chMCS: TcxGridDBColumn;
     chAmount_sale: TcxGridDBColumn;
-    chAmountSun_summ: TcxGridDBColumn;
+    chAmountIncome: TcxGridDBColumn;
     actOpenReportPartionHistoryForm: TdsdOpenForm;
     actOpenReportPartionDateForm: TdsdOpenForm;
     bbReportPartionDate: TdxBarButton;
@@ -76,8 +76,10 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
-    chAmountOrderExternal: TcxGridDBColumn;
+    chSumm_sale: TcxGridDBColumn;
     AmountRemains_calc: TcxGridDBColumn;
+    chAmountRemains_calc_all: TcxGridDBColumn;
+    chAmountOrderExternal: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -85,7 +87,7 @@ type
   end;
 
 var
-  Report_Send_RemainsSunOut_expressForm: TReport_Send_RemainsSunOut_expressForm;
+  Report_Movement_Send_RemainsSun_expressForm: TReport_Movement_Send_RemainsSun_expressForm;
 
 implementation
 
@@ -93,5 +95,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_Send_RemainsSunOut_expressForm)
+  RegisterClass(TReport_Movement_Send_RemainsSun_expressForm)
 end.

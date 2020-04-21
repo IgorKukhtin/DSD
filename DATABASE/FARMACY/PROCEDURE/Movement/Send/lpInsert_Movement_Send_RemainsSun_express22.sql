@@ -470,14 +470,14 @@ BEGIN
                                     (COALESCE (_tmpSale_express.Amount_sum, 0)
                                      -- МИНУС остаток
                                    - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) 
-                                            /*- COALESCE (tmpMI_Send_out.Amount, 0)
-                                              + COALESCE (tmpMI_Send_in.Amount, 0)*/
+                                            - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
                                               + COALESCE (tmpMI_Income.Amount, 0)
                                               + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                ) > 0
                                           THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) 
-                                            /*- COALESCE (tmpMI_Send_out.Amount, 0)
-                                              + COALESCE (tmpMI_Send_in.Amount, 0)*/
+                                            - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
                                               + COALESCE (tmpMI_Income.Amount, 0)
                                               + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                )
@@ -490,14 +490,14 @@ BEGIN
                                     (COALESCE (_tmpSale_express.Amount_sum, 0)
                                      -- МИНУС остаток
                                    - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) 
-                                            /*- COALESCE (tmpMI_Send_out.Amount, 0)
-                                              + COALESCE (tmpMI_Send_in.Amount, 0)*/
+                                            - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
                                               + COALESCE (tmpMI_Income.Amount, 0)
                                               + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                ) > 0
                                           THEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) 
-                                            /*- COALESCE (tmpMI_Send_out.Amount, 0)
-                                              + COALESCE (tmpMI_Send_in.Amount, 0)*/
+                                            - COALESCE (tmpMI_Send_out.Amount, 0)
+                                              + COALESCE (tmpMI_Send_in.Amount, 0)
                                               + COALESCE (tmpMI_Income.Amount, 0)
                                               + COALESCE (tmpMI_OrderExternal.Amount, 0)
                                                )
@@ -511,7 +511,7 @@ BEGIN
 
                -- Остаток у Отправителя, EXPRESS - можно отдать с учетом кратности
              , CASE WHEN 0 < FLOOR (-- остаток
-                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
+                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
                                      -- МИНУС продажи - статистика за Х*24 часов
                                    - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )
@@ -519,7 +519,7 @@ BEGIN
                                     / _tmpGoods_express.KoeffSUN
                                    ) * _tmpGoods_express.KoeffSUN
                         THEN FLOOR (-- остаток
-                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/
+                                    (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
                                      -- МИНУС продажи - статистика за Х*24 часов
                                    - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )

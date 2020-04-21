@@ -529,7 +529,7 @@ type
     N186: TMenuItem;
     actReport_GoodsPartionDate5: TdsdOpenForm;
     N510: TMenuItem;
-    actReport_Send_RemainsSun_express: TdsdOpenForm;
+    actReport_Movement_Send_RemainsSun_express: TdsdOpenForm;
     miReport_Movement_Send_RemainsSun: TMenuItem;
     actMCS_Lite: TdsdOpenForm;
     miMCS_Lite: TMenuItem;
@@ -651,7 +651,7 @@ type
     actReport_Movement_Send_RemainsSun: TdsdOpenForm;
     mmReport_Send_RemainsSun_express: TMenuItem;
     N228: TMenuItem;
-    actReport_Send_RemainsSunOut_express: TdsdOpenForm;
+    actReport_Movement_Send_RemainsSunOut_express: TdsdOpenForm;
     miReport_Send_RemainsSunOut_express: TMenuItem;
     actSeasonalityCoefficient: TdsdOpenForm;
     N227: TMenuItem;
@@ -666,7 +666,7 @@ type
     N231: TMenuItem;
     actHardware: TdsdOpenForm;
     N232: TMenuItem;
-    actReport_Send_RemainsSunOut_expressV2: TdsdOpenForm;
+    actReport_Movement_Send_RemainsSunOut_expressV2: TdsdOpenForm;
     miReport_Send_RemainsSunOut_expressV2: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
