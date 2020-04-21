@@ -29,6 +29,12 @@ $BODY$
   DECLARE vbCode Integer;
   DECLARE text_var1 text;
 BEGIN
+
+   IF COALESCE(ioId, 0) <> 0 AND inName <> (SELECT Object.ValueData FROM Object WHERE Object.ID = ioId)
+   THEN
+     PERFORM lpCheckRight (inUserId::TVarChar, zc_Enum_Process_InsertUpdate_Object_Goods());
+   END IF;
+
    -- !!!проверка уникальности <Ќаименование> дл€ "любого" inObjectId
    IF inCheckName = TRUE
    THEN

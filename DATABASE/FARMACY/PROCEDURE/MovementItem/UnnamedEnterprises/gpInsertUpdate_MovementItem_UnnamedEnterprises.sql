@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_UnnamedEnterprises()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TVarChar, TFloat, TFloat, TVarChar, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_UnnamedEnterprises(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -15,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_UnnamedEnterprises(
    OUT outSummOrder          TFloat    , -- Сумма в заказ
     IN inCodeUKTZED          TVarChar  , -- Код УКТЗЭД
     IN inExchangeId          Integer   , -- Од
+    IN inNDSKindId           Integer   , -- НДС
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS record
@@ -30,6 +30,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_UnnamedEnterprises());
     vbUserId := inSession;
+
+    IF COALESCE (inNDSKindId, 0) = 0
+    THEN
+      inNDSKindId := COALESCE((SELECT Object_Goods_Main.NDSKindId FROM  Object_Goods_Retail
+                                      LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                               WHERE Object_Goods_Retail.Id = inGoodsId), zc_Enum_NDSKind_Medical());
+    
+    END IF;
 
     SELECT
       MovementItem.ObjectId,
@@ -106,6 +114,7 @@ BEGIN
                                             , inPrice              := inPrice
                                             , inSumm               := outSumm
                                             , inSummOrder          := outSummOrder
+                                            , inNDSKindId          := inNDSKindId 
                                             , inUserId             := vbUserId
                                              );
 
@@ -144,6 +153,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 21.04.20         *
  05.12.18         *
  02.10.18         *
  30.09.18         *

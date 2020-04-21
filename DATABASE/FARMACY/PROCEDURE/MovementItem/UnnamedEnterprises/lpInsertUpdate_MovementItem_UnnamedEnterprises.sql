@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItem_UnnamedEnterprises()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_UnnamedEnterprises (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_UnnamedEnterprises(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_UnnamedEnterprises(
     IN inPrice               TFloat    , -- Цена
     IN inSumm                TFloat    , -- сумма
     IN inSummOrder           TFloat    , -- сумма в заказ
+    IN inNDSKindId           Integer   , -- НДС
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -33,6 +34,9 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummOrder(), ioId, inSummOrder);
 
+    -- сохранили свойство <НДС>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), ioId, inNDSKindId);
+
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummUnnamedEnterprisesExactly (inMovementId);
 
@@ -46,5 +50,6 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Шаблий О.В.
+ 21.04.20         *
  30.09.18         *
 */

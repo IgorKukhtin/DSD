@@ -4,7 +4,7 @@ inherited SendJournalForm: TSendJournalForm
   ClientWidth = 841
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 857
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -851,6 +851,32 @@ inherited SendJournalForm: TSendJournalForm
         end>
       Caption = 'actExecUnCompleteView'
     end
+    object actUpdate_NotDisplaySUN_Yes: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecUpdate_NotDisplaySUN_Yes
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"?'
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      ImageIndex = 44
+    end
+    object actExecUpdate_NotDisplaySUN_Yes: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_NotDisplaySUN_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_NotDisplaySUN_Yes
+        end>
+      Caption = 'actExecUpdate_NotDisplaySUN_Yes'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1029,6 +1055,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1071,6 +1101,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton3: TdxBarButton
       Action = actUnCompleteView
+      Category = 0
+    end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdate_NotDisplaySUN_Yes
       Category = 0
     end
   end
@@ -1464,5 +1498,29 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 528
     Top = 419
+  end
+  object spUpdate_NotDisplaySUN_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_NotDisplaySUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotDisplaySUN'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 72
+    Top = 443
   end
 end

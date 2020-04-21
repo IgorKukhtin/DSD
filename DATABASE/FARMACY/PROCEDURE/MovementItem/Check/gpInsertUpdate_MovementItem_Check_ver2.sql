@@ -167,7 +167,7 @@ BEGIN
       END IF;
     END IF;
 
-    -- сохранили свойство <Тип срок/не срок>
+    -- сохранили свойство <НДС>
     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), ioId, inNDSKindId);
 
     -- сохранили свойство <UID строки продажи>
