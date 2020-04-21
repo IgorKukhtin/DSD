@@ -34,6 +34,34 @@ BEGIN
         RAISE EXCEPTION 'Распроведение вам запрещено, обратитесь к системному администратору';
       END IF;
     END IF;
+    
+    
+/*
+    IF EXISTS (select 
+               -- update Movement set OperDate = '01.01.2020'
+               from (SELECT Movement.*
+                          , ROW_NUMBER() OVER (PARTITION BY Movement.Id ORDER BY MovementProtocol .OperDate aSC) AS Ord
+                          , MovementProtocol .OperDate as OperDate_prot
+                     FROM Movement 
+                          inner JOIN MovementProtocol on MovementProtocol. MovementId = Movement.Id
+                                      inner JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                                ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                               AND MovementBoolean_SUN_v2.DescId = zc_MovementBoolean_SUN_v2()
+                                                               and MovementBoolean_SUN_v2.ValueData = true
+                     where Movement.OperDate = '21.04.2020'
+                        AND Movement.DescId = zc_Movement_Send() 
+                        AND Movement.StatusId = zc_Enum_Status_Erased()
+                        AND Movement.Id = inMovementId
+                    ) as tmp
+               
+               where tmp.Ord = 1
+                 and DATE_TRUNC ('day', OperDate_prot) = '21.04.2020'
+               order by OperDate_prot
+              )
+    THEN
+        RAISE EXCEPTION 'Ошибка.Тестовые перемещения.Не для сбора!';
+    END IF;
+*/     
 
     -- Проверить, что бы не было переучета позже даты документа
     SELECT

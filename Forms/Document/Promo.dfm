@@ -3,6 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
+  ExplicitLeft = -593
+  ExplicitTop = -262
   ExplicitWidth = 1382
   ExplicitHeight = 719
   PixelsPerInch = 96
@@ -98,6 +100,9 @@
               Kind = skSum
               Column = AmountRetInWeight
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -125,7 +130,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = GoodsChoiceForm
+                Action = actGoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -140,7 +145,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = GoodsKindChoiceForm
+                Action = actGoodsKindChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -157,7 +162,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = GoodsKindCompleteChoiceForm
+                Action = actGoodsKindCompleteChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -555,7 +560,8 @@
                 OptionsCustomize.ColumnHiding = True
                 OptionsCustomize.ColumnsQuickCustomization = True
                 OptionsCustomize.DataRowSizing = True
-                OptionsData.CancelOnExit = False
+                OptionsData.Deleting = False
+                OptionsData.DeletingConfirmation = False
                 OptionsData.Inserting = False
                 OptionsView.Footer = True
                 OptionsView.GroupByBox = False
@@ -587,7 +593,7 @@
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
                     item
-                      Action = PromoPartnerChoiceForm
+                      Action = actPromoPartnerChoiceForm
                       Default = True
                       Kind = bkEllipsis
                     end>
@@ -646,7 +652,7 @@
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
                     item
-                      Action = ContractChoiceForm
+                      Action = actContractChoiceForm
                       Default = True
                       Kind = bkEllipsis
                     end>
@@ -823,7 +829,8 @@
                 OptionsCustomize.ColumnHiding = True
                 OptionsCustomize.ColumnsQuickCustomization = True
                 OptionsCustomize.DataRowSizing = True
-                OptionsData.CancelOnExit = False
+                OptionsData.Deleting = False
+                OptionsData.DeletingConfirmation = False
                 OptionsData.Inserting = False
                 OptionsView.Footer = True
                 OptionsView.GroupByBox = False
@@ -844,7 +851,7 @@
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
                     item
-                      Action = ConditionPromoChoiceForm
+                      Action = actConditionPromoChoiceForm
                       Default = True
                       Kind = bkEllipsis
                     end>
@@ -911,7 +918,8 @@
                 OptionsCustomize.ColumnHiding = True
                 OptionsCustomize.ColumnsQuickCustomization = True
                 OptionsCustomize.DataRowSizing = True
-                OptionsData.CancelOnExit = False
+                OptionsData.Deleting = False
+                OptionsData.DeletingConfirmation = False
                 OptionsData.Inserting = False
                 OptionsView.Footer = True
                 OptionsView.GroupByBox = False
@@ -936,7 +944,7 @@
                   PropertiesClassName = 'TcxButtonEditProperties'
                   Properties.Buttons = <
                     item
-                      Action = AdvertisingChoiceForm
+                      Action = actAdvertisingChoiceForm
                       Default = True
                       Kind = bkEllipsis
                     end>
@@ -999,7 +1007,7 @@
         Width = 1366
         Height = 176
         Align = alBottom
-        PopupMenu = PopupMenu
+        PopupMenu = PromoStateKindPopupMenu
         TabOrder = 4
         object cxGridDBTableViewPromoStateKind: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -1015,7 +1023,7 @@
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
+          OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.CellAutoHeight = True
@@ -1979,7 +1987,6 @@
         Width = 1366
         Height = 521
         Align = alClient
-        PopupMenu = PopupMenu
         TabOrder = 0
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -2540,7 +2547,7 @@
   end
   inherited ActionList: TActionList
     Top = 311
-    object InsertRecordPromoStateKind: TInsertRecord [0]
+    object actInsertRecordPromoStateKind: TInsertRecord [0]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2583,7 +2590,6 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PromoStateKindDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'> ?'
@@ -2614,7 +2620,6 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PromoStateKindDS
@@ -2775,7 +2780,7 @@
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableView
-      Action = GoodsChoiceForm
+      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -2917,7 +2922,7 @@
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object UpdateConditionDS: TdsdUpdateDataSet [20]
+    object actUpdateConditionDS: TdsdUpdateDataSet [20]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3182,7 +3187,7 @@
         end>
       isShowModal = False
     end
-    object GoodsKindChoiceForm: TOpenChoiceForm
+    object actGoodsKindChoiceForm: TOpenChoiceForm
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3208,7 +3213,7 @@
         end>
       isShowModal = True
     end
-    object GoodsChoiceForm: TOpenChoiceForm
+    object actGoodsChoiceForm: TOpenChoiceForm
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3259,7 +3264,7 @@
         end>
       isShowModal = True
     end
-    object GoodsKindCompleteChoiceForm: TOpenChoiceForm
+    object actGoodsKindCompleteChoiceForm: TOpenChoiceForm
       Category = 'Goods'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3286,19 +3291,19 @@
         end>
       isShowModal = True
     end
-    object InsertRecordPartner: TInsertRecord
+    object actInsertRecordPartner: TInsertRecord
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = cxGridDBTableViewPartner
-      Action = PromoPartnerChoiceForm
+      Action = actPromoPartnerChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 0
     end
-    object ErasedPartner: TdsdUpdateErased
+    object actErasedPartner: TdsdUpdateErased
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
@@ -3312,12 +3317,11 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
     end
-    object UnErasedPartner: TdsdUpdateErased
+    object actUnErasedPartner: TdsdUpdateErased
       Category = 'Partner'
       TabSheet = tsMain
       MoveParams = <>
@@ -3328,15 +3332,14 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PartnerDS
     end
-    object PromoPartnerChoiceForm: TOpenChoiceForm
+    object actPromoPartnerChoiceForm: TOpenChoiceForm
       Category = 'Partner'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3394,7 +3397,7 @@
         end>
       isShowModal = True
     end
-    object dsdUpdateDSPartner: TdsdUpdateDataSet
+    object actUpdateDSPartner: TdsdUpdateDataSet
       Category = 'Partner'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3408,19 +3411,19 @@
       Caption = 'actUpdateMainDS'
       DataSource = PartnerDS
     end
-    object InsertCondition: TInsertRecord
+    object actInsertCondition: TInsertRecord
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = grtvConditionPromo
-      Action = ConditionPromoChoiceForm
+      Action = actConditionPromoChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 0
     end
-    object ErasedCondition: TdsdUpdateErased
+    object actErasedCondition: TdsdUpdateErased
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
@@ -3434,12 +3437,11 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ConditionPromoDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
     end
-    object UnErasedCondition: TdsdUpdateErased
+    object actUnErasedCondition: TdsdUpdateErased
       Category = 'Condition'
       TabSheet = tsMain
       MoveParams = <>
@@ -3450,15 +3452,14 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ConditionPromoDS
     end
-    object ConditionPromoChoiceForm: TOpenChoiceForm
+    object actConditionPromoChoiceForm: TOpenChoiceForm
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3492,7 +3493,7 @@
         end>
       isShowModal = True
     end
-    object ContractChoiceForm: TOpenChoiceForm
+    object actContractChoiceForm: TOpenChoiceForm
       Category = 'Partner'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3552,19 +3553,19 @@
         end>
       isShowModal = False
     end
-    object InsertRecordAdvertising: TInsertRecord
+    object actInsertRecordAdvertising: TInsertRecord
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       View = grtvAdvertising
-      Action = AdvertisingChoiceForm
+      Action = actAdvertisingChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 0
     end
-    object ErasedAdvertising: TdsdUpdateErased
+    object actErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
@@ -3578,12 +3579,11 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = AdvertisingDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
     end
-    object unErasedAdvertising: TdsdUpdateErased
+    object actunErasedAdvertising: TdsdUpdateErased
       Category = 'Advertising'
       TabSheet = tsMain
       MoveParams = <>
@@ -3594,15 +3594,14 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = AdvertisingDS
     end
-    object AdvertisingChoiceForm: TOpenChoiceForm
+    object actAdvertisingChoiceForm: TOpenChoiceForm
       Category = 'Advertising'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3636,7 +3635,7 @@
         end>
       isShowModal = True
     end
-    object UpdateDSAdvertising: TdsdUpdateDataSet
+    object actUpdateDSAdvertising: TdsdUpdateDataSet
       Category = 'Advertising'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -4175,39 +4174,39 @@
       Category = 0
     end
     object dxBarButton2: TdxBarButton
-      Action = InsertRecordPartner
+      Action = actInsertRecordPartner
       Category = 0
     end
     object dxBarButton3: TdxBarButton
-      Action = ErasedPartner
+      Action = actErasedPartner
       Category = 0
     end
     object dxBarButton4: TdxBarButton
-      Action = UnErasedPartner
+      Action = actUnErasedPartner
       Category = 0
     end
     object dxBarButton5: TdxBarButton
-      Action = InsertCondition
+      Action = actInsertCondition
       Category = 0
     end
     object dxBarButton6: TdxBarButton
-      Action = UnErasedCondition
+      Action = actUnErasedCondition
       Category = 0
     end
     object dxBarButton7: TdxBarButton
-      Action = ErasedCondition
+      Action = actErasedCondition
       Category = 0
     end
     object dxBarButton8: TdxBarButton
-      Action = InsertRecordAdvertising
+      Action = actInsertRecordAdvertising
       Category = 0
     end
     object dxBarButton9: TdxBarButton
-      Action = unErasedAdvertising
+      Action = actunErasedAdvertising
       Category = 0
     end
     object dxBarButton10: TdxBarButton
-      Action = ErasedAdvertising
+      Action = actErasedAdvertising
       Category = 0
     end
     object dxBarButton11: TdxBarButton
@@ -4255,7 +4254,7 @@
       Category = 0
     end
     object bbInsertRecordPromoStateKind: TdxBarButton
-      Action = InsertRecordPromoStateKind
+      Action = actInsertRecordPromoStateKind
       Category = 0
     end
     object bbSetErasedPromoStateKind: TdxBarButton
@@ -4285,8 +4284,8 @@
     Top = 361
   end
   inherited PopupMenu: TPopupMenu
-    Left = 152
-    Top = 312
+    Left = 16
+    Top = 552
     object N2: TMenuItem [0]
       Action = InsertRecord
     end
@@ -5603,16 +5602,16 @@
   end
   object pmPartner: TPopupMenu
     Images = dmMain.ImageList
-    Left = 208
-    Top = 496
+    Left = 72
+    Top = 552
     object MenuItem1: TMenuItem
-      Action = InsertRecordPartner
+      Action = actInsertRecordPartner
     end
     object MenuItem2: TMenuItem
-      Action = ErasedPartner
+      Action = actErasedPartner
     end
     object MenuItem3: TMenuItem
-      Action = UnErasedPartner
+      Action = actUnErasedPartner
     end
     object MenuItem4: TMenuItem
       Caption = '-'
@@ -5620,31 +5619,25 @@
     object MenuItem5: TMenuItem
       Action = actRefresh
     end
-    object MenuItem6: TMenuItem
-      Action = actGridToExcel
-    end
   end
   object pmCondition: TPopupMenu
     Images = dmMain.ImageList
-    Left = 632
-    Top = 448
+    Left = 40
+    Top = 616
     object MenuItem7: TMenuItem
-      Action = InsertCondition
+      Action = actInsertCondition
     end
     object MenuItem8: TMenuItem
-      Action = ErasedCondition
+      Action = actErasedCondition
     end
     object MenuItem9: TMenuItem
-      Action = UnErasedCondition
+      Action = actUnErasedCondition
     end
     object MenuItem10: TMenuItem
       Caption = '-'
     end
     object MenuItem11: TMenuItem
       Action = actRefresh
-    end
-    object MenuItem12: TMenuItem
-      Action = actGridToExcel
     end
   end
   object PrintHead: TClientDataSet
@@ -5688,25 +5681,22 @@
   end
   object pmAdvertising: TPopupMenu
     Images = dmMain.ImageList
-    Left = 840
-    Top = 496
+    Left = 112
+    Top = 624
     object MenuItem13: TMenuItem
-      Action = InsertRecordAdvertising
+      Action = actInsertRecordAdvertising
     end
     object MenuItem14: TMenuItem
-      Action = ErasedAdvertising
+      Action = actErasedAdvertising
     end
     object MenuItem15: TMenuItem
-      Action = unErasedAdvertising
+      Action = actunErasedAdvertising
     end
     object MenuItem16: TMenuItem
       Caption = '-'
     end
     object MenuItem17: TMenuItem
       Action = actRefresh
-    end
-    object MenuItem18: TMenuItem
-      Action = actGridToExcel
     end
   end
   object spErasedAdvertising: TdsdStoredProc
@@ -6945,5 +6935,25 @@
       end>
     Left = 1252
     Top = 64
+  end
+  object PromoStateKindPopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 128
+    Top = 584
+    object MenuItem19: TMenuItem
+      Action = actInsertRecordPromoStateKind
+    end
+    object MenuItem20: TMenuItem
+      Action = actMISetErasedPromoStateKind
+    end
+    object MenuItem21: TMenuItem
+      Action = actMISetUnErasedPromoStateKind
+    end
+    object MenuItem22: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem23: TMenuItem
+      Action = actRefresh
+    end
   end
 end

@@ -69,9 +69,9 @@ type
     AmountPlanMin: TcxGridDBColumn;
     AmountPlanMax: TcxGridDBColumn;
     GoodsKindName: TcxGridDBColumn;
-    GoodsChoiceForm: TOpenChoiceForm;
+    actGoodsChoiceForm: TOpenChoiceForm;
     InsertRecord: TInsertRecord;
-    GoodsKindChoiceForm: TOpenChoiceForm;
+    actGoodsKindChoiceForm: TOpenChoiceForm;
     dxBarButton1: TdxBarButton;
     cxGridPartner: TcxGrid;
     cxGridDBTableViewPartner: TcxGridDBTableView;
@@ -83,10 +83,10 @@ type
     spSelect_Movement_PromoPartner: TdsdStoredProc;
     PartnerCDS: TClientDataSet;
     PartnerDS: TDataSource;
-    InsertRecordPartner: TInsertRecord;
-    ErasedPartner: TdsdUpdateErased;
-    UnErasedPartner: TdsdUpdateErased;
-    PromoPartnerChoiceForm: TOpenChoiceForm;
+    actInsertRecordPartner: TInsertRecord;
+    actErasedPartner: TdsdUpdateErased;
+    actUnErasedPartner: TdsdUpdateErased;
+    actPromoPartnerChoiceForm: TOpenChoiceForm;
     spErasedMIPartner: TdsdStoredProc;
     spUnErasedMIPartner: TdsdStoredProc;
     spInsertUpdateMIPartner: TdsdStoredProc;
@@ -94,7 +94,7 @@ type
     dxBarButton2: TdxBarButton;
     dxBarButton3: TdxBarButton;
     dxBarButton4: TdxBarButton;
-    dsdUpdateDSPartner: TdsdUpdateDataSet;
+    actUpdateDSPartner: TdsdUpdateDataSet;
     Panel1: TPanel;
     cxSplitter1: TcxSplitter;
     cxPageControl1: TcxPageControl;
@@ -113,11 +113,11 @@ type
     spInsertUpdateMICondition: TdsdStoredProc;
     spUnErasedMICondition: TdsdStoredProc;
     spErasedMICondition: TdsdStoredProc;
-    UpdateConditionDS: TdsdUpdateDataSet;
-    InsertCondition: TInsertRecord;
-    ErasedCondition: TdsdUpdateErased;
-    UnErasedCondition: TdsdUpdateErased;
-    ConditionPromoChoiceForm: TOpenChoiceForm;
+    actUpdateConditionDS: TdsdUpdateDataSet;
+    actInsertCondition: TInsertRecord;
+    actErasedCondition: TdsdUpdateErased;
+    actUnErasedCondition: TdsdUpdateErased;
+    actConditionPromoChoiceForm: TOpenChoiceForm;
     dxBarButton5: TdxBarButton;
     dxBarButton6: TdxBarButton;
     dxBarButton7: TdxBarButton;
@@ -132,14 +132,12 @@ type
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
-    MenuItem6: TMenuItem;
     pmCondition: TPopupMenu;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
     MenuItem9: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
-    MenuItem12: TMenuItem;
     PrintHead: TClientDataSet;
     spSelect_Movement_Promo_Print: TdsdStoredProc;
     Juridical_Name: TcxGridDBColumn;
@@ -147,7 +145,7 @@ type
     ContractCode: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     ContractTagName: TcxGridDBColumn;
-    ContractChoiceForm: TOpenChoiceForm;
+    actContractChoiceForm: TOpenChoiceForm;
     cxLabel18: TcxLabel;
     edCommentMain: TcxTextEdit;
     AdvertisingCDS: TClientDataSet;
@@ -158,16 +156,15 @@ type
     MenuItem15: TMenuItem;
     MenuItem16: TMenuItem;
     MenuItem17: TMenuItem;
-    MenuItem18: TMenuItem;
     spErasedAdvertising: TdsdStoredProc;
     spUnErasedAdvertising: TdsdStoredProc;
     spInsertUpdateMIAdvertising: TdsdStoredProc;
     spSelect_Movement_PromoAdvertising: TdsdStoredProc;
-    InsertRecordAdvertising: TInsertRecord;
-    ErasedAdvertising: TdsdUpdateErased;
-    unErasedAdvertising: TdsdUpdateErased;
-    AdvertisingChoiceForm: TOpenChoiceForm;
-    UpdateDSAdvertising: TdsdUpdateDataSet;
+    actInsertRecordAdvertising: TInsertRecord;
+    actErasedAdvertising: TdsdUpdateErased;
+    actunErasedAdvertising: TdsdUpdateErased;
+    actAdvertisingChoiceForm: TOpenChoiceForm;
+    actUpdateDSAdvertising: TdsdUpdateDataSet;
     cxPageControl3: TcxPageControl;
     tsAdvertising: TcxTabSheet;
     grAdvertising: TcxGrid;
@@ -291,7 +288,7 @@ type
     actUpdatePlanDS: TdsdUpdateDataSet;
     dsdDBViewAddOnPlan: TdsdDBViewAddOn;
     plGoodsKindName_List: TcxGridDBColumn;
-    GoodsKindCompleteChoiceForm: TOpenChoiceForm;
+    actGoodsKindCompleteChoiceForm: TOpenChoiceForm;
     PriceTender: TcxGridDBColumn;
     MessageDS: TDataSource;
     MessageDCS: TClientDataSet;
@@ -353,7 +350,7 @@ type
     calcTaxPromo_Condition: TcxGridDBColumn;
     cbisTaxPromo: TcxCheckBox;
     cbisTaxPromo_Condition: TcxCheckBox;
-    InsertRecordPromoStateKind: TInsertRecord;
+    actInsertRecordPromoStateKind: TInsertRecord;
     actMISetErasedPromoStateKind: TdsdUpdateErased;
     actMISetUnErasedPromoStateKind: TdsdUpdateErased;
     spErasedPromoStateKind: TdsdStoredProc;
@@ -394,6 +391,12 @@ type
     cxGridLevel3: TcxGridLevel;
     actOpenProtocoPromoStateKind: TdsdOpenForm;
     cbPromoStateKind: TcxCheckBox;
+    PromoStateKindPopupMenu: TPopupMenu;
+    MenuItem19: TMenuItem;
+    MenuItem20: TMenuItem;
+    MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
+    MenuItem23: TMenuItem;
   private
     { Private declarations }
   public
