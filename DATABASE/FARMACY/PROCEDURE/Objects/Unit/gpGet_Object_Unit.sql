@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                Address TVarChar, Phone TVarChar,
-               ListDaySUN TVarChar,
+               ListDaySUN TVarChar, ListDaySUN_pi TVarChar,
                ProvinceCityId Integer, ProvinceCityName TVarChar,
                ParentId Integer, ParentName TVarChar,
                UserManagerId Integer, UserManagerName TVarChar,
@@ -65,6 +65,7 @@ BEGIN
            , CAST ('' as TVarChar) AS Address
            , CAST ('' as TVarChar) AS Phone
            , CAST ('' as TVarChar) AS ListDaySUN
+           , CAST ('' as TVarChar) AS ListDaySUN_pi
            
            , CAST (0 as Integer)   AS ProvinceCityId
            , CAST ('' as TVarChar) AS ProvinceCityName
@@ -165,7 +166,8 @@ BEGIN
       , Object_Unit.ValueData                              AS Name
       , ObjectString_Unit_Address.ValueData                AS Address
       , ObjectString_Unit_Phone.ValueData                  AS Phone
-      , COALESCE (ObjectString_ListDaySUN.ValueData, '') :: TVarChar AS ListDaySUN
+      , COALESCE (ObjectString_ListDaySUN.ValueData, '')    :: TVarChar AS ListDaySUN
+      , COALESCE (ObjectString_ListDaySUN_pi.ValueData, '') :: TVarChar AS ListDaySUN_pi
 
       , Object_ProvinceCity.Id                             AS ProvinceCityId
       , Object_ProvinceCity.ValueData                      AS ProvinceCityName
@@ -351,6 +353,10 @@ BEGIN
                                ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
 
+        LEFT JOIN ObjectString AS ObjectString_ListDaySUN_pi
+                               ON ObjectString_ListDaySUN_pi.ObjectId = Object_Unit.Id 
+                              AND ObjectString_ListDaySUN_pi.DescId = zc_ObjectString_Unit_ListDaySUN_pi()
+
         LEFT JOIN ObjectString AS ObjectString_AccessKeyYF
                                ON ObjectString_AccessKeyYF.ObjectId = Object_Unit.Id 
                               AND ObjectString_AccessKeyYF.DescId = zc_ObjectString_Unit_AccessKeyYF()
@@ -527,6 +533,7 @@ ALTER FUNCTION gpGet_Object_Unit (integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 21.04.20         * add ListDaySUN_pi
  14.02.20                                                       * add isTechnicalRediscount
  17.12.19         * add SunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF

@@ -223,7 +223,6 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 122
           end
           object CholdMeasureName: TcxGridDBColumn [4]
@@ -729,8 +728,8 @@ inherited ProductionSeparateStorageLineForm: TProductionSeparateStorageLineForm
     Top = 208
   end
   inherited StatusGuides: TdsdGuides
-    Left = 144
-    Top = 56
+    Left = 176
+    Top = 40
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionSeparate'

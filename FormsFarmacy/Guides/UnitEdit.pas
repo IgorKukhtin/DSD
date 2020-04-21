@@ -148,6 +148,8 @@ type
     cxLabel42: TcxLabel;
     cbTechnicalRediscount: TcxCheckBox;
     cbAlertRecounting: TcxCheckBox;
+    cxLabel43: TcxLabel;
+    edListDaySUN_pi: TcxTextEdit;
   private
     { Private declarations }
   public

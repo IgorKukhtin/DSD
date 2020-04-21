@@ -24,7 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitRePriceId Integer, UnitRePriceName TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , DriverId Integer, DriverName TVarChar
-             , ListDaySUN TVarChar
+             , ListDaySUN TVarChar, ListDaySUN_pi TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
@@ -47,6 +47,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSUN_in Boolean, isSUN_out Boolean
              , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
              , isSUN_v3_in  Boolean, isSUN_v3_out Boolean
+             , isSUN_v4     Boolean, isSUN_v4_in  Boolean, isSUN_v4_out Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
@@ -121,7 +122,8 @@ BEGIN
       , COALESCE (Object_Driver.Id,0)          ::Integer     AS DriverId
       , COALESCE (Object_Driver.ValueData, '') ::TVarChar    AS DriverName
       
-      , COALESCE (ObjectString_ListDaySUN.ValueData, '') :: TVarChar AS ListDaySUN
+      , COALESCE (ObjectString_ListDaySUN.ValueData, '')    :: TVarChar AS ListDaySUN
+      , COALESCE (ObjectString_ListDaySUN_pi.ValueData, '') :: TVarChar AS ListDaySUN_pi
                  
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -163,6 +165,10 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v2_out.ValueData, FALSE) :: Boolean   AS isSUN_v2_out
       , COALESCE (ObjectBoolean_SUN_v3_in.ValueData, FALSE)  :: Boolean   AS isSUN_v3_in
       , COALESCE (ObjectBoolean_SUN_v3_out.ValueData, FALSE) :: Boolean   AS isSUN_v3_out
+      
+      , COALESCE (ObjectBoolean_SUN_v4.ValueData, FALSE)     :: Boolean   AS isSUN_v4
+      , COALESCE (ObjectBoolean_SUN_v4_in.ValueData, FALSE)  :: Boolean   AS isSUN_v4_in
+      , COALESCE (ObjectBoolean_SUN_v4_out.ValueData, FALSE) :: Boolean   AS isSUN_v4_out
       
       , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
       , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
@@ -223,6 +229,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_ListDaySUN
                                ON ObjectString_ListDaySUN.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN.DescId = zc_ObjectString_Unit_ListDaySUN()
+
+        LEFT JOIN ObjectString AS ObjectString_ListDaySUN_pi
+                               ON ObjectString_ListDaySUN_pi.ObjectId = Object_Unit.Id 
+                              AND ObjectString_ListDaySUN_pi.DescId = zc_ObjectString_Unit_ListDaySUN_pi()
 
         LEFT JOIN ObjectString AS ObjectString_EMail
                                ON ObjectString_EMail.ObjectId = Object_Member.Id 
@@ -326,6 +336,16 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v3_out
                                 ON ObjectBoolean_SUN_v3_out.ObjectId = Object_Unit.Id 
                                AND ObjectBoolean_SUN_v3_out.DescId = zc_ObjectBoolean_Unit_SUN_v3_out()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4
+                                ON ObjectBoolean_SUN_v4.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v4.DescId = zc_ObjectBoolean_Unit_SUN_v4()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4_in
+                                ON ObjectBoolean_SUN_v4_in.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v4_in.DescId = zc_ObjectBoolean_Unit_SUN_v4_in()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v4_out
+                                ON ObjectBoolean_SUN_v4_out.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v4_out.DescId = zc_ObjectBoolean_Unit_SUN_v4_out()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_NotSold
                                 ON ObjectBoolean_SUN_NotSold.ObjectId = Object_Unit.Id 
@@ -468,6 +488,10 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 21.04.20         * add ListDaySUN_pi
+                        zc_ObjectBoolean_Unit_SUN_v4
+                        zc_ObjectBoolean_Unit_SUN_v4_in
+                        zc_ObjectBoolean_Unit_SUN_v4_out
  31.03.20         * 
  05.02.20         * add isSUN_NotSold
  17.12.19         * add SunIncome

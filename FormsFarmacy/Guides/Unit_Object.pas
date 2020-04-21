@@ -146,6 +146,20 @@ type
     actUpdate_Unit_AlertRecounting: TdsdExecStoredProc;
     spUpdate_Unit_AlertRecounting: TdsdStoredProc;
     dxBarButton5: TdxBarButton;
+    spUpdate_ListDaySUN_pi: TdsdStoredProc;
+    actEDListDaySUN_pi: TExecuteDialog;
+    actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc;
+    macUpdate_ListDaySUN_pi: TMultiAction;
+    bbUpdate_ListDaySUN_pi: TdxBarButton;
+    actUpdate_Unit_isSUN_v4_out: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v4_in: TdsdExecStoredProc;
+    actUpdate_Unit_isSUN_v4: TdsdExecStoredProc;
+    spUpdate_Unit_isSUN_v4: TdsdStoredProc;
+    spUpdate_Unit_isSUN_v4_in: TdsdStoredProc;
+    spUpdate_Unit_isSUN_v4_out: TdsdStoredProc;
+    bbUpdate_Unit_isSUN_v4: TdxBarButton;
+    bbUpdate_Unit_isSUN_v4_in: TdxBarButton;
+    bbUpdate_Unit_isSUN_v4_out: TdxBarButton;
   private
     { Private declarations }
   public

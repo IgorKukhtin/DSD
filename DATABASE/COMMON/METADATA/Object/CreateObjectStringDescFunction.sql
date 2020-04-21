@@ -1036,6 +1036,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_AccessKeyYF() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_AccessKeyYF', zc_object_Unit(), 'Ключ ХО для отправки данных Юрия-Фарм' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_AccessKeyYF');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_ListDaySUN_pi() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_ListDaySUN_pi'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_ListDaySUN_pi', zc_object_Unit(), 'По каким дням недели формируется СУН2-перемещ.излишков' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_ListDaySUN_pi');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_Name() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Name'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Buyer_Name', zc_Object_Buyer(), 'Фамилия Имя Отчество' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Name');
@@ -1120,6 +1125,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 21.04.20         * zc_ObjectString_Unit_ListDaySUN_pi
  17.04.20                                                                                                         * zc_ObjectString_Hardware_ ...
  12.04.20                                                                                                         * zc_ObjectString_Hardware_ ...
  08.03.20                                                                                                         * zc_ObjectString_CashRegister_ ...

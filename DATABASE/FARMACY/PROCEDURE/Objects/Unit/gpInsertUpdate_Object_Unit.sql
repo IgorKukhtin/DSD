@@ -28,6 +28,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -72,6 +79,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inisTopNo                 Boolean   ,    -- Не учитывать ТОП для аптеки
 
     IN inListDaySUN              TVarChar  ,    -- По каким дням недели по СУН
+    IN inListDaySUN_pi           TVarChar  ,    -- По каким дням недели формируется СУН2-перемещ.излишков
 
     IN inLatitude                TVarChar  ,    -- Географическая широта
     IN inLongitude               TVarChar  ,    -- Географическая долгота
@@ -181,6 +189,8 @@ BEGIN
 
    -- По каким дням недели по СУН
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_ListDaySUN(), ioId, inListDaySUN);
+   -- По каким дням недели по СУН2
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Unit_ListDaySUN_pi(), ioId, inListDaySUN_pi);
 
    -- % бонусирования
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_TaxService(), ioId, inTaxService);
@@ -406,6 +416,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 21.04.20         * add inListDaySUN_pi
  14.02.20                                                       * add isTechnicalRediscount
  17.12.19         * add inSunIncome
  13.12.19                                                       * MorionCode, AccessKeyYF

@@ -568,7 +568,7 @@
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 7
-        Width = 217
+        Width = 220
       end
       object cxLabel40: TcxLabel
         Left = 3
@@ -708,6 +708,20 @@
         Caption = #1054#1087#1086#1074#1077#1097#1077#1085#1080#1077' '#1087#1077#1088#1077#1076' '#1087#1077#1088#1077#1091#1095#1077#1090#1086#1084
         TabOrder = 26
         Width = 246
+      end
+      object cxLabel43: TcxLabel
+        Left = 240
+        Top = 152
+        Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053' 2 - '#1087#1077#1088#1077#1084#1077#1097'.'#1080#1079#1083#1080#1096#1082#1086#1074
+      end
+      object edListDaySUN_pi: TcxTextEdit
+        Left = 240
+        Top = 171
+        Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 28
+        Width = 220
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -1225,6 +1239,14 @@
         Name = 'inListDaySUN'
         Value = Null
         Component = edListDaySUN
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inListDaySUN_pi'
+        Value = Null
+        Component = edListDaySUN_pi
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1803,6 +1825,13 @@
         Name = 'ListDaySUN'
         Value = Null
         Component = edListDaySUN
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ListDaySUN_pi'
+        Value = Null
+        Component = edListDaySUN_pi
         DataType = ftString
         MultiSelectSeparator = ','
       end

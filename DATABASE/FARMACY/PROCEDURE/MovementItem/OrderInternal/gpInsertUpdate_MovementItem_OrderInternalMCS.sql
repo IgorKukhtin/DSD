@@ -190,7 +190,7 @@ BEGIN
                                          , tmpPrice.Price
 
                                          , CASE WHEN tmpGoods_224.GoodsId IS NOT NULL
-                                                THEN COALESCE (tmpPrice.MCSValue,0) * 0.25  -- 25%
+                                                THEN COALESCE (tmpPrice.MCSValue,0) * 0.5  -- 50 % ñ 21,04,2020  ---  25%
                                                 ELSE COALESCE (tmpPrice.MCSValue,0)
                                            END ::TFloat AS MCSValue
 

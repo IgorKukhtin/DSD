@@ -774,6 +774,8 @@ inherited ProductionSeparateItemJournalForm: TProductionSeparateItemJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_ProductionSeparate'
+    Left = 456
+    Top = 136
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
