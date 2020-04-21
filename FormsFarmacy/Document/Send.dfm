@@ -851,8 +851,8 @@ inherited SendForm: TSendForm
       Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
     end
     object cbSUN_v3: TcxCheckBox
-      Left = 804
-      Top = 106
+      Left = 799
+      Top = 88
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
       ParentShowHint = False
@@ -860,6 +860,17 @@ inherited SendForm: TSendForm
       ShowHint = True
       TabOrder = 22
       Width = 148
+    end
+    object cbSUN_v4: TcxCheckBox
+      Left = 799
+      Top = 106
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'-'#1055#1048
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 23
+      Width = 153
     end
   end
   object cxLabel7: TcxLabel [2]
@@ -2083,6 +2094,13 @@ inherited SendForm: TSendForm
         Name = 'isSUN_v3'
         Value = Null
         Component = cbSUN_v3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSUN_v4'
+        Value = Null
+        Component = cbSUN_v4
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

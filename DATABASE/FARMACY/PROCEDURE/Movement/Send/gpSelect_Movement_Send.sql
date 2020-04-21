@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, isComplete Boolean
              , isDeferred Boolean
              , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean --, isSUN_over Boolean
-             , isSUN_v3 Boolean
+             , isSUN_v3 Boolean, isSUN_v4 Boolean
              , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
@@ -128,6 +128,7 @@ BEGIN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
            , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2
            , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)   ::Boolean  AS isSUN_v3
+           , COALESCE (MovementBoolean_SUN_v4.ValueData, FALSE)   ::Boolean  AS isSUN_v4
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean  AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE) ::Boolean  AS isReceived
            , CASE WHEN COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE
@@ -224,6 +225,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
                                       ON MovementBoolean_SUN_v3.MovementId = Movement.Id
                                      AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                      ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                     AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id
@@ -300,6 +304,7 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 21.04.20         * isSUN_v4
  31.03.20         * isSUN_v3
  05.03.20                                                                                      * zc_MovementLinkObject_DriverSun
  09.12.19         * isSUN_v2 вместо isSUN_over 

@@ -18,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean
              , isComplete Boolean
              , isDeferred Boolean
-             , isSUN Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean
+             , isSUN Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean, isSUN_v4 Boolean
              , isDefSUN Boolean
              , isSent Boolean
              , isReceived Boolean
@@ -62,6 +62,7 @@ BEGIN
              , FALSE                                            AS isSUN
              , FALSE                                            AS isSUN_v2
              , FALSE                                            AS isSUN_v3
+             , FALSE                                            AS isSUN_v4
              , FALSE                                            AS isDefSUN
              , FALSE                                            AS isSent
              , FALSE                                            AS isReceived
@@ -97,6 +98,7 @@ BEGIN
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)     ::Boolean AS isSUN
            , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)  ::Boolean AS isSUN_v2
            , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)  ::Boolean AS isSUN_v3
+           , COALESCE (MovementBoolean_SUN_v4.ValueData, FALSE)  ::Boolean AS isSUN_v4
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)  ::Boolean AS isDefSUN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
@@ -156,6 +158,9 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
                                       ON MovementBoolean_SUN_v3.MovementId = Movement.Id
                                      AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+            LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                      ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                     AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                       ON MovementBoolean_DefSUN.MovementId = Movement.Id

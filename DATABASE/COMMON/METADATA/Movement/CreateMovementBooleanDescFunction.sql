@@ -180,7 +180,11 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_SUN_v3() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_SUN_v3'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_SUN_v3', 'Перемещение по Э-СУН '  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SUN_v3');
+  SELECT 'zc_MovementBoolean_SUN_v3', 'Перемещение по Э-СУН'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SUN_v3');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_SUN_v4() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_SUN_v4'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_SUN_v4', 'Перемещение по СУН-ПИ'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_SUN_v4');
 
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_DefSUN() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_DefSUN'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -236,6 +240,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 21.04.20         * zc_MovementBoolean_SUN_v4
  14.04.20                                                                                    * zc_MovementBoolean_UseNDSKind
  10.03.20                                                                                    * zc_MovementBoolean_Adjustment
  06.03.20                                                                                    * zc_MovementBoolean_Pharmacist
