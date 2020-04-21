@@ -25,7 +25,6 @@ type
     edPaidTypeName: TcxTextEdit;
     ChoiceCashRegister: TOpenChoiceForm;
     ChoicePaidType: TOpenChoiceForm;
-    spUpdate_Movement_Check: TdsdStoredProc;
     actEditDocument: TMultiAction;
     dxBarButton1: TdxBarButton;
     actUpdate_Movement_Check: TdsdExecStoredProc;
@@ -143,7 +142,7 @@ type
     actExecReLinkContainer: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
     actExec_MovementIten_PartionDateKind: TdsdExecStoredProc;
-    spUpdate_MovementIten_PartionDateKind: TdsdStoredProc;
+    spUpdate_PartionDateKind: TdsdStoredProc;
     actUpdate_MovementIten_PartionDateKind: TMultiAction;
     dxBarButton5: TdxBarButton;
     astChoicePartionDateKind: TOpenChoiceForm;
@@ -173,6 +172,11 @@ type
     dxBarButton11: TdxBarButton;
     dxBarButton12: TdxBarButton;
     colNDS: TcxGridDBColumn;
+    actChoiceNDSKind: TOpenChoiceForm;
+    spUpdate_MovementIten_PartionDateKind: TdsdStoredProc;
+    spUpdateNDSKindId: TdsdStoredProc;
+    actExecspUpdateNDSKindId: TdsdExecStoredProc;
+    dxBarButton13: TdxBarButton;
   private
     { Private declarations }
   public

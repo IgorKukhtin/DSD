@@ -1142,7 +1142,9 @@ uses
   Report_OrderInternalBasis_OlapDialog in '..\..\Forms\Report\Report_OrderInternalBasis_OlapDialog.pas' {Report_OrderInternalBasis_OlapDialogForm: TParentForm},
   Report_Promo_Trade in '..\..\Forms\Report\Report_Promo_Trade.pas' {Report_Promo_TradeForm: TParentForm},
   PromoStateKind in '..\..\Forms\Kind\PromoStateKind.pas' {PromoStateKindForm: TParentForm},
-  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm};
+  Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
+  Report_Cash_Olap in '..\..\Forms\Report\Report_Cash_Olap.pas' {Report_Cash_OlapForm: TParentForm},
+  Report_Cash_OlapDialog in '..\..\Forms\Report\Report_Cash_OlapDialog.pas' {Report_Cash_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

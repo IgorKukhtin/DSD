@@ -1107,10 +1107,8 @@ inherited CheckForm: TCheckForm
       Category = 'EditMovement'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Movement_Check
       StoredProcList = <
         item
-          StoredProc = spUpdate_Movement_Check
         end>
     end
     object actEditDocument: TMultiAction
@@ -1609,10 +1607,10 @@ inherited CheckForm: TCheckForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_MovementIten_PartionDateKind
+      StoredProc = spUpdate_PartionDateKind
       StoredProcList = <
         item
-          StoredProc = spUpdate_MovementIten_PartionDateKind
+          StoredProc = spUpdate_PartionDateKind
         end>
       Caption = 'actExec_MovementIten_PartionDateKind'
     end
@@ -1789,6 +1787,39 @@ inherited CheckForm: TCheckForm
         end>
       isShowModal = True
     end
+    object actChoiceNDSKind: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'astChoicePartionDateKind'
+      FormName = 'TNDSKindForm'
+      FormNameParam.Value = 'TNDSKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'NDSKindId'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actExecspUpdateNDSKindId: TdsdExecStoredProc
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actChoiceNDSKind
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateNDSKindId
+      StoredProcList = <
+        item
+          StoredProc = spUpdateNDSKindId
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1053#1044#1057' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1080#1076' '#1053#1044#1057' '#1087#1086' '#1089#1090#1088#1086#1095#1082#1077
+      ImageIndex = 79
+    end
   end
   inherited MasterDS: TDataSource
     Top = 306
@@ -1904,6 +1935,10 @@ inherited CheckForm: TCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton13'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2010,6 +2045,10 @@ inherited CheckForm: TCheckForm
       Action = actMISetUnErased
       Category = 0
     end
+    object dxBarButton13: TdxBarButton
+      Action = actExecspUpdateNDSKindId
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -2102,6 +2141,11 @@ inherited CheckForm: TCheckForm
       end
       item
         Name = 'PromoCodeId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'NDSKindId'
         Value = Null
         MultiSelectSeparator = ','
       end>
@@ -2535,39 +2579,6 @@ inherited CheckForm: TCheckForm
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 500
     Top = 260
-  end
-  object spUpdate_Movement_Check: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Check'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPaidTypeId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'PaidTypeId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCashRegisterId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'CashRegisterId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 186
-    Top = 413
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Check_Print'
@@ -3105,7 +3116,7 @@ inherited CheckForm: TCheckForm
     Left = 690
     Top = 456
   end
-  object spUpdate_MovementIten_PartionDateKind: TdsdStoredProc
+  object spUpdate_PartionDateKind: TdsdStoredProc
     StoredProcName = 'gpUpdate_MovementIten_Check_PartionDateKind'
     DataSets = <>
     OutputType = otResult
@@ -3262,5 +3273,71 @@ inherited CheckForm: TCheckForm
     PackSize = 1
     Left = 402
     Top = 400
+  end
+  object spUpdate_MovementIten_PartionDateKind: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementIten_Check_PartionDateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementItemID'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionDateKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartionDateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 210
+    Top = 464
+  end
+  object spUpdateNDSKindId: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_Check_NDSKindId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDSKindId'
+        Value = 0c
+        Component = FormParams
+        ComponentItem = 'NDSKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 650
+    Top = 281
   end
 end

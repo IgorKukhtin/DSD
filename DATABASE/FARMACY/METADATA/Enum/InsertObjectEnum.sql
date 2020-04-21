@@ -102,6 +102,16 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_TechnicalRediscount(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_TechnicalRediscount'), inName:= 'Работа с техническим переучетом', inEnumName:= 'zc_Enum_Role_TechnicalRediscount');
    END IF;
 
+   -- zc_Enum_Role_TechnicalRediscount
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Учёт товара сети')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Учёт товара сети')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_GoodsAccounting');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_GoodsAccounting(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_GoodsAccounting'), inName:= 'Учёт товара сети', inEnumName:= 'zc_Enum_Role_GoodsAccounting');
+   END IF;
+
 END $$;
 /*
 DO $$

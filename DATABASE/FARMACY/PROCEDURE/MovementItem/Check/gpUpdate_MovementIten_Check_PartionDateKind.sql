@@ -48,7 +48,8 @@ BEGIN
     END IF;
 
     -- сохранили свойство <Тип срок/не срок>
-    IF COALESCE (inPartionDateKindID, 0) <> COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = inMovementItemID), 0)
+    IF COALESCE (inPartionDateKindID, 0) <> COALESCE ((SELECT ObjectId FROM MovementItemLinkObject WHERE MovementItemId = inMovementItemID
+                                                                                                     AND DescId = zc_MILinkObject_PartionDateKind()), 0)
     THEN
       PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PartionDateKind(), inMovementItemID, inPartionDateKindID);
       PERFORM lpInsertUpdate_MovementItemLinkContainer(inMovementItemId := inMovementItemID, inUserId := vbUserId);
