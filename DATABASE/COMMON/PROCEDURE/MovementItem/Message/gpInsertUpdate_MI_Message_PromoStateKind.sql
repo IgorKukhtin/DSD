@@ -39,12 +39,31 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh (zc_Enum_PromoStateKind_Start()), lfGet_Object_ValueData_sh (inPromoStateKindId);
      END IF;
 
+     -- Проверка - что б научились добавлять
+     IF EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId IN (zc_Enum_PromoStateKind_Head(), zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
+        AND NOT EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.Id = ioId AND MovementItem.ObjectId = inPromoStateKindId)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Состояние <%> не может быть изменено на <%>.', lfGet_Object_ValueData_sh ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId)), lfGet_Object_ValueData_sh (inPromoStateKindId);
+     END IF;
+
 
      -- определили
      vbIsChange:= inPromoStateKindId <> COALESCE ((SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = ioId), 0);
 
      -- сохранили <Элемент документа>
-     ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Message(), inPromoStateKindId, inMovementId, vbAmount, NULL);
+     ioId:= lpInsertUpdate_MovementItem (ioId, zc_MI_Message(), inPromoStateKindId, inMovementId
+                                       , COALESCE ((SELECT MI.Amount
+                                                    FROM MovementItem AS MI
+                                                         JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+                                                    WHERE MI.MovementId = inMovementId
+                                                      AND MI.DescId     = zc_MI_Message()
+                                                      AND MI.isErased   = FALSE
+                                                      AND MI.Id         < ioId
+                                                    ORDER BY MI.Id DESC
+                                                    LIMIT 1
+                                                   ), vbAmount)
+                                       , NULL
+                                       );
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
@@ -61,33 +80,43 @@ BEGIN
 
      IF vbIsChange = TRUE
      THEN
-         -- !!!пересчитали кто подписал/отменил + изменение модели!!!
-         PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, inPromoStateKindId, vbUserId);
+         -- если последний
+         IF ioId = (SELECT MAX (MI.Id)
+                    FROM MovementItem AS MI
+                         JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+                    WHERE MI.MovementId = inMovementId
+                      AND MI.DescId     = zc_MI_Message()
+                      AND MI.isErased   = FALSE
+                   )
+         THEN
+             -- !!!пересчитали кто подписал/отменил + изменение модели!!!
+             PERFORM lpUpdate_MI_Sign_Promo_recalc (inMovementId, inPromoStateKindId, vbUserId);
+         END IF;
 
-
-         -- нашли последний - и сохранили в шапку
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
-               , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
-                  -- сохранили свойство <Дата согласования>
-               , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
-                                            , CASE WHEN inPromoStateKindId = zc_Enum_PromoStateKind_Complete() THEN CURRENT_DATE ELSE NULL END
-                                             )
-                  -- сохранили свойство <Согласовано>
-               , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
-                                               , CASE WHEN inPromoStateKindId = zc_Enum_PromoStateKind_Complete() THEN TRUE ELSE FALSE END
-                                                )
-
-         FROM (SELECT MI.ObjectId, MI.Amount
-               FROM MovementItem AS MI
-                    JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
-               WHERE MI.MovementId = inMovementId
-                 AND MI.DescId     = zc_MI_Message()
-                 AND MI.isErased   = FALSE
-               ORDER BY MI.Id DESC
-               LIMIT 1
-              ) AS tmp;
 
      END IF;
+
+         -- нашли последний - и сохранили в шапку
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
+           , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
+              -- сохранили свойство <Дата согласования>
+           , lpInsertUpdate_MovementDate (zc_MovementDate_Check(), inMovementId
+                                        , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() THEN CURRENT_DATE ELSE NULL END
+                                         )
+              -- сохранили свойство <Согласовано>
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), inMovementId
+                                           , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() THEN TRUE ELSE FALSE END
+                                            )
+     FROM (SELECT MI.ObjectId, MI.Amount
+           FROM MovementItem AS MI
+                JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
+           WHERE MI.MovementId = inMovementId
+             AND MI.DescId     = zc_MI_Message()
+             AND MI.isErased   = FALSE
+           ORDER BY MI.Id DESC
+           LIMIT 1
+          ) AS tmp;
+
 /*
     RAISE EXCEPTION 'Ошибка.<%>  %', (SELECT zfCalc_WordNumber_Split (tmp.strIdSign,   ',', vbUserId :: TVarChar)
                             || '  _  ' || zfCalc_WordNumber_Split (tmp.strIdSignNo, ',', vbUserId :: TVarChar)

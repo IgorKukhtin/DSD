@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Ord Integer
              , InsertName TVarChar
              , InsertDate TDateTime
              , isQuickly Boolean
+             , Amount TFloat
              , isErased Boolean
               )
 AS
@@ -33,7 +34,8 @@ BEGIN
           , Object_PromoStateKind.ValueData        AS PromoStateKindName
           , Object_Insert.ValueData                AS InsertName
           , MIDate_Insert.ValueData                AS InsertDate
-          , CASE WHEN MovementItem.Amount = 1 THEN TRUE ELSE FALSE END AS isQuickly
+          , CASE WHEN MovementItem.Amount = 1 THEN TRUE ELSE FALSE END :: Boolean AS isQuickly
+          , MovementItem.Amount
           , MovementItem.isErased                  AS isErased
      FROM MovementItem
           LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementItem.ObjectId

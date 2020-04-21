@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS lpUpdate_MI_Sign_Promo_recalc (Integer, Integer, Integer
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_Sign_Promo_recalc(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPromoStateKindId    Integer   ,
+    IN inPromoStateKindId    Integer   , -- Состояние Акции
     IN inUserId              Integer     -- пользователь
 )
 RETURNS VOID AS
@@ -19,7 +19,7 @@ $BODY$
   DECLARE vbPromoStateKindId_old Integer;
 BEGIN
 
-     -- данные
+     -- данные из шапки
      vbPromoStateKindId_old:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PromoStateKind());
 
      -- данные - кто подписал/не подписал
@@ -45,9 +45,10 @@ BEGIN
       -- проверка - если все подписано
       IF vbStrIdSign <> '' AND vbIndex = 0 AND vbIndexNo = 0
       THEN
-          RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.'
+          RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.<%><%>'
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
                         , zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId))
+                        , vbIndex, vbIndexNo
                          ;
       END IF;
 /*
@@ -66,8 +67,8 @@ BEGIN
       -- Меняется модель + подписали для: 1)В работе Исполнительный Директор ИЛИ 2)Согласован
       IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
       THEN
-          -- если подписант с №п/п=1 И 2)Согласован
-          IF (vbIndex = 1 OR vbIndexNo = 1) AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
+          -- если еще не подписывали И №п/п=1 кто должен подписать И состояние = 2)Согласован
+          IF ((vbStrIdSign ='' AND vbIndexNo = 1) OR vbIndex = 1) AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
           THEN
               -- нашли модель - "другую"
               vbSignInternalId:= (SELECT gpSelect.Id
@@ -148,9 +149,8 @@ BEGIN
 
 
       -- если надо убрать подпись
-      IF vbPromoStateKindId_old IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
-         AND inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
-         AND vbIndexNo = 0
+      IF inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+         AND vbIndexNo = 0 AND vbIndex = 1
       THEN
           -- убрали подпись
           PERFORM gpInsertUpdate_MI_Sign (inMovementId, FALSE, inUserId :: TVarChar);
