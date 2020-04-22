@@ -692,9 +692,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1138,7 +1135,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 64
           end
           object calcNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
@@ -1146,6 +1143,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1156,6 +1154,7 @@
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1178,6 +1177,7 @@
           object calcMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1186,6 +1186,7 @@
           object calcGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1194,6 +1195,7 @@
           object calcGoodsKindCompleteName: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
@@ -1213,6 +1215,8 @@
           object calcTaxRetIn: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1227,12 +1231,6 @@
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
-          object calcTaxPromo: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
-            DataBinding.FieldName = 'TaxPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
           object calcAmountSale: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1064#1090
             DataBinding.FieldName = 'AmountSale'
@@ -1241,7 +1239,7 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
           object calcAmountSaleWeight: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1082#1075
@@ -1266,7 +1264,7 @@
             Width = 70
           end
           object calcPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' , '#1075#1088#1085
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1277,12 +1275,21 @@
             Options.Editing = False
             Width = 140
           end
+          object calcTaxPromo: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'TaxPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object calcPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1431,6 +1438,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1441,6 +1449,7 @@
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1463,6 +1472,7 @@
           object ccMeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1471,6 +1481,7 @@
           object ссGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1479,6 +1490,7 @@
           object ссGoodsKindCompleteName: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
@@ -1496,8 +1508,10 @@
             Width = 81
           end
           object ссTaxRetIn: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075' (N)'
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1510,7 +1524,6 @@
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 81
           end
           object ссAmountSale: TcxGridDBColumn
@@ -1521,7 +1534,6 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object ссAmountSaleWeight: TcxGridDBColumn
@@ -1547,7 +1559,7 @@
             Width = 70
           end
           object ссPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' , '#1075#1088#1085
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1558,12 +1570,23 @@
             Options.Editing = False
             Width = 140
           end
+          object ссTaxPromo_Condition: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
+            DataBinding.FieldName = 'TaxPromo_Condition'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
+            Width = 117
+          end
           object ссPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1582,16 +1605,6 @@
             VisibleForCustomization = False
             Width = 101
           end
-          object ссTaxPromo_Condition: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
-            DataBinding.FieldName = 'TaxPromo_Condition'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
-            Width = 117
-          end
           object ссTaxPromo: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxPromo'
@@ -1603,14 +1616,14 @@
             Width = 117
           end
           object ссSummaProfit_Condition: TcxGridDBColumn
-            Caption = #1055#1088#1080#1073#1099#1083#1100' ('#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103')'
+            Caption = #1055#1088#1080#1073#1099#1083#1100', '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit_Condition'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 167
+            Width = 125
           end
           object ссColor_PriceIn: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PriceIn'
@@ -1690,9 +1703,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1786,9 +1796,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2033,9 +2040,6 @@
     object cxTabSheetPromoStateKind: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -6225,6 +6229,7 @@
         ColorValueList = <>
       end
       item
+        ColorColumn = calcTaxRetIn
         BackGroundValueColumn = Color_RetIn
         ColorValueList = <>
       end
@@ -6256,6 +6261,11 @@
       item
         ColorColumn = calcSummaProfit
         BackGroundValueColumn = Color_SummaProfit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = calcTaxPromo
+        BackGroundValueColumn = Color_PromoCond
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -6867,6 +6877,11 @@
       item
         ColorColumn = ссSummaProfit_Condition
         BackGroundValueColumn = ссColor_SummaProfit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = ссTaxPromo_Condition
+        BackGroundValueColumn = ссColor_PromoCond
         ColorValueList = <>
       end>
     ColumnAddOnList = <>

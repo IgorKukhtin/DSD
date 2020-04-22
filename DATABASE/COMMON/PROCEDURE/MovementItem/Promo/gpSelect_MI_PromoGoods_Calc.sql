@@ -69,7 +69,7 @@ BEGIN
     RETURN QUERY
     WITH
     ---- Значение (% скидки / % компенсации)
-    tmpMIChild AS (SELECT MovementItem.Amount        -- Значение (% скидки / % компенсации)
+    tmpMIChild AS (SELECT SUM (MovementItem.Amount) AS Amount        -- Значение (% скидки / % компенсации)
                    FROM  MovementItem
                    WHERE MovementItem.MovementId = inMovementId 
                      AND MovementItem.DescId = zc_MI_Child()
@@ -108,6 +108,8 @@ BEGIN
                      , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
                      
                      , (MIFloat_PriceWithVAT.ValueData * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
+                     
+                     , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord
 
                 FROM MovementItem
                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -185,13 +187,13 @@ BEGIN
 
                                
                          , zc_Color_White()          AS Color_PriceIn
-                         , 16764159                  AS Color_RetIn
-                         , 11658012                  AS Color_ContractCond
+                         , zc_Color_Yelow()          AS Color_RetIn
+                         , zc_Color_Yelow()          AS Color_ContractCond   ---11658012
                          , zc_Color_White()          AS Color_AmountSale
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
-                         , 11658012                  AS Color_PriceWithVAT
-                         , 11658012                  AS Color_PromoCond
+                         , zc_Color_White()          AS Color_PriceWithVAT   --11658012
+                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Плановая'                AS Text
                     FROM tmpData
@@ -231,15 +233,16 @@ BEGIN
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
 
-                         , 11658012                    AS Color_PriceIn
+                         , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , 11658012                    AS Color_AmountSale
+                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_Yelow()            AS Color_SummaProfit
+                         , zc_Color_White()            AS Color_SummaProfit
+                         
                          , 'Плановая'                AS Text
                     FROM tmpData
                          LEFT JOIN tmpMIChild ON 1=1
@@ -267,14 +270,14 @@ BEGIN
                          , 0                         AS SummaProfit
                          , 0                         AS SummaProfit_Condition  
 
-                         , zc_Color_White()          AS Color_PriceIn 
-                         , 16764159                  AS Color_RetIn
-                         , 11658012                  AS Color_ContractCond
+                         , zc_Color_White()          AS Color_PriceIn
+                         , zc_Color_Yelow()          AS Color_RetIn          --16764159
+                         , zc_Color_Yelow()          AS Color_ContractCond   --11658012
                          , zc_Color_White()          AS Color_AmountSale
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
-                         , 11658012                  AS Color_PriceWithVAT
-                         , 11658012                  AS Color_PromoCond
+                         , zc_Color_White()          AS Color_PriceWithVAT   --11658012
+                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Фактическая'             AS Text
                     FROM tmpData
@@ -314,15 +317,16 @@ BEGIN
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
                          
-                         , 11658012                    AS Color_PriceIn
+                         , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , 11658012                    AS Color_AmountSale
+                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
-                         , 11658012                    AS Color_Price 
+                         , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_Yelow()            AS Color_SummaProfit
+                         , zc_Color_White()            AS Color_SummaProfit
+                         
                          , 'Фактическая'               AS Text
                     FROM tmpData
                   UNION
@@ -347,6 +351,7 @@ BEGIN
                          , 0                AS PromoCondition         --  Компенсация по доп.счету, грн/кг
                          , 0                AS SummaProfit                 -- прибыль
                          , 0                AS SummaProfit_Condition
+
                          , zc_Color_White() AS Color_PriceIn
                          , zc_Color_White() AS Color_RetIn
                          , zc_Color_White() AS Color_ContractCond
@@ -358,6 +363,7 @@ BEGIN
                          , zc_Color_White() AS Color_SummaProfit
                          , ''               AS Text
                     FROM tmpData
+                    WHERE tmpData.Ord <> 1
                    )   
                    
     -- результат
