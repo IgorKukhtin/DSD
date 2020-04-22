@@ -51,6 +51,8 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbTaxPromo Boolean;
+    DECLARE vbVAT TFloat;
+    DECLARE vbPriceList Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoGoods());
@@ -60,7 +62,18 @@ BEGIN
                    WHERE MovementBoolean.MovementId = inMovementId
                      AND MovementBoolean.DescId = zc_MovementBoolean_TaxPromo()
                    ) :: Boolean;
+    
 
+    --узнали прайслист
+    SELECT COALESCE(Movement_Promo.PriceListId,zc_PriceList_Basis())
+    INTO vbPriceList
+    FROM Movement_Promo_View AS Movement_Promo
+    WHERE Movement_Promo.Id = inMovementId;
+    --вытащили значение "с НДС" и "значение НДС"
+    SELECT PriceList.VATPercent
+    INTO vbVAT
+    FROM gpGet_Object_PriceList (vbPriceList,inSession) as PriceList;
+        
  /*   IF inIsTaxPromo <> vbTaxPromo
     THEN
         RETURN;
@@ -87,7 +100,9 @@ BEGIN
                      
                      , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
                      , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
-                     , MIFloat_Price.ValueData                AS Price                  --Цена в прайсе
+                     --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
+                     , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2) :: TFloat  AS Price                  --Цена в прайсе c НДС
+                     
                      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                
                      , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
