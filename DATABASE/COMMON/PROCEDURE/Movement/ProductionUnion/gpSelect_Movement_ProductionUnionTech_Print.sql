@@ -356,26 +356,27 @@ BEGIN
     3)5+7
     4) остальное
   */
- , tmpGroupPrint AS (SELECT 1 AS GroupNum WHERE inGroupNum = 1
+ , tmpGroupPrint AS (--сырье
+                     SELECT 1 AS GroupNum WHERE inGroupNum = 1
                     UNION
                      SELECT 2 AS GroupNum WHERE inGroupNum = 1
-                    
+                     -- прочее
                     UNION
-                     SELECT 3 AS GroupNum WHERE inGroupNum = 2
+                     SELECT 3 AS GroupNum WHERE inGroupNum = 4
                     UNION
-                     SELECT 4 AS GroupNum WHERE inGroupNum = 2
+                     SELECT 4 AS GroupNum WHERE inGroupNum = 4
                     UNION
-                     SELECT 6 AS GroupNum WHERE inGroupNum = 2
-                    
+                     SELECT 6 AS GroupNum WHERE inGroupNum = 4
+                    --специи
                    UNION
-                     SELECT 5 AS GroupNum WHERE inGroupNum = 3
+                     SELECT 5 AS GroupNum WHERE inGroupNum = 2
                    UNION
-                     SELECT 7 AS GroupNum WHERE inGroupNum = 3
-                    
+                     SELECT 7 AS GroupNum WHERE inGroupNum = 2
+                    --оболочка
                    UNION
                      SELECT tmp.GroupNumber AS GroupNum
                      FROM (SELECT DISTINCT tmpData.GroupNumber FROM tmpData) AS tmp
-                     WHERE inGroupNum = 4
+                     WHERE inGroupNum = 3
                      AND tmp.GroupNumber NOT IN (1,2,3,4,6,5,7)
                     )                   
 
@@ -386,6 +387,7 @@ BEGIN
             , tmpData.ParentId
             , tmpData.Amount
             , tmpData.AmountReceipt
+            
             /*, tmpData.PartionGoodsDate
             , tmpData.GoodsKindId
             , tmpData.GoodsKindCode
@@ -406,17 +408,30 @@ BEGIN
           , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName
           , _tmpRes_cur1.GoodsName
           , CASE WHEN _tmpRes_cur1.GoodsKindId_Complete = zc_GoodsKind_Basis() THEN '' ELSE _tmpRes_cur1.GoodsKindName_Complete END :: TVarChar AS GoodsKindName_Complete
-          , _tmpRes_cur1.CuterCount
+          , CASE WHEN inGroupNum <> 3 THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
+                 ELSE  _tmpRes_cur1.CuterCount
+            END AS CuterCount --_tmpRes_cur1.CuterCount --SUM (_tmpRes_cur1.CuterCount) OVER(PARTITION BY _tmpRes_cur1.GoodsName) AS CuterCount
           , _tmpRes_cur2.GoodsName  AS GoodsName_child
           , _tmpRes_cur2.AmountReceipt
-          , _tmpRes_cur2.Amount
+          , SUM (_tmpRes_cur2.Amount) AS Amount
+          , Count (*) OVER (PARTITION by _tmpRes_cur1.GoodsName, _tmpRes_cur2.GoodsName) :: integer AS CountReceipt
+          , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END GoodsKind_group-- для группировки
      FROM _tmpRes_cur1
           LEFT JOIN _tmpRes_cur2 ON _tmpRes_cur2.ParentId = _tmpRes_cur1.MovementItemId
           LEFT JOIN zfCalc_DayOfWeekName (_tmpRes_cur1.OperDate) AS tmpWeekDay ON 1=1
      WHERE COALESCE (_tmpRes_cur2.AmountReceipt,0) <> 0 OR COALESCE (_tmpRes_cur2.Amount,0) <> 0
-     ORDER BY _tmpRes_cur1.OperDate
-            , _tmpRes_cur1.GoodsName
-            , _tmpRes_cur2.GoodsName
+     GROUP BY _tmpRes_cur1.OperDate
+          , tmpWeekDay.DayOfWeekName_Full
+          , _tmpRes_cur1.GoodsName
+          , CASE WHEN _tmpRes_cur1.GoodsKindId_Complete = zc_GoodsKind_Basis() THEN '' ELSE _tmpRes_cur1.GoodsKindName_Complete END
+          , CASE WHEN inGroupNum <> 3 THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
+                 ELSE  _tmpRes_cur1.CuterCount
+            END
+          , _tmpRes_cur2.GoodsName
+          , _tmpRes_cur2.AmountReceipt 
+          , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
+         , _tmpres_cur1.goodsid
+            
      ;
     RETURN NEXT Cursor1;
 
