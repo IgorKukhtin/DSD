@@ -29,6 +29,9 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inMovementItemId, vbUserId, FALSE);
 
+   -- сохранили связь с <Виды товаров>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inMovementItemId, inGoodsKindId);
+   
 /*   -- выбираем строки куда записываем значение линии пр-ва
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), MovementItem.Id, inStorageLineId)  -- сохранили <линию пр-ва>
          , lpInsert_MovementItemProtocol (MovementItem.Id, vbUserId, FALSE)                                         -- сохранили протокол
