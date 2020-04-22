@@ -1323,11 +1323,23 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFullChargeFact() RETURNS Integer AS $
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
   SELECT 'zc_MIFloat_SummaFullChargeFact', 'Полное списание факт' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFullChargeFact');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFundMonth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFundMonth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaFundMonth', 'Фонд за предыдущий месяц' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFundMonth');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFund() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFund'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaFund', 'Фонд доступен в месяце расчета' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFund');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummaFundUsed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFundUsed'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc (Code, ItemName)
+  SELECT 'zc_MIFloat_SummaFundUsed', 'Использование фонда' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummaFundUsed');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 21.04.20                                                                                                     * zc_MIFloat_SummaFund...
  13.04.20                                                                                                     * zc_MIFloat_SummaFullChargeFact
  31.03.20         * zc_MIFloat_ValueTo
                     zc_MIFloat_ValueFrom

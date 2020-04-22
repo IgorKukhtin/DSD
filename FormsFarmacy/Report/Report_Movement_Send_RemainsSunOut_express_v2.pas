@@ -1,4 +1,4 @@
-unit Report_Send_RemainsSunOut_express_v2;
+unit Report_Movement_Send_RemainsSunOut_express_v2;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_Send_RemainsSunOut_express_v2Form = class(TAncestorReportForm)
+  TReport_Movement_Send_RemainsSunOut_express_v2Form = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
@@ -94,7 +94,7 @@ type
   end;
 
 var
-  Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_express_v2Form;
+  Report_Movement_Send_RemainsSunOut_express_v2Form: TReport_Movement_Send_RemainsSunOut_express_v2Form;
 
 implementation
 
@@ -102,5 +102,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_Send_RemainsSunOut_express_v2Form)
+  RegisterClass(TReport_Movement_Send_RemainsSunOut_express_v2Form)
 end.

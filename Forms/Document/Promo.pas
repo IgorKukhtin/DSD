@@ -397,6 +397,11 @@ type
     MenuItem21: TMenuItem;
     MenuItem22: TMenuItem;
     MenuItem23: TMenuItem;
+    actPrint_Calc2: TdsdPrintAction;
+    bbPrint_Calc2: TdxBarButton;
+    spUpdate_Movement_isTaxPromo: TdsdStoredProc;
+    actUpdate_Movement_isTaxPromo: TdsdExecStoredProc;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

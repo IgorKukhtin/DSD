@@ -28,14 +28,6 @@ BEGIN
   outShowMessage := False;
 
 
-  IF NOT EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), 59582, 393039))
-  THEN
-    outShowMessage := True;
-    outPUSHType := 2;
-    outText := 'Ошибка. У вас нет прав выполнения этой операции.';
-    RETURN;
-  END IF;
-
   IF NOT EXISTS(SELECT 1 FROM Container
                 WHERE Container.DescId    = zc_Container_Count()
                   AND Container.Id        = inContainerID)
@@ -112,6 +104,26 @@ BEGIN
     inAmount := vbRemains;
   END IF;
 
+  
+  IF vbExpirationDate > inExpirationDate
+  THEN
+    IF NOT EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
+    THEN
+      outShowMessage := True;
+      outPUSHType := 2;
+      outText := 'Ошибка. У вас нет прав выполнения этой операции.';
+      RETURN;
+    END IF;    
+  ELSE
+    IF NOT EXISTS(SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId IN (zc_Enum_Role_Admin(), zc_Enum_Role_CashierPharmacy(), zc_Enum_Role_PharmacyManager(), zc_Enum_Role_SeniorManager()))
+    THEN
+      outShowMessage := True;
+      outPUSHType := 2;
+      outText := 'Ошибка. У вас нет прав выполнения этой операции.';
+      RETURN;
+    END IF;  
+  END IF;
+  
   IF NOT EXISTS(SELECT 1 FROM Object AS Object_Unit
          INNER JOIN ObjectBoolean AS ObjectBoolean_DividePartionDate
                                  ON ObjectBoolean_DividePartionDate.ObjectId = Object_Unit.Id

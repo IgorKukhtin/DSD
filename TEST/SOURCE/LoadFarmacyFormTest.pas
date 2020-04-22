@@ -999,23 +999,26 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PriceProtocolDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
+    }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_piForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_piForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSunOut_expressForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSunOut_expressForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOut_expressForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOut_expressForm');
 
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressDialogForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressDialogForm');
-
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressDialogForm');
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOutForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOutForm');
     }
-    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSunOut_express_v2Form'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSunOut_express_v2Form');
-        TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Send_RemainsSun_expressv2DialogForm'));
-    TdsdFormStorageFactory.GetStorage.Load('TReport_Send_RemainsSun_expressv2DialogForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunOut_express_v2Form'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSunOut_express_v2Form');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressv2DialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressv2DialogForm');
     exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSunForm'));

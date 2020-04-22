@@ -2921,16 +2921,16 @@
 				<Form>GoodsTopDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas">
-				<Form>Report_Send_RemainsSun_expressForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_express.pas">
+				<Form>Report_Movement_Send_RemainsSun_expressForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas">
-				<Form>Report_Send_RemainsSunOut_expressForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut_express.pas">
+				<Form>Report_Movement_Send_RemainsSunOut_expressForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas">
-				<Form>Report_Send_RemainsSun_expressDialogForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_expressDialog.pas">
+				<Form>Report_Movement_Send_RemainsSun_expressDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\SeasonalityCoefficientEdit.pas">
@@ -2985,16 +2985,20 @@
 				<Form>HardwareEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express_v2.pas">
-				<Form>Report_Send_RemainsSunOut_express_v2Form</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut_express_v2.pas">
+				<Form>Report_Movement_Send_RemainsSunOut_express_v2Form</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressV2Dialog.pas">
-				<Form>Report_Send_RemainsSun_expressV2DialogForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_expressV2Dialog.pas">
+				<Form>Report_Movement_Send_RemainsSun_expressV2DialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas">
 				<Form>PersentSalaryDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_pi.pas">
+				<Form>Report_Movement_Send_RemainsSun_piForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

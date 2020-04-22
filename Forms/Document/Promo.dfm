@@ -3,10 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
-  ExplicitLeft = -593
-  ExplicitTop = -262
   ExplicitWidth = 1382
-  ExplicitHeight = 719
+  ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1137,7 +1135,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 90
+            Width = 64
           end
           object calcNum: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
@@ -1145,6 +1143,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1155,6 +1154,7 @@
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1174,9 +1174,19 @@
             Options.Editing = False
             Width = 150
           end
+          object calcMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
           object calcGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1185,6 +1195,7 @@
           object calcGoodsKindCompleteName: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
@@ -1204,6 +1215,8 @@
           object calcTaxRetIn: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1218,12 +1231,6 @@
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
-          object calcTaxPromo: TcxGridDBColumn
-            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
-            DataBinding.FieldName = 'TaxPromo'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
           object calcAmountSale: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1064#1090
             DataBinding.FieldName = 'AmountSale'
@@ -1232,6 +1239,17 @@
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object calcAmountSaleWeight: TcxGridDBColumn
+            Caption = #1054#1090#1075#1088'. '#1082#1075
+            DataBinding.FieldName = 'AmountSaleWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object calcSummaSale: TcxGridDBColumn
@@ -1246,23 +1264,32 @@
             Width = 70
           end
           object calcPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' , '#1075#1088#1085
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             Options.Editing = False
             Width = 140
           end
+          object calcTaxPromo: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
+            DataBinding.FieldName = 'TaxPromo'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           object calcPriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
+            Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'PriceWithVAT'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1400,6 +1427,8 @@
           object ccText: TcxGridDBColumn
             Caption = 'C/c'
             DataBinding.FieldName = 'Text'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
@@ -1409,6 +1438,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1419,6 +1449,7 @@
             DataBinding.FieldName = 'GoodsCode'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1438,9 +1469,19 @@
             Options.Editing = False
             Width = 150
           end
+          object ccMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 35
+          end
           object ссGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1449,6 +1490,7 @@
           object ссGoodsKindCompleteName: TcxGridDBColumn
             Caption = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
             DataBinding.FieldName = 'GoodsKindCompleteName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1080#1076' ('#1087#1088#1080#1084#1077#1095#1072#1085#1080#1077')'
@@ -1466,8 +1508,10 @@
             Width = 81
           end
           object ссTaxRetIn: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075' (N)'
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxRetIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -1480,12 +1524,21 @@
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 81
           end
           object ссAmountSale: TcxGridDBColumn
             Caption = #1054#1090#1075#1088'. '#1064#1090
             DataBinding.FieldName = 'AmountSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object ссAmountSaleWeight: TcxGridDBColumn
+            Caption = #1054#1090#1075#1088'. '#1082#1075
+            DataBinding.FieldName = 'AmountSaleWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -1506,16 +1559,26 @@
             Width = 70
           end
           object ссPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' , '#1075#1088#1085
+            Caption = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1062#1077#1085#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1089' '#1091#1095#1077#1090#1086#1084' '#1053#1044#1057', '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085
+            HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             Options.Editing = False
             Width = 140
+          end
+          object ссTaxPromo_Condition: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
+            DataBinding.FieldName = 'TaxPromo_Condition'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
+            Width = 117
           end
           object ссPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' '#1089' '#1091#1095#1077#1090#1086#1084' '#1089#1082#1080#1076#1082#1080', '#1075#1088#1085'/'#1082#1075
@@ -1523,6 +1586,7 @@
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1541,14 +1605,6 @@
             VisibleForCustomization = False
             Width = 101
           end
-          object ссTaxPromo_Condition: TcxGridDBColumn
-            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
-            DataBinding.FieldName = 'TaxPromo_Condition'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
-            Width = 117
-          end
           object ссTaxPromo: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075
             DataBinding.FieldName = 'TaxPromo'
@@ -1560,11 +1616,14 @@
             Width = 117
           end
           object ссSummaProfit_Condition: TcxGridDBColumn
-            Caption = #1055#1088#1080#1073#1099#1083#1100' ('#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103')'
+            Caption = #1055#1088#1080#1073#1099#1083#1100', '#1075#1088#1085
             DataBinding.FieldName = 'SummaProfit_Condition'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 167
+            Options.Editing = False
+            Width = 125
           end
           object ссColor_PriceIn: TcxGridDBColumn
             DataBinding.FieldName = 'Color_PriceIn'
@@ -2433,7 +2492,7 @@
       Width = 97
     end
     object cbisTaxPromo: TcxCheckBox
-      Left = 1287
+      Left = 1165
       Top = 45
       Caption = '% '#1089#1082#1080#1076#1082#1080
       Properties.ReadOnly = True
@@ -2441,7 +2500,7 @@
       Width = 74
     end
     object cbisTaxPromo_Condition: TcxCheckBox
-      Left = 1171
+      Left = 1245
       Top = 45
       Caption = '% '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
       Properties.ReadOnly = True
@@ -2547,7 +2606,26 @@
   end
   inherited ActionList: TActionList
     Top = 311
-    object actInsertRecordPromoStateKind: TInsertRecord [0]
+    object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [0]
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_isTaxPromo
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_isTaxPromo
+        end
+        item
+          StoredProc = spSelectCalc
+        end
+        item
+          StoredProc = spSelectCalc2
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090') / % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' % '#1057#1082#1080#1076#1082#1080' ('#1044#1072'/'#1053#1077#1090') / % '#1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 27
+    end
+    object actInsertRecordPromoStateKind: TInsertRecord [1]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2559,7 +2637,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 0
     end
-    object actRefresh_Get: TdsdDataSetRefresh [1]
+    object actRefresh_Get: TdsdDataSetRefresh [2]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spGet
@@ -2576,7 +2654,7 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actMISetErasedPromoStateKind: TdsdUpdateErased [2]
+    object actMISetErasedPromoStateKind: TdsdUpdateErased [3]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2590,11 +2668,12 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PromoStateKindDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1057#1086#1089#1090#1086#1103#1085#1080#1077'> ?'
     end
-    object actUpdate_Movement_Promo_Calc: TdsdExecStoredProc [3]
+    object actUpdate_Movement_Promo_Calc: TdsdExecStoredProc [4]
       Category = 'Update_Promo_Data'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2606,7 +2685,7 @@
       Caption = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
     end
-    object actMISetUnErasedPromoStateKind: TdsdUpdateErased [4]
+    object actMISetUnErasedPromoStateKind: TdsdUpdateErased [5]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2620,11 +2699,12 @@
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PromoStateKindDS
     end
-    object mactUpdate_Movement_Promo_Calc: TMultiAction [5]
+    object mactUpdate_Movement_Promo_Calc: TMultiAction [6]
       Category = 'Update_Promo_Data'
       TabSheet = cxTabSheetCalc
       MoveParams = <>
@@ -2640,7 +2720,7 @@
       Hint = #1056#1072#1089#1095#1077#1090' '#1076#1072#1085#1085#1099#1093' ('#1082#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088')'
       ImageIndex = 42
     end
-    object actInsertUpdateMISignNo: TdsdExecStoredProc [6]
+    object actInsertUpdateMISignNo: TdsdExecStoredProc [7]
       Category = 'Sign'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2655,7 +2735,7 @@
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100
     end
-    object actUpdatePromoStateKindDS: TdsdUpdateDataSet [7]
+    object actUpdatePromoStateKindDS: TdsdUpdateDataSet [8]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2670,7 +2750,7 @@
       Caption = 'actUpdatePromoStateKindDS'
       DataSource = PromoStateKindDS
     end
-    object actUpdateCalcDS2: TdsdUpdateDataSet [8]
+    object actUpdateCalcDS2: TdsdUpdateDataSet [9]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2691,7 +2771,7 @@
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS2
     end
-    object actUpdatePlanDS: TdsdUpdateDataSet [9]
+    object actUpdatePlanDS: TdsdUpdateDataSet [10]
       Category = 'Plan'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2745,7 +2825,7 @@
           StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object mactInsertUpdateMISignNo: TMultiAction [11]
+    object mactInsertUpdateMISignNo: TMultiAction [12]
       Category = 'Sign'
       MoveParams = <>
       ActionList = <
@@ -2759,7 +2839,7 @@
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1076#1083#1103' '#1044#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 52
     end
-    object actUpdateDataSetMessage: TdsdUpdateDataSet [12]
+    object actUpdateDataSetMessage: TdsdUpdateDataSet [13]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2774,7 +2854,7 @@
       Caption = 'actUpdateDataSetMessage'
       DataSource = MessageDS
     end
-    object InsertRecord: TInsertRecord [14]
+    object InsertRecord: TInsertRecord [15]
       Category = 'Goods'
       TabSheet = tsMain
       MoveParams = <>
@@ -2786,7 +2866,7 @@
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ImageIndex = 0
     end
-    object actUpdateCalcDS: TdsdUpdateDataSet [15]
+    object actUpdateCalcDS: TdsdUpdateDataSet [16]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2807,7 +2887,7 @@
       Caption = 'actUpdateCalcDS'
       DataSource = CalcDS
     end
-    object actOpenProtocoPromoStateKind: TdsdOpenForm [16]
+    object actOpenProtocoPromoStateKind: TdsdOpenForm [17]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2852,9 +2932,11 @@
       ShortCut = 0
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1058#1086#1074#1072#1088'> ?'
     end
-    object actPrint_Calc: TdsdPrintAction [18]
+    object actPrint_Calc: TdsdPrintAction [19]
       Category = 'DSDLib'
+      TabSheet = cxTabSheetCalc
       MoveParams = <>
+      Enabled = False
       StoredProcList = <>
       Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
       Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
@@ -2909,6 +2991,65 @@
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_Calc2: TdsdPrintAction [20]
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetCalc2
+      MoveParams = <>
+      Enabled = False
+      StoredProcList = <>
+      Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ImageIndex = 15
+      DataSets = <
+        item
+          UserName = 'frxHead'
+          IndexFieldNames = 'GroupNum;GoodsName;Num'
+          GridView = cxGridDBTableViewCalc2
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = ''
+          Component = edInvNumber
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = ''
+          Component = edComment
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentMain'
+          Value = ''
+          Component = edCommentMain
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo'
+          Value = 'False'
+          Component = cbisTaxPromo
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isTaxPromo_Condition'
+          Value = 'False'
+          Component = cbisTaxPromo_Condition
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.Value = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     inherited actMISetUnErased: TdsdUpdateErased
       Category = 'Goods'
       TabSheet = tsMain
@@ -2922,7 +3063,7 @@
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 0
     end
-    object actUpdateConditionDS: TdsdUpdateDataSet [20]
+    object actUpdateConditionDS: TdsdUpdateDataSet [22]
       Category = 'Condition'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2936,7 +3077,7 @@
       Caption = 'actUpdateMainDS'
       DataSource = ConditionPromoDS
     end
-    object actOpenProtocoPromoStateKind1: TdsdOpenForm [21]
+    object actOpenProtocoPromoStateKind1: TdsdOpenForm [23]
       Category = 'PromoStateKind'
       TabSheet = tsMain
       MoveParams = <>
@@ -2992,7 +3133,7 @@
           StoredProc = spSelectMIPromoStateKind
         end>
     end
-    object macInsertUpdate_MI_Param: TMultiAction [24]
+    object macInsertUpdate_MI_Param: TMultiAction [26]
       Category = 'Update_MI_Param'
       TabSheet = tsMain
       MoveParams = <>
@@ -3017,7 +3158,7 @@
         item
         end>
     end
-    object actInsertUpdate_MI_Param: TdsdExecStoredProc [27]
+    object actInsertUpdate_MI_Param: TdsdExecStoredProc [29]
       Category = 'Update_MI_Param'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3064,7 +3205,7 @@
       ReportName = #1040#1082#1094#1080#1103
       ReportNameParam.Value = #1040#1082#1094#1080#1103
     end
-    object actPromoStateKindChoice: TOpenChoiceForm [31]
+    object actPromoStateKindChoice: TOpenChoiceForm [33]
       Category = 'PromoStateKind'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -3094,7 +3235,7 @@
     inherited MovementItemProtocolOpenForm: TdsdOpenForm
       TabSheet = tsMain
     end
-    object actPartnerProtocolOpenForm: TdsdOpenForm [35]
+    object actPartnerProtocolOpenForm: TdsdOpenForm [37]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3125,7 +3266,7 @@
         end>
       isShowModal = False
     end
-    object actConditionPromoProtocolOpenForm: TdsdOpenForm [36]
+    object actConditionPromoProtocolOpenForm: TdsdOpenForm [38]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3156,7 +3297,7 @@
         end>
       isShowModal = False
     end
-    object actAdvertisingProtocolOpenForm: TdsdOpenForm [37]
+    object actAdvertisingProtocolOpenForm: TdsdOpenForm [39]
       Category = 'DSDLib'
       TabSheet = tsMain
       MoveParams = <>
@@ -3317,6 +3458,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = PartnerDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'> ?'
@@ -3332,9 +3474,10 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1055#1072#1088#1090#1085#1077#1088#1072'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = PartnerDS
@@ -3437,6 +3580,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ConditionPromoDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'> ?'
@@ -3452,9 +3596,10 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <% '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1081' '#1089#1082#1080#1076#1082#1080'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ConditionPromoDS
@@ -3579,6 +3724,7 @@
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = AdvertisingDS
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1076#1072#1083#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'> ?'
@@ -3594,9 +3740,10 @@
         end
         item
         end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1077#1082#1083#1072#1084#1085#1072#1103' '#1087#1086#1076#1076#1077#1088#1078#1082#1072'>'
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = AdvertisingDS
@@ -4120,6 +4267,14 @@
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocoPromoStateKind'
         end
         item
@@ -4146,6 +4301,10 @@
         item
           Visible = True
           ItemName = 'bbPrint_Calc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_Calc2'
         end
         item
           Visible = True
@@ -4269,6 +4428,14 @@
     end
     object bbProtocoPromoStateKind: TdxBarButton
       Action = actOpenProtocoPromoStateKind
+      Category = 0
+    end
+    object bbPrint_Calc2: TdxBarButton
+      Action = actPrint_Calc2
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actUpdate_Movement_isTaxPromo
       Category = 0
     end
   end
@@ -6062,6 +6229,7 @@
         ColorValueList = <>
       end
       item
+        ColorColumn = calcTaxRetIn
         BackGroundValueColumn = Color_RetIn
         ColorValueList = <>
       end
@@ -6093,6 +6261,11 @@
       item
         ColorColumn = calcSummaProfit
         BackGroundValueColumn = Color_SummaProfit
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = calcTaxPromo
+        BackGroundValueColumn = Color_PromoCond
         ColorValueList = <>
       end>
     ColumnAddOnList = <>
@@ -6705,6 +6878,11 @@
         ColorColumn = ссSummaProfit_Condition
         BackGroundValueColumn = ссColor_SummaProfit
         ColorValueList = <>
+      end
+      item
+        ColorColumn = ссTaxPromo_Condition
+        BackGroundValueColumn = ссColor_PromoCond
+        ColorValueList = <>
       end>
     ColumnAddOnList = <>
     ColumnEnterList = <
@@ -6877,8 +7055,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1150
-    Top = 168
+    Left = 1142
+    Top = 240
   end
   object spUnErasedPromoStateKind: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Promo_SetUnErased'
@@ -6955,5 +7133,44 @@
     object MenuItem23: TMenuItem
       Action = actRefresh
     end
+  end
+  object spUpdate_Movement_isTaxPromo: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Promo_TaxPromo'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisTaxPromo'
+        Value = Null
+        Component = cbisTaxPromo
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisTaxPromo'
+        Value = Null
+        Component = cbisTaxPromo
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisTaxPromo_Condition'
+        Value = Null
+        Component = cbisTaxPromo_Condition
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 912
+    Top = 392
   end
 end

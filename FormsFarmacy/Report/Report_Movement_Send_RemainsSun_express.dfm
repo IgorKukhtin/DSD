@@ -1,10 +1,10 @@
-inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressForm
+inherited Report_Movement_Send_RemainsSun_expressForm: TReport_Movement_Send_RemainsSun_expressForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1087#1088#1080#1093#1086#1076#1099')'
   ClientHeight = 563
   ClientWidth = 960
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 976
-  ExplicitHeight = 598
+  ExplicitHeight = 601
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1418,8 +1418,8 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_RemainsSun_expressDialogForm'
-      FormNameParam.Value = 'TReport_Send_RemainsSun_expressDialogForm'
+      FormName = 'TReport_Movement_Send_RemainsSun_expressDialogForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_expressDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1789,7 +1789,7 @@ inherited Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressFor
     Top = 200
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Send_RemainsSun_express'
+    StoredProcName = 'gpReport_Movement_Send_RemainsSun_express'
     DataSets = <
       item
         DataSet = MasterCDS

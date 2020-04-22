@@ -840,9 +840,9 @@ uses
   PromoCodeSignUnitNameDialog in '..\..\FormsFarmacy\Document\PromoCodeSignUnitNameDialog.pas' {PromoCodeSignUnitNameDialogForm: TParentForm},
   LocalWorkUnit in '..\..\SOURCE\LocalWorkUnit.pas',
   GoodsTopDialog in '..\..\FormsFarmacy\Guides\GoodsTopDialog.pas' {GoodsTopDialogForm: TParentForm},
-  Report_Send_RemainsSun_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_express.pas' {Report_Send_RemainsSun_expressForm: TParentForm},
-  Report_Send_RemainsSunOut_express in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express.pas' {Report_Send_RemainsSunOut_expressForm: TParentForm},
-  Report_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressDialog.pas' {Report_Send_RemainsSun_expressDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSun_express in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_express.pas' {Report_Movement_Send_RemainsSun_expressForm: TParentForm},
+  Report_Movement_Send_RemainsSunOut_express in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut_express.pas' {Report_Movement_Send_RemainsSunOut_expressForm: TParentForm},
+  Report_Movement_Send_RemainsSun_expressDialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_expressDialog.pas' {Report_Movement_Send_RemainsSun_expressDialogForm: TParentForm},
   SeasonalityCoefficientEdit in '..\..\FormsFarmacy\Guides\SeasonalityCoefficientEdit.pas' {SeasonalityCoefficientForm: TParentForm},
   Report_PharmacyPerformanceDialog in '..\..\FormsFarmacy\Report\Report_PharmacyPerformanceDialog.pas' {Report_PharmacyPerformanceDialogForm: TParentForm},
   Report_PharmacyPerformance in '..\..\FormsFarmacy\Report\Report_PharmacyPerformance.pas' {Report_PharmacyPerformanceForm: TParentForm},
@@ -856,9 +856,10 @@ uses
   IncomeOperDataDialog in '..\..\FormsFarmacy\Document\IncomeOperDataDialog.pas' {IncomeOperDataDialogForm: TParentForm},
   Hardware in '..\..\FormsFarmacy\Guides\Hardware.pas' {HardwareForm: TParentForm},
   HardwareEdit in '..\..\FormsFarmacy\Guides\HardwareEdit.pas' {HardwareEditForm: TParentForm},
-  Report_Send_RemainsSunOut_express_v2 in '..\..\FormsFarmacy\Report\Report_Send_RemainsSunOut_express_v2.pas' {Report_Send_RemainsSunOut_express_v2Form: TParentForm},
-  Report_Send_RemainsSun_expressV2Dialog in '..\..\FormsFarmacy\Report\Report_Send_RemainsSun_expressV2Dialog.pas' {Report_Send_RemainsSun_expressV2DialogForm: TParentForm},
-  PersentSalaryDialog in '..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas' {PersentSalaryDialogForm: TParentForm};
+  Report_Movement_Send_RemainsSunOut_express_v2 in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut_express_v2.pas' {Report_Movement_Send_RemainsSunOut_express_v2Form: TParentForm},
+  Report_Movement_Send_RemainsSun_expressV2Dialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_expressV2Dialog.pas' {Report_Movement_Send_RemainsSun_expressV2DialogForm: TParentForm},
+  PersentSalaryDialog in '..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas' {PersentSalaryDialogForm: TParentForm},
+  Report_Movement_Send_RemainsSun_pi in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_pi.pas' {Report_Movement_Send_RemainsSun_piForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

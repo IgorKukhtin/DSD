@@ -1096,7 +1096,7 @@ object JuridicalForm: TJuridicalForm
     Top = 136
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_Juridical'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1109,8 +1109,8 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 184
+    Left = 96
+    Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1137,8 +1137,8 @@ object JuridicalForm: TJuridicalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 208
-    Top = 184
+    Left = 248
+    Top = 272
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Juridical_Params'

@@ -1,4 +1,4 @@
-unit Report_Send_RemainsSun_express;
+unit Report_Movement_Send_RemainsSun_pi;
 
 interface
 
@@ -28,7 +28,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TReport_Send_RemainsSun_expressForm = class(TAncestorReportForm)
+  TReport_Movement_Send_RemainsSun_piForm = class(TAncestorReportForm)
     rdUnit: TRefreshDispatcher;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
@@ -42,26 +42,23 @@ type
     cxGridDBTableViewPartion: TcxGridDBTableView;
     chFromName: TcxGridDBColumn;
     chToName: TcxGridDBColumn;
-    chAmount_res: TcxGridDBColumn;
-    chSumm_res: TcxGridDBColumn;
+    chAmount: TcxGridDBColumn;
+    chSumm: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     DBViewAddOn_Partion: TdsdDBViewAddOn;
     PartionCDS: TClientDataSet;
     PartionDS: TDataSource;
     cxSplitter1: TcxSplitter;
-    spSendSUN: TdsdStoredProc;
-    actSendSUN: TdsdExecStoredProc;
-    macSendSUN: TMultiAction;
     bbSendSUN: TdxBarButton;
     Amount_res: TcxGridDBColumn;
     Summ_res: TcxGridDBColumn;
-    chAmountRemains_calc: TcxGridDBColumn;
-    chAmountSun_summ: TcxGridDBColumn;
+    Amount_notSold_summ: TcxGridDBColumn;
+    chAmount_notSold_summ: TcxGridDBColumn;
+    chAmountResult: TcxGridDBColumn;
     chAmountRemains: TcxGridDBColumn;
     chPrice: TcxGridDBColumn;
     chMCS: TcxGridDBColumn;
     chAmount_sale: TcxGridDBColumn;
-    chAmountIncome: TcxGridDBColumn;
     actOpenReportPartionHistoryForm: TdsdOpenForm;
     actOpenReportPartionDateForm: TdsdOpenForm;
     bbReportPartionDate: TdxBarButton;
@@ -76,10 +73,9 @@ type
     chAmountReserve: TcxGridDBColumn;
     chAmountSend_in: TcxGridDBColumn;
     chAmountSend_out: TcxGridDBColumn;
-    chSumm_sale: TcxGridDBColumn;
-    AmountRemains_calc: TcxGridDBColumn;
-    chAmountRemains_calc_all: TcxGridDBColumn;
-    chAmountOrderExternal: TcxGridDBColumn;
+    spSendSUN: TdsdStoredProc;
+    actSendSUN: TdsdExecStoredProc;
+    mactSendSUN: TMultiAction;
   private
     { Private declarations }
   public
@@ -87,7 +83,7 @@ type
   end;
 
 var
-  Report_Send_RemainsSun_expressForm: TReport_Send_RemainsSun_expressForm;
+  Report_Movement_Send_RemainsSun_piForm: TReport_Movement_Send_RemainsSun_piForm;
 
 implementation
 
@@ -95,5 +91,5 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_Send_RemainsSun_expressForm)
+  RegisterClass(TReport_Movement_Send_RemainsSun_piForm)
 end.

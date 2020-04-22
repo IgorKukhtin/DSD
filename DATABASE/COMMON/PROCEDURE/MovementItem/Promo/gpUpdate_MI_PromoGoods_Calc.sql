@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_MI_PromoGoods_Calc(
 )
 RETURNS  void
 AS 
-$BODY$
+$BODY$ 
    DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры

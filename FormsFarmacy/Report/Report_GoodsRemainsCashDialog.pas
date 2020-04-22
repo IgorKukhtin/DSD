@@ -13,6 +13,7 @@ uses
 
 type
   TReport_GoodsRemainsCashDialogForm = class(TReport_GoodsRemainsDialogForm)
+    spGet_OperDate: TdsdStoredProc;
   private
     { Private declarations }
   public

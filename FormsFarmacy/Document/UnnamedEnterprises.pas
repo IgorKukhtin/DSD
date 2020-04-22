@@ -85,6 +85,7 @@ type
     actPrintXLSScope: TMultiAction;
     actPrintScopeXLS: TdsdExportToXLS;
     PriceUnit: TcxGridDBColumn;
+    actChoiceNDSKind: TOpenChoiceForm;
   private
     { Private declarations }
   public

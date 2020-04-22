@@ -1,4 +1,4 @@
-inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_express_v2Form
+inherited Report_Movement_Send_RemainsSunOut_express_v2Form: TReport_Movement_Send_RemainsSunOut_express_v2Form
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1102' '#1057#1059#1053'-'#1069#1082#1089#1087#1088#1077#1089#1089'> ('#1088#1072#1089#1093#1086#1076#1099') V2'
   ClientHeight = 673
   ClientWidth = 859
@@ -1183,8 +1183,8 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TReport_Send_RemainsSun_expressV2DialogForm'
-      FormNameParam.Value = 'TReport_Send_RemainsSun_expressV2DialogForm'
+      FormName = 'TReport_Movement_Send_RemainsSun_expressV2DialogForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_expressV2DialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -1603,7 +1603,7 @@ inherited Report_Send_RemainsSunOut_express_v2Form: TReport_Send_RemainsSunOut_e
     Top = 384
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Send_RemainsSun_express_v2'
+    StoredProcName = 'gpReport_Movement_Send_RemainsSun_express_v2'
     DataSets = <
       item
         DataSet = MasterCDS

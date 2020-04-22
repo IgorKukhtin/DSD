@@ -1,4 +1,4 @@
-object Report_Send_RemainsSun_expressDialogForm: TReport_Send_RemainsSun_expressDialogForm
+object Report_Movement_Send_RemainsSun_expressDialogForm: TReport_Movement_Send_RemainsSun_expressDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog

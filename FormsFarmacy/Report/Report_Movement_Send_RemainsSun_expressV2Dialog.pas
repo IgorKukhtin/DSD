@@ -1,4 +1,4 @@
-unit Report_Send_RemainsSun_expressDialog;
+unit Report_Movement_Send_RemainsSun_expressV2Dialog;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   dxSkinsDefaultPainters, cxCheckBox;
 
 type
-  TReport_Send_RemainsSun_expressDialogForm = class(TParentForm)
+  TReport_Movement_Send_RemainsSun_expressV2DialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     deOperDate: TcxDateEdit;
@@ -20,6 +20,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
     cxLabel6: TcxLabel;
+    cxLabel3: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GuidesGoods: TdsdGuides;
   private
     { Private declarations }
   public
@@ -31,6 +34,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TReport_Send_RemainsSun_expressDialogForm);
+  RegisterClass(TReport_Movement_Send_RemainsSun_expressV2DialogForm);
 
 end.

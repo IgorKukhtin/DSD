@@ -87,11 +87,16 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           object NDS: TcxGridDBColumn
             Caption = #1053#1076#1089
             DataBinding.FieldName = 'NDS'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.## %'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceNDSKind
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 35
           end
           object AmountRemains: TcxGridDBColumn
@@ -514,6 +519,9 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       ItemsDataSet = PrintItemsCDS
       TitleDataSet = PrintHeaderCDS
       FileName = 'CommercialOffer'
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 3.000000000000000000
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
@@ -538,6 +546,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 5
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1050#1086#1076
@@ -551,6 +560,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 7
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -564,6 +574,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Width = 44
           WrapText = True
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skText
           KindText = #1048#1090#1086#1075#1086':'
         end
@@ -579,6 +590,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 9
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skSumma
         end
         item
@@ -593,6 +605,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 9
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1057#1091#1084#1084#1072
@@ -612,6 +625,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             item
               FieldName = 'Price'
             end>
+          DetailedTexts = <>
           Kind = skSumma
         end>
       Caption = 'actPrintXLS'
@@ -645,6 +659,9 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
       MoveParams = <>
       ItemsDataSet = PrintItemsCDS
       FileName = 'Scope'
+      FileNameParam.Value = ''
+      FileNameParam.DataType = ftString
+      FileNameParam.MultiSelectSeparator = ','
       TitleHeight = 1.000000000000000000
       Orientation = orLandscape
       TitleFont.Charset = DEFAULT_CHARSET
@@ -670,6 +687,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 6
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
@@ -683,6 +701,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Width = 31
           WrapText = True
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1054#1076
@@ -696,6 +715,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Width = 4
           WrapText = True
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skText
           KindText = #1048#1090#1086#1075#1086':'
         end
@@ -711,6 +731,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 8
           CalcColumnLists = <>
+          DetailedTexts = <>
           Kind = skSumma
         end
         item
@@ -725,6 +746,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 8
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1057#1091#1084#1084#1072
@@ -744,6 +766,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             item
               FieldName = 'Price'
             end>
+          DetailedTexts = <>
           Kind = skSumma
         end
         item
@@ -757,6 +780,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           WrapText = True
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1044#1057
@@ -769,6 +793,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 4
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1082#1086#1084#1087#1072#1085#1080#1080
@@ -781,6 +806,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 12
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1054#1050#1055#1054
@@ -793,6 +819,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 9
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1048#1053#1053
@@ -805,6 +832,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 9
           CalcColumnLists = <>
+          DetailedTexts = <>
         end
         item
           Caption = #1040#1076#1088#1077#1089' '#1082#1086#1084#1087#1072#1085#1080#1080
@@ -817,8 +845,44 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
           Font.Style = []
           Width = 12
           CalcColumnLists = <>
+          DetailedTexts = <>
         end>
       Caption = 'actPrintScopeXLS'
+    end
+    object actChoiceNDSKind: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceNDSKind'
+      FormName = 'TNDSKindForm'
+      FormNameParam.Value = 'TNDSKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'NDSKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NDSKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1379,6 +1443,14 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'ExchangeId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDSKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDSKindId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

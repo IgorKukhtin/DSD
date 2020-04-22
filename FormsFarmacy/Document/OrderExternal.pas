@@ -99,6 +99,7 @@ type
     actPUSHInfo: TdsdShowPUSHMessage;
     spPUSHError: TdsdStoredProc;
     cbDifferent: TcxCheckBox;
+    NDS_PriceList: TcxGridDBColumn;
   private
     { Private declarations }
   public

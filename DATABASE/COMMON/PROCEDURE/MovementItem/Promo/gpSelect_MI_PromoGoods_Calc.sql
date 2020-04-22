@@ -17,6 +17,7 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       
       , GoodsKindName           TVarChar --Наименование обьекта <Вид товара>
       , GoodsKindCompleteName   TVarChar --Наименование обьекта <Вид товара(примечание)>
+      , MeasureName             TVarChar -- ед.изм
 
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
       --, AmountRetIn             TFloat --Кол-во возврат грн/кг
@@ -24,8 +25,9 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , TaxRetIn                TFloat --
       , TaxPromo                TFloat --
       , TaxPromo_Condition      TFloat --
-      , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (в кг)
-      , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период (в кг)
+      , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (шт)
+      , AmountSaleWeight        TFloat -- вес
+      , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период 
       , Price                   TFloat --Цена в прайсе
       , PriceWithVAT            TFloat --Цена отгрузки с учетом НДС, с учетом скидки, грн
       , PromoCondition          TFloat --
@@ -49,6 +51,8 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbTaxPromo Boolean;
+    DECLARE vbVAT TFloat;
+    DECLARE vbPriceList Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PromoGoods());
@@ -58,7 +62,18 @@ BEGIN
                    WHERE MovementBoolean.MovementId = inMovementId
                      AND MovementBoolean.DescId = zc_MovementBoolean_TaxPromo()
                    ) :: Boolean;
+    
 
+    --узнали прайслист
+    SELECT COALESCE(Movement_Promo.PriceListId,zc_PriceList_Basis())
+    INTO vbPriceList
+    FROM Movement_Promo_View AS Movement_Promo
+    WHERE Movement_Promo.Id = inMovementId;
+    --вытащили значение "с НДС" и "значение НДС"
+    SELECT PriceList.VATPercent
+    INTO vbVAT
+    FROM gpGet_Object_PriceList (vbPriceList,inSession) as PriceList;
+        
  /*   IF inIsTaxPromo <> vbTaxPromo
     THEN
         RETURN;
@@ -67,7 +82,7 @@ BEGIN
     RETURN QUERY
     WITH
     ---- Значение (% скидки / % компенсации)
-    tmpMIChild AS (SELECT MovementItem.Amount        -- Значение (% скидки / % компенсации)
+    tmpMIChild AS (SELECT SUM (MovementItem.Amount) AS Amount        -- Значение (% скидки / % компенсации)
                    FROM  MovementItem
                    WHERE MovementItem.MovementId = inMovementId 
                      AND MovementItem.DescId = zc_MI_Child()
@@ -85,12 +100,17 @@ BEGIN
                      
                      , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
                      , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
-                     , MIFloat_Price.ValueData                AS Price                  --Цена в прайсе
+                     --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
+                     , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2) :: TFloat  AS Price                  --Цена в прайсе c НДС
+                     
                      , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                
                      , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
-                     , (MIFloat_AmountSale.ValueData * MIFloat_PriceWithVAT.ValueData)
-                                                              AS SummaSale           --сумма плана продаж
+                     , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE 
+                            THEN (MIFloat_Price.ValueData * (100-MIFloat_TaxPromo.ValueData) /100)*MIFloat_AmountSale.ValueData
+                            ELSE (MIFloat_AmountSale.ValueData * MIFloat_Price.ValueData)
+                       END AS SummaSale           --сумма плана продаж
+
                      --, MIFloat_AmountRetIn.ValueData          AS AmountRetIn            --Кол-во возврат (факт)
                     /* , CAST (CASE WHEN COALESCE (MIFloat_AmountReal.ValueData, 0) <> 0 
                             THEN MIFloat_AmountRetIn.ValueData * 100 / MIFloat_AmountReal.ValueData
@@ -103,6 +123,8 @@ BEGIN
                      , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
                      
                      , (MIFloat_PriceWithVAT.ValueData * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
+                     
+                     , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord
 
                 FROM MovementItem
                      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -116,7 +138,8 @@ BEGIN
              
                      LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
                                                  ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                                                AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
+                                                
                                    
                       LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
                                                   ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
@@ -179,13 +202,13 @@ BEGIN
 
                                
                          , zc_Color_White()          AS Color_PriceIn
-                         , 16764159                  AS Color_RetIn
-                         , 11658012                  AS Color_ContractCond
+                         , zc_Color_Yelow()          AS Color_RetIn
+                         , zc_Color_Yelow()          AS Color_ContractCond   ---11658012
                          , zc_Color_White()          AS Color_AmountSale
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
-                         , 11658012                  AS Color_PriceWithVAT
-                         , 11658012                  AS Color_PromoCond
+                         , zc_Color_White()          AS Color_PriceWithVAT   --11658012
+                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Плановая'                AS Text
                     FROM tmpData
@@ -200,38 +223,41 @@ BEGIN
 
                          , tmpData.PriceIn1            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * (100-tmpData.TaxPromo) /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
                          
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
                          , tmpData.Price  
                          , tmpData.PriceWithVAT
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
-                         , tmpData.SummaSale - (COALESCE (tmpData.PriceIn1, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                  ) 
+                         , tmpData.SummaSale
+                                               - (
+                                                   COALESCE (tmpData.PriceIn1, 0) 
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 ) 
                                                   * tmpData.AmountSale    AS SummaProfit               -- прибыль
 
                          , tmpData.SummaSale - (COALESCE (tmpData.PriceIn1, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
 
-                         , 11658012                    AS Color_PriceIn
+                         , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , 11658012                    AS Color_AmountSale
+                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_Yelow()            AS Color_SummaProfit
+                         , zc_Color_White()            AS Color_SummaProfit
+                         
                          , 'Плановая'                AS Text
                     FROM tmpData
                          LEFT JOIN tmpMIChild ON 1=1
@@ -259,14 +285,14 @@ BEGIN
                          , 0                         AS SummaProfit
                          , 0                         AS SummaProfit_Condition  
 
-                         , zc_Color_White()          AS Color_PriceIn 
-                         , 16764159                  AS Color_RetIn
-                         , 11658012                  AS Color_ContractCond
+                         , zc_Color_White()          AS Color_PriceIn
+                         , zc_Color_Yelow()          AS Color_RetIn          --16764159
+                         , zc_Color_Yelow()          AS Color_ContractCond   --11658012
                          , zc_Color_White()          AS Color_AmountSale
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
-                         , 11658012                  AS Color_PriceWithVAT
-                         , 11658012                  AS Color_PromoCond
+                         , zc_Color_White()          AS Color_PriceWithVAT   --11658012
+                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Фактическая'             AS Text
                     FROM tmpData
@@ -281,38 +307,41 @@ BEGIN
 
                          , tmpData.PriceIn2            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS ContractCondition
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * (100-tmpData.TaxPromo) /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
-
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
+                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         
                          , tmpData.AmountSale       AS AmountSale
-                         , tmpData.SummaSale        AS SummaSale
+                         , tmpData.SummaSale
                          , tmpData.Price               AS Price
                          , tmpData.PriceWithVAT        AS PriceWithVAT
                          , tmpData.PriceWithVAT * tmpData.PromoCondition / 100  AS PromoCondition         --  Компенсация по доп.счету, грн/кг
-                         , tmpData.SummaSale - (COALESCE (tmpData.PriceIn2, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
+                         , tmpData.SummaSale
+                                               - (
+                                                   COALESCE (tmpData.PriceIn2, 0) 
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
-                                                 * tmpData.AmountSale    AS SummaProfit               -- прибыль
+                                                  * tmpData.AmountSale    AS SummaProfit               -- прибыль
 
                          , tmpData.SummaSale - (COALESCE (tmpData.PriceIn2, 0) 
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2))
-                                                 + CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxRetIn /100) / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.ContractCondition /100) / tmpData.AmountSale ELSE 0 END, 0)
+                                                 + COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.TaxPromo /100) / tmpData.AmountSale ELSE 0 END, 0)
                                                  ) 
                                                  * tmpData.AmountSale    AS SummaProfit_Condition     -- прибыль (закладка компенсации)
                          
-                         , 11658012                    AS Color_PriceIn
+                         , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , 11658012                    AS Color_AmountSale
+                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
-                         , 11658012                    AS Color_Price 
+                         , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_Yelow()            AS Color_SummaProfit
+                         , zc_Color_White()            AS Color_SummaProfit
+                         
                          , 'Фактическая'               AS Text
                     FROM tmpData
                   UNION
@@ -337,6 +366,7 @@ BEGIN
                          , 0                AS PromoCondition         --  Компенсация по доп.счету, грн/кг
                          , 0                AS SummaProfit                 -- прибыль
                          , 0                AS SummaProfit_Condition
+
                          , zc_Color_White() AS Color_PriceIn
                          , zc_Color_White() AS Color_RetIn
                          , zc_Color_White() AS Color_ContractCond
@@ -348,6 +378,7 @@ BEGIN
                          , zc_Color_White() AS Color_SummaProfit
                          , ''               AS Text
                     FROM tmpData
+                    WHERE tmpData.Ord <> 1
                    )   
                    
     -- результат
@@ -362,6 +393,7 @@ BEGIN
          , tmpData_All.GoodsName               ::TVarChar  
          , tmpData_All.GoodsKindName           ::TVarChar
          , tmpData_All.GoodsKindCompleteName   ::TVarChar
+         , Object_Measure.ValueData            ::TVarChar AS MeasureName             --Единица измерения
 
          , tmpData_All.PriceIn                 :: TFloat
         -- , tmpData_All.AmountRetIn             :: TFloat
@@ -370,6 +402,8 @@ BEGIN
          , tmpData_All.TaxPromo                :: TFloat
          , tmpData_All.TaxPromo_Condition      :: TFloat
          , tmpData_All.AmountSale              :: TFloat
+         , (tmpData_All.AmountSale
+            * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес
          , tmpData_All.SummaSale               :: TFloat
          , tmpData_All.Price                   :: TFloat
          , tmpData_All.PriceWithVAT            :: TFloat
@@ -390,6 +424,14 @@ BEGIN
          , tmpData_All.Color_SummaProfit
          , tmpData_All.Text                    ::TVarChar
     FROM tmpData_All
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                              ON ObjectLink_Goods_Measure.ObjectId = tmpData_All.GoodsId
+                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+         LEFT OUTER JOIN ObjectFloat AS ObjectFloat_Goods_Weight
+                                     ON ObjectFloat_Goods_Weight.ObjectId = tmpData_All.GoodsId
+                                    AND ObjectFloat_Goods_Weight.DescId = zc_ObjectFloat_Goods_Weight()
     WHERE inIsTaxPromo = vbTaxPromo OR vbTaxPromo IS NULL
     ORDER BY  tmpData_All.Id, tmpData_All.NUM 
    ;
@@ -401,6 +443,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.
+ 21.04.20         *
  30.11.17         *
  03.08.17         *
 */

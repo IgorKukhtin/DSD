@@ -10,7 +10,8 @@ uses
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPCdxBarPopupMenu, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, ParentForm;
+  dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus, ParentForm,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TNDSKindForm = class(TAncestorEnumForm)
@@ -30,4 +31,3 @@ initialization
 
 end.
 
-    cxGridDBTableViewColumn1: TcxGridDBColumn;

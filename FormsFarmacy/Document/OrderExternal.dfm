@@ -4,7 +4,7 @@ inherited OrderExternalForm: TOrderExternalForm
   ClientWidth = 821
   AddOnFormData.PUSHMessage = actPUSHInfo
   ExplicitWidth = 837
-  ExplicitHeight = 650
+  ExplicitHeight = 649
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -129,6 +129,18 @@ inherited OrderExternalForm: TOrderExternalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 210
+          end
+          object NDS_PriceList: TcxGridDBColumn
+            Caption = #1053#1044#1057' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'NDS_PriceList'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1053#1044#1057' ('#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            Options.Editing = False
+            Width = 55
           end
           object Amount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -785,6 +797,7 @@ inherited OrderExternalForm: TOrderExternalForm
         MultiSelectSeparator = ','
       end
       item
+        Value = Null
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
@@ -1431,7 +1444,7 @@ inherited OrderExternalForm: TOrderExternalForm
   end
   inherited spGetTotalSumm: TdsdStoredProc
     Left = 420
-    Top = 236
+    Top = 300
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null

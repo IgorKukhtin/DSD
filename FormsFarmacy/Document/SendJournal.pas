@@ -85,6 +85,10 @@ type
     spUnCompleteView: TdsdStoredProc;
     dxBarButton3: TdxBarButton;
     NumberSeats: TcxGridDBColumn;
+    actUpdate_NotDisplaySUN_Yes: TMultiAction;
+    spUpdate_NotDisplaySUN_Yes: TdsdStoredProc;
+    actExecUpdate_NotDisplaySUN_Yes: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
   private
     { Private declarations }
   public
