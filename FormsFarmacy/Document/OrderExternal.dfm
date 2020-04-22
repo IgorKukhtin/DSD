@@ -130,9 +130,9 @@ inherited OrderExternalForm: TOrderExternalForm
             Options.Editing = False
             Width = 210
           end
-          object GoodsNDS: TcxGridDBColumn
-            Caption = #1053#1044#1057
-            DataBinding.FieldName = 'GoodsNDS'
+          object NDS_PriceList: TcxGridDBColumn
+            Caption = #1053#1044#1057' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'NDS_PriceList'
             FooterAlignmentHorz = taCenter
             GroupSummaryAlignment = taCenter
             HeaderAlignmentHorz = taCenter

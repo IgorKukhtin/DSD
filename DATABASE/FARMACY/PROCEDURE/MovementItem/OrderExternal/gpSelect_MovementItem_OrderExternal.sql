@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
              , RetailName TVarChar, AreaName TVarChar
-             , GoodsNDS TVarChar
+             , NDS_PriceList TVarChar
              , Amount TFloat, Price TFloat, Summ TFloat
              , PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
@@ -172,7 +172,7 @@ BEGIN
                                      , LoadPriceListItem.GoodsId
                                      , LoadPriceListItem.ProducerName
                                      , PartnerGoods.Id AS PartnerGoodsId
-                                     , ROW_NUMBER() OVER (PARTITION BY LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                     , ROW_NUMBER() OVER (PARTITION BY PartnerGoods.Id ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
                                 FROM LoadPriceList
                                      LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
                          
@@ -195,10 +195,11 @@ BEGIN
            , tmpMI.PartnerGoodsCode
            , Object_Retail.ValueData    AS RetailName
            , Object_Area.ValueData      AS AreaName
+           , CASE WHEN COALESCE (tmpLoadPriceList.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList.GoodsNDS,'') ELSE '' END  :: TVarChar  AS NDS_PriceList                                                               -- НДС из прайса поставщика
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
            , tmpMI.Summ ::TFloat        AS Summ
-           , tmpLoadPriceList.GoodsNDS  :: TVarChar                                                                 -- НДС из прайса поставщика
+           
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased

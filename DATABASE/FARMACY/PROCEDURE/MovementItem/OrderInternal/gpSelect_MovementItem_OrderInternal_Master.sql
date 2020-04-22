@@ -21,6 +21,7 @@ RETURNS TABLE (Id                    Integer
              , NDSKindId             Integer
              , NDSKindName           TVarChar  -- 10
              , NDS                   TFloat
+             , NDS_PriceList         TVarChar
              , isClose               Boolean
              , isFirst               Boolean
              , isSecond              Boolean
@@ -683,6 +684,27 @@ BEGIN
                           GROUP BY MI_Income.ObjectId
                          )
 
+
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList_NDS AS (SELECT *
+                              FROM (SELECT LoadPriceListItem.CommonCode
+                                         , LoadPriceListItem.GoodsName
+                                         , LoadPriceListItem.GoodsNDS
+                                         , LoadPriceListItem.GoodsId
+                                         , PartnerGoods.Id AS PartnerGoodsId
+                                         , LoadPriceList.JuridicalId
+                                         , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                    FROM LoadPriceList
+                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                             
+                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+    
+                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                    ) AS tmp
+                              WHERE tmp.ORD = 1
+                              )
+                          
        -- Результат 1
        SELECT
              tmpMI.MovementItemId                                   AS Id
@@ -698,6 +720,8 @@ BEGIN
            , tmpMI.NDSKindName                                      AS NDSKindName
            , tmpMI.NDS                                              AS NDS
 
+           , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar             AS NDS_PriceList                      -- НДС из прайса поставщика
+           
            , tmpMI.isClose
            , tmpMI.isFirst
            , tmpMI.isSecond
@@ -716,7 +740,7 @@ BEGIN
            , tmpMI.Amount   ::TFloat                                AS Amount
            , COALESCE(MIFloat_Summ.ValueData, 0)  ::TFloat          AS Summ
            , COALESCE (tmpMI.isErased, FALSE)     ::Boolean         AS isErased
-           , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price            -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
+           , COALESCE (MIFloat_Price.ValueData,0) ::TFloat          AS Price              -- !!!на самом деле здесь zc_MIFloat_PriceFrom!!!
            , tmpMI.MinimumLot
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
@@ -880,6 +904,9 @@ BEGIN
 
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
+            
+            LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
+                                          AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
            ;
 
 
@@ -2180,6 +2207,26 @@ BEGIN
                    GROUP BY MI_Income.ObjectId
                   )
 
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList_NDS AS (SELECT *
+                              FROM (SELECT LoadPriceListItem.CommonCode
+                                         , LoadPriceListItem.GoodsName
+                                         , LoadPriceListItem.GoodsNDS
+                                         , LoadPriceListItem.GoodsId
+                                         , PartnerGoods.Id AS PartnerGoodsId
+                                         , LoadPriceList.JuridicalId
+                                         , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, PartnerGoods.Id ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                    FROM LoadPriceList
+                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                             
+                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+    
+                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                    ) AS tmp
+                              WHERE tmp.ORD = 1
+                              )
+
        -- Результат 1
        SELECT
              tmpMI.Id                                       AS Id
@@ -2194,6 +2241,7 @@ BEGIN
            , tmpMI.NDSKindId                                AS NDSKindId
            , tmpMI.NDSKindName                              AS NDSKindName
            , tmpMI.NDS                                      AS NDS
+           , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar     AS NDS_PriceList                      -- НДС из прайса поставщика
            , tmpMI.isClose                                  AS isClose
            , tmpMI.isFirst                                  AS isFirst
            , tmpMI.isSecond                                 AS isSecond
@@ -2321,6 +2369,7 @@ BEGIN
             --LEFT JOIN tmpOrderLast_10    ON tmpOrderLast_10.GoodsId    = tmpMI.GoodsId
             --LEFT JOIN tmpRepeat          ON tmpRepeat.GoodsId          = tmpMI.GoodsId
             LEFT JOIN tmpJuridicalArea   ON tmpJuridicalArea.JuridicalId = tmpMI.JuridicalId
+            
 
             -- торговая сеть
             LEFT JOIN tmpObjectLink_Object AS ObjectLink_Object
@@ -2330,6 +2379,10 @@ BEGIN
             --средняя цена
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
+
+            LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
+                                          AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
+                                          
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
@@ -3603,6 +3656,26 @@ BEGIN
                    GROUP BY MI_Income.ObjectId
                   )
 
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList_NDS AS (SELECT *
+                              FROM (SELECT LoadPriceListItem.CommonCode
+                                         , LoadPriceListItem.GoodsName
+                                         , LoadPriceListItem.GoodsNDS
+                                         , LoadPriceListItem.GoodsId
+                                         , PartnerGoods.Id AS PartnerGoodsId
+                                         , LoadPriceList.JuridicalId
+                                         , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                    FROM LoadPriceList
+                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                             
+                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+    
+                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                    ) AS tmp
+                              WHERE tmp.ORD = 1
+                              )
+
        -- Результат 1
        SELECT
              tmpMI.Id                                       AS Id
@@ -3617,6 +3690,7 @@ BEGIN
            , tmpMI.NDSKindId                                AS NDSKindId
            , tmpMI.NDSKindName                              AS NDSKindName
            , tmpMI.NDS                                      AS NDS
+           , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END   :: TVarChar    AS NDS_PriceList
            , tmpMI.isClose                                  AS isClose
            , tmpMI.isFirst                                  AS isFirst
            , tmpMI.isSecond                                 AS isSecond
@@ -3754,6 +3828,9 @@ BEGIN
             --средняя цена
             LEFT JOIN AVGIncome ON AVGIncome.ObjectId = tmpMI.GoodsId
             LEFT JOIN tmpGoodsCategory ON tmpGoodsCategory.GoodsId = tmpMI.GoodsId
+            
+            LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
+                                          AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
 
 /*            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
                                  ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
