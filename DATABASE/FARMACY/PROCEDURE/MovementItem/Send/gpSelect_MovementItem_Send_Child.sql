@@ -344,6 +344,14 @@ BEGIN
                                         , tmpMI_Child_ContainerId.Amount
                                    FROM tmpMI_Child_ContainerId
                                         )
+          , tmpContainerPD AS (SELECT Container.ParentId                                          AS ContainerId
+                                    , Max(Container.Id)                                           AS ContainerPDId
+                               FROM (SELECT DISTINCT tmpMIContainerAll.ContainerId FROM tmpMIContainerAll) AS ContainerAll
+                                    INNER JOIN Container ON Container.DescId = zc_Container_CountPartionDate()
+                                                        AND Container.WhereObjectId = vbUnitId
+                                                        AND Container.Id = ContainerAll.ContainerId
+                                                        AND Container.Amount > 0
+                               GROUP BY Container.ParentId)
          , tmpContainer AS (SELECT tmp.ContainerId
                                  , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
                                  , COALESCE (ObjectDate_Value.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
@@ -355,8 +363,11 @@ BEGIN
                                         WHEN ObjectDate_Value.ValueData <= vbDate_6  THEN zc_Enum_PartionDateKind_6()      -- Меньше 6 месяца
                                         WHEN ObjectDate_Value.ValueData > vbDate_6   THEN zc_Enum_PartionDateKind_Good()  END  AS PartionDateKindId                              -- Востановлен с просрочки
                             FROM (SELECT DISTINCT tmpMIContainerAll.ContainerId FROM tmpMIContainerAll) AS tmp
+                            
+                                 LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = tmp.ContainerId
+                                 
                                  LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
-                                                               ON CLO_PartionGoods.ContainerId = tmp.ContainerId
+                                                               ON CLO_PartionGoods.ContainerId = tmpContainerPD.ContainerPDId
                                                               AND CLO_PartionGoods.DescId      = zc_ContainerLinkObject_PartionGoods()
                                  LEFT OUTER JOIN ObjectDate AS ObjectDate_Value
                                                             ON ObjectDate_Value.ObjectId = CLO_PartionGoods.ObjectId
@@ -795,3 +806,4 @@ $BODY$
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16804677 ,  inSession := '3');
 
 -- select * from gpSelect_MovementItem_Send_Child(inMovementId := 16905503       ,  inSession := '3');
+

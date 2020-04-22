@@ -1,8 +1,10 @@
 -- Function: gpGet_PUSH_Farmacy(TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_PUSH_Farmacy(TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_PUSH_Farmacy(TVarChar);
+DROP FUNCTION IF EXISTS gpGet_PUSH_Farmacy(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_PUSH_Farmacy(
+    IN inNumberPUSH  Integer,       -- Порядковый номер вызова
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Text TBlob,
@@ -16,6 +18,7 @@ $BODY$
    DECLARE vbMovementID Integer;
    DECLARE vbEmployeeShow Boolean;
    DECLARE vbPositionID Integer;
+   DECLARE vbText  Text;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -252,6 +255,59 @@ BEGIN
       END IF;
    END IF;
 
+   IF inNumberPUSH = 1 AND vbUserId IN (3, 758920)
+   THEN
+      WITH tmpCheckAll AS (
+              SELECT Movement.ID                                                             AS ID
+                   , Movement.OperDate                                                       AS OperDate
+                   , MovementLinkObject_Unit.ObjectId                                        AS UnitId
+                   , MLO_Insert.ObjectId                                                     AS UserID
+              FROM Movement
+
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                 ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+
+                   LEFT JOIN MovementLinkObject AS MLO_Insert
+                                                ON MLO_Insert.MovementId = Movement.Id
+                                               AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()
+
+                   LEFT JOIN MovementDate AS MovementDate_Insert
+                                          ON MovementDate_Insert.MovementId = Movement.Id
+                                         AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+
+              WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '1 day'
+                AND Movement.OperDate < CURRENT_DATE
+                AND DATE_TRUNC ('DAY', MovementDate_Insert.ValueData) = CURRENT_DATE - INTERVAL '1 day'
+                AND Movement.DescId = zc_Movement_Check()
+                AND Movement.StatusId = zc_Enum_Status_Complete()),
+           tmpCheckUser AS (
+              SELECT Movement.UserID                            AS UserID
+                   , count(*)                                   AS CountCheck
+              FROM tmpCheckAll AS Movement
+                   INNER JOIN ObjectLink AS ObjectLink_User_Member
+                                         ON ObjectLink_User_Member.ObjectId = Movement.UserID 
+                                        AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                   INNER JOIN ObjectLink AS ObjectLink_Member_Position
+                                         ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
+                                        AND ObjectLink_Member_Position.DescId = zc_ObjectLink_Member_Position()
+                                        AND ObjectLink_Member_Position.ChildObjectId = 1672498
+              GROUP BY Movement.UserID
+              HAVING count(*) < 20)
+
+
+       SELECT string_agg(Object_User.ValueData, CHR(13))
+       INTO vbText
+       FROM tmpCheckUser
+            LEFT JOIN Object AS Object_User ON Object_User.ID = tmpCheckUser.UserID;
+
+       IF COALESCE (vbText, '') <> ''
+       THEN
+         INSERT INTO _PUSH (Id, Text) VALUES (9, 'Сотрудники по которым за вчера чеков менее 20:'||CHR(13)||CHR(13)||vbText);
+       END IF;
+
+   END IF;
+
    RETURN QUERY
      SELECT _PUSH.Id                     AS Id
           , _PUSH.Text                   AS Text
@@ -276,4 +332,4 @@ LANGUAGE plpgsql VOLATILE;
 
 -- тест
 -- SELECT * FROM gpGet_PUSH_Farmacy('12198759')
--- SELECT * FROM gpGet_PUSH_Farmacy('3')
+-- SELECT * FROM gpGet_PUSH_Farmacy(1, '3')

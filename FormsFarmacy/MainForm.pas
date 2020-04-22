@@ -682,9 +682,11 @@ type
     procedure miRepriceChangeClick(Sender: TObject);
     procedure miReprice_testClick(Sender: TObject);
     procedure TimerPUSHTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     FLoadPUSH: Integer;
+    FNumberPUSH: Integer;
   public
     { Public declarations }
   end;
@@ -744,6 +746,12 @@ begin
   ShowMessage('Выгрузили');
 end;
 
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FNumberPUSH := 0;
+end;
+
 procedure TMainForm.FormShow(Sender: TObject);
 begin
   inherited;
@@ -801,6 +809,8 @@ procedure TMainForm.TimerPUSHTimer(Sender: TObject);
 
       if not gc_User.Local then
       try
+        Inc(FNumberPUSH);
+        spGet_PUSH_Farmacy.ParamByName('inNumberPUSH').Value := FNumberPUSH;
         spGet_PUSH_Farmacy.Execute;
         TimerPUSH.Interval := 1000;
       except

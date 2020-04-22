@@ -17,8 +17,8 @@
     vbUserId:= lpGetUserBySession (inSession);
     outMovementID := 0;
 
-    IF NOT EXISTS(SELECT 1 FROM ObjectBoolean 
-                  WHERE ObjectBoolean.ObjectId = inUnitID 
+    IF NOT EXISTS(SELECT 1 FROM ObjectBoolean
+                  WHERE ObjectBoolean.ObjectId = inUnitID
                     AND ObjectBoolean.DescId = zc_ObjectBoolean_Unit_TechnicalRediscount()
                     AND ObjectBoolean.ValueData = TRUE)
     THEN
@@ -62,7 +62,7 @@
                           WHERE Container.DescId = zc_Container_CountPartionDate()
                             AND Container.WhereObjectId = inUnitID
                             AND Container.Amount > 0
-                            AND ObjectDate_ExpirationDate.ValueData <= CURRENT_DATE)
+                            AND ObjectDate_ExpirationDate.ValueData <= date_trunc('month', CURRENT_DATE) - INTERVAL '90 day')
          -- Содержимое документа
 
     INSERT INTO tmpContainerOverdue (GoodsId, ContainerId, Amount)
@@ -70,9 +70,9 @@
          , Container.Id
          , Container.Amount
     FROM tmpContainer AS Container;
-    
+
 --    raise notice 'Value 05: %', (select Count(*) from tmpContainerOverdue);
-    
+
     -- сохранили <Документ>
     outMovementID := lpInsertUpdate_Movement_Loss (ioId               := 0
                                                  , inInvNumber        := CAST (NEXTVAL ('Movement_Loss_seq') AS TVarChar)
@@ -82,8 +82,8 @@
                                                  , inComment          := ''
                                                  , inUserId           := vbUserId
                                                   );
-    
-    PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := 0 
+
+    PERFORM lpInsertUpdate_MovementItem_Loss (ioId                := 0
                                             , inMovementId        := outMovementID
                                             , inGoodsId           := tmpContainerOverdue.GoodsId
                                             , inAmount            := Sum(tmpContainerOverdue.Amount)
@@ -91,7 +91,7 @@
     FROM tmpContainerOverdue
     GROUP BY GoodsId
     HAVING Sum(tmpContainerOverdue.Amount) > 0;
-    
+
   END;
   $BODY$
     LANGUAGE plpgsql VOLATILE;

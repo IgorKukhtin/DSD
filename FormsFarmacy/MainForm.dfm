@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -4741,7 +4741,13 @@ inherited MainForm: TMainForm
       item
         DataSet = PUSHDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inNumberPUSH'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 128
     Top = 8

@@ -130,7 +130,7 @@ BEGIN
                            AND MovementLinkObject_ArticleLoss.ObjectId = 13892113), 2), 0);
 
      -- сохранили свойство <Полное списание>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullCharge(), vbId, - vbSumma);
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeMonth(), vbId, - vbSumma);
 
      -- сохранили <Элемент документа>
     vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, vbUserId), 0);
