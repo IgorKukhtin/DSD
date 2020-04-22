@@ -20,10 +20,13 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbStatusId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_MI_ProductionSeparate_StorageLine());
 
+   vbStatusId := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = inMovementId);
+   
    -- сохранили <линию пр-ва>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), inMovementItemId, inStorageLineId);
    -- сохранили протокол
@@ -31,6 +34,16 @@ BEGIN
 
    -- сохранили связь с <Виды товаров>
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inMovementItemId, inGoodsKindId);
+   
+   
+   IF vbStatusId = zc_Enum_Status_Complete()
+   THEN 
+       --распроводим
+       PERFORM gpUnComplete_Movement_ProductionSeparate (inMovementId, inSession);
+       -- и проводим
+       PERFORM gpComplete_Movement_ProductionSeparate (inMovementId, FALSE,inSession);
+   END IF;
+
    
 /*   -- выбираем строки куда записываем значение линии пр-ва
    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_StorageLine(), MovementItem.Id, inStorageLineId)  -- сохранили <линию пр-ва>
@@ -70,4 +83,5 @@ $BODY$
 -- тест
 -- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 0 , ioStorageLineId_old := 0 , inIsDescMaster := 'TRUE' ,  inSession := '5');
 -- select * from gpUpdate_MI_ProductionSeparate_StorageLine(inMovementId := 5268188 , inGoodsId := 5246 , inGoodsKindId := 0 , inStorageLineId := 1005633 , inIsDescMaster := 'TRUE' ,  inSession := '5');
+   
    
