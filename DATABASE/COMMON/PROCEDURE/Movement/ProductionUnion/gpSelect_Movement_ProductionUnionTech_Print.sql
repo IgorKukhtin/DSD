@@ -350,7 +350,36 @@ BEGIN
                                         AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                     )
+  -- группы дл€ печати
+  /*1)1+2
+    2)3+4+6
+    3)5+7
+    4) остальное
+  */
+ , tmpGroupPrint AS (SELECT 1 AS GroupNum WHERE inGroupNum = 1
+                    UNION
+                     SELECT 2 AS GroupNum WHERE inGroupNum = 1
+                    
+                    UNION
+                     SELECT 3 AS GroupNum WHERE inGroupNum = 2
+                    UNION
+                     SELECT 4 AS GroupNum WHERE inGroupNum = 2
+                    UNION
+                     SELECT 6 AS GroupNum WHERE inGroupNum = 2
+                    
+                   UNION
+                     SELECT 5 AS GroupNum WHERE inGroupNum = 3
+                   UNION
+                     SELECT 7 AS GroupNum WHERE inGroupNum = 3
+                    
+                   UNION
+                     SELECT tmp.GroupNumber AS GroupNum
+                     FROM (SELECT DISTINCT tmpData.GroupNumber FROM tmpData) AS tmp
+                     WHERE inGroupNum = 4
+                     AND tmp.GroupNumber NOT IN (1,2,3,4,6,5,7)
+                    )                   
 
+       -- –≈«”Ћ№“ј“
        SELECT tmpData.GoodsId
             , tmpData.GoodsCode
             , tmpData.GoodsName
@@ -366,7 +395,7 @@ BEGIN
             , tmpData.GoodsKindCompleteName
             , tmpData.MeasureName*/
        FROM tmpData
-       WHERE tmpData.GroupNumber = inGroupNum
+            INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum = tmpData.GroupNumber
       ;
     
 

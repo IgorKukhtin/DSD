@@ -152,6 +152,18 @@ type
     macUpdate_OperDate: TMultiAction;
     macUpdate_OperDateList: TMultiAction;
     bbUpdate_OperDateList: TdxBarButton;
+    spPrintDays1: TdsdStoredProc;
+    spPrintDays2: TdsdStoredProc;
+    spPrintDays3: TdsdStoredProc;
+    spPrintDays4: TdsdStoredProc;
+    actPrintDays1: TdsdPrintAction;
+    actPrintDays2: TdsdPrintAction;
+    actPrintDays4: TdsdPrintAction;
+    actPrintDays3: TdsdPrintAction;
+    bbactPrintDays1: TdxBarButton;
+    bbactPrintDays2: TdxBarButton;
+    bbactPrintDays3: TdxBarButton;
+    bbactPrintDays4: TdxBarButton;
   private
     { Private declarations }
   public

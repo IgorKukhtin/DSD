@@ -13,7 +13,9 @@ RETURNS TABLE (Id Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartnerGoodsId Integer, PartnerGoodsCode TVarChar
              , RetailName TVarChar, AreaName TVarChar
-             , Amount TFloat, Price TFloat, Summ TFloat, PartionGoodsDate TDateTime
+             , GoodsNDS TVarChar
+             , Amount TFloat, Price TFloat, Summ TFloat
+             , PartionGoodsDate TDateTime
              , Comment TVarChar, isErased Boolean
              , isSP     Boolean
              , isClose  Boolean
@@ -51,6 +53,7 @@ BEGIN
      SELECT MovementLinkObject.ObjectId AS UnitId
             INTO vbUnitId
      FROM MovementLinkObject
+     
      WHERE MovementLinkObject.MovementId = inMovementId
        AND MovementLinkObject.DescId = zc_MovementLinkObject_To();
 
@@ -161,6 +164,27 @@ BEGIN
                         AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
                       )
 
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList AS (SELECT *
+                          FROM (SELECT LoadPriceListItem.CommonCode
+                                     , LoadPriceListItem.GoodsName
+                                     , LoadPriceListItem.GoodsNDS
+                                     , LoadPriceListItem.GoodsId
+                                     , LoadPriceListItem.ProducerName
+                                     , PartnerGoods.Id AS PartnerGoodsId
+                                     , ROW_NUMBER() OVER (PARTITION BY LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                FROM LoadPriceList
+                                     LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                         
+                                     LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                     AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+                                                                                    --AND COALESCE(PartnerGoods.AreaId, 0) = vbAreaId
+                                WHERE LoadPriceList.JuridicalId = vbPartnerId
+                                ) AS tmp
+                          WHERE tmp.ORD = 1
+                          )
+
+
        SELECT
              tmpMI.Id
            , tmpMainParam.CommonCode
@@ -174,6 +198,7 @@ BEGIN
            , tmpMI.Amount               AS Amount
            , tmpMI.Price                AS Price
            , tmpMI.Summ ::TFloat        AS Summ
+           , tmpLoadPriceList.GoodsNDS  :: TVarChar                                                                 -- НДС из прайса поставщика
            , tmpMI.PartionGoodsDate     AS PartionGoodsDate
            , tmpMI.Comment              AS Comment
            , FALSE                      AS isErased
@@ -190,32 +215,34 @@ BEGIN
              END                                                 AS PartionGoodsDateColor
       
        FROM tmpData AS tmpMI
-                -- торговая сеть
-                LEFT JOIN  tmpObjectLink_Object AS ObjectLink_Object 
-                                                ON ObjectLink_Object.ObjectId = tmpMI.GoodsId
-                LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
-                -- регион
-                LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area 
-                                             ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
-                LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
-                --
-                LEFT JOIN tmpMainParam ON tmpMainParam.GoodsId = tmpMI.GoodsId
-                
-                LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpMI.GoodsId
-                
-                LEFT JOIN tmpGoodsParam AS GoodsParam_Close 
-                                        ON GoodsParam_Close.ObjectId = tmpMI.GoodsId
-                                       AND GoodsParam_Close.DescId = zc_ObjectBoolean_Goods_Close()
-                LEFT JOIN tmpGoodsParam AS GoodsParam_First 
-                                        ON GoodsParam_First.ObjectId = tmpMI.GoodsId
-                                       AND GoodsParam_First.DescId = zc_ObjectBoolean_Goods_First()
-                LEFT JOIN tmpGoodsParam AS GoodsParam_Second
-                                        ON GoodsParam_Second.ObjectId = tmpMI.GoodsId
-                                       AND GoodsParam_Second.DescId = zc_ObjectBoolean_Goods_Second()
-                LEFT JOIN tmpGoodsParam AS GoodsParam_TOP
-                                        ON GoodsParam_TOP.ObjectId = tmpMI.GoodsId
-                                       AND GoodsParam_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
-;
+            -- торговая сеть
+            LEFT JOIN  tmpObjectLink_Object AS ObjectLink_Object 
+                                            ON ObjectLink_Object.ObjectId = tmpMI.GoodsId
+            LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Object.ChildObjectId
+            -- регион
+            LEFT JOIN tmpObjectLink_Area AS ObjectLink_Goods_Area
+                                         ON ObjectLink_Goods_Area.ObjectId = tmpMI.PartnerGoodsId
+            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
+            --
+            LEFT JOIN tmpMainParam ON tmpMainParam.GoodsId = tmpMI.GoodsId
+            
+            LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = tmpMI.GoodsId
+            
+            LEFT JOIN tmpGoodsParam AS GoodsParam_Close 
+                                    ON GoodsParam_Close.ObjectId = tmpMI.GoodsId
+                                   AND GoodsParam_Close.DescId = zc_ObjectBoolean_Goods_Close()
+            LEFT JOIN tmpGoodsParam AS GoodsParam_First 
+                                    ON GoodsParam_First.ObjectId = tmpMI.GoodsId
+                                   AND GoodsParam_First.DescId = zc_ObjectBoolean_Goods_First()
+            LEFT JOIN tmpGoodsParam AS GoodsParam_Second
+                                    ON GoodsParam_Second.ObjectId = tmpMI.GoodsId
+                                   AND GoodsParam_Second.DescId = zc_ObjectBoolean_Goods_Second()
+            LEFT JOIN tmpGoodsParam AS GoodsParam_TOP
+                                    ON GoodsParam_TOP.ObjectId = tmpMI.GoodsId
+                                   AND GoodsParam_TOP.DescId = zc_ObjectBoolean_Goods_TOP()
+           
+            LEFT JOIN tmpLoadPriceList ON tmpLoadPriceList.PartnerGoodsId = tmpMI.PartnerGoodsId
+       ;
 
 END;
 $BODY$
@@ -224,6 +251,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.20         * tmpLoadPriceList.GoodsNDS
  11.02.19         * признак Товары соц-проект берем и документа
  08.11.18         *
  21.10.17         * add AreaName
