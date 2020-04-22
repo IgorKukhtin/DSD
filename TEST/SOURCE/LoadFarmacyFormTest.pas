@@ -1000,6 +1000,9 @@ begin
     TdsdFormStorageFactory.GetStorage.Load('TReport_PriceProtocolDialogForm');
     //exit;
     }
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_piForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_piForm');
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Movement_Send_RemainsSun_expressForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_Movement_Send_RemainsSun_expressForm');
 
