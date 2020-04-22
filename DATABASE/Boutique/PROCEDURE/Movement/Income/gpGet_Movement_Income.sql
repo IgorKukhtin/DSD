@@ -39,8 +39,8 @@ BEGIN
 
              , 0                     AS FromId
              , CAST ('' AS TVarChar) AS FromName
-             , 0                     AS ToId
-             , CAST ('' AS TVarChar) AS ToName
+             , Object_To.Id          AS ToId
+             , Object_To.ValueData   AS ToName
 
 
              , Object_CurrencyDocument.Id            AS CurrencyDocumentId
@@ -50,6 +50,7 @@ BEGIN
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfGet
                LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = zc_Currency_EUR()
+               LEFT JOIN Object AS Object_To ON Object_To.Id = CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN 6318 ELSE 0 END
          ;
      ELSE
 

@@ -1917,13 +1917,16 @@ begin
      end;
 
 
-     if (ParamStr(2)='autoALL')or(ParamStr(2)='autoALL_SALE')
+     if ((ParamStr(2)='autoALL')or(ParamStr(2)='autoALL_SALE'))
      then begin
-               cbPack.Checked:=TRUE;
-               cbKopchenie.Checked:=TRUE;
-               cbPartion.Checked:=TRUE;
-               //
-               autoALL(true);
+              if (BranchEdit.Text = 'BranchId : 0') then
+              begin
+                 cbPack.Checked:=TRUE;
+                 cbKopchenie.Checked:=TRUE;
+                 cbPartion.Checked:=TRUE;
+              end;
+              //
+              autoALL(true);
      end;
      if (ParamStr(2)='autoALLLAST')or(ParamStr(2)='autoALLLAST_SALE')
      then begin
@@ -2436,7 +2439,7 @@ begin
      if ((Hour_calc = 7) or ((Hour_calc = 21) and (Minute_calc > 20)) or (Hour_calc = 23))
         and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
      //if (Hour_calc = 14) and (beginVACUUM < 4) and (ParamStr(2)='autoALL')
-       and (BranchEdit.Text = 'BranchId : 0')
+        and (BranchEdit.Text = 'BranchId : 0')
      then
           try
               if beginVACUUM_ii = 0

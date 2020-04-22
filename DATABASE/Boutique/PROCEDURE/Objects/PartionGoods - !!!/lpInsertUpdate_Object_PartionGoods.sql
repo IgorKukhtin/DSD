@@ -211,15 +211,16 @@ BEGIN
      -- 1.3.1. если была Переоценка
      ELSEIF vbRePrice_exists = TRUE
      THEN
-         RAISE EXCEPTION 'Ошибка.По товару <%> была переоценка.Можно ввести приход с ценой продажи = <%>.'
+         RAISE EXCEPTION 'Ошибка.По товару <%> была переоценка.Можно ввести приход с ценой продажи = <% %>.'
                        , lfGet_Object_ValueData (inGoodsId)
-                       , zfConvert_FloatToString (((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp))) || ' грн.'
+                       , zfConvert_FloatToString (((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate, zc_PriceList_Basis(), inGoodsId) AS tmp)))
+                       , (SELECT lfGet_Object_ValueData_sh (COALESCE (OL.ChildObjectId, zc_Currency_GRN())) FROM Object LEFT JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_PriceList_Currency() WHERE Object.Id = zc_PriceList_Basis())
                         ;
 
      -- 1.3.2. если ПАРТИИ в ДРУГИХ ПРОВЕДЕННЫХ документах
      ELSEIF vbId_income_ch > 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%> с ценой продажи = <%>.Для формирования прихода с другой ценой необходимо сначала провести Переоценку.'
+         RAISE EXCEPTION 'Ошибка.Уже есть приход № <%> от <%> с ценой продажи = <% %>.Для формирования прихода с другой ценой необходимо сначала провести Переоценку.'
                        , (SELECT Movement.InvNumber
                           FROM MovementItem
                                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -230,13 +231,14 @@ BEGIN
                                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                           WHERE MovementItem.Id = vbId_income_ch
                          )
-                       , (SELECT zfConvert_FloatToString (MIF.ValueData) || ' грн.' FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId_income_ch AND MIF.DescId = zc_MIFloat_OperPriceList())
+                       , (SELECT zfConvert_FloatToString (MIF.ValueData) FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId_income_ch AND MIF.DescId = zc_MIFloat_OperPriceList())
+                       , (SELECT lfGet_Object_ValueData_sh (COALESCE (OL.ChildObjectId, zc_Currency_GRN())) FROM Object LEFT JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_PriceList_Currency() WHERE Object.Id = zc_PriceList_Basis())
                         ;
 
      -- 1.3.3. есть ли ПРОВЕДЕННЫЕ документы - все
      ELSEIF vbId_sale_ch > 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%> с ценой продажи = <%>.Для формирования прихода с другой ценой необходимо сначала провести Переоценку.'
+         RAISE EXCEPTION 'Ошибка.Найдено движение <%> № <%> от <%> с ценой продажи = <% %>.Для формирования прихода с другой ценой необходимо сначала провести Переоценку.'
                        , (SELECT MovementDesc.ItemName
                           FROM MovementItem
                                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -253,7 +255,8 @@ BEGIN
                                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
                           WHERE MovementItem.Id = vbId_sale_ch
                          )
-                       , (SELECT zfConvert_FloatToString (MIF.ValueData) || ' грн.' FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId_sale_ch AND MIF.DescId = zc_MIFloat_OperPriceList())
+                       , (SELECT zfConvert_FloatToString (MIF.ValueData) FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = vbId_sale_ch AND MIF.DescId = zc_MIFloat_OperPriceList())
+                       , (SELECT lfGet_Object_ValueData_sh (COALESCE (OL.ChildObjectId, zc_Currency_GRN())) FROM Object LEFT JOIN ObjectLink AS OL ON OL.ObjectId = Object.Id AND OL.DescId = zc_ObjectLink_PriceList_Currency() WHERE Object.Id = zc_PriceList_Basis())
                         ;
 
 

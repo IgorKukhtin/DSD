@@ -177,6 +177,11 @@ type
     bbPrintSticker: TdxBarButton;
     actPrintAllPrice: TdsdPrintAction;
     bbPrintAllPrice: TdxBarButton;
+    TotalSummPriceListTo: TcxGridDBColumn;
+    TotalSummPriceListBalance: TcxGridDBColumn;
+    TotalSummPriceListToBalance: TcxGridDBColumn;
+    CurrencyName_pl: TcxGridDBColumn;
+    CurrencyName_pl_to: TcxGridDBColumn;
   private
   public
   end;

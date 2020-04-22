@@ -119,6 +119,21 @@ BEGIN
                                                      AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_30301() -- Доходы + Переработка + Переработка
                                                   ))*/)
      THEN
+         -- Проверка
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                         INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                               ON ObjectLink_Goods_InfoMoney.ObjectId      = MovementItem.ObjectId
+                                              AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                              AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() -- Оборотная тара
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSe
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.В операции не могут участвовать товары с УП = <%>', lfGet_Object_ValueData_sh (zc_Enum_InfoMoney_20501());
+         END IF;
+         --
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsReWork:= TRUE;
          vbIsProductionIn:= TRUE;
@@ -572,7 +587,7 @@ BEGIN
                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
                            , CASE WHEN vbMovementDescId = zc_Movement_Inventory()
                                        -- Склад Реализации + Склад База ГП
-                                   AND MLO_From.ObjectId IN (8459, 8458)
+                                 --AND MLO_From.ObjectId IN (8459, 8458)
                                        THEN 0
                                   ELSE COALESCE (MILinkObject_StorageLine.ObjectId, 0)
                              END AS StorageLineId
@@ -882,6 +897,7 @@ BEGIN
                            LEFT JOIN MovementItemLinkObject AS MILinkObject_StorageLine
                                                             ON MILinkObject_StorageLine.MovementItemId = MovementItem.Id
                                                            AND MILinkObject_StorageLine.DescId = zc_MILinkObject_StorageLine()
+                                                           AND vbMovementDescId                <> zc_Movement_Inventory()
 
                            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId

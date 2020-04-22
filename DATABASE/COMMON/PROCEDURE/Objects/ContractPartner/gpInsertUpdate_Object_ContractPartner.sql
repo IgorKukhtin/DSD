@@ -27,6 +27,12 @@ BEGIN
    -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractPartner(), vbCode_calc);
 
+   -- проверка
+   IF COALESCE (inPartnerId, 0) = 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Контрагент не установлен.';
+   END IF;   
+
    -- проверка уникальности
    IF EXISTS (SELECT Object_ContractPartner_View.ContractId
               FROM Object_ContractPartner_View

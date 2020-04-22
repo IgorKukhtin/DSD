@@ -84,13 +84,12 @@ object IncomeItemEditForm: TIncomeItemEditForm
   object edGoodsName: TcxButtonEdit
     Left = 8
     Top = 113
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
+    Properties.ReadOnly = False
     TabOrder = 2
     Width = 273
   end
@@ -263,6 +262,7 @@ object IncomeItemEditForm: TIncomeItemEditForm
     Caption = #1053#1077' '#1080#1079#1084#1077#1085#1103#1090#1100' '#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
     Properties.ReadOnly = True
     TabOrder = 30
+    Visible = False
     Width = 168
   end
   object ActionList: TActionList
@@ -904,6 +904,13 @@ object IncomeItemEditForm: TIncomeItemEditForm
       item
         Name = 'CompositionGroupName'
         Value = Null
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Code'
+        Value = Null
+        Component = edGoodsCode
         DataType = ftString
         MultiSelectSeparator = ','
       end>

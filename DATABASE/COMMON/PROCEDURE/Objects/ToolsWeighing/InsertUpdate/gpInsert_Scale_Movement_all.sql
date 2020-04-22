@@ -142,6 +142,21 @@ end if;
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
      IF vbMovementDescId = zc_Movement_Send() AND vbGoodsId_ReWork > 0
      THEN
+         -- Проверка
+         IF EXISTS (SELECT 1
+                    FROM MovementItem
+                         INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                               ON ObjectLink_Goods_InfoMoney.ObjectId      = MovementItem.ObjectId
+                                              AND ObjectLink_Goods_InfoMoney.DescId        = zc_ObjectLink_Goods_InfoMoney()
+                                              AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20501() -- Оборотная тара
+                    WHERE MovementItem.MovementId = inMovementId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                      AND MovementItem.isErased   = FALSe
+                   )
+         THEN
+             RAISE EXCEPTION 'Ошибка.В операции не могут участвовать товары с УП = <%>', lfGet_Object_ValueData_sh (zc_Enum_InfoMoney_20501());
+         END IF;
+         --
          vbMovementDescId:= zc_Movement_ProductionUnion();
          vbIsProductionIn:= FALSE;
      ELSE

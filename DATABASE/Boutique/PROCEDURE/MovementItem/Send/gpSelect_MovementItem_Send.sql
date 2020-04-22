@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inStartDate        TDateTime    , --
     IN inEndDate          TDateTime    , --
     IN inShowAll          Boolean      , --
-    IN inIsErased         Boolean      , -- 
+    IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer
              , TotalSummBalance TFloat
              , TotalSummPriceList TFloat
              , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyName_pl TVarChar, CurrencyName_pl_to TVarChar
              , DiscountTax_From TFloat, DiscountTax_To TFloat
              , isProtocol Boolean
              , isOlap Boolean
@@ -40,35 +41,55 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 
-  DECLARE vbUnitId_From Integer;
-  DECLARE vbUnitId_To   Integer;
-  DECLARE vbPriceListId Integer;
-  DECLARE vbPartnerId Integer;
-  DECLARE vbOperDate TDateTime;
+  DECLARE vbUnitId_From        Integer;
+  DECLARE vbUnitId_To          Integer;
+  DECLARE vbPriceListId_from   Integer;
+  DECLARE vbPriceListId_to     Integer;
+  DECLARE vbCurrencyId_pl_from Integer;
+  DECLARE vbCurrencyId_pl_to   Integer;
+  DECLARE vbOperDate           TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Send());
 
 
      -- данные из шапки
-     SELECT Movement.OperDate
-          , MovementLinkObject_From.ObjectId
-          , MovementLinkObject_To.ObjectId
-            INTO vbOperDate, vbUnitId_From, vbUnitId_To
-     FROM Movement 
+     SELECT Movement.OperDate                                                                AS OperDate
+          , MovementLinkObject_From.ObjectId                                                 AS vbUnitId_From
+          , MovementLinkObject_To.ObjectId                                                   AS vbUnitId_To
+          , COALESCE (ObjectLink_Unit_PriceList_from.ChildObjectId, zc_PriceList_Basis())    AS PriceListId_from
+          , COALESCE (ObjectLink_Unit_PriceList_to.ChildObjectId, zc_PriceList_Basis())      AS PriceListId_to
+          , COALESCE (ObjectLink_PriceList_Currency_from.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl_from
+          , COALESCE (ObjectLink_PriceList_Currency_to.ChildObjectId, zc_Currency_Basis())   AS CurrencyId_pl_to
+            INTO vbOperDate, vbUnitId_From, vbUnitId_To, vbPriceListId_from, vbPriceListId_to, vbCurrencyId_pl_from, vbCurrencyId_pl_to
+     FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList_from
+                               ON ObjectLink_Unit_PriceList_from.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_Unit_PriceList_from.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency_from
+                               ON ObjectLink_PriceList_Currency_from.ObjectId = ObjectLink_Unit_PriceList_from.ChildObjectId
+                              AND ObjectLink_PriceList_Currency_from.DescId   = zc_ObjectLink_PriceList_Currency()
+
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Unit_PriceList_to
+                               ON ObjectLink_Unit_PriceList_to.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Unit_PriceList_to.DescId   = zc_ObjectLink_Unit_PriceList()
+          LEFT JOIN ObjectLink AS ObjectLink_PriceList_Currency_to
+                               ON ObjectLink_PriceList_Currency_to.ObjectId = ObjectLink_Unit_PriceList_to.ChildObjectId
+                              AND ObjectLink_PriceList_Currency_to.DescId   = zc_ObjectLink_PriceList_Currency()
+
      WHERE Movement.Id = inMovementId;
 
 
      IF inShowAll = TRUE
      THEN
         -- Показываем ВСЕ
-        RETURN QUERY 
+        RETURN QUERY
         WITH
          tmpReportOLAP AS (SELECT DISTINCT ObjectLink_Object.ChildObjectId AS PartionId
                                 --, Object_PartionGoods.GoodsId
@@ -77,7 +98,7 @@ BEGIN
                                                       ON ObjectLink_User.ObjectId      = Object.Id
                                                      AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                                                      AND ObjectLink_User.ChildObjectId = vbUserId
-              
+
                                 INNER JOIN ObjectLink AS ObjectLink_Object
                                                       ON ObjectLink_Object.ObjectId = Object.Id
                                                      AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
@@ -91,7 +112,7 @@ BEGIN
        , tmpMI AS (SELECT MovementItem.Id
                         , MovementItem.ObjectId AS GoodsId
                         , MovementItem.PartionId
-                        , MovementItem.Amount 
+                        , MovementItem.Amount
                         , COALESCE (MIFloat_CurrencyValue.ValueData, 0)   AS CurrencyValue
                         , COALESCE (MIFloat_ParValue.ValueData, 0)        AS ParValue
                         , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
@@ -104,7 +125,7 @@ BEGIN
                                 END AS NUMERIC (16, 2)) AS TotalSumm
                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
                         , MovementItem.isErased
-                        
+
                     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                          JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                           AND MovementItem.DescId     = zc_MI_Master()
@@ -126,10 +147,10 @@ BEGIN
 
                          LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                      ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
+                                                    AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
                          LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                      ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                                    AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
+                                                    AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                     )
 
        , tmpCurrency AS (SELECT * FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
@@ -152,7 +173,7 @@ BEGIN
                              , Object_PartionGoods.PeriodYear
                              , Object_PartionGoods.OperPrice
                              , Object_PartionGoods.CountForPrice
-                             , Object_PartionGoods.OperPriceList
+                           --, Object_PartionGoods.OperPriceList
                              , Container.Amount                   AS Remains
                              , COALESCE (tmp.Amount, 1)           AS CurrencyValue
                              , COALESCE (tmp.ParValue,0)          AS ParValue
@@ -169,27 +190,54 @@ BEGIN
                              LEFT JOIN tmpCurrency AS tmp ON 1=0
                       WHERE CLO_Client.ContainerId IS NULL -- !!!отбросили Долги Покупателей!!!
                        )
-         -- Последняя цена из Прайс-листа - zc_PriceList_Basis
-       /*, tmpPriceList AS (SELECT tmp.GoodsId
+    -- Последняя цена из Прайс-листа - vbPriceListId_from
+  , tmpPriceList_from AS (SELECT tmp.GoodsId
                                , OHF_Value.ValueData AS OperPriceList
+                               , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_from) AS CurrencyId
                           FROM (SELECT DISTINCT tmpPartion.GoodsId FROM tmpPartion) AS tmp
                                INNER JOIN ObjectLink AS OL_PriceListItem_Goods
                                                      ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
                                                     AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                                INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
                                                      ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
-                                                    AND OL_PriceListItem_PriceList.ChildObjectId = zc_PriceList_Basis() -- !!!Базовай Прайс!!!
-                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                                                    AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_from
+                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
 
                                INNER JOIN ObjectHistory AS OH_PriceListItem
                                                         ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
                                                        AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
                                                        AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                               LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                           ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                          AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
                                LEFT JOIN ObjectHistoryFloat AS OHF_Value
                                                             ON OHF_Value.ObjectHistoryId = OH_PriceListItem.Id
                                                            AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
                          )
-       */
+      -- Последняя цена из Прайс-листа - vbPriceListId_to
+    , tmpPriceList_to AS (SELECT tmp.GoodsId
+                               , OHF_Value.ValueData AS OperPriceList
+                               , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_to) AS CurrencyId
+                          FROM (SELECT DISTINCT tmpPartion.GoodsId FROM tmpPartion) AS tmp
+                               INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                     ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                                    AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                               INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
+                                                     ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                                                    AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_to
+                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                               INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                        ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                       AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                       AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                               LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                           ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                          AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                               LEFT JOIN ObjectHistoryFloat AS OHF_Value
+                                                            ON OHF_Value.ObjectHistoryId = OH_PriceListItem.Id
+                                                           AND OHF_Value.DescId          = zc_ObjectHistoryFloat_PriceListItem_Value()
+                         )
      -- остатки
    , tmpContainer AS (SELECT Container.ObjectId
                            , Container.PartionId
@@ -222,7 +270,7 @@ BEGIN
    , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
                                            AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                )
-                      
+
    , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                           , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                           , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
@@ -259,13 +307,13 @@ BEGIN
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                , Object_Measure.ValueData       AS MeasureName
-    
+
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName
-               , Object_GoodsSize.Id            AS GoodsSizeId  
-               , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_GoodsSize.Id            AS GoodsSizeId
+               , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , tmpPartion.PeriodYear          AS PeriodYear
@@ -274,9 +322,8 @@ BEGIN
                , tmpPartion.Remains         :: TFloat AS Remains
                , tmpPartion.OperPrice       :: TFloat AS OperPrice
                , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
-               --, tmpPriceList.OperPriceList :: TFloat AS OperPriceList
-               , tmpPartion.OperPriceList   :: TFloat AS OperPriceList
-               , 0                          :: TFloat AS OperPriceListTo
+               , tmpPriceList_from.OperPriceList :: TFloat AS OperPriceList
+               , tmpPriceList_to.OperPriceList   :: TFloat AS OperPriceListTo
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceList
@@ -284,21 +331,27 @@ BEGIN
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
 
-               --сезонная скидка от кого
+               , Object_Currency_pl_from.ValueData AS CurrencyName_pl
+               , Object_Currency_pl_to.ValueData   AS CurrencyName_pl_to
+
+                 -- сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
-               -- сезонная скидка кому
+                 -- сезонная скидка кому
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
 
                , FALSE                                 AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END AS isOlap
 
                , tmpMI.isErased                        AS isErased
-    
-               
+
+
            FROM tmpPartion
-                LEFT JOIN tmpMI        ON tmpMI.PartionId      = tmpPartion.PartionId
-                --LEFT JOIN tmpPriceList ON tmpPriceList.GoodsId = tmpPartion.GoodsId
-                LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id   = tmpPartion.MovementId
+                LEFT JOIN tmpMI             ON tmpMI.PartionId           = tmpPartion.PartionId
+                LEFT JOIN tmpPriceList_from ON tmpPriceList_from.GoodsId = tmpPartion.GoodsId
+                LEFT JOIN tmpPriceList_to   ON tmpPriceList_to.GoodsId   = tmpPartion.GoodsId
+
+                LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = tmpPartion.MovementId
+
                 LEFT JOIN Object AS Object_Goods       ON Object_Goods.Id       = tmpPartion.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup  ON Object_GoodsGroup.Id  = tmpPartion.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure     ON Object_Measure.Id     = tmpPartion.MeasureId
@@ -310,14 +363,17 @@ BEGIN
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = tmpPartion.BrandId
                 LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = tmpPartion.PeriodId
 
+                LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = tmpPriceList_from.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = tmpPriceList_to.CurrencyId
+
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpPartion.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
-                --для подразделения от кого
-                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                -- для подразделения от кого
+                LEFT JOIN tmpDiscount AS tmpDiscount_From
                                       ON tmpDiscount_From.UnitId = vbUnitId_From
                                      AND tmpDiscount_From.GoodsId = tmpPartion.GoodsId
-                --для подразделения кому
+                -- для подразделения кому
                 LEFT JOIN tmpDiscount AS tmpDiscount_To
                                       ON tmpDiscount_To.UnitId = vbUnitId_To
                                      AND tmpDiscount_To.GoodsId = tmpPartion.GoodsId
@@ -325,7 +381,7 @@ BEGIN
                 LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = tmpPartion.PartionId
            WHERE tmpMI.PartionId IS NULL
 
-    UNION ALL
+          UNION ALL
            -- Показываем только строки документа
            SELECT
                  tmpMI.Id
@@ -338,32 +394,35 @@ BEGIN
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                , Object_Measure.ValueData       AS MeasureName
-    
+
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
-               , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
 
                , tmpMI.Amount
                , Container_From.Amount     ::TFloat AS Remains
-               , tmpMI.OperPrice           ::TFloat 
+               , tmpMI.OperPrice           ::TFloat
                , tmpMI.CountForPrice       ::TFloat
                , tmpMI.OperPriceList       ::TFloat
                , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
                , tmpMI.TotalSummPriceList  ::TFloat
-    
+
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
 
-               --сезонная скидка от кого
+               , Object_Currency_pl_from.ValueData AS CurrencyName_pl
+               , Object_Currency_pl_to.ValueData   AS CurrencyName_pl_to
+
+               -- сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
                -- сезонная скидка кому
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_To
@@ -372,11 +431,14 @@ BEGIN
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
 
                , tmpMI.isErased
-    
+
            FROM tmpMI
-                LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
+                LEFT JOIN Object_PartionGoods           ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
                 LEFT JOIN Movement  AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
-                
+
+                LEFT JOIN tmpPriceList_from ON tmpPriceList_from.GoodsId = tmpMI.GoodsId
+                LEFT JOIN tmpPriceList_to   ON tmpPriceList_to.GoodsId   = tmpMI.GoodsId
+
                 LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
                                                         AND Container_From.ObjectId  = tmpMI.GoodsId
 
@@ -391,18 +453,23 @@ BEGIN
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
                 LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
                 LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
-                LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+                LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+                LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = Object_PartionGoods.PeriodId
+                LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = Object_PartionGoods.PeriodId
+
+                LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = tmpPriceList_from.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = tmpPriceList_to.CurrencyId
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
                 --для подразделения от кого
-                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                LEFT JOIN tmpDiscount AS tmpDiscount_From
                                       ON tmpDiscount_From.UnitId  = vbUnitId_From
                                      AND tmpDiscount_From.GoodsId = tmpMI.GoodsId
                 --для подразделения кому
@@ -410,15 +477,14 @@ BEGIN
                                       ON tmpDiscount_To.UnitId  = vbUnitId_To
                                      AND tmpDiscount_To.GoodsId = tmpMI.GoodsId
 
-
                 LEFT JOIN tmpProtocol ON tmpProtocol.MovementItemId = tmpMI.Id
                 LEFT JOIN tmpReportOLAP ON tmpReportOLAP.PartionId = tmpMI.PartionId
            ;
 
-     ELSE 
+     ELSE
        -- Результат такой - Показываем только строки документа
-       RETURN QUERY 
-          WITH 
+       RETURN QUERY
+          WITH
           tmpReportOLAP AS (SELECT DISTINCT Object_PartionGoods.MovementItemId AS PartionId
                                  , Object_PartionGoods.GoodsId
                             FROM Object
@@ -426,23 +492,23 @@ BEGIN
                                                        ON ObjectLink_User.ObjectId      = Object.Id
                                                       AND ObjectLink_User.DescId        = zc_ObjectLink_ReportOLAP_User()
                                                       AND ObjectLink_User.ChildObjectId = vbUserId
-               
+
                                  INNER JOIN ObjectLink AS ObjectLink_Object
                                                        ON ObjectLink_Object.ObjectId = Object.Id
                                                       AND ObjectLink_Object.DescId   = zc_ObjectLink_ReportOLAP_Object()
-                                                      
+
                                  -- привязываем по партии, для партии определяем какой товар
                                  INNER JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = ObjectLink_Object.ChildObjectId
-                                                    
+
                             WHERE Object.DescId = zc_Object_ReportOLAP()
                               AND Object.ObjectCode IN (3)
                               AND Object.isErased = FALSE
                             )
-                            
+
         , tmpMI AS (SELECT MovementItem.Id
                          , MovementItem.ObjectId AS GoodsId
                          , MovementItem.PartionId
-                         , MovementItem.Amount 
+                         , MovementItem.Amount
                          , COALESCE (MIFloat_CurrencyValue.ValueData, 0)   AS CurrencyValue
                          , COALESCE (MIFloat_ParValue.ValueData, 0)        AS ParValue
                          , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
@@ -473,14 +539,54 @@ BEGIN
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-     
+
                           LEFT JOIN MovementItemFloat AS MIFloat_CurrencyValue
                                                       ON MIFloat_CurrencyValue.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()    
+                                                     AND MIFloat_CurrencyValue.DescId         = zc_MIFloat_CurrencyValue()
                           LEFT JOIN MovementItemFloat AS MIFloat_ParValue
                                                       ON MIFloat_ParValue.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue() 
+                                                     AND MIFloat_ParValue.DescId         = zc_MIFloat_ParValue()
                      )
+    -- Последняя цена из Прайс-листа - vbPriceListId_from
+  , tmpPriceList_from AS (SELECT tmp.GoodsId
+                               , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_from) AS CurrencyId
+                          FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                               INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                     ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                                    AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                               INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
+                                                     ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                                                    AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_from
+                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                               INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                        ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                       AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                       AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                               LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                           ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                          AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                         )
+      -- Последняя цена из Прайс-листа - vbPriceListId_to
+    , tmpPriceList_to AS (SELECT tmp.GoodsId
+                               , COALESCE (OH_PriceListItem_Currency.ObjectId, vbCurrencyId_pl_to) AS CurrencyId
+                          FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
+                               INNER JOIN ObjectLink AS OL_PriceListItem_Goods
+                                                     ON OL_PriceListItem_Goods.ChildObjectId = tmp.GoodsId
+                                                    AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
+                               INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
+                                                     ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
+                                                    AND OL_PriceListItem_PriceList.ChildObjectId = vbPriceListId_to
+                                                    AND OL_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
+
+                               INNER JOIN ObjectHistory AS OH_PriceListItem
+                                                        ON OH_PriceListItem.ObjectId = OL_PriceListItem_Goods.ObjectId
+                                                       AND OH_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                       AND OH_PriceListItem.EndDate  = zc_DateEnd() -- !!!Последняя цена!!!
+                               LEFT JOIN ObjectHistoryLink AS OH_PriceListItem_Currency
+                                                           ON OH_PriceListItem_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                          AND OH_PriceListItem_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                         )
         , tmpContainer AS (SELECT Container.ObjectId
                                 , Container.PartionId
                                 , SUM (COALESCE(Container.Amount, 0)) AS Amount
@@ -500,20 +606,20 @@ BEGIN
                            GROUP BY Container.ObjectId
                                   , Container.PartionId
                           )
-     
+
          ---сезонная скидка
         , tmpDiscountList AS (SELECT DISTINCT vbUnitId_From AS UnitId, tmpMI.GoodsId FROM tmpMI
                              UNION
                               SELECT DISTINCT vbUnitId_To   AS UnitId, tmpMI.GoodsId FROM tmpMI
                               )
-     
+
         , tmpOL1 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ChildObjectId IN (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI)
                                                 AND ObjectLink.DescId        = zc_ObjectLink_DiscountPeriodItem_Goods()
                     )
         , tmpOL2 AS (SELECT * FROM ObjectLink WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpOL1.ObjectId FROM tmpOL1)
                                                 AND ObjectLink.DescId   = zc_ObjectLink_DiscountPeriodItem_Unit()
                     )
-                           
+
         , tmpDiscount AS (SELECT ObjectLink_DiscountPeriodItem_Unit.ChildObjectId      AS UnitId
                                , ObjectLink_DiscountPeriodItem_Goods.ChildObjectId     AS GoodsId
                                , ObjectHistoryFloat_DiscountPeriodItem_Value.ValueData AS DiscountTax
@@ -532,7 +638,7 @@ BEGIN
                                                             ON ObjectHistoryFloat_DiscountPeriodItem_Value.ObjectHistoryId = ObjectHistory_DiscountPeriodItem.Id
                                                            AND ObjectHistoryFloat_DiscountPeriodItem_Value.DescId = zc_ObjectHistoryFloat_DiscountPeriodItem_Value()
                          )
-     
+
         , tmpProtocol AS (SELECT DISTINCT MovementItemProtocol.MovementItemId
                           FROM MovementItemProtocol
                           WHERE MovementItemProtocol.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -550,65 +656,73 @@ BEGIN
                , Object_Goods.ValueData         AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
                , Object_Measure.ValueData       AS MeasureName
-    
+
                , Object_Composition.ValueData   AS CompositionName
                , Object_GoodsInfo.ValueData     AS GoodsInfoName
                , Object_LineFabrica.ValueData   AS LineFabricaName
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
-               , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_GoodsSize.ValueData     AS GoodsSizeName
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
 
                , tmpMI.Amount
                , Container_From.Amount     ::TFloat AS Remains
-               , tmpMI.OperPrice           ::TFloat 
+               , tmpMI.OperPrice           ::TFloat
                , tmpMI.CountForPrice       ::TFloat
                , tmpMI.OperPriceList       ::TFloat
                , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance 
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
                , tmpMI.TotalSummPriceList  ::TFloat
-    
+
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
- 
-               --сезонная скидка от кого
+               
+               , Object_Currency_pl_from.ValueData AS CurrencyName_pl
+               , Object_Currency_pl_to.ValueData   AS CurrencyName_pl_to
+
+                 -- сезонная скидка от кого
                , tmpDiscount_From.DiscountTax ::TFloat AS DiscountTax_From
-               -- сезонная скидка кому
+                 -- сезонная скидка кому
                , tmpDiscount_To.DiscountTax   ::TFloat AS DiscountTax_To
 
                , CASE WHEN tmpProtocol.MovementItemId > 0 THEN TRUE ELSE FALSE END AS isProtocol
                , CASE WHEN tmpReportOLAP.PartionId > 0 THEN TRUE ELSE FALSE END    AS isOlap
                , tmpMI.isErased
-    
-           FROM tmpMI
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
-                LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId                                 
 
+           FROM tmpMI
+                LEFT JOIN Object_PartionGoods          ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
                 LEFT JOIN Movement AS Movement_Partion ON Movement_Partion.Id = Object_PartionGoods.MovementId
-                
+
+                LEFT JOIN tmpPriceList_from ON tmpPriceList_from.GoodsId = tmpMI.GoodsId
+                LEFT JOIN tmpPriceList_to   ON tmpPriceList_to.GoodsId   = tmpMI.GoodsId
+
                 LEFT JOIN tmpContainer AS Container_From ON Container_From.PartionId = tmpMI.PartionId
                                                         AND Container_From.ObjectId  = tmpMI.GoodsId
 
+                LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = tmpMI.GoodsId
                 LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = Object_PartionGoods.GoodsGroupId
                 LEFT JOIN Object AS Object_Measure          ON Object_Measure.Id          = Object_PartionGoods.MeasureId
                 LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = Object_PartionGoods.CompositionId
                 LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = Object_PartionGoods.GoodsInfoId
-                LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
+                LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
+
+                LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = tmpPriceList_from.CurrencyId
+                LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = tmpPriceList_to.CurrencyId
 
                 LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                        ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                       AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
 
                 --для подразделения от кого
-                LEFT JOIN tmpDiscount AS tmpDiscount_From 
+                LEFT JOIN tmpDiscount AS tmpDiscount_From
                                       ON tmpDiscount_From.UnitId  = vbUnitId_From
                                      AND tmpDiscount_From.GoodsId = tmpMI.GoodsId
                 --для подразделения кому

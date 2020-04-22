@@ -18,6 +18,9 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
               ELSE '0 дн.'
          END :: TVarChar  AS DelayDay
 
+       , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())  :: TDateTime AS StartDate
+       , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())      :: TDateTime AS EndDate
+
   FROM (SELECT zc_Enum_ContractConditionKind_ChangePercent()        AS Id -- (-)% Скидки (+)% Наценки
        UNION ALL
         SELECT zc_Enum_ContractConditionKind_ChangePercentPartner() AS Id -- % Наценки Павильоны (Приход покупателю)
@@ -33,7 +36,7 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
        INNER JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                              ON ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = tmpContractConditionKind.Id
                             AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-       INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+       INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id       = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                                                     AND Object_ContractCondition.isErased = FALSE
        INNER JOIN ObjectFloat AS ObjectFloat_Value
                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
@@ -43,7 +46,17 @@ CREATE OR REPLACE VIEW Object_ContractCondition_ValueView AS
                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
 
-  GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId;
+       LEFT JOIN ObjectDate AS ObjectDate_StartDate
+                            ON ObjectDate_StartDate.ObjectId = Object_ContractCondition.Id
+                           AND ObjectDate_StartDate.DescId = zc_ObjectDate_ContractCondition_StartDate()
+       LEFT JOIN ObjectDate AS ObjectDate_EndDate
+                            ON ObjectDate_EndDate.ObjectId = Object_ContractCondition.Id
+                           AND ObjectDate_EndDate.DescId = zc_ObjectDate_ContractCondition_EndDate()
+
+  GROUP BY ObjectLink_ContractCondition_Contract.ChildObjectId
+         , COALESCE (ObjectDate_StartDate.ValueData, zc_DateStart())
+         , COALESCE (ObjectDate_EndDate.ValueData, zc_DateEnd())
+          ;
 
 ALTER TABLE Object_ContractCondition_ValueView  OWNER TO postgres;
 

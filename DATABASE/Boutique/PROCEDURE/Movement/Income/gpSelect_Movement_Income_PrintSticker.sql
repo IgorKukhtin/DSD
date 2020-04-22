@@ -23,7 +23,7 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      -- vbUserId:= lpGetUserBySession (inSession);
 
-
+     -- если НЕ по списку
      IF inIsGoodsPrint = FALSE
      THEN
 
@@ -40,7 +40,7 @@ BEGIN
                                                        ON ObjectLink_Unit_PriceList.ObjectId = MovementLinkObject_To.ObjectId
                                                       AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
                              WHERE Movement.Id     = inMovementId
-                               AND Movement.DescId = zc_Movement_Send()
+                             --AND Movement.DescId = zc_Movement_Send()
                             );
 
          -- Результат
@@ -262,4 +262,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inUserId:= 2, inGoodsPrintId:= 0, inIsGoodsPrint:= FALSE, inSession:= '2');
+-- SELECT * FROM gpSelect_Movement_Income_PrintSticker (inMovementId := 432692, inUserId:= 2, inGoodsPrintId:= 0, inIsGoodsPrint:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";

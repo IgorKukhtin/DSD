@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_IncomeFuel_ChangePrice(
 RETURNS Void
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbStatusId Integer;
+   DECLARE vbUserId      Integer;
+   DECLARE vbStatusId    Integer;
    DECLARE vbChangePrice TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -25,7 +25,9 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-         LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId 
+         LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value
+                                                      ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId 
+                                                     AND Movement.OperDate BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
      WHERE Movement.Id = inId;
 
    
