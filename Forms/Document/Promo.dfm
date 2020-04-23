@@ -1235,7 +1235,7 @@
             Width = 81
           end
           object calcAmountSale: TcxGridDBColumn
-            Caption = #1054#1090#1075#1088'. '#1064#1090
+            Caption = #1054#1090#1075#1088'. '#1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1245,7 +1245,7 @@
             Width = 70
           end
           object calcAmountSaleWeight: TcxGridDBColumn
-            Caption = #1054#1090#1075#1088'. '#1082#1075
+            Caption = #1054#1090#1075#1088'. '#1074#1077#1089
             DataBinding.FieldName = 'AmountSaleWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1276,7 +1276,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             Options.Editing = False
-            Width = 140
+            Width = 108
           end
           object calcTaxPromo: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072', '#1075#1088#1085
@@ -1530,7 +1530,7 @@
             Width = 81
           end
           object ссAmountSale: TcxGridDBColumn
-            Caption = #1054#1090#1075#1088'. '#1064#1090
+            Caption = #1054#1090#1075#1088'. '#1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'AmountSale'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1540,7 +1540,7 @@
             Width = 60
           end
           object ссAmountSaleWeight: TcxGridDBColumn
-            Caption = #1054#1090#1075#1088'. '#1082#1075
+            Caption = #1054#1090#1075#1088'. '#1074#1077#1089
             DataBinding.FieldName = 'AmountSaleWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -1571,7 +1571,7 @@
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1062#1077#1085#1072' '#1087#1088#1072#1081#1089#1086#1074#1072#1103' '#1089' '#1053#1044#1057', '#1075#1088#1085
             Options.Editing = False
-            Width = 140
+            Width = 108
           end
           object ссTaxPromo_Condition: TcxGridDBColumn
             Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103' '#1087#1086' '#1076#1086#1087'.'#1089#1095#1077#1090#1091', '#1075#1088#1085'/'#1082#1075

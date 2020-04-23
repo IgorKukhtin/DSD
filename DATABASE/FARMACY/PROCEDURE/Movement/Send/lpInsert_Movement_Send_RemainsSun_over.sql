@@ -59,8 +59,6 @@ $BODY$
    DECLARE vbPeriod_t2    INTERVAL;
    DECLARE vbPeriod_t1_v2 INTERVAL;
 
-   DECLARE vbIs_V2 Boolean;
-
    DECLARE vbDate_6     TDateTime;
    DECLARE vbDate_1     TDateTime;
    DECLARE vbDate_0     TDateTime;
@@ -97,12 +95,9 @@ BEGIN
      -- !!!
      vbKoeff_over:= 2;
      
-     -- !!! определяется схема: версия-1 или версия-2
-     vbIs_V2:= CASE WHEN EXTRACT (DOW FROM inOperDate) = 3 THEN FALSE ELSE TRUE END;
-
      -- !!!
-     vbPeriod_t1    := CASE WHEN vbIs_V2 = FALSE THEN '35 DAY' ELSE '30 DAY' END :: INTERVAL;
-     vbPeriod_t2    := CASE WHEN vbIs_V2 = FALSE THEN '25 DAY' ELSE '0 DAY'  END :: INTERVAL;
+     vbPeriod_t1    := '35 DAY' :: INTERVAL;
+     vbPeriod_t2    := '25 DAY' :: INTERVAL;
 
      -- !!!
      vbSumm_limit:= CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
@@ -534,50 +529,7 @@ BEGIN
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
-             , CASE -- для такого
-                    WHEN vbIs_V2 = TRUE -- !!! вот он V2
-                         THEN
-                              CASE -- если НТЗ_МИН = 0 ИЛИ ост <= НТЗ_МИН
-                                   WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
-                                        THEN CASE -- для такого НТЗ
-                                                  WHEN tmpObject_Price.MCSValue >= 0.1 AND tmpObject_Price.MCSValue < 10
-                                                  -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                                   AND 1 >= ROUND (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
-                                                                 - COALESCE (tmpMI_Send_in.Amount, 0)
-                                                                 - COALESCE (tmpMI_Income.Amount, 0)
-                                                                 - COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                                  )
-                                                       THEN -- округляем ВВЕРХ
-                                                            CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
-                                                                - COALESCE (tmpMI_Send_in.Amount, 0)
-                                                                - COALESCE (tmpMI_Income.Amount, 0)
-                                                                - COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                                 )
-                                                  -- для такого НТЗ
-                                                  WHEN tmpObject_Price.MCSValue >= 10
-                                                  -- и 1 >= НТЗ - остаток - "отложено" - "перемещ" - "приход" - "заявка"
-                                                   AND 1 >= CEIL (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
-                                                                - COALESCE (tmpMI_Send_in.Amount, 0)
-                                                                - COALESCE (tmpMI_Income.Amount, 0)
-                                                                - COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                                 )
-                                                       THEN -- округляем
-                                                            ROUND  (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
-                                                                  - COALESCE (tmpMI_Send_in.Amount, 0)
-                                                                  - COALESCE (tmpMI_Income.Amount, 0)
-                                                                  - COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                                   )
-                                                  ELSE -- округляем ВВНИЗ
-                                                       FLOOR (tmpObject_Price.MCSValue - (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0))
-                                                            - COALESCE (tmpMI_Send_in.Amount, 0)
-                                                            - COALESCE (tmpMI_Income.Amount, 0)
-                                                            - COALESCE (tmpMI_OrderExternal.Amount, 0)
-                                                             )
-                                             END
-                                   ELSE 0
-                              END
-
-                    WHEN 1.0 <= FLOOR (-- продажи у у получателя в разрезе T2=45
+             , CASE WHEN 1.0 <= FLOOR (-- продажи у у получателя в разрезе T2=45
                                        COALESCE (_tmpSale_over.Amount_t2, 0)
                                        -- МИНУС остаток
                                      - CASE WHEN (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) /*- COALESCE (tmpMI_Send_out.Amount, 0)*/

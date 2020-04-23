@@ -708,6 +708,7 @@ BEGIN
                             THEN lpUpdate_MI_ProductionUnion_RealWeight
                                                          (inId                  := tmp.MovementItemId_Partion
                                                         , inAmount              := tmp.Amount
+                                                        , inCount               := tmp.Count
                                                         , inUserId              := vbUserId
                                                          )
                        WHEN vbMovementDescId = zc_Movement_ProductionUnion()
@@ -1384,7 +1385,7 @@ BEGIN
 
 if inSession = '5' AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin );
+    RAISE EXCEPTION 'Admin - Errr _end <%>', (select Movement.InvNumber from Movement where Movement.Id = vbMovementId_begin);
     -- 'Повторите действие через 3 мин.'
 end if;
 

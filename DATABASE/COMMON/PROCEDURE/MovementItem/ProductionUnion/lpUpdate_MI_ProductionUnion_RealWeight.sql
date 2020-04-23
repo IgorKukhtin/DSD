@@ -1,10 +1,11 @@
 -- Function: lpUpdate_MI_ProductionUnion_RealWeight()
 
-DROP FUNCTION IF EXISTS lpUpdate_MI_ProductionUnion_RealWeight  (Integer, TFloat, Integer);
+DROP FUNCTION IF EXISTS lpUpdate_MI_ProductionUnion_RealWeight  (Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpUpdate_MI_ProductionUnion_RealWeight(
     IN inId                     Integer   , -- Ключ объекта <Элемент документа>
-    IN inAmount                 TFloat    , -- Количество 
+    IN inAmount                 TFloat    , -- Фактический вес (информативно)
+    IN inCount                  TFloat    , -- Количество батонов 
     IN inUserId                 Integer     -- пользователя
 )                              
 RETURNS Integer
@@ -17,8 +18,11 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. Партия производства <%> не найдена.', inId;
    END IF;
 
-   -- сохранили свойство <Партия товара>
+   -- сохранили свойство <Фактический вес (информативно)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RealWeight(), inId, inAmount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_RealWeight()), 0));
+
+   -- сохранили свойство <Количество батонов>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Count(), inId, inCount + COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = inId AND MIF.DescId = zc_MIFloat_Count()), 0));
 
    -- сохранили протокол
    PERFORM lpInsert_MovementItemProtocol (inId, inUserId, FALSE);

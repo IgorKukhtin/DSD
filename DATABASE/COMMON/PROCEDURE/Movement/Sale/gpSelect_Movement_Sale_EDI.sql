@@ -234,6 +234,51 @@ BEGIN
     END IF;
 
 
+
+     -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
+     INSERT INTO ResourseProtocol (UserId
+                                 , OperDate
+                                 , Value1
+                                 , Value2
+                                 , Value3
+                                 , Value4
+                                 , Value5
+                                 , Time1
+                                 , Time2
+                                 , Time3
+                                 , Time4
+                                 , Time5
+                                 , ProcName
+                                 , ProtocolData
+                                  )
+        WITH tmp_pg AS (SELECT * FROM pg_stat_activity WHERE state = 'active')
+        SELECT vbUserId
+               -- во сколько началась
+             , CURRENT_TIMESTAMP
+             , (SELECT COUNT (*) FROM tmp_pg)                                                    AS Value1
+             , (SELECT COUNT (*) FROM tmp_pg WHERE position( 'autovacuum: VACUUM' in query) = 1) AS Value2
+             , NULL AS Value3
+             , NULL AS Value4
+             , NULL AS Value5
+               -- сколько всего выполнялась проц
+             , (CLOCK_TIMESTAMP() - CLOCK_TIMESTAMP()) :: INTERVAL AS Time1
+               -- сколько всего выполнялась проц ДО lpSelectMinPrice_List
+             , NULL AS Time2
+               -- сколько всего выполнялась проц lpSelectMinPrice_List
+             , NULL AS Time3
+               -- сколько всего выполнялась проц ПОСЛЕ lpSelectMinPrice_List
+             , NULL AS Time4
+               -- во сколько закончилась
+             , CLOCK_TIMESTAMP() AS Time5
+               -- ProcName
+             , 'gpSelect_Movement_Sale_EDI'
+               -- ProtocolData
+             , inMovementId :: TVarChar
+    || ', ' || inSession
+    || ', ' || (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+              ;
+
+
      --
     OPEN Cursor1 FOR
 --     WITH tmpObject_GoodsPropertyValue AS
