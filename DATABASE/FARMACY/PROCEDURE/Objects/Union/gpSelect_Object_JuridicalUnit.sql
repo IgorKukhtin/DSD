@@ -23,7 +23,7 @@ BEGIN
            , ObjectDesc.ItemName         AS DescName
            , Object_Juridical.ValueData  AS JuridicalName
            , Object_Unit.isErased        AS isErased
-           
+
        FROM Object AS Object_Unit
             LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit.DescId
 

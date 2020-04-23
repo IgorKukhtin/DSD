@@ -11,6 +11,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ToId Integer, ToCode Integer, ToName TVarChar
              , isV1  Boolean
              , isV2  Boolean
+             , isV3  Boolean
+             , isV4  Boolean
              , isMSC_in  Boolean
              , isErased   Boolean
              ) AS
@@ -38,6 +40,8 @@ BEGIN
 
            , FALSE :: Boolean       AS isV1
            , FALSE :: Boolean       AS isV2
+           , FALSE :: Boolean       AS isV3
+           , FALSE :: Boolean       AS isV4
            , FALSE :: Boolean       AS isMSC_in
            , FALSE :: Boolean       AS isErased
            ;
@@ -58,6 +62,8 @@ BEGIN
 
            , COALESCE (ObjectBoolean_SunExclusion_V1.ValueData, FALSE)     :: Boolean AS isV1
            , COALESCE (ObjectBoolean_SunExclusion_V2.ValueData, FALSE)     :: Boolean AS isV2
+           , COALESCE (ObjectBoolean_SunExclusion_V3.ValueData, FALSE)     :: Boolean AS isV3
+           , COALESCE (ObjectBoolean_SunExclusion_V4.ValueData, FALSE)     :: Boolean AS isV4
            , COALESCE (ObjectBoolean_SunExclusion_MSC_in.ValueData, FALSE) :: Boolean AS isMSC_in
 
            , Object_SunExclusion.isErased    AS isErased
@@ -80,6 +86,14 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_SunExclusion_V2
                                    ON ObjectBoolean_SunExclusion_V2.ObjectId = Object_SunExclusion.Id
                                   AND ObjectBoolean_SunExclusion_V2.DescId = zc_ObjectBoolean_SunExclusion_V2()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_SunExclusion_V3
+                                   ON ObjectBoolean_SunExclusion_V3.ObjectId = Object_SunExclusion.Id
+                                  AND ObjectBoolean_SunExclusion_V3.DescId = zc_ObjectBoolean_SunExclusion_V3()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_SunExclusion_V4
+                                   ON ObjectBoolean_SunExclusion_V4.ObjectId = Object_SunExclusion.Id
+                                  AND ObjectBoolean_SunExclusion_V4.DescId = zc_ObjectBoolean_SunExclusion_V4()
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_SunExclusion_MSC_in
                                    ON ObjectBoolean_SunExclusion_MSC_in.ObjectId = Object_SunExclusion.Id
                                   AND ObjectBoolean_SunExclusion_MSC_in.DescId = zc_ObjectBoolean_SunExclusion_MSC_in()

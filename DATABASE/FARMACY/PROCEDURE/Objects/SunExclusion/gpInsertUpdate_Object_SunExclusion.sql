@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_SunExclusion (Integer,Integer,TVarChar, TFloat,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SunExclusion (Integer,Integer,TVarChar, Integer, Integer, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_SunExclusion (Integer,Integer,TVarChar, Integer, Integer, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SunExclusion(
  INOUT ioId              Integer   ,    -- ключ объекта <Производитель>
@@ -10,6 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_SunExclusion(
     IN inToId            Integer   ,    -- 
     IN inisV1            Boolean,       -- 
     IN inisV2            Boolean,       -- 
+    IN inisV3            Boolean,       -- 
+    IN inisV4            Boolean,       -- 
     IN inisMSC_in        Boolean,       -- 
     IN inSession         TVarChar       -- сессия пользователя
 )
@@ -37,6 +40,11 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_SunExclusion_V2(), ioId, inisV2);
    -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_SunExclusion_V3(), ioId, inisV3);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_SunExclusion_V4(), ioId, inisV4);
+
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_SunExclusion_MSC_in(), ioId, inisMSC_in);
 
    -- сохранили протокол
@@ -49,6 +57,7 @@ $BODY$ LANGUAGE plpgsql;
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 23.04.20         *
  06.04.20         *
 */
 

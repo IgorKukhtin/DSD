@@ -48,6 +48,8 @@ type
     cxLabel2: TcxLabel;
     edTo: TcxButtonEdit;
     GuidesTo: TdsdGuides;
+    cbisv3: TcxCheckBox;
+    cbisv4: TcxCheckBox;
   private
     { Private declarations }
   public

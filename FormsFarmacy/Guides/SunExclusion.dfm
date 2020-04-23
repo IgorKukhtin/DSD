@@ -52,6 +52,14 @@ object SunExclusionForm: TSunExclusionForm
         Options.Editing = False
         Width = 39
       end
+      object ItemName_from: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1086#1090' '#1082#1086#1075#1086')'
+        DataBinding.FieldName = 'ItemName_from'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 74
+      end
       object FromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
@@ -59,6 +67,14 @@ object SunExclusionForm: TSunExclusionForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 212
+      end
+      object ItemName_to: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' ('#1082#1086#1084#1091')'
+        DataBinding.FieldName = 'ItemName_to'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 95
       end
       object ToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
@@ -94,6 +110,24 @@ object SunExclusionForm: TSunExclusionForm
         HeaderHint = #1054#1090#1082#1083#1102#1095#1077#1085' '#1077#1089#1083#1080' '#1091' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103' '#1087#1086' '#1090#1086#1074#1072#1088#1091' '#1053#1058#1047' = 0'
         Options.Editing = False
         Width = 93
+      end
+      object isV3: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083'. '#1076#1083#1103' '#1069'-'#1057#1059#1053
+        DataBinding.FieldName = 'isV3'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083#1102#1095#1077#1085' '#1076#1083#1103' '#1057#1059#1053' '#1101#1082#1089#1087#1088#1077#1089#1089
+        Options.Editing = False
+        Width = 88
+      end
+      object isV4: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083#1102#1095#1077#1085' '#1076#1083#1103' '#1057#1059#1053'2-'#1055#1048
+        DataBinding.FieldName = 'isV4'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083#1102#1095#1077#1085' '#1076#1083#1103' '#1057#1059#1053'2-'#1055#1048
+        Options.Editing = False
+        Width = 92
       end
       object Name: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
