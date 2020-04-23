@@ -70,6 +70,8 @@ type
     FromName: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
     isMSC_in: TcxGridDBColumn;
+    ItemName_from: TcxGridDBColumn;
+    ItemName_to: TcxGridDBColumn;
   private
     { Private declarations }
   public

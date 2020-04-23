@@ -1632,6 +1632,9 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_Area_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_Area_ObjectForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_Unit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_Unit_ObjectForm');
 end;

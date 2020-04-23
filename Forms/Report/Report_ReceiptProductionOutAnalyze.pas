@@ -104,6 +104,8 @@ type
     LossGP_plan: TcxGridDBColumn;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
+    actPrint_fact: TdsdPrintAction;
+    bbPrint_fact: TdxBarButton;
   private
     { Private declarations }
   public

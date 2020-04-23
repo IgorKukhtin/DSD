@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' <'#1048#1089#1082#1083#1102#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1057#1059#1053'>'
-  ClientHeight = 245
+  ClientHeight = 286
   ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 91
-    Top = 211
+    Left = 88
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 241
-    Top = 211
+    Left = 238
+    Top = 251
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -115,6 +115,20 @@
     Properties.ReadOnly = True
     TabOrder = 12
     Width = 398
+  end
+  object cbisv3: TcxCheckBox
+    Left = 20
+    Top = 207
+    Caption = #1054#1090#1082#1083#1102#1095#1077#1085' '#1076#1083#1103' '#1069'-'#1057#1059#1053
+    TabOrder = 13
+    Width = 138
+  end
+  object cbisv4: TcxCheckBox
+    Left = 170
+    Top = 207
+    Caption = #1054#1090#1082#1083#1102#1095#1077#1085' '#1076#1083#1103' '#1057#1059#1053'2-'#1055#1048
+    TabOrder = 14
+    Width = 159
   end
   object ActionList: TActionList
     Left = 252
@@ -210,6 +224,22 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisv3'
+        Value = Null
+        Component = cbisv3
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv4'
+        Value = Null
+        Component = cbisv4
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisMSC_in'
         Value = Null
         Component = cbisMSC_in
@@ -269,6 +299,20 @@
         Name = 'isV2'
         Value = Null
         Component = cbisv2
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isV3'
+        Value = Null
+        Component = cbisv3
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isV4'
+        Value = Null
+        Component = cbisv4
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
@@ -335,10 +379,10 @@
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnit_Area_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TUnit_Area_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -364,10 +408,10 @@
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.Value = 'TUnit_Area_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
+    FormName = 'TUnit_Area_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

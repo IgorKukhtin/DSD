@@ -859,7 +859,8 @@ uses
   Report_Movement_Send_RemainsSunOut_express_v2 in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSunOut_express_v2.pas' {Report_Movement_Send_RemainsSunOut_express_v2Form: TParentForm},
   Report_Movement_Send_RemainsSun_expressV2Dialog in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_expressV2Dialog.pas' {Report_Movement_Send_RemainsSun_expressV2DialogForm: TParentForm},
   PersentSalaryDialog in '..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas' {PersentSalaryDialogForm: TParentForm},
-  Report_Movement_Send_RemainsSun_pi in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_pi.pas' {Report_Movement_Send_RemainsSun_piForm: TParentForm};
+  Report_Movement_Send_RemainsSun_pi in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_pi.pas' {Report_Movement_Send_RemainsSun_piForm: TParentForm},
+  Unit_Area_Object in '..\..\FormsFarmacy\Guides\Unit_Area_Object.pas' {Unit_Area_ObjectForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
