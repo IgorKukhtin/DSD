@@ -837,7 +837,10 @@ begin
           CheckCDS.Next;
 
         end; // while
-      end;
+      end else if gCode = 4 then
+
+        Result:= True //!!!все ОК и Чек можно сохранить!!!
+      ;
 //       else if gCode = 3 then
 //      begin
 //        CheckCDS.First;
@@ -1165,7 +1168,7 @@ begin
       then lPriceSale:= CheckCDS.FieldByName('PriceSale').asFloat
       else lPriceSale:= CheckCDS.FieldByName('Price').asFloat;
       //
-      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode = 3)) and
+      if (lDiscountExternalId > 0) and ((gCode = 1) or (gCode = 2) and (gUserName <> '') or (gCode = 3) or (gCode = 4)) and
          (CheckCDS.FieldByName('Amount').AsFloat > 0)
       then
         //поиск Штрих-код
@@ -1455,6 +1458,9 @@ begin
             end;
             //finally
           end;
+
+      end else if (BarCode_find <> '') and (gCode = 4) then
+      begin
 
       end else
         // иначе - обнуляем скидку

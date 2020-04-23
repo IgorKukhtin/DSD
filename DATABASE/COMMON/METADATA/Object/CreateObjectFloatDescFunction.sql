@@ -1659,9 +1659,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity() 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity', zc_Object_CashRegister(), 'Оперативная память' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Fund() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Fund'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_Fund', 'Накопленный фонд' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Fund');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_FundUsed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_FundUsed'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_FundUsed', 'Использование из Фонда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_FundUsed');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 23.04.20                                                                                      * zc_ObjectFloat_Unit_Fund, zc_ObjectFloat_Unit_FundUsed
  08.04.20                                                                                      * zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity
  05.04.20                                                                                      * zc_ObjectFloat_SeasonalityCoefficient_Koeff1..12
  31.03.20         * zc_ObjectFloat_Unit_KoeffOutSUN_v3

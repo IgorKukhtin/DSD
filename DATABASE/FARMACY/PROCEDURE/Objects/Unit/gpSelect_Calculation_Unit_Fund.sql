@@ -1,9 +1,8 @@
--- Function: gpSelect_Calculation_FundMonth()
+-- Function: gpSelect_Calculation_Unit_Fund()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_FundMonth (TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_Unit_Fund (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Calculation_FundMonth(
-    IN inOperDate    TDateTime,
+CREATE OR REPLACE FUNCTION gpSelect_Calculation_Unit_Fund(
     IN inUnitID      Integer   , -- Подразделение
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -11,18 +10,12 @@ RETURNS VOID
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbStartDate TDateTime;
-   DECLARE vbEndDate   TDateTime;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
-   -- первое число месяца
-   vbStartDate := DATE_TRUNC ('MONTH', inOperDate) - INTERVAL '1 MONTH';
-   -- последнее число месяца
-   vbEndDate := DATE_TRUNC ('MONTH', vbStartDate) + INTERVAL '1 MONTH' - INTERVAL '1 second';
 
-   PERFORM lpInsertUpdate_MovementItem_WagesFundUnit (DATE_TRUNC ('MONTH', inOperDate), T1.UnitId, T1.Summa, vbUserId)
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_Fund(), T1.UnitId, T1.Summa)
    FROM
    (WITH
               -- Текущее значение
@@ -45,7 +38,7 @@ BEGIN
                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                 AND MovementLinkObject_Unit.ObjectId <> 377606
                                                 AND (MovementLinkObject_Unit.ObjectId = inUnitID OR COALESCE(inUnitID, 0) = 0)
-              WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+              WHERE Movement.OperDate >= (SELECT MIN(tmpPersentSalary.StartDate) FROM tmpPersentSalary)
                 AND Movement.DescId = zc_Movement_Check()
                 AND Movement.StatusId = zc_Enum_Status_Complete())
     ,  tmpCheck AS (
@@ -83,13 +76,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_FundMonth (TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_Unit_Fund (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                 Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
- 21.04.20                                                        *
+ 23.04.20                                                        *
 */
 
--- select * from gpSelect_Calculation_FundMonth('01.05.2020', 0/*183292*/, '3');
+-- select * from gpSelect_Calculation_Unit_Fund(0 /*183292*/, '3');

@@ -3660,7 +3660,7 @@ begin
   pnlDiscount.Visible    := DiscountExternalId > 0;
   lblDiscountExternalName.Caption:= '  ' + DiscountExternalName + '  ';
   lblDiscountCardNumber.Caption  := '  ' + DiscountCardNumber + '  ';
-  lblPrice.Visible := (DiscountServiceForm.gCode = 2) and (DiscountServiceForm.gUserName = '');
+  lblPrice.Visible := (DiscountServiceForm.gCode in [2, 4]) and (DiscountServiceForm.gUserName = '');
   edPrice.Visible := lblPrice.Visible;
   lblAmount.Visible := lblPrice.Visible;
   edDiscountAmount.Visible := lblAmount.Visible;
@@ -5010,7 +5010,7 @@ begin
                        // цена СО скидкой
                        lPrice := SourceClientDataSet.FieldByName('PriceSP').asCurrency;
              end else
-             if (DiscountServiceForm.gCode = 2) and edPrice.Visible and (Abs(edPrice.Value) > 0.0001) then
+             if (DiscountServiceForm.gCode in [2, 4]) and edPrice.Visible and (Abs(edPrice.Value) > 0.0001) then
              begin
                // цена БЕЗ скидки
                lPriceSale := SourceClientDataSet.FieldByName('Price').asCurrency;
@@ -6530,7 +6530,7 @@ begin
             checkCDS.FieldByName('ChangePercent').asCurrency     := 0;
             checkCDS.FieldByName('SummChangePercent').asCurrency := CheckCDS.FieldByName('Amount').asCurrency * (RemainsCDS.FieldByName('PriceSaleSP').asCurrency - RemainsCDS.FieldByName('PriceSP').asCurrency);
         end else
-        if (DiscountServiceForm.gCode = 2) and edPrice.Visible and (Abs(edPrice.Value) > 0.0001) then
+        if (DiscountServiceForm.gCode in [2, 4]) and edPrice.Visible and (Abs(edPrice.Value) > 0.0001) then
         begin
             // на всяк случай - УСТАНОВИМ скидку еще разок
             checkCDS.FieldByName('PriceSale').asCurrency:= RemainsCDS.FieldByName('Price').asCurrency;

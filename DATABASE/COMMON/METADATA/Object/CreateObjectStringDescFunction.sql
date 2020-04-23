@@ -1122,9 +1122,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Hardware_Comment() RETURNS Integer AS
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Hardware_Comment', zc_Object_Hardware(), 'Примечание' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Hardware_Comment');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_AnalogATC() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_AnalogATC'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_AnalogATC', zc_Object_Goods(), 'Перечень аналогов товара ATC' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_AnalogATC');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_ActiveSubstance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_ActiveSubstance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Goods_ActiveSubstance', zc_Object_Goods(), 'Действующее вещество' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_ActiveSubstance');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 24.04.20                                                                                                         * zc_ObjectString_Goods_ActiveSubstance, zc_ObjectString_Goods_AnalogATC
  21.04.20         * zc_ObjectString_Unit_ListDaySUN_pi
  17.04.20                                                                                                         * zc_ObjectString_Hardware_ ...
  12.04.20                                                                                                         * zc_ObjectString_Hardware_ ...

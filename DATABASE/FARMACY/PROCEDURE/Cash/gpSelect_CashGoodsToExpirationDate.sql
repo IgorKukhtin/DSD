@@ -35,6 +35,15 @@ BEGIN
      	vbUnitId := 0;
      END IF;
 
+
+    IF COALESCE((SELECT count(*) as CountProc  
+                 FROM pg_stat_activity
+                 WHERE state = 'active'
+                   AND query ilike '%gpSelect_CashGoodsToExpirationDate%'), 0) > 7
+    THEN
+      RAISE EXCEPTION 'Ошибка. Пропускаем из за нагрузки';
+    END IF;
+       
     -- значения для разделения по срокам
     -- дата + 6 месяцев
     SELECT CURRENT_DATE + tmp.Date_6, tmp.Day_6

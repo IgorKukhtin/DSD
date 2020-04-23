@@ -34,6 +34,7 @@ inherited MainCashForm2: TMainCashForm2
         Navigator.Buttons.CustomButtons = <>
         OnFocusedRecordChanged = CheckGridDBTableViewFocusedRecordChanged
         DataController.DataSource = CheckDS
+        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -308,7 +309,7 @@ inherited MainCashForm2: TMainCashForm2
         OnSelectionChanged = MainGridDBTableViewSelectionChanged
         DataController.DataSource = RemainsDS
         DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.KeyFieldNames = 'Id;PartionDateKindId'
+        DataController.KeyFieldNames = 'Id;PartionDateKindId;NDSKindId'
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
