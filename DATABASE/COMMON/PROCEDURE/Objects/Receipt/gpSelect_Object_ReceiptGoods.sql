@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptGoods(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+             , GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar
              , MeasureName TVarChar
              , GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
              , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
@@ -50,55 +51,75 @@ BEGIN
 
 
      SELECT
-           Object_Goods.Id          AS Id
-         , Object_Goods.ObjectCode  AS Code
-         , Object_Goods.ValueData   AS Name
+           Object_Goods.Id                      AS Id
+         , Object_Goods.ObjectCode              AS Code
+         , Object_Goods.ValueData               AS Name
 
-         , Object_GoodsKind.Id         AS GoodsKindId
-         , Object_GoodsKind.ObjectCode AS GoodsKindCode
-         , Object_GoodsKind.ValueData  AS GoodsKindName
+         , Object_GoodsKind.Id                  AS GoodsKindId
+         , Object_GoodsKind.ObjectCode          AS GoodsKindCode
+         , Object_GoodsKind.ValueData           AS GoodsKindName
 
-         , Object_Measure.ValueData     AS MeasureName
+         , Object_GoodsKindComplete.Id          AS GoodsKindCompleteId
+         , Object_GoodsKindComplete.ObjectCode  AS GoodsKindCompleteCode
+         , Object_GoodsKindComplete.ValueData   AS GoodsKindCompleteName
 
-         , Object_GoodsGroupAnalyst.ValueData          AS GoodsGroupAnalystName
-         , Object_GoodsTag.ValueData                   AS GoodsTagName
-         , Object_TradeMark.ValueData                  AS TradeMarkName
+         , Object_Measure.ValueData             AS MeasureName
+
+         , Object_GoodsGroupAnalyst.ValueData   AS GoodsGroupAnalystName
+         , Object_GoodsTag.ValueData            AS GoodsTagName
+         , Object_TradeMark.ValueData           AS TradeMarkName
 
          , tmpReceiptMain.ReceiptId   :: Integer
          , tmpReceiptMain.ReceiptCode :: Integer
          , tmpReceiptMain.ReceiptName :: TVarChar
-         , Object_Goods.isErased AS isErased
+         , Object_Goods.isErased                AS isErased
 
-     FROM (SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
-                , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
+     FROM (SELECT ObjectLink_Receipt_Goods.ChildObjectId             AS GoodsId
+                , ObjectLink_Receipt_GoodsKind.ChildObjectId         AS GoodsKindId
+                , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId AS GoodsKindCompleteId
+
            FROM ObjectLink AS ObjectLink_Receipt_GoodsKind
                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_GoodsKind.ObjectId
                 INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                      ON ObjectLink_Receipt_Goods.ObjectId = ObjectLink_Receipt_GoodsKind.ObjectId
                                     AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+
+                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                     ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id
+                                    AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+                                                            
            WHERE ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
              AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress()
            GROUP BY ObjectLink_Receipt_Goods.ChildObjectId
                   , ObjectLink_Receipt_GoodsKind.ChildObjectId
+                  , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
           UNION
-           SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
-                , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
+           SELECT ObjectLink_Receipt_Goods.ChildObjectId             AS GoodsId
+                , ObjectLink_Receipt_GoodsKind.ChildObjectId         AS GoodsKindId
+                , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId AS GoodsKindCompleteId
            FROM ObjectLink AS ObjectLink_Receipt_GoodsKind
                 INNER JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_Receipt_GoodsKind.ObjectId
                 INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Receipt.isErased
                 LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                      ON ObjectLink_Receipt_Goods.ObjectId = ObjectLink_Receipt_GoodsKind.ObjectId
                                     AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
+
+                LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                     ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id
+                                    AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
+
            WHERE ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
              AND ObjectLink_Receipt_GoodsKind.ChildObjectId IS NULL
            GROUP BY ObjectLink_Receipt_Goods.ChildObjectId
                   , ObjectLink_Receipt_GoodsKind.ChildObjectId
+                  , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId
           ) AS tmpGoods
 
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
           INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Goods.isErased
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+          LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = tmpGoods.GoodsKindCompleteId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 

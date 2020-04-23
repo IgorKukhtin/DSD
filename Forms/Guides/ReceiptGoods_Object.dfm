@@ -75,6 +75,14 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object GoodsKindCompleteName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
+        DataBinding.FieldName = 'GoodsKindCompleteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 100
+      end
       object TradeMarkName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
@@ -305,11 +313,15 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
         item
           Name = 'GoodsKindCompleteId'
           Value = 0
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteId'
           MultiSelectSeparator = ','
         end
         item
           Name = 'GoodsKindCompleteName'
           Value = ''
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindCompleteName'
           DataType = ftString
           MultiSelectSeparator = ','
         end
@@ -414,7 +426,7 @@ object ReceiptGoods_ObjectForm: TReceiptGoods_ObjectForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 272
-    Top = 136
+    Left = 208
+    Top = 184
   end
 end
