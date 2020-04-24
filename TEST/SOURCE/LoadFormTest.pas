@@ -910,6 +910,10 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalStewJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalStewJournalForm');
   exit;
@@ -946,7 +950,7 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
-{
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   }

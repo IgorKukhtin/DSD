@@ -89,6 +89,8 @@ type
     actPrintSaleOrderTax: TdsdPrintAction;
     bbPrintSaleOrder: TdxBarButton;
     bbPrintSaleOrderTax: TdxBarButton;
+    spInsertUpdateMovement_order: TdsdStoredProc;
+    HeaderSaver1: THeaderSaver;
   private
     { Private declarations }
   public
