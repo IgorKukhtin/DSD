@@ -16,19 +16,18 @@ $BODY$
    DECLARE vbUnitId    Integer;
    DECLARE vbStatusId  Integer;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
+    -- проверка прав пользователя на вызов процедуры
+    vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_Promo_Data());
 
-     -- параметры из документа <Акции>
-     SELECT Movement_Promo_View.StatusId
-          , Movement_Promo_View.StartSale
-          , Movement_Promo_View.EndSale
-          , COALESCE (Movement_Promo_View.UnitId, 0)
-            INTO vbStatusId, vbStartDate, vbEndDate, vbUnitId
-     FROM Movement_Promo_View
-     WHERE Movement_Promo_View.Id = inMovementId
+    -- параметры из документа <Акции>
+    SELECT Movement_Promo_View.StatusId
+         , Movement_Promo_View.StartSale
+         , Movement_Promo_View.EndSale
+         , COALESCE (Movement_Promo_View.UnitId, 0)
+      INTO vbStatusId, vbStartDate, vbEndDate, vbUnitId
+    FROM Movement_Promo_View
+    WHERE Movement_Promo_View.Id = inMovementId
     ;
-     
 
 END;
 $BODY$
