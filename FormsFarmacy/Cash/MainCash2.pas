@@ -465,6 +465,8 @@ type
     MemDataNDSKINDID: TIntegerField;
     CheckGridNDS: TcxGridDBColumn;
     mdCheckNDSKINDID: TIntegerField;
+    MainGoodsAnalogATC: TcxGridDBColumn;
+    MainGoodsActiveSubstance: TcxGridDBColumn;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -625,6 +627,8 @@ type
 
     FOldAnalogFilter : String;
 
+    FAnalogFilter: Integer;
+
     procedure SetBlinkVIP (isRefresh : boolean);
     procedure SetBlinkCheck (isRefresh : boolean);
     procedure SetBanCash (isRefresh : boolean);
@@ -762,7 +766,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog, SPDialog
      GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions, PUSHMessageCash,
      EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit, EmployeeScheduleCash,
      EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash, EnterLoyaltySaveMoney,
-     LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo;
+     LoyaltySMList, EnterLoyaltySMDiscount, GetSystemInfo, ListSelection;
 
 const
   StatusUnCompleteCode = 1;
@@ -1667,6 +1671,12 @@ end;
 // Установка фильтра по аналогу
 procedure TMainCashForm2.SetGoodsAnalogFilter(AGoodsAnalog : string);
 begin
+  Label19.Caption := '  Фильтр: ';
+  case FAnalogFilter of
+    1 : Label19.Caption := Label19.Caption + 'Аналоги по действующему веществу';
+    2 : Label19.Caption := Label19.Caption + 'Аналог товара ATC';
+    3 : Label19.Caption := Label19.Caption + 'Действующее вещество';
+  end;
   edAnalogFilter.Text := AGoodsAnalog;
   pnlAnalogFilter.Visible := True;
 end;
@@ -1719,7 +1729,8 @@ begin
     Exit;
   end else ClearFilterAll;
 
-  SetGoodsAnalogFilter('');
+  FAnalogFilter := ShowListSelection('Поиск по', ['Аналогам по действующему веществу', 'Аналогам товара ATC', 'Действующему вещество'], FAnalogFilter);
+  if FAnalogFilter > 0 then SetGoodsAnalogFilter('');
 end;
 
 procedure TMainCashForm2.actGoodsAnalogExecute(Sender: TObject);
@@ -1730,7 +1741,14 @@ begin
     Exit;
   end else ClearFilterAll;
 
-  SetGoodsAnalogFilter(StringReplace(RemainsCDS.FieldByName('GoodsAnalog').AsString, #13#10, ' ', [rfReplaceAll]));
+  FAnalogFilter := ShowListSelection('Поиск по', ['Аналогам по действующему веществу', 'Аналогам товара ATC', 'Действующему вещество'], FAnalogFilter);
+
+  case FAnalogFilter of
+    1 : SetGoodsAnalogFilter(StringReplace(RemainsCDS.FieldByName('GoodsAnalog').AsString, #13#10, ' ', [rfReplaceAll]));
+    2 : SetGoodsAnalogFilter(StringReplace(RemainsCDS.FieldByName('GoodsAnalogATC').AsString, #13#10, ' ', [rfReplaceAll]));
+    3 : SetGoodsAnalogFilter(StringReplace(RemainsCDS.FieldByName('GoodsActiveSubstance').AsString, #13#10, ' ', [rfReplaceAll]));
+  end;
+
 end;
 
 procedure TMainCashForm2.TimerMoneyInCashTimer(Sender: TObject);
@@ -1746,7 +1764,7 @@ end;
 
 procedure TMainCashForm2.SaveHardwareData;
 begin
-  if gc_User.Local then Exit;
+  if gc_User.Local or (gc_User.Session = '3') then Exit;
   try
     if Assigned(Cash) then
     begin
@@ -4594,10 +4612,19 @@ procedure TMainCashForm2.FilterRecord(DataSet: TDataSet; var Accept: Boolean);
 begin
   Accept := False;
   if Trim(FOldAnalogFilter) = '' then Exit;
-  if DataSet.FieldByName('GoodsAnalog').AsString = '' then Exit;
+  case FAnalogFilter of
+    1 : if DataSet.FieldByName('GoodsAnalog').AsString = '' then Exit;
+    2 : if DataSet.FieldByName('GoodsAnalogATC').AsString = '' then Exit;
+    3 : if DataSet.FieldByName('GoodsActiveSubstance').AsString = '' then Exit;
+    else Exit;
+  end;
 
   Res1 := TRegEx.Split(StringReplace(Trim(FOldAnalogFilter), '  ', '', [rfReplaceAll]), ' ');
-  Res2 := TRegEx.Split(DataSet.FieldByName('GoodsAnalog').AsString, #13#10);
+  case FAnalogFilter of
+    1 : Res2 := TRegEx.Split(DataSet.FieldByName('GoodsAnalog').AsString, #13#10);
+    2 : Res2 := TRegEx.Split(DataSet.FieldByName('GoodsAnalogATC').AsString, #13#10);
+    3 : Res2 := TRegEx.Split(DataSet.FieldByName('GoodsActiveSubstance').AsString, #13#10);
+  end;
 
   for I := 0 to High(Res1) do
     for J := 0 to High(Res2) do
@@ -4791,6 +4818,7 @@ begin
   FNeedFullRemains := true;
   TimerServiceRun.Enabled := true;
   FOldAnalogFilter := '';
+  FAnalogFilter := 0;
 
   LoadGoodsExpirationDate;
   LoadBankPOSTerminal;

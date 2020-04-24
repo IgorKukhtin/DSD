@@ -25,7 +25,8 @@ RETURNS TABLE (Id Integer, GoodsId_main Integer, GoodsGroupName TVarChar, GoodsN
                isMCSAuto Boolean, isMCSNotRecalcOld Boolean,
                AccommodationId Integer, AccommodationName TVarChar,
                PriceChange TFloat, FixPercent TFloat, FixDiscount TFloat, Multiplicity TFloat,
-               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar, GoodsAnalog TVarChar,
+               DoesNotShare boolean, GoodsAnalogId Integer, GoodsAnalogName TVarChar, 
+               GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar,
                CountSP TFloat, IdSP TVarChar, DosageIdSP TVarChar, PriceRetSP TFloat, PaymentSP TFloat,
                AmountMonth TFloat, PricePartionDate TFloat,
                PartionDateDiscount TFloat,
@@ -781,6 +782,8 @@ BEGIN
           , NULL::Integer                                          AS GoodsAnalogId
           , NULL::TVarChar                                         AS GoodsAnalogName
           , ObjectString_Goods_Analog.ValueData                    AS GoodsAnalog
+          , ObjectString_Goods_AnalogATC.ValueData                 AS GoodsAnalogATC
+          , ObjectString_Goods_ActiveSubstance.ValueData           AS GoodsActiveSubstance
           , tmpGoodsSP.CountSP                                     AS CountSP
           , tmpGoodsSP.IdSP                                        AS IdSP
           , tmpGoodsSP.DosageIdSP                                  AS DosageIdSP
@@ -882,6 +885,12 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_Goods_Analog
                                   ON ObjectString_Goods_Analog.ObjectId = ObjectLink_Main.ChildObjectId
                                  AND ObjectString_Goods_Analog.DescId = zc_ObjectString_Goods_Analog()
+           LEFT JOIN ObjectString AS ObjectString_Goods_AnalogATC
+                                  ON ObjectString_Goods_AnalogATC.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectString_Goods_AnalogATC.DescId = zc_ObjectString_Goods_AnalogATC()
+           LEFT JOIN ObjectString AS ObjectString_Goods_ActiveSubstance
+                                  ON ObjectString_Goods_ActiveSubstance.ObjectId = ObjectLink_Main.ChildObjectId
+                                 AND ObjectString_Goods_ActiveSubstance.DescId = zc_ObjectString_Goods_ActiveSubstance()
 
            -- Тип срок/не срок
            LEFT JOIN tmpPartionDateKind AS Object_PartionDateKind ON Object_PartionDateKind.Id = NULLIF (CashSessionSnapShot.PartionDateKindId, 0)

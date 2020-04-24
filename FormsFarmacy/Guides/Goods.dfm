@@ -425,13 +425,32 @@ inherited GoodsForm: TGoodsForm
             HeaderHint = #1044#1077#1083#1080#1090#1100' '#1085#1072' '#1082#1072#1089#1089#1072#1093
           end
           object GoodsAnalog: TcxGridDBColumn
-            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
+            Caption = #1040#1085#1072#1083#1086#1075#1080' '#1087#1086' '#1076#1077#1081#1089#1090#1074#1091#1102#1097#1077#1084#1091' '#1074#1077#1097#1077#1089#1090#1074#1091
             DataBinding.FieldName = 'GoodsAnalog'
             PropertiesClassName = 'TcxMemoProperties'
+            Properties.MaxLength = 255
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072
-            Width = 70
+            Width = 99
+          end
+          object GoodsAnalogATC: TcxGridDBColumn
+            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072' ATC'
+            DataBinding.FieldName = 'GoodsAnalogATC'
+            PropertiesClassName = 'TcxMemoProperties'
+            Properties.MaxLength = 255
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 89
+          end
+          object GoodsActiveSubstance: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074#1091#1102#1097#1077#1077' '#1074#1077#1097#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'GoodsActiveSubstance'
+            PropertiesClassName = 'TcxMemoProperties'
+            Properties.MaxLength = 255
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
           object NotTransferTime: TcxGridDBColumn
             Caption = #1053#1077' '#1087#1077#1088#1077#1074#1086#1076#1080#1090#1100' '#1074' '#1089#1088#1086#1082#1080
@@ -2345,6 +2364,24 @@ inherited GoodsForm: TGoodsForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'GoodsAnalog'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioAnalogATC'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsAnalogATC'
+        DataType = ftString
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioActiveSubstance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsActiveSubstance'
         DataType = ftString
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

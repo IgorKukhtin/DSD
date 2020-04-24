@@ -575,11 +575,11 @@ begin
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAllJuridicalForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAllJuridicalForm');
     //exit;
-    }
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeForm');
     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPartnerCodeMasterForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsPartnerCodeMasterForm');
 
@@ -589,14 +589,14 @@ begin
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
-
+     exit;
+    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTopDialogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsTopDialogForm');
-     exit;
-    {
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsAnalogForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAnalogEditForm'));
@@ -2260,7 +2260,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 

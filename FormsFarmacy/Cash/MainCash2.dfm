@@ -915,18 +915,33 @@ inherited MainCashForm2: TMainCashForm2
           Width = 46
         end
         object MainisGoodsAnalog: TcxGridDBColumn
-          Caption = #1040#1085#1072#1083#1086#1075#1080
+          Caption = #1040#1085#1072#1083#1086#1075#1080' '#1087#1086' '#1076#1077#1081#1089#1090#1074#1091#1102#1097#1077#1084#1091' '#1074#1077#1097#1077#1089#1090#1074#1091
           DataBinding.FieldName = 'GoodsAnalog'
           OnGetProperties = MainisGoodsAnalogGetProperties
           HeaderAlignmentHorz = taCenter
-          Width = 65
+          Options.Editing = False
+          Width = 88
+        end
+        object MainGoodsAnalogATC: TcxGridDBColumn
+          Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072' ATC'
+          DataBinding.FieldName = 'GoodsAnalogATC'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 88
+        end
+        object MainGoodsActiveSubstance: TcxGridDBColumn
+          Caption = #1044#1077#1081#1089#1090#1074#1091#1102#1097#1077#1077' '#1074#1077#1097#1077#1089#1090#1074#1086
+          DataBinding.FieldName = 'GoodsActiveSubstance'
+          HeaderAlignmentHorz = taCenter
+          Options.Editing = False
+          Width = 91
         end
         object MainisPartionDateKindName: TcxGridDBColumn
           Caption = #1058#1080#1087' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
           DataBinding.FieldName = 'PartionDateKindName'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
-          Width = 60
+          Width = 56
         end
         object MainPricePartionDate: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1089#1088#1086#1082#1086#1074#1086#1075#1086' '#1087#1088#1077#1087#1072#1088#1072#1090#1072
@@ -2016,7 +2031,7 @@ inherited MainCashForm2: TMainCashForm2
       ExplicitHeight = 13
     end
     object Label20: TLabel
-      Left = 211
+      Left = 249
       Top = 1
       Width = 40
       Height = 13
@@ -2030,7 +2045,7 @@ inherited MainCashForm2: TMainCashForm2
       ParentFont = False
     end
     object edAnalogFilter: TcxTextEdit
-      Left = 257
+      Left = 295
       Top = 0
       Properties.MaxLength = 0
       Properties.OnChange = edAnalogFilterPropertiesChange

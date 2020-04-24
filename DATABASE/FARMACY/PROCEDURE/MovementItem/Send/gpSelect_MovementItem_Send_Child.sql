@@ -349,7 +349,7 @@ BEGIN
                                FROM (SELECT DISTINCT tmpMIContainerAll.ContainerId FROM tmpMIContainerAll) AS ContainerAll
                                     INNER JOIN Container ON Container.DescId = zc_Container_CountPartionDate()
                                                         AND Container.WhereObjectId = vbUnitId
-                                                        AND Container.Id = ContainerAll.ContainerId
+                                                        AND Container.ParentId = ContainerAll.ContainerId
                                                         AND Container.Amount > 0
                                GROUP BY Container.ParentId)
          , tmpContainer AS (SELECT tmp.ContainerId
