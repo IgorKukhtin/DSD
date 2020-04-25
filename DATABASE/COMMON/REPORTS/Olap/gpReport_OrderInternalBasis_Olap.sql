@@ -224,7 +224,7 @@ BEGIN
                                     END                                    AS GoodsKindId
                                   , SUM (MIContainer.Amount)               AS Amount
                              FROM MovementItemContainer AS MIContainer
-                                  INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                                  INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                AND MIContainer.DescId     = zc_MIContainer_Count()
                                AND MIContainer.MovementDescId = zc_Movement_Send()
@@ -259,7 +259,7 @@ BEGIN
        , tmpMovementSend AS (SELECT tmp.MovementId                  AS MovementId
                                   , MovementLinkMovement.MovementId AS MovementId_Send
                                   , tmp.OperDate                    AS OperDate
-                             FROM (SELECT DISTINCT tmpMI.MovementId, tmpMI.OperDate FROM tmpMI) AS tmp
+                             FROM (SELECT DISTINCT tmpMovement.Id AS MovementId, tmpMovement.OperDate FROM tmpMovement) AS tmp
                                   INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = tmp.MovementId
                                                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                                   INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
@@ -284,6 +284,7 @@ BEGIN
                                                           AND MIContainer.DescId     = zc_MIContainer_Count()
                                                           AND MIContainer.MovementDescId = zc_Movement_Send() 
                           INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
+                          INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                      GROUP BY tmpMovementSend.OperDate
                             , MIContainer.WhereObjectId_Analyzer
                             , MIContainer.ObjectId_Analyzer
@@ -294,6 +295,100 @@ BEGIN
                      )
 
 
+       , tmpData_full AS (-- данные завки
+                          SELECT tmp.OperDate
+                               , tmp.InvNumber
+                               , tmp.DayCount
+                               , tmp.FromId
+                               , tmp.GoodsId
+                               , tmp.GoodsKindId
+                               , tmp.ReceiptId
+                               , tmp.Amount
+                               , tmp.AmountSecond
+                               , tmp.AmountRemains
+                               , tmp.AmountPartner
+                               , tmp.AmountPartnerPrior
+                               , tmp.AmountPartnerSecond
+                               , tmp.AmountForecast
+
+                               , tmpMI_Send.Amount          :: TFloat AS AmountSend       -- Приход за "сегодня"
+
+                               , tmpSend.AmountSendIn  :: TFloat AS AmountSendIn_or
+                               , tmpSend.AmountSendOut :: TFloat AS AmountSendOut_or
+                               , tmpSend.AmountSend    :: TFloat AS AmountSend_or
+
+                          FROM tmpData AS tmp
+                               -- приход сегодня
+                               LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmp.GoodsId
+                                                   AND tmpMI_Send.GoodsKindId = tmp.GoodsKindId
+                                                   AND tmpMI_Send.OperDate    = tmp.OperDate
+                                                   AND tmpMI_Send.UnitId      = tmp.FromId
+                               LEFT JOIN tmpSend ON tmpSend.GoodsId     = tmp.GoodsId
+                                                   AND tmpSend.GoodsKindId = tmp.GoodsKindId
+                                                   AND tmpSend.OperDate    = tmp.OperDate
+                                                   AND tmpSend.UnitId      = tmp.FromId
+                        UNION
+                          -- если есть перемещения без заявки их тоже показываем
+                          SELECT tmp.OperDate
+                               , '' :: TVarChar AS InvNumber
+                               , 0 AS DayCount
+                               , tmp.UnitId
+                               , tmp.GoodsId
+                               , tmp.GoodsKindId
+                               , 0 AS ReceiptId
+                               , 0 AS Amount
+                               , 0 AS AmountSecond
+                               , 0 AS AmountRemains
+                               , 0 AS AmountPartner
+                               , 0 AS AmountPartnerPrior
+                               , 0 AS AmountPartnerSecond
+                               , 0 AS AmountForecast
+
+                               , 0 AS AmountSend
+                               
+                               , tmp.AmountSendIn  AS AmountSendIn_or
+                               , tmp.AmountSendOut AS AmountSendOut_or
+                               , tmp.AmountSend    AS AmountSend_or
+                               
+                          FROM tmpSend AS tmp
+                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = tmp.UnitId
+                               LEFT JOIN tmpData ON tmpData.GoodsId     = tmp.GoodsId
+                                                AND tmpData.GoodsKindId = tmp.GoodsKindId
+                                                AND tmpData.OperDate    = tmp.OperDate
+                                                AND tmpData.FromId      = tmp.UnitId
+                          WHERE tmpData.GoodsId IS NULL
+                        UNION
+                          SELECT tmp.OperDate
+                               , '' :: TVarChar AS InvNumber
+                               , 0 AS DayCount
+                               , tmp.UnitId
+                               , tmp.GoodsId
+                               , tmp.GoodsKindId
+                               , 0 AS ReceiptId
+                               , 0 AS Amount
+                               , 0 AS AmountSecond
+                               , 0 AS AmountRemains
+                               , 0 AS AmountPartner
+                               , 0 AS AmountPartnerPrior
+                               , 0 AS AmountPartnerSecond
+                               , 0 AS AmountForecast
+
+                               , tmp.Amount AS AmountSend
+
+                               , 0 AS AmountSendIn_or
+                               , 0 AS AmountSendOut_or
+                               , 0 AS AmountSend_or
+                               
+                          FROM tmpMI_Send AS tmp
+                               INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = tmp.UnitId
+                               LEFT JOIN tmpData ON tmpData.GoodsId     = tmp.GoodsId
+                                                AND tmpData.GoodsKindId = tmp.GoodsKindId
+                                                AND tmpData.OperDate    = tmp.OperDate
+                                                AND tmpData.FromId      = tmp.UnitId
+                          WHERE tmpData.GoodsId IS NULL
+                          )
+
+      --Результат
       SELECT tmpData.OperDate
            , tmpData.InvNumber ::TVarChar
            , (tmpListDate.Num_day::TVarChar ||' '||tmpWeekDay.DayOfWeekName_Full)    ::TVarChar AS DayOfWeekName_Full
@@ -315,10 +410,10 @@ BEGIN
 
            , tmpData.Amount             :: TFloat AS Amount           -- Заказ на склад
            , tmpData.AmountSecond       :: TFloat AS AmountSecond     -- Дозаказ на склад
-           , tmpMI_Send.Amount          :: TFloat AS AmountSend       -- Приход за "сегодня"
+           , tmpData.AmountSend          :: TFloat AS AmountSend       -- Приход за "сегодня"
 
-           , CASE WHEN tmpData.AmountRemains + COALESCE (tmpMI_Send.Amount, 0) < tmpData.AmountPartner + tmpData.AmountPartnerPrior + tmpData.AmountPartnerSecond 
-                      THEN tmpData.AmountPartner + tmpData.AmountPartnerPrior + tmpData.AmountPartnerSecond - tmpData.AmountRemains - COALESCE (tmpMI_Send.Amount, 0) 
+           , CASE WHEN COALESCE (tmpData.AmountRemains,0) + COALESCE (tmpData.AmountSend, 0) < COALESCE (tmpData.AmountPartner,0) + COALESCE (tmpData.AmountPartnerPrior,0) + COALESCE (tmpData.AmountPartnerSecond,0)
+                      THEN COALESCE (tmpData.AmountPartner,0) + COALESCE (tmpData.AmountPartnerPrior,0) + COALESCE (tmpData.AmountPartnerSecond,0) - COALESCE (tmpData.AmountRemains,0) - COALESCE (tmpData.AmountSend, 0) 
                   ELSE 0
              END                        :: TFloat AS Amount_calc  -- Расчетный заказ
 
@@ -338,12 +433,12 @@ BEGIN
                    END
              AS NUMERIC (16, 1))        :: TFloat AS DayCountForecast -- Ост. в днях (по пр.)
 
-           , tmpSend.AmountSendIn  :: TFloat AS AmountSendIn_or
-           , tmpSend.AmountSendOut :: TFloat AS AmountSendOut_or
-           , tmpSend.AmountSend    :: TFloat AS AmountSend_or
-           , (COALESCE (tmpData.Amount,0) - COALESCE (tmpSend.AmountSend, 0)) :: TFloat AS AmountSend_diff
+           , tmpData.AmountSendIn_or  :: TFloat AS AmountSendIn_or
+           , tmpData.AmountSendOut_or :: TFloat AS AmountSendOut_or
+           , tmpData.AmountSend_or    :: TFloat AS AmountSend_or
+           , (COALESCE (tmpData.Amount,0) - COALESCE (tmpData.AmountSend_or, 0)) :: TFloat AS AmountSend_diff
            
-      FROM tmpData
+      FROM tmpData_full AS tmpData
           LEFT JOIN Object AS Object_From ON Object_From.Id = tmpData.FromId
           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpData.GoodsKindId
@@ -377,7 +472,7 @@ BEGIN
           --ограничения по подразделению кому
           INNER JOIN _tmpUnitTo ON _tmpUnitTo.UnitId = Object_To.Id
 
-          -- приход сегодня
+       /*   -- приход сегодня
           LEFT JOIN tmpMI_Send ON tmpMI_Send.GoodsId     = tmpData.GoodsId
                               AND tmpMI_Send.GoodsKindId = tmpData.GoodsKindId
                               AND tmpMI_Send.OperDate    = tmpData.OperDate
@@ -387,7 +482,7 @@ BEGIN
                            AND tmpSend.GoodsKindId = tmpData.GoodsKindId
                            AND tmpSend.OperDate    = tmpData.OperDate
                            AND tmpSend.UnitId      = tmpData.FromId
-
+*/
           LEFT JOIN zfCalc_DayOfWeekName (tmpData.OperDate) AS tmpWeekDay ON 1=1
           LEFT JOIN tmpListDate ON tmpListDate.Number = tmpWeekDay.Number
          ;

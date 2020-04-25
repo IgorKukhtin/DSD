@@ -43,11 +43,10 @@ BEGIN
      -- параметры из документа
      SELECT Movement.DescId
           , Movement.StatusId
-          , Movement.OperDate                  AS OperDate
+          , Movement.OperDate
        INTO vbDescId, vbStatusId, vbOperDate
      FROM Movement
-     WHERE Movement.Id = inMovementId
-    ;
+     WHERE Movement.Id = inMovementId;
 
      -- параметры из Взвешивания
      vbStoreKeeperName:= (SELECT Object_User.ValueData
@@ -112,20 +111,21 @@ BEGIN
                                  WHERE Movement.ParentId = inMovementId
                                    AND Movement.StatusId = zc_Enum_Status_Complete()
                                 )
-      , tmpMIWeighing AS (SELECT CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END AS WeighingNumber
-                               , SUM (MovementItem.Amount) AS Count
-                          FROM tmpMovementWeighing
-                              LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
-                                      ON MovementBoolean_isIncome.MovementId = tmpMovementWeighing.MovementId
-                                     AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
-                                     --AND MovementBoolean_isIncome.ValueData = FALSE
-                              LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovementWeighing.MovementId
-                                                     AND MovementItem.isErased  = FALSE
-                                                     AND MovementBoolean_isIncome.ValueData = FALSE
-                          WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing
-                             OR COALESCE (inMovementId_Weighing, 0) = 0
-                          GROUP BY CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END
-                         )
+       , tmpMIWeighing AS (SELECT CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END AS WeighingNumber
+                                , SUM (MovementItem.Amount) AS Count
+                           FROM tmpMovementWeighing
+                               LEFT JOIN MovementBoolean AS MovementBoolean_isIncome
+                                       ON MovementBoolean_isIncome.MovementId = tmpMovementWeighing.MovementId
+                                      AND MovementBoolean_isIncome.DescId = zc_MovementBoolean_isIncome()
+                                      --AND MovementBoolean_isIncome.ValueData = FALSE
+                               LEFT JOIN MovementItem ON MovementItem.MovementId = tmpMovementWeighing.MovementId
+                                                      AND MovementItem.isErased  = FALSE
+                                                      AND MovementBoolean_isIncome.ValueData = FALSE
+                           WHERE tmpMovementWeighing.MovementId = inMovementId_Weighing
+                              OR COALESCE (inMovementId_Weighing, 0) = 0
+                           GROUP BY CASE WHEN inMovementId_Weighing > 0 THEN tmpMovementWeighing.WeighingNumber ELSE 0 END
+                          )
+
         -- Результат - Мастер (1 строка)
         SELECT
            Movement.InvNumber                 AS InvNumber

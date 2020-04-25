@@ -870,7 +870,7 @@ inherited SendForm: TSendForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 23
-      Width = 153
+      Width = 176
     end
   end
   object cxLabel7: TcxLabel [2]

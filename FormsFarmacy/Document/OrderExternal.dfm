@@ -107,6 +107,18 @@ inherited OrderExternalForm: TOrderExternalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isResolution_224: TcxGridDBColumn [0]
+            Caption = #1055#1086#1089#1090'. 224'
+            DataBinding.FieldName = 'isResolution_224'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            Options.Editing = False
+            Width = 53
+          end
           object PartnerGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'PartnerGoodsCode'

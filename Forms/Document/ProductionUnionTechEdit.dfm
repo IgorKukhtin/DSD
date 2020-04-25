@@ -832,6 +832,28 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindCompleteId'
+        Value = Null
+        Component = GooodsKindCompleteGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'GoodsKindCompleteName'
+        Value = Null
+        Component = GooodsKindCompleteGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReceiptCode_user'
+        Value = Null
+        Component = ceReceiptCode
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 9

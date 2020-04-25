@@ -910,6 +910,10 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalChoiceForm');
+  exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalStewJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalStewJournalForm');
   exit;
@@ -946,7 +950,7 @@ end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
 begin
-{
+ {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   }
@@ -1473,24 +1477,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
   exit;
-  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  {
+  }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
-  {
+  exit;
   // 11,12,14 Инна
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
-
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;

@@ -21,10 +21,10 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
 
       , PriceIn                 TFloat --Себ-ть прод, грн/кг
       --, AmountRetIn             TFloat --Кол-во возврат грн/кг
-      , ContractCondition       TFloat --бонус сети грн/кг
-      , TaxRetIn                TFloat --
-      , TaxPromo                TFloat --
-      , TaxPromo_Condition      TFloat --
+      , ContractCondition       TVarChar --бонус сети грн/кг
+      , TaxRetIn                TVarChar --
+      , TaxPromo                TVarChar --
+      , TaxPromo_Condition      TVarChar --
       , AmountSale              TFloat --Максимум планируемого объема продаж на акционный период (шт)
       , AmountSaleWeight        TFloat -- вес
       , SummaSale               TFloat --Максимум планируемого объема продаж на акционный период 
@@ -33,7 +33,7 @@ RETURNS TABLE (NUM Integer , GroupNum Integer --
       , PromoCondition          TFloat --
       , SummaProfit             TFloat --прибыль
       , SummaProfit_Condition   TFloat --
-      , SummaDiscount           TFloat -- скидка
+      --, SummaDiscount           TFloat -- скидка
       
       
       , Color_PriceIn           Integer
@@ -73,8 +73,8 @@ BEGIN
     SELECT PriceList.VATPercent
     INTO vbVAT
     FROM gpGet_Object_PriceList (vbPriceList,inSession) as PriceList;
-        
- /*   IF inIsTaxPromo <> vbTaxPromo
+
+/*  IF inIsTaxPromo <> vbTaxPromo
     THEN
         RETURN;
     END IF;
@@ -89,93 +89,95 @@ BEGIN
                      AND MovementItem.isErased = FALSE
                   )
     -- все данные
-  , tmpData AS (SELECT MovementItem.Id                        AS Id                     --идентификатор
-                     , MovementItem.ObjectId                  AS GoodsId                --ИД объекта <товар>
-                     , Object_Goods.ObjectCode::Integer       AS GoodsCode              --код объекта  <товар>
-                     , Object_Goods.ValueData                 AS GoodsName              --наименование объекта <товар>
-                     , Object_GoodsKind.ValueData             AS GoodsKindName          --Наименование обьекта <Вид товара>
-                     , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName  --Наименование обьекта <Вид товара(Примечание)>
-                            
-                     , MovementItem.Amount                    AS Amount                 --% скидки на товар
-                     
-                     , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
-                     , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
-                     --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
-                     , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2) :: TFloat  AS Price                  --Цена в прайсе c НДС
-                     
-                     , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
-               
-                     , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
-                     , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE 
-                            THEN (MIFloat_Price.ValueData * (100-MIFloat_TaxPromo.ValueData) /100)*MIFloat_AmountSale.ValueData
-                            ELSE (MIFloat_AmountSale.ValueData * MIFloat_Price.ValueData)
-                       END AS SummaSale           --сумма плана продаж
-
-                     --, MIFloat_AmountRetIn.ValueData          AS AmountRetIn            --Кол-во возврат (факт)
-                    /* , CAST (CASE WHEN COALESCE (MIFloat_AmountReal.ValueData, 0) <> 0 
-                            THEN MIFloat_AmountRetIn.ValueData * 100 / MIFloat_AmountReal.ValueData
-                            ELSE 0 
-                       END AS NUMERIC (16,2))                 AS RetIn_Percent          -- % возврата
-                    */
-                     , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
-                     , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
-                     , MIFloat_TaxPromo.ValueData             AS TaxPromo               -- % cкидки
-                     , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
-                     
-                     , (MIFloat_PriceWithVAT.ValueData * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
-                     
-                     , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord
-
-                FROM MovementItem
-                     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-                     LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
-                                                 ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
-                     LEFT JOIN MovementItemFloat AS MIFloat_PriceIn2
-                                                 ON MIFloat_PriceIn2.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PriceIn2.DescId = zc_MIFloat_PriceIn2()
+  , tmpData_Full AS (SELECT MovementItem.Id                        AS Id                     --идентификатор
+                          , MovementItem.ObjectId                  AS GoodsId                --ИД объекта <товар>
+                          , Object_Goods.ObjectCode::Integer       AS GoodsCode              --код объекта  <товар>
+                          , Object_Goods.ValueData                 AS GoodsName              --наименование объекта <товар>
+                          , Object_GoodsKind.ValueData             AS GoodsKindName          --Наименование обьекта <Вид товара>
+                          , Object_GoodsKindComplete.ValueData     AS GoodsKindCompleteName  --Наименование обьекта <Вид товара(Примечание)>
+                                 
+                          , MovementItem.Amount                    AS Amount                 --% скидки на товар
+                          
+                          , MIFloat_PriceIn1.ValueData             AS PriceIn1               --Себ-ть - 1 прод, грн/кг
+                          , MIFloat_PriceIn2.ValueData             AS PriceIn2               --Себ-ть - 2 прод, грн/кг
+                          --, (MIFloat_Price.ValueData)                AS Price                  --Цена в прайсе
+                          , ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2) :: TFloat  AS Price                  --Цена в прайсе c НДС
+                          
+                          , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                    
+                          , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
+                          , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE 
+                                 THEN (MIFloat_Price.ValueData * (100-MIFloat_TaxPromo.ValueData) /100)*MIFloat_AmountSale.ValueData
+                                 ELSE (MIFloat_AmountSale.ValueData * MIFloat_Price.ValueData)
+                            END AS SummaSale           --сумма плана продаж
+     
+                          , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
+                          , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
+                          --, MIFloat_TaxPromo.ValueData             AS TaxPromo               -- % cкидки
+                          , MovementItem.Amount                    AS TaxPromo               -- % cкидки из мастера
+                          , tmpMIChild.Amount                      AS PromoCondition         -- % дополнительной скидки
+                          
+                          , (MIFloat_PriceWithVAT.ValueData * COALESCE (MIFloat_TaxRetIn.ValueData,0) /100) AS AmountRetIn 
+                          
+                          , ROW_NUMBER() OVER (/*PARTITION BY MovementItem.Id*/ ORDER BY MovementItem.Id Desc) AS Ord        -- для вывода пустой строки
+                           /* выводить товар 1 раз, даже если zc_MI_Master.ObjectId несколько - из за видов упак*/
+                          , ROW_NUMBER() OVER (PARTITION BY MovementItem.ObjectId ORDER BY MovementItem.Id)    AS Ord_goods  -- для вывода только 1 раз товара
+     
+                     FROM MovementItem
+                          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+     
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
+                                                      ON MIFloat_PriceIn1.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceIn2
+                                                      ON MIFloat_PriceIn2.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceIn2.DescId = zc_MIFloat_PriceIn2()
+                  
+                          LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                      ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
+                                                     
+                                        
+                           LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
+                                                       ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
+                           LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                                       ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
+                           LEFT JOIN MovementItemFloat AS MIFloat_TaxPromo
+                                                       ON MIFloat_TaxPromo.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_TaxPromo.DescId = zc_MIFloat_TaxPromo()
+     
+                           LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
+                                                       ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
+                                        
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+     
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
              
-                     LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
-                                                 ON MIFloat_PriceWithVAT.MovementItemId = MovementItem.Id
-                                                AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
-                                                
-                                   
-                      LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
-                                                  ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
-                      LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
-                                                  ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
-                      LEFT JOIN MovementItemFloat AS MIFloat_TaxPromo
-                                                  ON MIFloat_TaxPromo.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_TaxPromo.DescId = zc_MIFloat_TaxPromo()
-
-                      LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
-                                                  ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
-                                                 AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
-                                   
-                     LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
-                                                      ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                     AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-        
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
-                                                      ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
-                                                     AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
-                     LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
-
-                     LEFT JOIN tmpMIChild ON 1=1 
-                     
-                WHERE MovementItem.MovementId = inMovementId 
-                  AND MovementItem.DescId = zc_MI_Master()
-                  AND MovementItem.isErased = FALSE
-                )
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKindComplete
+                                                           ON MILinkObject_GoodsKindComplete.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKindComplete.DescId = zc_MILinkObject_GoodsKindComplete()
+                          LEFT JOIN Object AS Object_GoodsKindComplete ON Object_GoodsKindComplete.Id = MILinkObject_GoodsKindComplete.ObjectId
+     
+                          LEFT JOIN tmpMIChild ON 1=1 
+                          
+                     WHERE MovementItem.MovementId = inMovementId 
+                       AND MovementItem.DescId = zc_MI_Master()
+                       AND MovementItem.isErased = FALSE
+                     )
  
+  , tmpData AS (SELECT tmpData_Full.*
+                FROM tmpData_Full
+                WHERE tmpData_Full.Ord_goods = 1
+                )
+
   , tmpData_All AS (
                     SELECT 1                         AS NUM
                          , tmpData.Id                  --идентификатор
@@ -187,14 +189,14 @@ BEGIN
                    
                          , 0                         AS PriceIn  
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
-                         , tmpData.ContractCondition AS ContractCondition   -- бонус сети
-                         , tmpData.TaxRetIn          AS TaxRetIn
-                         , tmpData.TaxPromo          AS TaxPromo
-                         , tmpData.TaxPromo          AS TaxPromo_Condition
+                         , (CAST (tmpData.ContractCondition AS NUMERIC (16,2))  ||' %') ::TVarChar AS ContractCondition   -- бонус сети
+                         , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxRetIn
+                         , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxPromo
+                         , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2))  ||' %') ::TVarChar AS TaxPromo_Condition
                          , 0                         AS AmountSale
                          , 0                         AS SummaSale
                          , 0                         AS Price
-                         , tmpData.Amount            AS PriceWithVAT
+                         , 0                         AS PriceWithVAT
                          , tmpData.PromoCondition    AS PromoCondition      --  Компенсация по доп.счету, грн/кг
 
                          , 0                         AS SummaProfit              -- прибыль
@@ -223,10 +225,10 @@ BEGIN
 
                          , tmpData.PriceIn1            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn   -- 
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)))                             ::TVarChar AS TaxPromo   -- 
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))           ::TVarChar AS TaxPromo_Condition   -- 
                          
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
@@ -256,7 +258,7 @@ BEGIN
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_White()            AS Color_SummaProfit
+                         , 16764159                    AS Color_SummaProfit
                          
                          , 'Плановая'                AS Text
                     FROM tmpData
@@ -272,15 +274,15 @@ BEGIN
 
                          , 0                         AS PriceIn  
                          --, tmpData.RetIn_Percent     AS AmountRetIn           
-                         , tmpData.ContractCondition AS ContractCondition
-                         , tmpData.TaxRetIn          AS TaxRetIn
-                         , tmpData.TaxPromo          AS TaxPromo
-                         , tmpData.TaxPromo          AS TaxPromo_Condition   -- 
+                         , (CAST (tmpData.ContractCondition AS NUMERIC (16,2)) ||' %') ::TVarChar AS ContractCondition
+                         , (CAST (tmpData.TaxRetIn          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxRetIn
+                         , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxPromo
+                         , (CAST (tmpData.TaxPromo          AS NUMERIC (16,2)) ||' %') ::TVarChar AS TaxPromo_Condition
                          
                          , 0                         AS AmountSale
                          , 0                         AS SummaSale
                          , 0                         AS Price
-                         , tmpData.Amount            AS PriceWithVAT
+                         , 0                         AS PriceWithVAT
                          , tmpData.PromoCondition    AS PromoCondition 
                          , 0                         AS SummaProfit
                          , 0                         AS SummaProfit_Condition  
@@ -307,10 +309,10 @@ BEGIN
 
                          , tmpData.PriceIn2            AS PriceIn  
                          --, CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN (tmpData.SummaSale * tmpData.RetIn_Percent /100) / tmpData.AmountSale ELSE 0 END, 0) AS NUMERIC (16,2)) AS AmountRetIn           
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS ContractCondition   -- бонус сети
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxRetIn   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo   -- 
-                         , CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)) AS TaxPromo_Condition   -- 
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.ContractCondition /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2))) ::TVarChar AS ContractCondition   -- бонус сети
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxRetIn /100 / tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))          ::TVarChar AS TaxRetIn
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.Price * (100-tmpData.TaxPromo) /100 ELSE 0 END, 0)  AS NUMERIC (16,2)))                             ::TVarChar AS TaxPromo
+                         , (CAST (COALESCE (CASE WHEN tmpData.AmountSale <> 0 THEN tmpData.SummaSale * tmpData.TaxPromo /100/ tmpData.AmountSale ELSE 0 END, 0)  AS NUMERIC (16,2)))           ::TVarChar AS TaxPromo_Condition
                          
                          , tmpData.AmountSale       AS AmountSale
                          , tmpData.SummaSale
@@ -340,7 +342,7 @@ BEGIN
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
                          , zc_Color_White()            AS Color_PromoCond
-                         , zc_Color_White()            AS Color_SummaProfit
+                         , 16764159                    AS Color_SummaProfit
                          
                          , 'Фактическая'               AS Text
                     FROM tmpData
@@ -355,10 +357,10 @@ BEGIN
                          , ''
                          , 0                AS PriceIn  
                          --, 0                AS AmountRetIn           
-                         , 0                AS ContractCondition   -- бонус сети
-                         , 0                AS TaxRetIn   -- бонус сети
-                         , 0                AS TaxPromo   -- бонус сети
-                         , 0                AS TaxPromo_Condition
+                         , ''               AS ContractCondition   -- бонус сети
+                         , ''               AS TaxRetIn   -- бонус сети
+                         , ''               AS TaxPromo   -- бонус сети
+                         , ''               AS TaxPromo_Condition
                          , 0                AS AmountSale
                          , 0                AS SummaSale
                          , 0                AS Price   
@@ -397,10 +399,10 @@ BEGIN
 
          , tmpData_All.PriceIn                 :: TFloat
         -- , tmpData_All.AmountRetIn             :: TFloat
-         , tmpData_All.ContractCondition       :: TFloat
-         , tmpData_All.TaxRetIn                :: TFloat
-         , tmpData_All.TaxPromo                :: TFloat
-         , tmpData_All.TaxPromo_Condition      :: TFloat
+         , CASE WHEN tmpData_All.ContractCondition = '0.00' THEN '' ELSE tmpData_All.ContractCondition END       :: TVarChar
+         , tmpData_All.TaxRetIn                :: TVarChar
+         , tmpData_All.TaxPromo                :: TVarChar
+         , tmpData_All.TaxPromo_Condition      :: TVarChar
          , tmpData_All.AmountSale              :: TFloat
          , (tmpData_All.AmountSale
             * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN ObjectFloat_Goods_Weight.ValueData ELSE 1 END) :: TFloat AS AmountSaleWeight    -- Вес
@@ -411,7 +413,7 @@ BEGIN
          , tmpData_All.SummaProfit             :: TFloat
          , tmpData_All.SummaProfit_Condition   :: TFloat
          
-         , (tmpData_All.Price * (100-tmpData_All.TaxPromo)/100)  :: TFloat AS SummaDiscount               -- скидка
+        -- , (tmpData_All.Price * (100-tmpData_All.TaxPromo)/100)  :: TFloat AS SummaDiscount               -- скидка
          
          , tmpData_All.Color_PriceIn           
          , tmpData_All.Color_RetIn
@@ -450,4 +452,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_MI_PromoGoods_Calc (5083159 , False, '5');
-
+--select * from gpSelect_MI_PromoGoods_Calc(16390310 , 'False' ,  'true' , '5');

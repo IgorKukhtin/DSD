@@ -124,7 +124,8 @@ uses
   LoyaltySMList in '..\FormsFarmacy\Cash\LoyaltySMList.pas' {LoyaltySMListForm: TParentForm},
   BuyerList in '..\FormsFarmacy\Cash\BuyerList.pas' {BuyerListForm},
   EnterLoyaltySMDiscount in '..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas' {EnterLoyaltySMDiscountForm},
-  GetSystemInfo in '..\SOURCE\GetSystemInfo.pas';
+  GetSystemInfo in '..\SOURCE\GetSystemInfo.pas',
+  ListSelection in '..\FormsFarmacy\Cash\ListSelection.pas' {ListSelectionForm};
 
 {$R *.res}
 

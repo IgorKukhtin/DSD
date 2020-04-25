@@ -31,7 +31,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , NDS_PriceList TFloat, isNDS_dif Boolean
              , OrdPrice Integer
              , isNotUploadSites Boolean, DoesNotShare Boolean, AllowDivision Boolean
-             , GoodsAnalog TVarChar
+             , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
              , isResolution_224  boolean
@@ -150,11 +150,11 @@ BEGIN
          LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId
 
          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v3
-                                ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id 
+                                ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id
                                AND ObjectFloat_Goods_KoeffSUN_v3.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
-                                 ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id 
+                                 ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id
                                 AND ObjectBoolean_Goods_SUN_v3.DescId = zc_ObjectBoolean_Goods_SUN_v3()
         -- условия хранения
         LEFT JOIN ObjectLink AS ObjectLink_Goods_ConditionsKeep
@@ -283,8 +283,10 @@ BEGIN
            , Object_Goods_Main.isDoesNotShare                                    AS DoesNotShare
            , Object_Goods_Main.isAllowDivision                                   AS AllowDivision
            , Object_Goods_Main.Analog                                            AS GoodsAnalog
+           , Object_Goods_Main.AnalogATC                                         AS GoodsAnalogATC
+           , Object_Goods_Main.ActiveSubstance                                   AS GoodsActiveSubstance
            , Object_Goods_Main.isNotTransferTime                                 AS NotTransferTime
-      
+
            , COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
            , COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
@@ -549,7 +551,7 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_Not
                                    ON ObjectBoolean_Goods_Not.ObjectId = Object_Goods_View.Id
                                   AND ObjectBoolean_Goods_Not.DescId = zc_ObjectBoolean_Goods_Not()
-                                  
+
            LEFT JOIN  ObjectBoolean AS ObjectBoolean_Goods_Resolution_224
                                     ON ObjectBoolean_Goods_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
                                    AND ObjectBoolean_Goods_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()

@@ -169,6 +169,8 @@ type
     spUpdate_Goods_inTop_Yes: TdsdStoredProc;
     bbUpdate_inTop_Yes: TdxBarButton;
     bbUpdate_inTop_No: TdxBarButton;
+    GoodsAnalogATC: TcxGridDBColumn;
+    GoodsActiveSubstance: TcxGridDBColumn;
   private
     { Private declarations }
   public

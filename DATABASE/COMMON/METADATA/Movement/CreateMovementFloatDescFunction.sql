@@ -526,10 +526,15 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_PromoStateKind() RETURNS Integer AS 
 INSERT INTO MovementFloatDesc(Code, ItemName)
   SELECT 'zc_MovementFloat_PromoStateKind', 'Приоритет для состояния' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_PromoStateKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementFloat_SummaFund() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummaFund'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_SummaFund', 'Использование фонда' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_SummaFund');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.   Шаблий.О.В.
+ 23.04.20                                                                                     * zc_MovementFloat_SummaFund
  01.04.20         * zc_MovementFloat_PromoStateKind
  25.03.20         * zc_MovementFloat_TotalSummAuditAdd
  03.03.20                                                                                     * zc_MovementFloat_NumberSeats

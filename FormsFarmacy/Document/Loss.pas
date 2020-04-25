@@ -68,6 +68,10 @@ type
     spWriteRestFromPoint: TdsdStoredProc;
     actInsertMaskMIMaster: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
+    cxLabel21: TcxLabel;
+    cxLabel4: TcxLabel;
+    ceUnitFund: TcxCurrencyEdit;
+    ceSummaFund: TcxCurrencyEdit;
   private
     { Private declarations }
   public

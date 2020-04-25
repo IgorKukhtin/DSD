@@ -54,6 +54,7 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     ReceiptName: TcxGridDBColumn;
+    ReceiptCode_user: TcxGridDBColumn;
   private
     { Private declarations }
   public

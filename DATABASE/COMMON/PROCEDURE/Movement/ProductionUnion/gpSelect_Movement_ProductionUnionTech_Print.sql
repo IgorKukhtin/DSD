@@ -352,8 +352,8 @@ BEGIN
                     )
   -- группы для печати
   /*1)1+2
-    2)3+4+6
-    3)5+7
+    2)3+4+5+6
+    3)7
     4) остальное
   */
  , tmpGroupPrint AS (--сырье
@@ -366,10 +366,10 @@ BEGIN
                     UNION
                      SELECT 4 AS GroupNum WHERE inGroupNum = 4
                     UNION
+                     SELECT 5 AS GroupNum WHERE inGroupNum = 4
+                   UNION
                      SELECT 6 AS GroupNum WHERE inGroupNum = 4
                     --специи
-                   UNION
-                     SELECT 5 AS GroupNum WHERE inGroupNum = 2
                    UNION
                      SELECT 7 AS GroupNum WHERE inGroupNum = 2
                     --оболочка
@@ -377,7 +377,7 @@ BEGIN
                      SELECT tmp.GroupNumber AS GroupNum
                      FROM (SELECT DISTINCT tmpData.GroupNumber FROM tmpData) AS tmp
                      WHERE inGroupNum = 3
-                     AND tmp.GroupNumber NOT IN (1,2,3,4,6,5,7)
+                     AND tmp.GroupNumber NOT IN (1,2,3,4,5,6,7)
                     )                   
 
        -- РЕЗУЛЬТАТ
@@ -399,11 +399,10 @@ BEGIN
        FROM tmpData
             INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum = tmpData.GroupNumber
       ;
-    
 
     -- Все Результаты - 1
     OPEN Cursor1 FOR
-    
+
      SELECT _tmpRes_cur1.OperDate
           , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName
           , _tmpRes_cur1.GoodsName
@@ -431,7 +430,7 @@ BEGIN
           , _tmpRes_cur2.AmountReceipt 
           , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
          , _tmpres_cur1.goodsid
-            
+
      ;
     RETURN NEXT Cursor1;
 

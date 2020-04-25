@@ -98,7 +98,7 @@ BEGIN
                    ELSE ''
               END
            || zfCalc_PartionMovementName (Movement_Send.DescId, MovementDesc_Send.ItemName, Movement_Send.InvNumber, Movement_Send.OperDate)
-             , ' ')                            :: TVarChar      AS InvNumber_SendFull
+             , ' ')                     :: TVarChar      AS InvNumber_SendFull
 
            -- заявка
            , MovementLinkMovement_Order.MovementChildId         AS MovementId_Order
@@ -155,9 +155,9 @@ BEGIN
             LEFT JOIN Object AS Object_DocumentKind ON Object_DocumentKind.Id = MovementLinkObject_DocumentKind.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Send
-                                           ON MovementLinkMovement_Send.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Send.DescId          = zc_MovementLinkMovement_Send()
-            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementId
+                                           ON MovementLinkMovement_Send.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Send.DescId     = zc_MovementLinkMovement_Send()
+            LEFT JOIN Movement AS Movement_Send ON Movement_Send.Id = MovementLinkMovement_Send.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Send ON MovementDesc_Send.Id = Movement_Send.DescId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Order

@@ -248,12 +248,42 @@ inherited LossForm: TLossForm
       Top = 67
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 759
+      Width = 561
     end
     object cxLabel7: TcxLabel
       Left = 8
       Top = 48
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    end
+    object cxLabel21: TcxLabel
+      Left = 575
+      Top = 48
+      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1086#1085#1076#1072
+    end
+    object cxLabel4: TcxLabel
+      Left = 674
+      Top = 48
+      Caption = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
+    end
+    object ceUnitFund: TcxCurrencyEdit
+      Left = 575
+      Top = 67
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 14
+      Width = 93
+    end
+    object ceSummaFund: TcxCurrencyEdit
+      Left = 674
+      Top = 67
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.00;-,0.00; ;'
+      Properties.ReadOnly = True
+      TabOrder = 15
+      Width = 93
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -851,15 +881,17 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'UnitFund'
         Value = 0.000000000000000000
+        Component = ceUnitFund
         DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
+        Name = 'SummaFund'
         Value = 0.000000000000000000
+        Component = ceSummaFund
         DataType = ftFloat
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1381,7 +1413,7 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end>
     Left = 648
-    Top = 24
+    Top = 8
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Loss'

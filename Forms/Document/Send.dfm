@@ -485,6 +485,8 @@ inherited SendForm: TSendForm
           Enabled = False
           Kind = bkEllipsis
         end>
+      Properties.ClickKey = 0
+      Properties.HideSelection = False
       Properties.ReadOnly = True
       TabOrder = 17
       Width = 220
@@ -543,7 +545,6 @@ inherited SendForm: TSendForm
     Properties.Buttons = <
       item
         Default = True
-        Enabled = False
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
@@ -563,6 +564,15 @@ inherited SendForm: TSendForm
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
+        item
+          StoredProc = spInsertUpdateMovement_order
+        end>
     end
     object actPrintNoGroup: TdsdPrintAction [8]
       Category = 'DSDLib'
@@ -1343,8 +1353,7 @@ inherited SendForm: TSendForm
       item
         Name = 'InvNumber_SendFull'
         Value = Null
-        Component = GuidesSendDoc
-        ComponentItem = 'TextValue'
+        Component = edInvNumberSend
         DataType = ftString
         MultiSelectSeparator = ','
       end
@@ -1468,10 +1477,6 @@ inherited SendForm: TSendForm
         Control = edInvNumber
       end
       item
-      end
-      item
-      end
-      item
         Control = edOperDate
       end
       item
@@ -1502,14 +1507,18 @@ inherited SendForm: TSendForm
       item
       end
       item
+      end
+      item
+      end
+      item
       end>
-    Left = 232
-    Top = 193
+    Left = 272
+    Top = 201
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 912
-    Top = 320
+    Left = 800
+    Top = 328
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
@@ -1938,8 +1947,6 @@ inherited SendForm: TSendForm
   end
   object GuidesSendDoc: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edInvNumberSend
-    Key = '0'
     FormNameParam.Value = 'TSendJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -1961,16 +1968,16 @@ inherited SendForm: TSendForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 524
-    Top = 56
+    Left = 644
+    Top = 96
   end
   object GuidesInvNumberOrder: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInvNumberOrder
-    FormNameParam.Value = 'TOrderExternalJournalChoiceForm'
+    FormNameParam.Value = 'TOrderInternalJournalChoiceForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TOrderExternalJournalChoiceForm'
+    FormName = 'TOrderInternalJournalChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
@@ -1991,163 +1998,63 @@ inherited SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDatePartner'
-        Value = 42094d
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isRemains'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'OperDatePartner_Sale'
-        Value = 42192d
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'FromName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ToName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteSortingId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RouteSortingName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractTagId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ContractTagName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListId'
-        Value = ''
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceListName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'PriceWithVAT'
-        Value = 'False'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'VATPercent'
-        Value = 0.000000000000000000
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'MasterPartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
       end>
-    Left = 372
+    Left = 396
     Top = 56
   end
   object GuidesSubjectDoc: TdsdGuides
@@ -2266,5 +2173,44 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 999
     Top = 280
+  end
+  object spInsertUpdateMovement_order: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Send_Order'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Order'
+        Value = ''
+        Component = GuidesInvNumberOrder
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 266
+    Top = 312
+  end
+  object HeaderSaver1: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.MultiSelectSeparator = ','
+    StoredProc = spInsertUpdateMovement_order
+    ControlList = <
+      item
+        Control = edInvNumberOrder
+      end>
+    GetStoredProc = spGet
+    Left = 336
+    Top = 225
   end
 end

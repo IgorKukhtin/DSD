@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer
              , isFirst  Boolean
              , isSecond Boolean
              , isTOP    Boolean
+             , isResolution_224 Boolean
              , PartionGoodsDateColor Integer
               )
 AS
@@ -143,6 +144,7 @@ BEGIN
                                     
    , tmpMainParam AS (SELECT ObjectLink_Child.ChildObjectId                        AS GoodsId
                            , COALESCE (tmpGoodsSP.isSP, False)           ::Boolean AS isSP
+                           , COALESCE (ObjectBoolean_Resolution_224.ValueData, FALSE) :: Boolean AS isResolution_224
                            , COALESCE(Object_LinkGoods_View.GoodsCode, Object_LinkGoods_View.GoodsCodeInt::TVarChar) ::Integer AS CommonCode
                       FROM ObjectLink AS ObjectLink_Child 
                            LEFT JOIN  ObjectLink AS ObjectLink_Main 
@@ -159,6 +161,10 @@ BEGIN
                                                           AND Object_LinkGoods_View.ObjectId = zc_Enum_GlobalConst_Marion()
                                                           AND vbPartnerId = 59612 -- Вента
                                                           AND 1=0 -- 17.01.2018 - во внешних заказах по поставщику вента   убрать  задвоение позиции  из-за разных кодов Мориона.   Так как у них идет загрузка  наших заказов по их коду  (мы грузим их прайсы межгорода) - отпала необходимость в кодировке Мориона.
+
+                           LEFT JOIN ObjectBoolean AS ObjectBoolean_Resolution_224
+                                                   ON ObjectBoolean_Resolution_224.ObjectId = ObjectLink_Main.ChildObjectId
+                                                  AND ObjectBoolean_Resolution_224.DescId = zc_ObjectBoolean_Goods_Resolution_224()
 
                       WHERE ObjectLink_Child.ChildObjectId IN (SELECT DISTINCT tmpData.GoodsId FROM tmpData)
                         AND ObjectLink_Child.DescId = zc_ObjectLink_LinkGoods_Goods()
@@ -208,6 +214,7 @@ BEGIN
            , COALESCE (GoodsParam_First.ValueData, FALSE)  ::Boolean AS isFirst
            , COALESCE (GoodsParam_Second.ValueData, FALSE) ::Boolean AS isSecond
            , COALESCE (GoodsPrice.isTop, GoodsParam_TOP.ValueData, FALSE) ::Boolean AS isTOP
+           , COALESCE (tmpMainParam.isResolution_224, FALSE) :: Boolean AS isResolution_224
 
            , CASE WHEN tmpMainParam.isSP = TRUE THEN 25088                                                          -- товар соц.проекта
                WHEN tmpMI.PartionGoodsDate < vbDate180 THEN zc_Color_Red()                                          -- если срок годности менее 6 мес.
@@ -252,6 +259,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.20         * isResolution_224
  22.04.20         * tmpLoadPriceList.GoodsNDS
  11.02.19         * признак Товары соц-проект берем и документа
  08.11.18         *
