@@ -5,7 +5,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1092
-  ExplicitHeight = 723
+  ExplicitHeight = 720
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1835,7 +1835,6 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           Action = actUpdate_OperDate
         end>
-      View = cxGridDBTableView
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1090#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 67

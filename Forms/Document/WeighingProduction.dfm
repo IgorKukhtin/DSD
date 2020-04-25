@@ -1399,8 +1399,8 @@ object WeighingProductionForm: TWeighingProductionForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 96
+    Left = 432
+    Top = 120
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
