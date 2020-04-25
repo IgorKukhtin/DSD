@@ -847,6 +847,13 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ReceiptCode_user'
+        Value = Null
+        Component = ceReceiptCode
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 136
     Top = 9

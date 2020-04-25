@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsKindCompleteId Integer, GoodsKindCompleteCode Integer, GoodsKindCompleteName TVarChar
              , MeasureName TVarChar
              , GoodsGroupAnalystName TVarChar, GoodsTagName TVarChar, TradeMarkName TVarChar
-             , ReceiptId Integer, ReceiptCode Integer, ReceiptName TVarChar
+             , ReceiptId Integer, ReceiptCode Integer, ReceiptCode_user TVarChar, ReceiptName TVarChar
              , isErased Boolean
               )
 AS
@@ -30,6 +30,7 @@ BEGIN
                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
                                   , Object_Receipt.Id                          AS ReceiptId
                                   , Object_Receipt.ObjectCode                  AS ReceiptCode
+                                  , ObjectString_Receipt_Code.ValueData        AS ReceiptCode_user
                                   , Object_Receipt.ValueData                   AS ReceiptName
                              FROM Object AS Object_Receipt
                                       INNER JOIN ObjectBoolean AS ObjectBoolean_Main
@@ -44,7 +45,11 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                            ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
                                                           AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
-                            
+
+                                      LEFT JOIN ObjectString AS ObjectString_Receipt_Code
+                                                             ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
+                                                            AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
+
                                   WHERE Object_Receipt.DescId = zc_Object_Receipt()
                                     AND Object_Receipt.isErased = FALSE
                             )
@@ -69,9 +74,10 @@ BEGIN
          , Object_GoodsTag.ValueData            AS GoodsTagName
          , Object_TradeMark.ValueData           AS TradeMarkName
 
-         , tmpReceiptMain.ReceiptId   :: Integer
-         , tmpReceiptMain.ReceiptCode :: Integer
-         , tmpReceiptMain.ReceiptName :: TVarChar
+         , tmpReceiptMain.ReceiptId        :: Integer
+         , tmpReceiptMain.ReceiptCode      :: Integer
+         , tmpReceiptMain.ReceiptCode_user :: TVarChar
+         , tmpReceiptMain.ReceiptName      :: TVarChar
          , Object_Goods.isErased                AS isErased
 
      FROM (SELECT ObjectLink_Receipt_Goods.ChildObjectId             AS GoodsId

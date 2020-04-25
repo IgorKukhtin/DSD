@@ -303,6 +303,25 @@ BEGIN
       -- данные по % кредитных средств из справочника
       , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
 
+      -- НДС из прайс-листа поставщика (LoadPriceList )
+      , tmpLoadPriceList_NDS AS (SELECT *
+                                 FROM (SELECT LoadPriceListItem.CommonCode
+                                            , LoadPriceListItem.GoodsName
+                                            , LoadPriceListItem.GoodsNDS
+                                            , LoadPriceListItem.GoodsId
+                                            , PartnerGoods.Id AS PartnerGoodsId
+                                            , LoadPriceList.JuridicalId
+                                            , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                       FROM LoadPriceList
+                                            LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                                
+                                            LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                            AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+       
+                                       WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                       ) AS tmp
+                                 WHERE tmp.ORD = 1
+                                 )
 
         SELECT tmpMI.Id
              , tmpMI.MovementItemId
@@ -313,6 +332,7 @@ BEGIN
              , tmpGoods.GoodsCode :: TVarChar                            AS GoodsCode
              , tmpGoods.GoodsName
              , Null :: TVarChar                                          AS MainGoodsName
+             , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar AS NDS_PriceList
              , tmpMI.JuridicalId
              , tmpMI.JuridicalName
              , tmpMI.MakerName
@@ -387,6 +407,8 @@ BEGIN
 
             LEFT JOIN tmpCostCredit ON MIFloat_Price.ValueData BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
 
+            LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
+                                          AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
           ;
 
 
@@ -559,7 +581,6 @@ BEGIN
 
       -- данные по % кредитных средств из справочника
       , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
-
 
        -- Результат
        SELECT row_number() OVER ()
@@ -756,6 +777,26 @@ BEGIN
    -- данные по % кредитных средств из справочника
    , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
 
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList_NDS AS (SELECT *
+                              FROM (SELECT LoadPriceListItem.CommonCode
+                                         , LoadPriceListItem.GoodsName
+                                         , LoadPriceListItem.GoodsNDS
+                                         , LoadPriceListItem.GoodsId
+                                         , PartnerGoods.Id AS PartnerGoodsId
+                                         , LoadPriceList.JuridicalId
+                                         , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                    FROM LoadPriceList
+                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                             
+                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+    
+                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                    ) AS tmp
+                              WHERE tmp.ORD = 1
+                              )
+
 
         ---
         SELECT _tmpMI.Id
@@ -767,6 +808,7 @@ BEGIN
              , _tmpMI.GoodsCode
              , _tmpMI.GoodsName
              , _tmpMI.MainGoodsName
+             , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar AS NDS_PriceList
              , _tmpMI.JuridicalId
              , _tmpMI.JuridicalName
              , _tmpMI.MakerName
@@ -822,6 +864,9 @@ BEGIN
              LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 
              LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+
+             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.GoodsId = _tmpMI.GoodsId
+                                           AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 ;
 
 
@@ -1192,6 +1237,25 @@ BEGIN
    -- данные по % кредитных средств из справочника
    , tmpCostCredit AS (SELECT * FROM gpSelect_Object_RetailCostCredit(inRetailId := vbObjectId, inShowAll := FALSE, inisErased := FALSE, inSession := inSession) AS tmp)
 
+   -- НДС из прайс-листа поставщика (LoadPriceList )
+   , tmpLoadPriceList_NDS AS (SELECT *
+                              FROM (SELECT LoadPriceListItem.CommonCode
+                                         , LoadPriceListItem.GoodsName
+                                         , LoadPriceListItem.GoodsNDS
+                                         , LoadPriceListItem.GoodsId
+                                         , PartnerGoods.Id AS PartnerGoodsId
+                                         , LoadPriceList.JuridicalId
+                                         , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.JuridicalId, LoadPriceListItem.GoodsId ORDER BY LoadPriceList.OperDate DESC, LoadPriceListItem.Id DESC) AS ORD
+                                    FROM LoadPriceList
+                                         LEFT JOIN LoadPriceListItem ON LoadPriceListItem.LoadPriceListId = LoadPriceList.Id
+                             
+                                         LEFT JOIN Object_Goods_Juridical AS PartnerGoods ON PartnerGoods.JuridicalId  = LoadPriceList.JuridicalId
+                                                                                         AND PartnerGoods.Code = LoadPriceListItem.GoodsCode
+    
+                                    WHERE COALESCE (LoadPriceListItem.GoodsNDS,'') <> ''
+                                    ) AS tmp
+                              WHERE tmp.ORD = 1
+                              )
 
         ---
         SELECT _tmpMI.Id
@@ -1203,6 +1267,7 @@ BEGIN
              , _tmpMI.GoodsCode
              , _tmpMI.GoodsName
              , _tmpMI.MainGoodsName
+             , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar AS NDS_PriceList
              , _tmpMI.JuridicalId
              , _tmpMI.JuridicalName
              , _tmpMI.MakerName
@@ -1258,6 +1323,9 @@ BEGIN
              LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Goods_Area.ChildObjectId
 
              LEFT JOIN tmpCostCredit ON _tmpMI.Price BETWEEN tmpCostCredit.MinPrice  AND tmpCostCredit.PriceLimit
+
+             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.GoodsId = _tmpMI.GoodsId
+                                           AND tmpLoadPriceList_NDS.JuridicalId = _tmpMI.JuridicalId
 ;
 
 

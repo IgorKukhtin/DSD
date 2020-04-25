@@ -885,6 +885,18 @@ inherited OrderInternalForm: TOrderInternalForm
             Options.Editing = False
             Width = 49
           end
+          object colNDS_PriceList: TcxGridDBColumn
+            Caption = #1053#1044#1057' ('#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'NDS_PriceList'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1053#1044#1057' ('#1080#1079' '#1087#1088#1072#1081#1089#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072')'
+            Options.Editing = False
+            Width = 65
+          end
           object colContractName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072' '#1087#1086#1089#1090'-'#1082#1072
             DataBinding.FieldName = 'ContractName'
