@@ -29,7 +29,10 @@ RETURNS TABLE (Id Integer
              , OperPriceListTo TFloat
              , TotalSumm TFloat
              , TotalSummBalance TFloat
+             , TotalSummPriceListBalance TFloat
+             , TotalSummPriceListToBalance TFloat
              , TotalSummPriceList TFloat
+             , TotalSummPriceListTo TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyName_pl TVarChar, CurrencyName_pl_to TVarChar
              , DiscountTax_From TFloat, DiscountTax_To TFloat
@@ -123,7 +126,8 @@ BEGIN
                                           THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                       ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
                                 END AS NUMERIC (16, 2)) AS TotalSumm
-                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))   AS TotalSummPriceList
+                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo
                         , MovementItem.isErased
 
                     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -326,7 +330,11 @@ BEGIN
                , tmpPriceList_to.OperPriceList   :: TFloat AS OperPriceListTo
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
+               , 0                          :: TFloat AS TotalSummPriceListBalance
+               , 0                          :: TFloat AS TotalSummPriceListToBalance
+
                , 0                          :: TFloat AS TotalSummPriceList
+               , 0                          :: TFloat AS TotalSummPriceListTo
 
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
@@ -413,8 +421,12 @@ BEGIN
                , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
-               , tmpMI.TotalSummPriceList  ::TFloat
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))            :: TFloat AS TotalSummBalance
+               , (CAST (tmpMI.TotalSummPriceList * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))   :: TFloat AS TotalSummPriceListBalance
+               , (CAST (tmpMI.TotalSummPriceListTo * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummPriceListToBalance
+
+               , tmpMI.TotalSummPriceList    ::TFloat
+               , tmpMI.TotalSummPriceListTo  ::TFloat
 
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
@@ -458,8 +470,6 @@ BEGIN
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
-                LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = Object_PartionGoods.PeriodId
-                LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = Object_PartionGoods.PeriodId
 
                 LEFT JOIN Object AS Object_Currency_pl_from ON Object_Currency_pl_from.Id = tmpPriceList_from.CurrencyId
                 LEFT JOIN Object AS Object_Currency_pl_to   ON Object_Currency_pl_to.Id   = tmpPriceList_to.CurrencyId
@@ -519,7 +529,8 @@ BEGIN
                                            THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                        ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
                                  END AS NUMERIC (16, 2)) AS TotalSumm
-                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceList
+                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))   AS TotalSummPriceList
+                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo
                          , MovementItem.isErased
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -675,8 +686,12 @@ BEGIN
                , tmpMI.OperPriceListTo     ::TFloat
 
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummBalance
-               , tmpMI.TotalSummPriceList  ::TFloat
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))            :: TFloat AS TotalSummBalance
+               , (CAST (tmpMI.TotalSummPriceList * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))   :: TFloat AS TotalSummPriceListBalance
+               , (CAST (tmpMI.TotalSummPriceListTo * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))) :: TFloat AS TotalSummPriceListToBalance
+               
+               , tmpMI.TotalSummPriceList    ::TFloat
+               , tmpMI.TotalSummPriceListTo  ::TFloat
 
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat

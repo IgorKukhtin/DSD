@@ -2505,6 +2505,30 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'outTotalSummPriceListTo'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceListTo'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceListBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceListBalance'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outTotalSummPriceListToBalance'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'TotalSummPriceListToBalance'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outCurrencyValue'
         Value = Null
         Component = MasterCDS

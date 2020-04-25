@@ -5,21 +5,24 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Inte
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Send (Integer, Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
- INOUT ioId                   Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId           Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId              Integer   , -- Товары
-    IN inPartionId            Integer   , -- Партия
-    IN inAmount               TFloat    , -- Количество
-   OUT outOperPrice           TFloat    , -- Цена
-   OUT outCountForPrice       TFloat    , -- Цена за количество
- INOUT ioOperPriceList        TFloat    , -- Цена (прайс)
-    IN inOperPriceListTo      TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
-   OUT outTotalSumm           TFloat    , -- Сумма вх.
-   OUT outTotalSummBalance    TFloat    , -- Сумма вх. (ГРН)
-   OUT outTotalSummPriceList  TFloat    , -- Сумма по прайсу
-   OUT outCurrencyValue       TFloat    , -- 
-   OUT outParValue            TFloat    , -- 
-    IN inSession              TVarChar    -- сессия пользователя
+ INOUT ioId                            Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId                    Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId                       Integer   , -- Товары
+    IN inPartionId                     Integer   , -- Партия
+    IN inAmount                        TFloat    , -- Количество
+   OUT outOperPrice                    TFloat    , -- Цена
+   OUT outCountForPrice                TFloat    , -- Цена за количество
+ INOUT ioOperPriceList                 TFloat    , -- Цена (прайс)
+    IN inOperPriceListTo               TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
+   OUT outTotalSumm                    TFloat    , -- Сумма вх.
+   OUT outTotalSummBalance             TFloat    , -- Сумма вх. (ГРН)
+   OUT outTotalSummPriceList           TFloat    , -- Сумма по прайсу
+   OUT outTotalSummPriceListTo         TFloat    , -- Сумма (Кому, прайс)
+   OUT outTotalSummPriceListBalance    TFloat    , -- Сумма ГРН (От кого, прайс)
+   OUT outTotalSummPriceListToBalance  TFloat    , -- Сумма ГРН (Кому, прайс)
+   OUT outCurrencyValue                TFloat    , -- 
+   OUT outParValue                     TFloat    , -- 
+    IN inSession                       TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD
 AS
@@ -161,11 +164,21 @@ BEGIN
                           ELSE CAST (inAmount * outOperPrice AS NUMERIC (16, 2))
                      END;
 
+
      -- расчитали сумму вх. в грн по элементу, для грида
      outTotalSummBalance := (CAST (outTotalSumm * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
+     
 
      -- расчитали сумму по прайсу по элементу, для грида
      outTotalSummPriceList := CAST ((inAmount * ioOperPriceList) AS NUMERIC (16, 2));
+     -- расчитали Сумма (Кому, прайс)
+     outTotalSummPriceListTo := CAST ((inAmount * inOperPriceListTo) AS NUMERIC (16, 2));
+
+     --Сумма ГРН (От кого, прайс)
+     outTotalSummPriceListBalance   := (CAST (outTotalSummPriceList * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
+     --Сумма ГРН (Кому, прайс)
+     outTotalSummPriceListToBalance := (CAST (outTotalSummPriceListTo * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -180,6 +193,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.04.20         *
  26.06.17         *
  09.05.17         *
  25.04.17         *
