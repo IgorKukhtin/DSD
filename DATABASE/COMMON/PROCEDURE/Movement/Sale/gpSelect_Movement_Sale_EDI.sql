@@ -626,6 +626,10 @@ BEGIN
                                                  ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
                                                 AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
                                                 AND ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NOT NULL
+                            JOIN ObjectLink AS ObjectLink_BankAccountContract_Unit
+                                                 ON ObjectLink_BankAccountContract_Unit.DescId = zc_ObjectLink_BankAccountContract_Unit()
+                                                AND ObjectLink_BankAccountContract_Unit.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+                                                AND ObjectLink_BankAccountContract_Unit.ChildObjectId IS NULL
 
                        WHERE ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
                          AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId IS NULL
@@ -992,4 +996,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_EDI (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId := 15114787, inSession:= zfCalc_UserAdmin()); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_Movement_Sale_EDI (inMovementId:= 16505428, inSession:= '1329039'); -- FETCH ALL "<unnamed portal 1>";

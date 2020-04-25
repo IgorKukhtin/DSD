@@ -251,6 +251,8 @@ begin
      ParamAdd(Params,'CarName',ftString);
      ParamAdd(Params,'RouteName',ftString);
 
+     ParamAdd(Params,'isSticker_Ceh',ftBoolean);
+
      ParamAdd(Params,'isSubjectDoc',ftBoolean);
      ParamAdd(Params,'SubjectDocId',ftInteger);
      ParamAdd(Params,'SubjectDocCode',ftInteger);
@@ -416,6 +418,7 @@ begin
      Params:=nil;
      if SettingMain.isCeh = FALSE then
      begin
+     ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
      ParamAdd(Params,'GoodsId',ftInteger);           // Товары
      ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
      ParamAdd(Params,'GoodsName',ftString);          // Товары
@@ -450,6 +453,7 @@ begin
      end
      else
      begin
+     ParamAdd(Params,'MovementItemId',ftInteger);    // Id строки
      ParamAdd(Params,'GoodsId',ftInteger);           // Товары
      ParamAdd(Params,'GoodsCode',ftInteger);         // Товары
      ParamAdd(Params,'GoodsName',ftString);          // Товары

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Scale_Movement(
     IN inMovementId            Integer     , --
     IN inOperDate              TDateTime   , --
     IN inIsNext                Boolean     , --
-    IN inBranchCode            Integer  , --
+    IN inBranchCode            Integer     , --
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId       Integer

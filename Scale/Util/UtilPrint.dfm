@@ -21,8 +21,6 @@ object UtilPrintForm: TUtilPrintForm
     Align = alBottom
     TabOrder = 0
     Visible = False
-    ExplicitTop = 555
-    ExplicitWidth = 926
     object ExportXmlGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ExportDS
@@ -536,8 +534,8 @@ object UtilPrintForm: TUtilPrintForm
         end>
       isShowModal = True
     end
-    object actPrintWmsSticker: TdsdPrintAction
-      Category = 'DSDLib'
+    object actPrintSticker_Wms: TdsdPrintAction
+      Category = 'Print_Sticker'
       MoveParams = <>
       StoredProc = spSelectPrintWmsSticker
       StoredProcList = <
@@ -1428,7 +1426,7 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintSticker: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'Print_Sticker'
       MoveParams = <>
       StoredProc = spSelectPrintSticker
       StoredProcList = <
@@ -2343,6 +2341,38 @@ object UtilPrintForm: TUtilPrintForm
       ReportName = 'PrintMovement_ReturnInAkt'
       ReportNameParam.Name = #1040#1082#1090' '#1074#1086#1079#1074#1088#1072#1090#1072
       ReportNameParam.Value = 'PrintMovement_ReturnInAkt'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actPrintSticker_Ceh: TdsdPrintAction
+      Category = 'Print_Sticker'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker_Ceh
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker_Ceh
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1064'/'#1050
+      Hint = #1055#1077#1095#1072#1090#1100' '#1064'/'#1050
+      ImageIndex = 20
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = 'True'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_WeighingProductionBarCode'
+      ReportNameParam.Value = 'PrintMovement_WeighingProductionBarCode'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -3324,5 +3354,34 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 170
     Top = 370
+  end
+  object spSelectPrintSticker_Ceh: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_WeighingProduction_PrintBarCode'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 237
+    Top = 582
   end
 end

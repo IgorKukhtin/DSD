@@ -1,3 +1,4 @@
+
 unit UtilPrint;
 
 interface
@@ -131,10 +132,12 @@ type
     actExport: TMultiAction;
     spUpdate_isMail: TdsdStoredProc;
     actUpdate_isMail: TdsdExecStoredProc;
-    actPrintWmsSticker: TdsdPrintAction;
+    actPrintSticker_Wms: TdsdPrintAction;
     spSelectPrintWmsSticker: TdsdStoredProc;
     actPrint_ReturnInAkt: TdsdPrintAction;
     spSelectPrintAkt: TdsdStoredProc;
+    spSelectPrintSticker_Ceh: TdsdStoredProc;
+    actPrintSticker_Ceh: TdsdPrintAction;
   private
   end;
 
@@ -151,7 +154,8 @@ type
   function Print_Sale_Order(MovementId_order,MovementId_by:Integer; isDiff:Boolean; isDiffTax:Boolean):Boolean;
   function Print_PackWeight (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
   function Print_Sticker (MovementDescId,MovementId:Integer; isPreview:Boolean):Boolean;
-  function Print_StickerWms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+  function Print_Sticker_Wms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+  function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
   function Print_ReportGoodsBalance (StartDate,EndDate:TDateTime; UnitId : Integer; UnitName : String; isGoodsKind, isPartionGoods:Boolean):Boolean;
 
   procedure SendEDI_Invoice (MovementId: Integer);
@@ -201,12 +205,21 @@ begin
   UtilPrintForm.actPrintSticker.Execute;
 end;
 //------------------------------------------------------------------------------------------------
-procedure Print_StickerWmsDocument (MovementId,MovementItemId: Integer; isPreview:Boolean);
+procedure Print_Sticker_WmsDocument (MovementId,MovementItemId: Integer; isPreview:Boolean);
 begin
   UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
   UtilPrintForm.FormParams.ParamByName('MovementItemId').Value := MovementItemId;
-  UtilPrintForm.actPrintWmsSticker.WithOutPreview:= not isPreview;
-  UtilPrintForm.actPrintWmsSticker.Execute;
+  UtilPrintForm.actPrintSticker_Wms.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrintSticker_Wms.Execute;
+end;
+//------------------------------------------------------------------------------------------------
+procedure Print_Sticker_CehDocument (MovementId,MovementItemId: Integer; isPreview:Boolean);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+  UtilPrintForm.FormParams.ParamByName('MovementItemId').Value := MovementItemId;
+  UtilPrintForm.actPrintSticker_Ceh.WithOutPreview:= not isPreview;
+  UtilPrintForm.actPrintSticker_Ceh.Printer:= PrinterSticker_Array[0].Name;
+  UtilPrintForm.actPrintSticker_Ceh.Execute;
 end;
 //------------------------------------------------------------------------------------------------
 procedure Print_Loss (MovementId: Integer);
@@ -496,7 +509,7 @@ begin
      Result:=true;
 end;
 //------------------------------------------------------------------------------------------------
-function Print_StickerWms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+function Print_Sticker_Wms (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
 begin
      UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
      UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
@@ -506,7 +519,32 @@ begin
           //
           try
              //Print
-             Print_StickerWmsDocument (MovementId,MovementItemId,isPreview);
+             Print_Sticker_WmsDocument (MovementId,MovementItemId,isPreview);
+          except
+                ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
+                exit;
+          end;
+     Result:=true;
+end;
+//------------------------------------------------------------------------------------------------
+function Print_Sticker_Ceh (MovementDescId,MovementId,MovementItemId:Integer; isPreview:Boolean):Boolean;
+begin
+     UtilPrintForm.PrintHeaderCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsCDS.IndexFieldNames:='';
+     UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
+     //
+     Result:=false;
+     //
+     if Length(PrinterSticker_Array) = 0 then
+     begin
+          ShowMessage('Ошибка.Не определен термопринтер для печати этикетки.');
+          exit;
+     end;
+
+          //
+          try
+             //Print
+             Print_Sticker_CehDocument (MovementId,MovementItemId,isPreview);
           except
                 ShowMessage('Ошибка.Печать <Печать на термопринтер> НЕ сформирована.');
                 exit;

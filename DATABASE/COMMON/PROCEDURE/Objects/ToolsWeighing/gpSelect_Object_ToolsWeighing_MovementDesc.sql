@@ -23,13 +23,14 @@ RETURNS TABLE (Number              Integer
              , MovementDescName_master TVarChar
              , OrderById           Integer
              , isSendOnPriceIn     Boolean
-             , isPartionGoodsDate  Boolean
-             , isStorageLine       Boolean
-             , isArticleLoss       Boolean
-             , isTransport_link    Boolean
-             , isSubjectDoc        Boolean
-             , isOrderInternal     Boolean
-             , isLockStartWeighing Boolean
+             , isPartionGoodsDate  Boolean -- Scale + ScaleCeh - дл€ приемки с производства - показываем контрол с датой дл€ определени€ партии
+             , isStorageLine       Boolean -- ScaleCeh - будет проверка на ввод <Ћини€ пр-ва> - дл€ каждого взвешивани€
+             , isArticleLoss       Boolean -- ScaleCeh - проверка на установку <—тать€ списани€>
+             , isTransport_link    Boolean -- Scale - проверка <Ўтрих код ѕутевой лист>
+             , isSubjectDoc        Boolean -- Scale + ScaleCeh - будет проверка на ввод <ќснование ¬озврат>
+             , isOrderInternal     Boolean -- ScaleCeh - проверка дл€ операции - разрешаетс€ только через за€вку
+             , isSticker_Ceh       Boolean -- ScaleCeh - при взвешивании в данной операции - сразу печатаетс€ —тикер на термопринтере
+             , isLockStartWeighing Boolean -- 
                )
 AS
 $BODY$
@@ -79,11 +80,12 @@ BEGIN
                                        , isTransport_link         Boolean
                                        , isSubjectDoc             Boolean
                                        , isOrderInternal          Boolean
+                                       , isSticker_Ceh            Boolean
                                        , isLockStartWeighing      Boolean
                                        , ItemName                 TVarChar
                                         ) ON COMMIT DROP;
     -- формирование
-    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isOrderInternal, isLockStartWeighing, ItemName)
+    INSERT INTO _tmpToolsWeighing (Number, MovementDescId, FromId, ToId, PaidKindId, InfoMoneyId, GoodsId_ReWork, DocumentKindId, GoodsKindWeighingGroupId, ColorGridValue, OrderById, isSendOnPriceIn, isPartionGoodsDate, isStorageLine, isArticleLoss, isTransport_link, isSubjectDoc, isOrderInternal, isSticker_Ceh, isLockStartWeighing, ItemName)
        SELECT tmp.Number
             , CASE WHEN TRIM (tmp.MovementDescId)           <> '' THEN TRIM (tmp.MovementDescId)           ELSE '0' END :: Integer AS MovementDescId
             , CASE WHEN TRIM (tmp.FromId)                   <> '' THEN TRIM (tmp.FromId)                   ELSE '0' END :: Integer AS FromId
@@ -136,6 +138,7 @@ BEGIN
             , CASE WHEN tmp.isTransport_link    = 'TRUE' THEN TRUE ELSE FALSE END AS isTransport_link
             , CASE WHEN tmp.isSubjectDoc        = 'TRUE' THEN TRUE ELSE FALSE END AS isSubjectDoc
             , CASE WHEN tmp.isOrderInternal     = 'TRUE' THEN TRUE ELSE FALSE END AS isOrderInternal
+            , CASE WHEN tmp.isSticker_Ceh       = 'TRUE' THEN TRUE ELSE FALSE END AS isSticker_Ceh
             , CASE WHEN tmp.isLockStartWeighing = 'TRUE' THEN TRUE ELSE FALSE END AS isLockStartWeighing
             
 
@@ -167,7 +170,7 @@ BEGIN
                         , CASE WHEN inIsCeh = TRUE  OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isTransport_link',   'FALSE',                                                     inSession)          END AS isTransport_link
                         , CASE WHEN                    vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSubjectDoc',       'FALSE',                                                     inSession)          END AS isSubjectDoc
                         , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isOrderInternal',    'FALSE',                                                     inSession)          END AS isOrderInternal
-                        
+                        , CASE WHEN inIsCeh = FALSE OR vbIsSticker = TRUE  THEN 'FALSE' ELSE gpGet_ToolsWeighing_Value (vbLevelMain, 'Movement', 'MovementDesc_' || CASE WHEN tmp.Number < 10 THEN '0' ELSE '' END || tmp.Number, 'isSticker_Ceh',      'FALSE',                                                     inSession)          END AS isSticker_Ceh
                         
                    FROM (SELECT GENERATE_SERIES (1, vbCount) AS Number) AS tmp
                   ) AS tmp
@@ -357,6 +360,7 @@ BEGIN
            , _tmpToolsWeighing.isTransport_link
            , _tmpToolsWeighing.isSubjectDoc
            , _tmpToolsWeighing.isOrderInternal
+           , _tmpToolsWeighing.isSticker_Ceh
            , _tmpToolsWeighing.isLockStartWeighing
 
        FROM _tmpToolsWeighing
@@ -430,6 +434,7 @@ BEGIN
             , FALSE AS isTransport_link
             , FALSE AS isSubjectDoc
             , FALSE AS isOrderInternal
+            , FALSE AS isSticker_Ceh
             , FALSE AS isLockStartWeighing
        FROM (SELECT DISTINCT
                     _tmpToolsWeighing.MovementDescId

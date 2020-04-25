@@ -116,9 +116,9 @@ BEGIN
      DELETE FROM _tmpSale_over;
      -- 2.2. NotSold
      DELETE FROM _tmpSale_not;
-     -- 3.1. все остатки, OVER (Сверх запас)
+     -- 3.1. все остатки, PI (Сверх запас)
      DELETE FROM _tmpRemains_Partion_all;
-     -- 3.2. остатки, OVER (Сверх запас) - для распределения
+     -- 3.2. остатки, PI (Сверх запас) - для распределения
      DELETE FROM _tmpRemains_Partion;
      -- 4. Остатки по которым есть ПОТРЕБНОСТЬ и OVER
      DELETE FROM _tmpRemains_calc;
@@ -138,14 +138,14 @@ BEGIN
                   ) :: TVarChar;
 
 
-     -- все Подразделения для схемы SUN-v2
+     -- все Подразделения для схемы SUN-v4
      -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer) ON COMMIT DROP;
      INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
         FROM ObjectBoolean AS OB
-             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN_pi()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
@@ -158,55 +158,37 @@ BEGIN
 
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to, isMCS_to)
-        SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
-             , COALESCE (ObjectLink_To.ChildObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
+        SELECT COALESCE (ObjectLink_From.ChildObjectId, ObjectLink_Unit_Area_From.ObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
+             , COALESCE (ObjectLink_To.ChildObjectId,   ObjectLink_Unit_Area_To.ObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
              , FALSE                                                              AS isMCS_to
         FROM Object
              INNER JOIN ObjectBoolean AS OB
                                       ON OB.ObjectId  = Object.Id
-                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v2()
+                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_v4()
                                      AND OB.ValueData = TRUE
              LEFT JOIN ObjectLink AS ObjectLink_From
                                   ON ObjectLink_From.ObjectId = Object.Id
                                  AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Area_From
+                                  ON ObjectLink_Unit_Area_From.ChildObjectId = ObjectLink_From.ChildObjectId
+                                 AND ObjectLink_Unit_Area_From.DescId        = zc_ObjectLink_Unit_Area()
              -- в этом случае возьмем всех
-             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL AND ObjectLink_Unit_Area_From.ObjectId IS NULL
                                                         
              LEFT JOIN ObjectLink AS ObjectLink_To
                                   ON ObjectLink_To.ObjectId = Object.Id
                                  AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Area_To
+                                  ON ObjectLink_Unit_Area_To.ChildObjectId = ObjectLink_To.ChildObjectId
+                                 AND ObjectLink_Unit_Area_To.DescId        = zc_ObjectLink_Unit_Area()
              -- в этом случае возьмем всех
-             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
+             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL AND ObjectLink_Unit_Area_To.ObjectId IS NULL
 
         WHERE Object.DescId   = zc_Object_SunExclusion()
           AND Object.isErased = FALSE
-
-       UNION ALL
-        SELECT COALESCE (ObjectLink_From.ChildObjectId, _tmpUnit_SUN_From.UnitId) AS UnitId_from
-             , COALESCE (ObjectLink_To.ChildObjectId,   _tmpUnit_SUN_To.UnitId)   AS UnitId_to
-             , OB.ValueData                                                       AS isMCS_to
-        FROM Object
-             INNER JOIN ObjectBoolean AS OB
-                                      ON OB.ObjectId  = Object.Id
-                                     AND OB.DescId    = zc_ObjectBoolean_SunExclusion_MSC_in()
-                                     AND OB.ValueData = TRUE
-             LEFT JOIN ObjectLink AS ObjectLink_From
-                                  ON ObjectLink_From.ObjectId = Object.Id
-                                 AND ObjectLink_From.DescId   = zc_ObjectLink_SunExclusion_From()
-             -- в этом случае возьмем всех
-             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL
-                                                        
-             LEFT JOIN ObjectLink AS ObjectLink_To
-                                  ON ObjectLink_To.ObjectId = Object.Id
-                                 AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
-             -- в этом случае возьмем всех
-             LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_To ON ObjectLink_To.ChildObjectId IS NULL
-
-        WHERE Object.DescId   = zc_Object_SunExclusion()
-          AND Object.isErased = FALSE
-           ;
+       ;
        
-     -- 1.1. вся статистика продаж
+     -- 2.1. вся статистика продаж
      -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
      INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
         SELECT tmp.UnitId
@@ -232,7 +214,7 @@ BEGIN
              ) AS tmp
        ;
 
-     -- 1.2. NotSold
+     -- 2.2. NotSold
      -- CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
      INSERT INTO _tmpSale_not (UnitId, GoodsId, Amount)
         WITH -- список для NotSold
@@ -319,17 +301,18 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
-                                                           ON MB_SUN_v2.MovementId = Movement.Id
-                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                 -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v4
+                                                           ON MB_SUN_v4.MovementId = Movement.Id
+                                                          AND MB_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                                          AND MB_SUN_v4.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '30 DAY' AND Movement.OperDate < inOperDate + INTERVAL '30 DAY'
                            -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            -- AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
-                              AND MB_SUN_v2.MovementId IS NULL
+                              AND MB_SUN_v4.MovementId IS NULL
                             GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -356,17 +339,18 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
-                                 LEFT JOIN MovementBoolean AS MB_SUN_v2
-                                                           ON MB_SUN_v2.MovementId = Movement.Id
-                                                          AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                                          AND MB_SUN_v2.ValueData  = TRUE
+                                 -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
+                                 LEFT JOIN MovementBoolean AS MB_SUN_v4
+                                                           ON MB_SUN_v4.MovementId = Movement.Id
+                                                          AND MB_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                                          AND MB_SUN_v4.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                          -- WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
                               AND MovementBoolean_Deferred.MovementId IS NULL
-                              AND MB_SUN_v2.MovementId IS NULL
+                              AND MB_SUN_v4.MovementId IS NULL
                             GROUP BY MovementLinkObject_From.ObjectId, MovementItem.ObjectId
                             HAVING SUM (MovementItem.Amount) <> 0
                            )
@@ -676,7 +660,7 @@ BEGIN
                );
 
 
-     -- 3.1. все остатки, OVER (Сверх запас)
+     -- 3.1. все остатки, PI (Сверх запас)
      INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold)
         WITH -- остатки - список для OVER
              tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
@@ -738,7 +722,7 @@ BEGIN
                                             ELSE FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0))
                                        END > 0
                                )
-     -- для OVER - находим ВСЕ сроковые
+     -- для PI - находим ВСЕ сроковые
    , tmpNotSold_PartionDate AS (SELECT tmpNotSold_all.UnitID
                                      , tmpNotSold_all.GoodsID
                                    --, SUM (Container.Amount) AS Amount
@@ -761,7 +745,7 @@ BEGIN
                                        , tmpNotSold_all.GoodsID
                                 HAVING SUM (Container.Amount) > 0
                                )
-                  -- Income - за 30 дней - если приходило, OVER уходить уже не может
+                  -- Income - за 30 дней - если приходило, PI уходить уже не может
                 , tmpIncome AS (SELECT DISTINCT
                                        MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
@@ -789,13 +773,13 @@ BEGIN
                                      -- ВСЕ сроковые
                                      LEFT JOIN tmpNotSold_PartionDate ON tmpNotSold_PartionDate.UnitId  = tmpNotSold_all.UnitID
                                                                      AND tmpNotSold_PartionDate.GoodsID = tmpNotSold_all.GoodsID
-                                     -- Income - за 30 дней - если приходило, OVER уходить уже не может
+                                     -- Income - за 30 дней - если приходило, PI уходить уже не может
                                      LEFT JOIN tmpIncome ON tmpIncome.UnitId_to = tmpNotSold_all.UnitID
                                                         AND tmpIncome.GoodsID   = tmpNotSold_all.GoodsID
                                 WHERE tmpNotSold_PartionDate.GoodsID  IS NULL
                                   AND tmpIncome.GoodsID IS NULL
                                )
-       -- Перемещение SUN - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-2
+       -- Перемещение SUN - расход - Erased - за СЕГОДНЯ, что б не отправлять эти товары повторно в СУН-пи
      , tmpMI_SUN_out AS (SELECT DISTINCT
                                 MovementLinkObject_From.ObjectId AS UnitId_from
                               , MovementItem.ObjectId            AS GoodsId
@@ -818,10 +802,21 @@ BEGIN
                                                         ON MB_SUN_v2.MovementId = Movement.Id
                                                        AND MB_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                                        AND MB_SUN_v2.ValueData  = TRUE
+                              LEFT JOIN MovementBoolean AS MB_SUN_v3
+                                                        ON MB_SUN_v3.MovementId = Movement.Id
+                                                       AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
+                                                       AND MB_SUN_v3.ValueData  = TRUE
+                              LEFT JOIN MovementBoolean AS MB_SUN_v4
+                                                        ON MB_SUN_v4.MovementId = Movement.Id
+                                                       AND MB_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                                       AND MB_SUN_v4.ValueData  = TRUE
                          WHERE Movement.OperDate = inOperDate
                            AND Movement.DescId   = zc_Movement_Send()
                            AND Movement.StatusId = zc_Enum_Status_Erased()
+                           -- т.е. - ТОЛЬКО СУН - там срок и без продаж 100дн.
                            AND MB_SUN_v2.MovementId IS NULL
+                           AND MB_SUN_v3.MovementId IS NULL
+                           AND MB_SUN_v4.MovementId IS NULL
                         )
         -- Результат
         SELECT 0 AS ContainerDescId
@@ -834,7 +829,7 @@ BEGIN
              , 0 AS PartionDateKindId
              , zc_DateEnd()              AS ExpirationDate
              , 0                         AS Amount_sun
-               -- остатки, OVER (Сверх запас)
+               -- остатки, PI (Сверх запас)
              , tmpNotSold.Amount_notSold AS Amount_notSold
         FROM tmpNotSold
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
@@ -851,7 +846,7 @@ BEGIN
        ;
 
 
-     -- 3.2. остатки, OVER (Сверх запас) - для распределения
+     -- 3.2. остатки, PI (Сверх запас) - для распределения
      -- CREATE TEMP TABLE _tmpRemains_Partion (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
      --
      WITH -- Goods_sum
@@ -905,8 +900,9 @@ BEGIN
                               FROM ObjectBoolean AS OB_Goods_NOT
                               WHERE OB_Goods_NOT.DescId   = zc_ObjectBoolean_Goods_NOT_Sun_v2()
                                 AND OB_Goods_NOT.ValueData = TRUE
+                                AND 1=0
                              )
-       -- Результат: все остатки, OVER (Сверх запас) - для распределения
+       -- Результат: все остатки, PI (Сверх запас) - для распределения
        INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold)
           SELECT 0 AS ContainerDescId
                , tmp.UnitId
@@ -916,7 +912,7 @@ BEGIN
                  -- продажи у отправителя в разрезе T1=60 дней;
                , COALESCE (_tmpSale.Amount_t1, 0) AS Amount_sale
 
-                 -- остатки, OVER (Сверх запас)
+                 -- остатки, PI (Сверх запас)
                , tmp.Amount_notSold
                  -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                - COALESCE (_tmpRemains_all.AmountReserve, 0)
@@ -924,7 +920,7 @@ BEGIN
                - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                  AS Amount
 
-                 -- остатки, OVER (Сверх запас) без корректировки
+                 -- остатки, PI (Сверх запас) без корректировки
                , tmp.Amount             AS Amount_save
 
                  --
@@ -1001,12 +997,12 @@ BEGIN
              , COALESCE (_tmpRemains_Partion.Amount_save, 0) AS AmountSun_unit_save
 
         FROM _tmpRemains
-             -- итого OVER (Сверх запас) которые будем распределять
+             -- итого PI (Сверх запас) которые будем распределять
              INNER JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount) AS Amount, SUM (_tmpRemains_Partion.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion.Amount_real) AS Amount_real
                          FROM _tmpRemains_Partion
                          GROUP BY _tmpRemains_Partion.GoodsId
                          ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = _tmpRemains.GoodsId
-             -- OVER (Сверх запас) на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем
+             -- PI (Сверх запас) на этой аптеке, тогда перемещения с других аптек не будет, т.е. этот Автозаказ не учитываем
              LEFT JOIN _tmpRemains_Partion ON _tmpRemains_Partion.UnitId  = _tmpRemains.UnitId
                                           AND _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
         WHERE _tmpRemains.AmountResult >= 1.0
@@ -1014,7 +1010,7 @@ BEGIN
 
 
 
-     -- 5. из каких аптек остатки OVER "максимально" закрывают ПОТРЕБНОСТЬ
+     -- 5. из каких аптек остатки PI "максимально" закрывают ПОТРЕБНОСТЬ
      -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
      --
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
@@ -1028,9 +1024,9 @@ BEGIN
                               )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
-               -- если OVER больше чем в ПОТРЕБНОСТЬ
+               -- если PI больше чем в ПОТРЕБНОСТЬ
              , SUM (CASE WHEN _tmpRemains_Partion.Amount >= _tmpRemains_calc.AmountResult
-                              -- тогда OVER = ПОТРЕБНОСТЬ
+                              -- тогда PI = ПОТРЕБНОСТЬ
                               THEN _tmpRemains_calc.AmountResult
                               -- иначе закрываем "частично" - т.е. сколько есть OVER
                               ELSE _tmpRemains_Partion.Amount
@@ -1069,10 +1065,10 @@ BEGIN
                , _tmpRemains_calc.UnitId
        ;
 
-     -- 6.1.1. распределяем-1 остатки OVER (Сверх запас) - по всем аптекам
+     -- 6.1.1. распределяем-1 остатки PI (Сверх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
      --
-     -- курсор1 - все остатки, OVER (Сверх запас) + OVER (Сверх запас) без корректировки
+     -- курсор1 - все остатки, PI (Сверх запас) + PI (Сверх запас) без корректировки
      OPEN curPartion FOR
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save
         FROM _tmpRemains_Partion
@@ -1424,7 +1420,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 */
 -- тест
 /*
-     -- все Подразделения для схемы SUN
+     -- все Подразделения для схемы SUN-v4
      CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;

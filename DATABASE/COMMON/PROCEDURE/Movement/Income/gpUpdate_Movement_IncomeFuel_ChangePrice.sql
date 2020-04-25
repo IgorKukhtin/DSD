@@ -25,9 +25,12 @@ BEGIN
          LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                       ON MovementLinkObject_Contract.MovementId = Movement.Id
                                      AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+         LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                               AND MovementDate_OperDatePartner.DescId     = zc_MovementDate_OperDatePartner()
          LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value
                                                       ON View_ContractCondition_Value.ContractId = MovementLinkObject_Contract.ObjectId 
-                                                     AND Movement.OperDate BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
+                                                     AND MovementDate_OperDatePartner.ValueData BETWEEN View_ContractCondition_Value.StartDate AND View_ContractCondition_Value.EndDate
      WHERE Movement.Id = inId;
 
    

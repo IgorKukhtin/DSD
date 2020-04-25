@@ -58,6 +58,7 @@ type
     actUpdate_EDI_Send: TdsdExecStoredProc;
     cbLoad: TCheckBox;
     cbSend: TCheckBox;
+    actAfterInvoice: TAction;
     procedure TrayIconClick(Sender: TObject);
     procedure AppMinimize(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -68,6 +69,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure TimerTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure actAfterInvoiceExecute(Sender: TObject);
   private
     { Private declarations }
     FIntervalVal: Integer;
@@ -96,6 +98,19 @@ implementation
 
 {$R *.dfm}
 
+
+procedure TMainForm.actAfterInvoiceExecute(Sender: TObject);
+begin
+     if (PrintHeaderCDS.FieldByName('InvNumber').asString = '') or (PrintHeaderCDS.RecordCount <> 1)
+     then
+          LogMemo.Lines.Add('!!! FIND ERROR !!!'
+                          + ' InvNumber = <'+PrintHeaderCDS.FieldByName('InvNumber').asString + '>'
+                          + ' MovementId = <'+IntToStr (FormParams.ParamByName('MovementId_toEDI').Value) + '>'
+                          + ' RecordCount = <'+IntToStr (PrintHeaderCDS.RecordCount) + '>'
+                           )
+     else
+          LogMemo.Lines.Add('ok Send = <'+PrintHeaderCDS.FieldByName('InvNumber').asString);
+end;
 
 procedure TMainForm.actStartEDIExecute(Sender: TObject);
 begin

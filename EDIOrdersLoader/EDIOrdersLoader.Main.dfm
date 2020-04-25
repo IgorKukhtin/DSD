@@ -10613,6 +10613,9 @@ object MainForm: TMainForm
           Action = actExecPrintStoredProc
         end
         item
+          Action = actAfterInvoice
+        end
+        item
           Action = actInvoice
         end
         item
@@ -10652,6 +10655,11 @@ object MainForm: TMainForm
         end>
       Caption = #1059#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
       Hint = #1054#1090#1087#1088#1072#1074#1080#1090#1100' '#1091#1074#1077#1076#1086#1084#1083#1077#1085#1080#1077
+    end
+    object actAfterInvoice: TAction
+      Category = 'EDI'
+      Caption = 'actAfterInvoice'
+      OnExecute = actAfterInvoiceExecute
     end
   end
   object spHeaderOrder: TdsdStoredProc

@@ -1,12 +1,13 @@
--- Function: gpInsert_Movement_Send_RemainsSun_over
+-- Function: gpInsert_Movement_Send_RemainsSun_pi
 
-DROP FUNCTION IF EXISTS gpInsert_Movement_Send_RemainsSun_over (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_Movement_Send_RemainsSun_pi (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_RemainsSun_over(
+CREATE OR REPLACE FUNCTION gpInsert_Movement_Send_RemainsSun_pi(
     IN inOperDate            TDateTime , -- Дата начала отчета
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS VOID
+-- RETURNS VOID
+RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime)
 AS
 $BODY$
    DECLARE vbUserId     Integer;
@@ -67,9 +68,6 @@ BEGIN
      -- 2.2. NotSold
      CREATE TEMP TABLE _tmpSale_not (UnitId Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
 
-     -- 2.3. Перемещение SUN-v4 - Erased - за СЕГОДНЯ, что б не отправлять / не получать эти товары повторно в СУН-2
-     CREATE TEMP TABLE  _tmpSUN_v4 (UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat) ON COMMIT DROP;
-
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains_Partion_all_a (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -107,11 +105,11 @@ BEGIN
                       WHERE ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
                      );*/
      -- !!!1 - сформировали данные во временные табл!!!
-     PERFORM lpInsert_Movement_Send_RemainsSun_over (inOperDate:= inOperDate
-                                                   , inDriverId:= vbDriverId_1
-                                                   , inStep    := 1
-                                                   , inUserId  := vbUserId
-                                                    );
+     PERFORM lpInsert_Movement_Send_RemainsSun_pi (inOperDate:= inOperDate
+                                                 , inDriverId:= vbDriverId_1
+                                                 , inStep    := 1
+                                                 , inUserId  := vbUserId
+                                                  );
      -- !!!1 - перенесли данные
      INSERT INTO _tmpResult_Partion_a SELECT * FROM _tmpResult_Partion;
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;
@@ -136,9 +134,9 @@ BEGIN
      INSERT INTO _tmpResult_child_a   SELECT * FROM _tmpResult_child;*/
       
 
-     -- !!!Удаляем предыдущие документы - SUN-v2 !!!
+     -- !!!Удаляем предыдущие документы - SUN-v4 !!!
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, FALSE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, FALSE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v4(), tmp.MovementId, FALSE)
      FROM (SELECT Movement.Id AS MovementId
            FROM Movement
                 INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -154,10 +152,10 @@ BEGIN
                                            ON MovementBoolean_SUN.MovementId = Movement.Id
                                           AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                           AND MovementBoolean_SUN.ValueData  = TRUE
-                INNER JOIN MovementBoolean AS MovementBoolean_SUN_v2
-                                           ON MovementBoolean_SUN_v2.MovementId = Movement.Id
-                                          AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
-                                          AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                INNER JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                           ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                          AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                          AND MovementBoolean_SUN_v4.ValueData  = TRUE
            WHERE Movement.OperDate = CURRENT_DATE
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
@@ -211,7 +209,7 @@ BEGIN
 
      -- сохранили свойство <Перемещение по СУН-v2> + isAuto + zc_Enum_PartionDateKind_6
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, TRUE)
+           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v4(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
@@ -300,6 +298,13 @@ BEGIN
           ) AS tmp;
 
 
+     --
+     RETURN QUERY 
+       SELECT DISTINCT Movement.Id, Movement.InvNumber, Movement.OperDate
+       FROM _tmpResult_Partion_a 
+            INNER JOIN Movement ON Movement.Id = _tmpResult_Partion_a.MovementId 
+       WHERE _tmpResult_Partion_a.MovementId > 0;
+
 
   -- RAISE EXCEPTION '<ok>';
 
@@ -315,4 +320,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun_over (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

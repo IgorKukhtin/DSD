@@ -1168,8 +1168,11 @@ END IF;
      THEN
           PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Receipt(), tmp.MovementItemId, tmp.ReceiptId)
           FROM (SELECT _tmpItem_pr.MovementItemId
-                     , tmpReceipt.ReceiptId
+                     , CASE WHEN COALESCE (tmpReceipt.ReceiptId, 0) = 0 THEN MILO_Receipt.ObjectId ELSE tmpReceipt.ReceiptId END
                 FROM _tmpItem_pr
+                     LEFT JOIN MovementItemLinkObject AS MILO_Receipt
+                                                      ON MILO_Receipt.MovementItemId = _tmpItem_pr.MovementItemId
+                                                     AND MILO_Receipt.DescId         = zc_MILinkObject_Receipt()
                      LEFT JOIN (SELECT COALESCE (ObjectLink_Receipt_Goods.ObjectId, 0) AS ReceiptId
                                      , tmpGoods.GoodsId
                                      , tmpGoods.GoodsKindId
@@ -1185,8 +1188,8 @@ END IF;
                                                           ON ObjectLink_Receipt_GoodsKind.ObjectId = ObjectLink_Receipt_Goods.ObjectId
                                                          AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
                                 WHERE COALESCE (ObjectLink_Receipt_GoodsKind.ChildObjectId, 0) = tmpGoods.GoodsKindId
-                               ) AS tmpReceipt ON tmpReceipt.GoodsId = _tmpItem_pr.GoodsId
-                                         AND tmpReceipt.GoodsKindId = _tmpItem_pr.GoodsKindId
+                               ) AS tmpReceipt ON tmpReceipt.GoodsId     = _tmpItem_pr.GoodsId
+                                              AND tmpReceipt.GoodsKindId = _tmpItem_pr.GoodsKindId
                 WHERE _tmpItem_pr.GoodsKindId <> zc_GoodsKind_WorkProgress()
                       -- Тушенка
                   AND _tmpItem_pr.InfoMoneyId <> zc_Enum_InfoMoney_30102()

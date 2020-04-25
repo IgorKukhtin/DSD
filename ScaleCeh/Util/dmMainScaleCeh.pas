@@ -236,6 +236,7 @@ begin
          else Params.AddParam('inMovementId', ftInteger, ptInput, 0);
          Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
          Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
+         Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
 
          //try
            Execute;
@@ -253,6 +254,7 @@ begin
            ParamByName('OperDate_Movement').asDateTime:= DataSet.FieldByName('OperDate').asDateTime;
 
            ParamByName('MovementDescNumber').AsInteger:= DataSet.FieldByName('MovementDescNumber').asInteger;
+           ParamByName('isSticker_Ceh').asBoolean:= DataSet.FieldByName('isSticker_Ceh').asBoolean;
 
            ParamByName('MovementDescId').AsInteger:= DataSet.FieldByName('MovementDescId').asInteger;
            ParamByName('FromId').AsInteger:= DataSet.FieldByName('FromId').asInteger;
@@ -808,6 +810,10 @@ begin
              Result := '';
              ShowMessage('Ошибка получения - gpInsert_ScaleCeh_MI');
            end;}
+
+           // вернули Id строки
+           execParamsMI.ParamByName('MovementItemId').asInteger:= DataSet.FieldByName('Id').asInteger;
+
         end;
 
 end;

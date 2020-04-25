@@ -81,6 +81,7 @@ BEGIN
                   FROM tmpBranch
                        LEFT JOIN tmpToolsWeighing_Branch        ON tmpToolsWeighing_Branch.ValueData       = tmpBranch.BranchId :: TVarChar
                        LEFT JOIN tmpToolsWeighing_DiffSaleOrder ON tmpToolsWeighing_DiffSaleOrder.ParentId = tmpToolsWeighing_Branch.ParentId
+                  LIMIT 1
                   );
 
      RETURN QUERY

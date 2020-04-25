@@ -1,11 +1,13 @@
 -- Function: gpGet_ScaleCeh_Movement()
 
-DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_ScaleCeh_Movement(
     IN inMovementId            Integer     , --
     IN inOperDate              TDateTime   , --
     IN inIsNext                Boolean     , --
+    IN inBranchCode            Integer     , --
     IN inSession               TVarChar      -- сесси€ пользовател€
 )
 RETURNS TABLE (MovementId       Integer
@@ -15,6 +17,8 @@ RETURNS TABLE (MovementId       Integer
 
              , isProductionIn     Boolean
              , MovementDescNumber Integer
+
+             , isSticker_Ceh Boolean
 
              , MovementDescId Integer
              , FromId         Integer, FromCode         Integer, FromName       TVarChar
@@ -29,9 +33,9 @@ RETURNS TABLE (MovementId       Integer
              , InvNumber_Order  TVarChar
              , OrderExternalName_master TVarChar
               )
-AS	
+AS
 $BODY$
-   DECLARE vbUserId     Integer;
+   DECLARE vbUserId Integer;
 BEGIN
     -- проверка прав пользовател€ на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
@@ -112,6 +116,18 @@ BEGIN
             , MovementBoolean_isIncome.ValueData             AS isProductionIn
             , MovementFloat_MovementDescNumber.ValueData :: Integer AS MovementDescNumber
 
+              -- определили <печатать —тикер на термопринтере>
+            , (SELECT CASE WHEN TRIM (tmp.RetV) ILIKE 'TRUE' THEN TRUE ELSE FALSE END :: Boolean
+               FROM (SELECT gpGet_ToolsWeighing_Value (inLevel1      := 'ScaleCeh_' || inBranchCode
+                                                     , inLevel2      := 'Movement'
+                                                     , inLevel3      := 'MovementDesc_' || CASE WHEN MovementFloat_MovementDescNumber.ValueData < 10 THEN '0' ELSE '' END || (MovementFloat_MovementDescNumber.ValueData :: Integer) :: TVarChar
+                                                     , inItemName    := 'isSticker_Ceh'
+                                                     , inDefaultValue:= 'FALSE'
+                                                     , inSession     := inSession
+                                                      ) AS RetV
+                    ) AS tmp
+              ) :: Boolean AS isSticker_Ceh
+
             , tmpMovement.MovementDescId :: Integer          AS MovementDescId
             , Object_From.Id                                 AS FromId
             , Object_From.ObjectCode                         AS FromCode
@@ -147,7 +163,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -157,5 +172,5 @@ ALTER FUNCTION gpGet_ScaleCeh_Movement (Integer, TDateTime, Boolean, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
--- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, '201', zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleCeh_Movement (0, CURRENT_TIMESTAMP, FALSE, '201', zfCalc_UserAdmin())

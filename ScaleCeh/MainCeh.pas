@@ -272,6 +272,7 @@ type
     bbSale_Order_all: TSpeedButton;
     bbSale_Order_diff: TSpeedButton;
     bbSale_Order_diffTax: TSpeedButton;
+    bbPrint: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -354,6 +355,7 @@ type
     procedure bbSale_Order_allClick(Sender: TObject);
     procedure bbSale_Order_diffClick(Sender: TObject);
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
+    procedure bbPrintClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -911,6 +913,15 @@ begin
      //сохранение MovementItem
      Result:=DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
      //
+     // Сразу печатаем Этикетку - для сырья
+     if (Length(PrinterSticker_Array) > 0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE)
+     then
+       if PrinterSticker_Array[0].Name <> ''
+       then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                             , ParamsMovement.ParamByName('MovementId').AsInteger
+                             , ParamsMI.ParamByName('MovementItemId').AsInteger
+                             , FALSE);
+     //
      //подсветить - № линии на какую складываем
      if (Result = TRUE) and (SettingMain.isModeSorting = TRUE) then
      begin
@@ -922,10 +933,10 @@ begin
           //печатаем стикер
           if fPrintModeSorting_test = FALSE
           then
-              Print_StickerWms(ParamsMovement.ParamByName('MovementDescId').AsInteger
-                             , ParamsMovement.ParamByName('MovementId').AsInteger
-                             , ParamsLight.ParamByName('MovementItemId').AsInteger
-                             , FALSE);
+              Print_Sticker_Wms(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                              , ParamsMovement.ParamByName('MovementId').AsInteger
+                              , ParamsLight.ParamByName('MovementItemId').AsInteger
+                              , FALSE);
           //если ящик заполнен - надо новый + показали вес по линиям - ящики
           if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then GetParams_Light (1);
           if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then GetParams_Light (2);
@@ -2295,6 +2306,9 @@ begin
   gpInitialize_SettingMain_Default; //!!!обязатльно после получения Default_Array!!!
 
   GoodsKind_Array:=     DMMainScaleCehForm.gpSelect_Scale_GoodsKindWeighing;
+
+  PrinterSticker_Array:=DMMainScaleCehForm.gpSelect_ToolsWeighing_onLevelChild(SettingMain.BranchCode,'PrinterSticker');
+
   //global Initialize
   Create_ParamsMI(ParamsMI);
   Create_ParamsLight(ParamsLight);
@@ -3071,6 +3085,21 @@ begin
      end;
      //
      PanelStorageLine.Visible:=ParamsMovement.ParamByName('isStorageLine').asBoolean=true;
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbPrintClick(Sender: TObject);
+begin
+     if ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = FALSE
+     then ShowMessage ('Для данной операции не предусмотрена печать Стикера')
+     else
+         // Сразу печатаем Этикетку - для сырья
+         if (Length(PrinterSticker_Array) > 0)and(CDS.RecordCount > 0)
+         then
+           if PrinterSticker_Array[0].Name <> ''
+           then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                 , ParamsMovement.ParamByName('MovementId').AsInteger
+                                 , CDS.FieldByName('MovementItemId').AsInteger
+                                 , FALSE);
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.bbSale_Order_allClick(Sender: TObject);

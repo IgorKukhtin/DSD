@@ -284,6 +284,7 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
+                                 -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
                                  LEFT JOIN MovementBoolean AS MB_SUN_v3
                                                            ON MB_SUN_v3.MovementId = Movement.Id
                                                           AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
@@ -323,6 +324,7 @@ BEGIN
                                                          ON MovementItem.MovementId = Movement.Id
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
+                                 -- таким образом - попробуем "восстановить" картину - что б открыть отчет "задним" числом - для теста
                                  LEFT JOIN MovementBoolean AS MB_SUN_v3
                                                            ON MB_SUN_v3.MovementId = Movement.Id
                                                           AND MB_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
