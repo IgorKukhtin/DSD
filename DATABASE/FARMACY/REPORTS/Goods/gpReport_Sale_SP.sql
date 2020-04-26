@@ -37,6 +37,7 @@ RETURNS TABLE (MovementId     Integer
              , GoodsCode      Integer
              , GoodsName      TVarChar
              , MeasureName    TVarChar
+             , isResolution_224 Boolean
 
              , ChangePercent  TFloat
              , Amount        TFloat
@@ -247,12 +248,12 @@ BEGIN
                                                        ON MovementString_InvNumberSP.MovementId = Movement_Check.Id
                                                       AND MovementString_InvNumberSP.DescId     = zc_MovementString_InvNumberSP()
 
-                             LEFT JOIN MovementString AS MovementString_MedicSP
-                                                      ON MovementString_MedicSP.MovementId = Movement_Check.Id
-                                                     AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
-                             LEFT JOIN MovementString AS MovementString_Bayer
-                                                      ON MovementString_Bayer.MovementId = Movement_Check.Id
-                                                     AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
+                              LEFT JOIN MovementString AS MovementString_MedicSP
+                                                       ON MovementString_MedicSP.MovementId = Movement_Check.Id
+                                                      AND MovementString_MedicSP.DescId = zc_MovementString_MedicSP()
+                              LEFT JOIN MovementString AS MovementString_Bayer
+                                                       ON MovementString_Bayer.MovementId = Movement_Check.Id
+                                                      AND MovementString_Bayer.DescId = zc_MovementString_Bayer()
 
                               LEFT JOIN MovementDate AS MovementDate_OperDateSP
                                                      ON MovementDate_OperDateSP.MovementId = Movement_Check.Id
@@ -660,7 +661,14 @@ BEGIN
                                                  AND tmpPrice.UnitId = tmpMIC_Info.UnitId
                          )
 
-                   
+     , tmpGoodsMain AS (SELECT tmpGoods.GoodsId
+                             , Object_Goods_Main.isResolution_224
+                        FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmpGoods
+                             JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
+                             JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                        )
+
+
         -- результат
         SELECT tmpData.MovementId
              , Object_Unit.ValueData               AS UnitName
@@ -684,6 +692,7 @@ BEGIN
              , Object_Goods.ObjectCode             AS GoodsCode
              , Object_Goods.ValueData              AS GoodsName
              , Object_Measure.ValueData            AS MeasureName
+             , tmpGoodsMain.isResolution_224 :: Boolean
              , tmpData.ChangePercent     :: TFloat
              , tmpData.Amount            :: TFloat
 
@@ -733,7 +742,7 @@ BEGIN
            , tmpData.InvNumber_Invoice
            , tmpData.InvNumber_Invoice_Full
            
-           , FALSE                                             AS isPrintLast
+           , FALSE                                        AS isPrintLast
            
            , tmpPartionParam.InvNumber_in     ::TVarChar  AS InvNumber_in
            , tmpPartionParam.JuridicalName_in ::TVarChar  AS JuridicalName_in
@@ -778,6 +787,8 @@ BEGIN
 
              LEFT JOIN tmpPartionParam ON tmpPartionParam.MovementId = tmpData.MovementId
                                       AND tmpPartionParam.GoodsId = tmpData.GoodsId
+             
+             LEFT JOIN tmpGoodsMain ON tmpGoodsMain.GoodsId = tmpData.GoodsId
          ORDER BY Object_Unit.ValueData 
                 , Object_PartnerMedical.ValueData
                 , ContractName

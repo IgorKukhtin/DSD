@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, PriceSale TFloat, ChangePercent TFloat
              , Summ TFloat
              , isSP Boolean
+             , isResolution_224 Boolean
              , isErased Boolean
               )
 AS
@@ -139,6 +140,7 @@ BEGIN
 
               , tmpMarion AS (SELECT tmpGoods.GoodsId
                                    , Object_Goods_Main.MorionCode AS MorionCode
+                                   , Object_Goods_Main.isResolution_224
                               FROM (SELECT DISTINCT tmpRemains.GoodsId FROM tmpRemains) AS tmpGoods
                                    JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
                                    JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
@@ -174,7 +176,8 @@ BEGIN
                  , COALESCE(tmpRemainsFull.PriceSale, tmpPrice.Price)    AS PriceSale
                  , CASE WHEN vbSPKindId = zc_Enum_SPKind_1303() THEN COALESCE (tmpRemainsFull.ChangePercent, 100) ELSE tmpRemainsFull.ChangePercent END :: TFloat AS ChangePercent
                  , tmpRemainsFull.Summ
-                 , tmpRemainsFull.isSP ::Boolean
+                 , tmpRemainsFull.isSP        ::Boolean
+                 , tmpMarion.isResolution_224 ::Boolean
                  , COALESCE(tmpRemainsFull.IsErased,FALSE)               AS isErased
             FROM tmpRemainsFull
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpRemainsFull.GoodsId
@@ -271,6 +274,7 @@ BEGIN
                                       )
               , tmpMarion AS (SELECT tmpGoods.GoodsId
                                    , Object_Goods_Main.MorionCode AS MorionCode
+                                   , Object_Goods_Main.isResolution_224
                               FROM (SELECT DISTINCT MovementItem_Sale.GoodsId FROM MovementItem_Sale) AS tmpGoods
                                    JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = tmpGoods.GoodsId 
                                    JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
@@ -295,6 +299,7 @@ BEGIN
               , MovementItem_Sale.ChangePercent
               , MovementItem_Sale.Summ
               , MovementItem_Sale.isSP
+              , tmpMarion.isResolution_224 ::Boolean
               , MovementItem_Sale.IsErased    AS isErased
             FROM MovementItem_Sale
                 LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId

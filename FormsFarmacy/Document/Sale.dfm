@@ -22,6 +22,8 @@ inherited SaleForm: TSaleForm
       inherited cxGrid: TcxGrid
         Width = 683
         Height = 201
+        ExplicitLeft = 40
+        ExplicitTop = 32
         ExplicitWidth = 683
         ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -47,6 +49,18 @@ inherited SaleForm: TSaleForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isResolution_224: TcxGridDBColumn [0]
+            Caption = #1055#1086#1089#1090'. 224'
+            DataBinding.FieldName = 'isResolution_224'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            Options.Editing = False
+            Width = 53
+          end
           inherited colIsErased: TcxGridDBColumn
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -662,7 +676,16 @@ inherited SaleForm: TSaleForm
     Top = 116
     Caption = #1048#1053#1053' '#1087#1072#1094#1080#1077#1085#1090#1072
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 67
+    Top = 312
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Top = 328
+  end
   inherited ActionList: TActionList
+    Left = 87
+    Top = 327
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -868,8 +891,7 @@ inherited SaleForm: TSaleForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Sale'
-    Left = 64
-    Top = 224
+    Left = 88
   end
   inherited BarManager: TdxBarManager
     Left = 96

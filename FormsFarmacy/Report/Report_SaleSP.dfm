@@ -145,6 +145,18 @@ inherited Report_SaleSPForm: TReport_SaleSPForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090'. 224'
+            DataBinding.FieldName = 'isResolution_224'
+            FooterAlignmentHorz = taCenter
+            GroupSummaryAlignment = taCenter
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            HeaderHint = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            Options.Editing = False
+            Width = 53
+          end
           object isPrintLast: TcxGridDBColumn
             Caption = #1055#1077#1095'. '#1085#1072' '#1087#1086#1089#1083'. '#1089#1090#1088'.'
             DataBinding.FieldName = 'isPrintLast'

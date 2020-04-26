@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 204
+  ExplicitHeight = 203
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
