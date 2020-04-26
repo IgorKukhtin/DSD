@@ -13,6 +13,7 @@ $BODY$
   DECLARE vbOperDate  TDateTime;
   DECLARE vbUnitiD    Integer;
   DECLARE vbArticleLossId Integer;
+  DECLARE vbStatusId Integer;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_Loss());
@@ -33,11 +34,13 @@ BEGIN
     SELECT
         Movement.OperDate,
         Movement_Unit.ObjectId AS Unit,
-        MovementLinkObject_ArticleLoss.ObjectId 
+        MovementLinkObject_ArticleLoss.ObjectId,
+        Movement.StatusId
     INTO
         vbOperDate,
         vbUnitiD,
-        vbArticleLossId
+        vbArticleLossId,
+        vbStatusId
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_Unit
                                       ON Movement_Unit.MovementId = Movement.Id
@@ -82,7 +85,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
     
     --Пересчет полного списания в зарплате
-    IF COALESCE(vbArticleLossId, 0) = 13892113
+    IF COALESCE(vbArticleLossId, 0) = 13892113 AND vbStatusId = zc_Enum_StatusCode_Complete()
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitiD, vbOperDate, inSession); 
     END IF;
