@@ -11,7 +11,6 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
-  DECLARE vbMovementDescId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      IF inSession = zc_Enum_Process_Auto_PrimeCost() :: TVarChar
@@ -19,18 +18,14 @@ BEGIN
      ELSE vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_SendAsset());
      END IF;
 
-     -- Эти параметры нужны для
-     vbMovementDescId:= zc_Movement_SendAsset();
 
-      -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_SendAsset_CreateTemp();
-    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- создаются временные таблицы - для формирование данных для проводок
+     PERFORM lpComplete_Movement_Send_CreateTemp();
   
-     -- 5.3. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
-     PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_SendAsset()
-                                , inUserId     := vbUserId
-                                 );
+     -- !!!проводки!!!
+     PERFORM lpComplete_Movement_Send (inMovementId:= inMovementId
+                                     , inUserId    := vbUserId
+                                      );
 
 END;
 $BODY$
@@ -41,4 +36,3 @@ $BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  17.03.20         *
 */
-

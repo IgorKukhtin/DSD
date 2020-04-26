@@ -1,4 +1,4 @@
-program wms_oracle;
+program SendData_WMS;
 
 uses
   Vcl.Forms,

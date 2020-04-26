@@ -163,6 +163,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1057#1077#1079#1086#1085#1085#1086#1081' '#1089#1082#1080#1076#1082#1080
@@ -258,7 +259,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         Width = 55
       end
       object ValuePrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1043#1056#1053
+        Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
         DataBinding.FieldName = 'ValuePrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
@@ -455,7 +456,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
     object edShowDate: TcxDateEdit
       Left = 741
       Top = 9
-      EditValue = 42856d
+      EditValue = 43831d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
@@ -573,7 +574,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
   object edOperDate: TcxDateEdit
     Left = 741
     Top = 62
-    EditValue = 42856d
+    EditValue = 43831d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 7

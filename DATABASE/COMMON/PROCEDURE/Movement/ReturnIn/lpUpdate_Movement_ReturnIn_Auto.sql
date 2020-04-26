@@ -342,7 +342,7 @@ BEGIN
          -- !!!проверка!!!
          IF COALESCE (vbPartnerId, 0) = 0
          THEN
-             RAISE EXCEPTION 'Ошибка.Для привзякт к продажам необходимо установить контрагента.';
+             RAISE EXCEPTION 'Ошибка.Для привязки к продажам необходимо установить контрагента.';
          END IF;
 
 
@@ -691,8 +691,8 @@ BEGIN
                 -- !!!!!!!!!!!!!!!!!!!!!!!
 
 
-                -- для НАЛ - ТОЛЬКО
-                IF vbAmount > 0 AND vbPaidKindId = zc_Enum_PaidKind_SecondForm() THEN
+                -- для НАЛ - ТОЛЬКО OR zc_Movement_PriceCorrective
+                IF vbAmount > 0 AND (vbPaidKindId = zc_Enum_PaidKind_SecondForm() OR vbMovementDescId = zc_Movement_PriceCorrective()) THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2.4. - NOT vbPartnerId AND vbGoodsKindId!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

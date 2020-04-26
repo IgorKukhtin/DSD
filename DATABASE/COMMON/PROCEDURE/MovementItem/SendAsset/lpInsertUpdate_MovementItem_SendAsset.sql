@@ -18,7 +18,18 @@ BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
-       -- сохранили <Элемент документа>
+     -- Проверка
+     IF NOT EXISTS (SELECT 1 FROM Object WHERE Object.Id = inGoodsId AND Object.DescId = zc_Object_Asset())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Значение ОС не может быть пустым (<%>).', lfGet_Object_ValueData_sh (inGoodsId);
+     END IF;
+     -- Проверка
+     IF COALESCE (inContainerId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для ОС <%> не установлена партия.', lfGet_Object_ValueData_sh (inGoodsId);
+     END IF;
+
+      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, null);
 
      -- сохранили свойство <Партия ОС>
@@ -41,4 +52,4 @@ $BODY$
 */
 
 -- тест
---select * from gpInsertUpdate_MovementItem_SendAsset(ioId := 0 , inMovementId := 16151863 , inGoodsId := 4071624 , inAmount := 0 , inContainerId := 2682725 ,  inSession := '5');
+-- select * from gpInsertUpdate_MovementItem_SendAsset(ioId := 0 , inMovementId := 16151863 , inGoodsId := 4071624 , inAmount := 0 , inContainerId := 2682725 ,  inSession := '5');

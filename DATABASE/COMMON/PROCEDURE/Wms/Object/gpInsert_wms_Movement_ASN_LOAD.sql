@@ -5,10 +5,11 @@ DROP FUNCTION IF EXISTS gpInsert_wms_Movement_ASN_LOAD (VarChar(255), VarChar(25
 
 CREATE OR REPLACE FUNCTION gpInsert_wms_Movement_ASN_LOAD(
     IN inGUID          VarChar(255),      -- 
+   OUT outRecCount     Integer     ,      --
     IN inSession       VarChar(255)       -- сессия пользователя
 )
 -- RETURNS TABLE (GUID TVarChar, ProcName TVarChar, TagName TVarChar, RowNum Integer, ActionName TVarChar, RowData Text, ObjectId Integer, GroupId Integer, InsertDate TDateTime)
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbProcName       TVarChar;
@@ -82,10 +83,12 @@ BEGIN
                             LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = Movement.GoodsId
                                                                  AND wms_Object_GoodsByGoodsKind.GoodsKindId = Movement.GoodsKindId
                             -- линейная табл.
-                            LEFT JOIN wms_MI_Incoming ON wms_MI_Incoming.OperDate        = Movement.OperDate
-                                                     AND wms_MI_Incoming.GoodsId         = Movement.GoodsId
-                                                     AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
-                                                     AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
+                            INNER JOIN wms_MI_Incoming ON wms_MI_Incoming.OperDate        = Movement.OperDate
+                                                      AND wms_MI_Incoming.GoodsId         = Movement.GoodsId
+                                                      AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
+                                                      AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
+                                                      -- !!!обязательно сначала должен уйти Incoming!!!
+                                                      AND wms_MI_Incoming.StatusId_wms    = zc_Enum_Status_UnComplete()
 
                        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                          AND Movement.StatusId IN (/*zc_Enum_Status_UnComplete(), */zc_Enum_Status_Complete())
@@ -146,6 +149,10 @@ BEGIN
         -- AND wms_MI_Incoming.StatusId_wms IS NULL
          ;
      END IF;
+
+
+     -- Результат
+     outRecCount:= (SELECT COUNT(*) FROM wms_Message WHERE wms_Message.GUID = inGUID);
 
 END;
 $BODY$

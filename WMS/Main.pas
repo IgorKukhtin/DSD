@@ -9,7 +9,8 @@ uses
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.Oracle,
   FireDAC.Phys.OracleDef, FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.Client,
   Vcl.StdCtrls, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
-  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Phys.PG, FireDAC.Phys.PGDef;
+  FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Phys.PG, FireDAC.Phys.PGDef,
+  Vcl.ExtCtrls;
 
 type
   TMainForm = class(TForm)
@@ -38,6 +39,10 @@ type
     btnAll_from_wms: TButton;
     from_wms_PacketsHeader_query: TFDQuery;
     from_wms_PacketsDetail_query: TFDQuery;
+    Timer: TTimer;
+    btnStartTimer: TButton;
+    btnEndTimer: TButton;
+    LogMemo: TMemo;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -51,11 +56,14 @@ type
     procedure btnMovement_ASN_LOAD_to_wmsClick(Sender: TObject);
     procedure btnMovement_ORDER_to_wmsClick(Sender: TObject);
     procedure btnAll_from_wmsClick(Sender: TObject);
+    procedure btnStartTimerClick(Sender: TObject);
+    procedure btnEndTimerClick(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
   private
     function fIni_FDC_wms: Boolean;
     function fIni_FDC_alan: Boolean;
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
-    function gpInsert_wms_Message (spName, GUID : String) : Boolean;
+    function gpInsert_wms_Message (spName, GUID : String) : Integer;
     // получаем в Oracle - pack_id - потом можно заливать строки
     function p_alan_insert_packets_to_wms : Integer;
     //
@@ -69,23 +77,26 @@ type
     function fInsert_to_wms_PACK_all : Integer;
     function fInsert_to_wms_USER_all : Integer;
 
-    function fInsert_to_wms_Movement_INCOMING_all : Integer;
-    function fInsert_to_wms_Movement_ASN_LOAD_all : Integer;
-    function fInsert_to_wms_Movement_ORDER_all    : Integer;
+    procedure pInsert_to_wms_Movement_INCOMING_all (var lRecCount, lpack_id : Integer );
+    procedure pInsert_to_wms_Movement_ASN_LOAD_all (var lRecCount, lpack_id : Integer );
+    procedure pInsert_to_wms_Movement_ORDER_all (var lRecCount, lpack_id : Integer );
 
     // Только Postresql.CLOCK_TIMESTAMP
     function fGet_GUID_pg : String;
     // Только формируются данные в табл. Postresql.wms_Message
-    function fInsert_wms_Message_pg (pgProcName, GUID : String) : Boolean;
+    function fInsert_wms_Message_pg (pgProcName, GUID : String) : Integer;
     // открываются данные из табл. Postresql.wms_Message для GUID и переносятся в oracle
     function fInsert_wms_Message_to_wms (pgProcName, GUID : String) : Integer;
     // открываются данные из табл. Postresql.Movement и переносятся в oracle
     function fInsert_Movement_to_wms (pgProcName, GUID : String) : Integer;
 
 
+    procedure AddToLog_Timer (LogType, S: string);
     procedure AddToLog(LogFileName: string; S: string);
     procedure myShowSql;
     procedure myLogSql;
+
+    procedure MyDelay(mySec:Integer);
   public
     { Public declarations }
   end;
@@ -95,6 +106,65 @@ var
 
 implementation
 {$R *.dfm}
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.MyDelay(mySec:Integer);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+  calcSec,calcSec2:LongInt;
+begin
+     Present:=Now;
+     DecodeDate(Present, Year, Month, Day);
+     DecodeTime(Present, Hour, Min, Sec, MSec);
+     //calcSec:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+     calcSec:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+     while abs(calcSec-calcSec2)<mySec do
+     begin
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Present:=Now;
+          DecodeDate(Present, Year, Month, Day);
+          DecodeTime(Present, Hour, Min, Sec, MSec);
+          //calcSec2:=Year*12*31*24*60*60+Month*31*24*60*60+Day*24*60*60+Hour*60*60+Min*60+Sec;
+          calcSec2:=Day*24*60*60*1000+Hour*60*60*1000+Min*60*1000+Sec*1000+MSec;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+          Application.ProcessMessages;
+     end;
+end;
+{------------------------------------------------------------------------------}
+procedure TMainForm.AddToLog_Timer (LogType, S: string);
+var
+  LogFileName, LogStr: string;
+  LogFile: TextFile;
+begin
+  Application.ProcessMessages;
+
+  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+  LogMemo.Lines.Add(LogStr);
+
+  LogFileName := ChangeFileExt(Application.ExeName, '') + '_log' + '\' + LogType + '\'+FormatDateTime('yyyy-mm-dd', Date) + '.log';
+  ForceDirectories(ChangeFileExt(Application.ExeName, '') + '_log');
+  ForceDirectories(ChangeFileExt(Application.ExeName, '') + '_log'  + '\' + LogType);
+
+  AssignFile(LogFile, LogFileName);
+
+  if FileExists(LogFileName) then
+    Append(LogFile)
+  else
+    Rewrite(LogFile);
+
+  WriteLn(LogFile, DateTimeToStr(Now) + ' : ');
+  Writeln(LogFile, s);
+  WriteLn(LogFile, '');
+  CloseFile(LogFile);
+
+  Application.ProcessMessages;
+end;
 {------------------------------------------------------------------------}
 procedure TMainForm.AddToLog(LogFileName: string; S: string);
 var
@@ -127,7 +197,7 @@ end;
        with to_wms_Packets_query do begin
         for i:= 0 to SQL.Count-1 do str_test:= str_test + SQL[i] + #13;
         //
-        ShowMessage (IntToStr(Length(str_test)) + ':' + #13 + IntToStr(SQL.Count) + ':' + #13 + str_test);
+        ShowMessage ('Sql.Length = ' + IntToStr(Length(str_test)) + #13 + 'Sql.Count = ' + IntToStr(SQL.Count) + #13 + 'Sql=' + #13 + str_test);
        end;
     end;
 {------------------------------------------------------------------------}
@@ -159,33 +229,33 @@ begin
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.btnMovement_INCOMING_to_wmsClick(Sender: TObject);
-var vb_pack_id : Integer;
+var lRecCount, lpack_id : Integer;
 begin
    // INCOMING
-   vb_pack_id:= fInsert_to_wms_Movement_INCOMING_all;
-   if vb_pack_id <> 0
-   then ShowMessage('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_INCOMING')
-   else ShowMessage('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_INCOMING');
+   pInsert_to_wms_Movement_INCOMING_all (lRecCount, lpack_id);
+   if lpack_id <> 0
+   then ShowMessage('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING')
+   else ShowMessage('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_INCOMING');
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.btnMovement_ORDER_to_wmsClick(Sender: TObject);
-var vb_pack_id : Integer;
+var lRecCount, lpack_id : Integer;
 begin
-   // ASN_LOAD
-   vb_pack_id:= fInsert_to_wms_Movement_ORDER_all;
-   if vb_pack_id <> 0
-   then ShowMessage('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_ORDER')
-   else ShowMessage('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_ORDER');
+   // ORDER_all
+   pInsert_to_wms_Movement_ORDER_all (lRecCount, lpack_id);
+   if lpack_id <> 0
+   then ShowMessage('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER')
+   else ShowMessage('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = fInsert_to_wms_ORDER');
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.btnMovement_ASN_LOAD_to_wmsClick(Sender: TObject);
-var vb_pack_id : Integer;
+var lRecCount, lpack_id : Integer;
 begin
    // ASN_LOAD
-   vb_pack_id:= fInsert_to_wms_Movement_ASN_LOAD_all;
-   if vb_pack_id <> 0
-   then ShowMessage('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_ASN_LOAD')
-   else ShowMessage('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_ASN_LOAD');
+   pInsert_to_wms_Movement_ASN_LOAD_all (lRecCount, lpack_id);
+   if lpack_id <> 0
+   then ShowMessage('ok - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD')
+   else ShowMessage('ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD');
 end;
 {------------------------------------------------------------------------}
 function TMainForm.fIni_FDC_wms: Boolean;
@@ -210,23 +280,28 @@ begin
      end;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.gpInsert_wms_Message (spName, GUID : String) : Boolean;
+function TMainForm.gpInsert_wms_Message (spName, GUID : String) : Integer;
 begin
-     Result:= false;
+     Result:= -1;
      with spInsert_wms_Message do begin
        StoredProcName:= spName;
        Params.Clear;
        Params.Add('inGUID', ftString, ptInput);
+       Params.Add('outRecCount', ftInteger, ptOutput);
        Params.Add('inSession', ftString, ptInput);
        Params[0].ParamType:= ptInput;
        Params[0].FDDataType:= dtWideString;
-       Params[1].ParamType:= ptInput;
-       Params[1].FDDataType:= dtWideString;
+       Params[1].ParamType:= ptOutput;
+       Params[1].FDDataType:= dtInt32;
+       Params[2].ParamType:= ptInput;
+       Params[2].FDDataType:= dtWideString;
        ParamByName('inGUID').AsString:= GUID;
        ParamByName('inSession').AsString:= '5';
+       //
        ExecProc;
+       //
+       Result:= ParamByName('outRecCount').AsInteger;
      end;
-     Result:= true;
 end;
 {------------------------------------------------------------------------}
 function TMainForm.p_alan_insert_packets_to_wms : Integer;
@@ -254,7 +329,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -279,7 +354,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -304,7 +379,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -329,7 +404,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -354,7 +429,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -379,7 +454,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      Result:= fInsert_wms_Message_to_wms (spName, lGUID);
@@ -390,11 +465,11 @@ begin
    end;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.fInsert_to_wms_Movement_INCOMING_all : Integer;
+procedure TMainForm.pInsert_to_wms_Movement_INCOMING_all (var lRecCount, lpack_id : Integer );
 var spName : String;
     lGUID  : String;
 begin
-   Result:= 0;
+   lpack_id:= 0;
    try
      if not fIni_FDC_wms  then exit;
      if not fIni_FDC_alan then exit;
@@ -404,11 +479,12 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     lRecCount:= fInsert_wms_Message_pg (spName, lGUID);
+     if lRecCount < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      //Result:= fInsert_wms_Message_to_wms (spName, lGUID);
-     Result:= fInsert_Movement_to_wms (spName, lGUID);
+     lpack_id:= fInsert_Movement_to_wms (spName, lGUID);
      //
    finally
      FDC_wms.Connected := false;
@@ -416,11 +492,11 @@ begin
    end;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.fInsert_to_wms_Movement_ASN_LOAD_all : Integer;
+procedure TMainForm.pInsert_to_wms_Movement_ASN_LOAD_all (var lRecCount, lpack_id : Integer );
 var spName : String;
     lGUID  : String;
 begin
-   Result:= 0;
+   lpack_id:= 0;
    try
      if not fIni_FDC_wms  then exit;
      if not fIni_FDC_alan then exit;
@@ -430,10 +506,11 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     lRecCount:= fInsert_wms_Message_pg (spName, lGUID);
+     if lRecCount < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
-     Result:= fInsert_wms_Message_to_wms (spName, lGUID);
+     lpack_id:= fInsert_wms_Message_to_wms (spName, lGUID);
      //
    finally
      FDC_wms.Connected := false;
@@ -441,11 +518,11 @@ begin
    end;
 end;
 {------------------------------------------------------------------------}
-function TMainForm.fInsert_to_wms_Movement_ORDER_all    : Integer;
+procedure TMainForm.pInsert_to_wms_Movement_ORDER_all (var lRecCount, lpack_id : Integer );
 var spName : String;
     lGUID  : String;
 begin
-   Result:= 0;
+   lpack_id:= 0;
    try
      if not fIni_FDC_wms  then exit;
      if not fIni_FDC_alan then exit;
@@ -455,10 +532,11 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     lRecCount:= fInsert_wms_Message_pg (spName, lGUID);
+     if lRecCount < 0 then exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
-     Result:= fInsert_Movement_to_wms (spName, lGUID);
+     lpack_id:= fInsert_Movement_to_wms (spName, lGUID);
      //
    finally
      FDC_wms.Connected := false;
@@ -467,11 +545,11 @@ begin
 end;
 {------------------------------------------------------------------------}
 // Только формируются данные в табл. Postresql.wms_Message
-function TMainForm.fInsert_wms_Message_pg (pgProcName, GUID : String) : Boolean;
+function TMainForm.fInsert_wms_Message_pg (pgProcName, GUID : String) : Integer;
 begin
      Result:= gpInsert_wms_Message (pgProcName, GUID);
      //
-     if not Result then ShowMessage('ERR on pg = ' + pgProcName);
+     if Result < 0 then ShowMessage('ERR on pg = ' + pgProcName);
 end;
 {------------------------------------------------------------------------}
 // Только Postresql.CLOCK_TIMESTAMP
@@ -699,13 +777,16 @@ begin
        Close;
      end;
      //
-     // строчки завершают скрипт
-     to_wms_Packets_query.SQL.Add ('commit;');
-     to_wms_Packets_query.SQL.Add ('end;');
-     //
-     if cbDebug.Checked = TRUE then myShowSql;
-     // сохранили несколько XML в wms
-     try to_wms_Packets_query.ExecSQL; except ShowMessage('!!!ERROR!!!');myShowSql; exit;end;
+     if to_wms_Packets_query.Sql.Count > 0 then
+     begin
+         // строчки завершают скрипт
+         to_wms_Packets_query.SQL.Add ('commit;');
+         to_wms_Packets_query.SQL.Add ('end;');
+         //
+         if cbDebug.Checked = TRUE then myShowSql;
+         // сохранили несколько XML в wms
+         try to_wms_Packets_query.ExecSQL; except ShowMessage('!!!ERROR!!!');myShowSql; exit;end;
+     end;
      //
      Result:= -1;
 end;
@@ -740,7 +821,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      //
      with to_wms_Message_query do begin
@@ -824,7 +905,7 @@ begin
      lGUID:= fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-     if not fInsert_wms_Message_pg (spName, lGUID) then exit;
+     if fInsert_wms_Message_pg (spName, lGUID) < 0 then exit;
      //
      //
      with to_wms_Message_query do begin
@@ -951,6 +1032,76 @@ begin
    if vb_pack_id <> 0
    then ShowMessage('ok - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER')
    else ShowMessage('ERROR - pack_id = ' + IntToStr(vb_pack_id) + ' spName = fInsert_to_wms_USER');
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.btnStartTimerClick(Sender: TObject);
+begin
+     btnStartTimer.Enabled:= false;
+     btnEndTimer.Enabled:= true;
+     Timer.Enabled:= true;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.btnEndTimerClick(Sender: TObject);
+begin
+     btnStartTimer.Enabled:= true;
+     btnEndTimer.Enabled:= false;
+     Timer.Enabled:= false;
+end;
+{------------------------------------------------------------------------}
+procedure TMainForm.TimerTimer(Sender: TObject);
+var lRecCount, lpack_id : Integer;
+    Folder_Name : String;
+begin
+     Folder_Name:= 'Exec_Timer';
+     //
+     try
+       Timer.Enabled:= false;
+       //
+       // INCOMING
+       try
+           pInsert_to_wms_Movement_INCOMING_all (lRecCount, lpack_id);
+           //
+           if lpack_id <> 0
+           then
+               if lRecCount > 0 then
+                  AddToLog_Timer (Folder_Name, 'Send To WMS INCOMING : count = ' + IntToStr (lRecCount))
+               else
+                  AddToLog_Timer (Folder_Name, 'not Send To WMS INCOMING')
+           else
+               AddToLog_Timer (Folder_Name, 'ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_Movement_INCOMING_all');
+       except on E:Exception
+              do begin
+                AddToLog_Timer (Folder_Name, E.Message);
+                AddToLog_Timer (Folder_Name, 'ERROR - exec pInsert_to_wms_Movement_INCOMING_all');
+              end;
+       end;
+       //
+       //обязательно таймаут
+       MyDelay(2 * 1000);
+       //ShowMessage('');
+       //
+       // ASN_LOAD
+       try
+           pInsert_to_wms_Movement_ASN_LOAD_all (lRecCount, lpack_id);
+           if lpack_id <> 0
+           then
+               if lRecCount > 0 then
+                  AddToLog_Timer (Folder_Name, 'Send To WMS ASN : count = ' + IntToStr (lRecCount))
+               else
+                  AddToLog_Timer (Folder_Name, 'not Send To WMS ASN')
+           else
+               AddToLog_Timer (Folder_Name, 'ERROR - pack_id = ' + IntToStr(lpack_id) + ' spName = pInsert_to_wms_ASN_LOAD');
+       except on E:Exception
+              do begin
+                AddToLog_Timer (Folder_Name, E.Message);
+                AddToLog_Timer (Folder_Name, 'ERROR - exec pInsert_to_wms_Movement_ASN_LOAD_all');
+              end;
+       end;
+       //
+       AddToLog_Timer (Folder_Name, '');
+     finally
+        Timer.Enabled:= true;
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);

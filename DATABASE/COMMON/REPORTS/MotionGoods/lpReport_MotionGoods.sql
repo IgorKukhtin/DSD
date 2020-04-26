@@ -529,7 +529,7 @@ end if;
                                        , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
                                                AND inIsInfoMoney = FALSE
                                                    THEN -1
-                                              WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                              WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                AND inIsInfoMoney = FALSE
                                                    THEN MIContainer.ObjectExtId_Analyzer -- MIContainer.AnalyzerId
                                               ELSE 0
@@ -553,14 +553,14 @@ end if;
 
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountSendIn
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -738,14 +738,14 @@ end if;
 
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = TRUE
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS SummSendIn
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = FALSE
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
@@ -978,7 +978,7 @@ end if;
                                          , CASE WHEN MovementBoolean_Peresort.ValueData = TRUE
                                                  AND inIsInfoMoney = FALSE
                                                      THEN -1
-                                                WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
+                                                WHEN MIContainer.MovementDescId IN (zc_Movement_SendOnPrice(), zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate())
                                                  AND inIsInfoMoney = FALSE
                                                      THEN MIContainer.ObjectExtId_Analyzer -- MIContainer.AnalyzerId
                                                 ELSE 0
@@ -999,14 +999,14 @@ end if;
 
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) <> 0 -- AS CountSendIn
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
                                                     -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -1183,14 +1183,14 @@ end if;
 
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = TRUE
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) <> 0 -- AS SummSendIn
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Summ()
                                                    -- AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                   AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                   AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                    AND MIContainer.isActive = FALSE
                                                        THEN -1 * MIContainer.Amount
                                                   ELSE 0
