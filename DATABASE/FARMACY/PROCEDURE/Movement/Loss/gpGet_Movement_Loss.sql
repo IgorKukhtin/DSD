@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitId Integer, UnitName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
-             , UnitFund TFloat, SummaFund TFloat, SummaFundAvailable TFloat
+             , RetailFund TFloat, SummaFund TFloat, SummaFundAvailable TFloat
               )
 AS
 $BODY$
@@ -38,7 +38,7 @@ BEGIN
              , 0                     				            AS ArticleLossId
              , CAST ('' AS TVarChar) 				            AS ArticleLossName
              , CAST ('' AS TVarChar) 		                    AS Comment
-             , CAST (NULL AS TFloat)                            AS UnitFund
+             , CAST (NULL AS TFloat)                            AS RetailFund
              , CAST (NULL AS TFloat)                            AS SummaFund
              , CAST (0 AS TFloat)                               AS SummaFundAvailable
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -56,11 +56,11 @@ BEGIN
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
-           , NULLIF(COALESCE(ObjectFloat_Unit_Fund.ValueData , 0) -
-             COALESCE(ObjectFloat_Unit_FundUsed.ValueData, 0), 0)::TFloat       AS UnitFund
+           , NULLIF(COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
+             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0), 0)::TFloat       AS RetailFund
            , NULLIF(MovementFloat_SummaFund.ValueData, 0)::TFloat               AS SummaFund
-           , (COALESCE(ObjectFloat_Unit_Fund.ValueData , 0) -
-             COALESCE(ObjectFloat_Unit_FundUsed.ValueData, 0) +                
+           , (COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
+             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
              COALESCE(MovementFloat_SummaFund.ValueData, 0))::TFloat            AS SummaFundAvailable
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -76,14 +76,20 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                 ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                                AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Unit_Fund
-                                  ON ObjectFloat_Unit_Fund.ObjectId = Object_Unit.Id
-                                 AND ObjectFloat_Unit_Fund.DescId = zc_ObjectFloat_Unit_Fund()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Retail_Fund
+                                  ON ObjectFloat_Retail_Fund.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                                 AND ObjectFloat_Retail_Fund.DescId = zc_ObjectFloat_Retail_Fund()
 
-            LEFT JOIN ObjectFloat AS ObjectFloat_Unit_FundUsed
-                                  ON ObjectFloat_Unit_FundUsed.ObjectId = Object_Unit.Id
-                                 AND ObjectFloat_Unit_FundUsed.DescId = zc_ObjectFloat_Unit_FundUsed()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Retail_FundUsed
+                                  ON ObjectFloat_Retail_FundUsed.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Retail_FundUsed.DescId = zc_ObjectFloat_Retail_FundUsed()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id

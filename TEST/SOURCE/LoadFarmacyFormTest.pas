@@ -1944,6 +1944,12 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossFundJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossFundJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossFundForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossFundForm');
 end;
 
 procedure TLoadFormTest.LoadListDiffFormTest;

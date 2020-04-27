@@ -93,7 +93,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.Определения номера дня %', vbWeek;
     END IF;
 
-    vbSummaSUN1 := (SELECT MIFloat_SummaSUN1.ValueData
+    vbSummaSUN1 := (SELECT SUM(MIFloat_SummaSUN1.ValueData)
                     FROM MovementItemFloat AS MIFloat_SummaSUN1
                     WHERE MIFloat_SummaSUN1.MovementItemId = vbId
                       AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaWeek1(), zc_MIFloat_SummaWeek2(), zc_MIFloat_SummaWeek3(),

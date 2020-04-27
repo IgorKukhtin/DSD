@@ -55,7 +55,7 @@ BEGIN
     BEGIN
       IF date_part('DAY',  CURRENT_TIME)::Integer IN (1,2,5,10,25) AND date_part('HOUR',  CURRENT_TIME)::Integer = 6
       THEN
-         PERFORM gpSelect_Calculation_MoneyBoxSun (inSession := zfCalc_UserAdmin());
+         PERFORM gpSelect_Calculation_MoneyBoxSun (inUnitID := 0, inSession := zfCalc_UserAdmin());
       END IF;
     EXCEPTION
        WHEN others THEN
@@ -63,6 +63,18 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_MoneyBoxSun', True, text_var1::TVarChar, vbUserId);
     END;
     
+    -- Заполнение фонда
+/*    BEGIN
+      IF date_part('HOUR',  CURRENT_TIME)::Integer = '6' AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
+      THEN
+         PERFORM gpSelect_Calculation_Retail_Fund (inSession := zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_Unit_Fund', True, text_var1::TVarChar, vbUserId);
+    END;
+*/
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -77,3 +89,5 @@ $BODY$
 
 -- SELECT * FROM Log_Run_Schedule_Function
 -- SELECT * FROM gpFarmacy_Scheduler (inSession := zfCalc_UserAdmin())
+
+

@@ -143,6 +143,7 @@ object Report_MovementCheckFarmDialogForm: TReport_MovementCheckFarmDialogForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    DisableGuidesOpen = True
     Key = '0'
     FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString

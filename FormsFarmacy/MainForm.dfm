@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3577,6 +3577,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actLossFundJournal: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1088#1072#1073#1086#1090#1072' '#1089' '#1092#1086#1085#1076#1086#1084')'
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077' ('#1088#1072#1073#1086#1090#1072' '#1089' '#1092#1086#1085#1076#1086#1084')'
+      FormName = 'TLossFundJournalForm'
+      FormNameParam.Value = 'TLossFundJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4007,6 +4019,9 @@ inherited MainForm: TMainForm
       end
       object N56: TMenuItem
         Action = actLossJournal
+      end
+      object N234: TMenuItem
+        Action = actLossFundJournal
       end
       object N57: TMenuItem
         Action = actSendJournal

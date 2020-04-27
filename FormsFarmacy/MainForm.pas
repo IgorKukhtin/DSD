@@ -671,6 +671,8 @@ type
     actReport_Movement_Send_RemainsSun_pi: TdsdOpenForm;
     miReport_Movement_Send_RemainsSun_pi: TMenuItem;
     N233: TMenuItem;
+    actLossFundJournal: TdsdOpenForm;
+    N234: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
