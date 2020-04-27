@@ -877,6 +877,31 @@ inherited SendJournalForm: TSendJournalForm
         end>
       Caption = 'actExecUpdate_NotDisplaySUN_Yes'
     end
+    object actCompileFilter: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecComplete_Filter
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1055#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 66
+    end
+    object actExecComplete_Filter: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spComplete_Filter
+      StoredProcList = <
+        item
+          StoredProc = spComplete_Filter
+        end>
+      Caption = 'actExecComplete_Filter'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -995,6 +1020,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1105,6 +1134,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton4: TdxBarButton
       Action = actUpdate_NotDisplaySUN_Yes
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actCompileFilter
       Category = 0
     end
   end
@@ -1497,7 +1530,7 @@ inherited SendJournalForm: TSendJournalForm
       end>
     PackSize = 1
     Left = 528
-    Top = 419
+    Top = 403
   end
   object spUpdate_NotDisplaySUN_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_NotDisplaySUN'
@@ -1522,5 +1555,22 @@ inherited SendJournalForm: TSendJournalForm
     PackSize = 1
     Left = 72
     Top = 443
+  end
+  object spComplete_Filter: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Send_Filter'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 528
+    Top = 451
   end
 end

@@ -116,16 +116,22 @@ BEGIN
                    )
                    
       , CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
-                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                      FROM ObjectLink AS ObjectLink_Price_Unit
-                         LEFT JOIN ObjectLink AS Price_Goods
-                                ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                               AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                         LEFT JOIN ObjectFloat AS Price_Value
-                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                               AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
-                      WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                        AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId  
+                            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            INNER JOIN ObjectLink AS Price_Goods
+                                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+
+                            -- получаем значения цены и НТЗ из истории значений на начало дня
+                            LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                    ON ObjectHistory_Price.ObjectId = Price_Goods.ObjectId
+                                                   AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                   AND vbOperDate >= ObjectHistory_Price.StartDate AND vbOperDate < ObjectHistory_Price.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                                         ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                        AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                       WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                      )
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
@@ -301,20 +307,25 @@ BEGIN
                     HAVING SUM(T0.Amount) <> 0
                    )
 
-      , CurrPRICE AS (SELECT DISTINCT Price_Goods.ChildObjectId               AS GoodsId
-                           , ROUND(Price_Value.ValueData,2)::TFloat  AS Price 
-                      FROM tmpMI
-                         INNER JOIN ObjectLink AS Price_Goods
-                                               ON Price_Goods.ChildObjectId = tmpMI.ObjectId
-                                              AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                         INNER JOIN ObjectLink AS ObjectLink_Price_Unit
-                                               ON ObjectLink_Price_Unit.ObjectId = Price_Goods.ObjectId
-                                              AND ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                              AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
-                         LEFT JOIN ObjectFloat AS Price_Value
-                                ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                              AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
-             
+      , CurrPRICE AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
+                            , COALESCE (ObjectHistoryFloat_Price.ValueData, 0) :: TFloat  AS Price
+                       FROM ObjectLink AS ObjectLink_Price_Unit
+                            INNER JOIN (SELECT DISTINCT tmpMI.ObjectId AS GoodsId FROM tmpMI) tmpGoods ON 1 = 1
+                            INNER JOIN ObjectLink AS Price_Goods
+                                                  ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
+                                                 AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
+                                                 AND Price_Goods.ChildObjectId = tmpGoods.GoodsId
+
+                            -- получаем значения цены и НТЗ из истории значений на начало дня
+                            LEFT JOIN ObjectHistory AS ObjectHistory_Price
+                                                    ON ObjectHistory_Price.ObjectId = Price_Goods.ObjectId
+                                                   AND ObjectHistory_Price.DescId = zc_ObjectHistory_Price()
+                                                   AND vbOperDate >= ObjectHistory_Price.StartDate AND vbOperDate < ObjectHistory_Price.EndDate
+                            LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_Price
+                                                         ON ObjectHistoryFloat_Price.ObjectHistoryId = ObjectHistory_Price.Id
+                                                        AND ObjectHistoryFloat_Price.DescId = zc_ObjectHistoryFloat_Price_Value()
+                       WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
+                         AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                       )
 
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
@@ -420,4 +431,4 @@ ALTER FUNCTION gpSelect_MovementItem_Loss (Integer, Boolean, Boolean, TVarChar) 
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Loss (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
--- select * from gpSelect_MovementItem_Loss(inMovementId := 16461309 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Loss(inMovementId := 16461309 , inShowAll := 'True' , inIsErased := 'False' ,  inSession := '3');

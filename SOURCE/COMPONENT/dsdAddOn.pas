@@ -91,6 +91,7 @@ type
     FColorValueList: TCollection;
     FStyle: TcxStyle;
     FBackGroundValueColumn: TcxGridColumn;
+//    FRectangleColorColumn: TcxGridColumn;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -108,6 +109,8 @@ type
     property ColorValueList: TCollection read FColorValueList write FColorValueList;
     // Îòêóäà áğàòü çíà÷åíèå äëÿ îïğåäåëåíèÿ Bold
     property ValueBoldColumn: TcxGridColumn read FValueBoldColumn write FValueBoldColumn;
+    // Îòêóäà áğàòü çíà÷åíèå äëÿ öâåòà ğàìêè
+//    property RectangleColorColumn: TcxGridColumn read FRectangleColorColumn write FRectangleColorColumn;
   end;
 
   // Ïğàâèëî óïğàâëåíèÿ öâåòîì
@@ -213,10 +216,34 @@ type
     property DataSummaryItemIndex: Integer read FDataSummaryItemIndex write SetDataSummaryItemIndex;
   end;
 
+  // Ïğàâèëî óïğàâëåíèÿ ñâîéñòâàìè ÿ÷åéêè ãğèäà
+  TPropertiesCell = class(TCollectionItem)
+  private
+    FColumn: TcxGridColumn;
+    FValueColumn: TcxGridColumn;
+    FEditRepository: TcxEditRepository;
+    FOnGetProperties: TcxGridGetPropertiesEvent;
+    procedure SetColumn(const Value: TcxGridColumn);
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+    procedure GetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+                        var AProperties: TcxCustomEditProperties);
+  published
+    // Êàêóş ÿ÷åéêó ğàñêğàøèâàòü. Åñëè ColorColumn íå óêàçàí, òî áóäåò ìåíÿòüñÿ öâåò ó âñåé ñòğîêè
+    property Column: TcxGridColumn read FColumn write SetColumn;
+    // Îòêóäà áğàòü çíà÷åíèå äëÿ îïğåäåëåíèÿ Properties
+    property ValueColumn: TcxGridColumn read FValueColumn write FValueColumn;
+    // Êîëëåêöèÿ Properties
+    property EditRepository: TcxEditRepository read FEditRepository write FEditRepository;
+  end;
+
   // Äîáàâëÿåò ğÿä ôóíêöèîíàëà íà GridView
   // 1. Áûñòğàÿ óñòàíîâêà ôèëüòğîâ
   // 2. Ğèñîâàíèå èêîíîê ñîğòèğîâêè
   // 3. Îáğàáîòêà ïğèçíàêà isErased
+  // 4. Èçìåíåíèå Properties ÿ÷åéêè
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
     FDateEdit: TcxDateEdit;
@@ -234,6 +261,7 @@ type
     FColorRuleList: TCollection;
     FColumnAddOnList: TCollection;
     FColumnEnterList: TCollection;
+    TPropertiesCellList: TCollection;
     FSummaryItemList: TOwnedCollection;
     FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
     FSearchAsFilter: boolean;
@@ -315,6 +343,8 @@ type
     property SearchAsFilter: boolean read FSearchAsFilter write SetSearchAsFilter default true;
     // Ïğè óñòàíîâêå â True ñîõğàíÿåòñÿ öâåò øğèôòà è ôîí äëÿ âûäåëåííîé ñòğî÷êè
     property KeepSelectColor: boolean read FKeepSelectColor write FKeepSelectColor default false;
+    // Ïğàâèëà Properties ÿ÷åéêè
+    property PropertiesCellList: TCollection read TPropertiesCellList write TPropertiesCellList;
 
   end;
 
@@ -1063,6 +1093,7 @@ begin
   FColorRuleList := TCollection.Create(TColorRule);
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
   FColumnEnterList := TCollection.Create(TColumnCollectionItem);
+  TPropertiesCellList := TCollection.Create(TPropertiesCell);
   FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
 
   SearchAsFilter := true;
@@ -1181,6 +1212,37 @@ begin
       on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(AViewInfo.GridRecord.ValueCount)  + ' ' +  IntToStr(J));
     end;
   end;
+
+  // ĞĞèñóåì ïğÿìîóãîëüíèê
+//  try
+//    for i := 0 to ColorRuleList.Count - 1 do
+//      with TColorRule(ColorRuleList.Items[i]) do begin
+//        if Assigned(ColorColumn) then
+//        begin
+//           if TcxGridDBTableView(Sender).Columns[AViewInfo.Item.Index] = ColorColumn then begin
+//           if Assigned(FRectangleColorColumn) and (AViewInfo.GridRecord.ValueCount > FRectangleColorColumn.Index) then
+//              if not VarIsNull(AViewInfo.GridRecord.Values[FRectangleColorColumn.Index]) then begin
+//                 ACanvas.Pen.Color := AViewInfo.GridRecord.Values[FRectangleColorColumn.Index];
+//                 ACanvas.Rectangle(Rect(AViewInfo.Bounds.Left + 1, AViewInfo.Bounds.Top + 1,
+//                   AViewInfo.Bounds.Right - 1, AViewInfo.Bounds.Bottom - 2));
+//                 bManual := True;
+//              end;
+//            end;
+//        end
+//        else begin
+//           if Assigned(FRectangleColorColumn) then
+//              if not VarIsNull(AViewInfo.GridRecord.Values[FRectangleColorColumn.Index]) then begin
+//                 ACanvas.Pen.Color := AViewInfo.GridRecord.Values[FRectangleColorColumn.Index];
+//                 ACanvas.Rectangle(Rect(AViewInfo.Bounds.Left + 1, AViewInfo.Bounds.Top + 1,
+//                   AViewInfo.Bounds.Right - 1, AViewInfo.Bounds.Bottom - 2));
+//                 bManual := True;
+//                 AViewInfo.Bounds.Left := AViewInfo.Bounds.Left + 1;
+//              end;
+//        end;
+//      end;
+//  except
+//    on E: Exception do ShowMessage(E.Message + ' ' +IntToStr(AViewInfo.GridRecord.ValueCount)  + ' ' +  IntToStr(J));
+//  end;
 
   if not bManual and AViewInfo.Focused then begin
      ACanvas.Brush.Color := clHighlight;
@@ -1370,6 +1432,7 @@ begin
   FErasedStyle.Free;
   FreeAndNil(FColumnAddOnList);
   FreeAndNil(FColumnEnterList);
+  FreeAndNil(TPropertiesCellList);
   inherited;
 end;
 
@@ -4429,6 +4492,61 @@ procedure TdsdFieldFilter.TimerTimer(Sender: TObject);
 begin
   FProgressBar.Position := FProgressBar.Position + 10;
   if FProgressBar.Position = 100 then OnEditExit(Sender);
+end;
+
+{ TPropertiesCell }
+
+procedure TPropertiesCell.Assign(Source: TPersistent);
+begin
+  if Source is TColorRule then
+    with TColorRule(Source) do
+    begin
+      Self.Column := ColorColumn;
+      Self.ValueColumn := ValueColumn;
+      Self.EditRepository := EditRepository;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TPropertiesCell.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FOnGetProperties := Nil;
+end;
+
+destructor TPropertiesCell.Destroy;
+begin
+  inherited;
+end;
+
+procedure TPropertiesCell.SetColumn(const Value: TcxGridColumn);
+begin
+  if not Assigned(Value) or (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
+  begin
+    if Assigned(FColumn) then
+    begin
+      FColumn.OnGetProperties := FOnGetProperties;
+    end;
+    FColumn := Value;
+    FOnGetProperties := FColumn.OnGetProperties;
+    FColumn.OnGetProperties := GetProperties;
+  end else raise Exception.Create(Value.ClassName + ' íå ïîääåğæèâàåòüñÿ');
+end;
+
+procedure TPropertiesCell.GetProperties(Sender: TcxCustomGridTableItem; ARecord: TcxCustomGridRecord;
+                                    var AProperties: TcxCustomEditProperties);
+  var I : Integer;
+begin
+  if Assigned(FOnGetProperties) then FOnGetProperties(Sender, ARecord, AProperties);
+
+  if not Assigned(FValueColumn) then Exit;
+  if not Assigned(FEditRepository) then Exit;
+
+  if not TryStrToInt(ARecord.Values[FValueColumn.Index], I) then Exit;
+
+  if (I > 0) and (I <= FEditRepository.Count) then
+    AProperties := FEditRepository.Items[I - 1].Properties
 end;
 
 

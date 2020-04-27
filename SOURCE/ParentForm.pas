@@ -611,6 +611,7 @@ initialization
   RegisterClass (TcxComboBox);
   RegisterClass (TcxDateNavigator);
   RegisterClass (TcxMaskEdit);
+  RegisterClass (TcxEditRepository);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
