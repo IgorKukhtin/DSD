@@ -4,11 +4,12 @@
 DROP FUNCTION IF EXISTS gpInsert_wms_Movement_INCOMING (VarChar(255), VarChar(255));
 
 CREATE OR REPLACE FUNCTION gpInsert_wms_Movement_INCOMING(
-    IN inGUID          VarChar(255),      -- 
+    IN inGUID          VarChar(255),      --
+   OUT outRecCount     Integer     ,      --
     IN inSession       VarChar(255)       -- сессия пользователя
 )
 -- RETURNS TABLE (GUID TVarChar, ProcName TVarChar, TagName TVarChar, RowNum Integer, ActionName TVarChar, RowData Text, ObjectId Integer, GroupId Integer, InsertDate TDateTime)
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId            Integer;
@@ -50,13 +51,28 @@ BEGIN
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpTest AS (SELECT * FROM lpSelect_Object_wms_SKU_test())
+        WITH tmpTest AS (SELECT lpSelect.GoodsId FROM lpSelect_Object_wms_SKU_test() AS lpSelect
+                         WHERE 1=0
+                       UNION
+                         SELECT Movement.GoodsId
+                         FROM wms_Movement_WeighingProduction AS Movement
+                              INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
+                                                                        AND MI.isErased   = FALSE
+                                                                        -- только те по которым ящик закрыт
+                                                                        AND MI.ParentId   > 0
+                                                                        -- только те которые еще не передавали
+                                                                        AND (MI.StatusId_wms IS NULL
+                                                                       --OR Movement.OperDate = CURRENT_DATE - INTERVAL '0 DAY'
+                                                                            )
+                         WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                           AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- , zc_Enum_Status_UnComplete()
+                         )
            , tmpMI AS (SELECT wms_MI_Incoming.sku_id
                               -- дата документа
                             , wms_MI_Incoming.OperDate
                               -- Дата производства
                             , wms_MI_Incoming.PartionDate
-                              -- 
+                              --
                             , (ROW_NUMBER() OVER (ORDER BY wms_MI_Incoming.Id)) :: Integer AS RowNum
                               -- ObjectId
                             , wms_MI_Incoming.Id
@@ -64,9 +80,10 @@ BEGIN
                        WHERE wms_MI_Incoming.OperDate     = vbOperDate
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
-                         -- AND wms_MI_Incoming.StatusId_wms IS NULL
+                         AND wms_MI_Incoming.StatusId_wms IS NULL
                        --AND wms_MI_Incoming.sku_id :: TVarChar IN ('795292', '795293', '38391802', '800562', '800563')
                          AND wms_MI_Incoming.GoodsId IN (SELECT tmpTest.GoodsId FROM tmpTest)
+                     --LIMIT 1
                       )
         -- Результат
         SELECT inGUID, tmp.ProcName, tmp.TagName, vbActionName, tmp.RowNum, tmp.RowData, tmp.ObjectId, tmp.GroupId, CURRENT_TIMESTAMP AS InsertDate
@@ -93,7 +110,7 @@ BEGIN
                           ||' inc_id="' || tmpData.Id                    :: TVarChar ||'"' -- Номер документа
                             ||' line="' || '1'                                       ||'"' -- Номер строки товарной позиции документа
                           ||' sku_id="' || tmpData.sku_id                :: TVarChar ||'"' -- Уникальный идентификатор товара
-                             ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС 
+                             ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС
                  ||' production_date="' || zfConvert_Date_toWMS (tmpData.PartionDate) ||'"' -- Дата производства
                                         ||'></' || vbTagName_detail || '>'*/
                                         || '</' || vbTagName        || '>'
@@ -125,7 +142,7 @@ BEGIN
                           ||' inc_id="' || tmpData.Id                    :: TVarChar ||'"' -- Номер документа
                             ||' line="' || '1'                                       ||'"' -- Номер строки товарной позиции документа
                           ||' sku_id="' || tmpData.sku_id                :: TVarChar ||'"' -- Уникальный идентификатор товара
-                             ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС 
+                             ||' qty="' || '1'                                       ||'"' -- Количество товара в базовых единицах ГС
                  ||' production_date="' || zfConvert_Date_toWMS (tmpData.PartionDate) ||'"' -- Дата производства
                                         ||'></' || vbTagName_detail || '>'
                                         || '</' || vbTagName        || '>'
@@ -141,15 +158,22 @@ BEGIN
         ORDER BY tmp.GroupId, 4
      -- LIMIT 1
        ;
-       
-       -- отметили что данные отправлены
-       UPDATE wms_MI_Incoming SET StatusId_wms = zc_Enum_Status_UnComplete()
-       FROM wms_Message
-       WHERE wms_Message.GUID     = inGUID
-         AND wms_Message.ObjectId = wms_MI_Incoming.Id
-         -- только те которые еще не передавали
-      -- AND wms_MI_Incoming.StatusId_wms IS NULL
-       ;
+
+     IF inGUID <> '1'
+     THEN
+         -- отметили что данные отправлены
+         UPDATE wms_MI_Incoming SET StatusId_wms = zc_Enum_Status_UnComplete()
+         FROM wms_Message
+         WHERE wms_Message.GUID     = inGUID
+           AND wms_Message.ObjectId = wms_MI_Incoming.Id
+           -- только те которые еще не передавали
+        -- AND wms_MI_Incoming.StatusId_wms IS NULL
+         ;
+     END IF;
+
+
+       -- Результат
+       outRecCount:= (SELECT COUNT(*) FROM wms_Message WHERE wms_Message.GUID = inGUID);
 
 END;
 $BODY$

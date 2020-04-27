@@ -181,7 +181,7 @@ BEGIN
      IF zc_Enum_GlobalConst_isTerry() = FALSE
      THEN
          -- если надо найти существующий код
-         IF TRIM (inGoodsName) <> '' AND COALESCE (ioId, 0) = 0
+         IF TRIM (inGoodsName) <> '' AND COALESCE (ioId, 0) = 0 AND (inSession :: Integer) > 0
          THEN
              -- проверка
              IF inGoodsName <> ioGoodsCode :: TVarChar

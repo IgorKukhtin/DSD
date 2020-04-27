@@ -228,7 +228,7 @@ BEGIN
      PERFORM gpInsertUpdate_MIEdit_Income (ioId                 :=   0  -- Ключ объекта <Элемент документа>
                                          , inMovementId         :=   vbMovementId
                                          , inGoodsGroupId       :=   vbGoodsGroupId
-                                         , inMeasureId          :=   (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsGroup() AND Object.ValueData ILIKE '%шт%')
+                                         , inMeasureId          :=   (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Measure() AND Object.ValueData ILIKE '%шт%')
                                          , inJuridicalId        :=   0         -- Юр.лицо(наше)
                                          , ioGoodsCode          :=   inObjectCode  ::Integer      -- код товара --NEXTVAL ('Object_Goods_seq')   ::Integer      -- код товара
                                          , inGoodsName          :=   TRIM (inObjectCode :: TVarChar) :: TVarChar  -- Товары
@@ -241,7 +241,7 @@ BEGIN
                                          , inPriceJur           :=   inOperPrice        :: TFloat    -- Цена вх.без скидки
                                          , inCountForPrice      :=   1                  :: TFloat    -- Цена за количество
                                          , inOperPriceList      :=   inOperPriceList    :: TFloat    -- Цена по прайсу
-                                         , inisCode             :=   TRUE                            -- не изменять код товара--
+                                         , inisCode             :=   FALSE                           -- не изменять код товара--
                                          , inSession            :=   (-1 * vbUserId)    :: TVarChar  -- сессия пользователя
                                           );
 

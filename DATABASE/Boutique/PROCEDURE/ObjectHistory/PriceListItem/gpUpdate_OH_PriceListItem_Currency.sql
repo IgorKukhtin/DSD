@@ -17,7 +17,13 @@ BEGIN
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
    -- Сохранили ВАЛЮТУ
-   PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_PriceListItem_Currency(), inId, inCurrencyId);
+ --PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_PriceListItem_Currency(), OH_PriceListItem.Id, inCurrencyId)
+   PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_PriceListItem_Currency(), OH_PriceListItem_find.Id, inCurrencyId)
+   FROM ObjectHistory AS OH_PriceListItem
+        INNER JOIN ObjectHistory AS OH_PriceListItem_find
+                                 ON OH_PriceListItem_find.ObjectId = OH_PriceListItem.ObjectId
+   WHERE OH_PriceListItem.Id = inId
+  ;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

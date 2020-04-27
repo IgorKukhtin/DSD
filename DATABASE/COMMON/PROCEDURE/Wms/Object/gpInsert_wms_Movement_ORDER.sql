@@ -6,10 +6,11 @@ DROP FUNCTION IF EXISTS gpInsert_wms_Movement_ORDER (VarChar(255), VarChar(255))
 
 CREATE OR REPLACE FUNCTION gpInsert_wms_Movement_ORDER(
     IN inGUID          VarChar(255),      -- 
+   OUT outRecCount     Integer     ,      --
     IN inSession       VarChar(255)       -- сессия пользователя
 )
 -- RETURNS TABLE (GUID TVarChar, ProcName TVarChar, TagName TVarChar, RowNum Integer, ActionName TVarChar, RowData Text, ObjectId Integer, GroupId Integer, InsertDate TDateTime)
-RETURNS VOID
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbProcName       TVarChar;
@@ -337,6 +338,10 @@ BEGIN
         ORDER BY 4
      -- LIMIT 1
        ;
+
+
+     -- Результат
+     outRecCount:= (SELECT COUNT(*) FROM wms_Message WHERE wms_Message.GUID = inGUID);
 
 END;
 $BODY$

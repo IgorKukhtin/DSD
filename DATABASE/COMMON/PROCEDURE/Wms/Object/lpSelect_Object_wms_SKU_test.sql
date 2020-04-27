@@ -63,6 +63,7 @@ BEGIN
                             AND tmp.WeightMin > 0 AND tmp.WeightMax > 0
                                 -- Доходы + Продукция + Тушенка
                             AND tmp.InfoMoneyId <> zc_Enum_InfoMoney_30102()  
+                            AND tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
                          )
             -- этим покупателям ставим лучшую Категорию
           , tmpPartnerTag AS (SELECT Object.Id AS PartnerTagId
