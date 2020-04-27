@@ -21,8 +21,30 @@ BEGIN
 
    -- Сохранили историю
    ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate, inUserId);
+
    -- Сохранили цену
    PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
+
+   -- Сохранили ВАЛЮТУ
+   PERFORM lpInsertUpdate_ObjectHistoryLink (zc_ObjectHistoryLink_PriceListItem_Currency(), ioId
+                                           , COALESCE (-- валюта из истории - у всех элементов одинаковая ...
+                                                       (SELECT DISTINCT OHL_Currency.ObjectId
+                                                        FROM ObjectHistory AS OH_PriceListItem
+                                                             LEFT JOIN ObjectHistoryLink AS OHL_Currency
+                                                                                         ON OHL_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                                                                        AND OHL_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
+                                                        WHERE OH_PriceListItem.ObjectId = vbPriceListItemId
+                                                       )
+                                                       -- валюта прайса
+                                                     , (SELECT OL_Currency.ChildObjectId
+                                                        FROM ObjectLink AS OL_Currency
+                                                        WHERE OL_Currency.ObjectId = inPriceListId
+                                                          AND OL_Currency.DescId   = zc_ObjectLink_PriceList_Currency()
+                                                       )
+                                                     , zc_Currency_GRN()
+                                                      )
+                                            );
+
 
    -- не забыли - cохранили Последнюю Цену в ПАРТИЯХ
    IF inPriceListId = zc_PriceList_Basis()

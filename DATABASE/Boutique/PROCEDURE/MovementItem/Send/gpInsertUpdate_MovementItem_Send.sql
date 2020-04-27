@@ -35,9 +35,11 @@ $BODY$
    DECLARE vbCurrencyId_pl_to Integer;
    DECLARE vbToId Integer;
    DECLARE vbPriceListId_to Integer;
-   DECLARE vbOperPriceListTo_find TFloat;
    DECLARE vbCurrencyValue_to TFloat;
    DECLARE vbParValue_to TFloat;
+
+   DECLARE vbStartDate_plTo_find TDateTime;
+   DECLARE vbOperPriceListTo_find TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -137,18 +139,23 @@ BEGIN
      -- если есть цена и прайс для подр. кому определен сохраняем цену
      IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo,0) <> 0
      THEN
-         -- если есть, оставим без изменений - из Истории
-         vbOperPriceListTo_find := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
-                                                                                                          , vbPriceListId_to
-                                                                                                          , inGoodsId
-                                                                                                           ) AS tmp), 0);
-         -- если нет цены
+         -- найдем - из Истории
+         SELECT COALESCE (lpGet.StartDate, zc_DateStart()) AS StartDate
+              , COALESCE (lpGet.ValuePrice, 0 )            AS ValuePrice
+                INTO vbStartDate_plTo_find, vbOperPriceListTo_find
+         FROM (SELECT inGoodsId AS GoodsId) AS tmp
+              CROSS JOIN lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                          , vbPriceListId_to
+                                                          , inGoodsId
+                                                           ) AS lpGet;
+         -- если нет цены или была такая же цена, т.е. её корректируют
          IF COALESCE (vbOperPriceListTo_find, 0) = 0
+            OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
          THEN
              PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                                , inPriceListId:= vbPriceListId_to
                                                                , inGoodsId    := inGoodsId
-                                                               , inOperDate   := zc_DateStart()
+                                                               , inOperDate   := vbStartDate_plTo_find
                                                                , inValue      := ioOperPriceListTo
                                                                , inUserId     := vbUserId
                                                                 );
@@ -209,11 +216,12 @@ BEGIN
     -- получаем курс для Кому
     SELECT COALESCE (tmpCurrency.Amount, 1)   AS CurrencyValue
          , COALESCE (tmpCurrency.ParValue, 0) AS ParValue
-   INTO vbCurrencyValue_to, vbParValue_to      
+           INTO vbCurrencyValue_to, vbParValue_to      
     FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
                                           , inCurrencyFromId:= zc_Currency_Basis()
                                           , inCurrencyToId  := vbCurrencyId_pl_to
                                            ) AS tmpCurrency
+                                            ;
 
      -- расчитали сумму вх. в грн по элементу, для грида
      outTotalSummBalance := (CAST (outTotalSumm * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
