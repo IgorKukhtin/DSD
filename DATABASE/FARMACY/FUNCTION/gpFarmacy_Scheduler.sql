@@ -64,7 +64,7 @@ BEGIN
     END;
     
     -- Заполнение фонда
-/*    BEGIN
+    BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer = '6' AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
       THEN
          PERFORM gpSelect_Calculation_Retail_Fund (inSession := zfCalc_UserAdmin());
@@ -74,7 +74,7 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_Unit_Fund', True, text_var1::TVarChar, vbUserId);
     END;
-*/
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

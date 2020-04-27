@@ -7,6 +7,26 @@ inherited LossFundJournalForm: TLossFundJournalForm
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+              Column = TotalCount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = TotalSumm
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = TotalSummPrice
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = SummaFund
+            end>
           Styles.Content = nil
           Styles.Inactive = nil
           Styles.Selection = nil
