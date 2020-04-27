@@ -2485,12 +2485,12 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inOperPriceListTo'
+        Name = 'ioOperPriceListTo'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'OperPriceListTo'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
