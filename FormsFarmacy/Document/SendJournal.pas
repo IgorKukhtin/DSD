@@ -89,6 +89,10 @@ type
     spUpdate_NotDisplaySUN_Yes: TdsdStoredProc;
     actExecUpdate_NotDisplaySUN_Yes: TdsdExecStoredProc;
     dxBarButton4: TdxBarButton;
+    actCompileFilter: TMultiAction;
+    spComplete_Filter: TdsdStoredProc;
+    actExecComplete_Filter: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
   private
     { Private declarations }
   public

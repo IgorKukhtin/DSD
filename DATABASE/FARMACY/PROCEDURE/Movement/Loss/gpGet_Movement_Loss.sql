@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitId Integer, UnitName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
+             , UnitFund TFloat, SummaFund TFloat, SummaFundAvailable TFloat
               )
 AS
 $BODY$
@@ -37,6 +38,9 @@ BEGIN
              , 0                     				            AS ArticleLossId
              , CAST ('' AS TVarChar) 				            AS ArticleLossName
              , CAST ('' AS TVarChar) 		                    AS Comment
+             , CAST (NULL AS TFloat)                            AS UnitFund
+             , CAST (NULL AS TFloat)                            AS SummaFund
+             , CAST (0 AS TFloat)                               AS SummaFundAvailable
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
      RETURN QUERY
@@ -52,17 +56,34 @@ BEGIN
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
+           , NULLIF(COALESCE(ObjectFloat_Unit_Fund.ValueData , 0) -
+             COALESCE(ObjectFloat_Unit_FundUsed.ValueData, 0), 0)::TFloat       AS UnitFund
+           , NULLIF(MovementFloat_SummaFund.ValueData, 0)::TFloat               AS SummaFund
+           , (COALESCE(ObjectFloat_Unit_Fund.ValueData , 0) -
+             COALESCE(ObjectFloat_Unit_FundUsed.ValueData, 0) +                
+             COALESCE(MovementFloat_SummaFund.ValueData, 0))::TFloat            AS SummaFundAvailable
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_SummaFund
+                                    ON MovementFloat_SummaFund.MovementId =  Movement.Id
+                                   AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Unit_Fund
+                                  ON ObjectFloat_Unit_Fund.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Unit_Fund.DescId = zc_ObjectFloat_Unit_Fund()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Unit_FundUsed
+                                  ON ObjectFloat_Unit_FundUsed.ObjectId = Object_Unit.Id
+                                 AND ObjectFloat_Unit_FundUsed.DescId = zc_ObjectFloat_Unit_FundUsed()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
@@ -91,3 +112,5 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Movement_Loss (inMovementId:= 1, inOperDate:= '20150720', inSession:= '3')
+
+select * from gpGet_Movement_Loss(inMovementId := 18420172 , inOperDate := ('23.04.2020')::TDateTime ,  inSession := '3');

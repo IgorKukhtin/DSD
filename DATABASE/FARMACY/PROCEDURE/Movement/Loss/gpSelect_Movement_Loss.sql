@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ArticleLossId Integer, ArticleLossName TVarChar
              , TotalSumm TFloat
              , TotalSummPrice TFloat
+             , SummaFund TFloat
              , Comment TVarChar
               )
 
@@ -60,7 +61,7 @@ BEGIN
                                INNER JOIN tmpUnit ON tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
                                --JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
                          )
-
+/*
         , CurrPRICE AS (SELECT Price_Goods.ChildObjectId              AS GoodsId
                              , ObjectLink_Price_Unit.ChildObjectId    AS UnitId
                              , ROUND(Price_Value.ValueData,2)::TFloat AS Price 
@@ -92,7 +93,7 @@ BEGIN
                        -- AND MovementItem.MovementId IN (SELECT DISTINCT tmpMovement.Id FROM tmpMovement)
                       GROUP BY MovementItem.MovementId
                       )
-
+*/
        SELECT
              Movement.Id                        AS Id
            , Movement.InvNumber                 AS InvNumber
@@ -106,7 +107,9 @@ BEGIN
            , Object_ArticleLoss.Id              AS ArticleLossId
            , Object_ArticleLoss.ValueData       AS ArticleLossName
            , MovementFloat_TotalSumm.ValueData  AS TotalSumm
-           , tmpSumm.SummPrice     :: TFloat    AS TotalSummPrice
+--           , tmpSumm.SummPrice     :: TFloat    AS TotalSummPrice
+           , MovementFloat_TotalSummSale.ValueData AS TotalSummPrice
+           , MovementFloat_SummaFund.ValueData  AS SummaFund
            , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
 
        FROM tmpMovement
@@ -122,6 +125,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                    ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+            LEFT JOIN MovementFloat AS MovementFloat_SummaFund
+                                    ON MovementFloat_SummaFund.MovementId = Movement.Id
+                                   AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
 
 /*            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -133,7 +142,7 @@ BEGIN
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
             LEFT JOIN Object AS Object_ArticleLoss ON Object_ArticleLoss.Id = MovementLinkObject_ArticleLoss.ObjectId
             
-            LEFT JOIN tmpSumm ON tmpSumm.MovementId = tmpMovement.Id
+--            LEFT JOIN tmpSumm ON tmpSumm.MovementId = tmpMovement.Id
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                  ON ObjectLink_Unit_Juridical.ObjectId = tmpMovement.UnitId
@@ -160,4 +169,5 @@ ALTER FUNCTION gpSelect_Movement_Loss (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '3')
+-- 
+SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2020', inEndDate:= '01.02.2020', inIsErased := FALSE, inSession:= '3')

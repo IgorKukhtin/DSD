@@ -525,6 +525,47 @@ inherited LossForm: TLossForm
       ImageIndex = 30
       QuestionBeforeExecute = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080'?'
     end
+    object actExecuteSummaDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actAmountDialog'
+      FormName = 'TSummaDialogForm'
+      FormNameParam.Value = 'TSummaDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Summa'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'SummaFundAvailable'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateSummaFund: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actExecuteSummaDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SummaFund
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SummaFund
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
+      ImageIndex = 75
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072'?'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -681,6 +722,14 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateSummaFund'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -698,6 +747,10 @@ inherited LossForm: TLossForm
     end
     object dxBarButton3: TdxBarButton
       Action = actInsertMaskMIMaster
+      Category = 0
+    end
+    object bbUpdateSummaFund: TdxBarButton
+      Action = actUpdateSummaFund
       Category = 0
     end
   end
@@ -772,6 +825,12 @@ inherited LossForm: TLossForm
       item
         Name = 'CheckID'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFundAvailable'
+        Value = '0'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 280
@@ -895,8 +954,11 @@ inherited LossForm: TLossForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'SummaFundAvailable'
         Value = ''
-        ParamType = ptUnknown
+        Component = FormParams
+        ComponentItem = 'SummaFundAvailable'
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
@@ -1512,5 +1574,45 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 504
     Top = 403
+  end
+  object spUpdate_SummaFund: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Loss_SummaFund'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaFund'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SummaFundAvailable'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUnitFund'
+        Value = Null
+        Component = ceUnitFund
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaFund'
+        Value = Null
+        Component = ceSummaFund
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 590
+    Top = 512
   end
 end

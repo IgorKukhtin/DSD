@@ -2258,7 +2258,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
@@ -2270,7 +2270,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');  }
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
@@ -2371,6 +2371,10 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAmountDialogForm'));
