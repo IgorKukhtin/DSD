@@ -463,6 +463,19 @@ object SendForm: TSendForm
             Options.Editing = False
             Width = 80
           end
+          object OperPriceListBalance: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1043#1056#1053' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
+            DataBinding.FieldName = 'OperPriceListBalance'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' '#1076#1083#1103' '#1084#1072#1075#1072#1079#1080#1085#1072' '#1054#1090' '#1082#1086#1075#1086
+            Options.Editing = False
+            Width = 80
+          end
           object TotalSummPriceList: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1054#1090' '#1082#1086#1075#1086', '#1087#1088#1072#1081#1089')'
             DataBinding.FieldName = 'TotalSummPriceList'

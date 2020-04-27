@@ -342,7 +342,7 @@ begin
   dsdProject := prBoutique;
 
   if FindCmdLineSwitch('realpodium', true)
-  then gc_AdminPassword := 'qsxqsxw1'
+  then gc_AdminPassword := 'Админ'
   else gc_AdminPassword := 'Админ';
 
   gc_ProgramName := 'Boutique.exe';
