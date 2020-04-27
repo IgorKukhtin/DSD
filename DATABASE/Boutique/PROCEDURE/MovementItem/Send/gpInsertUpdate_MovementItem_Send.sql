@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outOperPrice                    TFloat    , -- Цена
    OUT outCountForPrice                TFloat    , -- Цена за количество
  INOUT ioOperPriceList                 TFloat    , -- Цена (прайс)
-    IN inOperPriceListTo               TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
+ INOUT ioOperPriceListTo               TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
    OUT outTotalSumm                    TFloat    , -- Сумма вх.
    OUT outTotalSummBalance             TFloat    , -- Сумма вх. (ГРН)
    OUT outTotalSummPriceList           TFloat    , -- Сумма по прайсу
@@ -126,16 +126,24 @@ BEGIN
 
 
      -- если есть цена и прайс для подр. кому определен сохраняем цену 
-     IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (inOperPriceListTo,0) <> 0
+     IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo,0) <> 0
      THEN
-         --
-         PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
-                                                           , inPriceListId:= vbPriceListId_to
-                                                           , inGoodsId    := inGoodsId
-                                                           , inOperDate   := vbOperDate
-                                                           , inValue      := inOperPriceListTo
-                                                           , inUserId     := vbUserId
-                                                            ); 
+         -- если есть, оставим без изменений - из Истории
+         ioOperPriceListTo := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                                     , vbPriceListId_to
+                                                                                                     , inGoodsId
+                                                                                                      ) AS tmp), 0);
+         -- если нет цены
+         IF COALESCE (ioOperPriceListTo, 0) = 0
+         THEN
+             PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
+                                                               , inPriceListId:= vbPriceListId_to
+                                                               , inGoodsId    := inGoodsId
+                                                               , inOperDate   := zc_DateStart()
+                                                               , inValue      := ioOperPriceListTo
+                                                               , inUserId     := vbUserId
+                                                                ); 
+         END IF;
      END IF;
 
      -- сохранили <Элемент документа>
@@ -147,7 +155,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(), ioId, ioOperPriceList);
      
      -- сохранили свойство <>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListTo(), ioId, inOperPriceListTo);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListTo(), ioId, ioOperPriceListTo);
      
      
      -- сохранили свойство <Цена за количество>
@@ -172,7 +180,7 @@ BEGIN
      -- расчитали сумму по прайсу по элементу, для грида
      outTotalSummPriceList := CAST ((inAmount * ioOperPriceList) AS NUMERIC (16, 2));
      -- расчитали Сумма (Кому, прайс)
-     outTotalSummPriceListTo := CAST ((inAmount * inOperPriceListTo) AS NUMERIC (16, 2));
+     outTotalSummPriceListTo := CAST ((inAmount * ioOperPriceListTo) AS NUMERIC (16, 2));
 
      --Сумма ГРН (От кого, прайс)
      outTotalSummPriceListBalance   := (CAST (outTotalSummPriceList * outCurrencyValue / CASE WHEN outParValue <> 0 THEN outParValue ELSE 1 END AS NUMERIC (16, 2))) ;
