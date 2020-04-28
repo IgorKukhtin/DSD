@@ -30,7 +30,8 @@ $BODY$
   DECLARE text_var1 text;
 BEGIN
 
-   IF COALESCE(ioId, 0) <> 0 AND inName <> (SELECT Object.ValueData FROM Object WHERE Object.ID = ioId)
+   IF COALESCE(ioId, 0) <> 0 AND inName <> (SELECT Object.ValueData FROM Object WHERE Object.ID = ioId) AND
+      EXISTS (SELECT 1 FROM Object WHERE Object.ID = inObjectId AND Object.DescId = zc_Object_Retail())
    THEN
      PERFORM lpCheckRight (inUserId::TVarChar, zc_Enum_Process_InsertUpdate_Object_Goods());
    END IF;

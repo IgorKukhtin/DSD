@@ -1668,10 +1668,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_FundUsed() RETURNS Integer AS $
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_FundUsed', 'Использование из Фонда' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_FundUsed');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Retail_OccupancySUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_OccupancySUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Retail(), 'zc_ObjectFloat_Retail_OccupancySUN', 'Заполняемость документа по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Retail_OccupancySUN');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 28.04.20                                                                                      * zc_ObjectFloat_Retail_OccupancySUN
  23.04.20                                                                                      * zc_ObjectFloat_Retail_Fund, zc_ObjectFloat_Retail_FundUsed
  08.04.20                                                                                      * zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity
  05.04.20                                                                                      * zc_ObjectFloat_SeasonalityCoefficient_Koeff1..12

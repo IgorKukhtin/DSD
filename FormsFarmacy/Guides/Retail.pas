@@ -65,6 +65,7 @@ type
     spUpdate_SummSUN: TdsdStoredProc;
     ShareFromPrice: TcxGridDBColumn;
     LimitSUN: TcxGridDBColumn;
+    OccupancySUN: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -9,23 +9,26 @@ CREATE OR REPLACE FUNCTION gpSelect_Calculation_MoneyBoxSun(
 RETURNS VOID
 AS
 $BODY$
-   DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
+   DECLARE vbUserId   Integer;
+   DECLARE vbUnitId   Integer;
+   DECLARE vbOperDate TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
+   
+ vbOperDate := date_trunc('month', CURRENT_DATE);
 
- PERFORM lpInsertUpdate_MovementItem_WagesMoneyBoxSun(date_trunc('month', CURRENT_DATE), T1.UnitID, COALESCE(T1.Summa, 0), vbUserId)
+ PERFORM lpInsertUpdate_MovementItem_WagesMoneyBoxSun(vbOperDate, T1.UnitID, COALESCE(T1.Summa, 0), vbUserId)
  FROM (
    WITH
             -- Текущее значение
        tmpSUNSaleDates AS (SELECT UnitId
                                 , ROUND(SUM(COALESCE(SUNSaleDates.Summa, 0) - COALESCE(SUNSaleDates.SummaSendTheir, 0) - COALESCE(SUNSaleDates.SummaSend, 0)) * 0.1, 2) AS Summa
-                           FROM gpReport_SUNSaleDates(inStartDate := CASE WHEN  date_trunc('month', CURRENT_DATE) >= ('01.04.2020')::TDateTime
-                                                                          THEN date_trunc('month', date_trunc('month', CURRENT_DATE) - INTERVAL '1 DAY')
+                           FROM gpReport_SUNSaleDates(inStartDate := CASE WHEN  vbOperDate >= ('01.04.2020')::TDateTime
+                                                                          THEN date_trunc('month', vbOperDate - INTERVAL '1 DAY')
                                                                           ELSE ('01.06.2019')::TDateTime END,
-                                                      inEndDate := date_trunc('month', CURRENT_DATE) - INTERVAL '1 DAY',
+                                                      inEndDate := vbOperDate - INTERVAL '1 DAY',
                                                       inUnitId := inUnitID,
                                                       inSession := inSession) AS SUNSaleDates
                            GROUP BY SUNSaleDates.UnitId)

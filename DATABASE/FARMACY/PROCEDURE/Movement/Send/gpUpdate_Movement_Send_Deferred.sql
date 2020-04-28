@@ -22,6 +22,9 @@ $BODY$
    DECLARE vbAmountStorage  TFloat;
    DECLARE vbSaldo TFloat;
    DECLARE vbUnit_From Integer;
+   DECLARE vbComment TVarChar;
+   DECLARE vbisAuto Boolean;
+   DECLARE vbOccupancySUN TFloat;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -38,7 +41,10 @@ BEGIN
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementFloat_TotalSummFrom.ValueData, 0),
         COALESCE (ObjectFloat_LimitSUN.ValueData, 0),
-        MovementLinkObject_From.ObjectId
+        MovementLinkObject_From.ObjectId, 
+        COALESCE (MovementString_Comment.ValueData,''), 
+        COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
+        COALESCE (ObjectFloat_OccupancySUN.ValueData, 0)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -46,7 +52,10 @@ BEGIN
         vbisDefSUN,
         vbSumma,
         vbLimitSUN,
-        vbUnit_From
+        vbUnit_From,
+        vbComment,
+        vbisAuto,
+        vbOccupancySUN
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -75,6 +84,17 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN
                               ON ObjectFloat_LimitSUN.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                              AND ObjectFloat_LimitSUN.DescId = zc_ObjectFloat_Retail_LimitSUN()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_OccupancySUN
+                              ON ObjectFloat_OccupancySUN.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
+                             AND ObjectFloat_OccupancySUN.DescId = zc_ObjectFloat_Retail_OccupancySUN()
+
+        LEFT JOIN MovementString AS MovementString_Comment
+                                 ON MovementString_Comment.MovementId = Movement.Id
+                                AND MovementString_Comment.DescId = zc_MovementString_Comment()
+        LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
+                                  ON MovementBoolean_isAuto.MovementId = Movement.Id
+                                 AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
@@ -103,7 +123,35 @@ BEGIN
            THEN
              RAISE EXCEPTION 'Ошибка.Документ уже отложен!';
            END IF;
-
+           
+           IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE
+           THEN
+             RAISE EXCEPTION 'ВНЕСИТЕ В ЯЧЕЙКУ КОММЕНТАРИЙ - ПРИЧИНУ ПЕРЕДАЧИ!!!';
+           END IF;
+           
+           IF (vbOccupancySUN > 0) AND vbisSUN = TRUE
+             AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+           THEN
+             IF (WITH tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId
+                                              , SUBSTRING(MovementItemProtocol.ProtocolData, POSITION('Значение' IN MovementItemProtocol.ProtocolData) + 24, 50) AS ProtocolData
+                                              , MovementItem.Amount
+                                              , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
+                                         FROM MovementItem
+                                              INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
+                                                                             AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
+                                                                             AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer
+                                         WHERE MovementItem.MovementId = inMovementId)
+                    , tmpProtocol AS (SELECT tmpProtocolAll.MovementItemId
+                                           , SUBSTRING(tmpProtocolAll.ProtocolData, 1, POSITION('"' IN tmpProtocolAll.ProtocolData) - 1)::TFloat AS AmountAuto
+                                           , tmpProtocolAll.Amount
+                                         FROM tmpProtocolAll
+                                         WHERE tmpProtocolAll.Ord = 1)
+               SELECT SUM(Amount) / SUM(AmountAuto) * 100  FROM tmpProtocol) < vbOccupancySUN
+             THEN
+               RAISE EXCEPTION 'Обнуляете товар ниже установленной нормы. Обратитесь в IT';
+             END IF;
+           END IF;
+       
            -- Проверка на то что бы не списали больше чем есть на остатке
            SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountRemains
                   INTO vbGoodsName, vbAmount, vbSaldo

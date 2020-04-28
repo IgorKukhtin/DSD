@@ -3,7 +3,7 @@ object RetailForm: TRetailForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100'>'
   ClientHeight = 390
-  ClientWidth = 604
+  ClientWidth = 628
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,13 @@ object RetailForm: TRetailForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 604
+    Width = 628
     Height = 364
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 541
+    ExplicitWidth = 604
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,7 +51,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 51
+        Width = 45
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -59,7 +59,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 204
+        Width = 183
       end
       object MarginPercent: TcxGridDBColumn
         Caption = '% '#1085#1072#1094#1077#1085#1082#1080
@@ -70,7 +70,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1085#1072#1094#1077#1085#1082#1080' '#1076#1083#1103' '#1089#1088#1086#1082#1072' '#1075#1086#1076#1085#1086#1089#1090#1080' < 6 '#1084#1077#1089'.'
         Options.Editing = False
-        Width = 66
+        Width = 58
       end
       object SummSUN: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1057#1059#1053
@@ -80,7 +80,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1081' '#1074#1082#1083#1102#1095#1072#1077#1090#1089#1103' '#1057#1059#1053
-        Width = 71
+        Width = 64
       end
       object LimitSUN: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090' '#1076#1083#1103' '#1054#1090#1083#1086#1078#1077#1085' ('#1057#1059#1053')'
@@ -90,7 +90,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 73
+        Width = 65
       end
       object ShareFromPrice: TcxGridDBColumn
         Caption = #1044#1077#1083#1080#1090#1100' '#1074' '#1082#1072#1089#1089#1077' '#1086#1090' '#1094#1077#1085#1099
@@ -100,7 +100,7 @@ object RetailForm: TRetailForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 62
+        Width = 56
       end
       object isGoodsReprice: TcxGridDBColumn
         Caption = '"'#1055#1077#1088#1077#1086#1094'. '#1074' '#1084#1080#1085#1091#1089'"'
@@ -110,7 +110,15 @@ object RetailForm: TRetailForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1084#1086#1076#1077#1083#1080' "'#1055#1077#1088#1077#1086#1094#1077#1085#1082#1072' '#1074' '#1084#1080#1085#1091#1089'"'
         Options.Editing = False
-        Width = 70
+        Width = 62
+      end
+      object OccupancySUN: TcxGridDBColumn
+        Caption = #1047#1072#1087#1086#1083#1085'. '#1076#1086#1082'-'#1090#1072' '#1087#1086' '#1057#1059#1053' '
+        DataBinding.FieldName = 'OccupancySUN'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 81
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -583,6 +591,7 @@ object RetailForm: TRetailForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end
