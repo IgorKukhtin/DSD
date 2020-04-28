@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , LimitSUN TFloat
              , ShareFromPrice TFloat
              , isGoodsReprice Boolean
+             , OccupancySUN TFloat
              , isErased Boolean) AS
 $BODY$
 BEGIN
@@ -31,6 +32,7 @@ BEGIN
            , CAST (0 AS TFloat)      AS LimitSUN
            , CAST (0 AS TFloat)      AS ShareFromPrice
            , CAST (FALSE AS Boolean) AS isGoodsReprice
+           , CAST (0 AS TFloat)      AS OccupancySUN
            , CAST (FALSE AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
@@ -45,6 +47,7 @@ BEGIN
            , COALESCE (ObjectFloat_ShareFromPrice.ValueData, 0):: TFloat AS ShareFromPrice
 
            , COALESCE (ObjectBoolean_GoodsReprice.ValueData, FALSE):: Boolean AS isGoodsReprice
+           , COALESCE (ObjectFloat_OccupancySUN.ValueData, 0):: TFloat        AS OccupancySUN
 
            , Object_Retail.isErased   AS isErased
        FROM Object AS Object_Retail
@@ -64,6 +67,10 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_GoodsReprice
                                     ON ObjectBoolean_GoodsReprice.ObjectId = Object_Retail.Id 
                                    AND ObjectBoolean_GoodsReprice.DescId = zc_ObjectBoolean_Retail_GoodsReprice()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_OccupancySUN
+                                  ON ObjectFloat_OccupancySUN.ObjectId = Object_Retail.Id 
+                                 AND ObjectFloat_OccupancySUN.DescId = zc_ObjectFloat_Retail_OccupancySUN()
        WHERE Object_Retail.Id = inId;
 
    END IF; 
@@ -76,6 +83,7 @@ LANGUAGE plpgsql VOLATILE;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 28.04.20                                                       * add OccupancySUN
  17.12.19         * add isGoodsReprice
  11.12.19                                                       * LimitSUN
  23.07.19         * SummSUN

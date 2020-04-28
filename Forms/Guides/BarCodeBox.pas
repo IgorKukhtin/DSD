@@ -56,6 +56,16 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     Weight: TcxGridDBColumn;
+    spInsert_BarCodeBox: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actInsert_BarCodeBox: TdsdExecStoredProc;
+    macInsert_BarCodeBox: TMultiAction;
+    ExecuteBarCodeBoxDialog: TExecuteDialog;
+    bbInsert_BarCodeBox: TdxBarButton;
+    ProtocolOpenForm: TdsdOpenForm;
+    bbProtocol: TdxBarButton;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

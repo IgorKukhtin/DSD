@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="4.15.6" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Modal="False" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="43949.7514463194" ReportOptions.Description.Text="" ReportOptions.LastChange="43949.7528881597" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end." PropData="0844617461736574730101061B20446174615365744E616D653D226672784442444D6173746572220000095661726961626C65730100055374796C650100">
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" PaperWidth="60" PaperHeight="80" PaperSize="256" LeftMargin="0" RightMargin="0" TopMargin="0" BottomMargin="0" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxMasterData Name="MasterData1" Height="302.362204724409" Left="0" Top="18.89765" Width="226.7718" ColumnWidth="0" ColumnGap="0" DataSetName="frxDBDMaster" RowCount="0">
+      <TfrxBarCodeView Name="BarCode1" Left="49.13389" Top="52.91342" Width="129" Height="134" ShowHint="False" BarType="bcCodeEAN128A" Expression="&#60;frxDBDMaster.&#34;barcode&#34;&#62;" Rotation="90" Text="12345678" WideBarRatio="2" Zoom="1" Font.Charset="1" Font.Color="0" Font.Height="-12" Font.Name="Arial" Font.Style="0"/>
+    </TfrxMasterData>
+  </TfrxReportPage>
+</TfrxReport>

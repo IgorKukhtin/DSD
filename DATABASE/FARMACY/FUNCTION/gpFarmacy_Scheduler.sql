@@ -53,7 +53,7 @@ BEGIN
     
     -- Заполнение кошелька
     BEGIN
-      IF date_part('DAY',  CURRENT_TIME)::Integer IN (1,2,5,10,25) AND date_part('HOUR',  CURRENT_TIME)::Integer = 6
+      IF date_part('DAY',  CURRENT_DATE)::Integer IN (1,2,5,10,25) AND date_part('HOUR',  CURRENT_TIME)::Integer = 6
       THEN
          PERFORM gpSelect_Calculation_MoneyBoxSun (inUnitID := 0, inSession := zfCalc_UserAdmin());
       END IF;

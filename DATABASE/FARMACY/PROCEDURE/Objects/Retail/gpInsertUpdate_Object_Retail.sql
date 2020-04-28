@@ -4,6 +4,7 @@
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Retail(Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, Boolean, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
  INOUT ioId                    Integer   ,     -- ключ объекта <Торговая сеть> 
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Retail(
     IN inLimitSUN              TFloat    ,     --
     IN inShareFromPrice        TFloat    ,     --
     IN inisGoodsReprice        Boolean   ,     --Участвует в модели "переоценка в минус"
+    IN inOccupancySUN          TFloat    ,     --Заполняемость документа по СУН 
     IN inSession               TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -53,6 +55,9 @@ BEGIN
    -- сохранили св-во <Участвует в модели "переоценка в минус">
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Retail_GoodsReprice(), ioId, inisGoodsReprice);
 
+   -- сохранили св-во <Заполняемость документа по СУН>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_OccupancySUN(), ioId, inOccupancySUN);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -63,6 +68,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 28.04.20                                                       * add OccupancySUN
  17.12.19         * add inisGoodsReprice
  11.12.19                                                       * LimitSUN
  23.07.19         * inSummSUN

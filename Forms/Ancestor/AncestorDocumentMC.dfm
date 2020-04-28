@@ -371,6 +371,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object MultiAction: TMultiAction
       Category = 'DSDLib'

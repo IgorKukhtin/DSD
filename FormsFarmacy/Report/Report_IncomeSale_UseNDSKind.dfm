@@ -1,5 +1,5 @@
 inherited Report_IncomeSale_UseNDSKindForm: TReport_IncomeSale_UseNDSKindForm
-  Caption = #1054#1090#1095#1077#1090' <'#1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1090#1072#1074#1082#1091' '#1053#1044#1057' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076'/'#1087#1088#1086#1076#1072#1078#1080' '#1090#1086#1074#1072#1088#1072' '#1089' '#1053#1044#1057'-0%>'
   ClientHeight = 364
   ClientWidth = 904
   AddOnFormData.isSingle = False
@@ -92,6 +92,11 @@ inherited Report_IncomeSale_UseNDSKindForm: TReport_IncomeSale_UseNDSKindForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaSale_income
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -171,6 +176,11 @@ inherited Report_IncomeSale_UseNDSKindForm: TReport_IncomeSale_UseNDSKindForm
               Format = ',0.####'
               Kind = skSum
               Column = SummaSale_income
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = Amount_diff
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -312,6 +322,18 @@ inherited Report_IncomeSale_UseNDSKindForm: TReport_IncomeSale_UseNDSKindForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 102
+          end
+          object Amount_diff: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1088#1080#1093'.'
+            DataBinding.FieldName = 'Amount_diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093'. - '#1087#1088#1086#1076'.'
+            Options.Editing = False
+            Width = 80
           end
           object isClose: TcxGridDBColumn
             Caption = #1047#1072#1082#1088#1099#1090' '#1082#1086#1076' '#1087#1086' '#1074#1089#1077#1081' '#1089#1077#1090#1080
@@ -777,14 +799,6 @@ inherited Report_IncomeSale_UseNDSKindForm: TReport_IncomeSale_UseNDSKindForm
         item
           Visible = True
           ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsPartyReport'
         end
         item
           Visible = True

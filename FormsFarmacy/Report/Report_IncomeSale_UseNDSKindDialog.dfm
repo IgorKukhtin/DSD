@@ -2,7 +2,7 @@ object Report_IncomeSale_UseNDSKindDialogForm: TReport_IncomeSale_UseNDSKindDial
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1048#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1089#1090#1072#1074#1082#1091' '#1053#1044#1057' '#1087#1086' '#1087#1088#1080#1093#1086#1076#1091'>'
+  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1080#1093#1086#1076'/'#1087#1088#1086#1076#1072#1078#1080' '#1090#1086#1074#1072#1088#1072' '#1089' '#1053#1044#1057'-0%>'
   ClientHeight = 272
   ClientWidth = 338
   Color = clBtnFace
@@ -102,7 +102,7 @@ object Report_IncomeSale_UseNDSKindDialogForm: TReport_IncomeSale_UseNDSKindDial
   end
   object cbList: TcxCheckBox
     Left = 235
-    Top = 43
+    Top = 51
     Hint = #1058#1054#1051#1068#1050#1054' '#1055#1054' '#1057#1055#1048#1057#1050#1059
     Caption = #1055#1054' '#1057#1055#1048#1057#1050#1059
     TabOrder = 10

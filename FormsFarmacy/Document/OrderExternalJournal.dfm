@@ -4,7 +4,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   ClientWidth = 1073
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1089
-  ExplicitHeight = 573
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -331,6 +331,8 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
+      Enabled = False
+      ShortCut = 0
       FormName = 'TOrderExternalForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
@@ -522,10 +524,6 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsert'
-        end
         item
           Visible = True
           ItemName = 'bbEdit'

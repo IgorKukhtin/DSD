@@ -280,6 +280,9 @@ end;
 
 procedure TLoadFormTest.LoadBarCodeBoxFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBarCodeBoxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBarCodeBoxEditForm'));
@@ -3488,6 +3491,8 @@ end;
 
 procedure TLoadFormTest.LoadReceiptFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptMainGoods_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReceiptMainGoods_ObjectForm');
 {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReceiptDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReceiptDialogForm');

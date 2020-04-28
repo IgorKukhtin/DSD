@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -876,7 +876,7 @@ inherited SendForm: TSendForm
   object cxLabel7: TcxLabel [2]
     Left = 195
     Top = 87
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
   end
   object edComment: TcxTextEdit [3]
     Left = 195
@@ -3156,6 +3156,7 @@ inherited SendForm: TSendForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 529
   end

@@ -1,4 +1,4 @@
-unit ReceiptGoods_Object;
+unit ReceiptMainGoods_Object;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TReceiptGoods_ObjectForm = class(TParentForm)
+  TReceiptMainGoods_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
@@ -53,6 +53,8 @@ type
     GoodsTagName: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    ReceiptName: TcxGridDBColumn;
+    ReceiptCode_user: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -62,5 +64,5 @@ type
 implementation
 {$R *.dfm}
 initialization
-  RegisterClass(TReceiptGoods_ObjectForm);
+  RegisterClass(TReceiptMainGoods_ObjectForm);
 end.

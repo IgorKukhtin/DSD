@@ -5829,18 +5829,18 @@ begin
       spCheckItem_SPKind_1303.ParamByName('outSentence').Value := '';
       spCheckItem_SPKind_1303.ParamByName('outPrice').Value := 0;
       spCheckItem_SPKind_1303.Execute;
-      if (spCheckItem_SPKind_1303.ParamByName('outSentence').Value <> '') and
+      if //(spCheckItem_SPKind_1303.ParamByName('outSentence').Value <> '') and
         (spCheckItem_SPKind_1303.ParamByName('outPrice').AsFloat <> 0) then
       begin
-        if MessageDlg(spCheckItem_SPKind_1303.ParamByName('outError').Value +
-          #13#10#13#10 + 'Yes - ' + spCheckItem_SPKind_1303.ParamByName
-          ('outSentence').Value, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-        begin
+//        if MessageDlg(spCheckItem_SPKind_1303.ParamByName('outError').Value +
+//          #13#10#13#10 + 'Yes - ' + spCheckItem_SPKind_1303.ParamByName
+//          ('outSentence').Value, mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+//        begin
           FormParams.ParamByName('Price1303').Value :=
             spCheckItem_SPKind_1303.ParamByName('outPrice').AsFloat;
-        end
-        else
-          exit;
+//        end
+//        else
+//          exit;
       end
       else if spCheckItem_SPKind_1303.ParamByName('outError').Value <> '' then
       begin

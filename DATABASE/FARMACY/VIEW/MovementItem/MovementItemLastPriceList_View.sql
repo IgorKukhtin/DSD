@@ -18,7 +18,8 @@ AS
          , LastMovement.JuridicalId
          , LastMovement.ContractId
          , MovementItem.Id                    AS MovementItemId
-         , MovementItem.Amount                AS Price
+--         , MovementItem.Amount                AS Price
+         , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price
          , MILinkObject_Goods.ObjectId        AS GoodsId
          , ObjectString_GoodsCode.ValueData   AS GoodsCode
          , Object_Goods.ValueData             AS GoodsName
@@ -67,6 +68,11 @@ AS
         LEFT JOIN MovementItemLinkObject AS MILinkObject_Goods -- товары в прайс-листе
                                          ON MILinkObject_Goods.DescId = zc_MILinkObject_Goods()
                                         AND MILinkObject_Goods.MovementItemId = MovementItem.Id
+
+        LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                    ON MIFloat_Price.MovementItemId =  MovementItem.Id
+                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
         LEFT OUTER JOIN Object AS Object_Goods
                                ON Object_Goods.Id = MILinkObject_Goods.ObjectId
         LEFT JOIN ObjectString AS ObjectString_GoodsCode 
@@ -77,7 +83,8 @@ AS
                               AND ObjectString_Goods_Maker.DescId = zc_ObjectString_Goods_Maker()  
         LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                    ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-                                  AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id;
+                                  AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+        ;
                                   
 ALTER TABLE MovementItemLastPriceList_View OWNER TO postgres;
 

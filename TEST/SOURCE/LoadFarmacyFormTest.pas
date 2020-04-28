@@ -858,6 +858,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindDialogForm');
+  exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodForm');
@@ -1595,6 +1600,8 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_T_SUN_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_T_SUN_EditForm');
 
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_KoeffSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_KoeffSUN_EditForm');
@@ -2264,7 +2271,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
@@ -2276,7 +2283,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');  }
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
@@ -2393,6 +2400,7 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SummSPForm');

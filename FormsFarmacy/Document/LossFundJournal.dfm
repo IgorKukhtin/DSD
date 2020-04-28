@@ -35,6 +35,8 @@ inherited LossFundJournalForm: TLossFundJournalForm
           object SummaFund: TcxGridDBColumn [9]
             Caption = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
             DataBinding.FieldName = 'SummaFund'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
