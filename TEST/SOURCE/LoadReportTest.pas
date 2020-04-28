@@ -136,6 +136,8 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+  LoadReportFromFile('Print_Object_BarCodeBox', ReportPath + '\Товарный Учет\Print_Object_BarCodeBox.fr3');
+  exit;
  {
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;

@@ -3,7 +3,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
   ClientHeight = 332
-  ClientWidth = 527
+  ClientWidth = 485
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,19 +15,20 @@ object BarCodeBoxForm: TBarCodeBoxForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 527
+    Width = 485
     Height = 306
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 440
+    ExplicitWidth = 527
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -192,7 +193,11 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert_BarCodeBox'
         end
         item
           Visible = True
@@ -201,6 +206,30 @@ object BarCodeBoxForm: TBarCodeBoxForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -240,6 +269,18 @@ object BarCodeBoxForm: TBarCodeBoxForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbInsert_BarCodeBox: TdxBarButton
+      Action = macInsert_BarCodeBox
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -371,6 +412,240 @@ object BarCodeBoxForm: TBarCodeBoxForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actInsert_BarCodeBox: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_BarCodeBox
+      StoredProcList = <
+        item
+          StoredProc = spInsert_BarCodeBox
+        end>
+      Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 50
+    end
+    object macInsert_BarCodeBox: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteBarCodeBoxDialog
+        end
+        item
+          Action = actInsert_BarCodeBox
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 50
+    end
+    object ExecuteBarCodeBoxDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 50
+      FormName = 'TBarCodeBoxDialogForm'
+      FormNameParam.Value = 'TBarCodeBoxDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inBarCodePref'
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1087#1088#1080#1093'.'
+          Component = FormParams
+          ComponentItem = 'inBarCodePref'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode1'
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1088#1072#1089#1093'.'
+          Component = FormParams
+          ComponentItem = 'inBarCode1'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBarCode2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBarCode2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBoxId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBoxId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inBoxName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inBoxName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BoxName'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BoxName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BoxId'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'BoxId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object ProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
+      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
+      ImageIndex = 22
+      ShortCut = 16464
+      DataSets = <
+        item
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'Code'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 42186d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'EndDate'
+          Value = 42186d
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsGroupName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isPartionGoods'
+          Value = 'False'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'FromName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ToName'
+          Value = ''
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'Print_Object_BarCodeBox'
+      ReportNameParam.Value = 'Print_Object_BarCodeBox'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_BarCodeBox'
@@ -432,5 +707,52 @@ object BarCodeBoxForm: TBarCodeBoxForm
     SummaryItemList = <>
     Left = 368
     Top = 128
+  end
+  object spInsert_BarCodeBox: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_BarCodeBox'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBoxId'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3'
+        Component = FormParams
+        ComponentItem = 'inBoxId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCodePref'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCodePref'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 187
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 125
+    Top = 250
   end
 end

@@ -1145,7 +1145,8 @@ uses
   Promo in '..\..\Forms\Document\Promo.pas' {PromoForm: TParentForm},
   Report_Cash_Olap in '..\..\Forms\Report\Report_Cash_Olap.pas' {Report_Cash_OlapForm: TParentForm},
   Report_Cash_OlapDialog in '..\..\Forms\Report\Report_Cash_OlapDialog.pas' {Report_Cash_OlapDialogForm: TParentForm},
-  OrderInternalJournalChoice in '..\..\Forms\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm};
+  OrderInternalJournalChoice in '..\..\Forms\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
+  BarCodeBoxDialog in '..\..\Forms\Guides\BarCodeBoxDialog.pas' {BarCodeBoxDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

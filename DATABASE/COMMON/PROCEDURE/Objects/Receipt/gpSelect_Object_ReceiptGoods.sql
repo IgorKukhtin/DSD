@@ -28,6 +28,7 @@ BEGIN
      
         , tmpReceiptMain AS (SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
+                                  , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId AS GoodsKindCompleteId
                                   , Object_Receipt.Id                          AS ReceiptId
                                   , Object_Receipt.ObjectCode                  AS ReceiptCode
                                   , ObjectString_Receipt_Code.ValueData        AS ReceiptCode_user
@@ -45,6 +46,10 @@ BEGIN
                                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
                                                            ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
                                                           AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+
+                                      LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
+                                                           ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id
+                                                          AND ObjectLink_Receipt_GoodsKindComplete.DescId = zc_ObjectLink_Receipt_GoodsKindComplete()
 
                                       LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                                              ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
