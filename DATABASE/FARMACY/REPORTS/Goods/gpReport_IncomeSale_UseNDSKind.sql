@@ -35,6 +35,7 @@ RETURNS TABLE (UnitId Integer, UnitName TVarChar,
                Amount_sale         TFloat,
                PriceSale_sale      TFloat,
                SummaSale_sale      TFloat,
+               Amount_diff         TFloat,
              
                isTOP               Boolean,
                isFirst             Boolean,
@@ -365,6 +366,8 @@ BEGIN
            , tmpData.Amount_sale       ::TFloat AS Amount_sale
            , CASE WHEN COALESCE (tmpData.Amount_sale,0) <> 0 THEN tmpData.SummaSale_sale / tmpData.Amount_sale ELSE 0 END ::TFloat AS PriceSale_sale
            , tmpData.SummaSale_sale    ::TFloat AS SummaSale_sale
+
+           , (COALESCE (tmpData.Amount_income,0) - COALESCE (tmpData.Amount_sale,0) ) ::TFloat AS Amount_diff
 
            , COALESCE(Object_Goods_Retail.isTOP, false)           :: Boolean AS isTOP
            , COALESCE(Object_Goods_Retail.isFirst, False)         :: Boolean AS isFirst
