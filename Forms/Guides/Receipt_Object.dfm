@@ -570,8 +570,8 @@ object Receipt_ObjectForm: TReceipt_ObjectForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 400
-    Top = 96
+    Left = 440
+    Top = 88
   end
   object FormParams: TdsdFormParams
     Params = <

@@ -780,10 +780,10 @@
   object ReceiptGoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGooods
-    FormNameParam.Value = 'TReceiptGoods_ObjectForm'
+    FormNameParam.Value = 'TReceiptMainGoods_ObjectForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TReceiptGoods_ObjectForm'
+    FormName = 'TReceiptMainGoods_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
