@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
-             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaMoneyBoxUsed TFloat
+             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaFullChargeFact TFloat, SummaMoneyBoxUsed TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -137,6 +137,7 @@ BEGIN
                  , NULL::TFloat                       AS SummaTechnicalRediscount
                  , NULL::TFloat                       AS SummaMoneyBox
                  , NULL::TFloat                       AS SummaFullCharge
+                 , NULL::TFloat                       AS SummaFullChargeFact
                  , NULL::TFloat                       AS SummaMoneyBoxUsed
                  , NULL::TFloat                       AS SummaTotal
 
@@ -170,9 +171,11 @@ BEGIN
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
 --                 , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
                  , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
-                 , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
-                   MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
-                 , COALESCE(tmpFullCharge.SummWages, MIFloat_SummaFullCharge.ValueData)   AS SummaFullCharge
+                 , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
+                   COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
+                 , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                     COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
+                 , MIFloat_SummaFullChargeFact.ValueData AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
@@ -215,16 +218,26 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                               ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxMonth
+                                              ON MIFloat_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
                                               ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
+                                              ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeFact
+                                              ON MIFloat_SummaFullChargeFact.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
                                               ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
 
 --                  LEFT JOIN tmpTechnicalRediscount ON tmpTechnicalRediscount.UnitID = MovementItem.ObjectId
+                  LEFT JOIN tmpFullCharge ON tmpFullCharge.UnitID = MovementItem.ObjectId
                   
                   LEFT JOIN MovementItemBoolean AS MIBoolean_isIssuedBy
                                                 ON MIBoolean_isIssuedBy.MovementItemId = MovementItem.Id
@@ -313,9 +326,11 @@ BEGIN
                  , MIFloat_SummaSUN1.ValueData         AS SummaSUN1
                  , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
 --                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
-                 , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
-                   MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
-                 , COALESCE(tmpFullCharge.SummWages, MIFloat_SummaFullCharge.ValueData)   AS SummaFullCharge
+                 , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
+                   COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
+                 , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                     COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
+                 , MIFloat_SummaFullChargeFact.ValueData AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
@@ -358,10 +373,19 @@ BEGIN
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                               ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxMonth
+                                              ON MIFloat_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
                                               ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
                                              AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
+                                              ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+                  LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeFact
+                                              ON MIFloat_SummaFullChargeFact.MovementItemId = MovementItem.Id
+                                             AND MIFloat_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
 
                   LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
                                               ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
@@ -399,6 +423,5 @@ $BODY$
  02.10.19                                                        *
  01.09.19                                                        *
 */
--- 
-select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- select * from gpSelect_MovementItem_WagesAdditionalExpenses(inMovementId := 17449644  , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
 

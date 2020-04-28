@@ -96,7 +96,7 @@ BEGIN
                                  AND ObjectFloat_Retail_Fund.DescId = zc_ObjectFloat_Retail_Fund()
 
             LEFT JOIN ObjectFloat AS ObjectFloat_Retail_FundUsed
-                                  ON ObjectFloat_Retail_FundUsed.ObjectId = Object_Unit.Id
+                                  ON ObjectFloat_Retail_FundUsed.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                  AND ObjectFloat_Retail_FundUsed.DescId = zc_ObjectFloat_Retail_FundUsed()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
@@ -125,4 +125,4 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
  */
 
 -- тест
--- select * from gpGet_Movement_Loss(inMovementId := 18420172 , inOperDate := ('23.04.2020')::TDateTime ,  inSession := '3');
+-- select * from gpGet_Movement_Loss(inMovementId := 18340672 , inOperDate := ('23.04.2020')::TDateTime ,  inSession := '3');
