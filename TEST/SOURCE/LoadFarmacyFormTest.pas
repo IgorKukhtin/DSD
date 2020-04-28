@@ -858,6 +858,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindDialogForm');
+  exit;
     {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodForm');
@@ -2393,6 +2398,7 @@ end;
 
 procedure TLoadFormTest.LoadSPObjectFormTest;
 begin
+
 {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SummSPForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_SummSPForm');

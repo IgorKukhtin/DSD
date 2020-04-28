@@ -673,6 +673,8 @@ type
     N233: TMenuItem;
     actLossFundJournal: TdsdOpenForm;
     N234: TMenuItem;
+    actReport_IncomeSale_UseNDSKind: TdsdOpenForm;
+    miReport_IncomeSale_UseNDSKind: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
