@@ -169,6 +169,8 @@ type
   private
     FGuides: TdsdGuides;
     procedure SetGuides(const Value: TdsdGuides);
+  public
+    procedure Assign(Source: TPersistent); override;
   protected
     function GetDisplayName: string; override;
   published
@@ -328,6 +330,17 @@ begin
        Value.OnAfterChoice := TGuidesFiller(Self.Collection.Owner).OnAfterChoice;
   end;
   FGuides := Value;
+end;
+
+procedure TGuidesListItem.Assign(Source: TPersistent);
+begin
+  if Source is TGuidesListItem then
+    with TGuidesListItem(Source) do
+    begin
+      Self.FGuides := FGuides;
+    end
+  else
+    inherited Assign(Source);
 end;
 
 { TGuidesList }

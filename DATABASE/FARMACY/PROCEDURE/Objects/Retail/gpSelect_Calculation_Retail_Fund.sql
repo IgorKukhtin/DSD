@@ -1,9 +1,8 @@
--- Function: gpSelect_Calculation_Unit_Fund()
+-- Function: gpSelect_Calculation_Retail_Fund()
 
-DROP FUNCTION IF EXISTS gpSelect_Calculation_Unit_Fund (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Calculation_Retail_Fund (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Calculation_Unit_Fund(
-    IN inUnitID      Integer   , -- Подразделение
+CREATE OR REPLACE FUNCTION gpSelect_Calculation_Retail_Fund(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -15,7 +14,7 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Wages());
 
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Unit_Fund(), T1.UnitId, T1.Summa)
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Retail_Fund(), T1.RetailId, T1.Summa)
    FROM
    (WITH
               -- Текущее значение
@@ -37,13 +36,12 @@ BEGIN
                                                  ON MovementLinkObject_Unit.MovementId = Movement.Id
                                                 AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                 AND MovementLinkObject_Unit.ObjectId <> 377606
-                                                AND (MovementLinkObject_Unit.ObjectId = inUnitID OR COALESCE(inUnitID, 0) = 0)
               WHERE Movement.OperDate >= (SELECT MIN(tmpPersentSalary.StartDate) FROM tmpPersentSalary)
                 AND Movement.DescId = zc_Movement_Check()
                 AND Movement.StatusId = zc_Enum_Status_Complete())
     ,  tmpCheck AS (
               SELECT Movement.OperDate                                                       AS OperDate
-                   , Movement.UnitId                                                         AS UnitId
+                   , ObjectLink_Juridical_Retail.ChildObjectId                               AS RetailId
                    , SUM(MovementFloat_TotalSumm.ValueData)                                  AS TotalSumm
               FROM tmpCheckId AS Movement
 
@@ -59,24 +57,24 @@ BEGIN
                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
               GROUP BY Movement.OperDate
-                     , Movement.UnitId)
-    ,  tmpData AS (SELECT tmpCheck.UnitId
+                     , ObjectLink_Juridical_Retail.ChildObjectId)
+    ,  tmpData AS (SELECT tmpCheck.RetailId
                         , ROUND(SUM(tmpCheck.TotalSumm * COALESCE(PersentSalary.PersentSalary, 0) / 100), 2) AS Summa
                    FROM tmpCheck
                         INNER JOIN tmpPersentSalary AS PersentSalary
                                                     ON PersentSalary.StartDate <= tmpCheck.OperDate
                                                    AND PersentSalary.EndDate > tmpCheck.OperDate
-                   GROUP BY tmpCheck.UnitId
+                   GROUP BY tmpCheck.RetailId
                    )
 
-       SELECT tmpData.UnitId
+       SELECT tmpData.RetailId
             , tmpData.Summa
        FROM tmpData) AS T1;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Calculation_Unit_Fund (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Calculation_Retail_Fund (TVarChar) OWNER TO postgres;
 
 
 /*
@@ -85,4 +83,4 @@ ALTER FUNCTION gpSelect_Calculation_Unit_Fund (Integer, TVarChar) OWNER TO postg
  23.04.20                                                        *
 */
 
--- select * from gpSelect_Calculation_Unit_Fund(0 /*183292*/, '3');
+-- select * from gpSelect_Calculation_Retail_Fund('3');

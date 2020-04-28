@@ -248,42 +248,12 @@ inherited LossForm: TLossForm
       Top = 67
       Properties.ReadOnly = False
       TabOrder = 10
-      Width = 561
+      Width = 759
     end
     object cxLabel7: TcxLabel
       Left = 8
       Top = 48
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-    end
-    object cxLabel21: TcxLabel
-      Left = 575
-      Top = 48
-      Caption = #1054#1089#1090#1072#1090#1086#1082' '#1092#1086#1085#1076#1072
-    end
-    object cxLabel4: TcxLabel
-      Left = 674
-      Top = 48
-      Caption = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
-    end
-    object ceUnitFund: TcxCurrencyEdit
-      Left = 575
-      Top = 67
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.00;-,0.00; ;'
-      Properties.ReadOnly = True
-      TabOrder = 14
-      Width = 93
-    end
-    object ceSummaFund: TcxCurrencyEdit
-      Left = 674
-      Top = 67
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DecimalPlaces = 2
-      Properties.DisplayFormat = ',0.00;-,0.00; ;'
-      Properties.ReadOnly = True
-      TabOrder = 15
-      Width = 93
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -525,47 +495,6 @@ inherited LossForm: TLossForm
       ImageIndex = 30
       QuestionBeforeExecute = #1057#1087#1080#1089#1072#1090#1100' '#1074#1077#1089#1100' '#1086#1089#1090#1072#1090#1086#1082' '#1089' '#1090#1086#1095#1082#1080'?'
     end
-    object actExecuteSummaDialog: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'actAmountDialog'
-      FormName = 'TSummaDialogForm'
-      FormNameParam.Value = 'TSummaDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Summa'
-          Value = '0'
-          Component = FormParams
-          ComponentItem = 'SummaFundAvailable'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Label'
-          Value = #1057#1091#1084#1084#1072' '#1080#1079' '#1092#1086#1085#1076#1072
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdateSummaFund: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      BeforeAction = actExecuteSummaDialog
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_SummaFund
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_SummaFund
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
-      ImageIndex = 75
-      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072'?'
-    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -722,10 +651,6 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateSummaFund'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -750,8 +675,11 @@ inherited LossForm: TLossForm
       Category = 0
     end
     object bbUpdateSummaFund: TdxBarButton
-      Action = actUpdateSummaFund
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1089#1091#1084#1084#1091' '#1080#1079' '#1092#1086#1085#1076#1072
+      Visible = ivAlways
+      ImageIndex = 75
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -942,14 +870,12 @@ inherited LossForm: TLossForm
       item
         Name = 'UnitFund'
         Value = 0.000000000000000000
-        Component = ceUnitFund
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
         Name = 'SummaFund'
         Value = 0.000000000000000000
-        Component = ceSummaFund
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -1574,45 +1500,5 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 504
     Top = 403
-  end
-  object spUpdate_SummaFund: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Movement_Loss_SummaFund'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inSummaFund'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'SummaFundAvailable'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outUnitFund'
-        Value = Null
-        Component = ceUnitFund
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outSummaFund'
-        Value = Null
-        Component = ceSummaFund
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 590
-    Top = 512
   end
 end

@@ -861,7 +861,9 @@ uses
   PersentSalaryDialog in '..\..\FormsFarmacy\Guides\PersentSalaryDialog.pas' {PersentSalaryDialogForm: TParentForm},
   Report_Movement_Send_RemainsSun_pi in '..\..\FormsFarmacy\Report\Report_Movement_Send_RemainsSun_pi.pas' {Report_Movement_Send_RemainsSun_piForm: TParentForm},
   Unit_Area_Object in '..\..\FormsFarmacy\Guides\Unit_Area_Object.pas' {Unit_Area_ObjectForm: TParentForm},
-  SummaDialog in '..\..\FormsFarmacy\Guides\SummaDialog.pas' {SummaDialogForm: TParentForm};
+  SummaDialog in '..\..\FormsFarmacy\Guides\SummaDialog.pas' {SummaDialogForm: TParentForm},
+  LossFundJournal in '..\..\FormsFarmacy\Document\LossFundJournal.pas' {LossFundJournalForm: TParentForm},
+  LossFund in '..\..\FormsFarmacy\Document\LossFund.pas' {LossFundForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

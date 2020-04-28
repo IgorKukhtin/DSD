@@ -4,29 +4,27 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   ClientWidth = 1251
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1267
-  ExplicitHeight = 518
+  ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 60
+    Top = 58
     Width = 1251
-    Height = 420
+    Height = 422
     TabOrder = 3
-    ExplicitTop = 60
+    ExplicitTop = 58
     ExplicitWidth = 1251
-    ExplicitHeight = 420
-    ClientRectBottom = 416
-    ClientRectRight = 1247
+    ExplicitHeight = 422
+    ClientRectBottom = 422
+    ClientRectRight = 1251
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 1243
-      ExplicitHeight = 412
+      ExplicitWidth = 1251
+      ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 1243
-        Height = 412
-        ExplicitWidth = 1243
-        ExplicitHeight = 412
+        Width = 1251
+        Height = 422
+        ExplicitWidth = 1251
+        ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -540,6 +538,9 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       ReportNameParam.DataType = ftString
       ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
   end
   inherited MasterDS: TDataSource
@@ -613,7 +614,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -692,6 +693,7 @@ inherited ReportMovementCheckFarmForm: TReportMovementCheckFarmForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    DisableGuidesOpen = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','

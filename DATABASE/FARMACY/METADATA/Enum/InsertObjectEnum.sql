@@ -112,6 +112,17 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_GoodsAccounting(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_GoodsAccounting'), inName:= 'Учёт товара сети', inEnumName:= 'zc_Enum_Role_GoodsAccounting');
    END IF;
 
+   -- zc_Enum_Role_WorkWithTheFund
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Работа с Фондом')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Работа с Фондом')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_WorkWithTheFund');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_WorkWithTheFund(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_WorkWithTheFund'), inName:= 'Работа с Фондом', inEnumName:= 'zc_Enum_Role_WorkWithTheFund');
+   END IF;
+
+
 END $$;
 /*
 DO $$

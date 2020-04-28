@@ -68,14 +68,7 @@ type
     spWriteRestFromPoint: TdsdStoredProc;
     actInsertMaskMIMaster: TdsdExecStoredProc;
     dxBarButton3: TdxBarButton;
-    cxLabel21: TcxLabel;
-    cxLabel4: TcxLabel;
-    ceUnitFund: TcxCurrencyEdit;
-    ceSummaFund: TcxCurrencyEdit;
-    actExecuteSummaDialog: TExecuteDialog;
-    actUpdateSummaFund: TdsdExecStoredProc;
     bbUpdateSummaFund: TdxBarButton;
-    spUpdate_SummaFund: TdsdStoredProc;
   private
     { Private declarations }
   public

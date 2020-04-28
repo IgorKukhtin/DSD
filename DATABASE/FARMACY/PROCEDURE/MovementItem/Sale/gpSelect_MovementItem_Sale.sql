@@ -90,13 +90,29 @@ BEGIN
                                        AND MovementItem.DescId = zc_MI_Master()
                                        AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
                                     )
-              , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemID     AS Id
+              , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemId     AS Id
                                                , SUM(-MovementItemContainer.Amount)       AS Amount
+                                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS M_IncomeId
                                       FROM  MovementItemContainer
+                                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                         ON ContainerLinkObject_MovementItem.ContainerId = MovementItemContainer.ContainerId
+                                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                           -- элемент прихода
+                                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                     
                                       WHERE MovementItemContainer.MovementId = inMovementId
                                         AND vbStatusId = zc_Enum_Status_UnComplete() 
-                                      GROUP BY MovementItemContainer.MovementItemID
+                                      GROUP BY MovementItemContainer.MovementItemId
+                                             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                       )
+                                      
               , tmpPrice AS (SELECT Price_Goods.ChildObjectId               AS GoodsId
                                   , ROUND(Price_Value.ValueData, 2) ::TFloat AS Price
                              FROM ObjectLink AS ObjectLink_Price_Unit
@@ -158,7 +174,31 @@ BEGIN
                                    FROM tmpRemains
                                        FULL OUTER JOIN MovementItem_Sale ON tmpRemains.GoodsId = MovementItem_Sale.GoodsId
                                    )
-                                   
+
+              , tmp_PartionNDS_all AS (SELECT Container.Id       AS MI_Id
+                                            , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = TRUE
+                                                     AND COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) <> 0
+                                                   THEN MovementLinkObject_NDSKind.ObjectId
+                                                   ELSE NULL
+                                              END  AS NDSKindId
+                                       FROM MovementItemContainer AS Container
+                                        LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                                        ON MovementBoolean_UseNDSKind.MovementId = Container.M_IncomeId
+                                                                       AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                                     ON MovementLinkObject_NDSKind.MovementId = Container.M_IncomeId
+                                                                    AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                  )
+
+              , tmp_PartionNDS AS(SELECT tmp_PartionNDS_all.MI_Id
+                                     , ObjectFloat_NDSKind_NDS.ValueData ::TFloat AS NDS
+                                FROM tmp_PartionNDS_all
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = tmp_PartionNDS_all.NDSKindId
+                                                          AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                WHERE tmp_PartionNDS_all.NDSKindId IS NOT NULL
+                                )
+
             --
             SELECT COALESCE(tmpRemainsFull.Id,0)                         AS Id
                  , Object_Goods.Id                                       AS GoodsId
@@ -167,7 +207,7 @@ BEGIN
                  , tmpMarion.MorionCode        :: Integer
                  , ObjectLink_Goods_GoodsGroup.GoodsGroupName         :: TVarChar
                  , ObjectLink_Goods_ConditionsKeep.ConditionsKeepName :: TVarChar
-                 , ObjectLink_Goods_NDS.NDS    :: TFloat
+                 , COALESCE (tmp_PartionNDS.NDS, ObjectLink_Goods_NDS.NDS) :: TFloat AS NDS
                  , tmpRemainsFull.Amount                                 AS Amount
                  , MovementItemContainer.Amount::TFloat                  AS AmountDeferred
                  , NULLIF(COALESCE(tmpRemainsFull.Remains, 0) +
@@ -195,6 +235,9 @@ BEGIN
                                             ON ObjectLink_Goods_NDS.GoodsId = tmpRemainsFull.GoodsId
                 -- код Марион
                 LEFT JOIN tmpMarion ON tmpMarion.GoodsId = tmpRemainsFull.GoodsId
+                
+                LEFT JOIN tmp_PartionNDS ON tmp_PartionNDS.MI_Id = COALESCE(tmpRemainsFull.Id,0)
+
             WHERE Object_Goods.isErased = FALSE
                OR tmpRemainsFull.id is not null;
     ELSE
@@ -242,10 +285,24 @@ BEGIN
                               )
               , MovementItemContainer AS (SELECT MovementItemContainer.MovementItemID     AS Id
                                                , SUM(-MovementItemContainer.Amount)       AS Amount
-                                      FROM  MovementItemContainer
+                                               , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS M_IncomeId
+                                      FROM MovementItemContainer
+                                           LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                         ON ContainerLinkObject_MovementItem.ContainerId = MovementItemContainer.ContainerId
+                                                                        AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                           LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                           -- элемент прихода
+                                           LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                           -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                           LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                       ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                      AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                           -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                           LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
                                       WHERE MovementItemContainer.MovementId = inMovementId
                                         AND vbStatusId = zc_Enum_Status_UnComplete() 
                                       GROUP BY MovementItemContainer.MovementItemID
+                                             , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId)
                                       )
 
               , tmpObjectLink_GoodsGroup AS (SELECT ObjectLink.ObjectId AS GoodsId
@@ -280,6 +337,30 @@ BEGIN
                                    JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
                               )
 
+              , tmp_PartionNDS_all AS (SELECT Container.Id       AS MI_Id
+                                            , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = TRUE
+                                                     AND COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) <> 0
+                                                   THEN MovementLinkObject_NDSKind.ObjectId
+                                                   ELSE NULL
+                                              END  AS NDSKindId
+                                       FROM MovementItemContainer AS Container
+                                        LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                                        ON MovementBoolean_UseNDSKind.MovementId = Container.M_IncomeId
+                                                                       AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                                        LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                                     ON MovementLinkObject_NDSKind.MovementId = Container.M_IncomeId
+                                                                    AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                                  )
+
+              , tmp_PartionNDS AS (SELECT tmp_PartionNDS_all.MI_Id
+                                     , ObjectFloat_NDSKind_NDS.ValueData ::TFloat AS NDS
+                                FROM tmp_PartionNDS_all
+                                     LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                           ON ObjectFloat_NDSKind_NDS.ObjectId = tmp_PartionNDS_all.NDSKindId
+                                                          AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                                WHERE tmp_PartionNDS_all.NDSKindId IS NOT NULL
+                                )
+
 
             SELECT
                 MovementItem_Sale.Id          AS Id
@@ -289,7 +370,7 @@ BEGIN
               , tmpMarion.MorionCode        :: Integer
               , ObjectLink_Goods_GoodsGroup.GoodsGroupName         :: TVarChar
               , ObjectLink_Goods_ConditionsKeep.ConditionsKeepName :: TVarChar
-              , ObjectLink_Goods_NDS.NDS    :: TFloat
+              , COALESCE (tmp_PartionNDS.NDS, ObjectLink_Goods_NDS.NDS) :: TFloat AS NDS
               , MovementItem_Sale.Amount      AS Amount
               , MovementItemContainer.Amount::TFloat                  AS AmountDeferred
               , NULLIF(COALESCE(tmpRemains.Amount, 0) +
@@ -316,6 +397,7 @@ BEGIN
                                             ON ObjectLink_Goods_NDS.GoodsId = Object_Goods.Id
                 -- код Марион
                 LEFT JOIN tmpMarion ON tmpMarion.GoodsId = Object_Goods.Id
+                LEFT JOIN tmp_PartionNDS ON tmp_PartionNDS.MI_Id = MovementItem_Sale.Id
                 ;
      END IF;
 END;
@@ -325,6 +407,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Воробкало А.А.   Шаблий О.В.
+ 27.04.20         * add tmp_PartionNDS
  21.01.20                                                                         * Оптимизация
  24.11.19         *
  18.01.17         *

@@ -49,7 +49,6 @@ type
     bbUpdate_OperDateList: TdxBarButton;
     JuridicalName: TcxGridDBColumn;
     Comment: TcxGridDBColumn;
-    SummaFund: TcxGridDBColumn;
   private
     { Private declarations }
   public
