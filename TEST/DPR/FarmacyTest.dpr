@@ -863,7 +863,9 @@ uses
   Unit_Area_Object in '..\..\FormsFarmacy\Guides\Unit_Area_Object.pas' {Unit_Area_ObjectForm: TParentForm},
   SummaDialog in '..\..\FormsFarmacy\Guides\SummaDialog.pas' {SummaDialogForm: TParentForm},
   LossFundJournal in '..\..\FormsFarmacy\Document\LossFundJournal.pas' {LossFundJournalForm: TParentForm},
-  LossFund in '..\..\FormsFarmacy\Document\LossFund.pas' {LossFundForm: TParentForm};
+  LossFund in '..\..\FormsFarmacy\Document\LossFund.pas' {LossFundForm: TParentForm},
+  Report_IncomeSale_UseNDSKind in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKind.pas' {Report_IncomeSale_UseNDSKindForm: TParentForm},
+  Report_IncomeSale_UseNDSKindDialog in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKindDialog.pas' {Report_IncomeSale_UseNDSKindDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
