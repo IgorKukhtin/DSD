@@ -57,11 +57,16 @@ BEGIN
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
            , NULLIF(COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
-             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0), 0)::TFloat       AS RetailFund
+             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0), 0)::TFloat     AS RetailFund
            , NULLIF(MovementFloat_SummaFund.ValueData, 0)::TFloat               AS SummaFund
-           , (COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
+           , CASE WHEN (COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
              COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
-             COALESCE(MovementFloat_SummaFund.ValueData, 0))::TFloat            AS SummaFundAvailable
+             COALESCE(MovementFloat_SummaFund.ValueData, 0)) > 
+             COALESCE (MovementFloat_TotalSummSale.ValueData, 0)
+             THEN MovementFloat_TotalSummSale.ValueData
+             ELSE COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
+             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
+             COALESCE(MovementFloat_SummaFund.ValueData, 0) END::TFloat         AS SummaFundAvailable
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -71,6 +76,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_SummaFund
                                     ON MovementFloat_SummaFund.MovementId =  Movement.Id
                                    AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                    ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
@@ -117,6 +125,4 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Loss (inMovementId:= 1, inOperDate:= '20150720', inSession:= '3')
-
-select * from gpGet_Movement_Loss(inMovementId := 18420172 , inOperDate := ('23.04.2020')::TDateTime ,  inSession := '3');
+-- select * from gpGet_Movement_Loss(inMovementId := 18420172 , inOperDate := ('23.04.2020')::TDateTime ,  inSession := '3');
