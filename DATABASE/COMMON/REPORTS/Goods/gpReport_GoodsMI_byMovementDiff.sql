@@ -39,28 +39,28 @@ BEGIN
     vbIsUnit:= FALSE;
 
     -- Ограничения по товарам
-    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+  --CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
     IF inGoodsGroupId <> 0
     THEN
         -- устанавливается признак
         vbIsGoods:= TRUE;
         -- заполнение
-        INSERT INTO _tmpGoods (GoodsId)
-           SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+      --INSERT INTO _tmpGoods (GoodsId)
+      --   SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     /*ELSE 
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();*/
     END IF;
 
     -- Ограничения по подразделениям
-    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+  --CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     IF inUnitId <> 0
     THEN
         -- устанавливается признак
         vbIsUnit:= TRUE;
         -- заполнение
-        INSERT INTO _tmpUnit (UnitId)
-           SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
+      --INSERT INTO _tmpUnit (UnitId)
+      --   SELECT UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lfSelect_Object_Unit_byGroup;
     /*ELSE
         INSERT INTO _tmpUnit (UnitId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Unit();*/
@@ -69,7 +69,10 @@ BEGIN
 
     -- Результат
     RETURN QUERY
-    WITH tmpAnalyzer AS (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
+    WITH _tmpGoods AS (SELECT lfSelect.GoodsId FROM lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfSelect WHERE inGoodsGroupId <> 0)
+       , _tmpUnit AS (SELECT lflfSelect.UnitId FROM lfSelect_Object_Unit_byGroup (inUnitId) AS lflfSelect WHERE inUnitId <> 0)
+
+       , tmpAnalyzer AS (SELECT AnalyzerId, isSale, isCost, isSumm, FALSE AS isLoss
                          FROM Constant_ProfitLoss_AnalyzerId_View
                          WHERE (isSale = TRUE  AND isCost = FALSE AND inDescId = zc_Movement_Sale())
                             OR (isSale = FALSE AND isCost = FALSE AND inDescId = zc_Movement_ReturnIn())
@@ -357,7 +360,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_byMovementDiff (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -369,4 +371,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovementDiff (TDateTime, TDateTime, Integer, I
 */
 
 -- тест
--- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovementDiff (inStartDate:= '01.01.2016', inEndDate:= '01.01.2016', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT SUM (AmountPartner_Weight), SUM (SummPartner) FROM gpReport_GoodsMI_byMovementDiff (inStartDate:= '01.01.2020', inEndDate:= '01.01.2020', inDescId:= zc_Movement_Sale(), inUnitId:= 0, inJuridicalId:= 0, inInfoMoneyId:= 0, inPaidKindId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
