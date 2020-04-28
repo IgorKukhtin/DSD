@@ -160,6 +160,14 @@ type
     bbUpdate_Unit_isSUN_v4: TdxBarButton;
     bbUpdate_Unit_isSUN_v4_in: TdxBarButton;
     bbUpdate_Unit_isSUN_v4_out: TdxBarButton;
+    ExecuteDialogUnit_T_SUN: TExecuteDialog;
+    actUpdate_Unit_T_SUN: TdsdDataSetRefresh;
+    macUpdateUnit_T_SUN: TMultiAction;
+    spUpdate_Unit_T_SUN: TdsdStoredProc;
+    macUpdateUnit_T_SUN_list: TMultiAction;
+    Action1: TAction;
+    T1_SUN_v2: TcxGridDBColumn;
+    bbUpdateUnit_T_SUN: TdxBarButton;
   private
     { Private declarations }
   public

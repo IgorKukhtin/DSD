@@ -865,7 +865,8 @@ uses
   LossFundJournal in '..\..\FormsFarmacy\Document\LossFundJournal.pas' {LossFundJournalForm: TParentForm},
   LossFund in '..\..\FormsFarmacy\Document\LossFund.pas' {LossFundForm: TParentForm},
   Report_IncomeSale_UseNDSKind in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKind.pas' {Report_IncomeSale_UseNDSKindForm: TParentForm},
-  Report_IncomeSale_UseNDSKindDialog in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKindDialog.pas' {Report_IncomeSale_UseNDSKindDialogForm: TParentForm};
+  Report_IncomeSale_UseNDSKindDialog in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKindDialog.pas' {Report_IncomeSale_UseNDSKindDialogForm: TParentForm},
+  Unit_T_SUN_Edit in '..\..\FormsFarmacy\Guides\Unit_T_SUN_Edit.pas' {Unit_T_SUN_EditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
