@@ -123,7 +123,7 @@ BEGIN
                                                              ON MIFloat_CuterWeight.MovementItemId = MovementItem.Id
                                                             AND MIFloat_CuterWeight.DescId         = zc_MIFloat_CuterWeight()
 
-                            WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '1 DAY' AND inOperDate
+                            WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '10 DAY' AND inOperDate
                               AND Movement.DescId   = zc_Movement_ProductionUnion()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
                            )

@@ -23,8 +23,9 @@ $BODY$
    DECLARE vbPartnerId  Integer;
    DECLARE vbPaidKindId Integer;
    DECLARE vbContractId Integer;
-   DECLARE vbMovementDescId Integer;
-   DECLARE vbMovementId_tax Integer;
+   DECLARE vbMovementDescId      Integer;
+   DECLARE vbMovementDescId_orig Integer;
+   DECLARE vbMovementId_tax      Integer;
 
    DECLARE vbMovementItemId_return Integer;
    DECLARE vbMovementId_sale       Integer;
@@ -149,6 +150,7 @@ BEGIN
      THEN
          -- параметры из документа
          vbMovementDescId:= (SELECT CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN zc_Movement_ReturnIn() ELSE Movement.DescId END FROM Movement WHERE Movement.Id = inMovementId);
+         vbMovementDescId_orig:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
          -- !!!будут чуть быстрее формироваться партии продажи!!!
          INSERT INTO _tmpResult_ReturnIn_Auto (ParentId, MovementId_sale, MovementItemId_sale, GoodsId, GoodsKindId, Amount, Price_original)
@@ -294,6 +296,8 @@ BEGIN
               , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) - INTERVAL '1 DAY' AS inEndDateSale -- !!!замена!!!
                -- замена, что б сразу искало в продажах
               , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN zc_Movement_ReturnIn() ELSE Movement.DescId END AS MovementDescId
+              , Movement.DescId                                                                                                AS MovementDescId_orig
+              
                -- 
               , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN COALESCE (Movement.ParentId, 0) ELSE 0 END AS MovementId_tax
                -- 
@@ -306,7 +310,7 @@ BEGIN
                -- 
               , MovementLinkObject_Contract.ObjectId AS ContractId
                 INTO vbStartDate, vbEndDate, inEndDateSale
-                   , vbMovementDescId, vbMovementId_tax, vbPartnerId, vbPaidKindId, vbContractId
+                   , vbMovementDescId, vbMovementDescId_orig, vbMovementId_tax, vbPartnerId, vbPaidKindId, vbContractId
          FROM Movement
               LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                      ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -692,7 +696,7 @@ BEGIN
 
 
                 -- для НАЛ - ТОЛЬКО OR zc_Movement_PriceCorrective
-                IF vbAmount > 0 AND (vbPaidKindId = zc_Enum_PaidKind_SecondForm() OR vbMovementDescId = zc_Movement_PriceCorrective()) THEN
+                IF vbAmount > 0 AND (vbPaidKindId = zc_Enum_PaidKind_SecondForm() OR vbMovementDescId_orig = zc_Movement_PriceCorrective()) THEN
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 -- !!!!! 2.4. - NOT vbPartnerId AND vbGoodsKindId!!
                 -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

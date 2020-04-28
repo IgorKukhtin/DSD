@@ -723,6 +723,7 @@ begin
            //try
              Result:= false;
              Execute;
+             SHowMessage ('');
              Result:= true;
            {except
              Result := '';

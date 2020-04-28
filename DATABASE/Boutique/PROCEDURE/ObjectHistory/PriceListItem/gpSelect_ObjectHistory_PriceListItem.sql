@@ -130,9 +130,11 @@ BEGIN
                                LEFT JOIN MovementFloat AS MF_ParValue
                                                        ON MF_ParValue.MovementId = Object_PartionGoods.MovementId
                                                       AND MF_ParValue.DescId = zc_MovementFloat_ParValue()
+                                                      AND zc_Enum_GlobalConst_isTerry() = FALSE
                                LEFT JOIN MovementFloat AS MF_CurrencyValue
                                                        ON MF_CurrencyValue.MovementId = Object_PartionGoods.MovementId
                                                       AND MF_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+                                                      AND zc_Enum_GlobalConst_isTerry() = FALSE
                           WHERE Object_PartionGoods.isErased = FALSE 
                             -- AND (Object_PartionGoods.UnitId = inUnitId OR inUnitId = 0)
                             AND (Object_PartionGoods.BrandId = inBrandId OR inBrandId = 0)
@@ -250,6 +252,7 @@ BEGIN
                                                                         ) AS lfSelect
                       WHERE Object.DescId = zc_Object_Currency()
                         AND Object.Id     <> zc_Currency_Basis()
+                        AND zc_Enum_GlobalConst_isTerry() = TRUE
                      )
 
        SELECT
@@ -302,18 +305,18 @@ BEGIN
 
 --         , tmpCurrency.Amount   ::TFloat  AS CurrencyValue
 --         , tmpCurrency.ParValue ::TFloat  AS ParValue
-           , tmpPartionGoods.CurrencyValue   :: TFloat AS CurrencyValue
-           , tmpPartionGoods.ParValue        :: TFloat AS ParValue
+           , COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) :: TFloat AS CurrencyValue
+           , COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue)    :: TFloat AS ParValue
 
              -- Цена по входным ценам в ГРН
          --, CAST (tmpPartionGoods.OperPrice * tmpCurrency.Amount / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpCurrency.ParValue <> 0 THEN tmpCurrency.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS OperPriceBalance
-           , CAST (tmpPartionGoods.OperPrice * tmpPartionGoods.CurrencyValue / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpPartionGoods.ParValue <> 0 THEN tmpPartionGoods.ParValue ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS OperPriceBalance
+           , CAST (tmpPartionGoods.OperPrice * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END AS NUMERIC (16, 2)) :: TFloat AS OperPriceBalance
 
              -- % наценки
-           , CAST (CASE WHEN (tmpPartionGoods.OperPrice * tmpPartionGoods.CurrencyValue / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpPartionGoods.ParValue <> 0 THEN tmpPartionGoods.ParValue ELSE 1 END)
+           , CAST (CASE WHEN (tmpPartionGoods.OperPrice * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END)
                               <> 0
                         THEN (100 * tmpPartionGoods.OperPriceList
-                            / (tmpPartionGoods.OperPrice * tmpPartionGoods.CurrencyValue / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN tmpPartionGoods.ParValue <> 0 THEN tmpPartionGoods.ParValue ELSE 1 END)
+                            / (tmpPartionGoods.OperPrice * COALESCE (tmpCurrency.Amount, tmpPartionGoods.CurrencyValue) / CASE WHEN tmpPartionGoods.CurrencyId = zc_Currency_Basis() THEN 1 WHEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) <> 0 THEN COALESCE (tmpCurrency.ParValue, tmpPartionGoods.ParValue) ELSE 1 END)
                               - 100)
                         ELSE 0
                    END AS NUMERIC (16, 0)) :: TFloat AS PriceTax
@@ -367,7 +370,7 @@ BEGIN
            LEFT JOIN tmpDiscount ON tmpDiscount.UnitId  = tmpPartionGoods.UnitId_Container -- UnitId
                                 AND tmpDiscount.GoodsId = tmpPartionGoods.GoodsId    
 
-         --LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPartionGoods.CurrencyId         
+           LEFT JOIN tmpCurrency  ON tmpCurrency.CurrencyToId = tmpPartionGoods.CurrencyId         
         ;
 END;
 $BODY$

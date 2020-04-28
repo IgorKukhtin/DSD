@@ -2635,7 +2635,10 @@ end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.testButton3Click(Sender: TObject);
 begin
-     fPrintModeSorting_test:= not fPrintModeSorting_test;
+     if Timer_GetWeight.Enabled = TRUE
+     then fPrintModeSorting_test:= not fPrintModeSorting_test
+     else begin Timer_GetWeightTimer(self); Timer_GetWeight.Enabled:= false;end;
+
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Set_LightOff_all : Boolean;
@@ -2808,9 +2811,9 @@ begin
         //if tmpCurrentWeight <= 0.001 then exit;
         //
         // если это только первый
-        if lTimerWeight_1 <> tmpCurrentWeight then begin lTimerWeight_1:= tmpCurrentWeight; lTimerWeight_2:=0; lTimerWeight_3:= 0; end
+        if lTimerWeight_1 <> tmpCurrentWeight then begin lTimerWeight_1:= tmpCurrentWeight; lTimerWeight_2:= -12345; lTimerWeight_3:= -12345; end
         else // если это только второй
-             if lTimerWeight_2 <> tmpCurrentWeight then begin lTimerWeight_2:= tmpCurrentWeight; lTimerWeight_3:= 0;end
+             if lTimerWeight_2 <> tmpCurrentWeight then begin lTimerWeight_2:= tmpCurrentWeight; lTimerWeight_3:= -12345;end
              else begin
                  // Отключили предыдущий
                  //!!!!Set_LightOff_all;
@@ -2821,31 +2824,34 @@ begin
                  ParamsMI.ParamByName('RealWeight').AsFloat:=tmpCurrentWeight;
                  //
 
-//*****-test
-     if (System.Pos('ves=',ParamStr(1))>0)
-      or(System.Pos('ves=',ParamStr(2))>0)
-      or(System.Pos('ves=',ParamStr(3))>0)
-     then begin
-               lTimerWeight_zero:= true;
-               //
-               if  (tmpWeight_test < ParamsLight.ParamByName('WeightMin').AsFloat)
-                 or(tmpWeight_test > ParamsLight.ParamByName('WeightMax').AsFloat)
-               then //Min
-                    tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat
-               else if tmpWeight_test + 0.001 < ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-               then //Min + 1/2
-                    tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-               else if tmpWeight_test = ParamsLight.ParamByName('WeightMax').AsFloat
-               then //Max + 1/2
-                    tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-               else //Max
-                    tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat;
-               //
-               ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
-               SetParams_OperCount;
-               PanelWeight_Scale.Caption:=FloatToStr(tmpWeight_test);
-      end;
-//*****-test
+                  //*****-test
+                       if (System.Pos('ves=',ParamStr(1))>0)
+                        or(System.Pos('ves=',ParamStr(2))>0)
+                        or(System.Pos('ves=',ParamStr(3))>0)
+                       then begin
+                                 lTimerWeight_zero:= true;
+                                 //
+                                 if  (tmpWeight_test < ParamsLight.ParamByName('WeightMin').AsFloat)
+                                   or(tmpWeight_test > ParamsLight.ParamByName('WeightMax').AsFloat)
+                                 then //Min
+                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat
+                                 else if tmpWeight_test + 0.001 < ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
+                                 then //Min + 1/2
+                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
+                                 else if tmpWeight_test = ParamsLight.ParamByName('WeightMax').AsFloat
+                                 then //Max + 1/2
+                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
+                                 else //Max
+                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat;
+                                 //
+                                 //tmpWeight_test:= 0.495;
+                                 //
+                                 ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
+                                 SetParams_OperCount;
+                                 PanelWeight_Scale.Caption:=FloatToStr(tmpWeight_test);
+                        end;
+                  //*****-test
+
                  // в первый раз после zero - получили с 3-х попыток вес и потом ждем zero
                  if lTimerWeight_zero = true
                  then begin // установили что ждем zero
@@ -2877,11 +2883,14 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
-     if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
-       or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
-       or(SettingMain.isCalc_sht = TRUE))
-     and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
-     and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
+     if (((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+        or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
+        or(SettingMain.isCalc_sht = TRUE)
+         )
+      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
+      and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
+        )
+      or(SettingMain.isModeSorting = TRUE)
      then begin
      // открываем ВЕСЫ, только когда НУЖЕН вес
      //Initialize_Scale_DB;
@@ -2895,6 +2904,11 @@ begin
                        then Result:=Scale_Zeus.Weight
                        else Result:=0;
      except Result:=0;end;
+
+     //if lTimerWeight_zero = false
+     //then Result:=0
+     //else Result:=0.495;
+
      // закрываем ВЕСЫ
      // Scale_DB.Active:=0;
      //
