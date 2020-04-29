@@ -61,5 +61,6 @@ ALTER FUNCTION gpSelect_Calculation_MoneyBoxSun (Integer, TVarChar) OWNER TO pos
 */
 
 -- SELECT * FROM ObjectFloat WHERE ObjectFloat.DescId = zc_ObjectFloat_Unit_MoneyBoxSun()
--- select * from gpSelect_Calculation_MoneyBoxSun(183292, '3');
+-- 
+-- select * from gpSelect_Calculation_MoneyBoxSun(11769526 , '3');
 -- select * from gpSelect_Calculation_MoneyBoxSun(0, '3');

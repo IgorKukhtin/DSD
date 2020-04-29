@@ -136,6 +136,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaMoneyBoxUsed
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaFullChargeFact
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -266,6 +271,8 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
           object SummaFullChargeFact: TcxGridDBBandedColumn
             Caption = #1055#1086#1083#1085#1086#1077' '#1089#1087#1080#1089#1072#1085#1080#1077' '#1092#1072#1082#1090
             DataBinding.FieldName = 'SummaFullChargeFact'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 76
@@ -280,6 +287,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 76
             Position.BandIndex = 2
             Position.ColIndex = 4
@@ -709,12 +717,6 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBBandedTableView1
-    ColorRuleList = <
-      item
-        ColorColumn = SummaFullChargeFact
-        BackGroundValueColumn = Color_Calc
-        ColorValueList = <>
-      end>
     SummaryItemList = <
       item
         Param.Value = Null

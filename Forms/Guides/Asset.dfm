@@ -133,6 +133,17 @@ object AssetForm: TAssetForm
         HeaderHint = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
         Width = 100
       end
+      object Production: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074#1086#1076'-'#1090#1100', '#1082#1075
+        DataBinding.FieldName = 'Production'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+        Options.Editing = False
+        Width = 86
+      end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'

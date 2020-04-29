@@ -59,7 +59,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 138
+    Width = 68
   end
   object ceInvNumber: TcxTextEdit
     Left = 40
@@ -180,19 +180,22 @@
     Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
   end
   object edPeriodUse: TcxCurrencyEdit
-    Left = 189
+    Left = 118
     Top = 21
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 3
     Properties.DisplayFormat = ',0.###'
     TabOrder = 24
-    Width = 147
+    Width = 106
   end
   object cxLabel11: TcxLabel
-    Left = 189
+    Left = 118
     Top = 3
-    Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
+    Hint = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
+    Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083'. ('#1083#1077#1090')'
+    ParentShowHint = False
+    ShowHint = True
   end
   object cxLabel12: TcxLabel
     Left = 43
@@ -210,6 +213,24 @@
     Properties.ReadOnly = True
     TabOrder = 27
     Width = 296
+  end
+  object cxLabel13: TcxLabel
+    Left = 235
+    Top = 3
+    Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100#1085#1086#1089#1090#1100', '#1082#1075
+    Caption = #1055#1088#1086#1080#1079#1074#1086#1076'-'#1090#1100', '#1082#1075
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object edProduction: TcxCurrencyEdit
+    Left = 235
+    Top = 21
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 3
+    Properties.DisplayFormat = ',0.###'
+    TabOrder = 29
+    Width = 101
   end
   object ActionList: TActionList
     Left = 344
@@ -359,6 +380,14 @@
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inProduction'
+        Value = Null
+        Component = edProduction
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 344
@@ -495,6 +524,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Production'
+        Value = Null
+        Component = edProduction
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'CarId'
         Value = Null
         Component = GuidesCar
@@ -510,7 +546,7 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 344
+    Left = 336
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

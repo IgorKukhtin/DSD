@@ -13,7 +13,6 @@ $BODY$
    DECLARE vbId         Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbIsInsert   Boolean;
-   DECLARE vbSumma      TFloat;
 BEGIN
 
     IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = date_trunc('month', inOparDate) AND Movement.DescId = zc_Movement_Wages())
@@ -58,39 +57,25 @@ BEGIN
      -- сохранили свойство <Копилка по результатам СУН1 за предыдущий месяц>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBoxMonth(), vbId, inSumma);
 
-    vbSumma := (SELECT sum(MIF_SummaMoneyBoxMonth.ValueData)
-                FROM Movement
-                     INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
-                                            AND MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.ObjectId = inUnitID
-                     INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
-                                                  ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
-                                                 AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
-                WHERE Movement.OperDate <=   date_trunc('month', inOparDate)
-                  AND Movement.DescId = zc_Movement_Wages());
+     -- сохранили <Элемент документа>
+    vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, inUserId), 0);
 
-     -- сохранили свойство <Копилка по результатам СУН1>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBox(), vbId, COALESCE (vbSumma, 0)::TFloat);
 
-    vbSumma := (SELECT sum(MIF_SummaMoneyBoxMonth.ValueData)
-                FROM Movement
-                     INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
-                                            AND MovementItem.MovementId = Movement.Id
-                                            AND MovementItem.ObjectId = inUnitID
-                     INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
-                                                  ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
-                                                 AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
-                WHERE Movement.DescId = zc_Movement_Wages());
-
-     -- сохранили свойство <Копилка по результатам СУН1> общий итог в подразделение
-    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSun(), inUnitID, COALESCE (vbSumma, 0)::TFloat);
-
-    IF vbIsInsert = FALSE
-    THEN
-         -- сохранили <Элемент документа>
-        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, lpGet_MovementItem_WagesAE_TotalSum (vbId, inUserId), 0);
-    END IF;
-
+    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSun(), inUnitID, T1.SummaMoneyBoxMonth)
+          , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSunUsed(), inUnitID, T1.SummaMoneyBoxUsed)
+    FROM (SELECT COALESCE(SUM(MIF_SummaMoneyBoxMonth.ValueData), 0)       AS SummaMoneyBoxMonth
+               ,  COALESCE(SUM(MIF_SummaMoneyBoxUsed.ValueData), 0)       AS SummaMoneyBoxUsed
+          FROM Movement
+               INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
+                                      AND MovementItem.MovementId = Movement.Id
+                                      AND MovementItem.ObjectId = inUnitID
+               INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
+                                            ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
+                                           AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
+               INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxUsed
+                                            ON MIF_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                           AND MIF_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
+          WHERE Movement.DescId = zc_Movement_Wages()) AS T1;
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, inUserId, vbIsInsert);

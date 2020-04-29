@@ -46,6 +46,10 @@ BEGIN
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
+    
+     -- сохранили свойство <Полное списание факт>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, inSummaFullChargeFact);
+    
 
     IF vbIsInsert = FALSE
     THEN

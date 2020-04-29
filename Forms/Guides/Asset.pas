@@ -20,7 +20,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  cxCurrencyEdit;
 
 type
   TAssetForm = class(TParentForm)
@@ -65,6 +66,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     Comment: TcxGridDBColumn;
     FullName: TcxGridDBColumn;
+    Production: TcxGridDBColumn;
   private
     { Private declarations }
   public

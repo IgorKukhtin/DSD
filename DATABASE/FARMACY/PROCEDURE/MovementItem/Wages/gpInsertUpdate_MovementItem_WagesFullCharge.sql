@@ -88,21 +88,7 @@ BEGIN
     END IF;
 
     vbSumma := COALESCE(Round((
-                         WITH CurrPRICE AS (SELECT Price_Goods.ChildObjectId              AS GoodsId
-                                                 , ObjectLink_Price_Unit.ChildObjectId    AS UnitId
-                                                 , ROUND(Price_Value.ValueData,2)::TFloat AS Price
-                                            FROM ObjectLink AS ObjectLink_Price_Unit
-                                               LEFT JOIN ObjectLink AS Price_Goods
-                                                      ON Price_Goods.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                     AND Price_Goods.DescId = zc_ObjectLink_Price_Goods()
-                                               LEFT JOIN ObjectFloat AS Price_Value
-                                                      ON Price_Value.ObjectId = ObjectLink_Price_Unit.ObjectId
-                                                     AND Price_Value.DescId   = zc_ObjectFloat_Price_Value()
-                                            WHERE ObjectLink_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                                              AND ObjectLink_Price_Unit.ChildObjectId = inUnitID
-                                           )
-
-                         SELECT SUM (MovementItem.Amount * COALESCE(MIFloat_Price.ValueData, CurrPRICE.Price))
+                         SELECT SUM (COALESCE (MovementFloat_TotalSummSale.ValueData, 0) - COALESCE(MovementFloat_SummaFund.ValueData, 0))
                          FROM Movement
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -110,20 +96,16 @@ BEGIN
                                                            AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                                            AND MovementLinkObject_Unit.ObjectId  = inUnitID
 
-                              JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                               AND MovementItem.DescId = zc_MI_Master()
-                                               AND MovementItem.isErased = FALSE
-
-                              LEFT JOIN CurrPRICE ON CurrPRICE.GoodsId = MovementItem.ObjectId
-
-                              LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                          ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                         AND MIFloat_Price.DescId = zc_MIFloat_Price()
-
                               INNER JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                                             ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                                            AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
 
+                              LEFT JOIN MovementFloat AS MovementFloat_SummaFund
+                                                      ON MovementFloat_SummaFund.MovementId =  Movement.Id
+                                                     AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
+                                                      ON MovementFloat_TotalSummSale.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
                          WHERE Movement.OperDate BETWEEN date_trunc('month', inOperDate) AND date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.DescId = zc_Movement_Loss()
                            AND Movement.StatusId = zc_Enum_Status_Complete()

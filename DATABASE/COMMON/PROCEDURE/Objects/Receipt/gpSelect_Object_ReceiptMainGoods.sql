@@ -38,14 +38,16 @@ BEGIN
                                                                ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id
                                                               AND ObjectBoolean_Main.DescId = zc_ObjectBoolean_Receipt_Main()
                                                               AND ObjectBoolean_Main.ValueData = TRUE
-                            
+
+                                      INNER JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
+                                                            ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
+                                                           AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
+                                                           AND ObjectLink_Receipt_GoodsKind.ChildObjectId = zc_GoodsKind_WorkProgress()
+
                                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_Goods
                                                            ON ObjectLink_Receipt_Goods.ObjectId = Object_Receipt.Id
                                                           AND ObjectLink_Receipt_Goods.DescId = zc_ObjectLink_Receipt_Goods()
                             
-                                      LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKind
-                                                           ON ObjectLink_Receipt_GoodsKind.ObjectId = Object_Receipt.Id
-                                                          AND ObjectLink_Receipt_GoodsKind.DescId = zc_ObjectLink_Receipt_GoodsKind()
 
                                       LEFT JOIN ObjectLink AS ObjectLink_Receipt_GoodsKindComplete
                                                            ON ObjectLink_Receipt_GoodsKindComplete.ObjectId = Object_Receipt.Id

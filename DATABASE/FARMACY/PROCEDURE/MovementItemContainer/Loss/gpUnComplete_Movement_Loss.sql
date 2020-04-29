@@ -85,9 +85,16 @@ BEGIN
     PERFORM lpInsertUpdate_MovementFloat_TotalSummLossAfterComplete(inMovementId);    
     
     --Пересчет полного списания в зарплате
-    IF COALESCE(vbArticleLossId, 0) = 13892113 AND vbStatusId = zc_Enum_StatusCode_Complete()
+    IF COALESCE(vbArticleLossId, 0) = 13892113
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitiD, vbOperDate, inSession); 
+    END IF;
+
+    --Использование фонда
+    IF EXISTS(SELECT 1 FROM MovementFloat WHERE MovementFloat.MovementId = inMovementId
+                                            AND MovementFloat.DescId = zc_MovementFloat_SummaFund())
+    THEN
+      PERFORM gpSelect_Calculation_Retail_FundUsed (inSession);
     END IF;
 
 END;
