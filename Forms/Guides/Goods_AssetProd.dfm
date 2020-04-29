@@ -461,23 +461,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -1010,10 +993,8 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       Category = 'Calc'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateGoods_In
       StoredProcList = <
         item
-          StoredProc = spUpdateGoods_In
         end>
       Caption = 'actUpdateGoods_In'
       Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -1036,10 +1017,8 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdateAsset
       StoredProcList = <
         item
-          StoredProc = spUpdateAsset
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -1075,10 +1054,8 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_WeightTare
       StoredProcList = <
         item
-          StoredProc = spUpdate_WeightTare
         end>
       Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
@@ -1301,33 +1278,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     Left = 200
     Top = 275
   end
-  object spUpdateGoods_In: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Goods_In'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inStartDate'
-        Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'inStartDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inEndDate'
-        Value = 'NULL'
-        Component = FormParams
-        ComponentItem = 'inEndDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 768
-    Top = 208
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -1337,57 +1287,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       end>
     Left = 464
     Top = 232
-  end
-  object spUpdateAsset: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Goods_Asset'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 648
-    Top = 256
-  end
-  object spUpdate_WeightTare: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Object_Goods_WeightTare'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inWeightTare'
-        Value = 42887d
-        Component = FormParams
-        ComponentItem = 'WeightTare'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 792
-    Top = 115
   end
   object spGetImportSettingId: TdsdStoredProc
     StoredProcName = 'gpGet_DefaultValue'
