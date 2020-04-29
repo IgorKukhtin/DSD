@@ -177,7 +177,7 @@ AS  (SELECT
        ,Object_SelectKind.Id                                AS SelectKindId           -- Тип выбора данных (из справочника Главные элементы Модели начисления)
        ,Object_SelectKind.ObjectCode                        AS SelectKindCode
        ,Object_SelectKind.ValueData                         AS SelectKindName
-       ,CASE WHEN MovementDesc.Id = zc_Movement_Send()
+       ,CASE WHEN MovementDesc.Id IN (zc_Movement_Send(), zc_Movement_SendAsset())
                   THEN FALSE
              WHEN Object_SelectKind.Id IN (zc_Enum_SelectKind_InAmount(), zc_Enum_SelectKind_InWeight(), zc_Enum_SelectKind_InHead()) -- Кол-во приход
                   THEN TRUE
@@ -1802,6 +1802,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.20         * zc_Movement_SendAsset
  20.06.16                                        *
 */
 

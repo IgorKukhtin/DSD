@@ -126,7 +126,8 @@ BEGIN
                             LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
                             INNER JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                                                       AND MovementDesc.Id IN (zc_Movement_ReturnOut()
-                                                                            , zc_Movement_Send()              
+                                                                            , zc_Movement_Send()
+                                                                            , zc_Movement_SendAsset()
                                                                             , zc_Movement_SendOnPrice()       
                                                                             , zc_Movement_Sale()              
                                                                             , zc_Movement_ReturnIn()          
@@ -234,6 +235,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.20         * zc_Movement_SendAsset()
  07.11.16         *
 */
 -- тест
