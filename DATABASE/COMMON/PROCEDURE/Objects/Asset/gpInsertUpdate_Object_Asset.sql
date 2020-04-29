@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Object_Asset()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, Integer, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
@@ -22,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
     IN inCarId               Integer   ,    -- ссылка на авто
 
     IN inPeriodUse           TFloat   ,     -- период эксплуатации
+    IN inProduction          TFloat   ,     -- Производительность, кг
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -63,6 +65,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_PeriodUse(), ioId, inPeriodUse);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Asset_Production(), ioId, inProduction);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Asset_Release(), ioId, inRelease);
@@ -77,6 +81,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.20         * add Production
  10.09.18         * add Car
  11.02.14         * add wiki  
  02.07.13          *

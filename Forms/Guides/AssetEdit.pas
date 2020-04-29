@@ -65,6 +65,8 @@ type
     cxLabel12: TcxLabel;
     edCar: TcxButtonEdit;
     GuidesCar: TdsdGuides;
+    cxLabel13: TcxLabel;
+    edProduction: TcxCurrencyEdit;
   private
     { Private declarations }
   public

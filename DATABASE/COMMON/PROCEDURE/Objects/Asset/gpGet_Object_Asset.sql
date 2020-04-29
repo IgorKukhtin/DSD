@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , CarId Integer, CarName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
-             , PeriodUse TFloat
+             , PeriodUse TFloat, Production TFloat
              , isErased boolean) AS
 $BODY$BEGIN
    
@@ -52,6 +52,7 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)  AS Comment
            
            , 0 :: TFloat            AS PeriodUse
+           , 0 :: TFloat            AS Production
            , CAST (NULL AS Boolean) AS isErased
            
        FROM Object 
@@ -81,12 +82,13 @@ $BODY$BEGIN
          , COALESCE (ObjectDate_Release.ValueData,CAST (CURRENT_DATE as TDateTime)) AS Release
          
          , ObjectString_InvNumber.ValueData      AS InvNumber
-         , ObjectString_FullName.ValueData       AS FullName                                                                                                       
+         , ObjectString_FullName.ValueData       AS FullName
          , ObjectString_SerialNumber.ValueData   AS SerialNumber
          , ObjectString_PassportNumber.ValueData AS PassportNumber
          , ObjectString_Comment.ValueData        AS Comment
 
          , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
+         , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
          
          , Object_Asset.isErased            AS isErased
          
@@ -99,7 +101,7 @@ $BODY$BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Asset_Juridical
                                ON ObjectLink_Asset_Juridical.ObjectId = Object_Asset.Id
                               AND ObjectLink_Asset_Juridical.DescId = zc_ObjectLink_Asset_Juridical()
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Asset_Juridical.ChildObjectId          
+          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Asset_Juridical.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Asset_Maker
                                ON ObjectLink_Asset_Maker.ObjectId = Object_Asset.Id
@@ -137,8 +139,11 @@ $BODY$BEGIN
 
           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodUse
                                 ON ObjectFloat_PeriodUse.ObjectId = Object_Asset.Id
-                               AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()                                                                                                                             
-                                
+                               AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Production
+                                ON ObjectFloat_Production.ObjectId = Object_Asset.Id
+                               AND ObjectFloat_Production.DescId = zc_ObjectFloat_Asset_Production()
        WHERE Object_Asset.Id = inId;
    END IF;
    
@@ -152,8 +157,9 @@ ALTER FUNCTION gpGet_Object_Asset(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.20         * add Production
  10.09.18         * add Car
- 11.02.14         * add wiki             
+ 11.02.14         * add wiki
  02.07.13         *
 
 */

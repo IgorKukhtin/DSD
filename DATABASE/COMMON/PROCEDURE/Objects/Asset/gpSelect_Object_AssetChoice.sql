@@ -13,7 +13,7 @@ RETURNS TABLE (ContainerId Integer, Id Integer, Code Integer, Name TVarChar
              , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Release TDateTime
              , InvNumber TVarChar, FullName TVarChar, SerialNumber TVarChar, PassportNumber TVarChar, Comment TVarChar
-             , PeriodUse TFloat
+             , PeriodUse TFloat, Production TFloat
              , AmountRemains TFloat
              , isErased boolean) AS
 $BODY$
@@ -75,7 +75,8 @@ BEGIN
          , ObjectString_PassportNumber.ValueData AS PassportNumber
          , ObjectString_Comment.ValueData        AS Comment
 
-         , ObjectFloat_PeriodUse.ValueData  AS PeriodUse
+         , ObjectFloat_PeriodUse.ValueData               :: TFloat AS PeriodUse
+         , COALESCE (ObjectFloat_Production.ValueData,0) :: TFloat AS Production
 
          , tmpRemains.Amount      :: TFloat AS AmountRemains
          , Object_Asset.isErased            AS isErased
@@ -137,6 +138,10 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodUse
                                 ON ObjectFloat_PeriodUse.ObjectId = Object_Asset.Id
                                AND ObjectFloat_PeriodUse.DescId = zc_ObjectFloat_Asset_PeriodUse()
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_Production
+                                ON ObjectFloat_Production.ObjectId = Object_Asset.Id
+                               AND ObjectFloat_Production.DescId = zc_ObjectFloat_Asset_Production()
        ;  
 
 END;
@@ -146,6 +151,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.20         * add Production
  16.03.20         *
 */
 
