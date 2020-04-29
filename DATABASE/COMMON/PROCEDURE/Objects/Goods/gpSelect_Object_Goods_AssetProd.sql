@@ -314,7 +314,7 @@ BEGIN
             , 0                   :: TFloat   AS Weight
             , 0                   :: TFloat   AS WeightTare
             , 0                   :: TFloat   AS CountForWeight
-            , 0                   :: TFloat  AS CountReceipt
+            , 0                   :: TFloat   AS CountReceipt
             
             , 0                    :: TFloat  AS Value_min
             , 0                    :: TFloat  AS Value_max

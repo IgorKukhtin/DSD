@@ -26,8 +26,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 56
-    ExplicitTop = 34
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -139,17 +137,19 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       object AssetName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = actChoiceAsset
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
+        Options.Editing = False
+        Width = 150
+      end
+      object AssetProdName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'  ('#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1089#1103')'
+        DataBinding.FieldName = 'AssetProdName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'  ('#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1089#1103')'
+        Options.Editing = False
         Width = 150
       end
       object MeasureName: TcxGridDBColumn
@@ -187,6 +187,46 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 72
+      end
+      object CountReceipt: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1088#1077#1094'.'
+        DataBinding.FieldName = 'CountReceipt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1088#1077#1094#1077#1087#1090#1091#1088#1077
+        Options.Editing = False
+        Width = 96
+      end
+      object Value_min: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1080#1085' ('#1088#1077#1094#1077#1087#1090'.)'
+        DataBinding.FieldName = 'Value_min'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 84
+      end
+      object Value_max: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1084#1072#1082#1089' ('#1088#1077#1094#1077#1087#1090'.)'
+        DataBinding.FieldName = 'Value_max'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 99
+      end
+      object isValue_diff: TcxGridDBColumn
+        Caption = #1054#1090#1082#1083' '#1082#1086#1083'-'#1074#1072' ('#1088#1077#1094#1077#1087#1090'.)'
+        DataBinding.FieldName = 'isValue_diff'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1082#1083#1086#1085#1077#1085#1080#1077' '#1084#1080#1085' '#1080' '#1084#1072#1082#1089' '#1082#1086#1083'-'#1074#1072' ('#1088#1077#1094#1077#1087#1090'.)'
+        Options.Editing = False
+        Width = 99
       end
       object GoodsCode_basis: TcxGridDBColumn
         Caption = #1050#1086#1076' ('#1094#1077#1093')'
@@ -341,6 +381,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
+        Options.Editing = False
         Width = 70
       end
       object PriceIn: TcxGridDBColumn
@@ -352,6 +393,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' '#1080' '#1089#1082#1080#1076#1082#1086#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1087#1086#1089#1083#1077#1076#1085#1080#1081')'
+        Options.Editing = False
         Width = 70
       end
     end
@@ -376,7 +418,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 6
+    TabOrder = 4
     Width = 186
   end
   object cxLabel13: TcxLabel
@@ -588,20 +630,32 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       Category = 0
     end
     object bbisPartionCount: TdxBarButton
-      Action = actUpdateisPartionCount
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
+      Visible = ivAlways
+      ImageIndex = 58
     end
     object bbisPartionSumm: TdxBarButton
-      Action = actUpdateisPartionSumm
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
+      Visible = ivAlways
+      ImageIndex = 52
     end
     object bbUpdateGoods_In: TdxBarButton
-      Action = macUpdateGoods_In
+      Caption = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Category = 0
+      Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Visible = ivAlways
+      ImageIndex = 43
     end
     object bbUpdate_WeightTareList: TdxBarButton
-      Action = macUpdate_WeightTareList
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
       Category = 0
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
+      Visible = ivAlways
+      ImageIndex = 60
     end
     object bbStartLoad: TdxBarButton
       Action = actStartLoad
@@ -927,195 +981,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
-    object actUpdateisPartionSumm: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateisPartionSumm
-      StoredProcList = <
-        item
-          StoredProc = spUpdateisPartionSumm
-        end
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1089#1091#1084#1084#1072' ('#1076#1072'/'#1085#1077#1090')"'
-      ImageIndex = 52
-    end
-    object actUpdateisPartionCount: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdateisPartionCount
-      StoredProcList = <
-        item
-          StoredProc = spUpdateisPartionCount
-        end
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1072#1088#1090#1080#1103' '#1082#1086#1083'-'#1074#1086' ('#1076#1072'/'#1085#1077#1090')"'
-      ImageIndex = 58
-    end
-    object actDatePeriodDialog: TExecuteDialog
-      Category = 'Calc'
-      MoveParams = <>
-      Caption = 'actDatePeriodDialog'
-      FormName = 'TDatePeriodDialogForm'
-      FormNameParam.Value = 'TDatePeriodDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inStartDate'
-          Value = 'NULL'
-          Component = FormParams
-          ComponentItem = 'inStartDate'
-          DataType = ftDateTime
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'inEndDate'
-          Value = 'NULL'
-          Component = FormParams
-          ComponentItem = 'inEndDate'
-          DataType = ftDateTime
-          ParamType = ptInputOutput
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
-    object actUpdateGoods_In: TdsdExecStoredProc
-      Category = 'Calc'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateGoods_In'
-      Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-    end
-    object macUpdateGoods_In: TMultiAction
-      Category = 'Calc'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actDatePeriodDialog
-        end
-        item
-          Action = actUpdateGoods_In
-        end>
-      Caption = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      Hint = #1054#1087#1088#1077#1076#1077#1083#1080#1090#1100' '#1076#1072#1090#1091' '#1087#1086#1089#1083'. '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097'.  '#1080' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
-      ImageIndex = 43
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
-    object actChoiceAsset: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      Caption = 'AssetForm'
-      FormName = 'TAssetForm'
-      FormNameParam.Value = 'TAssetForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'Key'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'AssetId'
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'TextValue'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'AssetName'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-    end
-    object actUpdate_WeightTare: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1090#1091' '#1072#1087#1090#1077#1082#1080
-      ImageIndex = 60
-    end
-    object macUpdate_WeightTare: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actUpdate_WeightTare
-        end>
-      View = cxGridDBTableView
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      ImageIndex = 60
-    end
-    object macUpdate_WeightTareList: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteDialogWeightTare
-        end
-        item
-          Action = macUpdate_WeightTare
-        end
-        item
-          Action = actRefresh
-        end>
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1091#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080' '#1074#1089#1077#1084' '#1074#1099#1073#1088#1072#1085#1085#1099#1084' '#1090#1086#1074#1072#1088#1072#1084'?'
-      InfoAfterExecute = #1042#1077#1089' '#1074#1090#1091#1083#1082#1080' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      ImageIndex = 60
-    end
-    object ExecuteDialogWeightTare: TExecuteDialog
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      PostDataSetAfterExecute = True
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1074#1077#1089' '#1074#1090#1091#1083#1082#1080
-      ImageIndex = 26
-      FormName = 'TGoods_WeightTareDialogForm'
-      FormNameParam.Value = 'TGoods_WeightTareDialogForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <
-        item
-          Name = 'inWeightTare'
-          Value = 42261d
-          Component = FormParams
-          ComponentItem = 'WeightTare'
-          DataType = ftFloat
-          MultiSelectSeparator = ','
-        end>
-      isShowModal = True
-      OpenBeforeShow = True
-    end
     object actGetImportSetting_Goods_Price: TdsdExecStoredProc
       Category = #1047#1072#1075#1088#1091#1079#1082#1072
       MoveParams = <>
@@ -1205,9 +1070,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -1225,58 +1087,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     SummaryItemList = <>
     Left = 232
     Top = 184
-  end
-  object spUpdateisPartionCount: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Goods_isPartionCount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartionCount'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isPartionCount'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 328
-    Top = 259
-  end
-  object spUpdateisPartionSumm: TdsdStoredProc
-    StoredProcName = 'gpUpdateObject_Goods_isPartionSumm'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId '
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisPartionSumm'
-        Value = Null
-        Component = ClientDataSet
-        ComponentItem = 'isPartionSumm'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 200
-    Top = 275
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1327,7 +1137,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TAssetForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
