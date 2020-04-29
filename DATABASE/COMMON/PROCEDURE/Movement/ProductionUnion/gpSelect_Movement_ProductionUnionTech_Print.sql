@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inStartDate         TDateTime,
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inGroupNum          Integer,
+    IN inisCuterCount      Boolean,
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -122,18 +124,19 @@ BEGIN
             , Object_Goods.ValueData            AS GoodsName
 
             , _tmpListMaster.Amount
-            , _tmpListMaster.CuterCount
+            , CASE WHEN inisCuterCount = FALSE THEN _tmpListMaster.CuterCount ELSE COALESCE (ObjectFloat_CountReceipt.ValueData,0) END AS CuterCount
             , COALESCE (ObjectFloat_Receipt_Value.ValueData, 0) * _tmpListMaster.CuterCount AS  Amount_calc
 
-            , MIFloat_Count.ValueData           AS Count
-            , MIFloat_RealWeight.ValueData      AS RealWeight
-            , MIFloat_CuterWeight.ValueData     AS CuterWeight 
+            , MIFloat_Count.ValueData             AS Count
+            , MIFloat_RealWeight.ValueData        AS RealWeight
+            , MIFloat_CuterWeight.ValueData       AS CuterWeight
+            --, ObjectFloat_CountReceipt.ValueData  AS CountReceipt_goods
 
 
-            , Object_GoodsKind.Id               AS GoodsKindId
-            , Object_GoodsKind.ObjectCode       AS GoodsKindCode
-            , Object_GoodsKind.ValueData        AS GoodsKindName
-            , Object_Measure.ValueData          AS MeasureName
+            , Object_GoodsKind.Id                 AS GoodsKindId
+            , Object_GoodsKind.ObjectCode         AS GoodsKindCode
+            , Object_GoodsKind.ValueData          AS GoodsKindName
+            , Object_Measure.ValueData            AS MeasureName
 
             , Object_GoodsKindComplete.Id         AS GoodsKindId_Complete
             , Object_GoodsKindComplete.ObjectCode AS GoodsKindCode_Complete
@@ -178,6 +181,10 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Receipt_Value
                                    ON ObjectFloat_Receipt_Value.ObjectId = Object_Receipt.Id
                                   AND ObjectFloat_Receipt_Value.DescId = zc_ObjectFloat_Receipt_Value()
+
+             LEFT JOIN ObjectFloat AS ObjectFloat_CountReceipt
+                                   ON ObjectFloat_CountReceipt.ObjectId = Object_Goods.Id 
+                                  AND ObjectFloat_CountReceipt.DescId = zc_ObjectFloat_Goods_CountReceipt()
            ;
 
 
@@ -385,8 +392,8 @@ BEGIN
             , tmpData.GoodsCode
             , tmpData.GoodsName
             , tmpData.ParentId
-            , tmpData.Amount
-            , tmpData.AmountReceipt
+            , COALESCE (tmpData.Amount,0)        AS Amount
+            , COALESCE (tmpData.AmountReceipt,0) AS AmountReceipt
             
             /*, tmpData.PartionGoodsDate
             , tmpData.GoodsKindId
@@ -407,14 +414,26 @@ BEGIN
           , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName
           , _tmpRes_cur1.GoodsName
           , CASE WHEN _tmpRes_cur1.GoodsKindId_Complete = zc_GoodsKind_Basis() THEN '' ELSE _tmpRes_cur1.GoodsKindName_Complete END :: TVarChar AS GoodsKindName_Complete
+
           , CASE WHEN inGroupNum <> 3 THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
                  ELSE  _tmpRes_cur1.CuterCount
-            END AS CuterCount --_tmpRes_cur1.CuterCount --SUM (_tmpRes_cur1.CuterCount) OVER(PARTITION BY _tmpRes_cur1.GoodsName) AS CuterCount
+            END AS CuterCount 
+                                                                      --_tmpRes_cur1.CuterCount --SUM (_tmpRes_cur1.CuterCount) OVER(PARTITION BY _tmpRes_cur1.GoodsName) AS CuterCount
           , _tmpRes_cur2.GoodsName  AS GoodsName_child
-          , _tmpRes_cur2.AmountReceipt
-          , SUM (_tmpRes_cur2.Amount) AS Amount
+          , COALESCE (_tmpRes_cur2.AmountReceipt,0) AS AmountReceipt
+          
+          , SUM (CASE WHEN inisCuterCount = FALSE
+                      THEN COALESCE (_tmpRes_cur2.Amount,0)
+                      ELSE COALESCE (_tmpRes_cur2.AmountReceipt,0) *
+                           CASE WHEN inGroupNum <> 3 
+                                THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
+                                ELSE  _tmpRes_cur1.CuterCount
+                           END
+                 END) AS Amount
+          
           , Count (*) OVER (PARTITION by _tmpRes_cur1.GoodsName, _tmpRes_cur2.GoodsName) :: integer AS CountReceipt
           , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END GoodsKind_group-- для группировки
+
      FROM _tmpRes_cur1
           LEFT JOIN _tmpRes_cur2 ON _tmpRes_cur2.ParentId = _tmpRes_cur1.MovementItemId
           LEFT JOIN zfCalc_DayOfWeekName (_tmpRes_cur1.OperDate) AS tmpWeekDay ON 1=1
@@ -427,7 +446,7 @@ BEGIN
                  ELSE  _tmpRes_cur1.CuterCount
             END
           , _tmpRes_cur2.GoodsName
-          , _tmpRes_cur2.AmountReceipt 
+          , COALESCE (_tmpRes_cur2.AmountReceipt,0)
           , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
          , _tmpres_cur1.goodsid
 
@@ -448,5 +467,5 @@ $BODY$
 -- тест
 --
 --
---select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inSession := '5'::TVarChar);
+--select * from gpSelect_Movement_ProductionUnionTech_Print(inStartDate := ('23.03.2020')::TDateTime , inEndDate := ('24.03.2020')::TDateTime , inFromId := 8447 , inToId := 8447 , inGroupNum:=1, inisCuterCount:=true, inSession := '5'::TVarChar);
 --FETCH ALL "<unnamed portal 6>"; 

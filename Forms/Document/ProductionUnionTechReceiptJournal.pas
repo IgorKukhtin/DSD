@@ -160,10 +160,13 @@ type
     actPrintDays2: TdsdPrintAction;
     actPrintDays4: TdsdPrintAction;
     actPrintDays3: TdsdPrintAction;
-    bbactPrintDays1: TdxBarButton;
+    bbPrintDays1: TdxBarButton;
     bbactPrintDays2: TdxBarButton;
     bbactPrintDays3: TdxBarButton;
     bbactPrintDays4: TdxBarButton;
+    actPrintDays1_test: TdsdPrintAction;
+    bbPrintDays1_test: TdxBarButton;
+    spPrintDays1_test: TdsdStoredProc;
   private
     { Private declarations }
   public

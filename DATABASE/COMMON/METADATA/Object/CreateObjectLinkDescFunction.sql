@@ -147,6 +147,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Asset() RETURNS Integer AS $BODY$
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_Asset', 'Связь товаров с ОС', zc_Object_Goods(), zc_Object_Asset() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_Asset');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_AssetProd() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_AssetProd'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_AssetProd', 'Связь товаров с ОС', zc_Object_Goods(), zc_Object_Asset() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_AssetProd');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind_GoodsBasis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsBasis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -187,6 +191,7 @@ SELECT 'zc_ObjectLink_Goods_PartnerIn', 'Связь товаров с поставщиком', zc_Object
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_PartnerIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_PartnerIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_PartnerIn', 'Связь товаров с поставщиком', zc_Object_Goods(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_PartnerIn');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsGroup_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2307,6 +2312,7 @@ SELECT 'zc_ObjectLink_Hardware_CashRegister', 'Связь с Подразделением', zc_Objec
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 29.04.20         * zc_ObjectLink_Goods_AssetProd
  17.04.20                                                                                      * zc_ObjectLink_Hardware_CashRegister
  12.04.20                                                                                      * zc_ObjectLink_Hardware_Unit
  10.04.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsSubSend

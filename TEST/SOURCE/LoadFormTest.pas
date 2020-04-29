@@ -496,6 +496,8 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
@@ -1482,7 +1484,7 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
@@ -1493,7 +1495,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
 end;
