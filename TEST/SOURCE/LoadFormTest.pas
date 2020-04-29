@@ -496,6 +496,8 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');

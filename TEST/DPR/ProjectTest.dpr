@@ -1147,7 +1147,8 @@ uses
   Report_Cash_OlapDialog in '..\..\Forms\Report\Report_Cash_OlapDialog.pas' {Report_Cash_OlapDialogForm: TParentForm},
   OrderInternalJournalChoice in '..\..\Forms\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
   BarCodeBoxDialog in '..\..\Forms\Guides\BarCodeBoxDialog.pas' {BarCodeBoxDialogForm: TParentForm},
-  ReceiptMainGoods_Object in '..\..\Forms\Guides\ReceiptMainGoods_Object.pas' {ReceiptMainGoods_ObjectForm: TParentForm};
+  ReceiptMainGoods_Object in '..\..\Forms\Guides\ReceiptMainGoods_Object.pas' {ReceiptMainGoods_ObjectForm: TParentForm},
+  Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

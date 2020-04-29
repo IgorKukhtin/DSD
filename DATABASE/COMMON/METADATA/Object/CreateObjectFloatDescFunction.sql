@@ -131,6 +131,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_CountForWeight() RETURNS Integer
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_CountForWeight', 'Кол-во для веса' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountForWeight');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_CountReceipt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountReceipt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_CountReceipt', 'Кол-во партий по рецептуре' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountReceipt');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsPropertyValue_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsPropertyValue_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_GoodsPropertyValue(), 'zc_ObjectFloat_GoodsPropertyValue_Amount', 'Вес товара' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsPropertyValue_Amount');
@@ -1358,6 +1363,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_CountPrice() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_CountPrice', 'Кол-во прайсов' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountPrice');
 
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v3() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v3'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v3', 'Кратность по Э-СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v3');
@@ -1692,6 +1698,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
  29.04.20         * zc_ObjectFloat_Asset_Production
+                    zc_ObjectFloat_Goods_CountReceipt
  28.04.20                                                                                      * zc_ObjectFloat_Retail_OccupancySUN
  23.04.20                                                                                      * zc_ObjectFloat_Retail_Fund, zc_ObjectFloat_Retail_FundUsed
  08.04.20                                                                                      * zc_ObjectFloat_CashRegister_PhysicalMemoryCapacity
