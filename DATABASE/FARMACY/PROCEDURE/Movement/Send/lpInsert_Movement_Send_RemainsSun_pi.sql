@@ -96,7 +96,7 @@ BEGIN
      vbKoeff_over:= 2;
      
      -- !!!
-     vbPeriod_t1    := '30 DAY' :: INTERVAL;
+     vbPeriod_t1    := '15 DAY' :: INTERVAL;
      vbPeriod_t2    := '0 DAY'  :: INTERVAL;
 
      -- !!!
