@@ -1484,7 +1484,7 @@ begin
   exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechJournalForm');
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechEditForm');
@@ -1495,7 +1495,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionPeresortForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionPeresortForm');
   //
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionTechReceiptJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionTechReceiptJournalForm');
 end;
