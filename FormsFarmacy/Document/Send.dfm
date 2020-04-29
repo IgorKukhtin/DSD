@@ -3156,7 +3156,6 @@ inherited SendForm: TSendForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
-    PropertiesCellList = <>
     Left = 318
     Top = 529
   end

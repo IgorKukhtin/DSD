@@ -158,9 +158,10 @@ BEGIN
                                                , MIFloat_SummaSUN1.ValueData         AS SummaSUN1 
                                                , tmpTechnicalRediscount.SummWages    AS SummaTechnicalRediscount
                               --                 , MIFloat_SummaTechnicalRediscount.ValueData         AS SummaTechnicalRediscount
-                                               , CASE WHEN MIFloat_SummaMoneyBox.ValueData > 0 THEN 
-                                                 MIFloat_SummaMoneyBox.ValueData END::TFloat AS SummaMoneyBox
-                                               , COALESCE(tmpFullCharge.SummWages, MIFloat_SummaFullCharge.ValueData)   AS SummaFullCharge
+                                               , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
+                                                 COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
+                                               , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                                                   COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
                                                , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
                                                , MovementItem.Amount                 AS SummaTotal
                                          FROM  MovementItem
@@ -192,10 +193,19 @@ BEGIN
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBox
                                                                             ON MIFloat_SummaMoneyBox.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_SummaMoneyBox.DescId = zc_MIFloat_SummaMoneyBox()
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxMonth
+                                                                            ON MIFloat_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
 
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
                                                                             ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
                                                                            AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
+                                                                            ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+                                                LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeFact
+                                                                            ON MIFloat_SummaFullChargeFact.MovementItemId = MovementItem.Id
+                                                                           AND MIFloat_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
 
                                                 LEFT JOIN MovementItemFloat AS MIFloat_SummaMoneyBoxUsed
                                                                             ON MIFloat_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id

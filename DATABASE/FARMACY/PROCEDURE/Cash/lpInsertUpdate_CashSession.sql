@@ -17,11 +17,12 @@ BEGIN
         UPDATE CashSession SET
             LastConnect = inDateConnect
           , UserId      = inUserId
+          , StartUpdate = CURRENT_TIMESTAMP
         WHERE
             CashSession.Id = inCashSessionId;
     ELSE
-        INSERT INTO CashSession (Id, LastConnect, UserId)
-           VALUES (inCashSessionId, inDateConnect, inUserId);
+        INSERT INTO CashSession (Id, LastConnect, UserId, StartUpdate)
+           VALUES (inCashSessionId, inDateConnect, inUserId, CURRENT_TIMESTAMP);
     END IF;
 
 END;
@@ -30,7 +31,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Шаблий О.В.
+ 29.04.20                                                                      *
  10.09.15                                                         *
 */
 

@@ -133,6 +133,11 @@ BEGIN
                        WHERE ObjectLink_Price_Unit.DescId        = zc_ObjectLink_Price_Unit()
                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                      )
+      , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                             , ObjectFloat_NDSKind_NDS.ValueData
+                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                      )
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
                                     THEN SUM(-MovementItemContainer.Amount * 
@@ -164,9 +169,8 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                          ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
                                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                  ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                         WHERE MovementItemContainer.MovementId = inMovementId
                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
                         GROUP BY MovementItemContainer.MovementItemId
@@ -328,6 +332,11 @@ BEGIN
                          AND ObjectLink_Price_Unit.ChildObjectId = vbUnitId
                       )
 
+      , tmpNDSKind AS (SELECT ObjectFloat_NDSKind_NDS.ObjectId
+                             , ObjectFloat_NDSKind_NDS.ValueData
+                       FROM ObjectFloat AS ObjectFloat_NDSKind_NDS
+                       WHERE ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                      )
       , MIContainer AS (SELECT MovementItemContainer.MovementItemId
                              , CASE WHEN SUM(-MovementItemContainer.Amount) <> 0 
                                     THEN SUM(-MovementItemContainer.Amount * 
@@ -360,9 +369,8 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
                                                          ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
                                                         AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
-                            LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                                  ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
-                                                 AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
+                            LEFT JOIN tmpNDSKind AS ObjectFloat_NDSKind_NDS
+                                                 ON ObjectFloat_NDSKind_NDS.ObjectId = MovementLinkObject_NDSKind.ObjectId
                         WHERE MovementItemContainer.MovementId = inMovementId
                           AND MovementItemContainer.DescId = zc_MIContainer_Count()
                         GROUP BY MovementItemContainer.MovementItemId

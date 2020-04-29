@@ -13,6 +13,7 @@ type
   public
      class procedure AutomaticCheckConnect;
      class procedure AutomaticUpdateProgram;
+     class procedure AutomaticUpdateProgramStart;
   end;
 
     const fAlan_colocall : Boolean = FALSE;
@@ -275,6 +276,18 @@ begin
        TMessagesForm.Create(nil).Execute('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику', E.Message);
   end;
 end;
+
+class procedure TUpdater.AutomaticUpdateProgramStart;
+begin
+  try
+    Application.ProcessMessages;
+    UpdateProgram;
+  except
+    on E: Exception do
+       TMessagesForm.Create(nil).Execute('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику', E.Message);
+  end;
+end;
+
 
 class procedure TUpdater.UpdateConnect (Connection: string);
 var StringList: TStringList;

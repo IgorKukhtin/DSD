@@ -1,26 +1,26 @@
 inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
   Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1077' '#1088#1072#1089#1093#1086#1076#1099
   ClientHeight = 540
-  ClientWidth = 877
+  ClientWidth = 898
   AddOnFormData.AddOnFormRefresh.ParentList = 'WagesAdditionalExpenses'
-  ExplicitWidth = 893
+  ExplicitWidth = 914
   ExplicitHeight = 579
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 77
-    Width = 877
+    Width = 898
     Height = 463
     ExplicitTop = 77
     ExplicitWidth = 877
     ExplicitHeight = 463
     ClientRectBottom = 463
-    ClientRectRight = 877
+    ClientRectRight = 898
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 877
       ExplicitHeight = 439
       inherited cxGrid: TcxGrid
-        Width = 877
+        Width = 898
         Height = 439
         ExplicitWidth = 877
         ExplicitHeight = 439
@@ -352,7 +352,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 877
+    Width = 898
     Height = 51
     TabOrder = 3
     ExplicitWidth = 877
@@ -385,6 +385,19 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       ExplicitLeft = 12
       ExplicitTop = 22
       ExplicitHeight = 22
+    end
+    object cxLabel3: TcxLabel
+      Left = 604
+      Top = 23
+      Anchors = [akTop, akRight]
+      Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1055#1057' '#1085#1072' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072' '#1085#1077' '#1083#1086#1078#1080#1090#1089#1103
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
     end
   end
   inherited ActionList: TActionList

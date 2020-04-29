@@ -66,6 +66,7 @@ type
     actClearSummaFullChargeFact: TdsdExecStoredProc;
     spClearSummaFullChargeFact: TdsdStoredProc;
     dxBarButton13: TdxBarButton;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public
