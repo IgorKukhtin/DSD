@@ -12,7 +12,9 @@
 CREATE TABLE CashSession
 (
   Id             TVarChar    NOT NULL PRIMARY KEY,
-  LastConnect    TDateTime -- Дата документа
+  LastConnect    TDateTime, -- Дата документа
+  UserId         Integer,   -- Сотрудник 
+  StartUpdate    TDateTime -- Дата начала обновления
 );
 
 ALTER TABLE CashSession

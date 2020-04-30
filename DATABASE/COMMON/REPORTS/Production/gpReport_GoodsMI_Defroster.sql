@@ -56,13 +56,13 @@ BEGIN
                              END AS MovementId
 
                              -- Перемещение приход на inUnitId
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.IsActive = TRUE
+                           , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = TRUE
                                         AND MIContainer.DescId = zc_MIContainer_Count()
                                         AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '0 DAY') AND (inEndDate + INTERVAL '0 DAY')
                                             THEN MIContainer.Amount 
                                        ELSE 0
                                   END) AS Amount_Send_in
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.IsActive = TRUE
+                           , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = TRUE
                                         AND MIContainer.DescId = zc_MIContainer_Summ()
                                         AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '0 DAY') AND (inEndDate + INTERVAL '0 DAY')
                                             THEN MIContainer.Amount 
@@ -84,13 +84,13 @@ BEGIN
                                   END) AS Summ_Separate_in
 
                              -- Перемещение расход с inUnitId
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.IsActive = FALSE
+                           , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE
                                         AND MIContainer.DescId = zc_MIContainer_Count()
                                         AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
                                             THEN -1 * MIContainer.Amount
                                        ELSE 0
                                   END) AS Amount_Send_out
-                           , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send() AND MIContainer.IsActive = FALSE
+                           , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE
                                         AND MIContainer.DescId = zc_MIContainer_Summ()
                                         AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
                                             THEN -1 * MIContainer.Amount
@@ -146,7 +146,7 @@ BEGIN
                       FROM MovementItemContainer AS MIContainer
                       WHERE MIContainer.OperDate BETWEEN inStartDate AND (inEndDate + INTERVAL '1 DAY')
                         AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                        AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate(), zc_Movement_Send(),zc_Movement_Loss() , zc_Movement_ProductionUnion())
+                        AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate(), zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_Loss() , zc_Movement_ProductionUnion())
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
                            , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
@@ -284,6 +284,7 @@ ALTER FUNCTION gpReport_GoodsMI_Defroster (TDateTime, TDateTime, Integer, TVarCh
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.04.20         * zc_Movement_SendAsset
  28.06.15                                        * all
  25.03.15         *
 */

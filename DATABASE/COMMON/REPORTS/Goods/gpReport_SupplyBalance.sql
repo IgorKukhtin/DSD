@@ -386,7 +386,7 @@ BEGIN
                                        END) AS CountIncome
                                 , SUM (-- Перемещение
                                        CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                                             AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                              -- AND MIContainer.isActive = FALSE
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
@@ -407,7 +407,7 @@ BEGIN
 
                                 , SUM (-- Перемещение
                                        CASE WHEN MIContainer.OperDate BETWEEN vbStartDate_Calc AND vbEndDate_Calc
-                                             AND MIContainer.MovementDescId = zc_Movement_Send()
+                                             AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                              -- AND MIContainer.isActive = FALSE
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
@@ -538,7 +538,7 @@ BEGIN
                                        END) CountIncome
 
                                 , SUM (-- Перемещение
-                                       CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()
+                                       CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                             THEN -1 * COALESCE (MIContainer.Amount, 0)
                                             ELSE 0
                                        END
@@ -894,7 +894,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 31.05.17         * 
+ 29.04.20         * zc_Movement_SendAsset()
+ 31.05.17         *
  25.05.17         *
  16.05.17         *
  30.03.17         *

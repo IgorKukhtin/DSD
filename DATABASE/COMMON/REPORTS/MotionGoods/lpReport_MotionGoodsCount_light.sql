@@ -227,13 +227,13 @@ BEGIN
                                               END) AS CountReturnOut
 
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS CountSendIn
                                        , SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -404,13 +404,13 @@ BEGIN
                                               END) <> 0 -- AS CountReturnOut
 
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = TRUE
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) <> 0 -- AS CountSendIn
                                       OR SUM (CASE WHEN _tmpContainer.ContainerDescId = zc_Container_Count()
-                                                    AND MIContainer.MovementDescId = zc_Movement_Send()
+                                                    AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                                     AND MIContainer.isActive = FALSE
                                                         THEN -1 * MIContainer.Amount
                                                    ELSE 0
@@ -668,6 +668,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.20         * zc_Movement_SendAsset
  13.08.19         *
 */
 

@@ -537,9 +537,9 @@ BEGIN
 
         , CASE WHEN MovementDesc.Id = zc_Movement_Inventory() AND tmpMIContainer_group.isReprice = TRUE
                     THEN MovementDesc.ItemName || ' ÔÂÂÓˆÂÌÍ‡'
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE
+               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE
                     THEN MovementDesc.ItemName || ' œ–»’Œƒ'
-               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE
+               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(),zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE
                     THEN MovementDesc.ItemName || ' –¿—’Œƒ'
                ELSE MovementDesc.ItemName
           END :: TVarChar AS MovementDescName
@@ -548,9 +548,9 @@ BEGIN
                     THEN '01 ' || MovementDesc.ItemName
                WHEN Movement.DescId = zc_Movement_ReturnOut()
                     THEN '02 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Send() AND tmpMIContainer_group.isActive = TRUE
+               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = TRUE
                     THEN '03 ' || MovementDesc.ItemName
-               WHEN Movement.DescId = zc_Movement_Send() AND tmpMIContainer_group.isActive = FALSE
+               WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND tmpMIContainer_group.isActive = FALSE
                     THEN '04 ' || MovementDesc.ItemName
                WHEN Movement.DescId = zc_Movement_ProductionUnion() AND tmpMIContainer_group.isActive = TRUE
                     THEN '05 ' || MovementDesc.ItemName
@@ -656,7 +656,7 @@ BEGIN
         , CAST (tmpMIContainer_group.AmountEnd AS TFloat)   AS AmountEnd
         , CAST ((tmpMIContainer_group.AmountIn - tmpMIContainer_group.AmountOut)
               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                 AS TFloat) AS Amount
 
         , CAST (tmpMIContainer_group.SummStart AS TFloat)   AS SummStart
@@ -669,11 +669,11 @@ BEGIN
         , tmpMIContainer_group.SummEnd_branch :: TFloat     AS SummEnd_branch
         , CAST ((tmpMIContainer_group.SummIn - tmpMIContainer_group.SummOut)
               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                 AS TFloat) AS Summ
         , CAST ((tmpMIContainer_group.SummIn_branch - tmpMIContainer_group.SummOut_branch)
               * CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_Loss()) THEN -1 ELSE 1 END
-              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
+              * CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN -1 ELSE 1 END
                 AS TFloat) AS Summ_branch
 
         , 0 :: TFloat AS Amount_Change, 0 :: TFloat AS Summ_Change_branch, 0 :: TFloat AS Summ_Change_zavod
@@ -697,8 +697,8 @@ BEGIN
                                                                    WHEN Movement.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To()
                                                                    WHEN Movement.DescId = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_From()
                                                                    WHEN Movement.DescId = zc_Movement_Loss() THEN zc_MovementLinkObject_ArticleLoss()
-                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
-                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
+                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = TRUE THEN zc_MovementLinkObject_From()
+                                                                   WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_SendOnPrice(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND tmpMIContainer_group.isActive = FALSE THEN zc_MovementLinkObject_To()
                                                               END
         LEFT JOIN tmpMLO_By AS MovementLinkObject_PaidKind
                             ON MovementLinkObject_PaidKind.MovementId = tmpMIContainer_group.MovementId
@@ -748,6 +748,7 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, Integer, 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.03.20         * add zc_Movement_SendAsset()
  02.03.20         *
  11.08.15                                        * add inUnitGroupId AND inGoodsGroupId
  30.05.14                                        * ALL

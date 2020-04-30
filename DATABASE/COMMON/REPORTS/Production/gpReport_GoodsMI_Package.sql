@@ -58,8 +58,8 @@ BEGIN
                                  , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId
                                  , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE NULL END :: TDatetime AS OperDate
                                  
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
-                                      + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion() AND MIContainer.IsActive = TRUE AND MLO_DocumentKind.ObjectId > 0 AND MIContainer.ObjectExtId_Analyzer = inUnitId
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = TRUE  THEN      MIContainer.Amount ELSE 0 END
+                                      + CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionUnion()                  AND MIContainer.IsActive = TRUE AND MLO_DocumentKind.ObjectId > 0 AND MIContainer.ObjectExtId_Analyzer = inUnitId
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END
@@ -67,7 +67,7 @@ BEGIN
                                                   THEN MIContainer.Amount
                                              ELSE 0
                                         END) AS Amount_Send_in
-                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Send()            AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset()) AND MIContainer.IsActive = FALSE THEN -1 * MIContainer.Amount ELSE 0 END) AS Amount_Send_out
                                  , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_ProductionUnion(), zc_Movement_Loss())
                                               AND MIContainer.IsActive       = FALSE
                                               AND (MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ReWork()
@@ -91,7 +91,7 @@ BEGIN
                             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                               AND MIContainer.DescId = zc_MIContainer_Count()
                               AND MIContainer.WhereObjectId_Analyzer = inUnitId
-                              AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_Loss())
+                              AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_ProductionUnion(), zc_Movement_Loss())
                               -- AND MIContainer.Amount <> 0
                             GROUP BY MIContainer.ObjectId_Analyzer
                                    , MIContainer.ObjectIntId_Analyzer
@@ -263,6 +263,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.20         * zc_Movement_SendAsset()
  07.06.18         * add inIsDate
  28.06.15                                        * ALL
  04.04.15         *

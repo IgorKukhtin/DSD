@@ -227,7 +227,7 @@ BEGIN
                                   INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                              WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                AND MIContainer.DescId     = zc_MIContainer_Count()
-                               AND MIContainer.MovementDescId = zc_Movement_Send()
+                               AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                                --AND MIContainer.WhereObjectId_Analyzer = inFromId
                              GROUP BY MIContainer.ObjectId_Analyzer, MIContainer.OperDate
                                     , MIContainer.WhereObjectId_Analyzer
@@ -264,7 +264,7 @@ BEGIN
                                                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Order()
                                   INNER JOIN Movement ON Movement.Id = MovementLinkMovement.MovementId
                                                      AND Movement.StatusId = zc_Enum_Status_Complete()
-                                                     AND Movement.DescId = zc_Movement_Send()
+                                                     AND Movement.DescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                             )
 
        , tmpSend AS (SELECT tmpMovementSend.OperDate
@@ -282,7 +282,7 @@ BEGIN
                           INNER JOIN MovementItemContainer AS MIContainer
                                                            ON MIContainer.MovementId = tmpMovementSend.MovementId_Send
                                                           AND MIContainer.DescId     = zc_MIContainer_Count()
-                                                          AND MIContainer.MovementDescId = zc_Movement_Send() 
+                                                          AND MIContainer.MovementDescId IN (zc_Movement_Send(), zc_Movement_SendAsset())
                           INNER JOIN _tmpUnitFrom ON _tmpUnitFrom.UnitId = MIContainer.WhereObjectId_Analyzer
                           INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MIContainer.ObjectId_Analyzer
                      GROUP BY tmpMovementSend.OperDate

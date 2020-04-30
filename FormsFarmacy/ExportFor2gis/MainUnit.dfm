@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' 103UA'
+  Caption = #1069#1082#1089#1087#1086#1088#1090' '#1085#1072' 2gis'
   ClientHeight = 524
   ClientWidth = 909
   Color = clBtnFace
@@ -22,8 +22,6 @@ object MainForm: TMainForm
     Height = 289
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 200
-    ExplicitHeight = 324
     object grtvUnit: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport_Upload

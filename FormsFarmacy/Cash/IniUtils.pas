@@ -42,6 +42,11 @@ function iniPosPortSpeed(ACode : integer):Integer;
 function iniLocalCashRegisterGet: string;
 function iniLocalCashRegisterSave(ACashRegister: string): string;
 
+//Запись информации о старте программы
+procedure InitCashSession;
+function UpdateOption : Boolean;
+procedure AutomaticUpdateProgram;
+
 var gUnitName, gUserName, gPassValue: string;
 var gUnitId : Integer;
 var isMainForm_OLD : Boolean;
@@ -49,7 +54,9 @@ var isMainForm_OLD : Boolean;
 implementation
 
 uses
-  iniFiles, Classes, SysUtils, Forms, vcl.Dialogs;
+  iniFiles, Controls, Classes, SysUtils, Forms, vcl.Dialogs, dsdDB, Data.DB,
+  UnilWin, FormStorage, Updater;
+
 const
   FileName: String = '\DEFAULTS.INI';
   LocalDBNameHead: String = 'FarmacyCashHead.dbf';
@@ -298,6 +305,70 @@ begin
       f.Free;
     end;
   End;
+end;
+
+procedure InitCashSession;
+var
+  sp : TdsdStoredProc;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpInsertUpdate_CashSession';
+      sp.Params.Clear;
+      sp.Params.AddParam('inCashSessionId', ftString, ptInput, iniLocalGUIDGet);
+      sp.Execute;
+    except
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+function UpdateOption : Boolean;
+var
+  sp : TdsdStoredProc;
+begin
+  sp := TdsdStoredProc.Create(nil);
+  try
+    try
+      sp.OutputType := otResult;
+      sp.StoredProcName := 'gpUpdate_CashSession_StartUpdate';
+      sp.Params.Clear;
+      sp.Params.AddParam('inCashSessionId', ftString, ptInput, iniLocalGUIDGet);
+      sp.Params.AddParam('outStartOk', ftBoolean, ptOutput, False);
+      sp.Params.AddParam('outMessage', ftString, ptOutput, '');
+      sp.Execute;
+      Result := sp.Params.ParamByName('outStartOk').Value;
+      if not Result then
+      begin
+          ShowMessage(sp.Params.ParamByName('outMessage').Value);
+      end;
+    except
+    end;
+  finally
+    freeAndNil(sp);
+  end;
+end;
+
+procedure AutomaticUpdateProgram;
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
+begin
+  try
+    Application.ProcessMessages;
+    BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+    LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+    if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+       ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+    begin
+      if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
+        if UpdateOption then TUpdater.AutomaticUpdateProgramStart;
+    end;
+  except
+    on E: Exception do
+       ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику.'#13#10 + E.Message);
+  end;
 end;
 
 

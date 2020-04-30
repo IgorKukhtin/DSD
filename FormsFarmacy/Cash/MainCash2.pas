@@ -468,6 +468,8 @@ type
     mdCheckNDSKINDID: TIntegerField;
     MainGoodsAnalogATC: TcxGridDBColumn;
     MainGoodsActiveSubstance: TcxGridDBColumn;
+    actUpdateProgram: TAction;
+    N41: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -602,6 +604,7 @@ type
     procedure actTechnicalRediscountExecute(Sender: TObject);
     procedure actPromoCodeDoctorExecute(Sender: TObject);
     procedure actSaveHardwareDataExecute(Sender: TObject);
+    procedure actUpdateProgramExecute(Sender: TObject);
   private
     isScaner: Boolean;
     FSoldRegim: Boolean;
@@ -786,7 +789,7 @@ uses CashFactory, IniUtils, CashCloseDialog, VIPDialog, DiscountDialog,
   LocalWorkUnit, Splash, DiscountService, UnilWin, ListDiff, ListGoods,
   MediCard.Intf, PromoCodeDialog, ListDiffAddGoods, TlHelp32, EmployeeWorkLog,
   GoodsToExpirationDate, ChoiceGoodsAnalog, Helsi, RegularExpressions,
-  PUSHMessageCash,
+  PUSHMessageCash, Updater,
   EnterRecipeNumber, CheckHelsiSign, CheckHelsiSignAllUnit,
   EmployeeScheduleCash,
   EnterLoyaltyNumber, Report_ImplementationPlanEmployeeCash,
@@ -4859,6 +4862,12 @@ begin
     ShowMessage('Текущий чек пустой!');
     exit;
   End;
+  if (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+  begin
+    ShowMessage('Чек по СП в VIP оправлять запрещено!.');
+    exit;
+  end;
+    exit;
   if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
     exit;
   //
@@ -5055,6 +5064,68 @@ begin
       ShowMessage(E.Message);
     end;
   end;
+end;
+
+procedure TMainCashForm2.actUpdateProgramExecute(Sender: TObject);
+var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
+
+  function ProcessExists(exeFileName: string): Boolean;
+  var
+    ContinueLoop: BOOL;
+    FSnapshotHandle: THandle;
+    FProcessEntry32: TProcessEntry32;
+  begin
+    FSnapshotHandle := CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    FProcessEntry32.dwSize := SizeOf(FProcessEntry32);
+    ContinueLoop := Process32First(FSnapshotHandle, FProcessEntry32);
+    Result := false;
+    while Integer(ContinueLoop) <> 0 do
+    begin
+      if ((UpperCase(ExtractFileName(FProcessEntry32.szExeFile))
+        = UpperCase(exeFileName)) or (UpperCase(FProcessEntry32.szExeFile)
+        = UpperCase(exeFileName))) then
+      begin
+        Result := True;
+      end;
+      ContinueLoop := Process32Next(FSnapshotHandle, FProcessEntry32);
+    end;
+    CloseHandle(FSnapshotHandle);
+  end;
+
+  begin
+  if not gc_User.Local then
+  Begin
+    try
+      Application.ProcessMessages;
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+      LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+      begin
+        if (MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk) then
+        begin
+          if not UpdateOption then Exit;
+          PostMessage(HWND_BROADCAST, FM_SERVISE, 2, 9); // только 2 форма
+          Step := 0;
+          while ProcessExists('FarmacyCashServise.exe') do
+          begin
+            Sleep(2000);
+            Inc(Step);
+            if Step > 10 then
+            begin
+              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 мин.');
+              Exit;
+            end;
+          end;
+
+          TUpdater.AutomaticUpdateProgramStart;
+        end;
+      end;
+    except
+      on E: Exception do
+         ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
+    end;
+  End;
 end;
 
 procedure TMainCashForm2.actUpdateRemainsExecute(Sender: TObject);
