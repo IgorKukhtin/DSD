@@ -93,6 +93,10 @@ type
     spComplete_Filter: TdsdStoredProc;
     actExecComplete_Filter: TdsdExecStoredProc;
     dxBarButton5: TdxBarButton;
+    actSetErasedFilter: TMultiAction;
+    actExecSetErased_Filter: TdsdExecStoredProc;
+    spSetErased_Filter: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

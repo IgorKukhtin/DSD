@@ -111,7 +111,7 @@ begin
         exit;
        end;
 
-    if not gc_User.Local then
+    if not gc_User.Local and (ParamStr(2) = '') then
     Begin
       TUpdater.AutomaticUpdateProgram;
       if ParamStr(2) = '' then TUpdater.AutomaticCheckConnect;

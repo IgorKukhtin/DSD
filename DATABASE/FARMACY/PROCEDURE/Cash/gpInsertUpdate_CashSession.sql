@@ -15,10 +15,20 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
    vbUserId:= lpGetUserBySession (inSession);
 
-    PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
-                                      , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
-                                      , inUserId        := vbUserId
-                                       );
+    IF EXISTS(SELECT 1 FROM CashSession WHERE CashSession.Id = inCashSessionId)
+    THEN
+        UPDATE CashSession SET
+            StartUpdate = CURRENT_TIMESTAMP
+          , UserId      = vbUserId
+        WHERE
+            CashSession.Id = inCashSessionId;
+    ELSE
+      PERFORM lpInsertUpdate_CashSession (inCashSessionId := inCashSessionId
+                                        , inDateConnect   := CURRENT_TIMESTAMP :: TDateTime
+                                        , inUserId        := vbUserId
+                                         );    
+    END IF;
+
 
 END;
 $BODY$

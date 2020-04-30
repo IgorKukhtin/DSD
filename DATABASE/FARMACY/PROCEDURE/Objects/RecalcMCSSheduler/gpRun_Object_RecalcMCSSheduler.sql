@@ -1,15 +1,15 @@
 -- Function: gpRun_Object_RecalcMCSSheduler()
 
-DROP FUNCTION IF EXISTS gpRun_Object_RecalcMCSSheduler(TVarChar);
+DROP FUNCTION IF EXISTS gpRun_Object_RecalcMCSSheduler(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpRun_Object_RecalcMCSSheduler(
+    IN inCalcType    Integer,       -- тип расчета 1 - для СУН, 2 - после СУН, 3 - обычный расчет
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$
   DECLARE vbHolidays Boolean;
   DECLARE vbUserId   Integer;
-  DECLARE vbCalcType    Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_ImportType());
@@ -21,16 +21,6 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Выполнение полного пересчета вам запрещено.';
   END IF;
    
-  IF CURRENT_TIME < '07:30'::TIME
-  THEN
-    vbCalcType := 1;
-  ELSEIF CURRENT_TIME <= '08:30'
-  THEN
-    vbCalcType := 2;
-  ELSE
-    vbCalcType := 3;  
-  END IF;
-  
   IF EXISTS(SELECT
                  TRUE       AS Holidays
             FROM
@@ -178,11 +168,11 @@ BEGIN
                                               WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
                                                 AND Object_RecalcMCSSheduler.isErased = False
                                                 AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False)
-    AND (vbCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
+    AND (inCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
                          OR COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0)
-     OR  vbCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
+     OR  inCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
                         AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) <> 0
-     OR  vbCalcType = 3);
+     OR  inCalcType = 3);
 
 
     -- По отдельным аптекам основной расчет 
@@ -274,11 +264,11 @@ BEGIN
     AND COALESCE (ObjectFloat_Day.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False
-    AND (vbCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
+    AND (inCalcType = 1 AND (COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) = 0
                          OR COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) = 0)
-     OR  vbCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
+     OR  inCalcType = 2 AND COALESCE (ObjectFloat_PeriodSun.ValueData::Integer, 0) <> 0
                         AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) <> 0
-     OR  vbCalcType = 3);
+     OR  inCalcType = 3);
     
     -- По сетям без вынесенных отдельно расчет по СУН
   PERFORM  gpRecalcMCS(inUnitId := ObjectLink_Unit_Juridical_Run.ObjectId,
@@ -405,7 +395,7 @@ BEGIN
                                               WHERE Object_RecalcMCSSheduler.DescId = zc_Object_RecalcMCSSheduler()
                                                 AND Object_RecalcMCSSheduler.isErased = False
                                                 AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False)
-    AND vbCalcType = 1;
+    AND inCalcType = 1;
 
 
     -- По отдельным аптекам расчет по СУН 
@@ -497,14 +487,14 @@ BEGIN
     AND COALESCE (ObjectFloat_DaySun.ValueData::Integer, 0) <> 0
     AND COALESCE (ObjectBoolean_Unit_AutoMCS.ValueData, FALSE) = TRUE
     AND COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = False
-    AND vbCalcType = 1;
+    AND inCalcType = 1;
      
   --  RAISE EXCEPTION 'Выполнено';    
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpRun_Object_RecalcMCSSheduler(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpRun_Object_RecalcMCSSheduler(Integer, TVarChar) OWNER TO postgres;
 
 -------------------------------------------------------------------------------
 /*
@@ -515,4 +505,4 @@ ALTER FUNCTION gpRun_Object_RecalcMCSSheduler(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpRun_Object_RecalcMCSSheduler ('3')
+-- SELECT * FROM gpRun_Object_RecalcMCSSheduler (3, '3')

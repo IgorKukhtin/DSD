@@ -22,6 +22,8 @@ BEGIN
   vbUserId:= lpGetUserBySession (inSession);
   inExpirationDate := DATE_TRUNC ('DAY', inExpirationDate);
 
+  RAISE EXCEPTION 'Ошибка. Изменять срока звпрещено.';
+
   IF NOT EXISTS(SELECT 1 FROM Container
                 WHERE Container.DescId    = zc_Container_CountPartionDate()
                   AND Container.Id        = inContainerID)

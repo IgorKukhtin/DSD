@@ -5111,13 +5111,13 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
           begin
             Sleep(2000);
             Inc(Step);
-            if Step > 10 then
+            if Step > 5 then
             begin
-              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 мин.');
+              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 минут.');
               Exit;
             end;
           end;
-
+          InitCashSession;
           TUpdater.AutomaticUpdateProgramStart;
         end;
       end;

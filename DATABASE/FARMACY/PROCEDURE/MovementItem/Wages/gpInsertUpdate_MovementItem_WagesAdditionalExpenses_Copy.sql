@@ -64,6 +64,7 @@ BEGIN
                                                                , inSummaSP             := 0                                            -- СП
                                                                , inSummaOther          := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
                                                                , inValidationResults   := 0                                            -- Результаты проверки
+                                                               , inSummaFullChargeFact := 0                                            -- Полное списание факт
                                                                , inisIssuedBy          := False                                        -- Выдано
                                                                , inComment             := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
                                                                , inUserId              := vbUserId                                     -- пользователь
@@ -102,4 +103,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_WagesAdditionalExpenses_Copy (, inSession:= '2')
-
