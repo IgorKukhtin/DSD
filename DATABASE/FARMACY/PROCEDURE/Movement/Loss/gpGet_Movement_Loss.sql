@@ -8,11 +8,11 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Loss(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalSumm TFloat
              , UnitId Integer, UnitName TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
              , Comment TVarChar
-             , RetailFund TFloat, SummaFund TFloat, SummaFundAvailable TFloat
+             , RetailFund TFloat, RetailFundUsed TFloat, RetailFundResidue TFloat, SummaFund TFloat, SummaFundAvailable TFloat
               )
 AS
 $BODY$
@@ -33,12 +33,15 @@ BEGIN
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , CAST (0 AS TFloat)                               AS TotalCount
+             , CAST (0 AS TFloat)                               AS TotalSumm
              , 0                     				            AS UnitId
              , CAST ('' AS TVarChar) 				            AS UnitName
              , 0                     				            AS ArticleLossId
              , CAST ('' AS TVarChar) 				            AS ArticleLossName
              , CAST ('' AS TVarChar) 		                    AS Comment
              , CAST (NULL AS TFloat)                            AS RetailFund
+             , CAST (NULL AS TFloat)                            AS RetailFundUsed
+             , CAST (NULL AS TFloat)                            AS RetailFundResidue
              , CAST (NULL AS TFloat)                            AS SummaFund
              , CAST (0 AS TFloat)                               AS SummaFundAvailable
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -51,19 +54,22 @@ BEGIN
            , Object_Status.ObjectCode                           AS StatusCode
            , Object_Status.ValueData                            AS StatusName
            , MovementFloat_TotalCount.ValueData                 AS TotalCount
+           , Round(MovementFloat_TotalSumm.ValueData, 2)::TFloat               AS TotalSumm
            , Object_Unit.Id                                     AS FromId
            , Object_Unit.ValueData                              AS FromName
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
            , COALESCE (MovementString_Comment.ValueData,'')     ::TVarChar AS Comment
+           , COALESCE(ObjectFloat_Retail_Fund.ValueData , 0)::TFloat            AS RetailFund
+           , COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0)::TFloat         AS RetailFundUsed
            , NULLIF(COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
-             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0), 0)::TFloat     AS RetailFund
+             COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0), 0)::TFloat     AS RetailFundResidue
            , NULLIF(MovementFloat_SummaFund.ValueData, 0)::TFloat               AS SummaFund
            , CASE WHEN (COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
              COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
              COALESCE(MovementFloat_SummaFund.ValueData, 0)) > 
-             COALESCE (MovementFloat_TotalSummSale.ValueData, 0)
-             THEN MovementFloat_TotalSummSale.ValueData
+             COALESCE (Round(MovementFloat_TotalSumm.ValueData, 2), 0)
+             THEN Round(MovementFloat_TotalSumm.ValueData, 2)
              ELSE COALESCE(ObjectFloat_Retail_Fund.ValueData , 0) -
              COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0) +                
              COALESCE(MovementFloat_SummaFund.ValueData, 0) END::TFloat         AS SummaFundAvailable
@@ -76,9 +82,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_SummaFund
                                     ON MovementFloat_SummaFund.MovementId =  Movement.Id
                                    AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
-                                    ON MovementFloat_TotalSummSale.MovementId = Movement.Id
-                                   AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id

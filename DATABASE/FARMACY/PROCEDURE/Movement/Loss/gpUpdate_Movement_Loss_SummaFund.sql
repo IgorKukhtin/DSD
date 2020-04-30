@@ -5,12 +5,9 @@ DROP FUNCTION IF EXISTS gpUpdate_Movement_Loss_SummaFund  (Integer, TFloat, TVar
 CREATE OR REPLACE FUNCTION gpUpdate_Movement_Loss_SummaFund(
     IN inMovementId           Integer,  -- ключ Документа
     IN inSummaFund            TFloat,   -- Сумма фонда
-   OUT outRetailFund          TFloat,   -- Остаток фонда
-   OUT outSummaFund           TFloat,   -- Использовано
-   OUT outSummaFundAvailable  TFloat,   -- Можно использовать
     IN inSession              TVarChar  -- сессия пользователя
 )
-RETURNS RECORD
+RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId             Integer;
@@ -39,7 +36,7 @@ BEGIN
     SELECT Movement.StatusId
          , Movement.OperDate
          , MovementLinkObject_Unit.ObjectId
-         , COALESCE (MovementFloat_TotalSummSale.ValueData, 0)::TFloat        AS TotalSumm
+         , COALESCE(Round(MovementFloat_TotalSumm.ValueData, 2), 0)::TFloat   AS TotalSumm
          , COALESCE(ObjectFloat_Retail_Fund.ValueData , 0)::TFloat            AS RetailFund
          , COALESCE(ObjectFloat_Retail_FundUsed.ValueData, 0)::TFloat         AS RetailFundUsed
          , COALESCE(MovementFloat_SummaFund.ValueData, 0)::TFloat             AS SummaFund
@@ -57,9 +54,9 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_SummaFund
                                  ON MovementFloat_SummaFund.MovementId =  Movement.Id
                                 AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
-         LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
-                                 ON MovementFloat_TotalSummSale.MovementId = Movement.Id
-                                AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                 ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                       ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                      AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
@@ -87,9 +84,9 @@ BEGIN
     IF inSummaFund > 0
     THEN
 
-      IF vbStatusId = zc_Enum_Status_Erased()
+      IF vbStatusId <> zc_Enum_Status_Complete()
       THEN
-        RAISE EXCEPTION 'Ошибка. Докумнт удален изменение суммы из фонда запрещено.';
+        RAISE EXCEPTION 'Ошибка. Докумнт не проведен изменение суммы из фонда запрещено.';
       END IF;
 
       IF inSummaFund > vbTotalSumm
@@ -117,11 +114,6 @@ BEGIN
     THEN
       PERFORM gpInsertUpdate_MovementItem_WagesFullCharge (vbUnitId, vbOperDate, inSession); 
     END IF;
-
-    outRetailFund := vbRetailFund - vbRetailFundUsed + vbSummaFund - inSummaFund;
-    outSummaFund := inSummaFund;
-    outSummaFundAvailable := CASE WHEN (vbRetailFund - vbRetailFundUsed + vbSummaFund) > vbTotalSumm THEN vbTotalSumm
-                                  ELSE vbRetailFund - vbRetailFundUsed + vbSummaFund END;
 
 END;
 $BODY$

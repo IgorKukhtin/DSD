@@ -54,7 +54,8 @@ BEGIN
     THEN
 
       -- Полное списание остаток сумм на текущий месяц
-      vbSummaTMP := COALESCE((SELECT SUM(MIF_SummaFullChargeMonth.ValueData - COALESCE(MIF_SummaFullChargeFact.ValueData, 0))
+      vbSummaTMP := COALESCE((SELECT SUM(MIF_SummaFullChargeMonth.ValueData - COALESCE(MIF_SummaFullChargeFact.ValueData, COALESCE(MIF_SummaFullCharge.ValueData, 0) + 
+                                                                              COALESCE(MIF_SummaFullChargeMonth.ValueData, 0), 0))
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
                                                           AND MovementItem.MovementId = Movement.Id
@@ -62,6 +63,9 @@ BEGIN
                                    INNER JOIN MovementItemFloat AS MIF_SummaFullChargeMonth
                                                                 ON MIF_SummaFullChargeMonth.MovementItemId = MovementItem.Id
                                                                AND MIF_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+                                   INNER JOIN MovementItemFloat AS MIF_SummaFullCharge
+                                                                ON MIF_SummaFullCharge.MovementItemId = MovementItem.Id
+                                                               AND MIF_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
                                    LEFT JOIN MovementItemFloat AS MIF_SummaFullChargeFact
                                                                ON MIF_SummaFullChargeFact.MovementItemId = MovementItem.Id
                                                               AND MIF_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
@@ -115,10 +119,21 @@ BEGIN
                                          AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaMoneyBoxUsed())), 0);
 
       -- Сумма ТП + ПС
-      vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
-                            FROM MovementItemFloat AS MIFloat_SummaSUN1
-                            WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
-                              AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);
+                              
+      IF EXISTS(SELECT 1 FROM MovementItemFloat 
+                WHERE MovementItemFloat.MovementItemId = inMovementItemId
+                  AND MovementItemFloat.DescId = zc_MIFloat_SummaFullChargeFact())
+      THEN
+        vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
+                              FROM MovementItemFloat AS MIFloat_SummaSUN1
+                              WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
+                                AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);      
+      ELSE
+        vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
+                              FROM MovementItemFloat AS MIFloat_SummaSUN1
+                              WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
+                                AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeMonth(), zc_MIFloat_SummaFullCharge())), 0);      
+      END IF;
 
 
       IF vbSumma2 < 0 AND vbSummaMoneyBox  > 0

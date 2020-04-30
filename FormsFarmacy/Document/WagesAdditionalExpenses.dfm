@@ -12,17 +12,17 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Width = 898
     Height = 463
     ExplicitTop = 77
-    ExplicitWidth = 877
+    ExplicitWidth = 898
     ExplicitHeight = 463
     ClientRectBottom = 463
     ClientRectRight = 898
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 877
+      ExplicitWidth = 898
       ExplicitHeight = 439
       inherited cxGrid: TcxGrid
         Width = 898
         Height = 439
-        ExplicitWidth = 877
+        ExplicitWidth = 898
         ExplicitHeight = 439
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.DataSource = nil
@@ -355,7 +355,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
     Width = 898
     Height = 51
     TabOrder = 3
-    ExplicitWidth = 877
+    ExplicitWidth = 898
     ExplicitHeight = 51
     inherited edInvNumber: TcxTextEdit
       Top = 22
@@ -1072,6 +1072,14 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummaTotal'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMoneyBoxUsed'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaMoneyBoxUsed'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

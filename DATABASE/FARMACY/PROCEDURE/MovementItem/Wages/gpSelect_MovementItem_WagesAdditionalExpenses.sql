@@ -175,7 +175,8 @@ BEGIN
                    COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
                  , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                      COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
-                 , MIFloat_SummaFullChargeFact.ValueData AS SummaFullChargeFact
+                 , COALESCE(MIFloat_SummaFullChargeFact.ValueData, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                                   COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal
@@ -330,7 +331,8 @@ BEGIN
                    COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
                  , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                      COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
-                 , MIFloat_SummaFullChargeFact.ValueData AS SummaFullChargeFact
+                 , COALESCE(MIFloat_SummaFullChargeFact.ValueData, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                                   COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
 
                  , MovementItem.Amount                 AS SummaTotal

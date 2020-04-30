@@ -18,8 +18,7 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
     vbUserId := lpGetUserBySession (inSession);
 
-    IF 3 <> inSession::Integer AND 375661 <> inSession::Integer AND 4183126 <> inSession::Integer AND 
-      8001630 <> inSession::Integer AND 9560329 <> inSession::Integer
+    IF inSession::Integer NOT IN (3, 375661, 4183126, 8001630, 9560329, 8051421, 14080152 )
     THEN
       RAISE EXCEPTION 'Изменение <Вид НДС> вам запрещено.';
     END IF;
