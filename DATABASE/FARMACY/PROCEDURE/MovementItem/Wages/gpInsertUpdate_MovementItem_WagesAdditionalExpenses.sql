@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
     IN inisIssuedBy               Boolean   , -- Выдано
     IN inComment                  TVarChar  , -- Примечание
    OUT outSummaTotal              TFloat    , -- Итого
+   OUT outSummaFullChargeFact     TFloat    , -- Полное списание факт
    OUT outSummaMoneyBoxUsed       TFloat    , -- Использовано из кошелька
     IN inSession                  TVarChar    -- сессия пользователя
 )
@@ -35,7 +36,13 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
     END IF;
     
-    IF inSummaFullChargeFact > 0
+    IF inSummaFullChargeFact = 1.0
+    THEN
+        inSummaFullChargeFact :=  COALESCE((SELECT SUM(MovementItemFloat.ValueData)
+                                            FROM MovementItemFloat
+                                            WHERE MovementItemFloat.MovementItemId = ioId
+                                              AND MovementItemFloat.DescId in (zc_MIFloat_SummaFullChargeMonth(), zc_MIFloat_SummaFullCharge())), 0);
+    ELSEIF inSummaFullChargeFact > 0
     THEN
         RAISE EXCEPTION 'Ошибка.Сумма полного списания факт должна быть меньше или равна 0';
     END IF;
@@ -143,6 +150,7 @@ BEGIN
                                                                  );
 
    outSummaTotal := COALESCE((SELECT Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0);
+   outSummaFullChargeFact := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaFullChargeFact() AND MovementItemID = ioId), 0);
    outSummaMoneyBoxUsed := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaMoneyBoxUsed() AND MovementItemID = ioId), 0);
    
 END;

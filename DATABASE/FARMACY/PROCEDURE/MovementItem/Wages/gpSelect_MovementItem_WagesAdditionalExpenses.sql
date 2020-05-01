@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WagesAdditionalExpenses(
 RETURNS TABLE (Id Integer
              , UnitID Integer, UnitCode Integer, UnitName TVarChar
              , SummaCleaning TFloat, SummaSP TFloat, SummaOther TFloat, SummaValidationResults TFloat, SummaSUN1 TFloat
-             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaFullChargeFact TFloat, SummaMoneyBoxUsed TFloat
+             , SummaTechnicalRediscount TFloat, SummaMoneyBox TFloat, SummaFullCharge TFloat, SummaFullChargeFact TFloat, SummaMoneyBoxUsed TFloat, SummaMoneyBoxResidual TFloat
              , SummaTotal TFloat
              , isIssuedBy Boolean, MIDateIssuedBy TDateTime
              , Comment TVarChar
@@ -175,9 +175,10 @@ BEGIN
                    COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
                  , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                      COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
-                 , COALESCE(MIFloat_SummaFullChargeFact.ValueData, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
-                                                                   COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat AS SummaFullChargeFact
+                 , MIFloat_SummaFullChargeFact.ValueData                                                                        AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
+                 , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
+                   COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) - COALESCE(MIFloat_SummaMoneyBoxUsed.ValueData, 0) END::TFloat AS SummaMoneyBoxResidual
 
                  , MovementItem.Amount                 AS SummaTotal
 
@@ -331,9 +332,10 @@ BEGIN
                    COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) END::TFloat AS SummaMoneyBox
                  , COALESCE(tmpFullCharge.SummWages, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
                                                      COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat               AS SummaFullCharge
-                 , COALESCE(MIFloat_SummaFullChargeFact.ValueData, COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
-                                                                   COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat AS SummaFullChargeFact
+                 , MIFloat_SummaFullChargeFact.ValueData                                                                        AS SummaFullChargeFact
                  , MIFloat_SummaMoneyBoxUsed.ValueData AS SummaMoneyBoxUsed
+                 , CASE WHEN COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) > 0 THEN 
+                   COALESCE(MIFloat_SummaMoneyBox.ValueData, 0) + COALESCE(MIFloat_SummaMoneyBoxMonth.ValueData, 0) - COALESCE(MIFloat_SummaMoneyBoxUsed.ValueData, 0) END::TFloat AS SummaMoneyBoxResidual
 
                  , MovementItem.Amount                 AS SummaTotal
 

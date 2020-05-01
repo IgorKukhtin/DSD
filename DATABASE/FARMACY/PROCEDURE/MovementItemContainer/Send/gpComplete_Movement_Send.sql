@@ -29,6 +29,7 @@ $BODY$
   DECLARE vbisDefSUN      Boolean;
   DECLARE vbisSUN      Boolean;
   DECLARE vbisReceived Boolean;
+  DECLARE vbPartionDateKindId Integer;
 BEGIN
     vbUserId:= inSession;
 
@@ -48,7 +49,8 @@ BEGIN
         Movement_To.ObjectId AS Unit_To,
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
-        COALESCE (MovementBoolean_Received.ValueData, FALSE)
+        COALESCE (MovementBoolean_Received.ValueData, FALSE),
+        COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
         
     INTO
         outOperDate,
@@ -57,8 +59,8 @@ BEGIN
         vbUnit_To,
         vbisDefSUN,
         vbisSUN,
-        vbisReceived
-
+        vbisReceived,
+        vbPartionDateKindId
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -75,6 +77,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_SUN
                                   ON MovementBoolean_SUN.MovementId = Movement.Id
                                  AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                     ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                    AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
     WHERE Movement.Id = inMovementId;
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -89,6 +94,11 @@ BEGIN
       IF COALESCE (vbUserUnitId, 0) = 0
       THEN 
         RAISE EXCEPTION 'Ошибка. Не найдено подразделение сотрудника.';     
+      END IF;     
+
+      IF vbPartionDateKindId = zc_Enum_PartionDateKind_0() OR vbUnit_To = 11299914 
+      THEN 
+        RAISE EXCEPTION 'Ошибка. Проводить перемещение на виртуальный склад сроков вам запрещено.';     
       END IF;     
 
       IF COALESCE (vbUnit_From, 0) <> COALESCE (vbUserUnitId, 0) AND COALESCE (vbUnit_To, 0) <> COALESCE (vbUserUnitId, 0) 

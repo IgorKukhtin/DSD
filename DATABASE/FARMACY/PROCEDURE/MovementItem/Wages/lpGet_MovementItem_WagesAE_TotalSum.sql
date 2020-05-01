@@ -54,8 +54,7 @@ BEGIN
     THEN
 
       -- Полное списание остаток сумм на текущий месяц
-      vbSummaTMP := COALESCE((SELECT SUM(MIF_SummaFullChargeMonth.ValueData - COALESCE(MIF_SummaFullChargeFact.ValueData, COALESCE(MIF_SummaFullCharge.ValueData, 0) + 
-                                                                              COALESCE(MIF_SummaFullChargeMonth.ValueData, 0), 0))
+      vbSummaTMP := COALESCE((SELECT SUM(COALESCE(MIF_SummaFullChargeMonth.ValueData, 0) - COALESCE(MIF_SummaFullChargeFact.ValueData, 0))
                               FROM Movement
                                    INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
                                                           AND MovementItem.MovementId = Movement.Id
@@ -120,20 +119,10 @@ BEGIN
 
       -- Сумма ТП + ПС
                               
-      IF EXISTS(SELECT 1 FROM MovementItemFloat 
-                WHERE MovementItemFloat.MovementItemId = inMovementItemId
-                  AND MovementItemFloat.DescId = zc_MIFloat_SummaFullChargeFact())
-      THEN
-        vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
-                              FROM MovementItemFloat AS MIFloat_SummaSUN1
-                              WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
-                                AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);      
-      ELSE
-        vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
-                              FROM MovementItemFloat AS MIFloat_SummaSUN1
-                              WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
-                                AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeMonth(), zc_MIFloat_SummaFullCharge())), 0);      
-      END IF;
+      vbSumma2 := COALESCE((SELECT SUM(MIFloat_SummaSUN1.ValueData)
+                            FROM MovementItemFloat AS MIFloat_SummaSUN1
+                            WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
+                              AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);      
 
 
       IF vbSumma2 < 0 AND vbSummaMoneyBox  > 0

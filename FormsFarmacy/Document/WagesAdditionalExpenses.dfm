@@ -141,6 +141,11 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = SummaFullChargeFact
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = SummaMoneyBoxResidual
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.Footer = True
@@ -153,7 +158,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             end
             item
               Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080' (1-2 '#1084#1072#1103' '#1091#1078#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1055#1057')'
-              Width = 350
+              Width = 372
             end
             item
             end>
@@ -293,6 +298,19 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             Position.ColIndex = 4
             Position.RowIndex = 0
           end
+          object SummaMoneyBoxResidual: TcxGridDBBandedColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1087#1086' '#1082#1086#1087#1080#1083#1082#1080
+            DataBinding.FieldName = 'SummaMoneyBoxResidual'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 76
+            Position.BandIndex = 2
+            Position.ColIndex = 5
+            Position.RowIndex = 0
+          end
           object SummaTotal: TcxGridDBBandedColumn
             Caption = #1048#1090#1086#1075#1086
             DataBinding.FieldName = 'SummaTotal'
@@ -387,10 +405,23 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
       ExplicitHeight = 22
     end
     object cxLabel3: TcxLabel
-      Left = 604
-      Top = 23
+      Left = 484
+      Top = 2
       Anchors = [akTop, akRight]
       Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1055#1057' '#1085#1072' '#1082#1083#1072#1076#1086#1074#1097#1080#1082#1072' '#1085#1077' '#1083#1086#1078#1080#1090#1089#1103
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -13
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = [fsBold]
+      Style.IsFontAssigned = True
+    end
+    object cxLabel4: TcxLabel
+      Left = 484
+      Top = 23
+      Anchors = [akTop, akRight]
+      Caption = #1047#1085#1072#1095#1077#1085#1080#1077' 1 '#1074' '#1089#1090#1086#1083#1073#1094#1077' '#1060#1072#1082#1090' '#1055#1057' - '#1055#1057' '#1091#1095#1080#1090#1099#1074#1072#1077#1090#1089#1103' '#1087#1086#1083#1085#1086#1089#1090#1100#1102
       ParentFont = False
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
@@ -1072,6 +1103,14 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummaTotal'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaFullChargeFact'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaFullChargeFact'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

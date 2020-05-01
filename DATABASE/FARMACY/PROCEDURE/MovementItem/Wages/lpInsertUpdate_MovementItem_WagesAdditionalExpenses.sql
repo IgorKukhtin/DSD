@@ -18,7 +18,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbSumma TFloat;   
 BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -40,33 +39,9 @@ BEGIN
 
      -- сохранили свойство <Прочее>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inSummaValidationResults);
+            
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, inSummaFullChargeFact);
     
-    vbSumma := COALESCE((SELECT SUM(MovementItemFloat.ValueData)
-                              FROM MovementItemFloat 
-                              WHERE MovementItemFloat.MovementItemId = ioId
-                                AND MovementItemFloat.DescId in (zc_MIFloat_SummaFullChargeMonth(), zc_MIFloat_SummaFullCharge())), 0);      
-        
-    IF inSummaFullChargeFact = vbSumma
-    THEN
-      IF EXISTS(SELECT 1 FROM MovementItemFloat 
-                WHERE MovementItemFloat.MovementItemId = ioId
-                  AND MovementItemFloat.DescId = zc_MIFloat_SummaFullChargeFact())
-      THEN
-        DELETE FROM MovementItemFloat 
-        WHERE MovementItemFloat.MovementItemId = ioId
-          AND MovementItemFloat.DescId = zc_MIFloat_SummaFullChargeFact();
-      END IF;    
-    ELSE
-     
-      -- сохранили свойство <Полное списание факт>
-      IF inSummaFullChargeFact = 0
-      THEN
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, vbSumma);      
-      END IF;
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, inSummaFullChargeFact);
-    END IF;
-    
-
     -- сохранили <Элемент документа>
     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, lpGet_MovementItem_WagesAE_TotalSum (ioId, inUserId), 0);
 
@@ -103,11 +78,3 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- 
-
-/*
-
-SELECT * FROM MovementItemFloat 
-                WHERE MovementItemFloat.MovementItemId = 333326971
-                  AND MovementItemFloat.DescId = zc_MIFloat_SummaFullChargeFact()
-                  
-*/                  

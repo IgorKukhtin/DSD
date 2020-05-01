@@ -64,18 +64,19 @@ BEGIN
     PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSun(), inUnitID, T1.SummaMoneyBoxMonth)
           , lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_MoneyBoxSunUsed(), inUnitID, T1.SummaMoneyBoxUsed)
     FROM (SELECT COALESCE(SUM(MIF_SummaMoneyBoxMonth.ValueData), 0)       AS SummaMoneyBoxMonth
-               ,  COALESCE(SUM(MIF_SummaMoneyBoxUsed.ValueData), 0)       AS SummaMoneyBoxUsed
+               , COALESCE(SUM(MIF_SummaMoneyBoxUsed.ValueData), 0)        AS SummaMoneyBoxUsed
           FROM Movement
                INNER JOIN MovementItem ON MovementItem.DescId = zc_MI_Sign()
                                       AND MovementItem.MovementId = Movement.Id
                                       AND MovementItem.ObjectId = inUnitID
-               INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
-                                            ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
-                                           AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
-               INNER JOIN MovementItemFloat AS MIF_SummaMoneyBoxUsed
-                                            ON MIF_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
-                                           AND MIF_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
-          WHERE Movement.DescId = zc_Movement_Wages()) AS T1;
+               LEFT JOIN MovementItemFloat AS MIF_SummaMoneyBoxMonth
+                                           ON MIF_SummaMoneyBoxMonth.MovementItemId = MovementItem.Id
+                                          AND MIF_SummaMoneyBoxMonth.DescId = zc_MIFloat_SummaMoneyBoxMonth()
+               LEFT JOIN MovementItemFloat AS MIF_SummaMoneyBoxUsed
+                                           ON MIF_SummaMoneyBoxUsed.MovementItemId = MovementItem.Id
+                                          AND MIF_SummaMoneyBoxUsed.DescId = zc_MIFloat_SummaMoneyBoxUsed()
+          WHERE Movement.DescId = zc_Movement_Wages()) AS T1;          
+
 
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, inUserId, vbIsInsert);
