@@ -1857,7 +1857,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       ImageIndex = 67
     end
     object actPrintDays1: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintDays'
       MoveParams = <
         item
           FromParam.Name = 'isDetail'
@@ -1953,7 +1953,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDays2: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintDays'
       MoveParams = <
         item
           FromParam.Name = 'isDetail'
@@ -2049,7 +2049,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDays4: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintDays'
       MoveParams = <
         item
           FromParam.Name = 'isDetail'
@@ -2145,7 +2145,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDays3: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintDays'
       MoveParams = <
         item
           FromParam.Name = 'isDetail'
@@ -2241,7 +2241,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
       PrinterNameParam.MultiSelectSeparator = ','
     end
     object actPrintDays1_test: TdsdPrintAction
-      Category = 'DSDLib'
+      Category = 'PrintDays'
       MoveParams = <
         item
           FromParam.Name = 'isDetail'

@@ -29,7 +29,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := CASE WHEN inSession = '-12345' THEN inSession :: Integer ELSE lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Promo()) END;
 
-    vbTaxPromo := (REPLACE (inTaxPromo, '%', '')) :: TFloat;
+    vbTaxPromo := (REPLACE(REPLACE ('15,33 %', '%', ''), ',', '.')) :: TFloat;
     vbGoodsId  := (SELECT MovementItem.ObjectId FROM MovementItem WHERE MovementItem.Id = inId);
     
     -- Проверили уникальность товар/вид товара
@@ -43,11 +43,11 @@ BEGIN
     THEN
         -- сохраняем % Возврат
         PERFORM -- сохраняем % Возврат
-                lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), MovementItem.Id, (REPLACE (inTaxRetIn, '%', '')) :: TFloat )     ---тк.к у нас строка выбрасываем  % и преобразовываем к числу
+                lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), MovementItem.Id, REPLACE(REPLACE (inTaxRetIn, '%', '')), ',', '.') :: TFloat )     ---тк.к у нас строка выбрасываем  % и преобразовываем к числу
                -- сохраняем % бонус
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), MovementItem.Id, (REPLACE (inTaxPromo, '%', '')) :: TFloat)
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), MovementItem.Id, REPLACE(REPLACE (inTaxPromo, '%', '')), ',', '.') :: TFloat)
               -- сохраняем % скидка
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, (REPLACE (inContractCondition, '%', '')) :: TFloat)
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, REPLACE(REPLACE (inContractCondition, '%', '')), ',', '.') :: TFloat)
         FROM MovementItem
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.ObjectId = vbGoodsId;
