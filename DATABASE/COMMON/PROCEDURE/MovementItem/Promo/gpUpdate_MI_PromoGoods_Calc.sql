@@ -43,11 +43,11 @@ BEGIN
     THEN
         -- сохраняем % Возврат
         PERFORM -- сохраняем % Возврат
-                lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), MovementItem.Id, REPLACE(REPLACE (inTaxRetIn, '%', '')), ',', '.') :: TFloat )     ---тк.к у нас строка выбрасываем  % и преобразовываем к числу
+                lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxRetIn(), MovementItem.Id, REPLACE(REPLACE (inTaxRetIn, '%', ''), ',', '.') :: TFloat )     ---тк.к у нас строка выбрасываем  % и преобразовываем к числу
                -- сохраняем % бонус
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), MovementItem.Id, REPLACE(REPLACE (inTaxPromo, '%', '')), ',', '.') :: TFloat)
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TaxPromo(), MovementItem.Id, REPLACE(REPLACE (inTaxPromo, '%', ''), ',', '.') :: TFloat)
               -- сохраняем % скидка
-              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, REPLACE(REPLACE (inContractCondition, '%', '')), ',', '.') :: TFloat)
+              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ContractCondition(), MovementItem.Id, REPLACE(REPLACE (inContractCondition, '%', ''), ',', '.') :: TFloat)
         FROM MovementItem
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.ObjectId = vbGoodsId;
