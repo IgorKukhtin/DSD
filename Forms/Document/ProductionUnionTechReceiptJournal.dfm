@@ -1943,6 +1943,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = 'false'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
@@ -2037,6 +2043,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           Name = 'isLoss'
           Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = 'false'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -2135,6 +2147,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = 'false'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
@@ -2231,6 +2249,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
           Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = 'false'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
         end>
       ReportName = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
       ReportNameParam.Value = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' ('#1087#1086' '#1076#1085#1103#1084' '#1076#1083#1103' '#1089#1099#1088#1100#1103')'
@@ -2325,6 +2349,12 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
         item
           Name = 'isLoss'
           Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isCalc'
+          Value = 'TRUE'
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>

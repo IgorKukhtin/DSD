@@ -45,7 +45,7 @@ BEGIN
                                , MLO_From.ObjectId                                              AS FromId
                                , MLO_DocumentKind.ObjectId                                      AS DocumentKindId
                                , MovementItem.Id                                                AS MovementItemId
-                               , MovementItem.Amount                                            AS Amount
+                                , MovementItem.Amount                                           AS Amount
                                , COALESCE (MIFloat_CuterCount.ValueData, 0)                     AS CuterCount
                                , COALESCE ((ObjectBoolean_UnitFrom_PartionDate.ValueData = TRUE AND ObjectBoolean_UnitTo_PartionDate.ValueData = TRUE), FALSE) AS isPartionDate
                           FROM Movement
@@ -124,13 +124,19 @@ BEGIN
             , Object_Goods.ValueData            AS GoodsName
 
             , _tmpListMaster.Amount
-            , CASE WHEN inisCuterCount = FALSE THEN _tmpListMaster.CuterCount ELSE COALESCE (ObjectFloat_CountReceipt.ValueData,0) END AS CuterCount
+            , _tmpListMaster.CuterCount           AS CuterCount
+            ,  COALESCE (ObjectFloat_CountReceipt.ValueData,0) AS CountReceipt_goods
+            , CASE WHEN COALESCE (ObjectFloat_CountReceipt.ValueData,0) <> 0 THEN FLOOR (_tmpListMaster.CuterCount / COALESCE (ObjectFloat_CountReceipt.ValueData,0)) ELSE 0 END AS Count_full
+            , (_tmpListMaster.CuterCount
+              - (COALESCE (ObjectFloat_CountReceipt.ValueData,0)
+                *(CASE WHEN COALESCE (ObjectFloat_CountReceipt.ValueData,0) <> 0 THEN FLOOR (_tmpListMaster.CuterCount / COALESCE (ObjectFloat_CountReceipt.ValueData,0)) ELSE 0 END)))  AS Count_part
+            
             , COALESCE (ObjectFloat_Receipt_Value.ValueData, 0) * _tmpListMaster.CuterCount AS  Amount_calc
 
             , MIFloat_Count.ValueData             AS Count
             , MIFloat_RealWeight.ValueData        AS RealWeight
             , MIFloat_CuterWeight.ValueData       AS CuterWeight
-            --, ObjectFloat_CountReceipt.ValueData  AS CountReceipt_goods
+            
 
 
             , Object_GoodsKind.Id                 AS GoodsKindId
@@ -297,7 +303,7 @@ BEGIN
         
                     , COALESCE (MIFloat_AmountReceipt.ValueData, CASE WHEN tmpMI_ReceiptChild.GoodsKindId_master = zc_GoodsKind_WorkProgress() THEN tmpMI_ReceiptChild.Value ELSE 0 END) AS AmountReceipt
         
-                    , MIDate_PartionGoods.ValueData     AS PartionGoodsDate
+                    /*, MIDate_PartionGoods.ValueData     AS PartionGoodsDate
         
                     , Object_GoodsKind.Id               AS GoodsKindId
                     , Object_GoodsKind.ObjectCode       AS GoodsKindCode
@@ -306,9 +312,9 @@ BEGIN
                     , Object_GoodsKindComplete.Id               AS GoodsKindCompleteId
                     , Object_GoodsKindComplete.ObjectCode       AS GoodsKindCompleteCode
                     , Object_GoodsKindComplete.ValueData        AS GoodsKindCompleteName
-        
+                
                     , Object_Measure.ValueData          AS MeasureName
-        
+                   */        
                     , zfCalc_ReceiptChild_GroupNumber (inGoodsId                := Object_Goods.Id
                                                      , inGoodsKindId            := Object_GoodsKind.Id
                                                      , inInfoMoneyDestinationId := Object_InfoMoney_View.InfoMoneyDestinationId
@@ -392,8 +398,8 @@ BEGIN
             , tmpData.GoodsCode
             , tmpData.GoodsName
             , tmpData.ParentId
-            , COALESCE (tmpData.Amount,0)        AS Amount
-            , COALESCE (tmpData.AmountReceipt,0) AS AmountReceipt
+            , SUM (COALESCE (tmpData.Amount,0))        AS Amount
+            , SUM (COALESCE (tmpData.AmountReceipt,0)) AS AmountReceipt
             
             /*, tmpData.PartionGoodsDate
             , tmpData.GoodsKindId
@@ -405,6 +411,10 @@ BEGIN
             , tmpData.MeasureName*/
        FROM tmpData
             INNER JOIN tmpGroupPrint ON tmpGroupPrint.GroupNum = tmpData.GroupNumber
+       GROUP BY tmpData.GoodsId
+              , tmpData.GoodsCode
+              , tmpData.GoodsName
+              , tmpData.ParentId
       ;
 
     -- Все Результаты - 1
@@ -422,17 +432,16 @@ BEGIN
           , _tmpRes_cur2.GoodsName  AS GoodsName_child
           , COALESCE (_tmpRes_cur2.AmountReceipt,0) AS AmountReceipt
           
-          , SUM (CASE WHEN inisCuterCount = FALSE
-                      THEN COALESCE (_tmpRes_cur2.Amount,0)
-                      ELSE COALESCE (_tmpRes_cur2.AmountReceipt,0) *
-                           CASE WHEN inGroupNum <> 3 
-                                THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
-                                ELSE  _tmpRes_cur1.CuterCount
-                           END
-                 END) AS Amount
+          , SUM (COALESCE (_tmpRes_cur2.Amount,0)) AS Amount
           
           , Count (*) OVER (PARTITION by _tmpRes_cur1.GoodsName, _tmpRes_cur2.GoodsName) :: integer AS CountReceipt
-          , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END GoodsKind_group-- для группировки
+          , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END GoodsKind_group  -- для группировки
+          
+          , SUM (COALESCE (_tmpRes_cur2.AmountReceipt,0) * _tmpRes_cur1.Count_full * _tmpRes_cur1.CountReceipt_goods) AS Amount_full
+          , SUM (COALESCE (_tmpRes_cur2.AmountReceipt,0) * _tmpRes_cur1.Count_part ) AS Amount_part
+          , _tmpRes_cur1.Count_full
+          , _tmpRes_cur1.Count_part
+          , _tmpRes_cur1.CountReceipt_goods
 
      FROM _tmpRes_cur1
           LEFT JOIN _tmpRes_cur2 ON _tmpRes_cur2.ParentId = _tmpRes_cur1.MovementItemId
@@ -448,7 +457,10 @@ BEGIN
           , _tmpRes_cur2.GoodsName
           , COALESCE (_tmpRes_cur2.AmountReceipt,0)
           , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
-         , _tmpres_cur1.goodsid
+          , _tmpres_cur1.goodsid
+          , _tmpRes_cur1.Count_full
+          , _tmpRes_cur1.Count_part
+          , _tmpRes_cur1.CountReceipt_goods
 
      ;
     RETURN NEXT Cursor1;
