@@ -171,6 +171,16 @@ type
     bbUpdate_inTop_No: TdxBarButton;
     GoodsAnalogATC: TcxGridDBColumn;
     GoodsActiveSubstance: TcxGridDBColumn;
+    spUpdate_isNot_v4_No: TdsdStoredProc;
+    spUpdate_isNOT_v4_Yes: TdsdStoredProc;
+    actUpdate_isNot_Sun_v4_No: TdsdExecStoredProc;
+    actSimpleUpdateNot_v4_No: TMultiAction;
+    macUpdate_isNot_Sun_v4_No: TMultiAction;
+    actUpdate_isNot_Sun_v4_Yes: TdsdExecStoredProc;
+    actSimpleUpdateNot_v4_yes: TMultiAction;
+    macUpdate_isNot_Sun_v4_yes: TMultiAction;
+    bbUpdate_isNot_Sun_v4_yes: TdxBarButton;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public
