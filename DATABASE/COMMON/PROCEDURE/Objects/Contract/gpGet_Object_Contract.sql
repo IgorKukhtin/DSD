@@ -405,7 +405,10 @@ BEGIN
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
             LEFT JOIN Object AS Object_CurrencyBasis ON Object_CurrencyBasis.Id = zc_Enum_Currency_Basis()
 
-       WHERE Object_Contract_View.ContractId = inId;
+       WHERE Object_Contract_View.ContractId = inId
+       --AND Object_Contract_View.EndDate_condition = zc_DateEnd()
+       LIMIT 1
+       ;
 
    END IF;
      
@@ -452,3 +455,4 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpGet_Object_Contract (inId := 2, inSession := zfCalc_UserAdmin())
+select * from gpGet_Object_Contract(Id := 3325401 ,  inSession := '5');

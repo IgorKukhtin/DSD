@@ -1,7 +1,7 @@
 -- Function: gpSelect_Object_SourceFuel()
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectFrom_byIncomeFuel (TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_SourceFuel (TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Object_SourceFuel (TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_SourceFuel (TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_SourceFuel(
@@ -57,6 +57,7 @@ BEGIN
                                                    AND inOperDate >= Object_Contract_View.StartDate
                                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                                    AND Object_Contract_View.isErased = FALSE
+                                                   AND inOperDate BETWEEN Object_Contract_View.StartDate_condition AND Object_Contract_View.EndDate_condition
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ÃÑÌ
                      ) 
 

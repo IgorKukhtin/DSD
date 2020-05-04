@@ -57,7 +57,7 @@ BEGIN
            , Object_From.Id                                     AS FromId
            , Object_From.ValueData                              AS FromName
            , Object_To.Id                                       AS ToId
-           , Object_To.ValueData                                AS ToName
+           , (Object_To.ValueData || CASE WHEN Object_Unit_CarTo.ValueData <> '' THEN ' (' || Object_Unit_CarTo.ValueData ||')' ELSE '' END) :: TVarChar AS ToName
            , Object_ArticleLoss.Id                              AS ArticleLossId
            , Object_ArticleLoss.ValueData                       AS ArticleLossName
            , MovementString_Comment.ValueData                   AS Comment
@@ -87,6 +87,11 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_CarTo_Unit
+                                 ON ObjectLink_CarTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_CarTo_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object AS Object_Unit_CarTo ON Object_Unit_CarTo.Id = ObjectLink_CarTo_Unit.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
@@ -100,8 +105,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
@@ -112,4 +115,4 @@ ALTER FUNCTION gpGet_Movement_Loss (Integer, TDateTime, TVarChar) OWNER TO postg
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_Loss (inMovementId:= 1, inSession:= '9818')
+-- SELECT * FROM gpGet_Movement_Loss (inMovementId:= 1, inOperDate:= CURRENT_DATE, inSession:= zfCalc_UserAdmin())

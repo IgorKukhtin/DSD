@@ -134,6 +134,8 @@ BEGIN
                                                               , 8359 -- 04-Услуги
                                                                )
           OR vbIsConstraint = FALSE)
+     AND Object_Contract_View.EndDate_condition = zc_DateEnd()
+
   ;
   
 END;

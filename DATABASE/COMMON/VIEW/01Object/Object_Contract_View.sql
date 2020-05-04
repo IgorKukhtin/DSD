@@ -49,6 +49,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , View_ContractCondition_Value.DayBank
        , View_ContractCondition_Value.DelayDay
        
+       , COALESCE (View_ContractCondition_Value.StartDate, zc_DateStart()) AS StartDate_condition
+       , COALESCE (View_ContractCondition_Value.EndDate, zc_DateEnd())     AS EndDate_condition
+
   FROM Object_Contract_InvNumber_View
        LEFT JOIN Object_ContractCondition_ValueView AS View_ContractCondition_Value ON View_ContractCondition_Value.ContractId = Object_Contract_InvNumber_View.ContractId
 

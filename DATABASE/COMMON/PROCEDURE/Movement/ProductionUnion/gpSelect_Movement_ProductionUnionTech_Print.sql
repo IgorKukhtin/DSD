@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inStartDate         TDateTime,
@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inGroupNum          Integer,
-    IN inisCuterCount      Boolean,
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -22,11 +21,13 @@ $BODY$
   DECLARE vbIsOrder Boolean;
 
   DECLARE Cursor1 refcursor;
+  DECLARE inisCuterCount      Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Select_Movement_ProductionUnionTech());
      vbUserId:= lpGetUserBySession (inSession);
 
+   inisCuterCount:= false;
 
      -- определяется
      vbFromId_group:= (SELECT ObjectLink_Parent.ChildObjectId FROM ObjectLink AS ObjectLink_Parent WHERE ObjectLink_Parent.ObjectId = inFromId AND ObjectLink_Parent.DescId = zc_ObjectLink_Unit_Parent());

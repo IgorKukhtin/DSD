@@ -55,9 +55,9 @@ $BODY$
 
    DECLARE vbKoeff_over TFloat;
 
-   DECLARE vbPeriod_t1    INTERVAL;
-   DECLARE vbPeriod_t2    INTERVAL;
-   DECLARE vbPeriod_t1_v2 INTERVAL;
+   DECLARE vbPeriod_t1    Integer;
+   DECLARE vbPeriod_t2    Integer;
+   DECLARE vbPeriod_t_max Integer;
 
    DECLARE vbDate_6     TDateTime;
    DECLARE vbDate_1     TDateTime;
@@ -95,9 +95,9 @@ BEGIN
      -- !!!
      vbKoeff_over:= 2;
      
-     -- !!!
-     vbPeriod_t1    := '35 DAY' :: INTERVAL;
-     vbPeriod_t2    := '25 DAY' :: INTERVAL;
+     -- !!! в днях
+     vbPeriod_t1    := 35;
+     vbPeriod_t2    := 25;
 
      -- !!!
      vbSumm_limit:= CASE WHEN 0 < (SELECT ObjectFloat.ValueData FROM ObjectFloat WHERE ObjectFloat.ObjectId = vbObjectId AND ObjectFloat.DescId = zc_ObjectFloat_Retail_SummSUN())
@@ -139,13 +139,17 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v2
-     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer) ON COMMIT DROP;
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN)
+     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
+             , CASE WHEN OF_T1.ValueData > 0 THEN OF_T1.ValueData ELSE vbPeriod_t1 END AS Value_T1
+             , CASE WHEN OF_T2.ValueData > 0 THEN OF_T2.ValueData ELSE vbPeriod_t2 END AS Value_T2
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectFloat  AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v2()
+             LEFT JOIN ObjectFloat  AS OF_T2  ON OF_T2.ObjectId  = OB.ObjectId AND OF_T2.DescId  = zc_ObjectFloat_Unit_T2_SUN_v2()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
@@ -154,6 +158,11 @@ BEGIN
           -- если указан день недели - проверим его
           AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
        ;
+       
+     -- находим максимальный
+     vbPeriod_t_max := (SELECT MAX (CASE WHEN _tmpUnit_SUN.Value_T1 > _tmpUnit_SUN.Value_T2 THEN _tmpUnit_SUN.Value_T1 ELSE _tmpUnit_SUN.Value_T2 END)
+                        FROM _tmpUnit_SUN
+                       );
 
 
      -- исключаем такие перемещения
@@ -223,15 +232,15 @@ BEGIN
              , tmp.Amount_t2, tmp.Summ_t2
         FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                    , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - vbPeriod_t1    AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - vbPeriod_t1    AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - vbPeriod_t2    AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - vbPeriod_t2    AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - vbPeriod_t1 AND inOperDate
+                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
@@ -1503,7 +1512,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN-v2
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 

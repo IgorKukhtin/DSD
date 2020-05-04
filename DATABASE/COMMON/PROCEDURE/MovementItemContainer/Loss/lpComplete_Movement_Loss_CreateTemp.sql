@@ -19,7 +19,8 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                               , PartionGoodsId Integer
+                                ) ON COMMIT DROP;
 
 
 END;$BODY$

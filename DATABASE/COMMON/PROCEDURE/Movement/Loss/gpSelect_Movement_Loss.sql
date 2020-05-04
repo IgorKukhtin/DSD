@@ -50,7 +50,7 @@ BEGIN
            , Object_From.ValueData              AS FromName
            , ObjectDesc_from.ItemName           AS ItemName_from
            , Object_To.Id                       AS ToId
-           , Object_To.ValueData                AS ToName
+           , (Object_To.ValueData || CASE WHEN Object_Unit_CarTo.ValueData <> '' THEN ' (' || Object_Unit_CarTo.ValueData ||')' ELSE '' END) :: TVarChar AS ToName
            , ObjectDesc_to.ItemName             AS ItemName_to
            , Object_ArticleLoss.Id              AS ArticleLossId
            , Object_ArticleLoss.ValueData       AS ArticleLossName
@@ -102,6 +102,11 @@ BEGIN
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectDesc AS ObjectDesc_to ON ObjectDesc_to.Id = Object_To.DescId
 
+            LEFT JOIN ObjectLink AS ObjectLink_CarTo_Unit
+                                 ON ObjectLink_CarTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_CarTo_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object AS Object_Unit_CarTo ON Object_Unit_CarTo.Id = ObjectLink_CarTo_Unit.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
@@ -128,7 +133,7 @@ BEGIN
            , Object_From.ValueData              AS FromName
            , ObjectDesc_from.ItemName           AS ItemName_from
            , Object_To.Id                       AS ToId
-           , Object_To.ValueData                AS ToName
+           , (Object_To.ValueData || CASE WHEN Object_Unit_CarTo.ValueData <> '' THEN ' (' || Object_Unit_CarTo.ValueData ||')' ELSE '' END) :: TVarChar AS ToName
            , ObjectDesc_to.ItemName             AS ItemName_to
            , Object_ArticleLoss.Id              AS ArticleLossId
            , Object_ArticleLoss.ValueData       AS ArticleLossName
@@ -178,6 +183,11 @@ BEGIN
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectDesc AS ObjectDesc_to ON ObjectDesc_to.Id = Object_To.DescId
 
+            LEFT JOIN ObjectLink AS ObjectLink_CarTo_Unit
+                                 ON ObjectLink_CarTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
+                                AND ObjectLink_CarTo_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object AS Object_Unit_CarTo ON Object_Unit_CarTo.Id = ObjectLink_CarTo_Unit.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
                                          ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
                                         AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
@@ -216,4 +226,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inJuridicalBasisId:= zc_Juridical_Basis(), inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inJuridicalBasisId:= zc_Juridical_Basis(), inSession:= zfCalc_UserAdmin())

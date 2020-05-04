@@ -51,10 +51,10 @@ BEGIN
      -- RETURN QUERY
      -- –езультат - сформировали новые данные - Ёлементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpTest AS (SELECT lpSelect.GoodsId FROM lpSelect_Object_wms_SKU_test() AS lpSelect
+        WITH tmpTest AS (SELECT lpSelect.GoodsId, lpSelect.sku_id :: TVarChar AS sku_id FROM lpSelect_Object_wms_SKU_test() AS lpSelect
                          WHERE 1=0
                        UNION
-                         SELECT Movement.GoodsId
+                         SELECT Movement.GoodsId, MI.sku_id :: TVarChar AS sku_id 
                          FROM wms_Movement_WeighingProduction AS Movement
                               INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
                                                                         AND MI.isErased   = FALSE
@@ -77,12 +77,13 @@ BEGIN
                               -- ObjectId
                             , wms_MI_Incoming.Id
                        FROM wms_MI_Incoming
+                            INNER JOIN tmpTest ON tmpTest.sku_id = wms_MI_Incoming.sku_id
                        WHERE wms_MI_Incoming.OperDate     = vbOperDate
                          AND wms_MI_Incoming.StatusId     = zc_Enum_Status_UnComplete()
                          -- только те которые еще не передавали
                          AND wms_MI_Incoming.StatusId_wms IS NULL
+                       -- тест
                        --AND wms_MI_Incoming.sku_id :: TVarChar IN ('795292', '795293', '38391802', '800562', '800563')
-                         AND wms_MI_Incoming.GoodsId IN (SELECT tmpTest.GoodsId FROM tmpTest)
                      --LIMIT 1
                       )
         -- –езультат

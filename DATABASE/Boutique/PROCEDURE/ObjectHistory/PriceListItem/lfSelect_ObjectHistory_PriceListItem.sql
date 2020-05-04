@@ -12,13 +12,23 @@ RETURNS TABLE (Id Integer, CurrencyId Integer, GoodsId Integer
              )
 AS
 $BODY$
+   DECLARE vbCurrencyId_pl Integer;
 BEGIN
+
+     -- Получили валюту для прайса
+     vbCurrencyId_pl:= (SELECT COALESCE (OL_currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl
+                        FROM ObjectLink AS OL_pl
+                             LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = OL_pl.ChildObjectId
+                                                                AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
+                        WHERE OL_pl.ObjectId = inPriceListId
+                          AND OL_pl.DescId   = zc_ObjectLink_Unit_PriceList()
+                       ); 
 
      -- Выбираем данные
      RETURN QUERY 
        SELECT
              ObjectHistory_PriceListItem.Id
-           , ObjectHistoryLink_Currency.ObjectId          AS CurrencyId
+           , COALESCE (ObjectHistoryLink_Currency.ObjectId, vbCurrencyId_pl) :: Integer AS CurrencyId
            , ObjectLink_PriceListItem_Goods.ChildObjectId AS GoodsId
 
            , ObjectHistory_PriceListItem.StartDate
@@ -41,7 +51,6 @@ BEGIN
             LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
                                         ON ObjectHistoryLink_Currency.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                        AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
-            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = ObjectHistoryLink_Currency.ObjectId
 
        WHERE ObjectLink_PriceListItem_PriceList.DescId = zc_ObjectLink_PriceListItem_PriceList()
          AND ObjectLink_PriceListItem_PriceList.ChildObjectId = inPriceListId

@@ -22,6 +22,7 @@ BEGIN
                   WHEN (inGoodsKindId <> 0 AND inInfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100()) -- Основное сырье + Мясное сырье
                     -- OR inGoodsKindId = zc_GoodsKind_WorkProgress()
                     OR inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21300() -- Общефирменные + Незавершенное производство
+                    OR inInfoMoneyId            = zc_Enum_InfoMoney_10106()            -- Основное сырье + Прочее сырье + Сыр
                        THEN 3
 
                   WHEN inInfoMoneyId = zc_Enum_InfoMoney_10105() -- Основное сырье + Мясное сырье + Прочее мясное сырье

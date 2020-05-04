@@ -53,12 +53,7 @@ BEGIN
     -- Результат
     RETURN QUERY
       WITH 
-      tmpMovReturn  AS (SELECT tmp.Id
-                             , tmp.MovementDescId
-                             , tmp.PartnerId
-                             , tmp.OperDatePartner
-                             , tmp.ContractId
-                        FROM (-- zc_Movement_ReturnIn
+         tmpMovReturn_all AS (-- zc_Movement_ReturnIn
                               SELECT Movement.Id
                                    , Movement.DescId                      AS MovementDescId
                                    , COALESCE (MovementLinkObject_From.ObjectId, 0)     AS PartnerId
@@ -164,36 +159,73 @@ BEGIN
                                                                                                              ELSE zc_MovementLinkObject_ContractFrom()
                                                                                                         END
                               WHERE Movement.Id = inMovementId
-                             ) AS tmp
-                       )
-
-    , tmpMIReturn AS (SELECT   tmpMovReturn.Id
-                             , tmpMovReturn.MovementDescId
-                             , tmpMovReturn.PartnerId
-                             , tmpMovReturn.ContractId
-                             , MI_Child.ParentId                             AS MI_Id
-                             , MI_Child.ObjectId                             AS GoodsId
-                             , MI_Child.Amount                               AS Amount
-                             , MIFloat_MovementId.ValueData      :: Integer  AS MovementId_sale
-                             , MIFloat_MovementItemId.ValueData  :: Integer  AS MovementItemId_sale
-                        FROM tmpMovReturn
-                         INNER JOIN MovementItem AS MI_Child
-                                                 ON MI_Child.MovementId = tmpMovReturn.Id
-                                                AND MI_Child.DescId     = zc_MI_Child()
-                                                AND MI_Child.isErased   = FALSE
-
-                         INNER JOIN MovementItemFloat AS MIFloat_MovementId
-                                                     ON MIFloat_MovementId.MovementItemId = MI_Child.Id
-                                                    AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
-                                                    AND MIFloat_MovementId.ValueData > 0
-                         INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
-                                                     ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
-                                                    AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
-                     )
-
-   , tmpData AS (SELECT tmpMIReturn.Id
+                             )
+      , tmpMovReturn  AS (SELECT tmpMovReturn_all.Id
+                               , tmpMovReturn_all.MovementDescId
+                               , tmpMovReturn_all.PartnerId
+                               , tmpMovReturn_all.OperDatePartner
+                               , tmpMovReturn_all.ContractId
+                          FROM tmpMovReturn_all
+                         )
+     , tmpMIChild_all AS (SELECT MI_Child.*
+                          FROM MovementItem AS MI_Child
+                          WHERE MI_Child.MovementId IN (SELECT DISTINCT tmpMovReturn.Id FROM tmpMovReturn)
+                            AND MI_Child.DescId     = zc_MI_Child()
+                            AND MI_Child.isErased   = FALSE
+                         )
+        , tmpMIReturn AS (SELECT   tmpMovReturn.Id
+                                 , tmpMovReturn.MovementDescId
+                                 , tmpMovReturn.PartnerId
+                                 , tmpMovReturn.ContractId
+                                 , MI_Child.ParentId                             AS MI_Id
+                                 , MI_Child.ObjectId                             AS GoodsId
+                                 , MI_Child.Amount                               AS Amount
+                                 , MIFloat_MovementId.ValueData      :: Integer  AS MovementId_sale
+                                 , MIFloat_MovementItemId.ValueData  :: Integer  AS MovementItemId_sale
+                            FROM tmpMovReturn
+                             INNER JOIN tmpMIChild_all AS MI_Child
+                                                       ON MI_Child.MovementId = tmpMovReturn.Id
+                                                      AND MI_Child.DescId     = zc_MI_Child()
+                                                      AND MI_Child.isErased   = FALSE
+    
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementId
+                                                         ON MIFloat_MovementId.MovementItemId = MI_Child.Id
+                                                        AND MIFloat_MovementId.DescId = zc_MIFloat_MovementId()                         
+                                                        AND MIFloat_MovementId.ValueData > 0
+                             INNER JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                         ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
+                                                        AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId() 
+                         )
+   , tmpData_MILO_ret AS (SELECT MovementItemLinkObject.*
+                          FROM MovementItemLinkObject
+                          WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpMIReturn.MI_Id FROM tmpMIReturn)
+                            AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                         )
+    , tmpData_MIF_ret AS (SELECT MovementItemFloat.*
+                          FROM MovementItemFloat
+                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpMIReturn.MI_Id FROM tmpMIReturn)
+                         )
+    , tmpData_MI_sale AS (SELECT MISale.*
+                               , Movement_Sale.StatusId AS StatusId
+                               , Movement_Sale.DescId   AS MovementDescId
+                          FROM tmpMIReturn
+                               --SALE 
+                               LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMIReturn.MovementId_sale
+                               LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMIReturn.MovementItemId_sale
+                         )
+  , tmpData_MILO_sale AS (SELECT MovementItemLinkObject.*
+                          FROM MovementItemLinkObject
+                          WHERE MovementItemLinkObject.MovementItemId IN (SELECT DISTINCT tmpData_MI_sale.Id FROM tmpData_MI_sale)
+                            AND MovementItemLinkObject.DescId = zc_MILinkObject_GoodsKind()
+                         )
+   , tmpData_MIF_sale AS (SELECT MovementItemFloat.*
+                          FROM MovementItemFloat
+                          WHERE MovementItemFloat.MovementItemId IN (SELECT DISTINCT tmpData_MI_sale.Id FROM tmpData_MI_sale)
+                            AND MovementItemFloat.DescId = zc_MIFloat_Price()  
+                         )
+  , tmpData AS (SELECT tmpMIReturn.Id
                       , tmpMIReturn.MovementDescId
-                      , Movement_Sale.Id                                   AS Sale_Id
+                      , MISale.MovementId                                  AS Sale_Id
                       , tmpMIReturn.GoodsId
                       , tmpMIReturn.Amount
                       , tmpMIReturn.PartnerId                              AS PartnerId
@@ -201,34 +233,33 @@ BEGIN
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)      AS GoodsKindId
                       , COALESCE (MIFloat_PriceTax_calc.ValueData, MIFloat_Price.ValueData, 0) AS Price
 
-                      , CASE WHEN MISale.isErased = TRUE OR Movement_Sale.StatusId <> zc_Enum_Status_Complete() THEN 0 ELSE MISale.ObjectId END AS GoodsId_Sale
+                      , CASE WHEN MISale.isErased = TRUE OR MISale.StatusId <> zc_Enum_Status_Complete() THEN 0 ELSE MISale.ObjectId END AS GoodsId_Sale
                       , MovementLinkObject_To.ObjectId                     AS PartnerId_Sale
                       , COALESCE (MILinkObject_GoodsKind_Sale.ObjectId, 0) AS GoodsKindId_Sale
                       , COALESCE (MIFloat_Price_Sale.ValueData, 0)         AS Price_Sale
              
                  FROM tmpMIReturn
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                    ON MILinkObject_GoodsKind.MovementItemId = tmpMIReturn.MI_Id
-                                                   AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                               ON MIFloat_Price.MovementItemId = tmpMIReturn.MI_Id
-                                              AND MIFloat_Price.DescId         = zc_MIFloat_Price()
-                   LEFT JOIN MovementItemFloat AS MIFloat_PriceTax_calc
-                                               ON MIFloat_PriceTax_calc.MovementItemId = tmpMIReturn.MI_Id
-                                              AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
+                   LEFT JOIN tmpData_MILO_ret AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = tmpMIReturn.MI_Id
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                   LEFT JOIN tmpData_MIF_ret AS MIFloat_Price
+                                             ON MIFloat_Price.MovementItemId = tmpMIReturn.MI_Id
+                                            AND MIFloat_Price.DescId         = zc_MIFloat_Price()
+                   LEFT JOIN tmpData_MIF_ret AS MIFloat_PriceTax_calc
+                                             ON MIFloat_PriceTax_calc.MovementItemId = tmpMIReturn.MI_Id
+                                            AND MIFloat_PriceTax_calc.DescId         = zc_MIFloat_PriceTax_calc()
                    --SALE 
-                   LEFT JOIN Movement AS Movement_Sale ON Movement_Sale.Id = tmpMIReturn.MovementId_sale
-                   LEFT JOIN MovementItem AS MISale ON MISale.Id = tmpMIReturn.MovementItemId_sale
+                   LEFT JOIN tmpData_MI_sale AS MISale ON MISale.Id = tmpMIReturn.MovementItemId_sale
                                                 
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind_Sale
+                   LEFT JOIN tmpData_MILO_sale AS MILinkObject_GoodsKind_Sale
                                                     ON MILinkObject_GoodsKind_Sale.MovementItemId = MISale.Id
                                                    AND MILinkObject_GoodsKind_Sale.DescId = zc_MILinkObject_GoodsKind()
-                   LEFT JOIN MovementItemFloat AS MIFloat_Price_Sale
-                                               ON MIFloat_Price_Sale.MovementItemId = MISale.Id
-                                              AND MIFloat_Price_Sale.DescId = zc_MIFloat_Price()  
+                   LEFT JOIN tmpData_MIF_sale AS MIFloat_Price_Sale
+                                              ON MIFloat_Price_Sale.MovementItemId = MISale.Id
+                                             AND MIFloat_Price_Sale.DescId = zc_MIFloat_Price()  
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                ON MovementLinkObject_To.MovementId = Movement_Sale.Id
-                                               AND MovementLinkObject_To.DescId = CASE WHEN Movement_Sale.DescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
+                                                ON MovementLinkObject_To.MovementId = MISale.Id
+                                               AND MovementLinkObject_To.DescId = CASE WHEN MISale.MovementDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_Partner() END
             --   WHERE Movement_Sale.StatusId <> zc_Enum_Status_Complete()
              )
  
@@ -384,4 +415,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '2016-05-24' ::TDateTime , inEndDate:= '2016-05-24' ::TDateTime, inShowAll:= True, inMovementId:=0, inJuridicalId:= 0, inPartnerId:=0, inSession:= zfCalc_UserAdmin()) 
+-- SELECT * FROM gpReport_Check_ReturnInToSale (inStartDate:= '01.04.2020', inEndDate:= '15.04.2020', inShowAll:= FALSE, inMovementId:= 0, inJuridicalId:= 0, inPartnerId:= 0, inSession:= zfCalc_UserAdmin());
