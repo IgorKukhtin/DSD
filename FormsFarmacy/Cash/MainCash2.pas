@@ -2012,6 +2012,7 @@ end;
 procedure TMainCashForm2.TimerPUSHTimer(Sender: TObject);
 var
   cResult: string;
+  LocalVersionInfo, BaseVersionInfo: TVersionInfo;
 
   procedure Load_PUSH(ARun: Boolean);
   begin
@@ -2108,11 +2109,20 @@ begin
       finally
         PUSHDS.Delete;
       end;
+    end else if not gc_User.Local and (FLoadPUSH = 2) then
+    begin
+      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+      LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+      begin
+        ShowPUSHMessageCash('Коллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
+      end;
+
+      if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
+        SaveHardwareData;
     end;
     Load_PUSH(false);
-
-    if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
-      SaveHardwareData;
   finally
     FPUSHStart := false;
     TimerPUSH.Enabled := True;
@@ -5111,13 +5121,13 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
           begin
             Sleep(2000);
             Inc(Step);
-            if Step > 10 then
+            if Step > 5 then
             begin
-              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 мин.');
+              ShowMessage('Ошибка закрытия сервиса.'#13#10'Попробуйте через 5 минут.');
               Exit;
             end;
           end;
-
+          InitCashSession;
           TUpdater.AutomaticUpdateProgramStart;
         end;
       end;

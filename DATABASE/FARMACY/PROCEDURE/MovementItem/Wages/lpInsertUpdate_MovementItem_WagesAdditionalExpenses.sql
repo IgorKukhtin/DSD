@@ -3,33 +3,29 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesAdditionalExpenses (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesAdditionalExpenses(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inUnitID              Integer   , -- Плдразделение
-    IN inSummaCleaning       TFloat    , -- Уборка
-    IN inSummaSP             TFloat    , -- СП
-    IN inSummaOther          TFloat    , -- Прочее
-    IN inValidationResults   TFloat    , -- Результаты проверки
-    IN inSummaFullChargeFact TFloat    , -- Полное списание факт
-    IN inisIssuedBy          Boolean   , -- Выдано
-    IN inComment             TVarChar  , -- Примечание
-    IN inUserId              Integer   -- пользователь
+ INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId               Integer   , -- Ключ объекта <Документ>
+    IN inUnitID                   Integer   , -- Плдразделение
+    IN inSummaCleaning            TFloat    , -- Уборка
+    IN inSummaSP                  TFloat    , -- СП
+    IN inSummaOther               TFloat    , -- Прочее
+    IN inSummaValidationResults   TFloat    , -- Результаты проверки
+    IN inSummaFullChargeFact      TFloat    , -- Полное списание факт
+    IN inisIssuedBy               Boolean   , -- Выдано
+    IN inComment                  TVarChar  , -- Примечание
+    IN inUserId                   Integer   -- пользователь
  )
 RETURNS Integer AS
 $BODY$
    DECLARE vbIsInsert Boolean;
-   DECLARE vbSummaSUN1 TFloat;
 BEGIN
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (ioId, 0) = 0;
     
     IF vbIsInsert = TRUE
     THEN
-       -- сохранили <Элемент документа>
-      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, COALESCE (inSummaCleaning, 0) + 
-                                                                                       COALESCE (inSummaSP, 0) + 
-                                                                                       COALESCE (inSummaOther, 0) + 
-                                                                                       COALESCE (inValidationResults, 0), 0);
+       -- Создали <Элемент документа>
+      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, 0, 0);
     END IF;
     
      -- сохранили свойство <Уборка>
@@ -42,20 +38,12 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaOther(), ioId, inSummaOther);
 
      -- сохранили свойство <Прочее>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
-
-     -- сохранили свойство <Прочее>
-    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inValidationResults);
-    
-     -- сохранили свойство <Полное списание факт>
+    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ValidationResults(), ioId, inSummaValidationResults);
+            
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaFullChargeFact(), ioId, inSummaFullChargeFact);
     
-
-    IF vbIsInsert = FALSE
-    THEN
-       -- сохранили <Элемент документа>
-      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, lpGet_MovementItem_WagesAE_TotalSum (ioId, inUserId), 0);
-    END IF;
+    -- сохранили <Элемент документа>
+    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Sign(), inUnitId, inMovementId, lpGet_MovementItem_WagesAE_TotalSum (ioId, inUserId), 0);
 
     -- сохранили свойство <Примечание>
     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);

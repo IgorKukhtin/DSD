@@ -860,10 +860,10 @@ inherited SendJournalForm: TSendJournalForm
           Action = actExecUpdate_NotDisplaySUN_Yes
         end>
       View = cxGridDBTableView
-      QuestionBeforeExecute = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"?'
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"?'
       InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
-      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
-      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053'"'
       ImageIndex = 44
     end
     object actExecUpdate_NotDisplaySUN_Yes: TdsdExecStoredProc
@@ -901,6 +901,31 @@ inherited SendJournalForm: TSendJournalForm
           StoredProc = spComplete_Filter
         end>
       Caption = 'actExecComplete_Filter'
+    end
+    object actSetErasedFilter: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = actExecSetErased_Filter
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084'?'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 13
+    end
+    object actExecSetErased_Filter: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spSetErased_Filter
+      StoredProcList = <
+        item
+          StoredProc = spSetErased_Filter
+        end>
+      Caption = 'actExecSetErased_Filter'
     end
   end
   inherited MasterDS: TDataSource
@@ -1024,6 +1049,10 @@ inherited SendJournalForm: TSendJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1138,6 +1167,10 @@ inherited SendJournalForm: TSendJournalForm
     end
     object dxBarButton5: TdxBarButton
       Action = actCompileFilter
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actSetErasedFilter
       Category = 0
     end
   end
@@ -1548,6 +1581,8 @@ inherited SendJournalForm: TSendJournalForm
       item
         Name = 'inisNotDisplaySUN'
         Value = False
+        Component = MasterCDS
+        ComponentItem = 'isNotDisplaySUN'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1571,6 +1606,23 @@ inherited SendJournalForm: TSendJournalForm
       end>
     PackSize = 1
     Left = 528
+    Top = 451
+  end
+  object spSetErased_Filter: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement_Send_Filter'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 600
     Top = 451
   end
 end

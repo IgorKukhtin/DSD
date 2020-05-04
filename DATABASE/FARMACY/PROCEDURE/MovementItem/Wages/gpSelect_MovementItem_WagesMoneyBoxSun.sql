@@ -38,8 +38,8 @@ BEGIN
              , Object_Unit.ObjectCode                AS UnitCode
              , Object_Unit.ValueData                 AS UnitName
              
-             , CASE WHEN Movement.OperDate = '01.03.2020'
-                    THEN 'До Апреля 2020 г.'
+             , CASE WHEN Movement.OperDate = '01.03.2020' THEN 'До Апреля 2020 г.'
+                    WHEN Movement.OperDate = '01.04.2020' THEN 'Апреля и Март  2020 г.'   
                     ELSE 'За '||zfCalc_MonthName(Movement.OperDate)||' '||to_char(Movement.OperDate, 'YYYY')||' г.' END::TVarChar  AS AccrualPeriod
 
              , MIFloat_SummaMoneyBoxMonth.ValueData  AS SummaMoneyBoxMonth

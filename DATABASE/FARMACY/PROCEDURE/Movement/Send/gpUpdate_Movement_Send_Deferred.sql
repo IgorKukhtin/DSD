@@ -25,6 +25,7 @@ $BODY$
    DECLARE vbComment TVarChar;
    DECLARE vbisAuto Boolean;
    DECLARE vbOccupancySUN TFloat;
+   DECLARE vbPartionDateKindId Integer;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -44,7 +45,8 @@ BEGIN
         MovementLinkObject_From.ObjectId, 
         COALESCE (MovementString_Comment.ValueData,''), 
         COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
-        COALESCE (ObjectFloat_OccupancySUN.ValueData, 0)
+        COALESCE (ObjectFloat_OccupancySUN.ValueData, 0),
+        MovementLinkObject_PartionDateKind.ObjectId
     INTO
         vbStatusId,
         vbisDeferred,
@@ -55,7 +57,8 @@ BEGIN
         vbUnit_From,
         vbComment,
         vbisAuto,
-        vbOccupancySUN
+        vbOccupancySUN,
+        vbPartionDateKindId
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -95,6 +98,9 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
+                                     ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
+                                    AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
@@ -125,6 +131,7 @@ BEGIN
            END IF;
            
            IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE
+              AND COALESCE(vbPartionDateKindId, 0) <> zc_Enum_PartionDateKind_0()
            THEN
              RAISE EXCEPTION 'бмеяхре б ъвеийс йнллемрюпхи - опхвхмс оепедювх!!!';
            END IF;

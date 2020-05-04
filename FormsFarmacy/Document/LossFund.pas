@@ -19,12 +19,19 @@ type
   TLossFundForm = class(TLossForm)
     ceSummaFund: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
-    ceRetailFund: TcxCurrencyEdit;
+    ceRetailFundResidue: TcxCurrencyEdit;
     cxLabel21: TcxLabel;
     spUpdate_SummaFund: TdsdStoredProc;
     actAmountDialog: TExecuteDialog;
-    actUpdate_SummaFund: TdsdExecStoredProc;
+    actRefreshGet: TdsdExecStoredProc;
     bbUpdate_SummaFund: TdxBarButton;
+    ceRetailFundUsed: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceRetailFund: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    HeaderSaverFund: THeaderSaver;
+    ceTotalSumm: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
   private
     { Private declarations }
   public

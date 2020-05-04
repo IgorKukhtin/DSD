@@ -105,11 +105,12 @@ BEGIN
                           
                           , MIFloat_PriceWithVAT.ValueData         AS PriceWithVAT           --Цена отгрузки с учетом НДС, с учетом скидки, грн
                     
-                          , MIFloat_AmountSale.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
-                          , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE 
-                                 THEN (MIFloat_Price.ValueData * (100-MIFloat_TaxPromo.ValueData) /100)*MIFloat_AmountSale.ValueData
-                                 ELSE (MIFloat_AmountSale.ValueData * MIFloat_Price.ValueData)
-                            END AS SummaSale           --сумма плана продаж
+                          , MIFloat_AmountPlanMax.ValueData           AS AmountSale          --Максимум планируемого объема продаж на акционный период (в кг)
+
+                          , CASE WHEN COALESCE (vbTaxPromo,FALSE) = TRUE
+                                 THEN (MIFloat_AmountPlanMax.ValueData * MIFloat_PriceWithVAT.ValueData)
+                                 ELSE MIFloat_AmountPlanMax.ValueData * ROUND (MIFloat_Price.ValueData * ((100+vbVAT)/100), 2)
+                            END   AS SummaSale                            --сумма плана продаж
      
                           , MIFloat_ContractCondition.ValueData    AS ContractCondition      -- Бонус сети, %
                           , MIFloat_TaxRetIn.ValueData             AS TaxRetIn               -- % возврат
@@ -138,24 +139,28 @@ BEGIN
                                                      AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()  ---zc_MIFloat_PriceWithOutVAT() ---
                                                      
                                         
-                           LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
-                                                       ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
-                           LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
-                                                       ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
-                           LEFT JOIN MovementItemFloat AS MIFloat_TaxPromo
-                                                       ON MIFloat_TaxPromo.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_TaxPromo.DescId = zc_MIFloat_TaxPromo()
+                          LEFT JOIN MovementItemFloat AS MIFloat_ContractCondition
+                                                      ON MIFloat_ContractCondition.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_ContractCondition.DescId = zc_MIFloat_ContractCondition()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TaxRetIn
+                                                      ON MIFloat_TaxRetIn.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_TaxRetIn.DescId = zc_MIFloat_TaxRetIn()
+                          LEFT JOIN MovementItemFloat AS MIFloat_TaxPromo
+                                                      ON MIFloat_TaxPromo.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_TaxPromo.DescId = zc_MIFloat_TaxPromo()
      
-                           LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
+                           /*LEFT JOIN MovementItemFloat AS MIFloat_AmountSale
                                                        ON MIFloat_AmountSale.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()
+                                                      AND MIFloat_AmountSale.DescId = zc_MIFloat_AmountSale()*/
                                         
                           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price()
      
+                          LEFT JOIN MovementItemFloat AS MIFloat_AmountPlanMax
+                                                      ON MIFloat_AmountPlanMax.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_AmountPlanMax.DescId = zc_MIFloat_AmountPlanMax()
+
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind 
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -210,7 +215,7 @@ BEGIN
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
                          , zc_Color_White()          AS Color_PriceWithVAT   --11658012
-                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
+                         , zc_Color_White()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Плановая'                AS Text
                     FROM tmpData
@@ -253,7 +258,7 @@ BEGIN
                          , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
+                         , zc_Color_White()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT
@@ -294,7 +299,7 @@ BEGIN
                          , zc_Color_White()          AS Color_SummaSale
                          , zc_Color_White()          AS Color_Price 
                          , zc_Color_White()          AS Color_PriceWithVAT   --11658012
-                         , zc_Color_Yelow()          AS Color_PromoCond      --11658012
+                         , zc_Color_White()          AS Color_PromoCond      --11658012
                          , zc_Color_White()          AS Color_SummaProfit
                          , 'Фактическая'             AS Text
                     FROM tmpData
@@ -337,7 +342,7 @@ BEGIN
                          , zc_Color_Yelow()            AS Color_PriceIn      --11658012
                          , zc_Color_White()            AS Color_RetIn
                          , zc_Color_White()            AS Color_ContractCond
-                         , zc_Color_Yelow()            AS Color_AmountSale   --11658012
+                         , zc_Color_White()            AS Color_AmountSale   --11658012
                          , zc_Color_White()            AS Color_SummaSale
                          , 11658012                    AS Color_Price
                          , zc_Color_White()            AS Color_PriceWithVAT

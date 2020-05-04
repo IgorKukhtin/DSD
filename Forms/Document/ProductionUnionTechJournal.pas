@@ -164,6 +164,9 @@ type
     spPrintDays4: TdsdStoredProc;
     actPrintDays4: TdsdPrintAction;
     bbPrintDays4: TdxBarButton;
+    spPrintDays1_test: TdsdStoredProc;
+    actPrintDays1_test: TdsdPrintAction;
+    bbPrintDays1_test: TdxBarButton;
   private
     { Private declarations }
   public

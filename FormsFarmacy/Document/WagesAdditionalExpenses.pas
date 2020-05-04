@@ -67,6 +67,8 @@ type
     spClearSummaFullChargeFact: TdsdStoredProc;
     dxBarButton13: TdxBarButton;
     cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    SummaMoneyBoxResidual: TcxGridDBBandedColumn;
   private
     { Private declarations }
   public

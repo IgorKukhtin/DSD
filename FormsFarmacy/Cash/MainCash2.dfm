@@ -4069,6 +4069,7 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N41: TMenuItem
       Action = actUpdateProgram
+      ShortCut = 16469
     end
   end
   object FormParams: TdsdFormParams

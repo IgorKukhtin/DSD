@@ -17,7 +17,6 @@ BEGIN
         UPDATE CashSession SET
             LastConnect = inDateConnect
           , UserId      = inUserId
-          , StartUpdate = CURRENT_TIMESTAMP
         WHERE
             CashSession.Id = inCashSessionId;
     ELSE

@@ -3,18 +3,20 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_WagesAdditionalExpenses(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
- INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inUnitID              Integer   , -- Плдразделение
-    IN inSummaCleaning       TFloat    , -- Уборка
-    IN inSummaSP             TFloat    , -- СП
-    IN inSummaOther          TFloat    , -- Прочее
-    IN inValidationResults   TFloat    , -- Результаты проверки
-    IN inSummaFullChargeFact TFloat    , -- Полное списание факт
-    IN inisIssuedBy          Boolean   , -- Выдано
-    IN inComment             TVarChar  , -- Примечание
-   OUT outSummaTotal         TFloat    , -- Итого
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                       Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId               Integer   , -- Ключ объекта <Документ>
+    IN inUnitID                   Integer   , -- Плдразделение
+    IN inSummaCleaning            TFloat    , -- Уборка
+    IN inSummaSP                  TFloat    , -- СП
+    IN inSummaOther               TFloat    , -- Прочее
+    IN inSummaValidationResults   TFloat    , -- Результаты проверки
+    IN inSummaFullChargeFact      TFloat    , -- Полное списание факт
+    IN inisIssuedBy               Boolean   , -- Выдано
+    IN inComment                  TVarChar  , -- Примечание
+   OUT outSummaTotal              TFloat    , -- Итого
+   OUT outSummaFullChargeFact     TFloat    , -- Полное списание факт
+   OUT outSummaMoneyBoxUsed       TFloat    , -- Использовано из кошелька
+    IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Record
 AS
@@ -32,6 +34,17 @@ BEGIN
     IF vbStatusId <> zc_Enum_Status_UnComplete()
     THEN
         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+    END IF;
+    
+    IF inSummaFullChargeFact = 1.0
+    THEN
+        inSummaFullChargeFact :=  COALESCE((SELECT SUM(MovementItemFloat.ValueData)
+                                            FROM MovementItemFloat
+                                            WHERE MovementItemFloat.MovementItemId = ioId
+                                              AND MovementItemFloat.DescId in (zc_MIFloat_SummaFullChargeMonth(), zc_MIFloat_SummaFullCharge())), 0);
+    ELSEIF inSummaFullChargeFact > 0
+    THEN
+        RAISE EXCEPTION 'Ошибка.Сумма полного списания факт должна быть меньше или равна 0';
     END IF;
 
     IF COALESCE (ioId, 0) = 0
@@ -77,6 +90,16 @@ BEGIN
                                           ON MIFloat_ValidationResults.MovementItemId = MovementItem.Id
                                          AND MIFloat_ValidationResults.DescId = zc_MIFloat_ValidationResults()
 
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
+                                          ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                          ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeFact
+                                          ON MIFloat_SummaFullChargeFact.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaFullChargeFact.DescId = zc_MIFloat_SummaFullChargeFact()
+
               LEFT JOIN MovementItemBoolean AS MIB_isIssuedBy
                                             ON MIB_isIssuedBy.MovementItemId = MovementItem.Id
                                            AND MIB_isIssuedBy.DescId = zc_MIBoolean_isIssuedBy()
@@ -86,29 +109,49 @@ BEGIN
           AND (COALESCE (MIFloat_SummaCleaning.ValueData, 0) <> COALESCE (inSummaCleaning, 0)
             OR COALESCE (MIFloat_SummaSP.ValueData, 0) <>  COALESCE (inSummaSP, 0)
             OR COALESCE (MIFloat_SummaOther.ValueData, 0) <>  COALESCE (inSummaOther, 0)
-            OR COALESCE (MIFloat_ValidationResults.ValueData, 0) <>  COALESCE (inValidationResults, 0)))
+            OR COALESCE (MIFloat_ValidationResults.ValueData, 0) <>  COALESCE (inSummaValidationResults, 0)
+            OR COALESCE (inSummaFullChargeFact, 0) <>  COALESCE(MIFloat_SummaFullChargeFact.ValueData, 
+                                                                COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + 
+                                                                COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))))
       THEN
         RAISE EXCEPTION 'Ошибка. Дополнительные расходы выданы. Изменение сумм запрещено.';            
       END IF;
       
+      IF EXISTS( SELECT 1
+        FROM  MovementItem
+
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaFullChargeMonth
+                                          ON MIFloat_SummaFullChargeMonth.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaFullChargeMonth.DescId = zc_MIFloat_SummaFullChargeMonth()
+              LEFT JOIN MovementItemFloat AS MIFloat_SummaFullCharge
+                                          ON MIFloat_SummaFullCharge.MovementItemId = MovementItem.Id
+                                         AND MIFloat_SummaFullCharge.DescId = zc_MIFloat_SummaFullCharge()
+
+        WHERE MovementItem.Id = ioId 
+          AND COALESCE(inSummaFullChargeFact, 0)::TFloat < (COALESCE(MIFloat_SummaFullCharge.ValueData, 0) + COALESCE(MIFloat_SummaFullChargeMonth.ValueData, 0))::TFloat)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Сумма полного списания факт меньше меньше суммы полного списания.';            
+      END IF;
       
     END IF;
 
     -- сохранили
-    ioId := lpInsertUpdate_MovementItem_WagesAdditionalExpenses (ioId                  := ioId                  -- Ключ объекта <Элемент документа>
-                                                               , inMovementId          := inMovementId          -- ключ Документа
-                                                               , inUnitID              := inUnitID              -- Подразделение
-                                                               , inSummaCleaning       := inSummaCleaning       -- Уборка
-                                                               , inSummaSP             := inSummaSP             -- СП
-                                                               , inSummaOther          := inSummaOther          -- Прочее
-                                                               , inValidationResults   := inValidationResults   -- Результаты проверки
-                                                               , inSummaFullChargeFact := inSummaFullChargeFact -- Полное списание факт 
-                                                               , inisIssuedBy          := inisIssuedBy          -- Выдано
-                                                               , inComment             := inComment             -- Примечание
-                                                               , inUserId              := vbUserId              -- пользователь
+    ioId := lpInsertUpdate_MovementItem_WagesAdditionalExpenses (ioId                       := ioId                  -- Ключ объекта <Элемент документа>
+                                                               , inMovementId               := inMovementId          -- ключ Документа
+                                                               , inUnitID                   := inUnitID              -- Подразделение
+                                                               , inSummaCleaning            := inSummaCleaning       -- Уборка
+                                                               , inSummaSP                  := inSummaSP             -- СП
+                                                               , inSummaOther               := inSummaOther          -- Прочее
+                                                               , inSummaValidationResults   := inSummaValidationResults   -- Результаты проверки
+                                                               , inSummaFullChargeFact      := inSummaFullChargeFact -- Полное списание факт 
+                                                               , inisIssuedBy               := inisIssuedBy          -- Выдано
+                                                               , inComment                  := inComment             -- Примечание
+                                                               , inUserId                   := vbUserId              -- пользователь
                                                                  );
 
    outSummaTotal := COALESCE((SELECT Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0);
+   outSummaFullChargeFact := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaFullChargeFact() AND MovementItemID = ioId), 0);
+   outSummaMoneyBoxUsed := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaMoneyBoxUsed() AND MovementItemID = ioId), 0);
    
 END;
 $BODY$
@@ -124,4 +167,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_WagesAdditionalExpenses (, inSession:= '2')
-

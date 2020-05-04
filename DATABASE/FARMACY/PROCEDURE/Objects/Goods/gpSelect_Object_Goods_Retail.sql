@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isPromo boolean
              , isMarketToday Boolean
              , isNotMarion Boolean
-             , isNot Boolean, isNot_Sun_v2 Boolean
+             , isNot Boolean, isNot_Sun_v2 Boolean, isNot_Sun_v4 Boolean
              , LastPriceDate TDateTime, LastPriceOldDate TDateTime
              , CountDays TFloat, CountDays_inf TFloat
              , InsertName TVarChar, InsertDate TDateTime
@@ -257,6 +257,7 @@ BEGIN
            , Object_Goods_Main.isNotMarion
            , Object_Goods_Main.isNOT
            , Object_Goods_Main.isNOT_Sun_v2
+           , Object_Goods_Main.isNOT_Sun_v4
 
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPrice)::TDateTime     AS LastPriceDate
            , DATE_TRUNC ('DAY', Object_Goods_Main.LastPriceOld)::TDateTime  AS LastPriceOldDate
@@ -570,6 +571,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 03.05.20         * isNot_Sun_v4
  29.10.19                                                                     * Плоские таблицы
  24.10.19         * zc_ObjectBoolean_Goods_Not
  19.10.19         *

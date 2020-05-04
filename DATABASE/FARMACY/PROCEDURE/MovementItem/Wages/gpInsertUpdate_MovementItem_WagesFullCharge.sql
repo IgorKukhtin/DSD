@@ -88,7 +88,7 @@ BEGIN
     END IF;
 
     vbSumma := COALESCE(Round((
-                         SELECT SUM (COALESCE (MovementFloat_TotalSummSale.ValueData, 0) - COALESCE(MovementFloat_SummaFund.ValueData, 0))
+                         SELECT SUM (COALESCE (Round(MovementFloat_TotalSumm.ValueData, 2), 0) - COALESCE(MovementFloat_SummaFund.ValueData, 0))
                          FROM Movement
 
                               INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
@@ -103,9 +103,9 @@ BEGIN
                               LEFT JOIN MovementFloat AS MovementFloat_SummaFund
                                                       ON MovementFloat_SummaFund.MovementId =  Movement.Id
                                                      AND MovementFloat_SummaFund.DescId = zc_MovementFloat_SummaFund()
-                              LEFT JOIN MovementFloat AS MovementFloat_TotalSummSale
-                                                      ON MovementFloat_TotalSummSale.MovementId = Movement.Id
-                                                     AND MovementFloat_TotalSummSale.DescId = zc_MovementFloat_TotalSummSale()
+                              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                      ON MovementFloat_TotalSumm.MovementId = Movement.Id
+                                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
                          WHERE Movement.OperDate BETWEEN date_trunc('month', inOperDate) AND date_trunc('month', inOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY'
                            AND Movement.DescId = zc_Movement_Loss()
                            AND Movement.StatusId = zc_Enum_Status_Complete()
