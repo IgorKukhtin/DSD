@@ -211,13 +211,13 @@ object MainForm: TMainForm
       'Password=oracle'
       'User_Name=wms'
       'POOL_MaximumItems=50000')
-    Left = 176
-    Top = 51
+    Left = 152
+    Top = 27
   end
   object to_wms_Packets_query: TFDQuery
     Connection = FDC_wms
-    Left = 573
-    Top = 85
+    Left = 261
+    Top = 205
   end
   object FDC_alan: TFDConnection
     ConnectionName = 'alan_shluz'
@@ -227,21 +227,21 @@ object MainForm: TMainForm
       'User_Name=admin'
       'Server=integer-srv.alan.dp.ua'
       'Database=project')
-    Left = 96
-    Top = 48
+    Left = 64
+    Top = 24
   end
   object to_wms_Message_query: TFDQuery
     Connection = FDC_alan
     SQL.Strings = (
       'SELECT * FROM Object_VMS WHERE ProcName = '#39'???'#39)
-    Left = 37
-    Top = 96
+    Left = 53
+    Top = 88
   end
   object sp_alan_insert_packets_to_wms: TFDStoredProc
     Connection = FDC_wms
     StoredProcName = 'alan_insert_packets_to_wms'
-    Left = 279
-    Top = 31
+    Left = 271
+    Top = 15
     ParamData = <
       item
         Position = 1
@@ -262,7 +262,7 @@ object MainForm: TMainForm
   end
   object spInsert_wms_Message: TFDStoredProc
     Connection = FDC_alan
-    Left = 118
+    Left = 198
     Top = 112
   end
   object from_wms_PacketsHeader_query: TFDQuery
