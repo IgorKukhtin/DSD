@@ -1148,7 +1148,8 @@ uses
   OrderInternalJournalChoice in '..\..\Forms\Document\OrderInternalJournalChoice.pas' {OrderInternalJournalChoiceForm: TParentForm},
   BarCodeBoxDialog in '..\..\Forms\Guides\BarCodeBoxDialog.pas' {BarCodeBoxDialogForm: TParentForm},
   ReceiptMainGoods_Object in '..\..\Forms\Guides\ReceiptMainGoods_Object.pas' {ReceiptMainGoods_ObjectForm: TParentForm},
-  Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm};
+  Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm},
+  Partner_updatePersonal in '..\..\Forms\Guides\Partner_updatePersonal.pas' {Partner_updatePersonalForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
