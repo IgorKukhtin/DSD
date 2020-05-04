@@ -3920,8 +3920,8 @@
 				<Form>Goods_AssetProdForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner_updatePersonal.pas">
-				<Form>Partner_updatePersonalForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\PartnerPersonal.pas">
+				<Form>PartnerPersonalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

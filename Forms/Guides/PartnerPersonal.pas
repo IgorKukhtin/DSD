@@ -1,4 +1,4 @@
-unit Partner_updatePersonal;
+unit PartnerPersonal;
 
 interface
 
@@ -23,10 +23,11 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
   dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
-  cxTextEdit, dsdGuides, cxLabel, cxCurrencyEdit, Vcl.ExtCtrls;
+  cxTextEdit, dsdGuides, cxLabel, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxDropDownEdit, cxCalendar, ChoicePeriod, Vcl.ExtCtrls;
 
 type
-  TPartner_updatePersonalForm = class(TParentForm)
+  TPartnerPersonalForm = class(TParentForm)
     DataSource: TDataSource;
     MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -37,7 +38,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    spSelect: TdsdStoredProc;
+    dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
@@ -54,7 +55,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     Code: TcxGridDBColumn;
     JuridicalName: TcxGridDBColumn;
-    IsErased: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     Name: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -63,10 +64,12 @@ type
     OKPO: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    PriceListName: TcxGridDBColumn;
-    PriceListPromoName: TcxGridDBColumn;
-    StartPromo: TcxGridDBColumn;
-    EndPromo: TcxGridDBColumn;
+    StreetName: TcxGridDBColumn;
+    CaseNumber: TcxGridDBColumn;
+    RoomNumber: TcxGridDBColumn;
+    HouseNumber: TcxGridDBColumn;
+    CityKindChoiceForm: TOpenChoiceForm;
+    PriceListPromoChoiceForm: TOpenChoiceForm;
     cxLabel6: TcxLabel;
     JuridicalGuides: TdsdGuides;
     edJuridical: TcxButtonEdit;
@@ -74,60 +77,89 @@ type
     FormParams: TdsdFormParams;
     bbJuridicalLabel: TdxBarControlContainerItem;
     bbJuridicalGuides: TdxBarControlContainerItem;
-    GLNCode: TcxGridDBColumn;
-    GLNCodeJuridical: TcxGridDBColumn;
+    ShortName: TcxGridDBColumn;
+    PostalCode: TcxGridDBColumn;
+    CityName: TcxGridDBColumn;
+    CityKindName: TcxGridDBColumn;
+    RegionName: TcxGridDBColumn;
+    ProvinceName: TcxGridDBColumn;
+    StreetKindName: TcxGridDBColumn;
+    StreetKindChoiceForm: TOpenChoiceForm;
+    ProvinceCityName: TcxGridDBColumn;
+    Order_Name: TcxGridDBColumn;
+    Order_Mail: TcxGridDBColumn;
+    Order_Phone: TcxGridDBColumn;
+    Doc_Name: TcxGridDBColumn;
+    Doc_Phone: TcxGridDBColumn;
+    Doc_Mail: TcxGridDBColumn;
+    Act_Name: TcxGridDBColumn;
+    Act_Mail: TcxGridDBColumn;
+    Act_Phone: TcxGridDBColumn;
+    ContactPersonChoiceOrderForm: TOpenChoiceForm;
+    ContactPersonChoiceActForm: TOpenChoiceForm;
+    ContactPersonChoiceDocForm: TOpenChoiceForm;
+    MemberTakeName: TcxGridDBColumn;
+    PersonalTradeName: TcxGridDBColumn;
+    PersonalName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
     PartnerTagName: TcxGridDBColumn;
-    PersonalName: TcxGridDBColumn;
-    PersonalTradeName: TcxGridDBColumn;
-    Id: TcxGridDBColumn;
-    RetailName: TcxGridDBColumn;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocolOpen: TdxBarButton;
-    EdiOrdspr: TcxGridDBColumn;
-    EdiInvoice: TcxGridDBColumn;
-    EdiDesadv: TcxGridDBColumn;
-    spUpdate_Personal: TdsdStoredProc;
-    bbUpdateEdiOrdspr: TdxBarButton;
-    bbUpdateEdiInvoice: TdxBarButton;
-    bbUpdateEdiDesadv: TdxBarButton;
-    GLNCodeRetail: TcxGridDBColumn;
-    GLNCodeCorporate: TcxGridDBColumn;
-    PrepareDayCount: TcxGridDBColumn;
-    DocumentDayCount: TcxGridDBColumn;
-    PersonalChoiceForm: TOpenChoiceForm;
+    MemberTakeChoiceForm: TOpenChoiceForm;
     PersonalTradeChoiceForm: TOpenChoiceForm;
-    UnitCode: TcxGridDBColumn;
-    UnitName: TcxGridDBColumn;
-    PriceListName_Prior: TcxGridDBColumn;
-    PriceListName_30103: TcxGridDBColumn;
-    PriceListName_30201: TcxGridDBColumn;
-    RouteName: TcxGridDBColumn;
-    RouteName_30201: TcxGridDBColumn;
+    PersonalChoiceForm: TOpenChoiceForm;
+    AreaChoiceForm: TOpenChoiceForm;
+    PartnerTagChoiceForm: TOpenChoiceForm;
+    JuridicalGroupName: TcxGridDBColumn;
+    RetailName: TcxGridDBColumn;
+    InfoMoneyName_all: TcxGridDBColumn;
+    UnitName_Personal: TcxGridDBColumn;
+    PositionName_Personal: TcxGridDBColumn;
+    UnitName_PersonalTrade: TcxGridDBColumn;
+    PositionName_PersonalTrade: TcxGridDBColumn;
+    BranchName_Personal: TcxGridDBColumn;
+    Id: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    PaidKindName: TcxGridDBColumn;
+    DocBranchName: TcxGridDBColumn;
+    LastDocName: TcxGridDBColumn;
+    deStart: TcxDateEdit;
+    cxlEnd: TcxLabel;
+    deEnd: TcxDateEdit;
+    dxBarStatic2: TdxBarStatic;
+    chkByDoc: TdxBarControlContainerItem;
+    deStartDate: TdxBarControlContainerItem;
+    textTo: TdxBarControlContainerItem;
+    deEndDate: TdxBarControlContainerItem;
+    actPrint_byPartner: TdsdPrintAction;
+    bbPrint_byPartner: TdxBarButton;
+    cxLabel5: TcxLabel;
+    dxBarControlContainerItem1: TdxBarControlContainerItem;
+    dxBarControlContainerItem2: TdxBarControlContainerItem;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    actRefreshPeriod: TdsdDataSetRefresh;
+    cbPeriod: TcxCheckBox;
+    NameInteger: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
-    GPSN: TcxGridDBColumn;
-    GPSE: TcxGridDBColumn;
-    bbShowAllPartnerOnMap: TdxBarButton;
-    actShowAllPartnerOnMap: TdsdPartnerMapAction;
-    actShowCurPartnerOnMap: TdsdPartnerMapAction;
-    bbShowCurPartnerOnMap: TdxBarButton;
-    mactShowAllPartnerOnMap: TMultiAction;
-    actCheckShowAllPartnerOnMap: TdsdExecStoredProc;
-    spCheck: TdsdStoredProc;
     Panel: TPanel;
     edRetail: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    GuidesRetail: TdsdGuides;
     cxLabel2: TcxLabel;
     edPersonalTrade: TcxButtonEdit;
-    GuidesPersonalTrade: TdsdGuides;
     cxLabel4: TcxLabel;
     edRoute: TcxButtonEdit;
+    GuidesRetail: TdsdGuides;
+    GuidesPersonalTrade: TdsdGuides;
     GuidesRoute: TdsdGuides;
-    PersonalMerchChoiceForm: TOpenChoiceForm;
+    spCheck: TdsdStoredProc;
+    actShowCurPartnerOnMap: TdsdPartnerMapAction;
+    actCheckShowAllPartnerOnMap: TdsdExecStoredProc;
+    actShowAllPartnerOnMap: TdsdPartnerMapAction;
+    mactShowAllPartnerOnMap: TMultiAction;
+    bbShowCurPartnerOnMap: TdxBarButton;
+    bbShowAllPartnerOnMap: TdxBarButton;
   private
     { Private declarations }
   public
@@ -139,6 +171,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPartner_updatePersonalForm);
+  RegisterClass(TPartnerPersonalForm);
 
 end.

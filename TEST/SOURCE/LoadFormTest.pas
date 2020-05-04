@@ -1793,6 +1793,9 @@ end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerPersonalForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerContactForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerContactForm');
   //exit;
@@ -3299,6 +3302,7 @@ end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
 begin
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   exit;

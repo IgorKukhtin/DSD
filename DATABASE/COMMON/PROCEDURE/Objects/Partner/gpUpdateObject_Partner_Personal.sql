@@ -1,8 +1,8 @@
--- Function: gpUpdateObject_Partner_Personal()
+-- Function: gpUpdate_Object_Partner_Personal()
 
-DROP FUNCTION IF EXISTS gpUpdateObject_Partner_Personal (Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Personal (Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUpdateObject_Partner_Personal(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Personal(
     IN inId                  Integer   ,    -- ключ объекта <Контрагент> 
     IN inPersonalId          Integer   ,    -- Сотрудник (супервайзер)
     IN inPersonalTradeId     Integer   ,    -- Сотрудник (торговый)
@@ -14,15 +14,15 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_Params());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Update_Object_Partner_Personal());
 
    -- сохранили связь с <Сотрудник (супервайзер)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), ioId, inPersonalId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Personal(), inId, inPersonalId);
    -- сохранили связь с <Сотрудник (торговый)>
-   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), ioId, inPersonalTradeId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTrade(), inId, inPersonalTradeId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    
 END;
 $BODY$
