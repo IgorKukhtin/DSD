@@ -109,6 +109,8 @@ type
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialogPriceTax: TExecuteDialog;
     actChoiceCurrency: TOpenChoiceForm;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public

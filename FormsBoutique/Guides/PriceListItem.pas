@@ -108,6 +108,8 @@ type
     spGet_Current_Date: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialogPriceTax: TExecuteDialog;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
   private
     { Private declarations }
   public
