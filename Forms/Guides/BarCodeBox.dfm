@@ -2,8 +2,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
-  ClientHeight = 332
-  ClientWidth = 485
+  ClientHeight = 409
+  ClientWidth = 760
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,21 +21,27 @@ object BarCodeBoxForm: TBarCodeBoxForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 485
-    Height = 306
+    Width = 760
+    Height = 383
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 527
+    ExplicitWidth = 485
+    ExplicitHeight = 306
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = #1057#1090#1088#1086#1082': ,0'
+          Kind = skCount
+          Column = BarCode
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
@@ -44,10 +50,10 @@ object BarCodeBoxForm: TBarCodeBoxForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -56,14 +62,16 @@ object BarCodeBoxForm: TBarCodeBoxForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Options.Editing = False
+        Width = 47
       end
       object BarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093#1082#1086#1076
         DataBinding.FieldName = 'BarCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 153
+        Options.Editing = False
+        Width = 123
       end
       object BoxCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1103#1097'.'
@@ -74,21 +82,41 @@ object BarCodeBoxForm: TBarCodeBoxForm
         Options.Editing = False
         Width = 58
       end
+      object BarCode_Value: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077' '#1074' '#1064'/'#1050
+        DataBinding.FieldName = 'BarCode_Value'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 102
+      end
       object BoxName: TcxGridDBColumn
         Caption = #1071#1097#1080#1082
         DataBinding.FieldName = 'BoxName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 187
+        Width = 123
       end
       object Weight: TcxGridDBColumn
         Caption = #1058#1086#1095#1085#1099#1081' '#1074#1077#1089' '#1103#1097#1080#1082#1072
         DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 113
+        Width = 74
+      end
+      object AmountPrint: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095'.'
+        DataBinding.FieldName = 'AmountPrint'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1064'/'#1050
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -97,6 +125,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -189,6 +218,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -222,6 +259,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_2'
         end
         item
           Visible = True
@@ -281,6 +326,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbPrint_2: TdxBarButton
+      Action = actPrint_2
       Category = 0
     end
   end
@@ -547,6 +600,62 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end>
       isShowModal = False
     end
+    object actPrint_2: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' ('#1082#1086#1083'-'#1074#1086' '#1087#1077#1095')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'Print_Object_BarCodeBox'
+      ReportNameParam.Value = 'Print_Object_BarCodeBox'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -646,6 +755,37 @@ object BarCodeBoxForm: TBarCodeBoxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = actUpdate_Print
+      StoredProcList = <
+        item
+          StoredProc = actUpdate_Print
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_BarCodeBox'
@@ -654,7 +794,15 @@ object BarCodeBoxForm: TBarCodeBoxForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = Null
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
     PackSize = 1
     Left = 40
     Top = 208
@@ -754,5 +902,55 @@ object BarCodeBoxForm: TBarCodeBoxForm
     Params = <>
     Left = 125
     Top = 250
+  end
+  object actUpdate_Print: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_BarCodeBox_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmountPrint'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AmountPrint'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 456
+    Top = 115
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 564
+    Top = 81
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 564
+    Top = 134
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_BarCodeBox_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 639
+    Top = 240
   end
 end

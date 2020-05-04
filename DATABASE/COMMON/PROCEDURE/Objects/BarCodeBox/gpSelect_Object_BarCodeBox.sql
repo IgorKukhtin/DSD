@@ -1,14 +1,16 @@
 -- Function: gpSelect_Object_BarCodeBox (TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_Object_BarCodeBox (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BarCodeBox (Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BarCodeBox(
+    IN inShowAll        Boolean  ,
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar
-             , BarCode TVarChar
-             , Weight TFloat
+             , BarCode TVarChar, BarCode_Value TFloat
+             , Weight TFloat, AmountPrint TFloat
              , isErased Boolean
              ) AS
 $BODY$
@@ -17,6 +19,7 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_BarCodeBox());
 
    RETURN QUERY
+   WITH tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
        SELECT
              Object_BarCodeBox.Id         AS Id
            , Object_BarCodeBox.ObjectCode AS Code
@@ -26,11 +29,18 @@ BEGIN
            , Object_Box.ValueData  AS BoxName
 
            , Object_BarCodeBox.ValueData     AS BarCode
+           , CASE WHEN POSITION ('-' IN Object_BarCodeBox.ValueData) > 0
+                  THEN RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('0' IN Object_BarCodeBox.ValueData) ) :: Tfloat-- (RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('-' IN Object_BarCodeBox.ValueData))) :: integer
+                  ELSE 0
+             END  :: TFloat AS BarCode_Value
            , ObjectFloat_Weight.ValueData    AS Weight
+           , ObjectFloat_Print.ValueData     AS AmountPrint
 
            , Object_BarCodeBox.isErased   AS isErased
 
        FROM Object AS Object_BarCodeBox
+            INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_BarCodeBox.isErased
+
             LEFT JOIN ObjectLink AS ObjectLink_BarCodeBox_Box
                                  ON ObjectLink_BarCodeBox_Box.ObjectId = Object_BarCodeBox.Id
                                 AND ObjectLink_BarCodeBox_Box.DescId = zc_ObjectLink_BarCodeBox_Box()
@@ -39,6 +49,10 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                   ON ObjectFloat_Weight.ObjectId = Object_BarCodeBox.Id
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_BarCodeBox_Weight()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Print
+                                  ON ObjectFloat_Print.ObjectId = Object_BarCodeBox.Id
+                                 AND ObjectFloat_Print.DescId = zc_ObjectFloat_BarCodeBox_Print()
 
       WHERE Object_BarCodeBox.DescId = zc_Object_BarCodeBox();
 
@@ -50,9 +64,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.05.19          *
+ 04.05.20         *
+ 14.05.19         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_BarCodeBox('2')
+-- SELECT * FROM gpSelect_Object_BarCodeBox(false, '2')

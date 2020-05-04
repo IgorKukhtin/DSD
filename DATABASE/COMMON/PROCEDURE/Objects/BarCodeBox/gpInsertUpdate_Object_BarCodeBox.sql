@@ -1,14 +1,16 @@
 -- Function: gpInsertUpdate_Object_BarCodeBox (Integer, Integer, TVarChar, TFloat, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCodeBox (Integer, Integer, TVarChar, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_BarCodeBox (Integer, Integer, TVarChar, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BarCodeBox(
- INOUT ioId         Integer   , -- Ключ объекта <Талоны на топливо>
-    IN inCode       Integer   , -- свойство <Код >
-    IN inBarCode    TVarChar  , -- свойство <Ш/К>
-    IN inWeight     TFloat    , -- точный вес ящ
-    IN inBoxId      Integer   , -- ссылка на Ящик
-    IN inSession    TVarChar    -- сессия пользователя
+ INOUT ioId           Integer   , -- Ключ объекта <Талоны на топливо>
+    IN inCode         Integer   , -- свойство <Код >
+    IN inBarCode      TVarChar  , -- свойство <Ш/К>
+    IN inWeight       TFloat    , -- точный вес ящ
+    IN inAmountPrint  TFloat    , -- кол для печати
+    IN inBoxId        Integer   , -- ссылка на Ящик
+    IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -44,7 +46,9 @@ BEGIN
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BarCodeBox_Weight(), ioId, inWeight);
-
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_BarCodeBox_Print(), ioId, inAmountPrint);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -56,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.05.20         *
  14.05.19         *
 */
 /*

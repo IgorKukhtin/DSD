@@ -35,6 +35,8 @@ type
     GuidesBox: TdsdGuides;
     cxLabel4: TcxLabel;
     edWeight: TcxCurrencyEdit;
+    cxLabel2: TcxLabel;
+    edAmountPrint: TcxCurrencyEdit;
   private
     { Private declarations }
   public

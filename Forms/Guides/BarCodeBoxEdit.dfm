@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1072
   ClientHeight = 198
-  ClientWidth = 396
+  ClientWidth = 383
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -76,7 +76,7 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 7
-    Width = 296
+    Width = 145
   end
   object cxLabel4: TcxLabel
     Left = 200
@@ -90,6 +90,20 @@
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
+    Width = 136
+  end
+  object cxLabel2: TcxLabel
+    Left = 200
+    Top = 103
+    Caption = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1064'/'#1050
+  end
+  object edAmountPrint: TcxCurrencyEdit
+    Left = 200
+    Top = 123
+    EditValue = '0'
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 11
     Width = 136
   end
   object ActionList: TActionList
@@ -162,6 +176,14 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountPrint'
+        Value = Null
+        Component = edAmountPrint
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBoxId'
         Value = ''
         Component = GuidesBox
@@ -218,6 +240,13 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'AmountPrint'
+        Value = Null
+        Component = edAmountPrint
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'BoxId'
         Value = ''
         Component = GuidesBox
@@ -237,7 +266,7 @@
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Top = 31
+    Top = 55
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
