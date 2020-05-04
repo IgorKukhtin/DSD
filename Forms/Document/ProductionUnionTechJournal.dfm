@@ -3777,7 +3777,7 @@ inherited ProductionUnionTechJournalForm: TProductionUnionTechJournalForm
       item
         Name = 'inisCuterCount'
         Value = 'false'
-        DataType = ftDateTime
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
