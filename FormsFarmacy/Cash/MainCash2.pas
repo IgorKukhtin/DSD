@@ -632,6 +632,7 @@ type
     FPUSHStart: Boolean;
     FPUSHEnd: TDateTime;
     FLoadPUSH: Integer;
+    FUpdatePUSH: Integer;
 
     FOldAnalogFilter: String;
 
@@ -2109,18 +2110,23 @@ begin
       finally
         PUSHDS.Delete;
       end;
-    end else if not gc_User.Local and (FLoadPUSH = 2) then
+    end else if not gc_User.Local then
     begin
-      BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
-      LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
-      if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
-         ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+      if FUpdatePUSH = 0 then
       begin
-        ShowPUSHMessageCash(' оллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
-      end;
+        BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
+        LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
+        if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
+           ((BaseVersionInfo.VerHigh = LocalVersionInfo.VerHigh) and (BaseVersionInfo.VerLow > LocalVersionInfo.VerLow)) then
+        begin
+          ShowPUSHMessageCash(' оллеги, обновите FCash, доступно новое обновление (Ctrl+U)!', cResult);
+        end;
 
-      if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
-        SaveHardwareData;
+        if UnitConfigCDS.FindField('isGetHardwareData').AsBoolean then
+          SaveHardwareData;
+      end;
+      Inc(FUpdatePUSH);
+      if FUpdatePUSH = 11 then FUpdatePUSH := 0;
     end;
     Load_PUSH(false);
   finally
@@ -2400,13 +2406,15 @@ end;
 // проверили что есть остаток
 function TMainCashForm2.fCheck_RemainsError: Boolean;
 var
-  GoodsId_list, Amount_list: String;
+  GoodsId_list, Amount_list, PartionDate_list, NDS_list: String;
   B: TBookmark;
 begin
   Result := false;
   //
   GoodsId_list := '';
   Amount_list := '';
+  PartionDate_list := '';
+  NDS_list := '';
   //
   // формируетс€ список товаров
   with CheckCDS do
@@ -2421,11 +2429,17 @@ begin
         begin
           GoodsId_list := GoodsId_list + ';';
           Amount_list := Amount_list + ';';
+          PartionDate_list := PartionDate_list + ';';
+          NDS_list := NDS_list + ';';
         end;
         GoodsId_list := GoodsId_list +
           IntToStr(FieldByName('GoodsId').AsInteger);
         Amount_list := Amount_list +
           FloatToStr(FieldByName('Amount').asCurrency);
+        PartionDate_list := PartionDate_list +
+          IntToStr(FieldByName('PartionDateKindId').AsInteger);
+        NDS_list := NDS_list +
+          IntToStr(FieldByName('NDSKindId').AsInteger);
         Next;
       End;
       GotoBookmark(B);
@@ -2440,6 +2454,8 @@ begin
     try
       ParamByName('inGoodsId_list').Value := GoodsId_list;
       ParamByName('inAmount_list').Value := Amount_list;
+      ParamByName('inPartionDate_list').Value := PartionDate_list;
+      ParamByName('inNDS_list').Value := NDS_list;
       Execute;
       Result := ParamByName('outMessageText').Value = '';
       // if not Result then ShowMessage(ParamByName('outMessageText').Value);
@@ -2554,7 +2570,7 @@ begin
       if (FieldByName('PartionDateKindId').AsInteger <> 0) and
         (FieldByName('AmountMonth').AsInteger = 0) and
         not(actSpecCorr.Checked or actSpec.Checked) and
-        (FieldByName('Amount').AsInteger <> 0) then
+        (FieldByName('Amount').AsCurrency <> 0) then
       begin
         ShowMessage('ќшибка.¬ чеке использован прсроченный товар '#13#10 +
           FieldByName('GoodsName').AsString);
@@ -5619,6 +5635,7 @@ begin
   isScaner := false;
   difUpdate := True;
   FPUSHStart := True;
+  FUpdatePUSH := 0;
   //
   edDays.Value := 7;
   PanelMCSAuto.Visible := false;

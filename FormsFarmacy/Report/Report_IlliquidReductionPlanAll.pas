@@ -35,6 +35,7 @@ type
     cxLabel4: TcxLabel;
     AmountStart: TcxGridDBColumn;
     SummaPenalty: TcxGridDBColumn;
+    ManDays: TcxGridDBColumn;
   private
     { Private declarations }
   public

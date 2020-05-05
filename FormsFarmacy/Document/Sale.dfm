@@ -4,7 +4,7 @@ inherited SaleForm: TSaleForm
   ClientWidth = 683
   AddOnFormData.AddOnFormRefresh.ParentList = 'Sale'
   ExplicitWidth = 699
-  ExplicitHeight = 580
+  ExplicitHeight = 581
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,8 +22,6 @@ inherited SaleForm: TSaleForm
       inherited cxGrid: TcxGrid
         Width = 683
         Height = 201
-        ExplicitLeft = 40
-        ExplicitTop = 32
         ExplicitWidth = 683
         ExplicitHeight = 201
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1584,12 +1582,12 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inPriceSale'
+        Name = 'ioPriceSale'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'PriceSale'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

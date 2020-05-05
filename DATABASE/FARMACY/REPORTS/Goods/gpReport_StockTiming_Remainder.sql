@@ -23,6 +23,7 @@ RETURNS TABLE ( UnitCode        Integer      --Код подразделение откуда
               , Summa           TFloat
               , MakerId         Integer
               , ExpirationDate  TDateTime    --Срок годности
+              , Remains         TFloat  
               )
 
 AS
@@ -100,8 +101,8 @@ BEGIN
                                 FROM tmpGoods_All
                                 WHERE tmpGoods_All.StartDate_Promo <= inOperDate
                                   AND tmpGoods_All.EndDate_Promo >= '01.01.2019'
-                                )
-      ,   tmpMovementItem AS (SELECT  MovementLinkObject_Unit.ObjectId            AS UnitID,
+                                ) 
+      ,   tmpMovementItem AS (SELECT MovementLinkObject_Unit.ObjectId            AS UnitID,
                                      MovementItem.ObjectId                       AS GoodsID,
                                      MovementItemContainer.ContainerId           AS ContainerId,
 
@@ -208,6 +209,17 @@ BEGIN
                                       
                                  GROUP BY Movement.UnitId, Movement.GoodsId, Movement.MakerId, COALESCE(tmpContainerPD.ExpirationDate, Movement.ExpirationDate))
 
+      ,   tmpContainer AS (SELECT tmpContainerId.UnitID
+                                , tmpContainerId.GoodsId
+                                , SUM(Container.Amount)::TFloat  AS Remains                                     
+                           FROM (SELECT DISTINCT tmpMovementItem.UnitID, tmpMovementItem.GoodsId FROM tmpMovementItem) AS tmpContainerId
+                                INNER JOIN Container ON Container.WhereObjectId = tmpContainerId.UnitID
+                                                    AND Container.ObjectId = tmpContainerId.GoodsId
+                                                    AND Container.DescId  = zc_Container_Count()
+                                                    AND Container.Amount > 0
+                          GROUP BY tmpContainerId.UnitID
+                                 , tmpContainerId.GoodsId
+                          )
      SELECT
 
            Object_Unit.ObjectCode,
@@ -227,10 +239,15 @@ BEGIN
            ROUND(Movement.Amount * Round(Movement.Price, 2), 2)::TFloat,
 
            Movement.MakerId,
-           DATE_TRUNC ('DAY', Movement.ExpirationDate)::TDateTime
+           DATE_TRUNC ('DAY', Movement.ExpirationDate)::TDateTime,
+           tmpContainer.Remains
 
      FROM tmpMovementItemSum AS Movement
 
+          LEFT JOIN tmpContainer ON tmpContainer.UnitId = Movement.UnitId
+                                AND tmpContainer.GoodsId = Movement.GoodsId
+
+          
           LEFT JOIN Object AS Object_Unit
                            ON Object_Unit.ID = Movement.UnitId
 
@@ -239,6 +256,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Maker
                            ON Object_Maker.ID = Movement.MakerId
+          
      WHERE Movement.MakerId = inMakerId OR inMakerId = 0;
 
 

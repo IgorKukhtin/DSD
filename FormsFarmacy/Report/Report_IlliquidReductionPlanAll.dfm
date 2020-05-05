@@ -1,26 +1,26 @@
 inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1083#1072#1085' '#1087#1086' '#1091#1084#1077#1085#1100#1096#1077#1085#1080#1102' '#1082#1086#1083'-'#1074#1086' '#1085#1077#1083#1080#1082#1074#1080#1076#1072'>'
   ClientHeight = 504
-  ClientWidth = 869
+  ClientWidth = 949
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 885
+  ExplicitWidth = 965
   ExplicitHeight = 543
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 869
+    Width = 949
     Height = 447
-    ExplicitWidth = 824
+    ExplicitWidth = 869
     ExplicitHeight = 447
     ClientRectBottom = 447
-    ClientRectRight = 869
+    ClientRectRight = 949
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 824
+      ExplicitWidth = 869
       ExplicitHeight = 447
       inherited cxGrid: TcxGrid
-        Width = 869
+        Width = 949
         Height = 447
-        ExplicitWidth = 824
+        ExplicitWidth = 869
         ExplicitHeight = 447
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -129,13 +129,21 @@ inherited Report_IlliquidReductionPlanAllForm: TReport_IlliquidReductionPlanAllF
             Options.Editing = False
             Width = 73
           end
+          object ManDays: TcxGridDBColumn
+            Caption = #1054#1090#1088#1072#1073#1086#1090#1072#1085#1086' '#1076#1085#1077#1081
+            DataBinding.FieldName = 'ManDays'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 62
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 869
-    ExplicitWidth = 824
+    Width = 949
+    ExplicitWidth = 869
     inherited deStart: TcxDateEdit
       EditValue = 43344d
       Properties.DisplayFormat = 'mmmm yyyy'

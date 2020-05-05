@@ -1,30 +1,28 @@
 inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
   Caption = #1054#1090#1095#1077#1090' '#1090#1086#1074#1072#1088#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1042#1080#1090#1091#1088#1090#1091#1072#1083#1100#1085#1086#1084' '#1089#1082#1083#1072#1076#1077' '#1057#1088#1086#1082#1080
   ClientHeight = 480
-  ClientWidth = 1051
+  ClientWidth = 1096
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1067
+  ExplicitWidth = 1112
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 58
-    Width = 1051
+    Width = 1096
     Height = 422
     TabOrder = 3
     ExplicitTop = 58
     ExplicitWidth = 1051
     ExplicitHeight = 422
     ClientRectBottom = 422
-    ClientRectRight = 1051
+    ClientRectRight = 1096
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1051
       ExplicitHeight = 422
       inherited cxGrid: TcxGrid
-        Width = 1051
+        Width = 1096
         Height = 422
-        ExplicitLeft = 192
-        ExplicitTop = -3
         ExplicitWidth = 1051
         ExplicitHeight = 422
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -125,9 +123,15 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Column = Summa
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = Remains
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Content = nil
           Styles.Inactive = nil
@@ -235,12 +239,23 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentVert = vaCenter
             Width = 108
           end
+          object Remains: TcxGridDBColumn
+            Caption = #1058#1077#1082#1091#1097#1080#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'Remains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 105
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1051
+    Width = 1096
     Height = 32
     ExplicitWidth = 1051
     ExplicitHeight = 32
@@ -306,6 +321,25 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
       Top = 5
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100': '
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GuidesUnit
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited ActionList: TActionList
     object actGet_UserUnit: TdsdExecStoredProc

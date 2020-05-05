@@ -13,6 +13,14 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
+    
+    IF COALESCE((SELECT count(*) as CountProc  
+                 FROM pg_stat_activity
+                 WHERE state = 'active'
+                   AND query ilike '%gpFarmacy_Scheduler%'), 0) > 1
+    THEN
+      Return;
+    END IF;
 
     -- Создание технических переучетов
     BEGIN

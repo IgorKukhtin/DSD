@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_WagesAdditionalExpenses(
    OUT outSummaTotal              TFloat    , -- Итого
    OUT outSummaFullChargeFact     TFloat    , -- Полное списание факт
    OUT outSummaMoneyBoxUsed       TFloat    , -- Использовано из кошелька
+   OUT outSummaMoneyBoxResidual   TFloat    , -- Остаток по копилки
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Record
@@ -152,6 +153,9 @@ BEGIN
    outSummaTotal := COALESCE((SELECT Amount FROM MovementItem WHERE MovementItem.ID = ioId), 0);
    outSummaFullChargeFact := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaFullChargeFact() AND MovementItemID = ioId), 0);
    outSummaMoneyBoxUsed := COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaMoneyBoxUsed() AND MovementItemID = ioId), 0);
+   outSummaMoneyBoxResidual := COALESCE((SELECT Sum(ValueData) FROM MovementItemFloat WHERE DescID IN (zc_MIFloat_SummaMoneyBox(), zc_MIFloat_SummaMoneyBoxMonth()) AND MovementItemID = ioId), 0)
+                             - COALESCE((SELECT ValueData FROM MovementItemFloat WHERE DescID = zc_MIFloat_SummaMoneyBoxUsed() AND MovementItemID = ioId), 0);
+   IF outSummaMoneyBoxResidual < 0 THEN outSummaMoneyBoxResidual := 0; END IF;
    
 END;
 $BODY$
