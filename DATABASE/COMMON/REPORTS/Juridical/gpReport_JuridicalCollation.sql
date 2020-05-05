@@ -398,14 +398,14 @@ BEGIN
                                                                                THEN zc_MovementLinkObject_UnitForwarding()
                                                                             WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
                                                                                  THEN zc_MovementLinkObject_Personal()
-                                                                            WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
+                                                                            WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
                                                                                  THEN zc_MovementLinkObject_From()
                                                                             WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                                                                  THEN zc_MovementLinkObject_From()
                                                                        END
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id
-                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
+                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut(), zc_Movement_Loss())
                                                                                THEN zc_MovementLinkObject_To()
                                                                           WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                                                                                THEN zc_MovementLinkObject_To()
