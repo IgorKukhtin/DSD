@@ -4893,7 +4893,7 @@ begin
     ShowMessage('Чек по СП в VIP оправлять запрещено!.');
     exit;
   end;
-    exit;
+
   if not VIPDialogExecute(ManagerID, ManagerName, BayerName) then
     exit;
   //
