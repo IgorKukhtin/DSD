@@ -114,6 +114,7 @@ BEGIN
                                                               , inCode       := 0
                                                               , inBarCode    := vbBoxBarCode
                                                               , inWeight     := 0
+                                                              , inAmountPrint:= 0
                                                               , inBoxId      := vbBoxId
                                                               , inSession    := inSession
                                                                );

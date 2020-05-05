@@ -23,6 +23,7 @@ BEGIN
                                           , inCode       := lfGet_ObjectCode(0, zc_Object_BarCodeBox()) :: Integer
                                           , inBarCode    := tmpNew.BarCode   :: TVarChar
                                           , inWeight     := 0                :: TFloat
+                                          , inAmountPrint:= 2                :: TFloat
                                           , inBoxId      := inBoxId          :: Integer
                                           , inSession    := inSession        :: TVarChar
                                            ) 

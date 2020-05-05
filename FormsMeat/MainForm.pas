@@ -1106,6 +1106,8 @@ type
     miReport_Cash_olap: TMenuItem;
     actGoods_AssetProd: TdsdOpenForm;
     miGoods_AssetProd: TMenuItem;
+    actPartnerPersonal: TdsdOpenForm;
+    miPartnerPersonal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
