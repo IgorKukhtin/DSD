@@ -107,6 +107,10 @@ type
     macDelete_bySeparate: TMultiAction;
     bbInsert_bySeparate: TdxBarButton;
     bbDelete_bySeparate: TdxBarButton;
+    actPrintStickerGrid: TdsdPrintAction;
+    bbPrintStickerGrid: TdxBarButton;
+    IdBarCode: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
