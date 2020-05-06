@@ -238,6 +238,24 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 40
       end
+      object isVatPrice: TcxGridDBColumn
+        Caption = #1057#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' '#1089#1090#1088'.'
+        DataBinding.FieldName = 'isVatPrice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+        Options.Editing = False
+        Width = 110
+      end
+      object VatPriceDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095'. '#1089#1093'. '#1088#1072#1089#1095'. '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1089#1090#1088'.)'
+        DataBinding.FieldName = 'VatPriceDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057' '#1082#1072#1082#1086#1081' '#1076#1072#1090#1099' '#1089#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+        Options.Editing = False
+        Width = 124
+      end
       object DayTaxSummary: TcxGridDBColumn
         Caption = #1055#1077#1088#1080#1086#1076' '#1074' '#1076#1085'. '#1076#1083#1103' '#1089#1074#1086#1076#1085#1086#1081' '#1053#1053
         DataBinding.FieldName = 'DayTaxSummary'
@@ -540,6 +558,14 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_VatPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocolOpen'
         end
         item
@@ -611,6 +637,10 @@ object JuridicalForm: TJuridicalForm
       Action = actUpdate_IsBranchAll
       Category = 0
     end
+    object bbInsert_VatPrice: TdxBarButton
+      Action = macInsert_VatPrice
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -619,8 +649,10 @@ object JuridicalForm: TJuridicalForm
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
         item
+          StoredProc = spSelect
         end
         item
           StoredProc = spSelect
@@ -1058,6 +1090,70 @@ object JuridicalForm: TJuridicalForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1056#1072#1079#1088#1077#1096#1077#1085' '#1084#1080#1085'. '#1079#1072#1082#1072#1079' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 76
     end
+    object macInsert_VatPrice: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteVatPriceDialog
+        end
+        item
+          Action = actInsert_VatPrice
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      ImageIndex = 50
+    end
+    object ExecuteVatPriceDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      ImageIndex = 50
+      FormName = 'TJuridicalVatPriceDialogForm'
+      FormNameParam.Value = 'TJuridicalVatPriceDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inisVatPrice'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'isVatPrice'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inVatPriceDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'VatPriceDate'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actInsert_VatPrice: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_VatPrice
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_VatPrice
+        end>
+      Caption = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      ImageIndex = 50
+    end
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -1248,5 +1344,40 @@ object JuridicalForm: TJuridicalForm
     PackSize = 1
     Left = 504
     Top = 120
+  end
+  object spUpdate_VatPrice: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Juridical_VatPrice'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsVatPrice'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isVatPrice'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVatPriceDate'
+        Value = 'NULL'
+        Component = MasterCDS
+        ComponentItem = 'VatPriceDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 192
   end
 end

@@ -154,6 +154,10 @@ BEGIN
        , ObjectString_GUID.ValueData AS GUID
        , CASE WHEN ObjectString_GUID.ValueData <> '' THEN TRUE ELSE FALSE END :: Boolean AS isGUID
        , COALESCE (ObjectBoolean_isBranchAll.ValueData, FALSE)                :: Boolean AS isBranchAll
+
+       , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
+       , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
+
        , Object_Juridical.isErased   AS isErased
 
    FROM tmpIsErased
@@ -188,6 +192,13 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isVatPrice
+                                ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
+                               AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
+        LEFT JOIN ObjectDate AS ObjectDate_VatPrice
+                             ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
+                            AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
 
         LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
