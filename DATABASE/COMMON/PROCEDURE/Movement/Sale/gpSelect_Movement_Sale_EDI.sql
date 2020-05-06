@@ -291,6 +291,21 @@ BEGIN
                                                                      )
                                   WHERE EXISTS (SELECT MovementChildId FROM tmpTransport)
                                  )
+          , tmpObject_BankAccount_View AS (SELECT * FROM Object_BankAccount_View)
+          , tmpObject_Bank_View AS (SELECT * FROM Object_Bank_View)
+
+          , BankAccount_To AS (SELECT *
+                               FROM tmpObject_BankAccount_View
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                            ON MovementLinkObject_To.MovementId = inMovementId
+                                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              WHERE tmpObject_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                              LIMIT 1
+                              )
+
        -- Результат
        SELECT
              Movement.Id                                AS Id
@@ -636,7 +651,7 @@ BEGIN
                       ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!не ошибка!!!, выбирается с пустой УП
                                                                          AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
 
-            LEFT JOIN Object_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
+            LEFT JOIN tmpObject_BankAccount_View AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
 
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_Bank_From
@@ -648,7 +663,7 @@ BEGIN
                                           ON OHS_JD_JuridicalAddress_Bank_From.ObjectHistoryId = OH_JuridicalDetails_Bank_From.ObjectHistoryId
                                          AND OHS_JD_JuridicalAddress_Bank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
-            LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank_From ON Object_Bank_View_CorrespondentBank_From.Id = Object_BankAccount.CorrespondentBankId
+            LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_CorrespondentBank_From ON Object_Bank_View_CorrespondentBank_From.Id = Object_BankAccount.CorrespondentBankId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_CorrBank_From
                                                                 ON OH_JuridicalDetails_CorrBank_From.JuridicalId = Object_Bank_View_CorrespondentBank_From.JuridicalId
@@ -660,24 +675,11 @@ BEGIN
                                          AND OHS_JD_JuridicalAddress_CorrBank_From.DescId = zc_ObjectHistoryString_JuridicalDetails_JuridicalAddress()
 
 -- +++++++++++++++++ BANK TO
-            LEFT JOIN
-                      (SELECT *
-                       FROM Object_BankAccount_View
-                       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                    ON MovementLinkObject_To.MovementId = inMovementId
-                                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                       LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                            ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                           AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN BankAccount_To ON 1=1
 
-
-                      WHERE Object_BankAccount_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                      LIMIT 1
-                      ) AS BankAccount_To ON 1=1
-
-         LEFT JOIN Object_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
-         LEFT JOIN Object_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
-         LEFT JOIN Object_Bank_View AS Object_Bank_View_To ON Object_Bank_View_To.Id = BankAccount_To.BankId
+            LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_CorrespondentBank ON Object_Bank_View_CorrespondentBank.Id = BankAccount_To.CorrespondentBankId
+            LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_BenifBank ON Object_Bank_View_BenifBank.Id = BankAccount_To.BeneficiarysBankId
+            LEFT JOIN tmpObject_Bank_View AS Object_Bank_View_To ON Object_Bank_View_To.Id = BankAccount_To.BankId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_BenifBank_To
                                                                 ON OH_JuridicalDetails_BenifBank_To.JuridicalId = Object_Bank_View_BenifBank.JuridicalId
@@ -705,7 +707,7 @@ BEGIN
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
-       WHERE Movement.Id =  inMovementId
+       WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;

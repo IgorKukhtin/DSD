@@ -1,6 +1,6 @@
 -- Function: gpUpdate_Object_Juridical_VatPrice()
 
-DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_VatPrice (Integer, boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Juridical_VatPrice (Integer, TDateTime, boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpUpdate_Object_Juridical_VatPrice(
@@ -18,10 +18,10 @@ BEGIN
 
 
    -- сохранили свойство <>
---   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isVatPrice(), inId, inIsVatPrice);
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isVatPrice(), inId, inIsVatPrice);
 
    -- сохранили свойство <>
---   PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_Juridical_VatPrice(), inId, inVatPriceDate);
+   PERFORM lpInsertUpdate_ObjectDate(zc_ObjectDate_Juridical_VatPrice(), inId, inVatPriceDate);
 
 
 
