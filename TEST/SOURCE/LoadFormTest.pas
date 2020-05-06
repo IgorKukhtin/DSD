@@ -1417,6 +1417,9 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalVatPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalVatPriceDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');

@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_PrintKindItem
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_isOrderMin() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_isOrderMin' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_isBranchAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_isBranchAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_Juridical' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Juridical_VatPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Juridical_VatPrice' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 --
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Juridical_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Juridical_Basis' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
@@ -64,6 +65,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_isErase
                                   , inCode:= 8
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'> - удаление/восстановление.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_isErased_Juridical');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Juridical_Basis()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 9
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Juridical())||'> - изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Select_Object_Juridical_Basis');
+
 END $$;
 
 

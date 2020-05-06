@@ -30,6 +30,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                StartPromo TDateTime, EndPromo TDateTime,
                GUID TVarChar, isGUID Boolean,
                isBranchAll Boolean,
+               isVatPrice Boolean,
+               VatPriceDate TDateTime,
                isErased Boolean
               )
 AS
@@ -86,7 +88,48 @@ BEGIN
                                      WHERE ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0
                                        AND ObjectLink_Contract_JuridicalDocument.DescId = zc_ObjectLink_Contract_JuridicalDocument()
                                     )
-,  tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+ , tmpIsErased AS (SELECT FALSE AS isErased UNION ALL SELECT inShowAll AS isErased WHERE inShowAll = TRUE)
+
+ , tmpJuridical AS (SELECT Object_Juridical.*
+                    FROM Object AS Object_Juridical
+                         INNER JOIN tmpIsErased ON tmpIsErased.isErased = Object_Juridical.isErased
+                    WHERE Object_Juridical.DescId = zc_Object_Juridical()
+                   )
+ , tmpObjectString AS (SELECT ObjectString.*
+                       FROM ObjectString
+                       WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
+                         AND ObjectString.DescId IN (zc_ObjectString_Juridical_GLNCode()
+                                                   , zc_ObjectString_Juridical_GUID()
+                                                    )
+                       )
+
+ , tmpObjectBoolean AS (SELECT ObjectBoolean.*
+                       FROM ObjectBoolean
+                       WHERE ObjectBoolean.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
+                         AND ObjectBoolean.DescId IN (zc_ObjectBoolean_Juridical_isCorporate()
+                                                    , zc_ObjectBoolean_Juridical_isTaxSummary()
+                                                    , zc_ObjectBoolean_Juridical_isDiscountPrice()
+                                                    , zc_ObjectBoolean_Juridical_isPriceWithVAT()
+                                                    , zc_ObjectBoolean_Juridical_isLongUKTZED()
+                                                    , zc_ObjectBoolean_Juridical_isOrderMin()
+                                                    , zc_ObjectBoolean_Juridical_isBranchAll()
+                                                    , zc_ObjectBoolean_Juridical_isVatPrice()
+                                                    )
+                       )
+
+ , tmpObjectFloat AS (SELECT ObjectFloat.*
+                      FROM ObjectFloat
+                      WHERE ObjectFloat.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
+                        AND ObjectFloat.DescId IN (zc_ObjectFloat_Juridical_DayTaxSummary()
+                                                 , zc_ObjectFloat_Juridical_SummOrderFinance()
+                                                   )
+                       )
+ , tmpObjectDate AS (SELECT ObjectDate.*
+                      FROM ObjectDate
+                      WHERE ObjectDate.ObjectId IN (SELECT DISTINCT tmpJuridical.Id FROM tmpJuridical)
+                        AND ObjectDate.DescId = zc_ObjectDate_Juridical_VatPrice()
+                       )
+
 
    SELECT
          Object_Juridical.Id             AS Id
@@ -166,50 +209,50 @@ BEGIN
                          AND Object_Juridical.DescId = zc_Object_Juridical()
 
         LEFT JOIN tmpListBranch_Constraint ON tmpListBranch_Constraint.JuridicalId = Object_Juridical.Id
-        LEFT JOIN ObjectString AS ObjectString_GLNCode
-                               ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id
-                              AND ObjectString_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+        LEFT JOIN tmpObjectString AS ObjectString_GLNCode
+                                  ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isCorporate
                                 ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isTaxSummary
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isTaxSummary
                                 ON ObjectBoolean_isTaxSummary.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isTaxSummary.DescId = zc_ObjectBoolean_Juridical_isTaxSummary()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isDiscountPrice
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isDiscountPrice
                                 ON ObjectBoolean_isDiscountPrice.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isDiscountPrice.DescId = zc_ObjectBoolean_Juridical_isDiscountPrice()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isPriceWithVAT
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isPriceWithVAT
                                 ON ObjectBoolean_isPriceWithVAT.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isPriceWithVAT.DescId = zc_ObjectBoolean_Juridical_isPriceWithVAT()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isLongUKTZED
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isLongUKTZED
                                 ON ObjectBoolean_isLongUKTZED.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isLongUKTZED.DescId = zc_ObjectBoolean_Juridical_isLongUKTZED()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isOrderMin
                                 ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isBranchAll
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isBranchAll
                                 ON ObjectBoolean_isBranchAll.ObjectId = Object_Juridical.Id
                                AND ObjectBoolean_isBranchAll.DescId   = zc_ObjectBoolean_Juridical_isBranchAll()
 
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_isVatPrice
+        LEFT JOIN tmpObjectBoolean AS ObjectBoolean_isVatPrice
                                 ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
                                AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
-        LEFT JOIN ObjectDate AS ObjectDate_VatPrice
+        LEFT JOIN tmpObjectDate AS ObjectDate_VatPrice
                              ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
-                            AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
+                            --AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
 
-        LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_DayTaxSummary
                               ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id
                              AND ObjectFloat_DayTaxSummary.DescId = zc_ObjectFloat_Juridical_DayTaxSummary()
-        LEFT JOIN ObjectFloat AS ObjectFloat_SummOrderFinance
+        LEFT JOIN tmpObjectFloat AS ObjectFloat_SummOrderFinance
                               ON ObjectFloat_SummOrderFinance.ObjectId = Object_Juridical.Id
                              AND ObjectFloat_SummOrderFinance.DescId = zc_ObjectFloat_Juridical_SummOrderFinance()
 
-        LEFT JOIN ObjectString AS ObjectString_GUID
-                               ON ObjectString_GUID.ObjectId = Object_Juridical.Id
-                              AND ObjectString_GUID.DescId = zc_ObjectString_Juridical_GUID()
+        LEFT JOIN tmpObjectString AS ObjectString_GUID
+                                  ON ObjectString_GUID.ObjectId = Object_Juridical.Id
+                                 AND ObjectString_GUID.DescId = zc_ObjectString_Juridical_GUID()
 
 
         /*LEFT JOIN ObjectDate AS ObjectDate_StartPromo

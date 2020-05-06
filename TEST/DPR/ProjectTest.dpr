@@ -1149,7 +1149,8 @@ uses
   BarCodeBoxDialog in '..\..\Forms\Guides\BarCodeBoxDialog.pas' {BarCodeBoxDialogForm: TParentForm},
   ReceiptMainGoods_Object in '..\..\Forms\Guides\ReceiptMainGoods_Object.pas' {ReceiptMainGoods_ObjectForm: TParentForm},
   Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm},
-  PartnerPersonal in '..\..\Forms\Guides\PartnerPersonal.pas' {PartnerPersonalForm: TParentForm};
+  PartnerPersonal in '..\..\Forms\Guides\PartnerPersonal.pas' {PartnerPersonalForm: TParentForm},
+  JuridicalVatPriceDialog in '..\..\Forms\Guides\JuridicalVatPriceDialog.pas' {JuridicalVatPriceDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

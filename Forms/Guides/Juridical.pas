@@ -111,6 +111,7 @@ type
     ExecuteVatPriceDialog: TExecuteDialog;
     macInsert_VatPrice: TMultiAction;
     bbInsert_VatPrice: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

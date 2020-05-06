@@ -15,6 +15,7 @@ object JuridicalForm: TJuridicalForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter: TcxSplitter
@@ -653,9 +654,6 @@ object JuridicalForm: TJuridicalForm
       StoredProcList = <
         item
           StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1099,9 +1097,6 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Action = actInsert_VatPrice
-        end
-        item
-          Action = actRefresh
         end>
       Caption = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
       Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
@@ -1122,7 +1117,7 @@ object JuridicalForm: TJuridicalForm
       GuiParams = <
         item
           Name = 'inisVatPrice'
-          Value = Null
+          Value = 'false'
           Component = MasterCDS
           ComponentItem = 'isVatPrice'
           DataType = ftBoolean
@@ -1131,7 +1126,7 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Name = 'inVatPriceDate'
-          Value = 'NULL'
+          Value = '01.05.2020'
           Component = MasterCDS
           ComponentItem = 'VatPriceDate'
           DataType = ftDateTime
@@ -1188,8 +1183,8 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 136
+    Left = 112
+    Top = 144
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_isErased_Juridical'
@@ -1359,25 +1354,44 @@ object JuridicalForm: TJuridicalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsVatPrice'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isVatPrice'
-        DataType = ftBoolean
+        Name = 'inVatPriceDate'
+        Value = 'NULL'
+        Component = FormParams
+        ComponentItem = 'inVatPriceDate'
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inVatPriceDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'VatPriceDate'
-        DataType = ftDateTime
+        Name = 'inIsVatPrice'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inIsVatPrice'
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 680
     Top = 192
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inisVatPrice'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVatPriceDate'
+        Value = '01.05.2020'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 735
+    Top = 127
   end
 end
