@@ -63,6 +63,7 @@ BEGIN
                     MI_Payment.income_JuridicalId
                   , MI_Payment.Income_JuridicalName
                   , Sum(MI_Payment.SummaPay)          AS SummaPay
+                  , MI_Payment.Income_NDSKindId
                   , MI_Payment.Income_NDS
                   , MI_Payment.BankAccountId
 
@@ -95,7 +96,7 @@ BEGIN
               AND MI_Payment.isErased = FALSE
               AND MI_Payment.NeedPay = TRUE
               AND COALESCE(Object_Bank.id, 0) = 4813205
-           GROUP BY MI_Payment.income_JuridicalId, MI_Payment.Income_JuridicalName, MI_Payment.Income_NDS,
+           GROUP BY MI_Payment.income_JuridicalId, MI_Payment.Income_JuridicalName, MI_Payment.Income_NDSKindId, MI_Payment.Income_NDS,
                     tmpJuridicalSettings.InvNumber, tmpJuridicalSettings.StartDate, MI_Payment.BankAccountId,
                     ObjectHistoryString_JuridicalDetails_OKPO.ValueData)
 
@@ -132,8 +133,10 @@ BEGIN
              THEN ObjectString_CBPurposePayment.ValueData
              ELSE 'Сплата за товар мед.призначення' END||
              'зг.дог.№ '||MI_Payment.ContractNumber::TVarChar||' від '||
-             TO_CHAR (MI_Payment.ContractStartDate, 'dd.mm.yyyy')||' р У т.ч. ПДВ '||
-             MI_Payment.Income_NDS::Integer::TVarChar||'%')::TVarChar    AS CBPurposePayment
+             TO_CHAR (MI_Payment.ContractStartDate, 'dd.mm.yyyy')||' р '||
+             CASE WHEN MI_Payment.Income_NDSKindId = zc_Enum_NDSKind_Special_0()
+                  THEN 'Без ПДВ'
+                  ELSE 'У т.ч. ПДВ '||MI_Payment.Income_NDS::Integer::TVarChar||'%'END)::TVarChar    AS CBPurposePayment
 
         FROM tmpMovementItem_Payment AS MI_Payment
 
@@ -179,6 +182,6 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportUkrxim (Integer,TVarChar) OWNER T
  08.09.19                                                                       *
 */
 
--- SELECT * FROM gpSelect_Movement_Payment_ExportUkrxim (inMovementId := 15584404 , inSession:= '5');
+-- SELECT * FROM gpSelect_Movement_Payment_ExportUkrxim (inMovementId := 18754855 , inSession:= '5');
 
 

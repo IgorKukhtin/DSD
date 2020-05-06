@@ -4,24 +4,22 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 1150
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1166
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1150
     Height = 417
-    ExplicitWidth = 1144
+    ExplicitWidth = 1150
     ExplicitHeight = 417
     ClientRectBottom = 417
     ClientRectRight = 1150
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1144
+      ExplicitWidth = 1150
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
         Width = 1150
         Height = 417
-        ExplicitLeft = 16
-        ExplicitTop = -24
         ExplicitWidth = 1150
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -447,7 +445,7 @@ inherited GoodsForm: TGoodsForm
             Width = 99
           end
           object GoodsAnalogATC: TcxGridDBColumn
-            Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072' ATC'
+            Caption = #1050#1086#1076' '#1040#1058#1057
             DataBinding.FieldName = 'GoodsAnalogATC'
             PropertiesClassName = 'TcxMemoProperties'
             Properties.MaxLength = 255

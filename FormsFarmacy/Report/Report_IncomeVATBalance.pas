@@ -29,6 +29,8 @@ type
     cxSplitter1: TcxSplitter;
     actGridToExcelItog: TdsdGridToExcel;
     dxBarButton1: TdxBarButton;
+    RemainsNDS: TcxGridDBColumn;
+    RemainsSale: TcxGridDBColumn;
   private
     { Private declarations }
   public

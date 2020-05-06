@@ -3604,7 +3604,7 @@ inherited MainForm: TMainForm
     object actReport_IncomeVATBalance: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       MoveParams = <>
-      Caption = #1055#1088#1080#1093#1086#1076#1072' '#1080' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1053#1044#1057
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1080' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1077#1088#1080#1086#1076' '#1073#1077#1079' '#1053#1044#1057
       FormName = 'TReport_IncomeVATBalanceForm'
       FormNameParam.Value = 'TReport_IncomeVATBalanceForm'
       FormNameParam.DataType = ftString

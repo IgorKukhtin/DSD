@@ -1,28 +1,28 @@
 inherited Report_IncomeVATBalanceForm: TReport_IncomeVATBalanceForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1080#1093#1086#1076#1072' '#1080' '#1086#1089#1090#1072#1090#1082#1072' '#1087#1086' '#1053#1044#1057'>'
+  Caption = #1054#1090#1095#1077#1090' <'#1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1080' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1077#1088#1080#1086#1076' '#1073#1077#1079' '#1053#1044#1057'>'
   ClientHeight = 555
-  ClientWidth = 848
+  ClientWidth = 1024
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 864
+  ExplicitWidth = 1040
   ExplicitHeight = 594
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 848
+    Width = 1024
     Height = 496
     ExplicitTop = 59
-    ExplicitWidth = 848
+    ExplicitWidth = 1024
     ExplicitHeight = 496
     ClientRectBottom = 496
-    ClientRectRight = 848
+    ClientRectRight = 1024
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 848
+      ExplicitWidth = 1024
       ExplicitHeight = 496
       inherited cxGrid: TcxGrid
-        Width = 848
+        Width = 1024
         Height = 488
-        ExplicitWidth = 848
+        ExplicitWidth = 1024
         ExplicitHeight = 488
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -90,6 +90,16 @@ inherited Report_IncomeVATBalanceForm: TReport_IncomeVATBalanceForm
               Format = ',0.00;-,0.00; ;'
               Kind = skSum
               Column = ChangePercent
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = RemainsSale
+            end
+            item
+              Format = ',0.00;-,0.00; ;'
+              Kind = skSum
+              Column = RemainsNDS
             end>
           Styles.Content = nil
           Styles.Inactive = nil
@@ -126,7 +136,7 @@ inherited Report_IncomeVATBalanceForm: TReport_IncomeVATBalanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 165
+            Width = 153
           end
           object AmountSale: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1087#1088#1080#1093#1086#1076#1072' ('#1073#1077#1079' '#1053#1044#1057') '#1087#1088#1086#1076#1072#1085#1085#1086#1075#1086' '#1090#1086#1074#1072#1088#1072
@@ -136,24 +146,44 @@ inherited Report_IncomeVATBalanceForm: TReport_IncomeVATBalanceForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 130
+            Width = 120
           end
           object ChangePercent: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' ('#1073#1077#1079' '#1053#1044#1057')'
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1079#1072#1082#1091#1087#1086#1095#1085#1099#1084' '#1094#1077#1085#1072#1084' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Remains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 119
+            Width = 120
+          end
+          object RemainsNDS: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1079#1072#1082#1091#1087#1086#1095#1085#1099#1084' '#1094#1077#1085#1072#1084' (c '#1053#1044#1057')'
+            DataBinding.FieldName = 'RemainsNDS'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
+          end
+          object RemainsSale: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1090#1086#1074#1072#1088#1072' '#1087#1086' '#1094#1077#1085#1072#1084' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' (c '#1053#1044#1057')'
+            DataBinding.FieldName = 'RemainsSale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 120
           end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 488
-        Width = 848
+        Width = 1024
         Height = 8
         Touch.ParentTabletOptions = False
         Touch.TabletOptions = [toPressAndHold]
@@ -162,9 +192,9 @@ inherited Report_IncomeVATBalanceForm: TReport_IncomeVATBalanceForm
     end
   end
   inherited Panel: TPanel
-    Width = 848
+    Width = 1024
     Height = 33
-    ExplicitWidth = 848
+    ExplicitWidth = 1024
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       EditValue = 42491d

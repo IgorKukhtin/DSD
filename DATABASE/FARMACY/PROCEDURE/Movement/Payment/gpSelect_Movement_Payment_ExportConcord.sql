@@ -61,6 +61,7 @@ BEGIN
                     MI_Payment.income_JuridicalId
                   , MI_Payment.Income_JuridicalName
                   , Sum(MI_Payment.SummaPay)          AS SummaPay
+                  , MI_Payment.Income_NDSKindId
                   , MI_Payment.Income_NDS
                   , MI_Payment.BankAccountId
 
@@ -102,7 +103,7 @@ BEGIN
               AND MI_Payment.isErased = FALSE
               AND MI_Payment.NeedPay = TRUE
               AND COALESCE(Object_Bank.id, 0) = 4611431
-           GROUP BY MI_Payment.income_JuridicalId, MI_Payment.Income_JuridicalName, MI_Payment.Income_NDS,
+           GROUP BY MI_Payment.income_JuridicalId, MI_Payment.Income_JuridicalName, MI_Payment.Income_NDSKindId, MI_Payment.Income_NDS,
                     tmpJuridicalSettings.InvNumber, tmpJuridicalSettings.StartDate, MI_Payment.BankAccountId,
                     ObjectHistoryString_JuridicalDetails_OKPO.ValueData, ObjectHistoryString_JuridicalDetails_Unit_OKPO.ValueData)
 
@@ -124,8 +125,10 @@ BEGIN
              THEN ObjectString_CBPurposePayment.ValueData
              ELSE 'Сплата за товар мед.призначення' END||
              'зг.дог.№ '||MI_Payment.ContractNumber::TVarChar||' від '||
-             TO_CHAR (MI_Payment.ContractStartDate, 'dd.mm.yyyy')||' р У т.ч. ПДВ '||
-             MI_Payment.Income_NDS::Integer::TVarChar||'%')::TVarChar    AS N_P
+             TO_CHAR (MI_Payment.ContractStartDate, 'dd.mm.yyyy')||' р '||
+             CASE WHEN MI_Payment.Income_NDSKindId = zc_Enum_NDSKind_Special_0()
+                  THEN 'Без ПДВ'
+                  ELSE 'У т.ч. ПДВ '||MI_Payment.Income_NDS::Integer::TVarChar||'%'END)::TVarChar    AS N_P
           , CASE WHEN TRIM(upper(SUBSTRING(OS_BankAccount_CBAccount.ValueData, 1, 2))) <> 'UA'
             THEN OS_BankAccount_CBAccount.ValueData 
             ELSE OS_BankAccount_CBAccountOld.ValueData END::TVarChar AS KL_CHK
@@ -201,4 +204,6 @@ ALTER FUNCTION gpSelect_Movement_Payment_ExportConcord (Integer,TVarChar) OWNER 
  08.09.19                                                                       *
 */
 
--- select * from gpSelect_Movement_Payment_ExportConcord(inMovementId := 16025389 ,  inSession := '3');
+-- 
+select * from gpSelect_Movement_Payment_ExportConcord(inMovementId := 18754855 ,  inSession := '3');
+

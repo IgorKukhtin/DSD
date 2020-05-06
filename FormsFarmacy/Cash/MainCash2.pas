@@ -2616,6 +2616,11 @@ begin
     end;
   end;
 
+  // проверили что есть остаток
+  if not gc_User.Local then
+    if fCheck_RemainsError = false then
+      exit;
+
   Add_Log('PutCheckToCash');
   PaidType := ptMoney;
   // спросили сумму и тип оплаты
@@ -2660,11 +2665,6 @@ begin
   ShapeState.Brush.Color := clYellow;
   ShapeState.Repaint;
   Application.ProcessMessages;
-
-  // проверили что есть остаток
-  if not gc_User.Local then
-    if fCheck_RemainsError = false then
-      exit;
 
   // проверили что этот чек Не был проведен другой кассой - 04.02.2017
   if not gc_User.Local and (FormParams.ParamByName('CheckId').Value <> 0) then
