@@ -136,9 +136,10 @@ procedure TLoadReportTest.LoadAllReportFormTest;
 var
  i : integer;
 begin
+{
   LoadReportFromFile('Print_Object_BarCodeBox', ReportPath + '\Товарный Учет\Print_Object_BarCodeBox.fr3');
   exit;
- {
+
   LoadReportFromFile('PrintMovement_WeighingProductionBarCode', ReportPath + '\Товарный Учет\PrintMovement_WeighingProductionBarCode.fr3');
   exit;
 
@@ -320,10 +321,10 @@ begin
   LoadReportFromFile('Плановая Прибыль (сравнение цен себестоимости)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (сравнение цен себестоимости).fr3');
 
   LoadReportFromFile('Плановая Прибыль (чистая прибыль)', ReportPath + '\Отчеты (производство)\Плановая Прибыль (чистая прибыль).fr3');
-   }
+
   LoadReportFromFile('Производство Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство Факт расход сырья.fr3');
   exit;
-  {
+
   LoadReportFromFile('Производство План и Факт расход сырья', ReportPath + '\Отчеты (производство)\Производство План и Факт расход сырья.fr3');
   LoadReportFromFile('Производство План и Факт запас цен', ReportPath + '\Отчеты (производство)\Производство План и Факт запас цен.fr3');
 
@@ -349,12 +350,12 @@ begin
   LoadReportFromFile('Акт обвалки', ReportPath + '\Производство\Акт обвалки.fr3');
   LoadReportFromFile('Накладная по обвалке', ReportPath + '\Производство\Накладная по обвалке.fr3');
   LoadReportFromFile('Накладная по взвешиванию куттера', ReportPath + '\Производство\Накладная по взвешиванию куттера.fr3');
-  }
+
    LoadReportFromFile('Производство (по дням для сырья)', ReportPath + '\Производство\Производство (по дням для сырья).fr3');
    //LoadReportFromFile('Производство (по дням для специй)', ReportPath + '\Производство\Производство (по дням для специй).fr3');
    //LoadReportFromFile('Производство (по дням для оболочки)', ReportPath + '\Производство\Производство (по дням для оболочки).fr3');
     exit;
-  {
+
   LoadReportFromFile('Заявка на производство', ReportPath + '\Производство\Заявка на производство.fr3');
   LoadReportFromFile('Заявка на упаковку', ReportPath + '\Производство\Заявка на упаковку.fr3');
 
@@ -367,8 +368,10 @@ begin
 
   LoadReportFromFile('Заявка на производство (скан)', ReportPath + '\Производство\Заявка на производство (скан).fr3');
   LoadReportFromFile('Заявка на упаковку (скан)', ReportPath + '\Производство\Заявка на упаковку (скан).fr3');
+  }
   LoadReportFromFile('Заявка на сырье (скан)', ReportPath + '\Производство\Заявка на сырье (скан).fr3');
-
+   exit;
+   {
   LoadReportFromFile('Заявка на упаковку (пленка)', ReportPath + '\Производство\Заявка на упаковку (пленка).fr3');
   exit;
 

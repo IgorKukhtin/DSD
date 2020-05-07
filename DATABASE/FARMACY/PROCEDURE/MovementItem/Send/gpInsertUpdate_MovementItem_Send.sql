@@ -117,6 +117,17 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
         END IF;
+        
+        IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                     FROM Object AS Object_CashSettings
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                  ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                                 AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                       AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+        END IF;                                
 
         --определяем подразделение отправителя
         SELECT MovementLinkObject_From.ObjectId AS vbFromId
@@ -129,29 +140,35 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);
         END IF;
-
-        IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
+        
+        IF vbUnitId <> 11299914 OR (DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH' - ('' ||
+            CASE WHEN date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') = 1
+                 THEN 6 - date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH')
+                 ELSE date_part('isodow', DATE_TRUNC ('MONTH', CURRENT_DATE) + INTERVAL '1 MONTH') - 2 END|| 'DAY ')::INTERVAL) <= CURRENT_DATE
         THEN
-          IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
+          IF COALESCE (vbFromId, 0) = COALESCE (vbUserUnitId, 0)
           THEN
-            RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
+            IF COALESCE (vbAmountManual, 0) <> COALESCE (inAmountManual, 0)
+            THEN
+              RAISE EXCEPTION 'Ошибка. Изменять <Факт кол-во точки-получателя> вам запрещено.';
+            END IF;
+          END IF;
+
+          IF COALESCE (vbUnitId, 0) = COALESCE (vbUserUnitId, 0)
+          THEN
+            IF COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0) OR
+             COALESCE (vbAmountStorage, 0) <> COALESCE (vbAmountStorage, 0)
+            THEN
+              RAISE EXCEPTION 'Ошибка. Изменять <Кол-во, загружаемое в точку-получатель> и <Факт кол-во точки-отправителя> вам запрещено.';
+            END IF;
+          END IF;
+
+          IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
+          THEN
+            RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
           END IF;
         END IF;
-
-        IF COALESCE (vbUnitId, 0) = COALESCE (vbUserUnitId, 0)
-        THEN
-          IF COALESCE (vbAmount, 0) <> COALESCE (inAmount, 0) OR
-           COALESCE (vbAmountStorage, 0) <> COALESCE (vbAmountStorage, 0)
-          THEN
-            RAISE EXCEPTION 'Ошибка. Изменять <Кол-во, загружаемое в точку-получатель> и <Факт кол-во точки-отправителя> вам запрещено.';
-          END IF;
-        END IF;
-
-        IF COALESCE (ioId, 0) <> 0 AND vbIsSUN = TRUE AND ceil(vbAmount) < inAmount
-        THEN
-          RAISE EXCEPTION 'Ошибка. Увеличивать количество в перемещениях по СУН вам запрещено.';
-        END IF;
-
+        
 /*        IF EXISTS(SELECT 1 FROM MovementBoolean
                   WHERE MovementBoolean.MovementId = inMovementId
                     AND MovementBoolean.DescId = zc_MovementBoolean_isAuto()

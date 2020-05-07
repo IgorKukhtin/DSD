@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3601,6 +3601,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_IncomeVATBalance: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1080' '#1086#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1087#1077#1088#1080#1086#1076' '#1073#1077#1079' '#1053#1044#1057
+      FormName = 'TReport_IncomeVATBalanceForm'
+      FormNameParam.Value = 'TReport_IncomeVATBalanceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4096,6 +4107,9 @@ inherited MainForm: TMainForm
       end
       object miReport_JuridicalSales: TMenuItem
         Action = actReport_JuridicalSales
+      end
+      object N235: TMenuItem
+        Action = actReport_IncomeVATBalance
       end
     end
     object miReports: TMenuItem [5]

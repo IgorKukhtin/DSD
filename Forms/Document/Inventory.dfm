@@ -330,6 +330,18 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object IdBarCode: TcxGridDBColumn
+            Caption = #1064#1090#1088#1080#1093#1082#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'IdBarCode'
+            Visible = False
+            Width = 70
+          end
+          object OperDate: TcxGridDBColumn
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            VisibleForCustomization = False
+            Width = 70
+          end
         end
       end
     end
@@ -766,6 +778,39 @@ inherited InventoryForm: TInventoryForm
       View = cxGridDBTableView
       Caption = 'mactUpdate_SummAll'
       Hint = 'mactUpdate_SummAll'
+    end
+    object actPrintStickerGrid: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintSticker
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintSticker
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080' ('#1080#1079' '#1075#1088#1080#1076#1072')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072'-'#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080' ('#1080#1079' '#1075#1088#1080#1076#1072')'
+      ImageIndex = 18
+      DataSets = <
+        item
+          UserName = 'frxDBDItems'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'isPrintTermo'
+          Value = 'False'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_IncomeSticker'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1089#1090#1080#1082#1077#1088#1072' '#1089#1072#1084#1086#1082#1083#1077#1081#1082#1080
+      ReportNameParam.Value = 'PrintMovement_IncomeSticker'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
     end
     object actGoodsKindCompleteChoiceMaster: TOpenChoiceForm
       Category = 'DSDLib'
@@ -1241,7 +1286,7 @@ inherited InventoryForm: TInventoryForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintSticker'
+          ItemName = 'bbPrintStickerGrid'
         end
         item
           Visible = True
@@ -1312,6 +1357,10 @@ inherited InventoryForm: TInventoryForm
     end
     object bbDelete_bySeparate: TdxBarButton
       Action = macDelete_bySeparate
+      Category = 0
+    end
+    object bbPrintStickerGrid: TdxBarButton
+      Action = actPrintStickerGrid
       Category = 0
     end
   end

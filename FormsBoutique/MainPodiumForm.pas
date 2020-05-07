@@ -234,6 +234,8 @@ type
     miReport_MotionOLAP: TMenuItem;
     actPriceListItem_Currency: TdsdOpenForm;
     miPriceListItem_Currency: TMenuItem;
+    actGoodsTag: TdsdOpenForm;
+    miGoodsTag: TMenuItem;
   private
     { Private declarations }
   public

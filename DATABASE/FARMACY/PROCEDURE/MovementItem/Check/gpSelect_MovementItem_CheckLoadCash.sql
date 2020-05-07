@@ -62,7 +62,57 @@ BEGIN
                FROM MovementItem_Check_View AS MovementItem
                WHERE MovementItem.MovementId = inMovementId
                )
+   , tmpContainerAll AS (SELECT Container.ObjectId
+                              , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                       OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                              , Container.Amount
+                         FROM (SELECT DISTINCT tmpMI.GoodsId FROM tmpMI) AS tmp
 
+                               INNER JOIN Container ON Container.ObjectId = tmp.GoodsId
+                                                   AND Container.DescId = zc_Container_Count()
+                                                   AND Container.Amount <> 0
+                                                   AND Container.WhereObjectId = vbUnitId
+
+                              LEFT JOIN ContainerlinkObject AS CLO_MovementItem
+                                                            ON CLO_MovementItem.Containerid = Container.Id
+                                                           AND CLO_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                              LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLO_MovementItem.ObjectId
+                              -- элемент прихода
+                              LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
+
+                              LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                              LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                              LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                              ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                             AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                           ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) 
+                                                          AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                         )
+   , tmpContainer AS (SELECT Container.ObjectId
+                           , Container.NDSKindId
+                           , SUM(Container.Amount) AS Amount
+                      FROM tmpContainerAll AS Container
+                      GROUP BY Container.ObjectId
+                             , Container.NDSKindId
+                      )
+   , tmpContainerOrd AS (SELECT Container.ObjectId
+                              , Container.NDSKindId
+                              , Container.Amount
+                              , COALESCE (ObjectFloat_NDSKind_NDS.ValueData, 0) AS NDS 
+                              , ROW_NUMBER() OVER (PARTITION BY Container.ObjectId ORDER BY Container.Amount DESC) AS Ord
+                         FROM tmpContainer AS Container
+                              LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Container.NDSKindId
+                                                   AND ObjectFloat_NDSKind_NDS.DescId   = zc_ObjectFloat_NDSKind_NDS()
+                         )
    , tmpMovSendPartion AS (SELECT
                                   Movement.Id                               AS Id
                                 , MovementFloat_ChangePercent.ValueData     AS ChangePercent
@@ -115,7 +165,11 @@ BEGIN
            , MovementItem.Amount
            , MovementItem.Price
            , MovementItem.AmountSumm
-           , MovementItem.NDS
+           , CASE WHEN (tmpContainer.Amount <= 0)
+                    OR (tmpContainer.Amount >= MovementItem.Amount)
+                    OR (tmpContainerOrd.Amount < MovementItem.Amount)
+                  THEN MovementItem.NDS
+                  ELSE tmpContainerOrd.NDS END::TFloat                           AS NDS
            , MovementItem.PriceSale
            , MovementItem.ChangePercent
            , MovementItem.SummChangePercent
@@ -139,7 +193,11 @@ BEGIN
            , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
-           , MovementItem.NDSKindId                                              AS NDSKindId
+           , CASE WHEN (tmpContainer.Amount <= 0)
+                    OR (tmpContainer.Amount >= MovementItem.Amount)
+                    OR (tmpContainerOrd.Amount < MovementItem.Amount)
+                  THEN MovementItem.NDSKindId 
+                  ELSE tmpContainerOrd.NDSKindId END                             AS NDSKindId
        FROM tmpMI AS MovementItem
 
             LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
@@ -168,6 +226,12 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Month
                                   ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
                                  AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                 
+            LEFT JOIN tmpContainer ON tmpContainer.ObjectId = MovementItem.GoodsId
+                                  AND tmpContainer.NDSKindId = MovementItem.NDSKindId
+
+            LEFT JOIN tmpContainerOrd ON tmpContainerOrd.ObjectId = MovementItem.GoodsId
+                                     AND tmpContainerOrd.Ord = 1
       ;
 END;
 $BODY$
@@ -181,6 +245,6 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
  */
 
 -- тест
--- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 3959328 ,  inSession := '3');
+-- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
 
 select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18360515 ,  inSession := '3');

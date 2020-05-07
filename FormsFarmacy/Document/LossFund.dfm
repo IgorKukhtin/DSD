@@ -4,7 +4,6 @@ inherited LossFundForm: TLossFundForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -16,31 +15,6 @@ inherited LossFundForm: TLossFundForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = PriceIn
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = Price
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = Remains_Amount
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colIsErased
             end
             item
               Format = ',0.####'

@@ -106,6 +106,12 @@ type
     spUpdate_IsBranchAll: TdsdStoredProc;
     actUpdate_IsBranchAll: TdsdExecStoredProc;
     bbUpdate_IsBranchAll: TdxBarButton;
+    spUpdate_VatPrice: TdsdStoredProc;
+    actInsert_VatPrice: TdsdExecStoredProc;
+    ExecuteVatPriceDialog: TExecuteDialog;
+    macInsert_VatPrice: TMultiAction;
+    bbInsert_VatPrice: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

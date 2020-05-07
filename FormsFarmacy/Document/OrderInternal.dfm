@@ -404,7 +404,7 @@ inherited OrderInternalForm: TOrderInternalForm
             HeaderHint = #1055#1077#1088#1074#1086#1085#1072#1095#1072#1083#1100#1085#1099#1081' '#1079#1072#1082#1072#1079' '#1073#1077#1079' '#1091#1095#1077#1090#1072' '#1057#1059#1053
             Options.Editing = False
             Options.IncSearch = False
-            Width = 48
+            Width = 71
           end
           object RemainsSUN: TcxGridDBColumn [17]
             Caption = #1054#1089#1090'. '#1089#1088#1086#1082#1086#1074#1099#1093

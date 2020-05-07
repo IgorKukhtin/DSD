@@ -19,7 +19,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar, 
                PriceListId Integer, PriceListName TVarChar, 
                PriceListPromoId Integer, PriceListPromoName TVarChar,
-               StartPromo TDateTime, EndPromo TDateTime
+               StartPromo TDateTime, EndPromo TDateTime,
+               isVatPrice Boolean,
+               VatPriceDate TDateTime
 
                ) AS
 $BODY$
@@ -69,6 +71,8 @@ BEGIN
            , CURRENT_DATE :: TDateTime AS StartPromo
            , CURRENT_DATE :: TDateTime AS EndPromo
            
+           , CAST (false as Boolean)   AS isVatPrice 
+           , NULL         :: TDateTime AS VatPriceDate
            ;
    ELSE
        RETURN QUERY 
@@ -108,8 +112,10 @@ BEGIN
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
            , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
-           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo            
+           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo
 
+           , COALESCE (ObjectBoolean_isVatPrice.ValueData, FALSE) :: Boolean   AS isVatPrice
+           , COALESCE (ObjectDate_VatPrice.ValueData, NULL)       :: TDateTime AS VatPriceDate
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectFloat AS ObjectFloat_DayTaxSummary 
                                  ON ObjectFloat_DayTaxSummary.ObjectId = Object_Juridical.Id 
@@ -137,6 +143,14 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isOrderMin
                                    ON ObjectBoolean_isOrderMin.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_isOrderMin.DescId = zc_ObjectBoolean_Juridical_isOrderMin()
+
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isVatPrice
+                                   ON ObjectBoolean_isVatPrice.ObjectId = Object_Juridical.Id 
+                                  AND ObjectBoolean_isVatPrice.DescId = zc_ObjectBoolean_Juridical_isVatPrice()
+
+           LEFT JOIN ObjectDate AS ObjectDate_VatPrice
+                                ON ObjectDate_VatPrice.ObjectId = Object_Juridical.Id
+                               AND ObjectDate_VatPrice.DescId = zc_ObjectDate_Juridical_VatPrice()
 
            LEFT JOIN ObjectDate AS ObjectDate_StartPromo
                                 ON ObjectDate_StartPromo.ObjectId = Object_Juridical.Id
@@ -192,6 +206,7 @@ ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.05.20         * add isVatPrice, VatPriceDate
  24.10.19         * isOrderMin
  07.02.17         * add isPriceWithVAT
  17.12.15         * add isDiscountPrice

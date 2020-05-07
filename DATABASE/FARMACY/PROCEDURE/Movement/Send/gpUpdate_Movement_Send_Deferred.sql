@@ -26,6 +26,7 @@ $BODY$
    DECLARE vbisAuto Boolean;
    DECLARE vbOccupancySUN TFloat;
    DECLARE vbPartionDateKindId Integer;
+   DECLARE vbisReceived Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -46,7 +47,8 @@ BEGIN
         COALESCE (MovementString_Comment.ValueData,''), 
         COALESCE (MovementBoolean_isAuto.ValueData, FALSE), 
         COALESCE (ObjectFloat_OccupancySUN.ValueData, 0),
-        MovementLinkObject_PartionDateKind.ObjectId
+        MovementLinkObject_PartionDateKind.ObjectId,
+        COALESCE (MovementBoolean_Received.ValueData, FALSE)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -58,7 +60,8 @@ BEGIN
         vbComment,
         vbisAuto,
         vbOccupancySUN,
-        vbPartionDateKindId
+        vbPartionDateKindId,
+        vbisReceived
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -95,6 +98,9 @@ BEGIN
         LEFT JOIN MovementString AS MovementString_Comment
                                  ON MovementString_Comment.MovementId = Movement.Id
                                 AND MovementString_Comment.DescId = zc_MovementString_Comment()
+        LEFT JOIN MovementBoolean AS MovementBoolean_Received
+                                  ON MovementBoolean_Received.MovementId = Movement.Id
+                                 AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
         LEFT JOIN MovementBoolean AS MovementBoolean_isAuto
                                   ON MovementBoolean_isAuto.MovementId = Movement.Id
                                  AND MovementBoolean_isAuto.DescId = zc_MovementBoolean_isAuto()
@@ -112,6 +118,23 @@ BEGIN
        AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
     THEN
       RAISE EXCEPTION 'Ошибка. Коллеги, перемещения по СУН с суммой менее % грн. отлаживать нельзя.', COALESCE(vbLimitSUN, 0);
+    END IF;
+
+    -- Для роли "Кассир аптеки"
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+    THEN
+
+        IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                     FROM Object AS Object_CashSettings
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                  ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                                 AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                       AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+        END IF;                                
     END IF;
 
    -- свойство не меняем у проведенных документов
@@ -136,7 +159,7 @@ BEGIN
              RAISE EXCEPTION 'ВНЕСИТЕ В ЯЧЕЙКУ КОММЕНТАРИЙ - ПРИЧИНУ ПЕРЕДАЧИ!!!';
            END IF;
            
-           IF (vbOccupancySUN > 0) AND vbisSUN = TRUE
+           IF (vbOccupancySUN > 0) AND vbisSUN = TRUE AND vbisReceived = FALSE
              AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
            THEN
              IF (WITH tmpProtocolAll AS (SELECT MovementItemProtocol.MovementItemId

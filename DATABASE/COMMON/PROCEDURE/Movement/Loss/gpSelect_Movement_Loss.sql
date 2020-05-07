@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , CheckedName   TVarChar
              , CheckedDate   TDateTime
              , Checked       Boolean
+             , MovementId_Income Integer, InvNumber_IncomeFull TVarChar
               )
 
 AS
@@ -62,7 +63,8 @@ BEGIN
 
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
            
-            
+           , COALESCE(Movement_Income.Id, -1)                         AS MovementId_Income
+           , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -117,6 +119,12 @@ BEGIN
                                         AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
             LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
 
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                           ON MovementLinkMovement_Income.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Income.DescId     = zc_MovementLinkMovement_Income()
+            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
+            
        -- огр. просмотра
        WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна 
          AND vbUserId <> 929721 -- Решетова И.А.
@@ -145,6 +153,9 @@ BEGIN
 
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
 
+           , COALESCE(Movement_Income.Id, -1)                         AS MovementId_Income
+           , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
+
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Loss() AND Movement.StatusId = tmpStatus.StatusId
@@ -197,6 +208,12 @@ BEGIN
                                          ON MovementLinkObject_Checked.MovementId = Movement.Id
                                         AND MovementLinkObject_Checked.DescId = zc_MovementLinkObject_Checked()
             LEFT JOIN Object AS Object_Checked ON Object_Checked.Id = MovementLinkObject_Checked.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Income
+                                           ON MovementLinkMovement_Income.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Income.DescId     = zc_MovementLinkMovement_Income()
+            LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
+            LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
 
        -- огр. просмотра - Рибалко Вікторія Віталіївна 
        WHERE (vbUserId = 300550

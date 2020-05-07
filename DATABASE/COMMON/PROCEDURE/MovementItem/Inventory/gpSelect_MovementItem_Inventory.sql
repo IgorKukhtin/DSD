@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , ContainerId Integer
              , isErased Boolean
              , PartionGoodsId Integer
+             , IdBarCode TVarChar
+             , OperDate TDateTime
            --  , Price_Partion     TFloat
              )
 AS
@@ -80,6 +82,8 @@ BEGIN
            , FALSE AS isErased
 
            , 0 :: Integer                    AS PartionGoodsId
+           , zfFormat_BarCode (zc_BarCodePref_Object(), tmpGoods.GoodsId) :: TVarChar AS IdBarCode
+           , Null ::TDateTime  AS OperDate
          --  , CAST (NULL AS TFloat)           AS Price_Partion
            
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
@@ -172,6 +176,9 @@ BEGIN
            
            -- из партии
            , Object_PartionGoods.Id                AS PartionGoodsId
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) :: TVarChar AS IdBarCode
+           , Null ::TDateTime  AS OperDate
+           
 /*         , ObjectFloat_Price_Partion.ValueData   AS Price_Partion
            
            , Object_Storage_Partion.Id             AS StorageId_Partion
@@ -333,6 +340,8 @@ BEGIN
 
            -- Id партии
            , Object_PartionGoods.Id              AS PartionGoodsId
+           , zfFormat_BarCode (zc_BarCodePref_Object(), Object_Goods.Id) :: TVarChar AS IdBarCode
+           , Null ::TDateTime  AS OperDate
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId

@@ -278,6 +278,7 @@ inherited MCS_LiteForm: TMCS_LiteForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSValueSun'
+        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -347,12 +348,12 @@ inherited MCS_LiteForm: TMCS_LiteForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMCSNotRecalc'
+        Name = 'ioMCSNotRecalc'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'MCSNotRecalc'
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item

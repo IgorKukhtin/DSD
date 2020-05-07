@@ -157,7 +157,7 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
             item
             end
             item
-              Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080' (1-2 '#1084#1072#1103' '#1091#1078#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1055#1057')'
+              Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080
               Width = 372
             end
             item
@@ -1119,6 +1119,14 @@ inherited WagesAdditionalExpensesForm: TWagesAdditionalExpensesForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'SummaMoneyBoxUsed'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outSummaMoneyBoxResidual'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'SummaMoneyBoxResidual'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

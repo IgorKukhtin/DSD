@@ -62,9 +62,15 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_ReportUnLiquid() RETURNS Inte
 INSERT INTO MovementLinkMovementDesc (Code, ItemName)
   SELECT 'zc_MovementLinkMovement_ReportUnLiquid', 'Документ Отчет по неликвидному товару' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_ReportUnLiquid');
  
+ 
+CREATE OR REPLACE FUNCTION zc_MovementLinkMovement_Income() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Income'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkMovementDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkMovement_Income', 'Приход от поставщика' WHERE NOT EXISTS (SELECT * FROM MovementLinkMovementDesc WHERE Code = 'zc_MovementLinkMovement_Income');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.20         * zc_MovementLinkMovement_Income
  19.11.18         *
  21.07.16         * zc_MovementLinkMovement_Invoice
  30.03.15                      	                 * add zc_MovementLinkMovement_TransportGoods

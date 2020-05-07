@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_BarCodeBox_Print (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_BarCodeBox_Print(
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (BarCode TVarChar
+RETURNS TABLE (BarCode TVarChar, AmountPrint TFloat
               ) AS
 $BODY$
 BEGIN
@@ -21,6 +21,7 @@ BEGIN
                    )
 
        SELECT Object_BarCodeBox.ValueData     AS BarCode
+            , 1 :: TFloat AS AmountPrint
  
        FROM Object AS Object_BarCodeBox
 

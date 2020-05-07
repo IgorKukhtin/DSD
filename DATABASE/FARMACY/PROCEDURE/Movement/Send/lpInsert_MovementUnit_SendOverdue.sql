@@ -19,7 +19,9 @@
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
     vbUserId:= lpGetUserBySession (inSession);
 
-    vbOperDate := CURRENT_DATE;
+    vbOperDate := CURRENT_DATE  - ('' ||CASE WHEN date_part('isodow', CURRENT_DATE) = 1 THEN 6
+                                             WHEN date_part('isodow', CURRENT_DATE) = 2 THEN 0
+                                             ELSE date_part('isodow', CURRENT_DATE) - 2 END|| 'DAY ')::INTERVAL;
 
       -- Временная таблица для товаров по переводу
     IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpContainerOverdue'))
@@ -336,5 +338,5 @@
  18.06.19                                                         *
    */
 
--- тест  SELECT * FROM lpInsert_MovementUnit_SendOverdue (1529734  , 11299914 , '3')
+-- тест  SELECT * FROM lpInsert_MovementUnit_SendOverdue (12607257, 11299914, '3')
 -- тест SELECT * FROM gpInsert_MovementUnit_SendOverdue (inSession:= '3')

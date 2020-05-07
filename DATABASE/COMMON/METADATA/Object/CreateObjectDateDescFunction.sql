@@ -86,6 +86,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Juridical_EndPromo() RETURNS Integer AS
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Juridical(), 'zc_ObjectDate_Juridical_EndPromo', 'Дата окончания акции' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Juridical_EndPromo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Juridical_VatPrice() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Juridical_VatPrice'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectDate_Juridical_VatPrice', 'С какой даты схема расчета цены с НДС (построчно)' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Juridical_VatPrice');
+
 CREATE OR REPLACE FUNCTION zc_ObjectDate_Asset_Release() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Asset_Release'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Asset(), 'zc_ObjectDate_Asset_Release', 'Дата выпуска' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Asset_Release');
@@ -424,6 +428,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 06.05.20         * zc_ObjectDate_Juridical_VatPrice
  24.03.20         * zc_ObjectDate_ContractCondition_StartDate
                     zc_ObjectDate_ContractCondition_EndDate
  10.02.20                                                                                     * zc_ObjectDate_Buyer_DateBirth

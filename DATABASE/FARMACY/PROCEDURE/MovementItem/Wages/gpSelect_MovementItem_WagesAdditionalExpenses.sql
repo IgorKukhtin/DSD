@@ -255,7 +255,8 @@ BEGIN
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Sign()
-              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+            ORDER BY Object_Unit.ValueData;
     ELSE
         -- Результат другой
         RETURN QUERY
@@ -413,7 +414,8 @@ BEGIN
 
             WHERE MovementItem.MovementId = inMovementId
               AND MovementItem.DescId = zc_MI_Sign()
-              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE);
+              AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)
+            ORDER BY Object_Unit.ValueData;
 
      END IF;
 END;

@@ -17,6 +17,7 @@ CREATE OR REPLACE VIEW MovementItem_Payment_View AS
       , Object_To.Name                              AS Income_UnitName
       , Object_To.JuridicalId                       AS Unit_JuridicalId
       , Object_To.JuridicalName                     AS Unit_JuridicalName
+      , Object_NDSKind.ID                           AS Income_NDSKindId
       , Object_NDSKind.ValueData                    AS Income_NDSKindName
       , ObjectFloat_NDSKind_NDS.ValueData           AS Income_NDS
       , Object_Contract.ValueData                   AS Income_ContractName

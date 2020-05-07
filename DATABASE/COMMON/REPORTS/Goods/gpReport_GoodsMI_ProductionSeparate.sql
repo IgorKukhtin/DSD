@@ -52,7 +52,7 @@ BEGIN
     IF inGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpGoods (GoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+          SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE IF inGoodsId <> 0
          THEN
              INSERT INTO _tmpGoods (GoodsId)
@@ -66,7 +66,7 @@ BEGIN
     IF inChildGoodsGroupId <> 0
     THEN
         INSERT INTO _tmpChildGoods (ChildGoodsId)
-          SELECT GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
+          SELECT lfObject_Goods_byGoodsGroup.GoodsId FROM  lfSelect_Object_Goods_byGoodsGroup (inChildGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE IF inChildGoodsId <> 0
          THEN
              INSERT INTO _tmpChildGoods (ChildGoodsId)

@@ -923,7 +923,7 @@ inherited MainCashForm2: TMainCashForm2
           Width = 88
         end
         object MainGoodsAnalogATC: TcxGridDBColumn
-          Caption = #1040#1085#1072#1083#1086#1075' '#1090#1086#1074#1072#1088#1072' ATC'
+          Caption = #1050#1086#1076' '#1040#1058#1057
           DataBinding.FieldName = 'GoodsAnalogATC'
           HeaderAlignmentHorz = taCenter
           Options.Editing = False
@@ -4938,6 +4938,20 @@ inherited MainCashForm2: TMainCashForm2
       end
       item
         Name = 'inAmount_list'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPartionDate_list'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inNDS_list'
         Value = Null
         DataType = ftString
         ParamType = ptInput

@@ -204,6 +204,7 @@ BEGIN
 
            , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
            , SUM (COALESCE (tmpMI.Amount_calc_Pack,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData)                         AS PrintGroup_Scan_Pack
+           , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id)                              AS PrintPage_Scan
 
        FROM (SELECT tmpMI.GoodsId
                   , tmpMI.GoodsKindId

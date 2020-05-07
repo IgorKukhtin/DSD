@@ -61,6 +61,7 @@ type
     GuidesMaker: TdsdGuides;
     MakerName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
+    Remains: TcxGridDBColumn;
   private
     { Private declarations }
   public

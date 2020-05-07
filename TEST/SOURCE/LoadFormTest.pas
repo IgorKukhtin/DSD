@@ -1417,6 +1417,9 @@ end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalVatPriceDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalVatPriceDialogForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridical_BasisForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridical_BasisForm');
@@ -2252,14 +2255,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashDialogForm');
   exit;
-  }
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapDialogForm');
-  exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
 
@@ -2279,12 +2280,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DefrosterForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageDialogForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PersonalCompleteDialogForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PersonalCompleteForm'));

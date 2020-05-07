@@ -123,6 +123,8 @@ BEGIN
                             FROM MovementItemFloat AS MIFloat_SummaSUN1
                             WHERE MIFloat_SummaSUN1.MovementItemId = inMovementItemId
                               AND MIFloat_SummaSUN1.DescId in (zc_MIFloat_SummaTechnicalRediscount(), zc_MIFloat_SummaFullChargeFact())), 0);      
+                              
+      IF vbSumma2 > 0 THEN vbSumma2 := 0; END IF;
 
 
       IF vbSumma2 < 0 AND vbSummaMoneyBox  > 0
