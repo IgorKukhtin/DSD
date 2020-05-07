@@ -156,7 +156,9 @@ BEGIN
               )
           AND OB.DescId = zc_ObjectBoolean_Unit_SUN_v2()
           -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = '')
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = ''
+          --OR inUserId = 3 -- Админ - отладка
+              )
        ;
        
      -- находим максимальный
@@ -227,24 +229,55 @@ BEGIN
         SELECT tmp.UnitId
              , tmp.GoodsId
                -- у отправителя в разрезе T1=60 дней OR T1=30 дней
-             , tmp.Amount_t1, tmp.Summ_t1
+             , SUM (tmp.Amount_t1) AS Amount_t1, SUM (tmp.Summ_t1) AS Summ_t1
                -- у получателя в разрезе T2=45
-             , tmp.Amount_t2, tmp.Summ_t2
-        FROM (SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
+             , SUM (tmp.Amount_t2) AS Amount_t2, SUM (tmp.Summ_t2) AS Summ_t2
+        FROM (-- zc_Movement_Check
+              SELECT MIContainer.WhereObjectId_analyzer          AS UnitId
                    , MIContainer.ObjectId_analyzer               AS GoodsId
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
-                   , SUM (CASE WHEN MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
+                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0)                                  ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
-                AND MIContainer.OperDate BETWEEN inOperDate + INTERVAL '1 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND inOperDate
+                AND MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
-              HAVING SUM (COALESCE (-1 * MIContainer.Amount, 0)) <> 0
+              HAVING SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0
+                  OR SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0
+
+             UNION ALL
+              -- zc_Movement_Sale
+              SELECT MLO_Unit.ObjectId      AS UnitId
+                   , MovementItem.ObjectId  AS GoodsId
+                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0)                                    ELSE 0 END) AS Amount_t1
+                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) * COALESCE (MIF_Price.ValueData,0) ELSE 0 END) AS Summ_t1
+                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0)                                    ELSE 0 END) AS Amount_t2
+                   , SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) * COALESCE (MIF_Price.ValueData,0) ELSE 0 END) AS Summ_t2
+              FROM Movement
+                   INNER JOIN MovementLinkObject AS MLO_Unit
+                                                 ON MLO_Unit.MovementId = Movement.Id
+                                                AND MLO_Unit.DescId     = zc_MovementLinkObject_Unit()
+                   INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MLO_Unit.ObjectId
+                   LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                         AND MovementItem.DescId     = zc_MI_Master()
+                                         AND MovementItem.isErased   = FALSE
+                   LEFT JOIN MovementItemFloat AS MIF_Price
+                                               ON MIF_Price.MovementItemId = Movement.Id
+                                              AND MIF_Price.DescId     = zc_MIFloat_Price()
+              WHERE Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate
+                AND Movement.DescId   = zc_Movement_Sale()
+                AND Movement.StatusId = zc_Enum_Status_Complete()
+              GROUP BY MLO_Unit.ObjectId
+                     , MovementItem.ObjectId
+              HAVING SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) <> 0
+                  OR SUM (CASE WHEN Movement.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND Movement.OperDate < inOperDate THEN COALESCE (MovementItem.Amount, 0) ELSE 0 END) <> 0
              ) AS tmp
+        GROUP BY tmp.UnitId
+               , tmp.GoodsId
        ;
 
      -- 2.2. NotSold

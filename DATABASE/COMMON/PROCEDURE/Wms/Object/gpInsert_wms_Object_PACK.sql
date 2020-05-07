@@ -102,7 +102,7 @@ BEGIN
                                -- Высота упаковки (см)
                                , tmpGoods.Height     :: TFloat   AS height
                                -- Вес упаковки (кг)
-                               , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.001 ELSE 1 END :: Integer AS weight
+                               , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves() THEN 0.001 ELSE 1 END :: TFloat AS weight
                                -- Вес брутто упаковки (кг) – условное значение, данные при приеме будут передаваться в ASN-сообщении
                                , tmpGoods.WeightAvg  :: TFloat   AS weight_brutto
                                --
@@ -187,7 +187,7 @@ BEGIN
                    , tmpData.pack_id AS ObjectId
                    , tmpData.GroupId
               FROM tmpData
-            --WHERE tmpData.sku_id :: TVarChar IN ('795292', '795293')
+            --WHERE tmpData.sku_id :: TVarChar IN ('4642923')
               ORDER BY tmpData.GroupId, tmpData.sku_id
              ) AS tmp
       --WHERE tmp.RowNum BETWEEN 1 AND 1

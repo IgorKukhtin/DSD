@@ -775,6 +775,7 @@ object PriceListItemForm: TPriceListItemForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbPriceListGoodsItem: TdxBarButton
       Action = actPriceListGoods
@@ -1524,6 +1525,7 @@ object PriceListItemForm: TPriceListItemForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 192
     Top = 256
   end

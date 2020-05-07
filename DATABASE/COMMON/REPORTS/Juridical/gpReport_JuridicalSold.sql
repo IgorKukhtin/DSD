@@ -107,6 +107,7 @@ BEGIN
                             INNER JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = tmpContractCondition.ContractId
                                                                             AND View_Contract.isErased = FALSE
                                                                             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                                            AND inEndDate BETWEEN View_Contract.StartDate_condition AND View_Contract.EndDate_condition
                        GROUP BY View_Contract.JuridicalId
                       )
         , tmpListBranch_Constraint AS (SELECT ObjectLink_Contract_Personal.ObjectId AS ContractId
@@ -551,7 +552,10 @@ BEGIN
 
          ) AS Operation
 
-           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = Operation.ContractId
+           LEFT JOIN Object_Contract_View AS View_Contract
+                                          ON View_Contract.ContractId = Operation.ContractId
+                                         AND inEndDate BETWEEN View_Contract.StartDate_condition AND View_Contract.EndDate_condition
+
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                                 ON ObjectLink_Contract_Area.ObjectId = Operation.ContractId
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_AreaContract()

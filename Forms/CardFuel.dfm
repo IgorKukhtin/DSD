@@ -52,18 +52,21 @@ object CardFuelForm: TCardFuelForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 48
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 138
       end
       object clPersonalDriver: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 133
       end
@@ -77,12 +80,14 @@ object CardFuelForm: TCardFuelForm
       object clCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 101
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
@@ -96,23 +101,29 @@ object CardFuelForm: TCardFuelForm
       object clLimitMoney: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1075#1088#1085
         DataBinding.FieldName = 'LimitMoney'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 70
       end
       object clLimitFuel: TcxGridDBColumn
         Caption = #1051#1080#1084#1080#1090', '#1083#1080#1090#1088#1099
         DataBinding.FieldName = 'LimitFuel'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 70
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 74
+        Width = 70
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -192,6 +203,10 @@ object CardFuelForm: TCardFuelForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsert'
         end
         item
@@ -207,17 +222,21 @@ object CardFuelForm: TCardFuelForm
           ItemName = 'bbUnErased'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -233,7 +252,11 @@ object CardFuelForm: TCardFuelForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -270,6 +293,7 @@ object CardFuelForm: TCardFuelForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
@@ -307,10 +331,12 @@ object CardFuelForm: TCardFuelForm
       FormName = 'TCardFuelEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       DataSource = DataSource
@@ -326,6 +352,7 @@ object CardFuelForm: TCardFuelForm
       FormName = 'TCardFuelEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -333,6 +360,7 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -380,6 +408,7 @@ object CardFuelForm: TCardFuelForm
       FormName = 'TProtocolForm'
       FormNameParam.Value = 'TProtocolForm'
       FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
           Name = 'Id'
@@ -387,6 +416,7 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -395,6 +425,7 @@ object CardFuelForm: TCardFuelForm
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = False
     end
@@ -408,6 +439,7 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
@@ -415,6 +447,7 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'Code'
@@ -422,12 +455,14 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'RouteKindName'
@@ -435,12 +470,14 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightId'
           Value = Null
           Component = ClientDataSet
           ComponentItem = 'FreightId'
+          MultiSelectSeparator = ','
         end
         item
           Name = 'FreightName'
@@ -448,6 +485,7 @@ object CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
+          MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -491,6 +529,7 @@ object CardFuelForm: TCardFuelForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 288
@@ -521,6 +560,7 @@ object CardFuelForm: TCardFuelForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 160
     Top = 216
   end

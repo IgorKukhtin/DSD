@@ -13,7 +13,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_wms_Object_GoodsByGoodsKind());
    
-
+/*
     -- заливаем в линейную табл. - данные из zc_Object_GoodsByGoodsKind
     CREATE TEMP TABLE _tmpGoodsByGoodsKind (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, MeasureId Integer, GoodsTypeKindId_Sh Integer, GoodsTypeKindId_Nom Integer, GoodsTypeKindId_Ves Integer
                                           , WeightMin TFloat, WeightMax TFloat, NormInDays TFloat, Height TFloat, Length TFloat, Width TFloat, WmsCode Integer
@@ -55,13 +55,13 @@ BEGIN
                , tmp.Id * 10 + 1 AS sku_id_Sh
                , tmp.Id * 10 + 2 AS sku_id_Nom
                , tmp.Id * 10 + 3 AS sku_id_Ves
-               , tmp.WmsCodeCalc_Sh, tmp.WmsCodeCalc_Nom, tmp.WmsCodeCalc_Ves
+               , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
                , Object_GoodsByGoodsKind.isErased
           FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
                LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
           WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 
          ;
-           
+  */         
           -- Обновляем существующие ObjectId
           UPDATE wms_Object_GoodsByGoodsKind
            SET GoodsId               = tmp.GoodsId            
@@ -90,7 +90,38 @@ BEGIN
              , sku_code_Nom          = tmp.sku_code_Nom
              , sku_code_Ves          = tmp.sku_code_Ves
              , isErased              = tmp.isErased           
-          FROM _tmpGoodsByGoodsKind AS tmp
+        --FROM _tmpGoodsByGoodsKind AS tmp
+          -- Результат
+          FROM
+         (SELECT tmp.Id AS ObjectId
+               , tmp.GoodsId
+               , tmp.GoodsKindId
+               , tmp.MeasureId
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Sh,   FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Sh()  ELSE NULL END AS GoodsTypeKindId_Sh
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Nom,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Nom() ELSE NULL END AS GoodsTypeKindId_Nom
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Ves,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Ves() ELSE NULL END AS GoodsTypeKindId_Ves
+               , tmp.WeightMin
+               , tmp.WeightMax
+               , tmp.NormInDays
+               , tmp.Height
+               , tmp.Length
+               , tmp.Width
+               , tmp.WmsCode
+               , tmp.GoodsPropertyBoxId
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
+               , tmp.WmsCellNum
+               , tmp.Id * 10 + 1 AS sku_id_Sh
+               , tmp.Id * 10 + 2 AS sku_id_Nom
+               , tmp.Id * 10 + 3 AS sku_id_Ves
+               , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
+               , Object_GoodsByGoodsKind.isErased
+          FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
+               LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
+          WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 
+         ) AS tmp
           WHERE tmp.ObjectId = wms_Object_GoodsByGoodsKind.ObjectId;
      
      -- добавляем новые ObjectId
@@ -122,6 +153,36 @@ BEGIN
                                             , sku_code_Ves
                                             , isErased
                                              )
+       WITH _tmpGoodsByGoodsKind AS
+         (SELECT tmp.Id AS ObjectId
+               , tmp.GoodsId
+               , tmp.GoodsKindId
+               , tmp.MeasureId
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Sh,   FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Sh()  ELSE NULL END AS GoodsTypeKindId_Sh
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Nom,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Nom() ELSE NULL END AS GoodsTypeKindId_Nom
+               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Ves,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Ves() ELSE NULL END AS GoodsTypeKindId_Ves
+               , tmp.WeightMin
+               , tmp.WeightMax
+               , tmp.NormInDays
+               , tmp.Height
+               , tmp.Length
+               , tmp.Width
+               , tmp.WmsCode
+               , tmp.GoodsPropertyBoxId
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
+               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
+               , tmp.WmsCellNum
+               , tmp.Id * 10 + 1 AS sku_id_Sh
+               , tmp.Id * 10 + 2 AS sku_id_Nom
+               , tmp.Id * 10 + 3 AS sku_id_Ves
+               , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
+               , Object_GoodsByGoodsKind.isErased
+          FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
+               LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
+          WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0 
+         )
       SELECT tmp.ObjectId
            , tmp.GoodsId
            , tmp.GoodsKindId

@@ -784,6 +784,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
       Category = 0
       Hint = '       '
       Visible = ivAlways
+      ShowCaption = False
     end
     object bbPriceListGoodsItem: TdxBarButton
       Action = actPriceListGoods
@@ -1560,6 +1561,7 @@ object PriceListItem_CurrencyForm: TPriceListItem_CurrencyForm
         Column = ValuePrice
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 192
     Top = 256
   end

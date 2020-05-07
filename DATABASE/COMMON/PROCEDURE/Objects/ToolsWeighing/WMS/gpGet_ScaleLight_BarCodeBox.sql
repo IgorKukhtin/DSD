@@ -95,7 +95,7 @@ BEGIN
                            FROM Object AS Object_BarCodeBox
                            WHERE Object_BarCodeBox.ObjectCode = vbBoxCode
                              AND Object_BarCodeBox.DescId     = zc_Object_BarCodeBox()
-                             AND Object_BarCodeBox.isErased   = FALSE
+                             AND (Object_BarCodeBox.isErased   = FALSE OR inSession = zfCalc_UserAdmin())
                           );
 
      ELSEIF TRIM (vbBoxBarCode) <> ''
@@ -105,7 +105,7 @@ BEGIN
                            FROM Object AS Object_BarCodeBox
                            WHERE Object_BarCodeBox.ValueData = vbBoxBarCode
                              AND Object_BarCodeBox.DescId    = zc_Object_BarCodeBox()
-                             AND Object_BarCodeBox.isErased  = FALSE
+                             AND (Object_BarCodeBox.isErased   = FALSE OR inSession = zfCalc_UserAdmin())
                           );
          -- если не нашли - ДОБАВИМ
          IF COALESCE (vbBarCodeBoxId, 0) = 0
