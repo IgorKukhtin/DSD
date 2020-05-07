@@ -168,7 +168,7 @@ BEGIN
                               )
             
             -- подменяем НТЗ на значение из ассорт. матрицы, если в ассотр. матрице значение больше
-            , Object_Price1 AS (SELECT COALESCE (tmpPrice.UnitId, inUnitId) AS UnitId
+            , Object_Price AS (SELECT COALESCE (tmpPrice.UnitId, inUnitId) AS UnitId
                                          , COALESCE (tmpPrice.GoodsId, tmpGoodsCategory.GoodsId) AS GoodsId
                                          , COALESCE (tmpPrice.Price, 0)                :: TFloat AS Price
                                          --, COALESCE (tmpPrice.MCSValue, 0)  ::TFloat AS MCSValue
@@ -185,12 +185,14 @@ BEGIN
                                )
             -- подменяем НТЗ для товаров пост. 224 берем 25% от полного НТЗ
             --например, если есть НТЗ=100шт, на остатке 20шт, то в колонке Итого с округлением должно стоять 5шт  (чтобы вышло 25% от их полного нтз)
-            , Object_Price AS (SELECT tmpPrice.UnitId
+            /*
+             --07.05.2020 100 % это ограничение не нужно
+              , Object_Price AS (SELECT tmpPrice.UnitId
                                          , tmpPrice.GoodsId
                                          , tmpPrice.Price
 
                                          , CASE WHEN tmpGoods_224.GoodsId IS NOT NULL
-                                                THEN COALESCE (tmpPrice.MCSValue,0) * 0.75  -- 75% c 24.04.2020 --50 % с 21,04,2020  ---  25%
+                                                THEN COALESCE (tmpPrice.MCSValue,0)  * 0.75  -- 75% c 24.04.2020 --50 % с 21,04,2020  ---  25%   
                                                 ELSE COALESCE (tmpPrice.MCSValue,0)
                                            END ::TFloat AS MCSValue
 
@@ -198,7 +200,7 @@ BEGIN
                                     FROM Object_Price1 AS tmpPrice
                                          LEFT JOIN tmpGoods_224 ON tmpGoods_224.GoodsId = tmpPrice.GoodsId
                                )
-
+             */
             , MovementItemSaved AS (SELECT T1.Id,
                                            T1.Amount,
                                            T1.ObjectId

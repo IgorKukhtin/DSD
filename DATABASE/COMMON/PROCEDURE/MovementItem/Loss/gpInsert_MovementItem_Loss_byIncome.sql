@@ -1,79 +1,62 @@
--- Function: gpInsert_MovementItem_Inventory_bySend()
+-- Function: gpInsert_MovementItem_Loss_byIncome()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Inventory_bySend (Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_MovementItem_Loss_byIncome (Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory_bySend(
-    IN inMovementId               Integer   , -- Ключ объекта <Документ инвенторизации>
-    IN inMovementId_Send          Integer   , -- Ключ объекта <Документ Перемещение>
-    IN inIsAdd                    Boolean   , -- добавить кол-во из накладной или отнять 
-    IN inSession                  TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpInsert_MovementItem_Loss_byIncome(
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId_Income   Integer   , -- Ключ объекта <Документ  приход>
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS void AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
-   DECLARE vbKoef Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Inventory());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Loss());
 
-     -- определяем нужно добавлять или минусовать кол-во из накладной перемещения
-     vbKoef := (CASE WHEN inIsAdd = True THEN 1 ELSE -1 END);
-     
-     -- определяем
-     vbUnitId:= (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_From());
-     
      -- сохранили
-     PERFORM lpInsertUpdate_MovementItem_Inventory (ioId                 := COALESCE (tmp.MovementItemId, 0)
-                                                  , inMovementId         := inMovementId
-                                                  , inGoodsId            := tmp.GoodsId
-                                                  , inAmount             := COALESCE (tmp.Amount,0)
-                                                  , inPartionGoodsDate   := CASE WHEN vbUnitId IN (8459 -- Склад Реализации
-                                                                                                 , 8458 -- Склад База ГП
-                                                                                                  )
-                                                                                      THEN NULL
-                                                                                  WHEN tmp.PartionGoodsDate = zc_DateStart() THEN NULL
-                                                                                  ELSE tmp.PartionGoodsDate
-                                                                            END
-                                                  , inPrice              := 0
-                                                  , inSumm               := 0
-                                                  , inHeadCount          := 0
-                                                  , inCount              := 0
-                                                  , inPartionGoods       := tmp.PartionGoods
-                                                  , inPartionGoodsId     := NULL
-                                                  , inGoodsKindId        := tmp.GoodsKindId
-                                                  , inGoodsKindCompleteId:= tmp.GoodsKindCompleteId
-                                                  , inAssetId            := NULL
-                                                  , inUnitId             := NULL
-                                                  , inStorageId          := NULL
-                                                  , inUserId             := vbUserId
-                                                   )
-     FROM (SELECT tmpMI.MovementItemId                                                      AS MovementItemId
-                , COALESCE (tmpMI.GoodsId, tmpMI_Send.GoodsId)                              AS GoodsId
-                , COALESCE (tmpMI.GoodsKindId, tmpMI_Send.GoodsKindId)                      AS GoodsKindId
-                , COALESCE (tmpMI.GoodsKindCompleteId, 0)                                   AS GoodsKindCompleteId
-                , COALESCE (tmpMI.PartionGoods, tmpMI_Send.PartionGoods)                    AS PartionGoods
-                , COALESCE (tmpMI.PartionGoodsDate, tmpMI_Send.PartionGoodsDate)            AS PartionGoodsDate
-                , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Send.Amount, 0)) :: TFloat  AS Amount
+     PERFORM lpInsertUpdate_MovementItem_Loss (ioId                  := COALESCE (tmp.MovementItemId, 0)
+                                            , inMovementId          := inMovementId
+                                            , inGoodsId             := tmp.GoodsId
+                                            , inAmount              := COALESCE (tmp.Amount,0)
+                                            , inCount               := COALESCE (tmp.Count,0)
+                                            , inHeadCount           := COALESCE (tmp.HeadCount,0)
+                                            , inPartionGoodsDate    := tmp.PartionGoodsDate
+                                            , inPartionGoods        := tmp.PartionGoods
+                                            , inGoodsKindId         := tmp.GoodsKindId
+                                            , inGoodsKindCompleteId := tmp.GoodsKindCompleteId
+                                            , inAssetId             := tmp.AssetId
+                                            , inPartionGoodsId      := 0
+                                            , inUserId              := vbUserId
+                                             )
+       FROM (SELECT tmpMI.MovementItemId                                                        AS MovementItemId
+                  , COALESCE (tmpMI.AssetId, tmpMI_Income.AssetId)                              AS AssetId
+                  , COALESCE (tmpMI.GoodsId, tmpMI_Income.GoodsId)                              AS GoodsId
+                  , COALESCE (tmpMI.GoodsKindId, tmpMI_Income.GoodsKindId)                      AS GoodsKindId
+                  , COALESCE (tmpMI.GoodsKindId_Complete, 0)                                    AS GoodsKindCompleteId
+                  , COALESCE (tmpMI.PartionGoods, Null)                                         AS PartionGoods
+                  , COALESCE (tmpMI.PartionGoodsDate, NULL)                                     AS PartionGoodsDate
+                  , (COALESCE (tmpMI.Amount, 0) + COALESCE (tmpMI_Income.Amount, 0)) :: TFloat  AS Amount
+                  , COALESCE (tmpMI.Count, 0)                                        :: TFloat  AS Count
+                  , COALESCE (tmpMI.HeadCount, 0)                                    :: TFloat  AS HeadCount
 
             FROM (SELECT MovementItem.ObjectId                       AS GoodsId
-                      , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
-                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , SUM (MovementItem.Amount)                     AS Amount
+                       , COALESCE (MILinkObject_Asset.ObjectId, 0)     AS AssetId
+                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                       , SUM (MovementItem.Amount)                     AS Amount
                    FROM MovementItem
                       LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                   ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                                  AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
+ 
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                        ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-
-                   WHERE MovementItem.MovementId = 16528099 --inMovementId_Income
+ 
+                   WHERE MovementItem.MovementId = inMovementId_Income
                      AND MovementItem.DescId     = zc_MI_Master()
                      AND MovementItem.isErased   = FALSE
                    GROUP BY MovementItem.ObjectId
@@ -118,14 +101,16 @@ BEGIN
                                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                             WHERE MovementItem.MovementId = 16533973 --inMovementId
+                             WHERE MovementItem.MovementId = inMovementId
                                AND MovementItem.DescId     = zc_MI_Master()
                                AND MovementItem.isErased   = FALSE
                                  
                             ) AS tmpMI ON tmpMI.GoodsId          = tmpMI_Income.GoodsId
                                       AND tmpMI.GoodsKindId      = tmpMI_Income.GoodsKindId
-                                                 ) AS tmp;
+           ) AS tmp;
 
+       -- сохраняем свойство документа основание
+       PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Income(), inMovementId, inMovementId_Income);
 
 END;
 $BODY$
@@ -133,10 +118,9 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 04.06.18         * add inIsAdd
- 17.10.16         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.05.20         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Inventory_bySend (ioId:= 0, inMovementId:= 10, inMovementId_Send:= 1, inIsAdd := TRUE, inSession:= '2')
+--

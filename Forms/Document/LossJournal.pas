@@ -52,6 +52,7 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
+    InvNumber_IncomeFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

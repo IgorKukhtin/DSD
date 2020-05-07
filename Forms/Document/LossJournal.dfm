@@ -136,6 +136,14 @@ inherited LossJournalForm: TLossJournalForm
             HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1088#1077#1085' '#1076#1072'/'#1085#1077#1090')'
             Width = 130
           end
+          object InvNumber_IncomeFull: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+            DataBinding.FieldName = 'InvNumber_IncomeFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 128
+          end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'

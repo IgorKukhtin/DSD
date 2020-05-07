@@ -58,6 +58,14 @@ type
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
     actGoodsKindCompleteChoice: TOpenChoiceForm;
+    cxLabel27: TcxLabel;
+    edInvNumberIncome: TcxButtonEdit;
+    GuidesIncomeDoc: TdsdGuides;
+    spInsertMIMaster_byIncome: TdsdStoredProc;
+    actOpenIncomeJournalChoice: TOpenChoiceForm;
+    actInsertMIMaster_byIncome: TdsdExecStoredProc;
+    macInsertMI_byIncome: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

@@ -357,15 +357,35 @@ inherited LossForm: TLossForm
       Width = 118
     end
     object cxLabel22: TcxLabel
-      Left = 418
+      Left = 647
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 418
+      Left = 647
       Top = 61
       TabOrder = 14
-      Width = 455
+      Width = 226
+    end
+    object cxLabel27: TcxLabel
+      Left = 418
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
+    end
+    object edInvNumberIncome: TcxButtonEdit
+      Left = 418
+      Top = 61
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ClickKey = 0
+      Properties.HideSelection = False
+      Properties.ReadOnly = True
+      TabOrder = 16
+      Width = 220
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -608,6 +628,76 @@ inherited LossForm: TLossForm
         end>
       isShowModal = True
     end
+    object actOpenIncomeJournalChoice: TOpenChoiceForm
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'OpenChoiceFormIncome'
+      FormName = 'TIncomeJournalChoiceForm'
+      FormNameParam.Value = 'TIncomeJournalChoiceForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inStartDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 'NULL'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Key'
+          Value = Null
+          Component = GuidesIncomeDoc
+          ComponentItem = 'Key'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = GuidesIncomeDoc
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object actInsertMIMaster_byIncome: TdsdExecStoredProc
+      Category = 'Income'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertMIMaster_byIncome
+      StoredProcList = <
+        item
+          StoredProc = spInsertMIMaster_byIncome
+        end>
+      Caption = 'actInsertMIMaster_byIncome'
+    end
+    object macInsertMI_byIncome: TMultiAction
+      Category = 'Income'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actOpenIncomeJournalChoice
+        end
+        item
+          Action = actInsertMIMaster_byIncome
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -724,6 +814,14 @@ inherited LossForm: TLossForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -770,6 +868,11 @@ inherited LossForm: TLossForm
     object bbChecked: TdxBarButton
       Action = actChecked
       Category = 0
+    end
+    object bb: TdxBarButton
+      Action = macInsertMI_byIncome
+      Category = 0
+      ImageIndex = 27
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -957,6 +1060,13 @@ inherited LossForm: TLossForm
         Value = 0.000000000000000000
         Component = edIsChecked
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_IncomeFull'
+        Value = Null
+        Component = edInvNumberIncome
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -1388,7 +1498,7 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 488
+    Left = 464
     Top = 8
   end
   object GuidesArticleLoss: TdsdGuides
@@ -1471,5 +1581,57 @@ inherited LossForm: TLossForm
     PackSize = 1
     Left = 360
     Top = 369
+  end
+  object GuidesIncomeDoc: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edInvNumberIncome
+    FormNameParam.Value = 'TIncomeJournalChoiceForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TIncomeJournalChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesIncomeDoc
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'InvNumber_Full'
+        Value = ''
+        Component = GuidesIncomeDoc
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 524
+    Top = 56
+  end
+  object spInsertMIMaster_byIncome: TdsdStoredProc
+    StoredProcName = 'gpInsert_MovementItem_Loss_byIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId_Income'
+        Value = Null
+        Component = GuidesIncomeDoc
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 256
+    Top = 440
   end
 end
