@@ -71,6 +71,16 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 6
     Width = 233
   end
+  object cbBanSUN: TcxCheckBox
+    Left = 16
+    Top = 145
+    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    Caption = ' '#1047#1072#1087#1088#1077#1090' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+    Width = 233
+  end
   object ActionList: TActionList
     Left = 344
     Top = 76
@@ -132,6 +142,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisBanSUN'
+        Value = Null
+        Component = cbBanSUN
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -160,6 +178,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Name = 'isGetHardwareData'
         Value = Null
         Component = cbGetHardwareData
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBanSUN'
+        Value = Null
+        Component = cbBanSUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>

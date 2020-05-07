@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CashSettings(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShareFromPriceName TVarChar
              , ShareFromPriceCode TVarChar
-             , isGetHardwareData Boolean) AS
+             , isGetHardwareData Boolean
+             , isBanSUN Boolean) AS
 $BODY$
 BEGIN
 
@@ -21,7 +22,8 @@ BEGIN
         , Object_CashSettings.ValueData              AS Name
         , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
         , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
-        , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS GetHardwareData
+        , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
+        , COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE)             AS isBanSUN
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -32,6 +34,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_GetHardwareData
                                 ON ObjectBoolean_CashSettings_GetHardwareData.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_GetHardwareData.DescId = zc_ObjectBoolean_CashSettings_GetHardwareData()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                               AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
   

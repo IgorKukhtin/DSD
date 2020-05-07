@@ -120,6 +120,23 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Коллеги, перемещения по СУН с суммой менее % грн. отлаживать нельзя.', COALESCE(vbLimitSUN, 0);
     END IF;
 
+    -- Для роли "Кассир аптеки"
+    IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+    THEN
+
+        IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                     FROM Object AS Object_CashSettings
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                  ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                                 AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                       AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+        END IF;                                
+    END IF;
+
    -- свойство не меняем у проведенных документов
    IF COALESCE (vbStatusId, 0) = zc_Enum_Status_UnComplete()
    THEN

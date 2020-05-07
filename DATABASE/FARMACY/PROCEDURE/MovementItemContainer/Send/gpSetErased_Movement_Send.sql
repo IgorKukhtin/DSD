@@ -15,6 +15,7 @@ $BODY$
   DECLARE vbUnitKey TVarChar;
   DECLARE vbUserUnitId Integer;
   DECLARE vbisDefSUN Boolean;
+  DECLARE vbIsSUN Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      --vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_Send());
@@ -24,11 +25,13 @@ BEGIN
     SELECT
         Movement_From.ObjectId AS Unit_From,
         Movement_To.ObjectId AS Unit_To,
-        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)
+        COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
+        COALESCE (MovementBoolean_SUN.ValueData, FALSE) 
     INTO
         vbFromId,
         vbUnitId,
-        vbisDefSUN
+        vbisDefSUN,
+        vbIsSUN
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -39,10 +42,13 @@ BEGIN
         LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                   ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                  AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
     WHERE Movement.Id = inMovementId;     
     
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN
       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
       IF vbUnitKey = '' THEN
@@ -64,6 +70,22 @@ BEGIN
       THEN 
         RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
       END IF;     
+
+      IF vbStatusID = zc_Enum_Status_Erased() AND vbisNotDisplaySUN = TRUE
+      THEN 
+        RAISE EXCEPTION 'Ошибка. Изменить статус на Не проведен в перемещениях СУН с признаком Не отображать для сбора запрещено.';     
+      END IF;     
+
+      IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                   FROM Object AS Object_CashSettings
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                               AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                   WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                     AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+      END IF;                                
 
       RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
     END IF;     

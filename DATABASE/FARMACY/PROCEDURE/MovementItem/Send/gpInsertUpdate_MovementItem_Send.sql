@@ -117,6 +117,17 @@ BEGIN
         THEN
           RAISE EXCEPTION 'Ошибка. Коллеги, вы не можете редактировать данное перемещение! Проверьте фильтр на Перемещение по СУН.';
         END IF;
+        
+        IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                     FROM Object AS Object_CashSettings
+                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                  ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                                 AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                     WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                       AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+        THEN
+          RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+        END IF;                                
 
         --определяем подразделение отправителя
         SELECT MovementLinkObject_From.ObjectId AS vbFromId

@@ -1840,7 +1840,7 @@ begin
     1:
       Label19.Caption := Label19.Caption + 'Аналоги по действующему веществу';
     2:
-      Label19.Caption := Label19.Caption + 'Аналог товара ATC';
+      Label19.Caption := Label19.Caption + 'Коды АТС';
     3:
       Label19.Caption := Label19.Caption + 'Действующее вещество';
   end;
@@ -1930,7 +1930,7 @@ begin
     ClearFilterAll;
 
   FAnalogFilter := ShowListSelection('Поиск по',
-    ['Аналогам по действующему веществу', 'Аналогам товара ATC',
+    ['Аналогам по действующему веществу', 'Коду АТС',
     'Действующему вещество'], FAnalogFilter);
 
   case FAnalogFilter of

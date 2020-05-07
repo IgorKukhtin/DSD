@@ -105,7 +105,7 @@ BEGIN
     END IF;     
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
-              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
+              WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
     THEN
       vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
       IF vbUnitKey = '' THEN
@@ -132,6 +132,17 @@ BEGIN
       THEN 
         RAISE EXCEPTION 'Ошибка. Изменить статус на Не проведен в перемещениях СУН с признаком Не отображать для сбора запрещено.';     
       END IF;     
+
+      IF vbIsSUN = TRUE AND EXISTS(SELECT 1
+                                   FROM Object AS Object_CashSettings
+                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
+                                                                ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
+                                                               AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                   WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                                     AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+      THEN
+        RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
+      END IF;                                
     END IF;     
 
     /*IF EXISTS(SELECT 1
