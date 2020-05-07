@@ -1139,9 +1139,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 
-            'ArticleLossName;GoodsGroupNameFull;GoodsName;GoodsKindName;Parti' +
-            'onGoods'
+          IndexFieldNames = 'ArticleLossName;GoodsName;GoodsKindName;PartionGoods'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1270,8 +1268,8 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
         item
           UserName = 'frxDBDItems'
           IndexFieldNames = 
-            'ArticleLossName;GoodsGroupNameFull;GoodsName;GoodsKindName;Parti' +
-            'onGoods'
+            'ArticleLossName;LocationName;GoodsName;GoodsKindName;PartionGood' +
+            's'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1399,6 +1397,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
+          IndexFieldNames = 'LocationName;GoodsName;GoodsKindName;PartionGoods'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1526,7 +1525,7 @@ inherited Report_GoodsMI_InternalForm: TReport_GoodsMI_InternalForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;GoodsName;GoodsKindName;PartionGoods'
+          IndexFieldNames = 'LocationName;GoodsName;GoodsKindName;PartionGoods'
           GridView = cxGridDBTableView
         end>
       Params = <
