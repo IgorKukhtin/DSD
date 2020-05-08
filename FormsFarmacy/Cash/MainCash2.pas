@@ -5146,7 +5146,7 @@ var LocalVersionInfo, BaseVersionInfo: TVersionInfo; Step : Integer;
           InitCashSession;
           TUpdater.AutomaticUpdateProgramStart;
         end;
-      end;
+      end else ShowMessage('Обновление на данный момент отстутствует...');
     except
       on E: Exception do
          ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику ' + E.Message);
