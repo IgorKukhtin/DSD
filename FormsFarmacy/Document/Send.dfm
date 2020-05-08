@@ -16,6 +16,7 @@ inherited SendForm: TSendForm
     ClientRectBottom = 462
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1001
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
@@ -510,12 +511,20 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 102
           end
+          object isPromo: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082'. '#1082#1086#1085#1090#1072#1088'.'
+            DataBinding.FieldName = 'isPromo'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
         end
       end
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 1001
+        Width = 8
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom

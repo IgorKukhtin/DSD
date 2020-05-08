@@ -18,8 +18,7 @@ AS
          , LastMovement.JuridicalId
          , LastMovement.ContractId
          , MovementItem.Id                    AS MovementItemId
---         , MovementItem.Amount                AS Price
-         , COALESCE(MIFloat_Price.ValueData,0)::TFloat  AS Price
+         , COALESCE(MIFloat_Price.ValueData, MovementItem.Amount)::TFloat  AS Price
          , MILinkObject_Goods.ObjectId        AS GoodsId
          , ObjectString_GoodsCode.ValueData   AS GoodsCode
          , Object_Goods.ValueData             AS GoodsName

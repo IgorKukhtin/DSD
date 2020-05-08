@@ -31,7 +31,8 @@ type
     cxLabel2: TcxLabel;
     FormParams: TdsdFormParams;
     cbGetHardwareData: TcxCheckBox;
-    cbBanSUN: TcxCheckBox;
+    edDateBanSUN: TcxDateEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

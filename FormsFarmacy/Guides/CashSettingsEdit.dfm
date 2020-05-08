@@ -71,15 +71,20 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 6
     Width = 233
   end
-  object cbBanSUN: TcxCheckBox
-    Left = 16
-    Top = 145
-    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
-    Caption = ' '#1047#1072#1087#1088#1077#1090' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
-    ParentShowHint = False
-    ShowHint = True
+  object edDateBanSUN: TcxDateEdit
+    Left = 191
+    Top = 154
+    EditValue = 42993d
+    Properties.ReadOnly = False
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 7
-    Width = 233
+    Width = 90
+  end
+  object cxLabel11: TcxLabel
+    Left = 16
+    Top = 155
+    Caption = ' '#1044#1072#1090#1072' '#1079#1072#1087#1088#1077#1090#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
   end
   object ActionList: TActionList
     Left = 344
@@ -144,10 +149,10 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inisBanSUN'
-        Value = Null
-        Component = cbBanSUN
-        DataType = ftBoolean
+        Name = 'inDateBanSUN'
+        Value = 'NULL'
+        Component = edDateBanSUN
+        DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -182,10 +187,10 @@ object CashSettingsEditForm: TCashSettingsEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isBanSUN'
-        Value = Null
-        Component = cbBanSUN
-        DataType = ftBoolean
+        Name = 'DateBanSUN'
+        Value = 'NULL'
+        Component = edDateBanSUN
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end>
     PackSize = 1

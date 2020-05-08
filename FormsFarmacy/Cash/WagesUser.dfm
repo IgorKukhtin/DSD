@@ -524,11 +524,6 @@ inherited WagesUserForm: TWagesUserForm
       ParentShowHint = False
       ShowHint = True
     end
-    object cxLabel25: TcxLabel
-      Left = 11
-      Top = 68
-      Caption = #1056#1072#1089#1095#1077#1090' '#1058#1055','#1055#1057' '#1080' '#1082#1086#1087#1080#1083#1082#1080' (1-2 '#1084#1072#1103' '#1091#1078#1077' '#1089' '#1091#1095#1077#1090#1086#1084' '#1055#1057')'
-    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 235
