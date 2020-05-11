@@ -867,7 +867,8 @@ uses
   Report_IncomeSale_UseNDSKind in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKind.pas' {Report_IncomeSale_UseNDSKindForm: TParentForm},
   Report_IncomeSale_UseNDSKindDialog in '..\..\FormsFarmacy\Report\Report_IncomeSale_UseNDSKindDialog.pas' {Report_IncomeSale_UseNDSKindDialogForm: TParentForm},
   Unit_T_SUN_Edit in '..\..\FormsFarmacy\Guides\Unit_T_SUN_Edit.pas' {Unit_T_SUN_EditForm: TParentForm},
-  Report_IncomeVATBalance in '..\..\FormsFarmacy\Report\Report_IncomeVATBalance.pas' {Report_IncomeVATBalanceForm: TParentForm};
+  Report_IncomeVATBalance in '..\..\FormsFarmacy\Report\Report_IncomeVATBalance.pas' {Report_IncomeVATBalanceForm: TParentForm},
+  Goods_KoeffSUN_Edit in '..\..\FormsFarmacy\Guides\Goods_KoeffSUN_Edit.pas' {Goods_KoeffSUN_EditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
