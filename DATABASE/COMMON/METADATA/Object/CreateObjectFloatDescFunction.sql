@@ -1335,6 +1335,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_SunIncome() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_SunIncome', zc_Object_Unit(), 'Кол-во дней приход от пост. (блокируем СУН)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_SunIncome');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Sun_v2Income() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Sun_v2Income'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_Sun_v2Income', zc_Object_Unit(), 'Кол-во дней приход от пост. (блокируем СУН-2)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Sun_v2Income');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Sun_v4Income() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Sun_v4Income'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_Sun_v4Income', zc_Object_Unit(), 'Кол-во дней приход от пост. (блокируем СУН-2-пи)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Sun_v4Income');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Asset_PeriodUse() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Asset_PeriodUse'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Asset(), 'zc_ObjectFloat_Asset_PeriodUse', 'Период эксплуатации' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Asset_PeriodUse');
@@ -1540,6 +1549,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1739,7 +1756,9 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
- 12.05.20         * zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh
+ 12.05.20         * zc_ObjectFloat_Unit_Sun_v2Income
+                    zc_ObjectFloat_Unit_Sun_v4Income
+                  * zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh
                     zc_ObjectFloat_GoodsByGoodsKind_Avg_Ves
                     zc_ObjectFloat_GoodsByGoodsKind_Avg_Nom
                     zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves

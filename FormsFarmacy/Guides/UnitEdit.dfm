@@ -525,15 +525,47 @@
       end
       object cxLabel42: TcxLabel
         Left = 240
-        Top = 100
+        Top = 98
         Hint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053')'
         Caption = #1050#1086#1083'. '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053')'
         ParentShowHint = False
         ShowHint = True
       end
+      object cxLabel44: TcxLabel
+        Left = 240
+        Top = 192
+        Hint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053'-2-'#1055#1048')'
+        Caption = #1050#1086#1083'. '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053'-2-'#1055#1048')'
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object edSun_v4Income: TcxCurrencyEdit
+        Left = 240
+        Top = 211
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 11
+        Width = 220
+      end
+      object edSun_v2Income: TcxCurrencyEdit
+        Left = 240
+        Top = 165
+        Properties.DecimalPlaces = 0
+        Properties.DisplayFormat = '0'
+        TabOrder = 16
+        Width = 220
+      end
+      object cxLabel45: TcxLabel
+        Left = 240
+        Top = 144
+        Hint = #1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053'-2)'
+        Caption = #1050#1086#1083'. '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082'. '#1057#1059#1053'-2)'
+        ParentShowHint = False
+        ShowHint = True
+      end
       object edUnitOld: TcxButtonEdit
-        Left = -1
-        Top = 123
+        Left = 0
+        Top = 165
         Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1088#1086#1089#1088#1086#1095#1077#1085#1085#1086#1075#1086' '#1090#1086#1074'.'
         ParentShowHint = False
         Properties.Buttons = <
@@ -547,8 +579,8 @@
         Width = 220
       end
       object cxLabel39: TcxLabel
-        Left = -1
-        Top = 102
+        Left = 0
+        Top = 144
         Hint = #1057#1090#1072#1088#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080#1077' ('#1079#1072#1082#1088#1099#1090#1086#1077')'
         Caption = #1057#1090#1072#1088#1086#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1080#1077' ('#1079#1072#1082#1088#1099#1090#1086#1077')'
         ParentShowHint = False
@@ -556,7 +588,7 @@
       end
       object ceMorionCode: TcxCurrencyEdit
         Left = 0
-        Top = 171
+        Top = 211
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 10
@@ -564,15 +596,15 @@
       end
       object edSunIncome: TcxCurrencyEdit
         Left = 240
-        Top = 123
+        Top = 117
         Properties.DecimalPlaces = 0
         Properties.DisplayFormat = '0'
         TabOrder = 7
         Width = 220
       end
       object cxLabel40: TcxLabel
-        Left = 3
-        Top = 152
+        Left = 0
+        Top = 192
         Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
       end
       object cbTechnicalRediscount: TcxCheckBox
@@ -585,7 +617,7 @@
       end
       object cbRedeemByHandSP: TcxCheckBox
         Left = 0
-        Top = 271
+        Top = 298
         Hint = #1055#1086#1075#1072#1096#1072#1090#1100' '#1095#1077#1088#1077#1079' '#1089#1072#1081#1090' '#1074#1088#1091#1095#1085#1091#1102' ('#1073#1077#1079' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1085#1080#1103' API)'
         Caption = #1055#1086#1075#1072#1096#1072#1090#1100' '#1074#1088#1091#1095#1085#1091#1102
         TabOrder = 13
@@ -593,7 +625,7 @@
       end
       object cbSp: TcxCheckBox
         Left = 0
-        Top = 251
+        Top = 278
         Hint = #1076#1083#1103' '#1040#1089#1089#1086#1088#1090#1080#1084#1077#1085#1090#1085#1086#1081' '#1084#1072#1090#1088#1080#1094#1099
         Caption = #1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
         TabOrder = 14
@@ -601,7 +633,7 @@
       end
       object cbTopNo: TcxCheckBox
         Left = 0
-        Top = 301
+        Top = 328
         Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053
         Caption = #1053#1077' '#1091#1095#1080#1090#1099#1074#1072#1090#1100' '#1058#1054#1055' '#1076#1083#1103' '#1072#1087#1090#1077#1082#1080
         TabOrder = 15
@@ -609,12 +641,12 @@
       end
       object cxLabel19: TcxLabel
         Left = 0
-        Top = 202
+        Top = 236
         Caption = #1052#1077#1076'. '#1091#1095#1088#1077#1078#1076#1077#1085#1080#1077' '#1076#1083#1103' '#1087#1082#1084#1091' 1303'
       end
       object cxLabel22: TcxLabel
         Left = 126
-        Top = 251
+        Top = 278
         Hint = #1044#1072#1090#1072' '#1085#1072#1095'.'#1088#1072#1073#1086#1090#1099' '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090#1072#1084
         Caption = #1044#1072#1090#1072' '#1085#1072#1095'.'
         ParentShowHint = False
@@ -622,17 +654,17 @@
       end
       object cxLabel23: TcxLabel
         Left = 239
-        Top = 251
+        Top = 278
         Caption = #1053#1072#1095'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
       end
       object cxLabel24: TcxLabel
         Left = 351
-        Top = 251
+        Top = 278
         Caption = #1054#1082#1086#1085'. '#1057#1086#1094'.'#1087#1088#1086#1077#1082#1090
       end
       object edDateSp: TcxDateEdit
         Left = 126
-        Top = 270
+        Top = 297
         EditValue = 42993d
         Properties.ReadOnly = False
         Properties.SaveTime = False
@@ -642,7 +674,7 @@
       end
       object edEndSP: TcxDateEdit
         Left = 348
-        Top = 270
+        Top = 297
         EditValue = 43234d
         Properties.ArrowsForYear = False
         Properties.AssignedValues.EditFormat = True
@@ -654,7 +686,7 @@
       end
       object edKoeffInSUN: TcxCurrencyEdit
         Left = 239
-        Top = 301
+        Top = 328
         Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
         ParentShowHint = False
         Properties.DecimalPlaces = 4
@@ -665,7 +697,7 @@
       end
       object edKoeffOutSUN: TcxCurrencyEdit
         Left = 348
-        Top = 301
+        Top = 328
         Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
         ParentShowHint = False
         Properties.DecimalPlaces = 4
@@ -676,7 +708,7 @@
       end
       object edPartnerMedical: TcxButtonEdit
         Left = 0
-        Top = 218
+        Top = 252
         Properties.Buttons = <
           item
             Default = True
@@ -688,7 +720,7 @@
       end
       object edStartSP: TcxDateEdit
         Left = 239
-        Top = 270
+        Top = 297
         EditValue = 43225d
         Properties.ArrowsForYear = False
         Properties.AssignedValues.EditFormat = True
@@ -710,13 +742,13 @@
         Width = 246
       end
       object cxLabel43: TcxLabel
-        Left = 240
-        Top = 152
+        Left = 0
+        Top = 98
         Caption = #1044#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053' 2 - '#1055#1048
       end
       object edListDaySUN_pi: TcxTextEdit
-        Left = 240
-        Top = 171
+        Left = 0
+        Top = 117
         Hint = #1086#1090' 1 '#1076#1086' 7 '#1095#1077#1088#1077#1079' '#1079#1087#1090'.'
         ParentShowHint = False
         ShowHint = True
@@ -876,8 +908,8 @@
     end
   end
   object ActionList: TActionList
-    Left = 332
-    Top = 417
+    Left = 396
+    Top = 505
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -992,6 +1024,22 @@
         Name = 'inSunIncome'
         Value = Null
         Component = edSunIncome
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSun_v2Income'
+        Value = Null
+        Component = edSun_v2Income
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSun_v4Income'
+        Value = Null
+        Component = edSun_v4Income
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1884,6 +1932,20 @@
         MultiSelectSeparator = ','
       end
       item
+        Name = 'Sun_v2Income'
+        Value = Null
+        Component = edSun_v2Income
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Sun_v4Income'
+        Value = Null
+        Component = edSun_v4Income
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'isTechnicalRediscount'
         Value = Null
         Component = cbTechnicalRediscount
@@ -2014,8 +2076,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 232
-    Top = 341
+    Left = 216
+    Top = 405
   end
   object GuidesUserManager: TdsdGuides
     KeyField = 'Id'
@@ -2072,8 +2134,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 295
+    Left = 80
+    Top = 303
   end
   object GuidesUnitCategory: TdsdGuides
     KeyField = 'Id'
@@ -2159,8 +2221,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 233
-    Top = 479
+    Left = 185
+    Top = 495
   end
   object GuidesUnitOverdue: TdsdGuides
     KeyField = 'Id'
@@ -2217,8 +2279,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 360
-    Top = 389
+    Left = 368
+    Top = 301
   end
   object GuidesUserManager3: TdsdGuides
     KeyField = 'Id'
@@ -2246,8 +2308,8 @@
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 356
-    Top = 432
+    Left = 300
+    Top = 504
   end
   object GuidesUnitOld: TdsdGuides
     KeyField = 'Id'

@@ -150,6 +150,10 @@ type
     cbAlertRecounting: TcxCheckBox;
     cxLabel43: TcxLabel;
     edListDaySUN_pi: TcxTextEdit;
+    cxLabel44: TcxLabel;
+    edSun_v4Income: TcxCurrencyEdit;
+    edSun_v2Income: TcxCurrencyEdit;
+    cxLabel45: TcxLabel;
   private
     { Private declarations }
   public
