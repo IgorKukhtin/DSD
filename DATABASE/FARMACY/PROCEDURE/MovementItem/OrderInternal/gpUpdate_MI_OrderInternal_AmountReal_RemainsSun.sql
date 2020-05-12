@@ -50,11 +50,11 @@ BEGIN
                                                                  AND MovementBoolean_SUN.ValueData  = TRUE
                                        LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
                                                                  ON MovementBoolean_SUN_v2.MovementId = Movement.Id
-                                                                AND MovementBoolean_SUN_v2.DescId     = zc_ObjectBoolean_Unit_SUN_v2()
+                                                                AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                                                 AND MovementBoolean_SUN_v2.ValueData  = TRUE
                                        LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
                                                                  ON MovementBoolean_SUN_v4.MovementId = Movement.Id
-                                                                AND MovementBoolean_SUN_v4.DescId     = zc_ObjectBoolean_Unit_SUN_v4()
+                                                                AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
                                                                 AND MovementBoolean_SUN_v4.ValueData  = TRUE
                                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                               AND MovementItem.DescId     = zc_MI_Master()
@@ -82,11 +82,11 @@ BEGIN
                                                                  AND MovementBoolean_SUN.ValueData  = TRUE
                                        LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
                                                                  ON MovementBoolean_SUN_v2.MovementId = Movement.Id
-                                                                AND MovementBoolean_SUN_v2.DescId     = zc_ObjectBoolean_Unit_SUN_v2()
+                                                                AND MovementBoolean_SUN_v2.DescId     = zc_MovementBoolean_SUN_v2()
                                                                 AND MovementBoolean_SUN_v2.ValueData  = TRUE
                                        LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
                                                                  ON MovementBoolean_SUN_v4.MovementId = Movement.Id
-                                                                AND MovementBoolean_SUN_v4.DescId     = zc_ObjectBoolean_Unit_SUN_v4()
+                                                                AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
                                                                 AND MovementBoolean_SUN_v4.ValueData  = TRUE
                                        INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                               AND MovementItem.DescId     = zc_MI_Master()

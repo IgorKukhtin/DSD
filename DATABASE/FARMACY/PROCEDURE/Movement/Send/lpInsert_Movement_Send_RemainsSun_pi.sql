@@ -1095,6 +1095,8 @@ BEGIN
 
                  -- остатки, PI (Сверх запас)
                , tmp.Amount_notSold
+                 -- уменьшаем еще на НТЗ
+               - COALESCE (tmpMCS.MCSValue, 0)
                  -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                - COALESCE (_tmpRemains_all.AmountReserve, 0)
                  -- уменьшаем - Перемещение - расход (ожидается)
@@ -1111,6 +1113,8 @@ BEGIN
 
                  --
                , FLOOR ((tmp.Amount_notSold
+                         -- уменьшаем еще на НТЗ
+                       - COALESCE (tmpMCS.MCSValue, 0)
                          -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - Перемещение - расход (ожидается)
@@ -1148,6 +1152,8 @@ BEGIN
                
           -- маленькое кол-во не распределяем
           WHERE FLOOR ((tmp.Amount_notSold
+                        -- уменьшаем еще на НТЗ
+                      - COALESCE (tmpMCS.MCSValue, 0)
                         -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                       - COALESCE (_tmpRemains_all.AmountReserve, 0)
                         -- уменьшаем - Перемещение - расход (ожидается)
@@ -1274,7 +1280,7 @@ BEGIN
      --
      -- курсор1 - все остатки, PI (Сверх запас) + PI (Сверх запас) без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -1282,12 +1288,14 @@ BEGIN
                          WHERE _tmpSumm_limit.Summ >= vbSumm_limit
                          GROUP BY _tmpSumm_limit.UnitId_from
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
+             -- товары - для Кратность
+             LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save;
+         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbKoeffSUN;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1352,13 +1360,15 @@ BEGIN
                          , vbUnitId_from
                          , vbUnitId_to
                          , vbGoodsId
-                         , vbAmount
-                         , vbAmount * vbPrice
+                           -- с учетом кратности - vbKoeffSUN
+                         , CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END
+                         , CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice
+                           --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
-                    WHERE vbAmount > 0
+                    WHERE CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END > 0
                    ;
                  -- обнуляем кол-во что бы больше не искать
                  vbAmount     := 0;
@@ -1386,8 +1396,10 @@ BEGIN
                          , vbUnitId_from
                          , vbUnitId_to
                          , vbGoodsId
+                           -- здесь уже кратность учтена
                          , vbAmountResult
                          , vbAmountResult * vbPrice
+                           --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId

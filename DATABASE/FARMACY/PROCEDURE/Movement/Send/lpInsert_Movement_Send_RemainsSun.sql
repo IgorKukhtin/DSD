@@ -1627,7 +1627,7 @@ BEGIN
      --
      -- курсор1 - все остатки, СРОК + остаток срок без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save, _tmpRemains_Partion.Amount_sun
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save, _tmpRemains_Partion.Amount_sun, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -1635,12 +1635,15 @@ BEGIN
                          WHERE _tmpSumm_limit.Summ >= vbSumm_limit
                          GROUP BY _tmpSumm_limit.UnitId_from
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
+             -- товары - для Кратность
+             LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
+
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun;
+         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbAmount_sun, vbKoeffSUN;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1711,7 +1714,6 @@ BEGIN
                                 OR
                                    NOT EXISTS (SELECT 1 FROM _tmpUnit_SUN_balance_partion WHERE _tmpUnit_SUN_balance_partion.UnitId = vbUnitId_to)
                                  ;
-
                  --
                  -- получилось в Автозаказе больше чем в остатках, т.е. отдаем весь "СРОК"
                  INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId, Amount_not_out, Summ_not_out, Amount_not_in, Summ_not_in)
@@ -1719,18 +1721,26 @@ BEGIN
                          , vbUnitId_from
                          , vbUnitId_to
                          , vbGoodsId
-                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmount           ELSE 0 END AS Amount
-                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmount * vbPrice ELSE 0 END AS Summ
+                           -- с учетом кратности - vbKoeffSUN
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END           ELSE 0 END AS Amount
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice ELSE 0 END AS Summ
+                           --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
-                         , CASE WHEN vbIsOut_partion = FALSE THEN vbAmount           ELSE 0 END AS Amount_not_out
-                         , CASE WHEN vbIsOut_partion = FALSE THEN vbAmount * vbPrice ELSE 0 END AS Summ_not_out
-                         , CASE WHEN vbIsIn_partion  = FALSE THEN vbAmount           ELSE 0 END AS Amount_not_in
-                         , CASE WHEN vbIsIn_partion  = FALSE THEN vbAmount * vbPrice ELSE 0 END AS Summ_not_in
-                    WHERE vbAmount > 0
+                         , CASE WHEN vbIsOut_partion = FALSE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END           ELSE 0 END AS Amount_not_out
+                         , CASE WHEN vbIsOut_partion = FALSE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice ELSE 0 END AS Summ_not_out
+                         , CASE WHEN vbIsIn_partion  = FALSE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END           ELSE 0 END AS Amount_not_in
+                         , CASE WHEN vbIsIn_partion  = FALSE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice ELSE 0 END AS Summ_not_in
+                    WHERE CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END > 0
                    ;
+
+-- if inUserId = 3 AND exists (select 1 from _tmpResult_Partion where _tmpResult_Partion.GoodsId = 42550  AND _tmpResult_Partion.Amount > 0)
+-- then --  Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId, Amount_not_out, Summ_not_out, Amount_not_in, Summ_not_in)
+--      RAISE EXCEPTION 'Ошибка.<%>', (select _tmpResult_Partion.Amount from _tmpResult_Partion where _tmpResult_Partion.GoodsId = 42550 AND _tmpResult_Partion.Amount > 0);
+-- end if;
+
                  --  если все разрешено ИЛИ если расход запрещен
                  IF (vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE)
                     OR vbIsOut_partion = FALSE
@@ -1790,8 +1800,10 @@ BEGIN
                          , vbUnitId_from
                          , vbUnitId_to
                          , vbGoodsId
+                           -- ???здесь уже кратность учтена???
                          , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmountResult           ELSE 0 END AS Amount
                          , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmountResult * vbPrice ELSE 0 END AS Summ
+                           --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId
@@ -1829,7 +1841,7 @@ BEGIN
      --
      -- курсор1 - все остатки, СРОК МИНУС сколько уже распределили
      OPEN curPartion_next FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0) AS Amount, _tmpRemains_Partion.Amount_sun
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount - COALESCE (tmp.Amount, 0) AS Amount, _tmpRemains_Partion.Amount_sun, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
         FROM _tmpRemains_Partion
              -- сколько уже ушло после распределения - 1
              LEFT JOIN (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_from, _tmpResult_Partion.GoodsId
@@ -1842,12 +1854,15 @@ BEGIN
                         GROUP BY _tmpSumm_limit.UnitId_from
                        ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
 
+             -- товары для Кратность
+             LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
+
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun;
+         FETCH curPartion_next INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_sun, vbKoeffSUN;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
@@ -1866,6 +1881,10 @@ BEGIN
                               -- AND _tmpSumm_limit.Summ >= vbSumm_limit
                             GROUP BY _tmpSumm_limit.UnitId_to
                            ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_to = _tmpRemains_calc.UnitId
+
+                 -- товары - для Кратность
+                 LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_calc.GoodsId
+
                  -- !!!только НЕ DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit!!!
                  LEFT JOIN _tmpList_DefSUN ON _tmpList_DefSUN.UnitId_from = vbUnitId_from
                                           AND _tmpList_DefSUN.UnitId_to   = _tmpRemains_calc.UnitId
@@ -1959,15 +1978,15 @@ BEGIN
                          , vbGoodsId
                          , 0                  AS Amount
                          , 0                  AS Summ
-                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmount           ELSE 0 END AS Amount_next
-                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN vbAmount * vbPrice ELSE 0 END AS Summ_next
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END           ELSE 0 END AS Amount_next
+                         , CASE WHEN vbIsOut_partion = TRUE AND vbIsIn_partion = TRUE THEN CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice ELSE 0 END AS Summ_next
                          , 0                  AS MovementId
                          , 0                  AS MovementItemId
                          , CASE WHEN vbIsOut_partion = FALSE THEN vbAmount           ELSE 0 END AS Amount_not_out
                          , CASE WHEN vbIsOut_partion = FALSE THEN vbAmount * vbPrice ELSE 0 END AS Summ_not_out
                          , CASE WHEN vbIsIn_partion  = FALSE THEN vbAmount           ELSE 0 END AS Amount_not_in
                          , CASE WHEN vbIsIn_partion  = FALSE THEN vbAmount * vbPrice ELSE 0 END AS Summ_not_in
-                    WHERE vbAmount > 0
+                    WHERE CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END > 0
                    -- AND NOT EXISTS (SELECT 1 FROM _tmpResult_Partion WHERE _tmpResult_Partion.UnitId_from = vbUnitId_from AND _tmpResult_Partion.UnitId_to = vbUnitId_to AND _tmpResult_Partion.GoodsId = vbGoodsId)
                    ;
 
