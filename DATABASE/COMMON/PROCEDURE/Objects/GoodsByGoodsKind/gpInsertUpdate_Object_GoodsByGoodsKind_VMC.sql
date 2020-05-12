@@ -19,14 +19,23 @@ DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, In
                                                                    , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
                                                                    , TVarChar);
 
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_GoodsByGoodsKind_VMC (Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , Boolean, Boolean, Boolean
+                                                                   , Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer
+                                                                   , TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat
+                                                                   , TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
  INOUT ioId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
     IN inGoodsKindId           Integer  , -- Виды товаров
+    IN inGoodsId_sh            Integer  , -- Товар (из категории "Штучный")
     IN inBoxId                 Integer  , -- Ящик (E2/E3)
     IN inBoxId_2               Integer  , -- ящик (Гофра)
-    IN inWeightMin             TFloat  , -- Мин. вес
-    IN inWeightMax             TFloat  , -- Мах. вес
+    --IN inWeightMin             TFloat  , -- Мин. вес
+    --IN inWeightMax             TFloat  , -- Мах. вес
     IN inHeight                TFloat  , -- Высота
     IN inLength                TFloat  , -- Длина
     IN inWidth                 TFloat  , -- Ширина
@@ -46,6 +55,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsByGoodsKind_VMC(
    OUT outWeightAvgGross_2     TFloat  , -- Вес брутто по среднему весу ящика (Гофра)
    OUT outWeightAvgNet_2       TFloat  , -- Вес нетто по среднему весу ящика (Гофра)
    
+    IN inWeightAvg_Sh          TFloat ,
+    IN inWeightAvg_Nom         TFloat ,
+    IN inWeightAvg_Ves         TFloat ,
+    IN inTax_Sh                TFloat ,
+    IN inTax_Nom               TFloat ,
+    IN inTax_Ves               TFloat ,
+
+   OUT outWeightMin_Sh         TFloat,
+   OUT outWeightMax_Sh         TFloat,
+   OUT outWeightMin_Nom        TFloat,
+   OUT outWeightMax_Nom        TFloat,
+   OUT outWeightMin_Ves        TFloat,
+   OUT outWeightMax_Ves        TFloat,
+
     IN inisGoodsTypeKind_Sh    Boolean , -- Штучный
     IN inisGoodsTypeKind_Nom   Boolean , -- Номинальный
     IN inisGoodsTypeKind_Ves   Boolean , -- Неноминальный
@@ -150,9 +173,9 @@ BEGIN
    END IF;
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMin(), ioId, inWeightMin);
+   --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMin(), ioId, inWeightMin);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMax(), ioId, inWeightMax);
+   --PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WeightMax(), ioId, inWeightMax);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Height(), ioId, inHeight);
    -- сохранили свойство <>
@@ -164,7 +187,24 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum(), ioId, inWmsCellNum);   
    
+   
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh(), ioId, inWeightAvg_Sh);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Avg_Nom(), ioId, inWeightAvg_Nom);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Avg_Ves(), ioId, inWeightAvg_Ves);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh(), ioId, inTax_Sh);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom(), ioId, inTax_Nom);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves(), ioId, inTax_Ves);
 
+
+   -- сохранили связь с <Товар (из категории "Штучный")>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_Goods_Sh(), ioId, inGoodsId_sh);
+       
 
    IF inisGoodsTypeKind_Sh = TRUE 
    THEN
@@ -951,7 +991,14 @@ BEGIN
    WHERE tmp.Id = ioId;
    */
    
-   
+  
+   outWeightMin_Sh  := (inWeightAvg_Sh  * (1-inTax_Sh/100))  :: TFloat;
+   outWeightMax_Sh  := (inWeightAvg_Sh  * (1+inTax_Sh/100))  :: TFloat;
+   outWeightMin_Nom := (inWeightAvg_Nom * (1-inTax_Nom/100)) :: TFloat;
+   outWeightMax_Nom := (inWeightAvg_Nom * (1+inTax_Nom/100)) :: TFloat;
+   outWeightMin_Ves := (inWeightAvg_Ves * (1-inTax_Ves/100)) :: TFloat;
+   outWeightMax_Ves := (inWeightAvg_Ves * (1+inTax_Ves/100)) :: TFloat;
+ 
 
 END;
 $BODY$
@@ -961,6 +1008,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.05.20         *
  10.04.19         *
  29.03.19         *
  22.03.19         * 

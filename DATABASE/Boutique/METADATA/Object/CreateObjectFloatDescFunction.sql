@@ -62,6 +62,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_DiscountTax() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_DiscountTax', zc_Object_Unit(), '% скидки ВИНТАЖ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_DiscountTax');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_PeriodYearTag() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodYearTag'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_PeriodYearTag', zc_Object_Unit(), 'Год(для категории тов.)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_PeriodYearTag');
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Currency_IncomeKoeff() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Currency_IncomeKoeff'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Currency_IncomeKoeff', zc_Object_Currency(), 'Коэффициент при приходе' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Currency_IncomeKoeff');
@@ -81,6 +85,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.  Кухтин И.В.  Климентьев К.И.  Полятыкин А.А.  Воробкало А.А.
+12.05.20          * zc_ObjectFloat_Unit_PeriodYearTag
 12.03.19          * zc_ObjectFloat_ProfitLossDemo_Value
 24.04.18          * zc_ObjectFloat_Currency_IncomeKoeff
 08.05.17                                                       *

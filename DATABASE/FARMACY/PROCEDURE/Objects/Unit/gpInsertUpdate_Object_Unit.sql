@@ -35,6 +35,13 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, T
                                                    TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
                                                    Integer, TVarChar, Boolean, Boolean, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,
+                                                   TDateTime, TDateTime, TDateTime, TDateTime, TDateTime,TDateTime, TDateTime, TDateTime, TDateTime,
+                                                   Boolean, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer,
+                                                   Boolean, Boolean, Boolean, Boolean, Integer, Boolean, Boolean, 
+                                                   TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, Boolean, Boolean, Integer, 
+                                                   Integer, TVarChar, Boolean, Boolean, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
@@ -47,6 +54,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inKoeffInSUN              TFloat    ,    -- Коэффициент баланса приход/расход
     IN inKoeffOutSUN             TFloat    ,    -- Коэффициент баланса расход/приход
     IN inSunIncome               TFloat    ,    -- Кол-во дней приход от пост. (блокируем СУН) по-умолчанию 30 дней, если не установлено другое число > 0
+    IN inSun_v2Income            TFloat    ,    -- Кол-во дней приход от пост. (блокируем СУН-2) по-умолчанию 30 дней, если не установлено другое число > 0
+    IN inSun_v4Income            TFloat    ,    -- Кол-во дней приход от пост. (блокируем СУН-2-ПИ) по-умолчанию 30 дней, если не установлено другое число > 0
     IN inStartServiceNigth       TDateTime ,
     IN inEndServiceNigth         TDateTime ,
     IN inCreateDate              TDateTime ,    -- дата создания точки
@@ -204,7 +213,10 @@ BEGIN
 
    -- Кол-во дней приход от пост. (блокируем СУН)
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_SunIncome(), ioId, inSunIncome);
-   
+   -- Кол-во дней приход от пост. (блокируем СУН-2)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Sun_v2Income(), ioId, inSun_v2Income);
+   -- Кол-во дней приход от пост. (блокируем СУН-2-ПИ)
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Unit_Sun_v4Income(), ioId, inSun_v4Income);   
 
    IF inStartServiceNigth ::Time <> '00:00'
    THEN

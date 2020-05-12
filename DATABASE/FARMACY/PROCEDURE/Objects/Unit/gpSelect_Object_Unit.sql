@@ -29,7 +29,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
              , T1_SUN_v2 TFloat, T2_SUN_v2 TFloat, T1_SUN_v4 TFloat
-             , SunIncome TFloat
+             , SunIncome TFloat, Sun_v2Income TFloat, Sun_v4Income TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
              , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
@@ -139,7 +139,9 @@ BEGIN
       , COALESCE (ObjectFloat_T2_SUN_v2.ValueData,0) ::TFloat AS T2_SUN_v2
       , COALESCE (ObjectFloat_T1_SUN_v4.ValueData,0) ::TFloat AS T1_SUN_v4
       
-      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END  ::TFloat AS SunIncome
+      , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END        ::TFloat AS SunIncome
+      , CASE WHEN COALESCE (ObjectFloat_Sun_v2Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v2Income.ValueData ELSE 30 END  ::TFloat AS Sun_v2Income
+      , CASE WHEN COALESCE (ObjectFloat_Sun_v4Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v4Income.ValueData ELSE 30 END  ::TFloat AS Sun_v4Income
 
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
@@ -410,6 +412,12 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_SunIncome
                               ON ObjectFloat_SunIncome.ObjectId = Object_Unit.Id
                              AND ObjectFloat_SunIncome.DescId = zc_ObjectFloat_Unit_SunIncome()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Sun_v2Income
+                              ON ObjectFloat_Sun_v2Income.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_Sun_v2Income.DescId = zc_ObjectFloat_Unit_Sun_v2Income()
+        LEFT JOIN ObjectFloat AS ObjectFloat_Sun_v4Income
+                              ON ObjectFloat_Sun_v4Income.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_Sun_v4Income.DescId = zc_ObjectFloat_Unit_Sun_v4Income()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
@@ -503,6 +511,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 12.05.20         *
  28.04.20         *
  21.04.20         * add ListDaySUN_pi
                         zc_ObjectBoolean_Unit_SUN_v4

@@ -10,11 +10,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, Phone TVarChar
              , Printer TVarChar, PrintName TVarChar
              , DiscountTax TFloat
+             , PeriodYearTag TFloat
              , JuridicalName TVarChar, ParentName TVarChar, ChildName TVarChar
              , BankAccountName TVarChar, BankName TVarChar
              , AccountDirectionName TVarChar
              , GoodsGroupName  TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , GoodsTagId Integer, GoodsTagName TVarChar
+             , PeriodTagId Integer, PeriodTagName TVarChar
              , StartDate_sybase TDateTime
              , isPartnerBarCode Boolean
              , isOLAP Boolean
@@ -53,6 +56,7 @@ BEGIN
            , OS_Unit_Printer.ValueData       AS Printer
            , OS_Unit_Print.ValueData         AS PrintName
            , OF_Unit_DiscountTax.ValueData   AS DiscountTax
+           , COALESCE (OF_Unit_PeriodYearTag.ValueData, 0) :: TFloat AS PeriodYearTag
            , Object_Juridical.ValueData      AS JuridicalName
            , Object_Parent.ValueData         AS ParentName
            , Object_Child.ValueData          AS ChildName
@@ -65,6 +69,12 @@ BEGIN
 
            , Object_PriceList.Id            AS PriceListId
            , Object_PriceList.ValueData     AS PriceListName
+
+           , Object_GoodsTag.Id            AS GoodsTagId
+           , Object_GoodsTag.ValueData     AS GoodsTagName
+
+           , Object_PeriodTag.Id            AS PeriodTagId
+           , Object_PeriodTag.ValueData     AS PeriodTagName
 
            , CASE WHEN Object_Unit.ValueData = 'Ï‡„‡ÁËÌ MaxMara'
                        THEN '2006-01-01' -- MaxMara -- OK
@@ -135,6 +145,10 @@ BEGIN
                                   ON OF_Unit_DiscountTax.ObjectId = Object_Unit.Id
                                  AND OF_Unit_DiscountTax.DescId = zc_ObjectFloat_Unit_DiscountTax()
 
+            LEFT JOIN ObjectFloat AS OF_Unit_PeriodYearTag
+                                  ON OF_Unit_PeriodYearTag.ObjectId = Object_Unit.Id
+                                 AND OF_Unit_PeriodYearTag.DescId = zc_ObjectFloat_Unit_PeriodYearTag()
+
             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartnerBarCode 
                                     ON ObjectBoolean_PartnerBarCode.ObjectId = Object_Unit.Id 
                                    AND ObjectBoolean_PartnerBarCode.DescId = zc_ObjectBoolean_Unit_PartnerBarCode()
@@ -179,6 +193,16 @@ BEGIN
                                 AND ObjectLink_Unit_GoodsGroup.DescId = zc_ObjectLink_Unit_GoodsGroup()
             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Unit_GoodsGroup.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_GoodsTag
+                                 ON ObjectLink_Unit_GoodsTag.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_GoodsTag.DescId = zc_ObjectLink_Unit_GoodsTag()
+            LEFT JOIN Object AS Object_GoodsTag ON Object_GoodsTag.Id = ObjectLink_Unit_GoodsTag.ChildObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_PeriodTag
+                                 ON ObjectLink_Unit_PeriodTag.ObjectId = Object_Unit.Id
+                                AND ObjectLink_Unit_PeriodTag.DescId = zc_ObjectLink_Unit_PeriodTag()
+            LEFT JOIN Object AS Object_PeriodTag ON Object_PeriodTag.Id = ObjectLink_Unit_PeriodTag.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_User_Unit
                                  ON ObjectLink_User_Unit.ObjectId = vbUserId
                                 AND ObjectLink_User_Unit.DescId   = zc_ObjectLink_User_Unit()
@@ -197,6 +221,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    œÓÎˇÚ˚ÍËÌ ¿.¿.
+12.05.20          *
 27.07.18          *
 22.03.18          *
 05.03.18          *
