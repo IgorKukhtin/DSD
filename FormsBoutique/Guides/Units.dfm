@@ -181,6 +181,36 @@ object UnitForm: TUnitForm
         Options.Editing = False
         Width = 80
       end
+      object GoodsTagName: TcxGridDBColumn
+        Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'GoodsTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1090#1086#1074#1072#1088#1072
+        Options.Editing = False
+        Width = 112
+      end
+      object PeriodTagName: TcxGridDBColumn
+        Caption = #1057#1077#1079#1086#1085
+        DataBinding.FieldName = 'PeriodTagName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1077#1079#1086#1085' ('#1076#1083#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074'.)'
+        Options.Editing = False
+        Width = 112
+      end
+      object PeriodYearTag: TcxGridDBColumn
+        Caption = #1043#1086#1076
+        DataBinding.FieldName = 'PeriodYearTag'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        HeaderHint = #1043#1086#1076' ('#1076#1083#1103' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1090#1086#1074'.)'
+        Options.Editing = False
+        Width = 120
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
