@@ -54,8 +54,8 @@ BEGIN
      -- 2.1. вся статистика продаж - EXPRESS
      CREATE TEMP TABLE _tmpSale_express   (DayOrd Integer, DayOrd_real Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Amount_sum TFloat, Summ TFloat, Summ_sum TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpSale_express_a (DayOrd Integer, DayOrd_real Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Amount_sum TFloat, Summ TFloat, Summ_sum TFloat) ON COMMIT DROP;
-     -- 2.3. все товары для статистики продаж - EXPRESS
-     CREATE TEMP TABLE _tmpGoods_express   (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
+     -- 2.3. все товары для статистики продаж - EXPRESS + Кратность
+     CREATE TEMP TABLE _tmpGoods_SUN  (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
 
      -- 3.2. остатки, СРОК - для распределения
      CREATE TEMP TABLE _tmpRemains_Partion   (UnitId Integer, GoodsId Integer, AmountRemains TFloat, AmountResult TFloat) ON COMMIT DROP;
@@ -359,5 +359,4 @@ $BODY$
 */
 
 -- тест
--- FETCH ALL "<unnamed portal 1>";
--- select * from gpReport_Movement_Send_RemainsSun_express_v2(inOperDate := ('05.04.2020 12:00:00')::TDateTime ,  inSession := '3');
+-- SELECT * FROM gpReport_Movement_Send_RemainsSun_express_v2 (inOperDate:= CURRENT_DATE + INTERVAL '3 DAY', inGoodsId:= 0, inSession:= '3'); -- FETCH ALL "<unnamed portal 1>";

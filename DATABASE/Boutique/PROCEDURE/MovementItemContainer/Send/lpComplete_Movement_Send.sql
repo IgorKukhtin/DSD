@@ -71,6 +71,12 @@ BEGIN
           ) AS tmp;
 
 
+     -- проверка - Подразделение
+     IF COALESCE (vbUnitId_From, 0) = COALESCE (vbUnitId_To, 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Значение <Подразделение (От кого)> должно отличаться от <Подразделение (Кому)>.';
+     END IF;
+
      -- доопределили - Аналитику для проводок
      vbWhereObjectId_Analyzer_From:= CASE WHEN vbUnitId_From <> 0 THEN vbUnitId_From END;
      vbWhereObjectId_Analyzer_To  := CASE WHEN vbUnitId_To   <> 0 THEN vbUnitId_To   END;

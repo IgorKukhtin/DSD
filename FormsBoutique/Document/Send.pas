@@ -182,6 +182,10 @@ type
     TotalSummPriceListToBalance: TcxGridDBColumn;
     CurrencyName_pl: TcxGridDBColumn;
     CurrencyName_pl_to: TcxGridDBColumn;
+    TotalSummPriceListToBalance_start: TcxGridDBColumn;
+    TotalSummPriceListTo_start: TcxGridDBColumn;
+    OperPriceListTo_start: TcxGridDBColumn;
+    NPP: TcxGridDBColumn;
   private
   public
   end;

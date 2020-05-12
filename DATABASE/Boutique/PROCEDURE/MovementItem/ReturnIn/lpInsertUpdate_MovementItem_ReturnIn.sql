@@ -56,6 +56,7 @@ BEGIN
                                                        AND MIBoolean.ValueData      = TRUE
                     WHERE Object_PartionMI.Id = inPartionMI_Id
                    )
+        AND zc_Enum_GlobalConst_isTerry() = TRUE
      THEN
          -- проверка - сколько дней прошло с момента списания кол-ва с покупателя - т.е. с момента реальной продажи
          vbOperDate_pay:= COALESCE ((SELECT MAX (MIContainer.OperDate)

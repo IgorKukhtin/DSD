@@ -16,12 +16,17 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
     DECLARE vbPriceListId_to Integer;
+    DECLARE vbMovementDescId Integer;
 
     DECLARE Cursor1 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      -- vbUserId:= lpGetUserBySession (inSession);
+     
+     
+     --
+     vbMovementDescId:= (SELECT Movement.DescId FROM Movement WHERE Movement.Id = inMovementId);
 
      -- если НЕ по списку
      IF inIsGoodsPrint = FALSE
@@ -31,7 +36,7 @@ BEGIN
          PERFORM lfCheck_Movement_Print (inMovementDescId:= Movement.DescId, inMovementId:= Movement.Id, inStatusId:= Movement.StatusId) FROM Movement WHERE Id = inMovementId;
 
          -- данные Прайс-лист
-         vbPriceListId_to:= (SELECT ObjectLink_Unit_PriceList.ChildObjectId AS PriceListId_to
+         vbPriceListId_to:= (SELECT COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis()) AS PriceListId_to
                              FROM Movement
                                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                                ON MovementLinkObject_To.MovementId = Movement.Id
@@ -80,7 +85,9 @@ BEGIN
                                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
                                                              AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                                             AND ObjectHistory_PriceListItem.EndDate = zc_DateEnd()
+                                                             AND ((ObjectHistory_PriceListItem.EndDate   = zc_DateEnd()   AND (vbMovementDescId <> zc_Movement_Send() OR  zc_Enum_GlobalConst_isTerry() = TRUE))
+                                                               OR (ObjectHistory_PriceListItem.StartDate = zc_DateStart() AND  vbMovementDescId =  zc_Movement_Send() AND zc_Enum_GlobalConst_isTerry() = FALSE)
+                                                                 )
                                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -144,7 +151,8 @@ BEGIN
          -- печать из списка Object_GoodsPrint - для соотв. сессии и пользователя
          OPEN Cursor1 FOR
            WITH
-               tmpGoodsPrint AS (SELECT Object_GoodsPrint.UnitId
+               tmpGoodsPrint AS (SELECT Object_GoodsPrint.Id
+                                      , Object_GoodsPrint.UnitId
                                       , Object_GoodsPrint.PartionId
                                       , Object_GoodsPrint.Amount
                                  FROM  (SELECT Object_GoodsPrint.InsertDate
@@ -182,13 +190,15 @@ BEGIN
                                                            AND ObjectLink_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
                                       INNER JOIN ObjectLink AS ObjectLink_PriceListItem_PriceList
                                                             ON ObjectLink_PriceListItem_PriceList.ObjectId      = ObjectLink_PriceListItem_Goods.ObjectId
-                                                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = ObjectLink_Unit_PriceList.ChildObjectId
+                                                           AND ObjectLink_PriceListItem_PriceList.ChildObjectId = COALESCE (ObjectLink_Unit_PriceList.ChildObjectId, zc_PriceList_Basis())
                                                            AND ObjectLink_PriceListItem_PriceList.DescId        = zc_ObjectLink_PriceListItem_PriceList()
 
                                       LEFT JOIN ObjectHistory AS ObjectHistory_PriceListItem
                                                               ON ObjectHistory_PriceListItem.ObjectId = ObjectLink_PriceListItem_PriceList.ObjectId
-                                                             AND ObjectHistory_PriceListItem.DescId = zc_ObjectHistory_PriceListItem()
-                                                             AND ObjectHistory_PriceListItem.EndDate = zc_DateEnd()
+                                                             AND ObjectHistory_PriceListItem.DescId   = zc_ObjectHistory_PriceListItem()
+                                                             AND ((ObjectHistory_PriceListItem.EndDate   = zc_DateEnd()   AND (vbMovementDescId <> zc_Movement_Send() OR  zc_Enum_GlobalConst_isTerry() = TRUE))
+                                                               OR (ObjectHistory_PriceListItem.StartDate = zc_DateStart() AND  vbMovementDescId =  zc_Movement_Send() AND zc_Enum_GlobalConst_isTerry() = FALSE)
+                                                                 )
                                       LEFT JOIN ObjectHistoryFloat AS ObjectHistoryFloat_PriceListItem_Value
                                                                    ON ObjectHistoryFloat_PriceListItem_Value.ObjectHistoryId = ObjectHistory_PriceListItem.Id
                                                                   AND ObjectHistoryFloat_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
@@ -242,7 +252,7 @@ BEGIN
 
                 LEFT JOIN Object AS Object_Period          ON Object_Period.Id     = Object_PartionGoods.PeriodId
 
-           ORDER BY Object_Goods.ObjectCode, Object_GoodsSize.ValueData
+           ORDER BY tmpGoodsPrint.Id, Object_Goods.ObjectCode, Object_GoodsSize.ValueData
            ;
 
          RETURN NEXT Cursor1;

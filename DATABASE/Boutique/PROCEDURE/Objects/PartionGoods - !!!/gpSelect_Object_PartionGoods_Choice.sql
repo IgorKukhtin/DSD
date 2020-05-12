@@ -25,6 +25,7 @@ RETURNS TABLE (Id                   Integer
              , Remains              TFloat
              , AmountDebt           TFloat
              , RemainsWithDebt      TFloat
+             , Value_choice         TFloat
              , OperPrice            TFloat
              , OperPriceList        TFloat
              , OperPriceListReal    TFloat
@@ -88,7 +89,7 @@ BEGIN
             INTO vbCurrencyValue_usd, vbParValue_usd
      FROM lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
                                            , inCurrencyFromId:= zc_Currency_Basis()
-                                           , inCurrencyToId  := zc_Currency_EUR()
+                                           , inCurrencyToId  := zc_Currency_USD()
                                             ) AS tmp;
      -- Результат
      RETURN QUERY
@@ -212,11 +213,14 @@ BEGIN
             , tmpContainer.AmountDebt   :: TFloat AS AmountDebt
             , (tmpContainer.Amount + tmpContainer.AmountDebt) :: TFloat AS RemainsWithDebt
 
+              -- для авто-заполнения в гриде после выбора
+            , 1                         :: TFloat AS Value_choice
+              -- Цена вх.
             , CASE WHEN vbIsOperPrice = TRUE THEN Object_PartionGoods.OperPrice ELSE 0 END :: TFloat AS OperPrice
-            
-            --, Object_PartionGoods.OperPriceList   AS OperPriceList 
+              -- Цена в прайсе 
             , CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END :: TFloat AS OperPriceList
 
+              -- Цена в прайсе - ГРН
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
                         THEN zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END
                                                                          , vbCurrencyValue_eur, vbParValue_eur)
@@ -228,6 +232,7 @@ BEGIN
                    ELSE CASE WHEN zc_Enum_GlobalConst_isTerry() = FALSE THEN COALESCE (tmpPriceList.OperPriceList, tmpPriceList_Basis.OperPriceList) ELSE Object_PartionGoods.OperPriceList END
               END :: TFloat                       AS OperPriceListReal
 
+              -- курс
             , CASE WHEN tmpPriceList.CurrencyId = zc_Currency_EUR()
                         THEN zfCalc_CurrencyFrom (1, vbCurrencyValue_eur, vbParValue_eur)
                    WHEN tmpPriceList.CurrencyId = zc_Currency_USD()

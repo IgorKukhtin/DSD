@@ -775,6 +775,13 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'TextValue'
           Value = Null
           Component = MasterCDS
@@ -910,6 +917,14 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
+          Name = 'OperPriceListTo_start'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'OperPriceListReal'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
           Name = 'Remains'
           Value = Null
           Component = MasterCDS
@@ -941,10 +956,11 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
           MultiSelectSeparator = ','
         end
         item
-          Name = 'Code'
+          Name = 'Value_choice'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'GoodsCode'
+          ComponentItem = 'Value_choice'
+          DataType = ftFloat
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -1193,6 +1209,7 @@ object PartionGoodsChoiceForm: TPartionGoodsChoiceForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 104
     Top = 248
   end

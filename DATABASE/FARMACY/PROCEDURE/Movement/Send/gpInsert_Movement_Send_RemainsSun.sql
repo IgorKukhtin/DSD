@@ -65,9 +65,12 @@ BEGIN
      CREATE TEMP TABLE _tmpRemains   (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains_a (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
-     -- 2. вся статистика продаж
+     -- 2.1. вся статистика продаж
      CREATE TEMP TABLE _tmpSale   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpSale_a (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
+
+     -- 2.2. товары для Кратность
+     CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -165,6 +168,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v3.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
                                          AND MovementBoolean_SUN_v3.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                          ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v3()
+                                         AND MovementBoolean_SUN_v4.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
                 -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
@@ -173,6 +180,7 @@ BEGIN
            --AND _tmpUnit_SUN_over.UnitId IS NULL
              AND MovementBoolean_SUN_v2.MovementId IS NULL
              AND MovementBoolean_SUN_v3.MovementId IS NULL
+             AND MovementBoolean_SUN_v4.MovementId IS NULL
           ) AS tmp;
           
      -- !!!Удаляем предыдущие документы - DefSUN!!!
@@ -201,6 +209,10 @@ BEGIN
                                           ON MovementBoolean_SUN_v3.MovementId = Movement.Id
                                          AND MovementBoolean_SUN_v3.DescId     = zc_MovementBoolean_SUN_v3()
                                          AND MovementBoolean_SUN_v3.ValueData  = TRUE
+                LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                          ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                         AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
+                                         AND MovementBoolean_SUN_v4.ValueData  = TRUE
                 -- !!!кроме таких Аптек!!!
                 -- LEFT JOIN _tmpUnit_SUN_over ON _tmpUnit_SUN_over.UnitId = MovementLinkObject_From.ObjectId
            WHERE Movement.OperDate = CURRENT_DATE
@@ -209,6 +221,7 @@ BEGIN
            --AND _tmpUnit_SUN_over.UnitId IS NULL
              AND MovementBoolean_SUN_v2.MovementId IS NULL
              AND MovementBoolean_SUN_v3.MovementId IS NULL
+             AND MovementBoolean_SUN_v4.MovementId IS NULL
           ) AS tmp;
 
 
@@ -340,4 +353,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE - INTERVAL '0 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+-- SELECT * FROM gpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inSession:= zfCalc_UserAdmin()) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ

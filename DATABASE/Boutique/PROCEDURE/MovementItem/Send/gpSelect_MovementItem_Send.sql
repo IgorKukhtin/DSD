@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inIsErased         Boolean      , --
     IN inSession          TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (NPP Integer
+             , Id Integer
              , PartionId Integer, InvNumber_Partion TVarChar, OperDate_Partion TDateTime
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , GoodsGroupNameFull TVarChar, MeasureName TVarChar
@@ -25,15 +26,12 @@ RETURNS TABLE (Id Integer
              , Amount TFloat
              , Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat
-             , OperPriceList TFloat
-             , OperPriceListTo TFloat
-             , OperPriceListBalance TFloat
-             , TotalSumm TFloat 
-             , TotalSummBalance TFloat
-             , TotalSummPriceListBalance TFloat
-             , TotalSummPriceListToBalance TFloat
-             , TotalSummPriceList TFloat
-             , TotalSummPriceListTo TFloat
+             , OperPriceList TFloat, OperPriceListTo TFloat, OperPriceListTo_start TFloat
+             , OperPriceListBalance TFloat -- , OperPriceListToBalance TFloat, OperPriceListToBalance_start TFloat
+             , TotalSumm TFloat , TotalSummBalance TFloat
+
+             , TotalSummPriceListBalance TFloat, TotalSummPriceListToBalance TFloat, TotalSummPriceListToBalance_start TFloat
+             , TotalSummPriceList TFloat, TotalSummPriceListTo TFloat, TotalSummPriceListTo_start TFloat
              , CurrencyValue TFloat, ParValue TFloat
              , CurrencyName_pl TVarChar, CurrencyName_pl_to TVarChar
              , DiscountTax_From TFloat, DiscountTax_To TFloat
@@ -55,6 +53,13 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_MI_Send());
+
+
+     -- !!!Замена!!!
+     IF zc_Enum_GlobalConst_isTerry() = FALSE
+     THEN
+         inShowAll:= FALSE;
+     END IF;
 
 
      -- данные из шапки
@@ -113,7 +118,8 @@ BEGIN
                              AND Object.isErased = FALSE
                            )
 
-       , tmpMI AS (SELECT MovementItem.Id
+       , tmpMI AS (SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) AS NPP
+                        , MovementItem.Id
                         , MovementItem.ObjectId AS GoodsId
                         , MovementItem.PartionId
                         , MovementItem.Amount
@@ -127,8 +133,9 @@ BEGIN
                                           THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                       ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
                                 END AS NUMERIC (16, 2)) AS TotalSumm
-                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))   AS TotalSummPriceList
-                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo
+                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS NUMERIC (16, 2)) AS TotalSummPriceList
+                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0)       AS NUMERIC (16, 2)) AS TotalSummPriceListTo
+                        , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo_start.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo_start
                         , MovementItem.isErased
 
                     FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -145,6 +152,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
                                                      ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
                                                     AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceListTo()
+                         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo_start
+                                                     ON MIFloat_OperPriceListTo_start.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_OperPriceListTo_start.DescId = zc_MIFloat_OperPriceListTo_start()
 
                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -314,43 +324,48 @@ BEGIN
 
            -- результат
            SELECT
-                 0
-               , tmpPartion.PartionId           AS PartionId
-               , Movement_Partion.InvNumber     AS InvNumber_Partion
-               , Movement_Partion.OperDate      AS OperDate_Partion
-               , Object_Goods.Id                AS GoodsId
-               , Object_Goods.ObjectCode        AS GoodsCode
-               , Object_Goods.ValueData         AS GoodsName
+                 COALESCE (tmpMI.NPP, 0)  :: Integer  AS NPP
+               , 0                                    AS Id
+               , tmpPartion.PartionId                 AS PartionId
+               , Movement_Partion.InvNumber           AS InvNumber_Partion
+               , Movement_Partion.OperDate            AS OperDate_Partion
+               , Object_Goods.Id                      AS GoodsId
+               , Object_Goods.ObjectCode              AS GoodsCode
+               , Object_Goods.ValueData               AS GoodsName
                , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
-               , Object_Measure.ValueData       AS MeasureName
-
-               , Object_Composition.ValueData   AS CompositionName
-               , Object_GoodsInfo.ValueData     AS GoodsInfoName
-               , Object_LineFabrica.ValueData   AS LineFabricaName
-               , Object_Label.ValueData         AS LabelName
-               , Object_GoodsSize.Id            AS GoodsSizeId
-               , Object_GoodsSize.ValueData     AS GoodsSizeName
-               , Object_Brand.ValueData         AS BrandName
-               , Object_Period.ValueData        AS PeriodName
-               , tmpPartion.PeriodYear          AS PeriodYear
+               , Object_Measure.ValueData             AS MeasureName
+                                                      
+               , Object_Composition.ValueData         AS CompositionName
+               , Object_GoodsInfo.ValueData           AS GoodsInfoName
+               , Object_LineFabrica.ValueData         AS LineFabricaName
+               , Object_Label.ValueData               AS LabelName
+               , Object_GoodsSize.Id                  AS GoodsSizeId
+               , Object_GoodsSize.ValueData           AS GoodsSizeName
+               , Object_Brand.ValueData               AS BrandName
+               , Object_Period.ValueData              AS PeriodName
+               , tmpPartion.PeriodYear                AS PeriodYear
 
                , 0                          :: TFloat AS Amount
                , tmpPartion.Remains         :: TFloat AS Remains
                , tmpPartion.OperPrice       :: TFloat AS OperPrice
                , tmpPartion.CountForPrice   :: TFloat AS CountForPrice
-               , tmpPriceList_from.OperPriceList :: TFloat AS OperPriceList
-               , tmpPriceList_to.OperPriceList   :: TFloat AS OperPriceListTo
+               , tmpPriceList_from.OperPriceList       :: TFloat AS OperPriceList
+               , tmpPriceList_to.OperPriceList         :: TFloat AS OperPriceListTo
+               , tmpPriceList_to.OperPriceListTo_start :: TFloat AS OperPriceListTo_start
                , (CAST (tmpPriceList_from.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
                                                                THEN 1
                                                                ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
-                                                          END AS NUMERIC (16, 2)))  :: TFloat AS OperPriceListBalance
+                                                          END AS NUMERIC (16, 2))
+                 )                          :: TFloat AS OperPriceListBalance
                , 0                          :: TFloat AS TotalSumm
                , 0                          :: TFloat AS TotalSummBalance
                , 0                          :: TFloat AS TotalSummPriceListBalance
                , 0                          :: TFloat AS TotalSummPriceListToBalance
+               , 0                          :: TFloat AS TotalSummPriceListToBalance_start
 
                , 0                          :: TFloat AS TotalSummPriceList
                , 0                          :: TFloat AS TotalSummPriceListTo
+               , 0                          :: TFloat AS TotalSummPriceListTo_start
 
                , tmpPartion.CurrencyValue   ::TFloat
                , tmpPartion.ParValue        ::TFloat
@@ -430,32 +445,59 @@ BEGIN
                , Object_PartionGoods.PeriodYear AS PeriodYear
 
                , tmpMI.Amount
-               , Container_From.Amount     ::TFloat AS Remains
-               , tmpMI.OperPrice           ::TFloat
-               , tmpMI.CountForPrice       ::TFloat
-               , tmpMI.OperPriceList       ::TFloat
-               , tmpMI.OperPriceListTo     ::TFloat
+               , Container_From.Amount      ::TFloat AS Remains
+                 -- Цена вх.
+               , tmpMI.OperPrice            ::TFloat
+               , tmpMI.CountForPrice        ::TFloat
+                 -- Цена в прайсе для магазина От кого
+               , tmpMI.OperPriceList        ::TFloat
+                 -- Цена в прайсе для магазина Кому
+               , tmpMI.OperPriceListTo      ::TFloat
+                 -- Цена-start в прайсе для магазина Кому
+               , tmpMI.OperPriceListTo_start ::TFloat
 
+                 -- Цена в прайсе - ГРН для магазина От кого
                , (CAST (tmpMI.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
                                                                THEN 1
                                                                ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
-                                                          END AS NUMERIC (16, 2)))  :: TFloat AS OperPriceListBalance
+                                                          END AS NUMERIC (16, 2))
+                 ) :: TFloat AS OperPriceListBalance
 
-               , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))  :: TFloat AS TotalSummBalance
+                 -- Сумма вх.
+               , tmpMI.TotalSumm  :: TFloat AS TotalSumm
+                 -- Сумма вх. - ГРН
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummBalance
+
+                 -- Сумма по прайсу - ГРН для магазина От кого
                , (CAST (tmpMI.TotalSummPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
                                                         THEN 1
                                                         ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
-                                                   END AS NUMERIC (16, 2)))                                                                        :: TFloat AS TotalSummPriceListBalance
+                                                   END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListBalance
                                                    
+                 -- Сумма по прайсу - ГРН для магазина Кому
                , (CAST (tmpMI.TotalSummPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis() 
                                                           THEN 1
                                                           ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
-                                                     END AS NUMERIC (16, 2)))                                                                      :: TFloat AS TotalSummPriceListToBalance
+                                                     END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListToBalance
 
-               , tmpMI.TotalSummPriceList    ::TFloat
-               , tmpMI.TotalSummPriceListTo  ::TFloat
+                 -- Сумма-start по прайсу - ГРН для магазина Кому
+               , (CAST (tmpMI.TotalSummPriceListTo_start * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis() 
+                                                                THEN 1
+                                                                ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
+                                                           END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListToBalance_start
 
+                 -- Сумма по прайсу - для магазина От кого
+               , tmpMI.TotalSummPriceList          :: TFloat
+                 -- Сумма по прайсу - для магазина Кому
+               , tmpMI.TotalSummPriceListTo        :: TFloat
+                 -- Сумма-start по прайсу - для магазина Кому
+               , tmpMI.TotalSummPriceListTo_start  :: TFloat
+
+                 -- курс
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
 
@@ -544,22 +586,25 @@ BEGIN
                               AND Object.isErased = FALSE
                             )
 
-        , tmpMI AS (SELECT MovementItem.Id
+        , tmpMI AS (SELECT ROW_NUMBER() OVER (ORDER BY MovementItem.Id ASC) AS NPP
+                         , MovementItem.Id
                          , MovementItem.ObjectId AS GoodsId
                          , MovementItem.PartionId
                          , MovementItem.Amount
-                         , COALESCE (MIFloat_CurrencyValue.ValueData, 0)   AS CurrencyValue
-                         , COALESCE (MIFloat_ParValue.ValueData, 0)        AS ParValue
-                         , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice
-                         , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
-                         , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-                         , COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS OperPriceListTo
+                         , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
+                         , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
+                         , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice
+                         , COALESCE (MIFloat_OperPrice.ValueData, 0)             AS OperPrice
+                         , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
+                         , COALESCE (MIFloat_OperPriceListTo.ValueData, 0)       AS OperPriceListTo
+                         , COALESCE (MIFloat_OperPriceListTo_start.ValueData, 0) AS OperPriceListTo_start
                          , CAST (CASE WHEN MIFloat_CountForPrice.ValueData <> 0
                                            THEN MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0) / MIFloat_CountForPrice.ValueData
                                        ELSE MovementItem.Amount * COALESCE (MIFloat_OperPrice.ValueData, 0)
                                  END AS NUMERIC (16, 2)) AS TotalSumm
-                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0) AS NUMERIC (16, 2))   AS TotalSummPriceList
-                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo
+                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS NUMERIC (16, 2)) AS TotalSummPriceList
+                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo.ValueData, 0)       AS NUMERIC (16, 2)) AS TotalSummPriceListTo
+                         , CAST (MovementItem.Amount * COALESCE (MIFloat_OperPriceListTo_start.ValueData, 0) AS NUMERIC (16, 2)) AS TotalSummPriceListTo_start
                          , MovementItem.isErased
                      FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                           JOIN MovementItem ON MovementItem.MovementId = inMovementId
@@ -575,6 +620,9 @@ BEGIN
                          LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
                                                      ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
                                                     AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceListTo()
+                         LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo_start
+                                                     ON MIFloat_OperPriceListTo_start.MovementItemId = MovementItem.Id
+                                                    AND MIFloat_OperPriceListTo_start.DescId         = zc_MIFloat_OperPriceListTo_start()
 
                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -699,7 +747,8 @@ BEGIN
 
            -- результат
            SELECT
-                 tmpMI.Id
+                 tmpMI.NPP           :: Integer AS NPP
+               , tmpMI.Id
                , tmpMI.PartionId
                , Movement_Partion.InvNumber     AS InvNumber_Partion
                , Movement_Partion.OperDate      AS OperDate_Partion
@@ -721,31 +770,59 @@ BEGIN
                , Object_PartionGoods.PeriodYear AS PeriodYear
 
                , tmpMI.Amount
-               , Container_From.Amount     ::TFloat AS Remains
-               , tmpMI.OperPrice           ::TFloat
-               , tmpMI.CountForPrice       ::TFloat
-               , tmpMI.OperPriceList       ::TFloat
-               , tmpMI.OperPriceListTo     ::TFloat
+               , Container_From.Amount       ::TFloat AS Remains
+                 -- Цена вх.
+               , tmpMI.OperPrice             ::TFloat
+               , tmpMI.CountForPrice         ::TFloat
+                 -- Цена в прайсе для магазина От кого
+               , tmpMI.OperPriceList         ::TFloat
+                 -- Цена в прайсе для магазина Кому
+               , tmpMI.OperPriceListTo       ::TFloat
+                 -- Цена-start в прайсе для магазина Кому
+               , tmpMI.OperPriceListTo_start ::TFloat
 
+                 -- Цена в прайсе - ГРН для магазина От кого
                , (CAST (tmpMI.OperPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
                                                                THEN 1
                                                                ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
-                                                          END AS NUMERIC (16, 2)))  :: TFloat AS OperPriceListBalance
+                                                          END AS NUMERIC (16, 2))
+                 ) :: TFloat AS OperPriceListBalance
 
+                 -- Сумма вх.
                , tmpMI.TotalSumm           ::TFloat
-               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2)))            :: TFloat AS TotalSummBalance
+                 -- Сумма вх. - ГРН
+               , (CAST (tmpMI.TotalSumm * tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummBalance
+
+                 -- Сумма по прайсу - ГРН для магазина От кого
                , (CAST (tmpMI.TotalSummPriceList * CASE WHEN tmpPriceList_from.CurrencyId = zc_Currency_Basis()
                                                         THEN 1
                                                         ELSE tmpMI.CurrencyValue / CASE WHEN tmpMI.ParValue <> 0 THEN tmpMI.ParValue ELSE 1 END
-                                                   END AS NUMERIC (16, 2)))   :: TFloat AS TotalSummPriceListBalance
+                                                   END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListBalance
+
+                 -- Сумма по прайсу - ГРН для магазина Кому
                , (CAST (tmpMI.TotalSummPriceListTo * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis() 
                                                           THEN 1
                                                           ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
-                                                     END AS NUMERIC (16, 2))) :: TFloat AS TotalSummPriceListToBalance
+                                                     END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListToBalance
                
-               , tmpMI.TotalSummPriceList    ::TFloat
-               , tmpMI.TotalSummPriceListTo  ::TFloat
+                 -- Сумма-start по прайсу - ГРН для магазина Кому
+               , (CAST (tmpMI.TotalSummPriceListTo_start * CASE WHEN tmpPriceList_to.CurrencyId = zc_Currency_Basis() 
+                                                               THEN 1
+                                                               ELSE tmpCurrency_to.CurrencyValue / CASE WHEN tmpCurrency_to.ParValue <> 0 THEN tmpCurrency_to.ParValue ELSE 1 END
+                                                          END AS NUMERIC (16, 2))
+                 ) :: TFloat AS TotalSummPriceListToBalance_start
 
+                 -- Сумма по прайсу - для магазина От кого
+               , tmpMI.TotalSummPriceList         :: TFloat
+                 -- Сумма по прайсу - для магазина Кому
+               , tmpMI.TotalSummPriceListTo       :: TFloat
+                 -- Сумма-start по прайсу - для магазина Кому
+               , tmpMI.TotalSummPriceListTo_start :: TFloat
+
+                 -- курс
                , tmpMI.CurrencyValue       ::TFloat
                , tmpMI.ParValue            ::TFloat
                

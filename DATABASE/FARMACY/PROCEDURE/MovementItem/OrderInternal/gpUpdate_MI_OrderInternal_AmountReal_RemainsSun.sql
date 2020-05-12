@@ -36,49 +36,98 @@ BEGIN
      -- строки заказа
      CREATE TEMP TABLE _tmp_MI (Id integer, GoodsId Integer, Amount TFloat, AmountReal TFloat, RemainsSUN TFloat, SendSUN TFloat, SendDefSUN TFloat) ON COMMIT DROP;
        INSERT INTO _tmp_MI (Id, GoodsId, Amount, AmountReal, RemainsSUN, SendSUN, SendDefSUN)
-             WITH tmpSend AS (SELECT MovementItem.ObjectId     AS GoodsId
-                                   , SUM (MovementItem.Amount) AS SendSUN
-                                   , 0                         AS SendDefSUN
-                              FROM Movement
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                 ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                                AND MovementLinkObject_To.ObjectId   = inUnitId
-                                   INNER JOIN MovementBoolean AS MovementBoolean_SUN
-                                                              ON MovementBoolean_SUN.MovementId = Movement.Id
-                                                             AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
-                                                             AND MovementBoolean_SUN.ValueData  = TRUE
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = FALSE
-                              WHERE Movement.OperDate = vbOperDate
-                                AND Movement.DescId   = zc_Movement_Send()
-                             -- AND Movement.StatusId = zc_Enum_Status_Erased()
-                                AND vbOperDate >= '30.07.2019'
-                              GROUP BY MovementItem.ObjectId
+             WITH tmpSend_all AS (SELECT MovementItem.ObjectId     AS GoodsId
+                                       , SUM (MovementItem.Amount) AS SendSUN
+                                       , 0                         AS SendDefSUN
+                                  FROM Movement
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                    AND MovementLinkObject_To.ObjectId   = inUnitId
+                                       INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                                 AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                                 AND MovementBoolean_SUN.ValueData  = TRUE
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                                 ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                                AND MovementBoolean_SUN_v2.DescId     = zc_ObjectBoolean_Unit_SUN_v2()
+                                                                AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                                                 ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                                                AND MovementBoolean_SUN_v4.DescId     = zc_ObjectBoolean_Unit_SUN_v4()
+                                                                AND MovementBoolean_SUN_v4.ValueData  = TRUE
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                              AND MovementItem.DescId     = zc_MI_Master()
+                                                              AND MovementItem.isErased   = FALSE
+                                  WHERE Movement.OperDate = vbOperDate
+                                    AND Movement.DescId   = zc_Movement_Send()
+                                 -- AND Movement.StatusId = zc_Enum_Status_Erased()
+                                    AND vbOperDate >= '30.07.2019'
+                                    AND MovementBoolean_SUN_v2.MovementId IS NULL
+                                    AND MovementBoolean_SUN_v4.MovementId IS NULL
+                                  GROUP BY MovementItem.ObjectId
+    
+                                 UNION ALL
+                                  SELECT MovementItem.ObjectId     AS GoodsId
+                                       , 0                         AS SendSUN
+                                       , SUM (MovementItem.Amount) AS SendDefSUN
+                                  FROM Movement
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                    AND MovementLinkObject_To.ObjectId   = inUnitId
+                                       INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                                 AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                                 AND MovementBoolean_SUN.ValueData  = TRUE
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v2
+                                                                 ON MovementBoolean_SUN_v2.MovementId = Movement.Id
+                                                                AND MovementBoolean_SUN_v2.DescId     = zc_ObjectBoolean_Unit_SUN_v2()
+                                                                AND MovementBoolean_SUN_v2.ValueData  = TRUE
+                                       LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                                                 ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                                                AND MovementBoolean_SUN_v4.DescId     = zc_ObjectBoolean_Unit_SUN_v4()
+                                                                AND MovementBoolean_SUN_v4.ValueData  = TRUE
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                              AND MovementItem.DescId     = zc_MI_Master()
+                                                              AND MovementItem.isErased   = FALSE
+                                  WHERE Movement.OperDate = vbOperDate
+                                    AND Movement.DescId   = zc_Movement_Send()
+                                 -- AND Movement.StatusId = zc_Enum_Status_Erased()
+                                    AND vbOperDate >= '30.07.2019'
+                                    AND (MovementBoolean_SUN_v2.MovementId > 0
+                                      OR MovementBoolean_SUN_v4.MovementId > 0
+                                        )
+                                  GROUP BY MovementItem.ObjectId
 
-                             UNION ALL
-                              SELECT MovementItem.ObjectId     AS GoodsId
-                                   , 0                         AS SendSUN
-                                   , SUM (MovementItem.Amount) AS SendDefSUN
-                              FROM Movement
-                                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
-                                                                 ON MovementLinkObject_To.MovementId = Movement.Id
-                                                                AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
-                                                                AND MovementLinkObject_To.ObjectId   = inUnitId
-                                   INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
-                                                              ON MovementBoolean_DefSUN.MovementId = Movement.Id
-                                                             AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
-                                                             AND MovementBoolean_DefSUN.ValueData = TRUE
-                                   INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = FALSE
-                              WHERE Movement.OperDate = vbOperDate
-                                AND Movement.DescId   = zc_Movement_Send()
-                             -- AND Movement.StatusId = zc_Enum_Status_Erased()
-                                AND vbOperDate >= '30.07.2019'
-                              GROUP BY MovementItem.ObjectId
-                             )
+                               /*UNION ALL
+                                  SELECT MovementItem.ObjectId     AS GoodsId
+                                       , 0                         AS SendSUN
+                                       , SUM (MovementItem.Amount) AS SendDefSUN
+                                  FROM Movement
+                                       INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                     ON MovementLinkObject_To.MovementId = Movement.Id
+                                                                    AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+                                                                    AND MovementLinkObject_To.ObjectId   = inUnitId
+                                       INNER JOIN MovementBoolean AS MovementBoolean_DefSUN
+                                                                  ON MovementBoolean_DefSUN.MovementId = Movement.Id
+                                                                 AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
+                                                                 AND MovementBoolean_DefSUN.ValueData = TRUE
+                                       INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                              AND MovementItem.DescId     = zc_MI_Master()
+                                                              AND MovementItem.isErased   = FALSE
+                                  WHERE Movement.OperDate = vbOperDate
+                                    AND Movement.DescId   = zc_Movement_Send()
+                                 -- AND Movement.StatusId = zc_Enum_Status_Erased()
+                                    AND vbOperDate >= '30.07.2019'
+                                  GROUP BY MovementItem.ObjectId*/
+                                 )
+                    , tmpSend AS (SELECT tmpSend_all.GoodsId
+                                       , SUM (tmpSend_all.SendSUN)    AS SendSUN
+                                       , SUM (tmpSend_all.SendDefSUN) AS SendDefSUN
+                                  FROM tmpSend_all
+                                  GROUP BY tmpSend_all.GoodsId
+                                 )
              -- Результат
              SELECT MovementItem.Id
                   , MovementItem.ObjectId AS GoodsId
@@ -112,9 +161,12 @@ BEGIN
                                                 , inGoodsId        := _tmp_MI.GoodsId
                                                 , inAmount         := CASE WHEN _tmpRemains.Amount <> 0
                                                                              OR _tmp_MI.SendSUN    <> 0
-                                                                             OR _tmp_MI.SendDefSUN <> 0 THEN 0
-                                                                           WHEN _tmp_MI.Amount     <> 0 THEN _tmp_MI.Amount
-                                                                           ELSE _tmp_MI.AmountReal
+                                                                           --OR _tmp_MI.SendDefSUN <> 0
+                                                                                THEN 0
+                                                                           WHEN _tmp_MI.Amount     > _tmp_MI.SendDefSUN THEN _tmp_MI.Amount - _tmp_MI.SendDefSUN
+                                                                           WHEN _tmp_MI.Amount     <> 0 THEN 0
+                                                                           WHEN _tmp_MI.AmountReal > _tmp_MI.SendDefSUN THEN _tmp_MI.AmountReal - _tmp_MI.SendDefSUN
+                                                                           ELSE 0
                                                                       END :: TFloat
                                                 , inAmountReal     := CASE WHEN (_tmpRemains.Amount <> 0 OR _tmp_MI.SendSUN <> 0 OR _tmp_MI.SendDefSUN <> 0)
                                                                             AND _tmp_MI.Amount <> 0

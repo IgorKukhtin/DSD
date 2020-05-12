@@ -121,8 +121,8 @@ BEGIN
      DELETE FROM _tmpRemains;
      -- 2.1. вся статистика продаж - express: 1) у отправителя  2) у получателя
      DELETE FROM _tmpSale_express;
-     -- 2.3. все товары для статистики продаж - express
-     DELETE FROM _tmpGoods_express;
+     -- 2.3. все товары для статистики продаж - express + Кратность
+     DELETE FROM _tmpGoods_SUN;
      -- 3.2. остатки, EXPRESS - для распределения
      DELETE FROM _tmpRemains_Partion;
      -- 5. из каких аптек остатки со сроками "полностью" закрывают АВТОЗАКАЗ
@@ -168,8 +168,8 @@ BEGIN
       */  
        ;
 
-     -- все Товары для схемы SUN-v3
-     INSERT INTO _tmpGoods_express (GoodsId, KoeffSUN)
+     -- все Товары для схемы SUN-v3 + Кратность
+     INSERT INTO _tmpGoods_SUN (GoodsId, KoeffSUN)
         SELECT OB.ObjectId AS GoodsId
                -- Кратность по Э-СУН  
              , CASE WHEN COALESCE (OF_KoeffSUN.ValueData, 0) = 0  THEN 1 ELSE OF_KoeffSUN.ValueData  END AS KoeffSUN
@@ -223,7 +223,7 @@ BEGIN
                    -- !!!только для таких Аптек!!!
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
                    -- !!!только для таких товаров!!!
-                   INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MIContainer.ObjectId_analyzer
+                   INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MIContainer.ObjectId_analyzer
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
                 AND MIContainer.OperDate BETWEEN inOperDate - INTERVAL '32 DAY' AND inOperDate
@@ -256,7 +256,7 @@ BEGIN
                                                        AND MovementItem.DescId     = zc_MI_Master()
                                                        AND MovementItem.isErased   = FALSE
                                 -- !!!только для таких товаров!!!
-                                INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
+                                INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MovementItem.ObjectId
                            WHERE Movement.DescId   = zc_Movement_Income()
                              AND Movement.StatusId = zc_Enum_Status_UnComplete()
                            GROUP BY MovementLinkObject_To.ObjectId, MovementItem.ObjectId
@@ -291,7 +291,7 @@ BEGIN
                                                           AND MB_SUN_v3.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                                  -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
+                                 INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MovementItem.ObjectId
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '30 DAY' AND Movement.OperDate < inOperDate + INTERVAL '30 DAY'
                            -- AND Movement.OperDate >= CURRENT_DATE - INTERVAL '14 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
@@ -331,7 +331,7 @@ BEGIN
                                                           AND MB_SUN_v3.ValueData  = TRUE
                                                           AND Movement.OperDate    >= inOperDate
                                  -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
+                                 INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MovementItem.ObjectId
                          -- WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '30 DAY' AND Movement.OperDate < CURRENT_DATE + INTERVAL '30 DAY'
                             WHERE Movement.OperDate >= inOperDate - INTERVAL '14 DAY' AND Movement.OperDate < inOperDate + INTERVAL '14 DAY'
                               AND Movement.DescId   = zc_Movement_Send()
@@ -360,7 +360,7 @@ BEGIN
                                                               AND MovementItem.isErased   = FALSE
 
                                        -- !!!только для таких товаров!!!
-                                       INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
+                                       INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MovementItem.ObjectId
                                   WHERE Movement.DescId   = zc_Movement_OrderExternal()
                                     AND Movement.StatusId = zc_Enum_Status_Complete()
                                   GROUP BY MovementLinkObject_Unit.ObjectId, MovementItem.ObjectId
@@ -405,7 +405,7 @@ BEGIN
                                                         AND MovementItem.DescId     = zc_MI_Master()
                                                         AND MovementItem.isErased   = FALSE
                                  -- !!!только для таких товаров!!!
-                                 INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = MovementItem.ObjectId
+                                 INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = MovementItem.ObjectId
 
                             GROUP BY tmpMovementCheck.UnitId, MovementItem.ObjectId
                            )
@@ -417,7 +417,7 @@ BEGIN
                               -- !!!только для таких Аптек!!!
                               INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = Container.WhereObjectId
                               -- !!!только для таких товаров!!!
-                              INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = Container.ObjectId
+                              INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = Container.ObjectId
 
                          WHERE Container.DescId = zc_Container_Count()
                            AND Container.Amount <> 0
@@ -442,7 +442,7 @@ BEGIN
                                                ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
                                               AND Object_Goods.isErased = FALSE
                              -- !!!только для таких товаров!!!
-                             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = OL_Price_Goods.ChildObjectId
+                             INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = OL_Price_Goods.ChildObjectId
                              LEFT JOIN ObjectFloat AS Price_Value
                                                    ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
                                                   AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
@@ -486,8 +486,8 @@ BEGIN
                                           ELSE 0
                                      END)
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / _tmpGoods_SUN.KoeffSUN
+                                   ) * _tmpGoods_SUN.KoeffSUN
                         THEN FLOOR (-- продажи - статистика за Х*24 часов
                                     (COALESCE (_tmpSale_express.Amount_sum, 0)
                                      -- МИНУС остаток
@@ -506,8 +506,8 @@ BEGIN
                                           ELSE 0
                                      END)
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / _tmpGoods_SUN.KoeffSUN
+                                   ) * _tmpGoods_SUN.KoeffSUN
                         ELSE 0
                END AS AmountResult_in
 
@@ -518,16 +518,16 @@ BEGIN
                                    - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / _tmpGoods_SUN.KoeffSUN
+                                   ) * _tmpGoods_SUN.KoeffSUN
                         THEN FLOOR (-- остаток
                                     (COALESCE (tmpRemains.Amount, 0) - COALESCE (tmpMI_Reserve.Amount, 0) - COALESCE (tmpMI_Send_out.Amount, 0)
                                      -- МИНУС продажи - статистика за Х*24 часов
                                    - COALESCE (_tmpSale_express.Amount_sum, 0)
                                     )
                                     -- делим на кратность
-                                    / _tmpGoods_express.KoeffSUN
-                                   ) * _tmpGoods_express.KoeffSUN
+                                    / _tmpGoods_SUN.KoeffSUN
+                                   ) * _tmpGoods_SUN.KoeffSUN
                         ELSE 0
                END AS AmountResult_out
 
@@ -563,8 +563,8 @@ BEGIN
                                     AND OB_Unit_SUN_out.DescId    = zc_ObjectBoolean_Unit_SUN_v3_out()
                                     AND OB_Unit_SUN_out.ValueData = TRUE
 
-             LEFT JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId  = tmpObject_Price.GoodsId
-             LEFT JOIN _tmpUnit_SUN      ON _tmpUnit_SUN.UnitId        = tmpObject_Price.UnitId
+             LEFT JOIN _tmpUnit_SUN  ON _tmpUnit_SUN.UnitId    = tmpObject_Price.UnitId
+             LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId  = tmpObject_Price.GoodsId
 
              LEFT JOIN _tmpSale_express AS _tmpSale_express
                                         ON _tmpSale_express.UnitId  = tmpObject_Price.UnitId
@@ -592,7 +592,7 @@ BEGIN
            --                                 AND Object_Goods.ValueData NOT ILIKE 'ААА%'
 
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
-          AND _tmpGoods_express.KoeffSUN > 0
+          AND _tmpGoods_SUN.KoeffSUN > 0
        ;
      -- 2.2. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, AmountResult)
@@ -708,7 +708,7 @@ BEGIN
                               -- тогда EXPRESS = ПОТРЕБНОСТЬ
                               THEN _tmpRemains.AmountResult
                               -- иначе закрываем "частично" - т.е. сколько есть EXPRESS - с учетом Кратности
-                              ELSE FLOOR (_tmpRemains_Partion.AmountResult / _tmpGoods_express.KoeffSUN) * _tmpGoods_express.KoeffSUN
+                              ELSE FLOOR (_tmpRemains_Partion.AmountResult / _tmpGoods_SUN.KoeffSUN) * _tmpGoods_SUN.KoeffSUN
                     END
                   * _tmpRemains.Price
                    )
@@ -717,7 +717,7 @@ BEGIN
              -- все остатки, EXPRESS
              INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
              -- все товары для статистики продаж - express
-             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains.GoodsId
+             INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains.GoodsId
         GROUP BY _tmpRemains_Partion.UnitId
                , _tmpRemains.UnitId
        ;
@@ -725,7 +725,7 @@ BEGIN
      -- 6.1.1. распределяем-1 остатки EXPRESS (Сверх запас) - по всем аптекам
      -- курсор1 - все остатки, EXPRESS (Сверх запас) + EXPRESS (Сверх запас) без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.AmountResult, _tmpRemains_Partion.AmountRemains, _tmpGoods_express.KoeffSUN
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.AmountResult, _tmpRemains_Partion.AmountRemains, _tmpGoods_SUN.KoeffSUN
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -734,7 +734,7 @@ BEGIN
                          GROUP BY _tmpSumm_limit.UnitId_from
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
              -- все товары для статистики продаж - express
-             INNER JOIN _tmpGoods_express ON _tmpGoods_express.GoodsId = _tmpRemains_Partion.GoodsId
+             INNER JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
@@ -1024,8 +1024,8 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
      -- 2.1. вся статистика продаж
      CREATE TEMP TABLE _tmpSale_express   (DayOrd Integer, DayOrd_real Integer, UnitId Integer, GoodsId Integer, Amount TFloat, Amount_sum TFloat, Summ TFloat, Summ_sum TFloat) ON COMMIT DROP;
-     -- 2.3. все товары для статистики продаж - express
-     CREATE TEMP TABLE _tmpGoods_express   (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
+     -- 2.3. все товары для статистики продаж - EXPRESS + Кратность
+     CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
 
      -- 3.2. остатки, СРОК - для распределения
      CREATE TEMP TABLE _tmpRemains_Partion   (UnitId Integer, GoodsId Integer, AmountRemains TFloat, AmountResult TFloat) ON COMMIT DROP;

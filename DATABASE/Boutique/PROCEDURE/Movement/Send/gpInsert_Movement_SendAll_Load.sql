@@ -3,9 +3,11 @@
 DROP FUNCTION IF EXISTS gpInsert_Movement_SendAll_Load (TDateTime, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_Movement_SendAll_Load(
+    IN inInvNumber             TVarChar  , -- 
     IN inOperDate              TDateTime ,
     IN inObjectCode            Integer   , -- код товара
     IN inAmount                TFloat    , -- кол-во
+    IN inPrice                 TFloat    , -- цена
     IN inSession               TVarChar    -- сессия пользователя
 )
 RETURNS VOID
@@ -24,6 +26,7 @@ BEGIN
 
      -- вносим данне только где остаток <> 0
      IF COALESCE (inAmount, 0) = 0
+        OR inObjectCode IN (9661)
      THEN
          -- !!!ВЫХОД!!!
          RETURN;
@@ -49,14 +52,14 @@ BEGIN
      -- находим товар и партию
      SELECT Object_PartionGoods.MovementItemId
           , Object_PartionGoods.GoodsId
-    INTO vbPartionId, vbGoodsId
+            INTO vbPartionId, vbGoodsId
      FROM Object_PartionGoods
           INNER JOIN Object ON Object.Id = Object_PartionGoods.GoodsId
                            AND Object.DescId = zc_Object_Goods()
                            AND Object.ObjectCode = inObjectCode
      LIMIT 1;
 
-     --если не нашли товар пропускаем
+     -- Проверка - если не нашли товар
      IF COALESCE (vbGoodsId, 0) = 0
      THEN
          RAISE EXCEPTION 'Ошибка.Не найден товар с кодом <%>.', inObjectCode;
@@ -76,8 +79,9 @@ BEGIN
                                                          ON MLO_To.MovementId = Movement.Id
                                                         AND MLO_To.DescId     = zc_MovementLinkObject_To()
                                                         AND MLO_To.ObjectId   = vbUnitToId
-                      WHERE Movement.DescId   = zc_Movement_Send()
-                        AND Movement.OperDate = inOperDate
+                      WHERE Movement.DescId    = zc_Movement_Send()
+                        AND Movement.OperDate  = inOperDate
+                        AND Movement.InvNumber = inInvNumber
                         AND Movement.StatusId <> zc_Enum_Status_Erased()
                      );
 
@@ -85,7 +89,7 @@ BEGIN
      THEN
         -- сохранили <Документ>
         vbMovementId := lpInsertUpdate_Movement_Send (ioId       := 0
-                                                    , inInvNumber:= CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar)
+                                                    , inInvNumber:= CASE WHEN CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) = inInvNumber THEN inInvNumber ELSE inInvNumber END
                                                     , inOperDate := inOperDate
                                                     , inFromId   := vbUnitFromId
                                                     , inToId     := vbUnitToId
@@ -100,10 +104,14 @@ BEGIN
                                              , inGoodsId             :=  vbGoodsId       -- Товар
                                              , inPartionId           :=  vbPartionId     -- Партия
                                              , inAmount              :=  inAmount ::TFloat     -- Количество
-                                             , ioOperPriceList       :=  0 ::TFloat     -- Цена (прайс)
-                                             , inOperPriceListTo     :=  0 ::TFloat     -- Цена (прайс)(кому) --(для магазина получателя)
+                                             , ioOperPriceList       :=  (SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (inOperDate, ObjectLink_Unit_PriceList.ChildObjectId, vbGoodsId) AS lpGet) -- Цена (прайс)
+                                             , ioOperPriceListTo     :=  inPrice ::TFloat     -- Цена (прайс)(кому) --(для магазина получателя)
                                              , inSession             :=  inSession :: TVarChar    -- сессия пользователя
-                                             );
+                                             )
+     FROM ObjectLink AS ObjectLink_Unit_PriceList
+     WHERE ObjectLink_Unit_PriceList.ObjectId = vbUnitFromId
+       AND ObjectLink_Unit_PriceList.DescId   = zc_ObjectLink_Unit_PriceList()
+     ;
 
 END;
 $BODY$
