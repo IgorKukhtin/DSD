@@ -75,7 +75,8 @@ RETURNS TABLE (Id                    Integer
 
              , AmountReal            TFloat
              , SendSUNAmount         TFloat
-             , SendDefSUNAmount      TFloat  -- 60
+             , SendSUNAmount_save    TFloat
+             , SendDefSUNAmount_save TFloat  -- 60
              , RemainsSUN            TFloat
 
              , CountPrice            TFloat
@@ -704,7 +705,32 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
-                          
+
+   -- перемещения по СУН удаленные на дату документа
+   , tmpSendSun AS (SELECT MI_Send.ObjectId                AS GoodsId
+                         , SUM (MI_Send.Amount) ::TFloat   AS Amount
+                     FROM Movement AS Movement_Send
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                          ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
+                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                            INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                       ON MovementBoolean_SUN.MovementId = Movement_Send.Id
+                                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                      AND MovementBoolean_SUN.ValueData = TRUE
+                            INNER JOIN MovementItem AS MI_Send
+                                                    ON MI_Send.MovementId = Movement_Send.Id
+                                                   AND MI_Send.DescId = zc_MI_Master()
+                                                   AND MI_Send.isErased = FALSE
+
+                            --INNER JOIN tmpGoodsId AS tmp ON tmp.GoodsId = MI_Send.ObjectId
+                     WHERE Movement_Send.OperDate = vbOperDate
+                       AND Movement_Send.DescId = zc_Movement_Send()
+                       AND Movement_Send.StatusId = zc_Enum_Status_Erased()
+                     GROUP BY MI_Send.ObjectId
+                     HAVING SUM (MI_Send.Amount) <> 0
+                    )
+                    
        -- Результат 1
        SELECT
              tmpMI.MovementItemId                                   AS Id
@@ -808,8 +834,9 @@ BEGIN
            , tmpMI.ListDiffAmount                       ::TFloat    AS ListDiffAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
-           , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount
-           , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount
+           , tmpSendSun.Amount                          ::TFLoat    AS SendSUNAmount
+           , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount_save
+           , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount_save
            , tmpMI.RemainsSUN                           ::TFloat    AS RemainsSUN
 
            , tmpMI.CountPrice                           ::TFloat    AS CountPrice
@@ -907,6 +934,8 @@ BEGIN
             
             LEFT JOIN tmpLoadPriceList_NDS ON tmpLoadPriceList_NDS.PartnerGoodsId = tmpMI.PartnerGoodsId
                                           AND tmpLoadPriceList_NDS.JuridicalId = tmpMI.JuridicalId
+                                          
+            LEFT JOIN tmpSendSun ON tmpSendSun.GoodsId = tmpMI.GoodsId
            ;
 
 
@@ -2227,6 +2256,31 @@ BEGIN
                               WHERE tmp.ORD = 1
                               )
 
+   -- перемещения по СУН удаленные на дату документа
+   , tmpSendSun AS (SELECT MI_Send.ObjectId                AS GoodsId
+                         , SUM (MI_Send.Amount) ::TFloat   AS Amount
+                     FROM Movement AS Movement_Send
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                          ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
+                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                            INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                       ON MovementBoolean_SUN.MovementId = Movement_Send.Id
+                                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                      AND MovementBoolean_SUN.ValueData = TRUE
+                            INNER JOIN MovementItem AS MI_Send
+                                                    ON MI_Send.MovementId = Movement_Send.Id
+                                                   AND MI_Send.DescId = zc_MI_Master()
+                                                   AND MI_Send.isErased = FALSE
+
+                            --INNER JOIN tmpGoodsId AS tmp ON tmp.GoodsId = MI_Send.ObjectId
+                     WHERE Movement_Send.OperDate = vbOperDate
+                       AND Movement_Send.DescId = zc_Movement_Send()
+                       AND Movement_Send.StatusId = zc_Enum_Status_Erased()
+                     GROUP BY MI_Send.ObjectId
+                     HAVING SUM (MI_Send.Amount) <> 0
+                    )
+
        -- Результат 1
        SELECT
              tmpMI.Id                                       AS Id
@@ -2303,8 +2357,9 @@ BEGIN
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
            , tmpMI.AmountReal                           ::TFloat    AS AmountReal
-           , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount
-           , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount
+           , tmpSendSun.Amount                          ::TFLoat    AS SendSUNAmount
+           , tmpMI.SendSUNAmount                        ::TFloat    AS SendSUNAmount_save
+           , tmpMI.SendDefSUNAmount                     ::TFloat    AS SendDefSUNAmount_save
            , tmpMI.RemainsSUN                           ::TFloat    AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
@@ -2355,6 +2410,7 @@ BEGIN
             LEFT JOIN OrderSheduleListToday             ON OrderSheduleListToday.ContractId = tmpMI.ContractId
             LEFT JOIN tmpCheck                          ON tmpCheck.GoodsId                 = tmpMI.GoodsId
             LEFT JOIN tmpSend                           ON tmpSend.GoodsId                  = tmpMI.GoodsId
+            LEFT JOIN tmpSendSun                        ON tmpSendSun.GoodsId               = tmpMI.GoodsId
             LEFT JOIN tmpDeferred                       ON tmpDeferred.GoodsId              = tmpMI.GoodsId
             LEFT JOIN tmpReserve                        ON tmpReserve.GoodsId               = tmpMI.GoodsId
             LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
@@ -3675,6 +3731,30 @@ BEGIN
                                     ) AS tmp
                               WHERE tmp.ORD = 1
                               )
+   -- перемещения по СУН удаленные на дату документа
+   , tmpSendSun AS (SELECT MI_Send.ObjectId                AS GoodsId
+                         , SUM (MI_Send.Amount) ::TFloat   AS Amount
+                     FROM Movement AS Movement_Send
+                            INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                          ON MovementLinkObject_Unit.MovementId = Movement_Send.Id
+                                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_To()
+                                                         AND MovementLinkObject_Unit.ObjectId = vbUnitId
+                            INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                       ON MovementBoolean_SUN.MovementId = Movement_Send.Id
+                                                      AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
+                                                      AND MovementBoolean_SUN.ValueData = TRUE
+                            INNER JOIN MovementItem AS MI_Send
+                                                    ON MI_Send.MovementId = Movement_Send.Id
+                                                   AND MI_Send.DescId = zc_MI_Master()
+                                                   AND MI_Send.isErased = FALSE
+
+                            INNER JOIN tmpGoodsId AS tmp ON tmp.GoodsId = MI_Send.ObjectId
+                     WHERE Movement_Send.OperDate = vbOperDate
+                       AND Movement_Send.DescId = zc_Movement_Send()
+                       AND Movement_Send.StatusId = zc_Enum_Status_Erased()
+                     GROUP BY MI_Send.ObjectId
+                     HAVING SUM (MI_Send.Amount) <> 0
+                    )
 
        -- Результат 1
        SELECT
@@ -3753,8 +3833,9 @@ BEGIN
            , tmpMI.ListDiffAmount                               ::TFloat     AS ListDiffAmount
 
            , 0                                                  ::TFloat    AS AmountReal
-           , 0                                                  ::TFloat    AS SendSUNAmount
-           , 0                                                  ::TFloat    AS SendDefSUNAmount
+           , tmpSendSun.Amount                                  ::TFloat    AS SendSUNAmount
+           , 0                                                  ::TFloat    AS SendSUNAmount_save
+           , 0                                                  ::TFloat    AS SendDefSUNAmount_save
            , 0                                                  ::TFloat    AS RemainsSUN
 
            , COALESCE (tmpGoodsMain.CountPrice,0)               ::TFloat     AS CountPrice
@@ -3805,6 +3886,7 @@ BEGIN
             LEFT JOIN OrderSheduleListToday             ON OrderSheduleListToday.ContractId = tmpMI.ContractId
             LEFT JOIN tmpCheck                          ON tmpCheck.GoodsId                 = tmpMI.GoodsId
             LEFT JOIN tmpSend                           ON tmpSend.GoodsId                  = tmpMI.GoodsId
+            LEFT JOIN tmpSendSun                        ON tmpSendSun.GoodsId               = tmpMI.GoodsId
             LEFT JOIN tmpDeferred                       ON tmpDeferred.GoodsId              = tmpMI.GoodsId
             LEFT JOIN tmpReserve                        ON tmpReserve.GoodsId               = tmpMI.GoodsId
             LEFT JOIN SelectMinPrice_AllGoods ON SelectMinPrice_AllGoods.MovementItemId = tmpMI.Id
@@ -3850,6 +3932,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 12.05.20         *
  20.09.19                                                                    * Разбил на две процедуры
  24.04.19         *
  16.04.18                                                                    * оптимизация
