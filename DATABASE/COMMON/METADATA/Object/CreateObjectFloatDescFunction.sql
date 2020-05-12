@@ -1373,6 +1373,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v3() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v3', 'Кратность по Э-СУН' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v3');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v1', 'Кратность по СУН v1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v2', 'Кратность по СУН v2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v4', 'Кратность по СУН v2-ПИ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v4');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_User_BillNumberMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_BillNumberMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1702,6 +1714,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 11.05.20         * zc_ObjectFloat_Goods_KoeffSUN_v1/v2/v4
  04.05.20         * zc_ObjectFloat_BarCodeBox_Print
  29.04.20         * zc_ObjectFloat_Asset_Production
                     zc_ObjectFloat_Goods_CountReceipt

@@ -23,6 +23,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbUnitId Integer;
+   DECLARE vbUnitKey TVarChar;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Loss());
@@ -30,7 +32,17 @@ BEGIN
 
      -- определяется <Торговая сеть>
      vbObjectId:= lpGet_DefaultValue ('zc_Object_Retail', vbUserId);
-
+     vbUnitId := 0;
+ 
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy()) -- Для роли "Кассир аптеки"
+     THEN
+        vbUnitKey := COALESCE(lpGet_DefaultValue('zc_Object_Unit', vbUserId), '');
+        IF vbUnitKey = '' THEN
+           vbUnitKey := '0';
+        END IF;
+        vbUnitId := vbUnitKey::Integer;
+     END IF;
 
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
@@ -48,6 +60,7 @@ BEGIN
                                                 AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                 AND ObjectLink_Juridical_Retail.ChildObjectId = vbObjectId
                         WHERE  ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                          AND (ObjectLink_Unit_Juridical.ObjectId = vbUnitId OR vbUnitId = 0)
                         )
         , tmpMovement AS (SELECT Movement.Id
                                , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -169,5 +182,5 @@ ALTER FUNCTION gpSelect_Movement_Loss (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2020', inEndDate:= '01.02.2020', inIsErased := FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_Loss (inStartDate:= '30.01.2020', inEndDate:= '01.02.2020', inIsErased := FALSE, inSession:= '3')
+

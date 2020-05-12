@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , GoodsAnalog TVarChar, GoodsAnalogATC TVarChar, GoodsActiveSubstance TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
+             , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
               ) AS
@@ -126,6 +127,9 @@ BEGIN
            , COALESCE(Object_ConditionsKeep.ValueData, '') ::TVarChar  AS ConditionsKeepName
            , COALESCE (ObjectBoolean_Goods_SUN_v3.ValueData, False) ::Boolean AS isSUN_v3
            , COALESCE (ObjectFloat_Goods_KoeffSUN_v3.ValueData,0)   :: TFloat AS KoeffSUN_v3
+           , COALESCE (ObjectFloat_Goods_KoeffSUN_v1.ValueData,0)   :: TFloat AS KoeffSUN_v1
+           , COALESCE (ObjectFloat_Goods_KoeffSUN_v2.ValueData,0)   :: TFloat AS KoeffSUN_v2
+           , COALESCE (ObjectFloat_Goods_KoeffSUN_v4.ValueData,0)   :: TFloat AS KoeffSUN_v4
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
 
@@ -152,6 +156,16 @@ BEGIN
          LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v3
                                 ON ObjectFloat_Goods_KoeffSUN_v3.ObjectId = Object_Goods_View.Id
                                AND ObjectFloat_Goods_KoeffSUN_v3.DescId = zc_ObjectFloat_Goods_KoeffSUN_v3()
+
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v1
+                                ON ObjectFloat_Goods_KoeffSUN_v1.ObjectId = Object_Goods_View.Id
+                               AND ObjectFloat_Goods_KoeffSUN_v1.DescId = zc_ObjectFloat_Goods_KoeffSUN_v1()
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v2
+                                ON ObjectFloat_Goods_KoeffSUN_v2.ObjectId = Object_Goods_View.Id
+                               AND ObjectFloat_Goods_KoeffSUN_v2.DescId = zc_ObjectFloat_Goods_KoeffSUN_v2()
+         LEFT JOIN ObjectFloat  AS ObjectFloat_Goods_KoeffSUN_v4
+                                ON ObjectFloat_Goods_KoeffSUN_v4.ObjectId = Object_Goods_View.Id
+                               AND ObjectFloat_Goods_KoeffSUN_v4.DescId = zc_ObjectFloat_Goods_KoeffSUN_v4()
 
          LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_SUN_v3
                                  ON ObjectBoolean_Goods_SUN_v3.ObjectId = Object_Goods_View.Id
@@ -290,6 +304,9 @@ BEGIN
 
            , COALESCE (Object_Goods_Retail.isSUN_v3, False) ::Boolean AS isSUN_v3
            , COALESCE (Object_Goods_Retail.KoeffSUN_v3,0)   :: TFloat AS KoeffSUN_v3
+           , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
+           , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
+           , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
       FROM Object_Goods_Retail
@@ -571,6 +588,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 11.05.20         *
  03.05.20         * isNot_Sun_v4
  29.10.19                                                                     * Плоские таблицы
  24.10.19         * zc_ObjectBoolean_Goods_Not

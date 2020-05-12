@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 1150
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1166
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -489,6 +489,39 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' - '#1069#1082#1089#1087#1088#1077#1089#1089
+            Options.Editing = False
+            Width = 70
+          end
+          object KoeffSUN_v1: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v1'
+            DataBinding.FieldName = 'KoeffSUN_v1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v1'
+            Options.Editing = False
+            Width = 70
+          end
+          object KoeffSUN_v2: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2'
+            DataBinding.FieldName = 'KoeffSUN_v2'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2'
+            Options.Editing = False
+            Width = 70
+          end
+          object KoeffSUN_v4: TcxGridDBColumn
+            Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2-'#1055#1048
+            DataBinding.FieldName = 'KoeffSUN_v4'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1088#1072#1090#1085#1086#1089#1090#1100' '#1087#1086' '#1057#1059#1053' v2-'#1055#1048
             Options.Editing = False
             Width = 70
           end
@@ -1448,6 +1481,113 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdate_inResolution_224_No'
     end
+    object actUpdate_Goods_KoeffSUN: TdsdDataSetRefresh
+      Category = 'KoeffSUN'
+      MoveParams = <>
+      StoredProc = spUpdate_Goods_KoeffSUN
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_KoeffSUN
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object ExecuteDialogGoods_KoeffSUN: TExecuteDialog
+      Category = 'KoeffSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      ImageIndex = 26
+      FormName = 'TGoods_KoeffSUN_EditForm'
+      FormNameParam.Value = 'TGoods_KoeffSUN_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKoeffSUN_v1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeffSUN_v1'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeffSUN_v2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeffSUN_v2'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeffSUN_v4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeffSUN_v4'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v1'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v1'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v2'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v2'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v4'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v4'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateGoods_KoeffSUN_list: TMultiAction
+      Category = 'KoeffSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Goods_KoeffSUN
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      ImageIndex = 43
+    end
+    object macUpdateGoods_KoeffSUN: TMultiAction
+      Category = 'KoeffSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogGoods_KoeffSUN
+        end
+        item
+          Action = macUpdateGoods_KoeffSUN_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v2-'#1055#1048')'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
+      ImageIndex = 43
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1573,7 +1713,7 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdate_isNot_Sun_v4_No'
         end
         item
           Visible = True
@@ -1622,6 +1762,14 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdate_inTop_No'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateGoods_KoeffSUN'
         end
         item
           Visible = True
@@ -1755,8 +1903,12 @@ inherited GoodsForm: TGoodsForm
       Action = macUpdate_isNot_Sun_v4_yes
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdate_isNot_Sun_v4_No: TdxBarButton
       Action = macUpdate_isNot_Sun_v4_No
+      Category = 0
+    end
+    object bbUpdateGoods_KoeffSUN: TdxBarButton
+      Action = macUpdateGoods_KoeffSUN
       Category = 0
     end
   end
@@ -2015,6 +2167,27 @@ inherited GoodsForm: TGoodsForm
         Name = 'Price'
         Value = 0c
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v1'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v2'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v4'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 240
@@ -2643,8 +2816,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 888
-    Top = 259
+    Left = 864
+    Top = 227
   end
   object spUpdate_isNOT_v2_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_isNOT_Sun_v2'
@@ -2991,5 +3164,76 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 1088
     Top = 155
+  end
+  object spUpdate_Goods_KoeffSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_KoeffSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v1'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v2'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v4'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_v1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeffSUN_v1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_v1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeffSUN_v2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeffSUN_v4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeffSUN_v4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1080
+    Top = 315
   end
 end

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
     IN inShareFromPriceCode      TVarChar  ,     -- Перечень кодов товаров которые можно делить с любой ценой
     IN inisGetHardwareData       Boolean   ,     -- Получить данные аппаратной части
-    IN inisBanSUN                Boolean   ,     -- Запрет работы по СУН
+    IN inDateBanSUN              TDateTime ,     -- Запрет работы по СУН
     IN inSession                 TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -38,7 +38,7 @@ BEGIN
    -- сохранили Получить данные аппаратной части
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_GetHardwareData(), vbID, inisGetHardwareData);
    -- сохранили Запрет работы по СУН
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BanSUN(), vbID, inisBanSUN);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_CashSettings_DateBanSUN(), vbID, inDateBanSUN);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);
@@ -52,6 +52,3 @@ END;$BODY$
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  24.11.19                                                       *
 */
-
--- тест
--- 

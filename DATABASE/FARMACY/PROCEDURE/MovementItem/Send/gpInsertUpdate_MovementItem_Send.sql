@@ -39,6 +39,7 @@ $BODY$
    DECLARE vbIsSUN_v2      Boolean;
    DECLARE vbIsSUN_v3      Boolean;
    DECLARE vbIsDefSUN      Boolean;
+   DECLARE vbInsertDate TDateTime;
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Send());
@@ -50,7 +51,8 @@ BEGIN
          , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN_v2
          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
-    INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN
+         , MovementDate_Insert.ValueData
+    INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate
     FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
@@ -70,6 +72,9 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_DefSUN
                                     ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                    AND MovementBoolean_DefSUN.DescId = zc_MovementBoolean_DefSUN()
+          LEFT JOIN MovementDate AS MovementDate_Insert
+                                 ON MovementDate_Insert.MovementId = Movement.Id
+                                AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
     WHERE Movement.Id = inMovementId;
     
     IF COALESCE (ioId, 0) = 0 AND (vbIsSUN = TRUE OR vbIsSUN_v2 = TRUE OR vbIsSUN_v3 = TRUE) AND
@@ -120,11 +125,11 @@ BEGIN
         
         IF vbIsSUN = TRUE AND EXISTS(SELECT 1
                                      FROM Object AS Object_CashSettings
-                                          LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
-                                                                  ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
-                                                                 AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                          LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
+                                                               ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id 
+                                                              AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
                                      WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-                                       AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+                                       AND ObjectDate_CashSettings_DateBanSUN.ValueData = vbInsertDate)
         THEN
           RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
         END IF;                                

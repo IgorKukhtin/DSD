@@ -180,7 +180,13 @@ type
     actSimpleUpdateNot_v4_yes: TMultiAction;
     macUpdate_isNot_Sun_v4_yes: TMultiAction;
     bbUpdate_isNot_Sun_v4_yes: TdxBarButton;
-    bb: TdxBarButton;
+    bbUpdate_isNot_Sun_v4_No: TdxBarButton;
+    spUpdate_Goods_KoeffSUN: TdsdStoredProc;
+    actUpdate_Goods_KoeffSUN: TdsdDataSetRefresh;
+    ExecuteDialogGoods_KoeffSUN: TExecuteDialog;
+    macUpdateGoods_KoeffSUN_list: TMultiAction;
+    macUpdateGoods_KoeffSUN: TMultiAction;
+    bbUpdateGoods_KoeffSUN: TdxBarButton;
   private
     { Private declarations }
   public

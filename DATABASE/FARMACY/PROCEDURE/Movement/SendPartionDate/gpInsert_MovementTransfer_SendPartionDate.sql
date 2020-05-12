@@ -17,15 +17,11 @@ $BODY$
    DECLARE vbGoodsId Integer;
    DECLARE vbRemains TFloat;
    DECLARE vbExpirationDate TDateTime;
+   DECLARE vbRetailId Integer;
 BEGIN
 
   vbUserId:= lpGetUserBySession (inSession);
   inExpirationDate := DATE_TRUNC ('DAY', inExpirationDate);
-
-  IF inSession::Integer NOT IN (3, 375661, 4183126, 8001630, 9560329, 8051421, 14080152 )
-  THEN
-      RAISE EXCEPTION 'Ошибка. Изменять срока звпрещено.';
-  END IF;
 
   IF NOT EXISTS(SELECT 1 FROM Container
                 WHERE Container.DescId    = zc_Container_CountPartionDate()
@@ -34,8 +30,8 @@ BEGIN
     RAISE EXCEPTION 'Ошибка. Контейнкр не найден.';
   END IF;
 
-  SELECT Container.WhereObjectId, Container.ObjectId, Container.Amount, ObjectDate_ExpirationDate.ValueData
-  INTO vbUnitId, vbGoodsId, vbRemains, vbExpirationDate
+  SELECT Container.WhereObjectId, Container.ObjectId, Container.Amount, ObjectDate_ExpirationDate.ValueData, ObjectLink_Juridical_Retail.ChildObjectId
+  INTO vbUnitId, vbGoodsId, vbRemains, vbExpirationDate, vbRetailId
   FROM Container
 
        LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
@@ -45,8 +41,21 @@ BEGIN
                             ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                            AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
 
+       LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                            ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
+                           AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+       LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                            ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
+                           AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                           
   WHERE Container.DescId    = zc_Container_CountPartionDate()
     AND Container.Id        = inContainerID;
+
+  IF inSession::Integer NOT IN (3, 375661, 4183126, 8001630, 9560329, 8051421, 14080152 ) AND vbRetailId = 4
+  THEN
+      RAISE EXCEPTION 'Ошибка. Изменять срока звпрещено.';
+  END IF;
 
   IF vbRemains < inAmount
   THEN

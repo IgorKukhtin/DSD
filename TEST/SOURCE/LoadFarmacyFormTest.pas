@@ -545,6 +545,8 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_KoeffSUN_EditForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TGoods_KoeffSUN_EditForm');
    {
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsRetailTab_ErrorForm'));
     TdsdFormStorageFactory.GetStorage.Load('TGoodsRetailTab_ErrorForm');

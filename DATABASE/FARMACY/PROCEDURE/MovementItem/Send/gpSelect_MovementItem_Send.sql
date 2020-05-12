@@ -34,6 +34,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , isSecond   Boolean
              , AccommodationId Integer, AccommodationName TVarChar
              , DateInsertChild TDateTime , DateInsert TDateTime
+             , isPromo Boolean
 
               )
 AS
@@ -376,6 +377,24 @@ BEGIN
                              AND MovementItem.IsErased = FALSE
                            GROUP BY MovementItem.ParentId
                           )
+            -- Товары из Маркетинговых контрактов
+          , tmpPromo AS (SELECT DISTINCT  Object_Goods_Retail.GoodsMainId  AS GoodsId  
+                         FROM Movement
+                              INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                     AND MovementDate_StartPromo.ValueData <= vbOperDate
+                              INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                     AND MovementDate_EndPromo.ValueData >= vbOperDate
+                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                                 AND MI_Goods.isErased = FALSE
+                              LEFT OUTER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Goods.ObjectId
+                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId = zc_Movement_Promo()
+                        )
 
             -- результат
             SELECT
@@ -429,6 +448,8 @@ BEGIN
               , Object_Accommodation.ValueData                             AS AccommodationName
               , tmpMI_Child.DateInsertChild::TDateTime                     AS DateInsertChild
               , MovementItem_Send.DateInsert                               AS DateInsert
+   
+              , COALESCE(tmpPromo.GoodsId, 0) <> 0                               AS isPromo
 
             FROM tmpRemains
                 FULL OUTER JOIN MovementItem_Send ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
@@ -460,6 +481,9 @@ BEGIN
                 -- Размещение товара
                 LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
 
+                LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Object_Goods.Id
+                LEFT JOIN tmpPromo ON tmpPromo.GoodsId = Object_Goods_Retail.GoodsMainId
+                
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null;
     ELSE
@@ -750,7 +774,25 @@ BEGIN
                              AND MovementItem.IsErased = FALSE
                            GROUP BY MovementItem.ParentId
                           )
-
+            -- Товары из Маркетинговых контрактов
+          , tmpPromo AS (SELECT DISTINCT  Object_Goods_Retail.GoodsMainId  AS GoodsId  
+                         FROM Movement
+                              INNER JOIN MovementDate AS MovementDate_StartPromo
+                                                      ON MovementDate_StartPromo.MovementId = Movement.Id
+                                                     AND MovementDate_StartPromo.DescId = zc_MovementDate_StartPromo()
+                                                     AND MovementDate_StartPromo.ValueData <= vbOperDate
+                              INNER JOIN MovementDate AS MovementDate_EndPromo
+                                                      ON MovementDate_EndPromo.MovementId = Movement.Id
+                                                     AND MovementDate_EndPromo.DescId = zc_MovementDate_EndPromo()
+                                                     AND MovementDate_EndPromo.ValueData >= vbOperDate
+                              INNER JOIN MovementItem AS MI_Goods ON MI_Goods.MovementId = Movement.Id
+                                                                 AND MI_Goods.DescId = zc_MI_Master()
+                                                                 AND MI_Goods.isErased = FALSE
+                              LEFT OUTER JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MI_Goods.ObjectId
+                         WHERE Movement.StatusId = zc_Enum_Status_Complete()
+                           AND Movement.DescId = zc_Movement_Promo()
+                        )
+                        
        -- результат
        SELECT
              MovementItem_Send.Id                              AS Id
@@ -812,6 +854,8 @@ BEGIN
 
            , tmpMI_Child.DateInsertChild::TDateTime                           AS DateInsertChild
            , MovementItem_Send.DateInsert                                     AS DateInsert
+           
+           , COALESCE(tmpPromo.GoodsId, 0) <> 0                               AS isPromo
        FROM MovementItem_Send
             LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_Send.ObjectId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_Send.ObjectId
@@ -846,7 +890,10 @@ BEGIN
                                                   AND Accommodation.GoodsId = Object_Goods.Id
             -- Размещение товара
             LEFT JOIN Object AS Object_Accommodation  ON Object_Accommodation.ID = Accommodation.AccommodationId
-;
+            
+            LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_Send.ObjectId
+            LEFT JOIN tmpPromo ON tmpPromo.GoodsId = Object_Goods_Retail.GoodsMainId;
+
      END IF;
 
 END;
@@ -888,4 +935,5 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- select * from gpSelect_MovementItem_Send(inMovementId := 15183090 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');
+-- 
+select * from gpSelect_MovementItem_Send(inMovementId := 15183090 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

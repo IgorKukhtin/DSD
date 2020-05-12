@@ -455,7 +455,7 @@ BEGIN
 
                   , tmpMI_master.isErased
              FROM _tmpMI_master AS tmpMI_master
-                  FULL JOIN tmpMIPartion_master ON tmpMIPartion_master.MovementItemId = tmpMI_master.MovementItemId
+                  FULL JOIN tmpMIPartion_master ON tmpMIPartion_master.MovementItemId = tmpMI_master.MovementItemId  ---tmpMIPartion_master.GoodsId_basis = tmpMI_master.GoodsId --
              GROUP BY CASE WHEN inShowAll = TRUE THEN tmpMI_master.MovementItemId ELSE 0 END
                   , tmpMI_master.GoodsId_detail
                   , tmpMI_master.GoodsKindId_detail

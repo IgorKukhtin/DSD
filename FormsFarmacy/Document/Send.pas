@@ -164,6 +164,7 @@ type
     cxLabel9: TcxLabel;
     cbSUN_v3: TcxCheckBox;
     cbSUN_v4: TcxCheckBox;
+    isPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -30,6 +30,7 @@ $BODY$
   DECLARE vbisSUN      Boolean;
   DECLARE vbisReceived Boolean;
   DECLARE vbPartionDateKindId Integer;
+  DECLARE vbInsertDate TDateTime;
 BEGIN
     vbUserId:= inSession;
 
@@ -50,7 +51,8 @@ BEGIN
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
-        COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
+        COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0),
+        MovementDate_Insert.ValueData
         
     INTO
         outOperDate,
@@ -60,7 +62,8 @@ BEGIN
         vbisDefSUN,
         vbisSUN,
         vbisReceived,
-        vbPartionDateKindId
+        vbPartionDateKindId,
+        vbInsertDate
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -80,6 +83,9 @@ BEGIN
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
                                      ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
                                     AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+        LEFT JOIN MovementDate AS MovementDate_Insert
+                               ON MovementDate_Insert.MovementId = Movement.Id
+                              AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
     WHERE Movement.Id = inMovementId;
 
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -108,11 +114,11 @@ BEGIN
 
       IF vbIsSUN = TRUE AND EXISTS(SELECT 1
                                    FROM Object AS Object_CashSettings
-                                        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
-                                                                ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
-                                                               AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+                                        LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
+                                                             ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id 
+                                                            AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
                                    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
-                                     AND COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE) = TRUE)
+                                     AND ObjectDate_CashSettings_DateBanSUN.ValueData = vbInsertDate)
       THEN
         RAISE EXCEPTION 'Ошибка. Работа СУН пока невозможна, ожидайте сообщение IT.';
       END IF;                                

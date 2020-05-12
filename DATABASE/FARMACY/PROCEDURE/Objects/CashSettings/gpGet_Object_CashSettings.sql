@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShareFromPriceName TVarChar
              , ShareFromPriceCode TVarChar
              , isGetHardwareData Boolean
-             , isBanSUN Boolean) AS
+             , DateBanSUN TDateTime) AS
 $BODY$
 BEGIN
 
@@ -23,7 +23,7 @@ BEGIN
         , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
         , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
         , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
-        , COALESCE(ObjectBoolean_CashSettings_BanSUN.ValueData, FALSE)             AS isBanSUN
+        , ObjectDate_CashSettings_DateBanSUN.ValueData                             AS DateBanSUN
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -34,9 +34,9 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_GetHardwareData
                                 ON ObjectBoolean_CashSettings_GetHardwareData.ObjectId = Object_CashSettings.Id 
                                AND ObjectBoolean_CashSettings_GetHardwareData.DescId = zc_ObjectBoolean_CashSettings_GetHardwareData()
-        LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BanSUN
-                                ON ObjectBoolean_CashSettings_BanSUN.ObjectId = Object_CashSettings.Id 
-                               AND ObjectBoolean_CashSettings_BanSUN.DescId = zc_ObjectBoolean_CashSettings_BanSUN()
+        LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
+                             ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id 
+                            AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
   

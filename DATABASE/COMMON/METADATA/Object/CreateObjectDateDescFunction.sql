@@ -426,8 +426,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_ContractCondition_EndDate() RETURNS Int
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_ContractCondition(), 'zc_ObjectDate_ContractCondition_EndDate', 'Дейстует по' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ContractCondition_EndDate');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_CashSettings_DateBanSUN() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashSettings_DateBanSUN'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectDate_CashSettings_DateBanSUN', 'Дата запрета работы по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashSettings_DateBanSUN');
+
+
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 07.05.20                                                                                     * zc_ObjectDate_Buyer_DateBirth
  06.05.20         * zc_ObjectDate_Juridical_VatPrice
  24.03.20         * zc_ObjectDate_ContractCondition_StartDate
                     zc_ObjectDate_ContractCondition_EndDate
