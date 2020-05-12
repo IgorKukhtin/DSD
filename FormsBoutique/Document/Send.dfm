@@ -2598,19 +2598,19 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPriceListTo'
+        Name = 'ioOperPriceListTo_start'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceListTo'
+        ComponentItem = 'OperPriceListTo_start'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPriceListTo_start'
+        Name = 'ioOperPriceListTo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceListTo_start'
+        ComponentItem = 'OperPriceListTo'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
@@ -2686,16 +2686,18 @@ object SendForm: TSendForm
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-      end>
-    ActionItemList = <
-      item
-      end>
+    OnDblClickActionList = <>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
+    OnlyEditingCellOnEnter = True
     ColorRuleList = <>
-    ColumnAddOnList = <>
+    ColumnAddOnList = <
+      item
+        Column = GoodsName
+        FindByFullValue = True
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
+      end>
     ColumnEnterList = <
       item
         Column = GoodsName
@@ -3184,19 +3186,19 @@ object SendForm: TSendForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPriceListTo'
+        Name = 'ioOperPriceListTo_start'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceListTo'
+        ComponentItem = 'OperPriceListTo_start'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioOperPriceListTo_start'
+        Name = 'ioOperPriceListTo'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'OperPriceListTo_start'
+        ComponentItem = 'OperPriceListTo'
         DataType = ftFloat
         ParamType = ptInputOutput
         MultiSelectSeparator = ','

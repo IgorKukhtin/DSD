@@ -44,6 +44,7 @@ BEGIN
                                                                                          ON OHL_Currency.ObjectHistoryId = OH_PriceListItem.Id
                                                                                         AND OHL_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
                                                         WHERE OH_PriceListItem.ObjectId = vbPriceListItemId
+                                                          AND OHL_Currency.ObjectId     > 0
                                                        )
                                                        -- валюта прайса
                                                      , (SELECT OL_Currency.ChildObjectId

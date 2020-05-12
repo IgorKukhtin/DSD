@@ -13,8 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
    OUT outOperPrice                    TFloat    , -- Цена
    OUT outCountForPrice                TFloat    , -- Цена за количество
  INOUT ioOperPriceList                 TFloat    , -- Цена (прайс)
- INOUT ioOperPriceListTo               TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
  INOUT ioOperPriceListTo_start         TFloat    , -- Цена печать ценников (прайс)(кому) --(для магазина получателя)
+ INOUT ioOperPriceListTo               TFloat    , -- Цена (прайс)(кому) --(для магазина получателя)
    OUT outTotalSumm                    TFloat    , -- Сумма вх.
    OUT outTotalSummBalance             TFloat    , -- Сумма вх. (ГРН)
    OUT outTotalSummPriceList           TFloat    , -- Сумма по прайсу
@@ -148,6 +148,23 @@ BEGIN
      END IF;
 
 
+     -- !!!замена!!!
+     IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE)
+     THEN
+         -- Цена печать ценников (прайс)(кому) --(для магазина получателя)
+         ioOperPriceListTo_start:= (SELECT DISTINCT MIF.ValueData
+                                    FROM MovementItem AS MI
+                                         INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_OperPriceListTo_start()
+                                    WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE
+                                   );
+         -- Цена (прайс)(кому) --(для магазина получателя)
+         ioOperPriceListTo:= (SELECT DISTINCT MIF.ValueData
+                              FROM MovementItem AS MI
+                                   INNER JOIN MovementItemFloat AS MIF ON MIF.MovementItemId = MI.Id AND MIF.DescId = zc_MIFloat_OperPriceListTo()
+                              WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE
+                             );
+     END IF;
+
      -- PriceListTo - start - если есть цена и прайс для подр. кому определен сохраняем цену
      IF COALESCE (vbPriceListId_to,0) <> 0 AND COALESCE (ioOperPriceListTo_start, 0) <> 0
         -- !!!временно
@@ -194,16 +211,18 @@ BEGIN
                                                          , inGoodsId
                                                           ) AS lpGet ON 1=1;
          -- если нет цены или была такая же цена, т.е. её корректируют
-         IF COALESCE (vbOperPriceListTo_find, 0) = 0
-            OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
+         IF  vbOperPriceListTo_find = 0
+          OR vbStartDate_plTo_find  = zc_DateStart()
+          OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
          THEN
-             PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
-                                                               , inPriceListId:= vbPriceListId_to
-                                                               , inGoodsId    := inGoodsId
-                                                               , inOperDate   := vbStartDate_plTo_find
-                                                               , inValue      := ioOperPriceListTo
-                                                               , inUserId     := vbUserId
-                                                                );
+             PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := 0
+                                                                   , inPriceListId:= vbPriceListId_to
+                                                                   , inGoodsId    := inGoodsId
+                                                                   , inOperDate   := CASE WHEN vbStartDate_plTo_find = zc_DateStart() THEN vbOperDate ELSE vbStartDate_plTo_find END
+                                                                   , inValue      := ioOperPriceListTo
+                                                                   , inIsLast     := TRUE
+                                                                   , inSession    := inSession
+                                                                    );
          ELSE
              -- иначе вернем ту что нашли
              ioOperPriceListTo:= vbOperPriceListTo_find;
