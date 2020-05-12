@@ -237,6 +237,33 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             Width = 85
           end
+          object GoodsCode_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1079' '#1082#1072#1090'. "'#1064#1090#1091#1095#1085#1099#1081'")'
+            DataBinding.FieldName = 'GoodsCode_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1079' '#1082#1072#1090'. "'#1064#1090#1091#1095#1085#1099#1081'")'
+            Options.Editing = False
+            Width = 82
+          end
+          object GoodsName_Sh: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' ('#1080#1079' '#1082#1072#1090'. "'#1064#1090#1091#1095#1085#1099#1081'")'
+            DataBinding.FieldName = 'GoodsName_Sh'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoods_shOpenChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1058#1086#1074#1072#1088' ('#1080#1079' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' "'#1064#1090#1091#1095#1085#1099#1081'")'
+            Width = 85
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -294,38 +321,139 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Options.Editing = False
             Width = 60
           end
-          object WeightMin: TcxGridDBColumn
-            Caption = #1052#1080#1085'. '#1074#1077#1089' 1 '#1077#1076'.'
-            DataBinding.FieldName = 'WeightMin'
+          object WeightMin_Sh: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1074#1077#1089' 1 '#1077#1076'. '#1064#1090'.'
+            DataBinding.FieldName = 'WeightMin_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = '0.####;-0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
-            Width = 70
-          end
-          object WeightMax: TcxGridDBColumn
-            Caption = #1052#1072#1093'. '#1074#1077#1089' 1 '#1077#1076'.'
-            DataBinding.FieldName = 'WeightMax'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
-            Width = 70
-          end
-          object WeightAvg: TcxGridDBColumn
-            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'.'
-            DataBinding.FieldName = 'WeightAvg'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072
+            HeaderHint = #1042#1052#1057' - '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1064#1090'.'
             Options.Editing = False
+            Width = 70
+          end
+          object WeightMax_Sh: TcxGridDBColumn
+            Caption = #1052#1072#1093'. '#1074#1077#1089' 1 '#1077#1076'. '#1064#1090'.'
+            DataBinding.FieldName = 'WeightMax_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1064#1090'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightMin_Nom: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'WeightMin_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1086#1084#1080#1085#1072#1083'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightMax_Nom: TcxGridDBColumn
+            Caption = #1052#1072#1093'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'WeightMax_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1086#1084#1080#1085#1072#1083'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightMin_Ves: TcxGridDBColumn
+            Caption = #1052#1080#1085'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1077#1085#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'WeightMin_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1084#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1077#1085#1086#1084#1080#1085#1072#1083'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightMax_Ves: TcxGridDBColumn
+            Caption = #1052#1072#1093'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1077#1085#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'WeightMax_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1077#1085#1086#1084#1080#1085#1072#1083'.'
+            Options.Editing = False
+            Width = 70
+          end
+          object WeightAvg_Sh: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'.  '#1064#1090'.'
+            DataBinding.FieldName = 'WeightAvg_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1064#1090'.'
+            Width = 70
+          end
+          object WeightAvg_Nom: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'WeightAvg_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1086#1084#1080#1085#1072#1083'.'
+            Width = 70
+          end
+          object WeightAvg_Ves: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1077#1085#1086#1084#1080#1085'.'
+            DataBinding.FieldName = 'WeightAvg_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1090#1086#1074#1072#1088#1072' '#1053#1077#1085#1086#1084#1080#1085'.'
+            Width = 70
+          end
+          object Tax_Sh: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1064#1090'.'
+            DataBinding.FieldName = 'Tax_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Tax_Nom: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'Tax_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object Tax_Ves: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1077#1085#1086#1084#1080#1085#1072#1083'.'
+            DataBinding.FieldName = 'Tax_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object Height: TcxGridDBColumn
@@ -1205,6 +1333,41 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
+    end
+    object actGoods_shOpenChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'Goods_ObjectForm'
+      FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = 'TGoods_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId_sh'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName_sh'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode_sh'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object GoodsOpenChoice: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2404,6 +2567,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsId_sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsId_sh'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBoxId'
         Value = Null
         Component = MasterCDS
@@ -2416,24 +2587,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'BoxId_2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inWeightMin'
-        Value = 'Felse'
-        Component = MasterCDS
-        ComponentItem = 'WeightMin'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inWeightMax'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'WeightMax'
-        DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -2522,6 +2675,108 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         Value = Null
         Component = MasterCDS
         ComponentItem = 'WeightGross_2'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightAvg_Sh'
+        Value = 'Felse'
+        Component = MasterCDS
+        ComponentItem = 'WeightAvg_Sh'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightAvg_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvg_Nom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inWeightAvg_Ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvg_Ves'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax_Sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Tax_Sh'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Tax_Nom'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inTax_Ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Tax_Ves'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMin_Sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMin_Sh'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMax_Sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMax_Sh'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMin_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMin_Nom'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMax_Nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMax_Nom'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMin_Ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMin_Ves'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightMax_Ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightMax_Ves'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end

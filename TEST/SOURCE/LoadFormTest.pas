@@ -496,9 +496,10 @@ end;
 
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
-TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
   {
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoods_AssetProdForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
 
@@ -517,11 +518,11 @@ TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKindForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_OrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_OrderForm');
 
@@ -530,10 +531,11 @@ TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_AssetProdForm'));
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_StickerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_StickerForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_lineVMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_lineVMCForm');
   exit;
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind_VMCForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind_VMCDialogForm'));

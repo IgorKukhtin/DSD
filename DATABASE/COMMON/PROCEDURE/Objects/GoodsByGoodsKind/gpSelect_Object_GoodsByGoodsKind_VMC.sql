@@ -24,9 +24,14 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             , WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
+             --, WeightMin TFloat, WeightMax TFloat--, WeightAvg TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
+             , WeightAvg_Sh TFloat, WeightAvg_Nom TFloat, WeightAvg_Ves TFloat
+             , Tax_Sh TFloat, Tax_Nom TFloat, Tax_Ves TFloat
+             , WeightMin_Sh  TFloat, WeightMax_Sh  TFloat
+             , WeightMin_Nom TFloat, WeightMax_Nom TFloat
+             , WeightMin_Ves TFloat, WeightMax_Ves TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
              , GoodsSubId Integer, GoodsSubCode Integer, GoodsSubName TVarChar, MeasureSubName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
@@ -35,6 +40,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindSubSendId Integer, GoodsKindSubSendName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
+             , GoodsId_Sh Integer, GoodsCode_Sh Integer, GoodsName_Sh TVarChar
+           
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
@@ -344,14 +351,30 @@ BEGIN
            , COALESCE (ObjectFloat_WeightTotal.ValueData,0)         ::TFloat  AS WeightTotal
            , COALESCE (ObjectFloat_ChangePercentAmount.ValueData,0) ::TFloat  AS ChangePercentAmount
 
-           , COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
-           , COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
-           , ((COALESCE (ObjectFloat_WeightMin.ValueData,0) + COALESCE (ObjectFloat_WeightMax.ValueData,0)) / 2) :: TFloat AS WeightAvg
+           --, COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
+           --, COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
+           --, ((COALESCE (ObjectFloat_WeightMin.ValueData,0) + COALESCE (ObjectFloat_WeightMax.ValueData,0)) / 2) :: TFloat AS WeightAvg
+           
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
            , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
+           
+           , COALESCE (ObjectFloat_Avg_Sh.ValueData,0)        ::TFloat  AS WeightAvg_Sh
+           , COALESCE (ObjectFloat_Avg_Nom.ValueData,0)       ::TFloat  AS WeightAvg_Nom
+           , COALESCE (ObjectFloat_Avg_Ves.ValueData,0)       ::TFloat  AS WeightAvg_Ves
+           , COALESCE (ObjectFloat_Tax_Sh.ValueData,0)        ::TFloat  AS Tax_Sh
+           , COALESCE (ObjectFloat_Tax_Nom.ValueData,0)       ::TFloat  AS Tax_Nom
+           , COALESCE (ObjectFloat_Tax_Ves.ValueData,0)       ::TFloat  AS Tax_Ves
 
+           , (COALESCE (ObjectFloat_Avg_Sh.ValueData,0)  * (1 - COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))   ::TFloat  AS WeightMin_Sh
+           , (COALESCE (ObjectFloat_Avg_Sh.ValueData,0)  * (1 + COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))   ::TFloat  AS WeightMax_Sh
+           , (COALESCE (ObjectFloat_Avg_Nom.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Nom.ValueData,0)/100))  ::TFloat  AS WeightMin_Nom
+           , (COALESCE (ObjectFloat_Avg_Nom.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Nom.ValueData,0)/100))  ::TFloat  AS WeightMax_Nom
+           , (COALESCE (ObjectFloat_Avg_Ves.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Ves.ValueData,0)/100))  ::TFloat  AS WeightMin_Ves
+           , (COALESCE (ObjectFloat_Avg_Ves.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Ves.ValueData,0)/100))  ::TFloat  AS WeightMax_Ves
+
+           
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
@@ -376,6 +399,11 @@ BEGIN
            , Object_MeasurePack.ValueData     AS MeasurePackName
            , Object_GoodsKindPack.Id          AS GoodsKindPackId
            , Object_GoodsKindPack.ValueData   AS GoodsKindPackName
+
+           , Object_Goods_Sh.Id              AS GoodsId_Sh
+           , Object_Goods_Sh.ObjectCode      AS GoodsCode_Sh
+           , Object_Goods_Sh.ValueData       AS GoodsName_Sh
+
 
            , Object_Receipt.Id                AS ReceiptId
            , ObjectString_Code.ValueData      AS ReceiptCode
@@ -556,6 +584,27 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_NormInDays
                                   ON ObjectFloat_NormInDays.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_NormInDays.DescId = zc_ObjectFloat_GoodsByGoodsKind_NormInDays()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Sh
+                                  ON ObjectFloat_Avg_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Avg_Sh.DescId = zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Nom
+                                  ON ObjectFloat_Avg_Nom.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Avg_Nom.DescId = zc_ObjectFloat_GoodsByGoodsKind_Avg_Nom()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Ves
+                                  ON ObjectFloat_Avg_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Avg_Ves.DescId = zc_ObjectFloat_GoodsByGoodsKind_Avg_Ves()
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Sh
+                                  ON ObjectFloat_Tax_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Tax_Sh.DescId = zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Nom
+                                  ON ObjectFloat_Tax_Nom.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Tax_Nom.DescId = zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom()
+            LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Ves
+                                  ON ObjectFloat_Tax_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                 AND ObjectFloat_Tax_Ves.DescId = zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves()
+                                 
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -612,6 +661,12 @@ BEGIN
                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods_Sh
+                                 ON ObjectLink_GoodsByGoodsKind_Goods_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_Goods_Sh.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods_Sh()
+            LEFT JOIN Object AS Object_Goods_Sh ON Object_Goods_Sh.Id = ObjectLink_GoodsByGoodsKind_Goods_Sh.ChildObjectId
+            
+            
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
                                  ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()
@@ -735,5 +790,18 @@ group by GoodsName, BarCodeShort
 group by BarCodeShort
 having count (*) > 1
 */
+
+
+/* 
+SELECT * 
+, case when tt.isGoodsTypeKind_Sh = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh(), tt.Id, 3) END
+, case when tt.isGoodsTypeKind_Sh = TRUE AND tt.isGoodsTypeKind_Nom = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom(), tt.Id, 10) END
+, case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom(), tt.Id, 3) END
+, case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = TRUE AND tt.isGoodsTypeKind_Ves = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves(), tt.Id, 10) END
+, case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = false AND tt.isGoodsTypeKind_Ves = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves(), tt.Id, 3) END
+FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,zfCalc_UserAdmin()) as tt 
+*/
+
+
 -- тест
 -- SELECT * FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,zfCalc_UserAdmin())  limit 10

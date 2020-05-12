@@ -122,6 +122,7 @@ type
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
     WmsCellNum: TcxGridDBColumn;
+    actGoods_shOpenChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
