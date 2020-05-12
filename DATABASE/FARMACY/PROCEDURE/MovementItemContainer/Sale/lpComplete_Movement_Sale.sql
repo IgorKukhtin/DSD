@@ -66,12 +66,18 @@ BEGIN
                   ),
         Sale AS( -- строки документа продажи
                     SELECT
-                        MovementItem.Id                                as MovementItemId
-                       ,MovementItem.ObjectId                          as ObjectId
+                        MovementItem.Id                                                  as MovementItemId
+                       ,MovementItem.ObjectId                                            as ObjectId
+                       ,COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods.NDSKindId) as NDSKindId
                        ,MovementItem.Amount - COALESCE(HeldBy.Amount,0)as Amount
                     FROM MovementItem
                          LEFT OUTER JOIN HeldBy AS HeldBy
                                                 ON MovementItem.Id = HeldBy.MovementItemId
+                         LEFT JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem.ObjectId
+                         LEFT JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+                         LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                                          ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                                         AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.IsErased = FALSE
                       AND (COALESCE(MovementItem.Amount,0) - COALESCE(HeldBy.Amount,0)) > 0
@@ -80,20 +86,20 @@ BEGIN
         PartionDate AS (SELECT REMAINS.Id
                              , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate
                         FROM Container AS REMAINS
-                        
-                             JOIN Sale ON Sale.objectid = REMAINS.objectid
-                
+
+                             JOIN (SELECT DISTINCT Sale.ObjectId FROM Sale) AS Sale ON Sale.objectid = REMAINS.objectid
+
                              INNER JOIN Container ON Container.ParentId = REMAINS.Id
                                                  AND Container.DescID = zc_Container_CountPartionDate()
-                                                 AND Container.Amount > 0 
-                                             
+                                                 AND Container.Amount > 0
+
                              INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                            AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-                                                      
+
                              INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                   ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId 
+                                                   ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
                                                   AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                        WHERE 
+                        WHERE
                               REMAINS.Amount > 0
                               AND
                               REMAINS.DescId = zc_Container_Count()
@@ -101,17 +107,22 @@ BEGIN
                               REMAINS.WhereObjectId = vbUnitId
                         GROUP BY REMAINS.Id
                ),
-        DD AS  (  -- строки документа продажи размазанные по текущему остатку(Контейнерам) на подразделении
+        tmpContainer AS  (  -- остатки
                     SELECT
-                        Sale.MovementItemId
-                      , Sale.Amount
-                      , Container.Amount AS ContainerAmount
+                        Container.Id
                       , Container.ObjectId
-                      , Container.Id
-                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY COALESCE(PartionDate.ExpirationDate, MIDate_ExpirationDate.ValueData) DESC,Container.Id)
+                      , Container.Amount 
+                      , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                               OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                             THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                      , MIDate_ExpirationDate.ValueData                                                AS ExpirationDate 
                     FROM Container
-                        JOIN Sale ON Sale.objectid = Container.objectid
+                        JOIN (SELECT DISTINCT Sale.ObjectId FROM Sale) AS Sale ON Sale.ObjectId = Container.ObjectId
                         LEFT JOIN PartionDate ON PartionDate.ID = Container.ID
+
+                        LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                        LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
                         JOIN containerlinkobject AS CLI_MI
                                                  ON CLI_MI.containerid = Container.Id
                                                 AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
@@ -128,12 +139,33 @@ BEGIN
                         LEFT OUTER JOIN MovementItemDate AS MIDate_ExpirationDate
                                                          ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
                                                         AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+
+                        LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                        ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                                       AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                        LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                     ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MI_Income.MovementId)
+                                                    AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
                     WHERE
                         Container.Amount > 0
                         AND
                         Container.DescId = zc_Container_Count()
                         AND
                         Container.WhereObjectId = vbUnitId
+                ),
+        DD AS  (  -- строки документа продажи размазанные по текущему остатку(Контейнерам) на подразделении
+                    SELECT
+                        Sale.MovementItemId
+                      , Sale.Amount
+                      , Container.Amount AS ContainerAmount
+                      , Container.ObjectId
+                      , Container.Id
+                      , Container.NDSKindId
+                      , SUM(Container.Amount) OVER (PARTITION BY Container.objectid ORDER BY Container.NDSKindId, COALESCE(PartionDate.ExpirationDate, Container.ExpirationDate) DESC,Container.Id)
+                    FROM tmpContainer AS Container
+                        JOIN Sale ON Sale.ObjectId = Container.ObjectId
+                                 AND Sale.NDSKindId = Container.NDSKindId
+                        LEFT JOIN PartionDate ON PartionDate.ID = Container.ID
                 ),
 
         tmpItem AS ( -- контейнеры и кол-во(Сумма), которое с них будет списано (с подразделения)
@@ -252,6 +284,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.   Воробкало А.А.  Шаблий О.В.
+ 11.05.20                                                                                   *               
  01.08.19                                                                                   *
  13.10.15                                                                     *
 */

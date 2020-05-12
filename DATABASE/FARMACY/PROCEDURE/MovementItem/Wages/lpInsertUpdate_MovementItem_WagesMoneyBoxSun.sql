@@ -54,6 +54,12 @@ BEGIN
         vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, 0, 0);
     END IF;
 
+      -- Если меньше 0 обнуляем
+    IF inSumma < 0 AND inOparDate >= '01.06.2020'::TDateTime
+    THEN
+      inSumma := 0;
+    END IF;
+    
      -- сохранили свойство <Копилка по результатам СУН1 за предыдущий месяц>
     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaMoneyBoxMonth(), vbId, inSumma);
 

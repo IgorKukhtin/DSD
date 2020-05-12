@@ -61,6 +61,9 @@ BEGIN
                                             0::TFloat,
                                             MIFloat_Summ.ValueData,
                                             False,
+                                            COALESCE (MILinkObject_NDSKind.ObjectId, 
+                                                      CASE WHEN Object_Goods_Main.isResolution_224 = TRUE THEN zc_Enum_NDSKind_Special_0() 
+                                                           ELSE Object_Goods_Main.NDSKindId END),
                                             vbUserId)
   FROM MovementItem
        LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -70,6 +73,13 @@ BEGIN
        LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                    ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                   AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+       -- ÍÄÑ
+       LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                        ON MILinkObject_NDSKind.MovementItemId = MovementItem.Id
+                                       AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+       LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id =  MovementItem.ObjectId
+       LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+
   WHERE MovementItem.MovementId = inMovementId
     AND MovementItem.DescId = zc_MI_Master()
     AND MovementItem.isErased = FALSE

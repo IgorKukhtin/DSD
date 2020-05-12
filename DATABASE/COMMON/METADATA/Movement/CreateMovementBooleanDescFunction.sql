@@ -235,11 +235,15 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_UseNDSKind() RETURNS integer AS $B
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_UseNDSKind', 'Использовать ставку НДС по приходу'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_UseNDSKind');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_ApprovedBy() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_ApprovedBy'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_ApprovedBy', 'Утверждено'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ApprovedBy');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 12.05.20                                                                                    * zc_MovementBoolean_ApprovedBy
  21.04.20         * zc_MovementBoolean_SUN_v4
  14.04.20                                                                                    * zc_MovementBoolean_UseNDSKind
  10.03.20                                                                                    * zc_MovementBoolean_Adjustment

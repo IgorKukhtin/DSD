@@ -366,7 +366,7 @@ BEGIN
                                           WHEN ObjectDate_ExpirationDate.ValueData <= vbDate30  THEN zc_Enum_PartionDateKind_1()  -- ћеньше 1 мес€ца
                                           WHEN ObjectDate_ExpirationDate.ValueData <= vbDate180 THEN zc_Enum_PartionDateKind_6()  -- ћеньше 6 мес€ца
                                           ELSE zc_Enum_PartionDateKind_Good() END <> zc_Enum_PartionDateKind_Good()
-                                  OR Container.GoodsGroupId <> 394744
+                                  AND Container.GoodsGroupId <> 394744
                                 )
         SELECT Container.WhereObjectId
              , Container.ObjectId

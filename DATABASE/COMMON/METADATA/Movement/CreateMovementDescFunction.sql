@@ -377,9 +377,14 @@ INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SendAsset', 'Перемещение (ОС)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendAsset');
 
 
+CREATE OR REPLACE FUNCTION zc_Movement_ProjectsImprovements() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProjectsImprovements'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProjectsImprovements', 'Проекты/Доработки' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProjectsImprovements');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 12.05.20                                                                                     * zc_Movement_ProjectsImprovements
  16.03.20         * zc_Movement_SendAsset
  14.02.20                                                                                     * zc_Movement_TechnicalRediscount
  31.01.20         * zc_Movement_ReestrTransportGoods

@@ -106,6 +106,7 @@ type
     procedure LoadPriceListFormTest;
     procedure LoadPriceFormTest;
     procedure LoadPriceChangeFormTest;
+    procedure LoadProjectsImprovementsFormTest;
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
@@ -1754,6 +1755,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TProfitLossDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
+end;
+
+procedure TLoadFormTest.LoadProjectsImprovementsFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProjectsImprovementsJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProjectsImprovementsJournalForm');
 end;
 
 procedure TLoadFormTest.LoadProfitLossFormTest;
