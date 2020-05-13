@@ -123,6 +123,7 @@ type
     bbExecuteDialog: TdxBarButton;
     WmsCellNum: TcxGridDBColumn;
     actGoods_shOpenChoice: TOpenChoiceForm;
+    actGoodsKind_shOpenForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , GoodsId_Sh Integer, GoodsCode_Sh Integer, GoodsName_Sh TVarChar
+             , GoodsKindId_Sh Integer, GoodsKindName_Sh TVarChar
            
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
@@ -65,6 +66,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsPropertyBoxId Integer
              , BoxId Integer, BoxCode Integer, BoxName TVarChar -- Ящик (E2/E3)
              , WeightOnBox_Sh TFloat, WeightOnBox_Nom TFloat, WeightOnBox_Ves TFloat                               -- Кол-во кг. в ящ. (E2/E3)
+             , WeightOnBox TFloat
              , CountOnBox TFloat                                -- Кол-во ед. в ящ. (E2/E3)
              , BoxVolume TFloat
              , BoxWeight TFloat
@@ -412,6 +414,8 @@ BEGIN
            , Object_Goods_Sh.ObjectCode      AS GoodsCode_Sh
            , Object_Goods_Sh.ValueData       AS GoodsName_Sh
 
+           , Object_GoodsKind_Sh.Id          AS GoodsKindId_Sh
+           , Object_GoodsKind_Sh.ValueData   AS GoodsKindName_Sh
 
            , Object_Receipt.Id                AS ReceiptId
            , ObjectString_Code.ValueData      AS ReceiptCode
@@ -467,6 +471,8 @@ BEGIN
                         THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Ves.ValueData,0)
                    ELSE tmpGoodsPropertyBox.WeightOnBox
               END :: TFloat AS WeightOnBox_Ves
+              -- Кол-во кг. в ящ. (E2/E3)
+            , tmpGoodsPropertyBox.WeightOnBox
 
               -- Кол-во ед. в ящ. (E2/E3)
             , tmpGoodsPropertyBox.CountOnBox
@@ -808,7 +814,11 @@ BEGIN
                                 AND ObjectLink_GoodsByGoodsKind_Goods_Sh.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods_Sh()
             LEFT JOIN Object AS Object_Goods_Sh ON Object_Goods_Sh.Id = ObjectLink_GoodsByGoodsKind_Goods_Sh.ChildObjectId
             
-            
+            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind_Sh
+                                 ON ObjectLink_GoodsByGoodsKind_GoodsKind_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
+                                AND ObjectLink_GoodsByGoodsKind_GoodsKind_Sh.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh()
+            LEFT JOIN Object AS Object_GoodsKind_Sh ON Object_GoodsKind_Sh.Id = ObjectLink_GoodsByGoodsKind_GoodsKind_Sh.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsSub
                                  ON ObjectLink_GoodsByGoodsKind_GoodsSub.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsSub.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsSub()

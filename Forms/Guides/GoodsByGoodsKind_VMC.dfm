@@ -264,6 +264,22 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderHint = #1058#1086#1074#1072#1088' ('#1080#1079' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' "'#1064#1090#1091#1095#1085#1099#1081'")'
             Width = 85
           end
+          object GoodsKindName_Sh: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1079' '#1082#1072#1090'. "'#1064#1090#1091#1095#1085#1099#1081'")'
+            DataBinding.FieldName = 'GoodsKindName_Sh'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsKind_shOpenForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' ('#1080#1079' '#1082#1072#1090'. "'#1064#1090#1091#1095#1085#1099#1081'")'
+            Width = 85
+          end
           object MeasureName: TcxGridDBColumn
             Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
@@ -2510,6 +2526,33 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       isShowModal = True
       OpenBeforeShow = True
     end
+    object actGoodsKind_shOpenForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actGoodsKind_shOpenForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId_sh'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName_sh'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2791,6 +2834,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsKindId_sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId_sh'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inBoxId'
         Value = Null
         Component = MasterCDS
@@ -2879,10 +2930,26 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outWeightGross'
+        Name = 'outWeightGross_sh'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'WeightGross'
+        ComponentItem = 'WeightGross_sh'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightGross_nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightGross_nom'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightGross_ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightGross_ves'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -3355,18 +3422,50 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outWeightAvgGross'
+        Name = 'outWeightAvgGross_sh'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'WeightAvgGross'
+        ComponentItem = 'WeightAvgGross_sh'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outWeightAvgNet'
+        Name = 'outWeightAvgGross_nom'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'WeightAvgNet'
+        ComponentItem = 'WeightAvgGross_nom'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgGross_ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgGross_ves'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgNet_sh'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgNet_sh'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgNet_nom'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgNet_nom'
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outWeightAvgNet_ves'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'WeightAvgNet_ves'
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
