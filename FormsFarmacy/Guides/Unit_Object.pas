@@ -168,6 +168,12 @@ type
     Action1: TAction;
     T1_SUN_v2: TcxGridDBColumn;
     bbUpdateUnit_T_SUN: TdxBarButton;
+    spUpdate_Unit_SunIncome: TdsdStoredProc;
+    ExecuteDialogUnit_SunIncome: TExecuteDialog;
+    actUpdate_Unit_SunIncome: TdsdDataSetRefresh;
+    macUpdateUnit_SunIncome_list: TMultiAction;
+    macUpdateUnit_SunIncome: TMultiAction;
+    bbUpdateUnit_SunIncome: TdxBarButton;
   private
     { Private declarations }
   public
