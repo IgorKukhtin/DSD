@@ -152,6 +152,31 @@ object SaleJournalForm: TSaleJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChange_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChangePay_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPay_curr
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -183,6 +208,31 @@ object SaleJournalForm: TSaleJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChange_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChangePay_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPay_curr
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList

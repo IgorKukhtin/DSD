@@ -152,6 +152,31 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChange_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChangePay_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPay_curr
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -183,6 +208,31 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSumm_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceList_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChange_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummChangePay_curr
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPay_curr
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -294,6 +344,57 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
       object TotalSummPay: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1043#1056#1053')'
         DataBinding.FieldName = 'TotalSummPay'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSumm_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1074#1093'. '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSumm_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1074#1093'. '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        Width = 80
+      end
+      object TotalSummPriceList_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummPriceList_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummChange_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummChange_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummChangePay_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummChangePay_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummPay_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummPay_curr'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'

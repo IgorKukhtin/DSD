@@ -22,7 +22,15 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
              , DiscountSaleKindId Integer, DiscountSaleKindName TVarChar
              , Amount TFloat, Remains TFloat
              , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
-             , OperPriceListReal TFloat, OperPriceList_curr TFloat, CurrencyName_pl TVarChar
+             , OperPriceListReal TFloat, OperPriceList_curr TFloat
+             , SummChangePercent_curr     TFloat
+             , TotalChangePercent_curr    TFloat
+             , TotalChangePercentPay_curr TFloat
+             , TotalPay_curr              TFloat
+             , TotalPayOth_curr           TFloat
+             , TotalReturn_curr           TFloat
+             , TotalPayReturn_curr        TFloat
+             , CurrencyName_pl TVarChar
 
              , TotalSumm TFloat
              , TotalSummBalance TFloat
@@ -93,6 +101,15 @@ BEGIN
                            , COALESCE (MIFloat_CountForPrice.ValueData, 1)         AS CountForPrice
                            , COALESCE (MIFloat_OperPriceList.ValueData, 0)         AS OperPriceList
                            , COALESCE (MIFloat_OperPriceListReal.ValueData, 0)     AS OperPriceListReal
+                           
+                           , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0)     AS SummChangePercent_curr
+                           , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)    AS TotalChangePercent_curr
+                           , COALESCE (MIFloat_TotalChangePercentPay_curr.ValueData, 0) AS TotalChangePercentPay_curr
+                           , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)              AS TotalPay_curr
+                           , COALESCE (MIFloat_TotalPayOth_curr.ValueData, 0)           AS TotalPayOth_curr
+                           , COALESCE (MIFloat_TotalReturn_curr.ValueData, 0)           AS TotalReturn_curr
+                           , COALESCE (MIFloat_TotalPayReturn_curr.ValueData, 0)        AS TotalPayReturn_curr
+                           
                            , COALESCE (MIFloat_CurrencyValue.ValueData, 0)         AS CurrencyValue
                            , COALESCE (MIFloat_ParValue.ValueData, 0)              AS ParValue
                            , COALESCE (MIFloat_ChangePercent.ValueData, 0)         AS ChangePercent
@@ -170,6 +187,28 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn
                                                         ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                        ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                        ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay_curr
+                                                        ON MIFloat_TotalChangePercentPay_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalChangePercentPay_curr.DescId         = zc_MIFloat_TotalChangePercentPay_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                        ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_curr
+                                                        ON MIFloat_TotalPayOth_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPayOth_curr.DescId         = zc_MIFloat_TotalPayOth_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalReturn_curr
+                                                        ON MIFloat_TotalReturn_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalReturn_curr.DescId         = zc_MIFloat_TotalReturn_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayReturn_curr
+                                                        ON MIFloat_TotalPayReturn_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPayReturn_curr.DescId         = zc_MIFloat_TotalPayReturn_curr()
 
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_DiscountSaleKind
                                                              ON MILinkObject_DiscountSaleKind.MovementItemId = MovementItem.Id
@@ -267,6 +306,15 @@ BEGIN
            , tmpMI.OperPriceList       :: TFloat AS OperPriceList
            , tmpMI.OperPriceListReal   :: TFloat AS OperPriceListReal
            , Object_PartionGoods.OperPriceList   AS OperPriceList_curr
+           
+           , tmpMI.SummChangePercent_curr     :: TFloat
+           , tmpMI.TotalChangePercent_curr    :: TFloat
+           , tmpMI.TotalChangePercentPay_curr :: TFloat
+           , tmpMI.TotalPay_curr              :: TFloat
+           , tmpMI.TotalPayOth_curr           :: TFloat
+           , tmpMI.TotalReturn_curr           :: TFloat
+           , tmpMI.TotalPayReturn_curr        :: TFloat
+
            , Object_Currency_pl.ValueData        AS CurrencyName_pl
            
            , tmpMI.TotalSumm           :: TFloat AS TotalSumm
@@ -347,6 +395,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 13.05.20         *
  23.03.18         *
  06.03.18         *
  10.05.17         *
