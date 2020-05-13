@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProjectsImprovements(
    OUT outisApprovedBy       Boolean   , -- Утверждено
    OUT outStatusCode         Integer   ,
    OUT outStatusName         TVarChar  ,
+   OUT outUserName           TVarChar  ,
     IN inSession             TVarChar    -- сессия пользователя
 )                               
 RETURNS Record AS
@@ -41,11 +42,9 @@ BEGIN
                                                          , inUserId           := vbUserId
                                                           );
                                                           
-     outisApprovedBy := COALESCE ((SELECT MovementBoolean.ValueData 
-                                   FROM MovementBoolean WHERE MovementBoolean.MovementId = ioId
-                                    AND MovementBoolean.DescId = zc_MovementBoolean_ApprovedBy()), False);
-     outStatusCode := (SELECT Movement.StatusId FROM Movement WHERE Movement.Id = ioId);
-     outStatusName := (SELECT Object.ValueData FROM Object WHERE Object.Id = outStatusCode);
+     SELECT T1.StatusCode, T1.StatusName, T1.isApprovedBy, T1.UserName
+     INTO outStatusCode, outStatusName, outisApprovedBy, outUserName
+     FROM gpGet_Movement_ProjectsImprovements (ioId, inSession) AS T1;
                                     
 END;
 $BODY$
@@ -57,3 +56,5 @@ ALTER FUNCTION gpInsertUpdate_Movement_ProjectsImprovements (Integer, TVarChar, 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
  12.05.20                                                       *
 */
+
+-- select * from gpInsertUpdate_Movement_ProjectsImprovements(ioId := 18831165 , ioInvNumber := '103' , ioOperDate := ('13.05.2020')::TDateTime , inTitle := 'Проба 1' , inDescription := 'Чтото сделать' , inComment := '' ,  inSession := '3');

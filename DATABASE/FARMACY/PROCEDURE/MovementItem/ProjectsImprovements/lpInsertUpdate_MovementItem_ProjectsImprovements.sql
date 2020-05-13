@@ -1,40 +1,53 @@
 -- Function: lpInsertUpdate_MovementItem_ProjectsImprovements()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ProjectsImprovements(Integer, Integer, Integer, TFloat, Integer, TVarChar, TVarChar, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ProjectsImprovements(Integer, Integer, TDateTime, TVarChar, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ProjectsImprovements(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
-    IN inCommentTRID         Integer   , -- Комментарий
-    IN isExplanation         TVarChar  , -- Пояснение
-    IN isComment             TVarChar  , -- Комментарий 2
+    IN inOperDate            TDateTime , -- Дата
+    IN inTitle               TVarChar  , -- Название
+    IN inDescription         TVarChar  , -- Описание задания 
     IN inUserId              Integer     -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
  DECLARE vbIsInsert Boolean;
+ DECLARE vbAmount TFloat;
 BEGIN
 
      
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
      
+     if vbIsInsert = TRUE
+     THEN
+       vbAmount := 0;
+     ELSE
+       vbAmount := (SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId);
+     END IF;
+     
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, Null);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), Null, inMovementId, vbAmount, Null);
 
-     -- Сохранили <Комментарий>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_CommentTR(), ioId, inCommentTRID);
      -- Сохранили <Пояснение>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Explanation(), ioId, isExplanation);
-     -- Сохранили <Комментарий 2>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, isComment);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);
 
-     PERFORM lpUpdate_Movement_ProjectsImprovements_TotalDiff (inMovementId);
+     -- Сохранили <Описание задания>
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inTitle);
+     -- Сохранили < Описание задания >
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Description(), ioId, inDescription);
 
-    -- сохранили протокол
-    PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <Дата создания>
+         PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (создание)>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Insert(), ioId, inUserId);
+     END IF;
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

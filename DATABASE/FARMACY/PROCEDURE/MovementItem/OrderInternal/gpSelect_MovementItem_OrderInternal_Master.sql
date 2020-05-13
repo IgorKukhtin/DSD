@@ -771,7 +771,7 @@ BEGIN
            , tmpMI.PartionGoodsDate
            , MIString_Comment.ValueData                             AS Comment
            , Object_PartnerGoods.Id                                 AS PartnerGoodsId
-           , Object_PartnerGoods.ObjectCode::TVarChar               AS PartnerGoodsCode
+           , ObjectString_Goods_Code.ValueData                      AS PartnerGoodsCode
            , Object_PartnerGoods.ValueData                          AS PartnerGoodsName
            , tmpMI.JuridicalId
            , tmpMI.JuridicalName -- ***
@@ -898,6 +898,9 @@ BEGIN
             LEFT JOIN Object AS Object_PartnerGoods ON Object_PartnerGoods.Id = tmpMI.PartnerGoodsId
             LEFT JOIN GoodsPromo ON GoodsPromo.JuridicalId = tmpMI.JuridicalId
                                 AND GoodsPromo.GoodsId = tmpMI.GoodsId
+            LEFT JOIN ObjectString AS ObjectString_Goods_Code
+                                   ON ObjectString_Goods_Code.ObjectId = Object_PartnerGoods.Id
+                                  AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
 
             -- показываем не зависимо от поставщ. явл. ли товар маркетинговым
             LEFT JOIN (SELECT DISTINCT GoodsPromo.GoodsId FROM GoodsPromo) AS GoodsPromoAll ON GoodsPromoAll.GoodsId = tmpMI.GoodsId
@@ -3995,4 +3998,4 @@ where Movement.DescId = zc_Movement_OrderInternal()
 , tmp2 as (select distinct from tmp1)
 */
 
--- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 15668431 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');
+-- тест select * from gpSelect_MovementItem_OrderInternal_Master(inMovementId := 18820132 , inShowAll := 'False' , inIsErased := 'False' , inIsLink := 'FALSE' ,  inSession := '7564573');

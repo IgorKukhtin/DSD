@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProjectsImprovements(
     IN inSession     TVarChar    --сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , isApprovedBy Boolean
+             , isApprovedBy Boolean, UserName TVarChar
              , Title TVarChar, Description Text, Comment TVarChar
              )
 AS
@@ -38,6 +38,7 @@ BEGIN
            , Object_Status.ValueData                                AS StatusName
            , COALESCE (MovementBoolean_ApprovedBy.ValueData, False) AS isApprovedBy
            
+           , Object_User.ValueData                                  AS UserName
            , MovementString_Title.ValueData                         AS Title
            , MovementBlob_Description.ValueData::Text               AS Description
            , MovementString_Comment.ValueData                       AS Comment
@@ -67,6 +68,11 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_ApprovedBy
                                       ON MovementBoolean_ApprovedBy.MovementId = Movement.Id
                                      AND MovementBoolean_ApprovedBy.DescId = zc_MovementBoolean_ApprovedBy()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
             ;
 
 END;
@@ -81,6 +87,5 @@ ALTER FUNCTION gpSelect_Movement_ProjectsImprovements (Boolean, Boolean, TVarCha
 */
 
 -- тест
--- 
-SELECT * FROM gpSelect_Movement_ProjectsImprovements (inShowAll := FALSE, inIsErased:= FALSE, inSession:= '3')
+-- SELECT * FROM gpSelect_Movement_ProjectsImprovements (inShowAll := FALSE, inIsErased:= FALSE, inSession:= '3')
 

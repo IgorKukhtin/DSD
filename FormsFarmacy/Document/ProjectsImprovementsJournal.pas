@@ -55,6 +55,11 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actUpdateDetailDS: TdsdUpdateDataSet;
     spSelectDetai: TdsdStoredProc;
+    detUserName: TcxGridDBColumn;
+    detisApprovedBy: TcxGridDBColumn;
+    detTitle: TcxGridDBColumn;
+    UserName: TcxGridDBColumn;
+    spUpdateMovement_ApprovedBy: TdsdStoredProc;
   private
     { Private declarations }
   public

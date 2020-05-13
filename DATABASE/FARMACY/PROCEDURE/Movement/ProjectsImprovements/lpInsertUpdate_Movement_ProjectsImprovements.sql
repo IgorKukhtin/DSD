@@ -31,6 +31,14 @@ BEGIN
      -- сохранили <ѕримечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <ƒата создани€>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Insert(), ioId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <ѕользователь (создание)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Insert(), ioId, vbUserId);
+     END IF;
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 

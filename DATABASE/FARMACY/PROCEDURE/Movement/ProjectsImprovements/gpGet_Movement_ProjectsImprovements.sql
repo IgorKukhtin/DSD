@@ -7,16 +7,17 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProjectsImprovements(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , UnitId Integer, UnitName TVarChar
-             , TotalDiff TFloat, TotalDiffSumm TFloat
-             , Comment TVarChar, isRedCheck Boolean, isAdjustment Boolean
+             , isApprovedBy Boolean, UserName TVarChar
+             , Title TVarChar, Description Text, Comment TVarChar
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ProjectsImprovements());
+     --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProjectsImprovements());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -27,6 +28,14 @@ BEGIN
              , CURRENT_DATE::TDateTime          AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
+             , False                            AS isApprovedBy
+             
+             , Object_User.ValueData            AS UserName
+             , ''::TVarChar                     AS Title
+             , ''::Text                         AS Description
+             , ''::TVarChar                     AS Comment
+
+
              , 0                                AS UnitId
              , CAST ('' as TVarChar)            AS UnitName
              , 60 :: Integer                    AS DayCount
@@ -35,48 +44,45 @@ BEGIN
              , CAST ('' as TVarChar)            AS Comment
              , False :: Boolean                 AS isRedCheck
              , False :: Boolean                 AS isAdjustment
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+               LEFT JOIN Object AS Object_User ON Object_User.Id = vbUserId;
      ELSE
        RETURN QUERY
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode                             AS StatusCode
-           , Object_Status.ValueData                              AS StatusName
-           , Object_Unit.Id                                       AS UnitId
-           , Object_Unit.ValueData                                AS UnitName
-           , MovementFloat_TotalDiff.ValueData                    AS TotalDiff
-           , MovementFloat_TotalDiffSumm.ValueData                AS TotalDiffSumm
-           , COALESCE (MovementString_Comment.ValueData,'')     :: TVarChar AS Comment
-           , COALESCE (MovementBoolean_RedCheck.ValueData, False) AS isRedCheck
-           , COALESCE (MovementBoolean_Adjustment.ValueData, False) AS isAdjustment
+             Movement.Id                                            AS Id
+           , Movement.InvNumber                                     AS InvNumber
+           , Movement.OperDate                                      AS OperDate
+           , Object_Status.ObjectCode                               AS StatusCode
+           , Object_Status.ValueData                                AS StatusName
+           , COALESCE (MovementBoolean_ApprovedBy.ValueData, False) AS isApprovedBy
+           
+           , Object_User.ValueData                                  AS UserName
+           , MovementString_Title.ValueData                         AS Title
+           , MovementBlob_Description.ValueData::Text               AS Description
+           , MovementString_Comment.ValueData                       AS Comment
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN MovementString AS MovementString_Title
+                                     ON MovementString_Title.MovementId = Movement.Id
+                                    AND MovementString_Title.DescId = zc_MovementString_Title()
 
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_TotalDiff
-                                          ON MovementFloat_TotalDiff.MovementId = Movement.Id
-                                         AND MovementFloat_TotalDiff.DescId = zc_MovementFloat_TotalDiff()
-            LEFT OUTER JOIN MovementFloat AS MovementFloat_TotalDiffSumm
-                                          ON MovementFloat_TotalDiffSumm.MovementId = Movement.Id
-                                         AND MovementFloat_TotalDiffSumm.DescId = zc_MovementFloat_TotalDiffSumm()
+            LEFT JOIN MovementBlob AS MovementBlob_Description
+                                     ON MovementBlob_Description.MovementId = Movement.Id
+                                    AND MovementBlob_Description.DescId = zc_MovementBlob_Description()
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementBoolean AS MovementBoolean_RedCheck
-                                      ON MovementBoolean_RedCheck.MovementId = Movement.Id
-                                     AND MovementBoolean_RedCheck.DescId = zc_MovementBoolean_RedCheck()
-            LEFT JOIN MovementBoolean AS MovementBoolean_Adjustment
-                                      ON MovementBoolean_Adjustment.MovementId = Movement.Id
-                                     AND MovementBoolean_Adjustment.DescId = zc_MovementBoolean_Adjustment()
+            LEFT JOIN MovementBoolean AS MovementBoolean_ApprovedBy
+                                      ON MovementBoolean_ApprovedBy.MovementId = Movement.Id
+                                     AND MovementBoolean_ApprovedBy.DescId = zc_MovementBoolean_ApprovedBy()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                         ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                        AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+            LEFT JOIN Object AS Object_User ON Object_User.Id = MovementLinkObject_Insert.ObjectId
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ProjectsImprovements();
 
@@ -94,4 +100,4 @@ ALTER FUNCTION gpGet_Movement_ProjectsImprovements (Integer, TVarChar) OWNER TO 
  */
 
 -- тест
---  SELECT * FROM gpGet_Movement_ProjectsImprovements (inMovementId:= 17924741 , inSession:= '3')
+--  SELECT * FROM gpGet_Movement_ProjectsImprovements (inMovementId:= 18831165 , inSession:= '3')

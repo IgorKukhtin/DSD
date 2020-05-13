@@ -189,6 +189,10 @@ type
     bbUpdateGoods_KoeffSUN: TdxBarButton;
     isInvisibleSUN: TcxGridDBColumn;
     spUpdate_isInvisibleSUN: TdsdStoredProc;
+    actUpdateInvisibleSUN: TMultiAction;
+    ExecUpdate_isInvisibleSUN: TdsdExecStoredProc;
+    bbUpdateInvisibleSUN: TdxBarButton;
+    spUpdate_isInvisibleSUN_Revert: TdsdStoredProc;
   private
     { Private declarations }
   public

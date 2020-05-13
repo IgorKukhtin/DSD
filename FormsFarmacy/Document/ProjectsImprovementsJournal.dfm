@@ -1,5 +1,5 @@
 inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1077#1093#1085#1080#1095#1077#1089#1082#1080#1077' '#1087#1077#1088#1077#1091#1095#1077#1090#1099'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1077#1082#1090#1099'/'#1044#1086#1088#1072#1073#1086#1090#1082#1080'>'
   ClientHeight = 572
   ClientWidth = 975
   ExplicitWidth = 991
@@ -53,7 +53,15 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 66
+            Width = 55
+          end
+          object UserName: TcxGridDBColumn
+            Caption = #1048#1085#1080#1094#1080#1072#1090#1088
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 72
           end
           object colisApprovedBy: TcxGridDBColumn
             Caption = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1086
@@ -118,7 +126,23 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 67
+          end
+          object detUserName: TcxGridDBColumn
+            Caption = #1048#1085#1080#1094#1080#1072#1090#1088
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 77
+          end
+          object detisApprovedBy: TcxGridDBColumn
+            Caption = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1086
+            DataBinding.FieldName = 'isApprovedBy'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
           end
           object detPerformed: TcxGridDBColumn
             Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1086
@@ -127,6 +151,13 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 49
+          end
+          object detTitle: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Title'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 77
           end
           object detDescription: TcxGridDBColumn
             Caption = #1054#1087#1080#1089#1072#1085#1080#1077
@@ -506,8 +537,8 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
       end
       item
       end>
-    Left = 408
-    Top = 344
+    Left = 456
+    Top = 312
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ProjectsImprovements'
@@ -526,8 +557,8 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 320
+    Left = 48
+    Top = 296
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_ProjectsImprovements'
@@ -540,8 +571,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 384
+    Top = 368
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_ProjectsImprovements'
@@ -555,7 +585,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         MultiSelectSeparator = ','
       end>
     Left = 208
-    Top = 376
+    Top = 360
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -608,8 +638,8 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_ProjectsImprovements'
-    Left = 176
-    Top = 304
+    Left = 184
+    Top = 296
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProjectsImprovements'
@@ -691,10 +721,18 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         ComponentItem = 'StatusName'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UserName'
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 306
-    Top = 325
+    Left = 322
+    Top = 309
   end
   object DetailDS: TDataSource
     DataSet = DetailDCS
@@ -734,6 +772,15 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'ioOperDate'
+        Value = 'NULL'
+        Component = DetailDCS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inTitle'
         Value = Null
         Component = DetailDCS
@@ -752,11 +799,11 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'outOperDate'
-        Value = 'NULL'
+        Name = 'outisApprovedBy'
+        Value = Null
         Component = DetailDCS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
+        ComponentItem = 'isApprovedBy'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
@@ -765,6 +812,14 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         Component = DetailDCS
         ComponentItem = 'isPerformed'
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outUserName'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'UserName'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -804,5 +859,31 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
     PackSize = 1
     Left = 760
     Top = 235
+  end
+  object spUpdateMovement_ApprovedBy: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_ProjectsImprovements_ApprovedBy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisApprovedBy'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isApprovedBy'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 394
+    Top = 373
   end
 end

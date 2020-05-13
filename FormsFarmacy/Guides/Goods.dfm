@@ -1598,6 +1598,32 @@ inherited GoodsForm: TGoodsForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1088#1072#1090#1085#1086#1089#1090#1080' '#1087#1086' '#1057#1059#1053' (v1, v2, v3)'
       ImageIndex = 43
     end
+    object actUpdateInvisibleSUN: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = ExecUpdate_isInvisibleSUN
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"?? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053'"'
+      ImageIndex = 79
+    end
+    object ExecUpdate_isInvisibleSUN: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isInvisibleSUN_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isInvisibleSUN_Revert
+        end>
+      Caption = 'ExecUpdate_isInvisibleSUN'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1779,6 +1805,14 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateInvisibleSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateGoods_KoeffSUN'
         end
         item
@@ -1919,6 +1953,10 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdateGoods_KoeffSUN: TdxBarButton
       Action = macUpdateGoods_KoeffSUN
+      Category = 0
+    end
+    object bbUpdateInvisibleSUN: TdxBarButton
+      Action = actUpdateInvisibleSUN
       Category = 0
     end
   end
@@ -3260,16 +3298,42 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisInvisibleSUN'
+        Name = 'inisInvisibleSUN'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isInvisibleSUN'
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
+    Left = 80
+    Top = 360
+  end
+  object spUpdate_isInvisibleSUN_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inInvisibleSUN_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInvisibleSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isInvisibleSUN'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 216
     Top = 352
   end
 end
