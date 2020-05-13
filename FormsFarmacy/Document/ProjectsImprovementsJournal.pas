@@ -25,36 +25,36 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalc;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCalc, cxBlobEdit, cxSplitter;
 
 type
   TProjectsImprovementsJournalForm = class(TAncestorJournalForm)
-    colUnitName: TcxGridDBColumn;
-    colTotalDiff: TcxGridDBColumn;
-    PrintHeaderCDS: TClientDataSet;
-    PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    coTitle: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    colTotalDiffSumm: TcxGridDBColumn;
     bbPrint1: TdxBarButton;
     dxBarButton1: TdxBarButton;
     ExecuteDialog: TExecuteDialog;
-    colComment: TcxGridDBColumn;
-    actProjectsImprovements_Formation: TMultiAction;
-    actExecuteDialogData: TExecuteDialog;
-    actExecProjectsImprovements_Formation: TdsdExecStoredProc;
-    spProjectsImprovements_Formation: TdsdStoredProc;
-    colisRedCheck: TcxGridDBColumn;
-    actChoiceUnitTreeForm: TOpenChoiceForm;
-    actAddRedCheck: TdsdExecStoredProc;
-    spInsertRedCheck: TdsdStoredProc;
-    actOpenProjectsImprovements: TdsdOpenForm;
+    coDescription: TcxGridDBColumn;
+    colisApprovedBy: TcxGridDBColumn;
     bbAddRedCheck: TdxBarButton;
-    actInsertProjectsImprovements: TdsdExecStoredProc;
-    spInsertProjectsImprovements: TdsdStoredProc;
     dxBarButton2: TdxBarButton;
-    colisAdjustment: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    dxBarButton3: TdxBarButton;
+    spInsertUpdateMovement: TdsdStoredProc;
+    actUpdateMainDS: TdsdUpdateDataSet;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    detOperDate: TcxGridDBColumn;
+    detPerformed: TcxGridDBColumn;
+    detDescription: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    DetailDS: TDataSource;
+    DetailDCS: TClientDataSet;
+    spInsertUpdateMIMaster: TdsdStoredProc;
+    actUpdateDetailDS: TdsdUpdateDataSet;
+    spSelectDetai: TdsdStoredProc;
   private
     { Private declarations }
   public

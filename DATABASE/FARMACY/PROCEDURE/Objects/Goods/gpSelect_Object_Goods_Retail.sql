@@ -37,6 +37,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
+             , isInvisibleSUN boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -309,6 +310,7 @@ BEGIN
            , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
+           , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

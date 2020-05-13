@@ -1,26 +1,26 @@
 inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074' '#1089#1077#1090#1080
   ClientHeight = 443
-  ClientWidth = 1150
+  ClientWidth = 1166
   AddOnFormData.ChoiceAction = dsdChoiceGuides
-  ExplicitWidth = 1166
-  ExplicitHeight = 481
+  ExplicitWidth = 1182
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1150
+    Width = 1166
     Height = 417
-    ExplicitWidth = 1150
+    ExplicitWidth = 1166
     ExplicitHeight = 417
     ClientRectBottom = 417
-    ClientRectRight = 1150
+    ClientRectRight = 1166
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1150
+      ExplicitWidth = 1166
       ExplicitHeight = 417
       inherited cxGrid: TcxGrid
-        Width = 1150
+        Width = 1166
         Height = 417
-        ExplicitWidth = 1150
+        ExplicitWidth = 1166
         ExplicitHeight = 417
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -540,6 +540,13 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 91
           end
+          object isInvisibleSUN: TcxGridDBColumn
+            Caption = #1053#1077#1074#1080#1076#1080#1084#1082#1072' '#1076#1083#1103' '#1086#1075#1088#1072#1085#1080#1095#1077#1085#1080#1081' '#1087#1086' '#1057#1059#1053
+            DataBinding.FieldName = 'isInvisibleSUN'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
         end
       end
     end
@@ -1057,6 +1064,9 @@ inherited GoodsForm: TGoodsForm
         end
         item
           StoredProc = spUpdate_inResolution_224
+        end
+        item
+          StoredProc = spUpdate_isInvisibleSUN
         end>
       Caption = 'UpdateDataSet'
       DataSource = MasterDS
@@ -2986,8 +2996,8 @@ inherited GoodsForm: TGoodsForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 192
-    Top = 336
+    Left = 200
+    Top = 296
   end
   object spUpdate_inResolution_224_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Goods_inResolution_224'
@@ -3235,5 +3245,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 1080
     Top = 315
+  end
+  object spUpdate_isInvisibleSUN: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inInvisibleSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ioisInvisibleSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isInvisibleSUN'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 200
+    Top = 352
   end
 end

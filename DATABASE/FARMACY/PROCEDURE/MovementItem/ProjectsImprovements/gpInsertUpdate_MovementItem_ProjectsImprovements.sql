@@ -1,0 +1,105 @@
+-- Function: gpInsertUpdate_MovementItem_ProjectsImprovements()
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProjectsImprovements(Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer, TVarChar, TVarChar, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProjectsImprovements(
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId             Integer   , -- Товары
+    IN inAmount              TFloat    , -- Количество
+    IN inPrice               TFloat    , --
+    IN inRemains_Amount      TFloat    , --
+    IN inCommentTRID         Integer   , -- Комментарий
+    IN isExplanation         TVarChar  , -- Количество
+    IN isComment             TVarChar  , -- Комментарий 2
+   OUT outDiffSumm           TFloat    , --
+   OUT outRemains_FactAmount TFloat    , --
+   OUT outRemains_FactSumm   TFloat    , --
+   OUT outDeficit            TFloat    , --
+   OUT outDeficitSumm        TFloat    , --
+   OUT outProficit           TFloat    , --
+   OUT outProficitSumm       TFloat    , --
+    IN inSession             TVarChar    -- сессия пользователя
+)
+AS
+$BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbMovementIncomeId Integer;
+   DECLARE vbAmountIncome TFloat;
+   DECLARE vbAmountOther TFloat;
+   DECLARE vbOperDate TDateTime;
+BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ProjectsImprovements());
+
+     IF ROUND(COALESCE(inRemains_Amount, 0) + inAmount, 4) < 0
+     THEN
+       RAISE EXCEPTION 'Ошибка.Фактическое количество не может быть ментше 0.';
+     END IF;
+
+/*     SELECT Movement.OperDate
+     INTO vbOperDate
+     FROM Movement
+     WHERE Movement.ID = inMovementId;
+
+     IF date_part('DAY',  vbOperDate)::Integer <= 15
+     THEN
+         vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '14 DAY';
+     ELSE
+         vbOperDate := date_trunc('month', vbOperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+     END IF;
+
+     -- Для роли "Кассир" проверяем период
+     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
+               WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = zc_Enum_Role_CashierPharmacy())
+        AND  vbOperDate < CURRENT_DATE
+     THEN
+         RAISE EXCEPTION 'Ошибка. По документу технической инвентаризации истек срок корректировки для кассиров аптек.';
+     END IF;
+*/
+     IF COALESCE(inCommentTRID, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не выбран <Комментарий к строке технического переучета>.';
+     END IF;
+
+     IF COALESCE(isExplanation, '') = '' AND EXISTS (SELECT 1 FROM ObjectBoolean
+                                                     WHERE ObjectBoolean.ObjectId = inCommentTRID
+                                                       AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentTR_Explanation()
+                                                       AND ObjectBoolean.ValueData = TRUE)
+     THEN
+         IF EXISTS (SELECT 1 FROM ObjectBoolean
+                    WHERE ObjectBoolean.ObjectId = inCommentTRID
+                      AND ObjectBoolean.DescId = zc_ObjectBoolean_CommentTR_Resort()
+                      AND ObjectBoolean.ValueData = TRUE)
+         THEN
+             RAISE EXCEPTION 'Ошибка. Проставьте номер пересорта в столбик "Пояснение" по порядку в документе (1,2,3 и тд).';
+         ELSE
+             RAISE EXCEPTION 'Ошибка. Не заполнено <Пояснение>.';
+         END IF;
+     END IF;
+
+     ioId := lpInsertUpdate_MovementItem_ProjectsImprovements(ioId, inMovementId, inGoodsId, inAmount, inCommentTRID, isExplanation, isComment, vbUserId);
+
+     outDiffSumm           := inAmount * inPrice;
+     outRemains_FactAmount := inRemains_Amount + inAmount;
+     outRemains_FactSumm   := (inRemains_Amount + inAmount) * inPrice;
+     outDeficit            := CASE WHEN inAmount < 0 THEN - inAmount ELSE 0 END;
+     outDeficitSumm        := CASE WHEN inAmount < 0 THEN - inAmount * inPrice ELSE 0 END;
+     outProficit           := CASE WHEN inAmount > 0 THEN inAmount ELSE 0 END;
+     outProficitSumm       := CASE WHEN inAmount > 0 THEN inAmount * inPrice ELSE 0 END;
+
+
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.15                        *
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_ProjectsImprovements (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
