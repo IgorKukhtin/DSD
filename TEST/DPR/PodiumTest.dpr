@@ -328,7 +328,9 @@ uses
   Report_MotionOLAPDialog in '..\..\FormsBoutique\Report\Report_MotionOLAPDialog.pas' {Report_MotionOLAPDialogForm: TParentForm},
   PriceListItem_Currency in '..\..\FormsBoutique\Guides\PriceListItem_Currency.pas' {PriceListItem_CurrencyForm: TParentForm},
   GoodsTag in '..\..\FormsBoutique\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
-  GoodsTagEdit in '..\..\FormsBoutique\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm};
+  GoodsTagEdit in '..\..\FormsBoutique\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
+  SendPodium in '..\..\FormsBoutique\Document\SendPodium.pas' {SendPodiumForm: TParentForm},
+  SendPodiumJournal in '..\..\FormsBoutique\Document\SendPodiumJournal.pas' {SendPodiumJournalForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

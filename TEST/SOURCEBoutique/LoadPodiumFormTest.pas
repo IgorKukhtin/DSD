@@ -934,10 +934,16 @@ begin
 end;
 procedure TLoadFormTest.LoadSendFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPodiumForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPodiumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendPodiumJournalForm');
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  }
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountPeriodItemBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountPeriodItemBySendDialogForm');
