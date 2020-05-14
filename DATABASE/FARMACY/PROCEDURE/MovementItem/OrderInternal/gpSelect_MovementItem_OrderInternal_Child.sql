@@ -18,6 +18,7 @@ RETURNS TABLE (Id                       Integer
              , GoodsCode                 TVarChar
              , GoodsName                 TVarChar
              , MainGoodsName             TVarChar
+             , NDS_PriceList             TVarChar
              , JuridicalId               Integer
              , JuridicalName             TVarChar
              , MakerName                 TVarChar
@@ -205,7 +206,34 @@ BEGIN
                              , MI_Child.Id
                              , MI_Child.ObjectId
                              , MI_Child.Amount
+                             , Object_Juridical.Id                  AS JuridicalId
+                             , Object_Juridical.ValueData           AS JuridicalName
+                             , Object_Contract.Id                   AS ContractId
+                             , Object_Contract.ValueData            AS ContractName
+                             , Object_Area.Id                       AS AreaId
+                             , Object_Area.ValueData                AS AreaName
                         FROM MovementItem AS MI_Child
+                             LEFT JOIN MovementItemFloat AS MIFloat_MovementItemId
+                                                         ON MIFloat_MovementItemId.MovementItemId = MI_Child.Id
+                                                        AND MIFloat_MovementItemId.DescId = zc_MIFloat_MovementItemId()
+
+                             LEFT JOIN MovementItem AS PriceListMovementItem
+                                                    ON PriceListMovementItem.Id = MIFloat_MovementItemId.ValueData::Integer
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                                          ON MovementLinkObject_Juridical.MovementId = PriceListMovementItem.MovementId
+                                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+                             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                          ON MovementLinkObject_Contract.MovementId = PriceListMovementItem.MovementId
+                                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+                              
+                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Area
+                                                          ON MovementLinkObject_Area.MovementId = PriceListMovementItem.MovementId
+                                                         AND MovementLinkObject_Area.DescId = zc_MovementLinkObject_Area()
+                             LEFT JOIN Object AS Object_Area ON Object_Area.Id = MovementLinkObject_Area.ObjectId
                         WHERE MI_Child.MovementId = inMovementId
                           AND MI_Child.DescId     = zc_MI_Child()
                           AND (MI_Child.IsErased = inIsErased OR inIsErased = TRUE)
@@ -281,9 +309,9 @@ BEGIN
                                  WHERE ObjectLink.ObjectId IN (SELECT DISTINCT tmpMI_Child.ObjectId FROM tmpMI_Child)
                                    AND ObjectLink.DescId = zc_ObjectLink_Goods_ConditionsKeep()
                                  )
-      , tmpGoods AS (SELECT tmpMI_Child.ObjectId             AS GoodsId
-                          , Object_Goods.ObjectCode          AS GoodsCode
-                          , Object_Goods.ValueData           AS GoodsName
+      , tmpGoods AS (SELECT tmpMI_Child.ObjectId                      AS GoodsId
+                          , ObjectString_Goods_Code.ValueData         AS GoodsCode
+                          , Object_Goods.ValueData                    AS GoodsName
                           , ObjectFloat_Goods_MinimumLot.ValueData    AS MinimumLot
                           , Object_ConditionsKeep.ValueData           AS ConditionsKeepName
                      FROM tmpMI_Child
@@ -296,6 +324,10 @@ BEGIN
                           LEFT JOIN tmpOF_MinimumLot AS ObjectFloat_Goods_MinimumLot
                                                      ON ObjectFloat_Goods_MinimumLot.ObjectId = tmpMI_Child.ObjectId
                                                --AND ObjectFloat_Goods_MinimumLot.DescId = zc_ObjectFloat_Goods_MinimumLot()
+
+                          LEFT JOIN ObjectString AS ObjectString_Goods_Code
+                                                 ON ObjectString_Goods_Code.ObjectId = tmpMI_Child.ObjectId
+                                                AND ObjectString_Goods_Code.DescId = zc_ObjectString_Goods_Code()
 
                           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_Child.ObjectId
                     )
@@ -329,17 +361,17 @@ BEGIN
              , MIFloat_Price.ValueData             ::TFLoat              AS Price
              , COALESCE(MIDate_PartionGoods.ValueData, NULL) ::TDateTime AS PartionGoodsDate
              , tmpMI.GoodsId
-             , tmpGoods.GoodsCode :: TVarChar                            AS GoodsCode
+             , tmpGoods.GoodsCode                                        AS GoodsCode
              , tmpGoods.GoodsName
              , Null :: TVarChar                                          AS MainGoodsName
              , CASE WHEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'0') <> '0' THEN COALESCE (tmpLoadPriceList_NDS.GoodsNDS,'') ELSE '' END  :: TVarChar AS NDS_PriceList
-             , tmpMI.JuridicalId
-             , tmpMI.JuridicalName
+             , COALESCE(MI_Child.JuridicalId, tmpMI.JuridicalId)
+             , COALESCE(MI_Child.JuridicalName, tmpMI.JuridicalName)
              , tmpMI.MakerName
-             , tmpMI.ContractId
-             , tmpMI.ContractName
-             , tmpJuridicalArea.AreaId                                   AS AreaId
-             , COALESCE (tmpJuridicalArea.AreaName, '')      :: TVarChar AS AreaName
+             , COALESCE(MI_Child.ContractId, tmpMI.ContractId)
+             , COALESCE(MI_Child.ContractName, tmpMI.ContractName)
+             , COALESCE(MI_Child.AreaId, tmpJuridicalArea.AreaId)        AS AreaId
+             , COALESCE (MI_Child.AreaName, tmpJuridicalArea.AreaName, '')      :: TVarChar AS AreaName
              , COALESCE (tmpJuridicalArea.isDefault, FALSE)  :: Boolean  AS isDefault
              , COALESCE (tmpContract.Deferment, 0)::Integer              AS Deferment
              , COALESCE(JuridicalSettings.Bonus, 0)::TFloat              AS Bonus

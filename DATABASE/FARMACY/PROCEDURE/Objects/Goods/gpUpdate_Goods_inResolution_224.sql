@@ -21,7 +21,7 @@ BEGIN
    vbUserId := lpGetUserBySession (inSession);
    
    -- сохранили свойство <Перечень аналогов товара>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectBoolean_Goods_Resolution_224(), inGoodsMainId, inisResolution_224);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Goods_Resolution_224(), inGoodsMainId, inisResolution_224);
    
     -- Сохранили в плоскую таблицй
    BEGIN

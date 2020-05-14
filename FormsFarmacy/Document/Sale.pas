@@ -113,6 +113,8 @@ type
     AmountDeferred: TcxGridDBColumn;
     InvNumber: TcxGridDBColumn;
     OperDate: TcxGridDBColumn;
+    PartNDS: TcxGridDBColumn;
+    actChoiceNDSKind: TOpenChoiceForm;
   private
     { Private declarations }
   public

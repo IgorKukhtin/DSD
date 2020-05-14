@@ -161,9 +161,16 @@ inherited SaleForm: TSaleForm
           object NDS: TcxGridDBColumn
             Caption = #1053#1044#1057', %'
             DataBinding.FieldName = 'NDS'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceNDSKind
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 68
           end
           object GoodsGroupName: TcxGridDBColumn
@@ -349,6 +356,14 @@ inherited SaleForm: TSaleForm
             GroupSummaryAlignment = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
+          end
+          object PartNDS: TcxGridDBColumn
+            Caption = #1053#1044#1057
+            DataBinding.FieldName = 'NDS'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 51
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -879,6 +894,41 @@ inherited SaleForm: TSaleForm
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1044#1072
       ImageIndex = 52
+    end
+    object actChoiceNDSKind: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actChoiceNDSKind'
+      FormName = 'TNDSKindForm'
+      FormNameParam.Value = 'TNDSKindForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NDSKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NDSKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'NDS'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'NDS'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1600,6 +1650,14 @@ inherited SaleForm: TSaleForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inNDSKindId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'NDSKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'outSumm'
         Value = Null
         Component = MasterCDS
@@ -1850,6 +1908,7 @@ inherited SaleForm: TSaleForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 409
   end

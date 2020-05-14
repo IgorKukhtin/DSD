@@ -52,7 +52,7 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
         COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0),
-        MovementDate_Insert.ValueData
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
         
     INTO
         outOperDate,

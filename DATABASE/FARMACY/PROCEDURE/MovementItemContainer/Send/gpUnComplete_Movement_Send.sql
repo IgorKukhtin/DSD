@@ -73,7 +73,7 @@ BEGIN
         COALESCE (MovementBoolean_SUN.ValueData, FALSE), 
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE), 
         COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE),
-        MovementDate_Insert.ValueData
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
     INTO
         vbOperDate,
         vbStatusID,

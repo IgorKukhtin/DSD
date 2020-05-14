@@ -677,6 +677,8 @@ type
     miReport_IncomeSale_UseNDSKind: TMenuItem;
     actReport_IncomeVATBalance: TdsdOpenForm;
     N235: TMenuItem;
+    actProjectsImprovements: TdsdOpenForm;
+    actProjectsImprovements1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

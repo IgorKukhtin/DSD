@@ -187,6 +187,12 @@ type
     macUpdateGoods_KoeffSUN_list: TMultiAction;
     macUpdateGoods_KoeffSUN: TMultiAction;
     bbUpdateGoods_KoeffSUN: TdxBarButton;
+    isInvisibleSUN: TcxGridDBColumn;
+    spUpdate_isInvisibleSUN: TdsdStoredProc;
+    actUpdateInvisibleSUN: TMultiAction;
+    ExecUpdate_isInvisibleSUN: TdsdExecStoredProc;
+    bbUpdateInvisibleSUN: TdxBarButton;
+    spUpdate_isInvisibleSUN_Revert: TdsdStoredProc;
   private
     { Private declarations }
   public

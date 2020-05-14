@@ -50,7 +50,7 @@ BEGIN
         COALESCE (ObjectFloat_OccupancySUN.ValueData, 0),
         MovementLinkObject_PartionDateKind.ObjectId,
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
-        MovementDate_Insert.ValueData
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -173,6 +173,9 @@ BEGIN
                                               , MovementItem.Amount
                                               , ROW_NUMBER() OVER (PARTITION BY MovementItemProtocol.MovementItemId ORDER BY MovementItemProtocol.Id) AS Ord
                                          FROM MovementItem
+                                              INNER JOIN Object_Goods_Retail ON Object_Goods_Retail.ID = MovementItem.objectid
+                                              INNER JOIN Object_Goods_Main ON Object_Goods_Main.ID = Object_Goods_Retail.GoodsMainId
+                                                                          AND Object_Goods_Main.isInvisibleSUN = False
                                               INNER JOIN MovementItemProtocol ON MovementItemProtocol.MovementItemId = MovementItem.Id
                                                                              AND MovementItemProtocol.ProtocolData ILIKE '%Значение%'
                                                                              AND MovementItemProtocol.UserId = zfCalc_UserAdmin()::Integer

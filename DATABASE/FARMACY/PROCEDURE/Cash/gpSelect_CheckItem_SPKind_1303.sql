@@ -106,13 +106,12 @@ BEGIN
                    IF vbPersent = 10 THEN  outError :=  'Ошибка. Запрет на отпуск товара по ПКМУ 1303 с наценкой более 10 процентов'||Chr(13)||Chr(10)||'(для товара с приходной ценой свыше 1000грн)'; END IF;
                    outError2 :=  Chr(13)||Chr(10)||'Сделать PrintScreen экрана с ошибкой и отправить на Skype своему менеджеру для  исправления Цены реализации'||Chr(13)||Chr(10)||'(после исправления - препарат можно отпустить по рецепту)';
             END IF;
-
-            outPrice := trunc(vbPriceCalc * 10) / 10;
             
             -- Предложение по цене
             IF (COALESCE (vbPriceCalc,0) < inPriceSale) AND (COALESCE (trunc(vbPriceCalc * 10) / 10, 0) > 0)
             THEN
                    outSentence :=  'Применить максимально допустимую цену - '||to_char(outPrice, 'G999G999G999G999D99');
+                   outPrice := trunc(vbPriceCalc * 10) / 10;
             END IF;
     END IF;
 

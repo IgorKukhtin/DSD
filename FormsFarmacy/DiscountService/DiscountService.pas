@@ -718,7 +718,7 @@ begin
         Result:= True //!!!все ОК и Чек можно сохранить!!!
 
       else
-      if (gCode = 3) then
+      if (gCode = 3) or (gCode = 4) and (gUserName <> '') then
       begin
         CheckCDS.First;
         while not CheckCDS.Eof do
@@ -1343,7 +1343,7 @@ begin
           end;
 
       end // if BarCode_find <> ''
-      else   if (BarCode_find <> '') and (gCode = 3) then
+      else   if (BarCode_find <> '') and ((gCode = 3) OR (gCode = 4) and (gUserName <> '')) then
       begin
 
           //получение кода дистрибьюторов

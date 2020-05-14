@@ -23,6 +23,7 @@ $BODY$
   DECLARE vbMemberSPId  Integer;
   DECLARE vbCount       Integer;
   DECLARE vbIsDeferred  Boolean;
+  DECLARE vbNDS         TVarChar;
 BEGIN
     vbUserId:= inSession;
     vbGoodsName := '';
@@ -52,7 +53,7 @@ BEGIN
 
 
     IF (SELECT MovementLinkObject_SPKind.ObjectId AS SPKindId
-        FROM Movement 
+        FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_SPKind
                                           ON MovementLinkObject_SPKind.MovementId = Movement.Id
                                          AND MovementLinkObject_SPKind.DescId = zc_MovementLinkObject_SPKind()
@@ -181,32 +182,83 @@ BEGIN
                    FROM MovementItemContainer
                    WHERE MovementItemContainer.MovementId = inMovementId
                    GROUP BY MovementItemContainer.MovementItemId)
+       , MI_Sale AS(SELECT MI_Sale.GoodsId
+                         , MI_Sale.GoodsName
+                         , MI_Sale.NDS
+                         , MI_Sale.NDSKindId
+                         , SUM(MI_Sale.Amount)                                                      AS Amount
+                         , SUM(COALESCE(MI_Sale.Amount,0) + COALESCE(HeldBy.Amount, 0))             AS Saldo
+                    FROM MovementItem_Sale_View AS MI_Sale
+                         LEFT OUTER JOIN HeldBy AS HeldBy
+                                                ON MI_Sale.ID = HeldBy.MovementItemId
+                    WHERE MI_Sale.MovementId = inMovementId
+                      AND MI_Sale.isErased = FALSE
+                    GROUP BY MI_Sale.GoodsId
+                           , MI_Sale.GoodsName
+                           , MI_Sale.NDS
+                           , MI_Sale.NDSKindId
+                    HAVING SUM(COALESCE(MI_Sale.Amount,0) + COALESCE(HeldBy.Amount, 0)) > 0)
+       , tmpContainer AS(SELECT MI_Sale.GoodsId
+                              , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                       OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                     THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END  AS NDSKindId
+                              , SUM(Container.Amount)                                                          AS Amount
+
+                         FROM MI_Sale AS MI_Sale
+
+                              LEFT OUTER JOIN Container ON MI_Sale.GoodsId = Container.ObjectId
+                                                       AND Container.WhereObjectId = vbUnitId
+                                                       AND Container.DescId = zc_Container_Count()
+                                                       AND Container.Amount > 0
+                              LEFT OUTER JOIN Object_Goods_Retail AS Object_Goods_Retail ON Object_Goods_Retail.Id = Container.ObjectId
+                              LEFT OUTER JOIN Object_Goods_Main AS Object_Goods ON Object_Goods.Id = Object_Goods_Retail.GoodsMainId
+
+                              -- партия
+                              INNER JOIN ContainerLinkObject AS CLI_MI
+                                                             ON CLI_MI.ContainerId = Container.Id
+                                                            AND CLI_MI.descid = zc_ContainerLinkObject_PartionMovementItem()
+                              INNER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                              -- элемент прихода
+                              INNER JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                              INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                              -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                              LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                          ON MIFloat_MovementItem.MovementItemId = MovementItem.Id
+                                                         AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                              -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                              LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+
+                              LEFT OUTER JOIN MovementBoolean AS MovementBoolean_UseNDSKind
+                                                              ON MovementBoolean_UseNDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                                             AND MovementBoolean_UseNDSKind.DescId = zc_MovementBoolean_UseNDSKind()
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_NDSKind
+                                                           ON MovementLinkObject_NDSKind.MovementId = COALESCE (MI_Income_find.MovementId,MovementItem.MovementId)
+                                                          AND MovementLinkObject_NDSKind.DescId = zc_MovementLinkObject_NDSKind()
+                          GROUP BY MI_Sale.GoodsId
+                                 , CASE WHEN COALESCE (MovementBoolean_UseNDSKind.ValueData, FALSE) = FALSE
+                                          OR COALESCE(MovementLinkObject_NDSKind.ObjectId, 0) = 0
+                                        THEN Object_Goods.NDSKindId ELSE MovementLinkObject_NDSKind.ObjectId END
+                          HAVING SUM(MI_Sale.Amount) >  0)
 
     SELECT MI_Sale.GoodsName
          , COALESCE(MI_Sale.Amount,0)
-         , COALESCE(SUM(Container.Amount),0) + COALESCE(HeldBy.Amount,0)
+         , zfConvert_FloatToString (MI_Sale.NDS)||'%'
+         , COALESCE(Container.Amount,0)
     INTO
         vbGoodsName
       , vbAmount
+      , vbNDS
       , vbSaldo
-    FROM MovementItem_Sale_View AS MI_Sale
-        LEFT OUTER JOIN HeldBy AS HeldBy
-                               ON MI_Sale.ID = HeldBy.MovementItemId
-        LEFT OUTER JOIN Container ON MI_Sale.GoodsId = Container.ObjectId
-                                 AND Container.WhereObjectId = vbUnitId
-                                 AND Container.DescId = zc_Container_Count()
-                                 AND Container.Amount > 0
-    WHERE MI_Sale.MovementId = inMovementId
-      AND MI_Sale.isErased = FALSE
-    GROUP BY MI_Sale.GoodsId
-           , MI_Sale.GoodsName
-           , MI_Sale.Amount
-           , HeldBy.Amount
-    HAVING (COALESCE (MI_Sale.Amount, 0) - COALESCE(HeldBy.Amount,0)) > COALESCE (SUM (Container.Amount) ,0);
+    FROM MI_Sale AS MI_Sale
+
+        LEFT OUTER JOIN tmpContainer AS Container
+                                     ON Container.GoodsId = MI_Sale.GoodsId
+                                    AND Container.NDSKindId =  MI_Sale.NDSKindId
+    WHERE MI_Sale.Saldo > COALESCE(Container.Amount, 0);
 
     IF (COALESCE(vbGoodsName,'') <> '')
     THEN
-        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbSaldo;
+        RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во продажи <%> c НДС <%> больше, чем есть на остатке <%>.', vbGoodsName, vbAmount, vbNDS, vbSaldo;
     END IF;
 
 
@@ -261,6 +313,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Шаблий О.В.
+ 11.05.20                                                                       *               
  01.08.19                                                                       *
  05.06.18         *
  03.04.17         *

@@ -25,7 +25,13 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             , WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
+             --, WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
+             , WeightAvg_Sh TFloat, WeightAvg_Nom TFloat, WeightAvg_Ves TFloat
+             , Tax_Sh TFloat, Tax_Nom TFloat, Tax_Ves TFloat
+             , WeightMin_Sh  TFloat, WeightMax_Sh  TFloat
+             , WeightMin_Nom TFloat, WeightMax_Nom TFloat
+             , WeightMin_Ves TFloat, WeightMax_Ves TFloat
+             
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , isOrder Boolean, isScaleCeh Boolean, isNotMobile Boolean
@@ -188,9 +194,24 @@ BEGIN
            , tmpGoodsByGoodsKind.WeightTotal
            , tmpGoodsByGoodsKind.ChangePercentAmount
 
-           , tmpGoodsByGoodsKind.WeightMin
-           , tmpGoodsByGoodsKind.WeightMax
-           , tmpGoodsByGoodsKind.WeightAvg
+           --, tmpGoodsByGoodsKind.WeightMin
+           --, tmpGoodsByGoodsKind.WeightMax
+           --, tmpGoodsByGoodsKind.WeightAvg
+
+           , tmpGoodsByGoodsKind.WeightAvg_Sh
+           , tmpGoodsByGoodsKind.WeightAvg_Nom
+           , tmpGoodsByGoodsKind.WeightAvg_Ves
+           , tmpGoodsByGoodsKind.Tax_Sh
+           , tmpGoodsByGoodsKind.Tax_Nom
+           , tmpGoodsByGoodsKind.Tax_Ves
+
+           , tmpGoodsByGoodsKind.WeightMin_Sh
+           , tmpGoodsByGoodsKind.WeightMax_Sh
+           , tmpGoodsByGoodsKind.WeightMin_Nom
+           , tmpGoodsByGoodsKind.WeightMax_Nom
+           , tmpGoodsByGoodsKind.WeightMin_Ves
+           , tmpGoodsByGoodsKind.WeightMax_Ves
+           
            , tmpGoodsByGoodsKind.Height
            , tmpGoodsByGoodsKind.Length
            , tmpGoodsByGoodsKind.Width

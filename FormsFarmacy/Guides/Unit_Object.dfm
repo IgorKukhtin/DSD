@@ -1714,6 +1714,129 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object Action1: TAction
       Caption = 'Action1'
     end
+    object ExecuteDialogUnit_SunIncome: TExecuteDialog
+      Category = 'SunIncome'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      ImageIndex = 26
+      FormName = 'TUnit_SunIncome_EditForm'
+      FormNameParam.Value = 'TUnit_SunIncome_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inSunIncome'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inSunIncome'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inSun_v2Income'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inSun_v2Income'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inSun_v4Income'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inSun_v4Income'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v1'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v1'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v2'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v2'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v4'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v4'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Unit_SunIncome: TdsdDataSetRefresh
+      Category = 'SunIncome'
+      MoveParams = <>
+      StoredProc = spUpdate_Unit_SunIncome
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_SunIncome
+        end>
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdateUnit_SunIncome_list: TMultiAction
+      Category = 'SunIncome'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_SunIncome
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      ImageIndex = 43
+    end
+    object macUpdateUnit_SunIncome: TMultiAction
+      Category = 'SunIncome'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUnit_SunIncome
+        end
+        item
+          Action = macUpdateUnit_SunIncome_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1087#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090'. ('#1073#1083#1086#1082#1080#1088#1091#1077#1084' '#1057#1059#1053' v1, v' +
+        '2, v2-'#1055#1048')'
+      ImageIndex = 42
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -1925,6 +2048,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateUnit_SunIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateisReport'
         end
         item
@@ -2111,6 +2242,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
     object bbUpdateUnit_T_SUN: TdxBarButton
       Action = macUpdateUnit_T_SUN
+      Category = 0
+    end
+    object bbUpdateUnit_SunIncome: TdxBarButton
+      Action = macUpdateUnit_SunIncome
       Category = 0
     end
   end
@@ -3023,6 +3158,27 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v1'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v2'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v4'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 29
     Top = 146
@@ -3306,5 +3462,76 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 944
     Top = 203
+  end
+  object spUpdate_Unit_SunIncome: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SunIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v1'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v2'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v4'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSunIncome'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSunIncome'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSun_v2Income'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSun_v2Income'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSun_v4Income'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSun_v4Income'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1104
+    Top = 123
   end
 end

@@ -87,9 +87,48 @@ CREATE OR REPLACE FUNCTION zc_MIFloat_PriceJur() RETURNS Integer AS $BODY$BEGIN 
 INSERT INTO MovementItemFloatDesc(Code, ItemName)
   SELECT 'zc_MIFloat_PriceJur', 'цена без ск.' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_PriceJur');
 
+CREATE OR REPLACE FUNCTION zc_MIFloat_SummChangePercent_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummChangePercent_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_SummChangePercent_curr', 'Сумма дополнительной Скидки (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_SummChangePercent_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalChangePercent_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalChangePercent_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalChangePercent_curr', 'Итого сумма Скидки (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalChangePercent_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalChangePercentPay_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalChangePercentPay_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalChangePercentPay_curr', 'Итого сумма скидки (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalChangePercentPay_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalPay_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPay_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalPay_curr', 'Итого сумма оплаты (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPay_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalPayOth_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPayOth_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalPayOth_curr', 'Итого сумма оплаты (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPayOth_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalReturn_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalReturn_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalReturn_curr', 'Итого сумма возврата со скидкой (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalReturn_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_TotalPayReturn_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPayReturn_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_TotalPayReturn_curr', 'Итого сумма возврата оплаты (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_TotalPayReturn_curr');
+
+CREATE OR REPLACE FUNCTION zc_MIFloat_OperPriceList_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OperPriceList_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemFloatDesc(Code, ItemName)
+  SELECT 'zc_MIFloat_OperPriceList_curr', 'Цена Прайс (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_OperPriceList_curr');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+ 13.05.20         * zc_MIFloat_SummChangePercent_curr
+                    zc_MIFloat_TotalChangePercent_curr
+                    zc_MIFloat_TotalChangePercentPay_curr
+                    zc_MIFloat_TotalPay_curr
+                    zc_MIFloat_TotalPayOth_curr
+                    zc_MIFloat_TotalReturn_curr
+                    zc_MIFloat_TotalPayReturn_curr
  05.02.19         * zc_MIFloat_PriceJur
  25.05.17                                                          *
  08.05.17         * zc_MIFloat_AmountSecondRemains

@@ -120,9 +120,14 @@ CREATE OR REPLACE FUNCTION zc_MIBoolean_isTestingUser() RETURNS Integer AS $BODY
 INSERT INTO MovementItemBooleanDesc (Code, ItemName)
   SELECT 'zc_MIBoolean_isTestingUser', 'Ручной признак сдачи экзамена' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_isTestingUser'); 
 
+CREATE OR REPLACE FUNCTION zc_MIBoolean_ApprovedBy() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ApprovedBy'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemBooleanDesc (Code, ItemName)
+  SELECT 'zc_MIBoolean_ApprovedBy', 'Утверждено' WHERE NOT EXISTS (SELECT * FROM MovementItemBooleanDesc WHERE Code = 'zc_MIBoolean_ApprovedBy'); 
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.   Шаблий О.В.
+ 13.05.20                                                                       * zc_MIBoolean_ApprovedBy
  10.01.20                                                                       * zc_MIBoolean_isTestingUser
  21.09.19                                                                       * zc_MIBoolean_ServiceExitv
  01.09.19                                                                       * zc_MIBoolean_isIssuedBy

@@ -51,7 +51,7 @@ BEGIN
          , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)::Boolean  AS isSUN_v2
          , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)::Boolean  AS isSUN_v3
          , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)::Boolean  AS isDefSUN
-         , MovementDate_Insert.ValueData
+         , DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
     INTO vbUnitId, vbIsSUN, vbIsSUN_v2, vbIsSUN_v3, vbIsDefSUN, vbInsertDate
     FROM Movement 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To

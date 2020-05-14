@@ -3039,6 +3039,14 @@
 				<Form>Goods_KoeffSUN_EditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\ProjectsImprovementsJournal.pas">
+				<Form>ProjectsImprovementsJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_SunIncome_Edit.pas">
+				<Form>Unit_SunIncome_EditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

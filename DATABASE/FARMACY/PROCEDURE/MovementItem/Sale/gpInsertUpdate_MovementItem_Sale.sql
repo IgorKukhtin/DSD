@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioPrice               TFloat    , -- Цена
  INOUT ioPriceSale           TFloat    , -- Цена без скидки
     IN inChangePercent       TFloat    , -- % скидки
+    IN inNDSKindId           Integer   , -- НДС
    OUT outSumm               TFloat    , -- Сумма
    OUT outIsSp               Boolean   , --
     IN inSession             TVarChar    -- сессия пользователя
@@ -33,6 +35,14 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
     vbUserId := inSession;
+
+    IF COALESCE (inNDSKindId, 0) = 0
+    THEN
+      inNDSKindId := COALESCE((SELECT Object_Goods_Main.NDSKindId FROM  Object_Goods_Retail
+                                      LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
+                               WHERE Object_Goods_Retail.Id = inGoodsId), zc_Enum_NDSKind_Medical());
+    
+    END IF;
 
     -- Получили признак отложен
     SELECT COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean
@@ -109,8 +119,7 @@ BEGIN
              WHERE tt.Ord = 1;
 
             -- проверка  Цена < 100грн – максимальна торгівельна надбавка може складати 25%. від 100 до 500 грн – надбавка на рівні 20%. Від 500 до 1000 – 15%. Понад 1000 грн надбавка на рівні 10%.
-            IF (COALESCE(ioId, 0) = 0) AND (COALESCE (vbPriceCalc,0) <> 0) 
-               AND vbUnitId in (13338606, 9771036)
+            IF (COALESCE(ioId, 0) = 0) AND (COALESCE (vbPriceCalc,0) <> 0)
             THEN
               ioPriceSale := trunc(vbPriceCalc * 10) / 10;
             ELSEIF (COALESCE (vbPriceCalc,0) < ioPriceSale) AND (COALESCE (vbPriceCalc,0) <> 0)
@@ -211,6 +220,7 @@ BEGIN
                                             , inChangePercent      := inChangePercent
                                             , inSumm               := outSumm
                                             , inisSp               := COALESCE(outIsSp,False) ::Boolean
+                                            , inNDSKindId          := inNDSKindId 
                                             , inUserId             := vbUserId
                                              );
 
@@ -261,6 +271,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.    Воробкало А.А.  Шаблий О.В.
+ 11.05.20                                                                                      *               
  26.11.19         *
  01.08.19                                                                                      *
  05.06.18         *

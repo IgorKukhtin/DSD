@@ -28,7 +28,7 @@ BEGIN
         Movement_To.ObjectId AS Unit_To,
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
-        MovementDate_Insert.ValueData
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
     INTO
         vbFromId,
         vbUnitId,

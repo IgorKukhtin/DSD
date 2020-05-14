@@ -695,6 +695,7 @@ BEGIN
                                , NULL                                                                  AS PriceWithVAT
                           FROM tmpReserve AS Reserve
                              LEFT OUTER JOIN tmpGoodsRemains ON Reserve.GoodsId = tmpGoodsRemains.ObjectId
+                                                            AND Reserve.NDSKindId = tmpGoodsRemains.NDSKindId
                           WHERE COALESCE(tmpGoodsRemains.ObjectId, 0) = 0
                             AND COALESCE (Reserve.ContainerId, 0 ) = 0
                             AND Reserve.Amount <> 0

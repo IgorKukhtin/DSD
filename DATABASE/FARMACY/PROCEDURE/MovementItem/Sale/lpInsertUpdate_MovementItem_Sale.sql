@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, Boolean, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -13,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inChangePercent       TFloat    , -- % Скидки
     IN inSumm                TFloat    , -- сумма
     IN inisSP                Boolean   , -- участвует в Соц. проекте
+    IN inNDSKindId           Integer   , -- НДС
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -38,6 +40,9 @@ BEGIN
     -- сохранили <>
     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_SP(), ioId, inisSP);
 
+    -- сохранили свойство <НДС>
+    PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_NDSKind(), ioId, inNDSKindId);
+
 
     -- пересчитали Итоговые суммы по накладной
     PERFORM lpInsertUpdate_MovementFloat_TotalSummSaleExactly (inMovementId);
@@ -51,7 +56,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 11.05.20                                                                                     *               
  09.02.17         *
  13.10.15                                                                       *
  */
