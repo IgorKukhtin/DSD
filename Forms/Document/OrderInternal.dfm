@@ -234,6 +234,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPrognozTerm_calc_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -448,6 +453,11 @@ inherited OrderInternalForm: TOrderInternalForm
               Format = ',0.####'
               Kind = skSum
               Column = AmountPrognozTerm_calc_sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = Amount_sh
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -1112,6 +1122,7 @@ inherited OrderInternalForm: TOrderInternalForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
