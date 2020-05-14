@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
+             , TotalSummPriceListTo_start TFloat, TotalSummPriceListTo TFloat
              , FromName TVarChar, ToName TVarChar
              , Comment TVarChar
              , isProtocol Boolean
@@ -80,7 +81,10 @@ BEGIN
            , MovementFloat_TotalCount.ValueData          AS TotalCount
            , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
            , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
-        
+
+           , MovementFloat_TotalSummPriceListTo_start.ValueData AS TotalSummPriceListTo_start
+           , MovementFloat_TotalSummPriceListTo.ValueData       AS TotalSummPriceListTo
+
            , Object_From.ValueData                       AS FromName
            , Object_To.ValueData                         AS ToName
 
@@ -109,6 +113,13 @@ BEGIN
                                     ON MovementFloat_TotalSummBalance.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummBalance.DescId = zc_MovementFloat_TotalSummBalance()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceListTo_start
+                                    ON MovementFloat_TotalSummPriceListTo_start.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPriceListTo_start.DescId = zc_MovementFloat_TotalSummPriceListTo_start()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceListTo
+                                    ON MovementFloat_TotalSummPriceListTo.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPriceListTo.DescId = zc_MovementFloat_TotalSummPriceListTo()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -128,6 +139,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 14.05.20         *
  03.05.18         * add protocol
  14.06.17         * add TotalSummBalance
  25.04.17         *

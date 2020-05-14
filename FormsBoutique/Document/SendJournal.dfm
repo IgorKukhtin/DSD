@@ -154,6 +154,16 @@ object SendJournalForm: TSendJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceListTo_start
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceListTo
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -207,6 +217,16 @@ object SendJournalForm: TSendJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = TotalSummBalance
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceListTo_start
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = TotalSummPriceListTo
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -302,6 +322,30 @@ object SendJournalForm: TSendJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummPriceListTo_start: TcxGridDBColumn
+        Caption = 'C'#1091#1084#1084#1072' '#1087#1077#1095'. '#1094#1077#1085#1080#1082#1086#1074' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1043#1056#1053')'
+        DataBinding.FieldName = 'TotalSummPriceListTo_start'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1077#1095#1072#1090#1100' '#1094#1077#1085#1080#1082#1086#1074' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1043#1056#1053')'
+        Options.Editing = False
+        Width = 93
+      end
+      object TotalSummPriceListTo: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1043#1056#1053')'
+        DataBinding.FieldName = 'TotalSummPriceListTo'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1087#1088#1072#1081#1089#1091' ('#1074' '#1043#1056#1053')'
+        Options.Editing = False
         Width = 80
       end
       object isProtocol: TcxGridDBColumn
@@ -1378,6 +1422,7 @@ object SendJournalForm: TSendJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end
