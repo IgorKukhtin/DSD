@@ -471,6 +471,7 @@ BEGIN
                         THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Ves.ValueData,0)
                    ELSE tmpGoodsPropertyBox.WeightOnBox
               END :: TFloat AS WeightOnBox_Ves
+
               -- Кол-во кг. в ящ. (E2/E3)
             , tmpGoodsPropertyBox.WeightOnBox
 
