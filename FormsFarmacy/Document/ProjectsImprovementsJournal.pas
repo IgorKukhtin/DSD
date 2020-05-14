@@ -60,6 +60,24 @@ type
     detTitle: TcxGridDBColumn;
     UserName: TcxGridDBColumn;
     spUpdateMovement_ApprovedBy: TdsdStoredProc;
+    DBViewAddOnDetail: TdsdDBViewAddOn;
+    actUpdateMovement_ApprovedBy: TdsdExecStoredProc;
+    dxBarButton4: TdxBarButton;
+    spUpdateMovementItem_ApprovedBy: TdsdStoredProc;
+    actUpdateMovementItem_ApprovedBy: TdsdExecStoredProc;
+    spUpdateMovementItem_Performed: TdsdStoredProc;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    dxBarButton5: TdxBarButton;
+    dxBarButton6: TdxBarButton;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
+    actMISetErased: TdsdUpdateErased;
+    actMISetUnErased: TdsdUpdateErased;
+    dxBarButton7: TdxBarButton;
+    dxBarButton8: TdxBarButton;
+    MovementItemProtocolOpenForm: TdsdOpenForm;
+    dxBarButton9: TdxBarButton;
+    dclisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

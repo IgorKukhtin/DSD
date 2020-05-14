@@ -35,7 +35,9 @@ BEGIN
            , Movement.InvNumber                                     AS InvNumber
            , Movement.OperDate                                      AS OperDate
            , Object_Status.ObjectCode                               AS StatusCode
-           , Object_Status.ValueData                                AS StatusName
+           , CASE Movement.StatusId WHEN zc_Enum_Status_Complete() THEN 'Выполнено'
+                                    WHEN zc_Enum_Status_UnComplete() THEN 'Не выполнено'
+                                    ELSE 'Удален' END::TVarChar     AS StatusName
            , COALESCE (MovementBoolean_ApprovedBy.ValueData, False) AS isApprovedBy
            
            , Object_User.ValueData                                  AS UserName
