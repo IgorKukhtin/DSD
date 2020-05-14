@@ -36,6 +36,10 @@ $BODY$
   DECLARE vbTotalSummChangePay_curr TFloat;
   DECLARE vbTotalSummPay_curr TFloat;
   DECLARE vbTotalSumm_curr TFloat;
+  
+  DECLARE vbTotalSummPriceListTo_start TFloat;
+  DECLARE vbTotalSummPriceListTo TFloat;
+  
 /*  DECLARE vbTotalCountSecond TFloat;
 */
 BEGIN
@@ -89,6 +93,9 @@ BEGIN
           , SUM (COALESCE (MIFloat_TotalChangePercentPay_curr.ValueData,0))                                     AS TotalSummChangePay_curr  
           , SUM (COALESCE (MIFloat_TotalPay_curr.ValueData,0) )                                                 AS TotalSummPay_curr  
           , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm_curr
+          
+          , SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceListTo_start.ValueData))               AS TotalSummPriceListTo_start
+          , SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceListTo.ValueData))                     AS TotalSummPriceListTo
 
             INTO vbTotalCount, vbTotalSumm, vbTotalSummJur, vbTotalSummBalance, vbTotalSummPriceList
                , vbTotalSummChange, vbTotalSummPay
@@ -101,6 +108,8 @@ BEGIN
                , vbTotalSummChangePay_curr
                , vbTotalSummPay_curr
                , vbTotalSumm_curr
+               , vbTotalSummPriceListTo_start
+               , vbTotalSummPriceListTo
        
        FROM MovementItem
             LEFT JOIN Object_PartionGoods ON Object_PartionGoods.MovementItemId = MovementItem.PartionId
@@ -108,6 +117,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPriceList.DescId = zc_MIFloat_OperPriceList()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo_start
+                                        ON MIFloat_OperPriceListTo_start.MovementItemId = MovementItem.Id
+                                       AND MIFloat_OperPriceListTo_start.DescId = zc_MIFloat_OperPriceList()
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceListTo
+                                        ON MIFloat_OperPriceListTo.MovementItemId = MovementItem.Id
+                                       AND MIFloat_OperPriceListTo.DescId = zc_MIFloat_OperPriceList()
 
             LEFT JOIN MovementItemFloat AS MIFloat_PriceJur
                                         ON MIFloat_PriceJur.MovementItemId = MovementItem.Id
@@ -224,7 +240,12 @@ BEGIN
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPay_curr(), inMovementId, vbTotalSummPay_curr);   
              -- Сохранили свойство <Итого сумма вх. по документу (в валюте)>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_curr(), inMovementId, vbTotalSumm_curr);               
-               
+
+             -- Сохранили свойство <Итого сумма печать цеников по PriceList (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPriceListTo_start(), inMovementId, vbTotalSummPriceListTo_start);
+             -- Сохранили свойство <Итого сумма перемещения по PriceList (в ГРН)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPriceListTo(), inMovementId, vbTotalSummPriceListTo);
+             
              -- Сохранили свойство <Итого сумма скидки в ГРН>
              -- PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChangePay(), inMovementId, vbTotalSummChangePay);
              -- Сохранили свойство <Итого сумма оплаты (в ГРН)>
