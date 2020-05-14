@@ -5,9 +5,8 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -403
   ExplicitWidth = 1055
-  ExplicitHeight = 455
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -357,98 +356,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Options.Editing = False
             Width = 60
           end
-          object isOrder: TcxGridDBColumn
-            Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
-            DataBinding.FieldName = 'isOrder'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object isScaleCeh: TcxGridDBColumn
-            Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' ScaleCeh'
-            DataBinding.FieldName = 'isScaleCeh'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 96
-          end
-          object isNotMobile: TcxGridDBColumn
-            Caption = #1053#1045' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1052#1086#1073#1080#1083#1100#1085#1086#1084' '#1072#1075#1077#1085#1090#1077
-            DataBinding.FieldName = 'isNotMobile'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 110
-          end
-          object Tax_Sh: TcxGridDBColumn
-            Caption = '% '#1086#1090#1082#1083'. '#1064#1090'.'
-            DataBinding.FieldName = 'Tax_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1064#1090'.'
-            Width = 55
-          end
-          object Tax_Nom: TcxGridDBColumn
-            Caption = '% '#1086#1090#1082#1083'. '#1053#1086#1084'.'
-            DataBinding.FieldName = 'Tax_Nom'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1086#1084#1080#1085#1072#1083
-            Width = 55
-          end
-          object Tax_Ves: TcxGridDBColumn
-            Caption = '% '#1086#1090#1082#1083'. '#1053#1077#1085#1086#1084'.'
-            DataBinding.FieldName = 'Tax_Ves'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1077#1085#1086#1084#1080#1085#1072#1083
-            Width = 55
-          end
-          object WeightAvg_Sh: TcxGridDBColumn
-            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'.  '#1064#1090'.'
-            DataBinding.FieldName = 'WeightAvg_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1064#1090'.'
-            Width = 70
-          end
-          object WeightAvg_Nom: TcxGridDBColumn
-            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1086#1084'.'
-            DataBinding.FieldName = 'WeightAvg_Nom'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1086#1084#1080#1085#1072#1083
-            Width = 70
-          end
-          object WeightAvg_Ves: TcxGridDBColumn
-            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1077#1085#1086#1084'.'
-            DataBinding.FieldName = 'WeightAvg_Ves'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = '0.####;-0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1077#1085#1086#1084#1080#1085#1072#1083
-            Width = 70
-          end
           object WeightMin_Sh: TcxGridDBColumn
             Caption = #1052#1080#1085'. '#1074#1077#1089' 1 '#1077#1076'. '#1064#1090'.'
             DataBinding.FieldName = 'WeightMin_Sh'
@@ -526,6 +433,98 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderHint = #1042#1052#1057' - '#1084#1072#1082#1089#1080#1084#1072#1083#1100#1085#1099#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1077#1085#1086#1084#1080#1085#1072#1083
             Options.Editing = False
             Width = 70
+          end
+          object WeightAvg_Sh: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'.  '#1064#1090'.'
+            DataBinding.FieldName = 'WeightAvg_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1064#1090'.'
+            Width = 70
+          end
+          object WeightAvg_Nom: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1086#1084'.'
+            DataBinding.FieldName = 'WeightAvg_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1086#1084#1080#1085#1072#1083
+            Width = 70
+          end
+          object WeightAvg_Ves: TcxGridDBColumn
+            Caption = 'C'#1088'. '#1074#1077#1089' 1 '#1077#1076'. '#1053#1077#1085#1086#1084'.'
+            DataBinding.FieldName = 'WeightAvg_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1042#1052#1057' - '#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089' '#1086#1076#1085#1086#1081' '#1077#1076#1080#1085#1080#1094#1099' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1077#1085#1086#1084#1080#1085#1072#1083
+            Width = 70
+          end
+          object isOrder: TcxGridDBColumn
+            Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' '#1079#1072#1103#1074#1082#1072#1093
+            DataBinding.FieldName = 'isOrder'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object isScaleCeh: TcxGridDBColumn
+            Caption = #1048#1089#1087#1086#1083#1100#1079#1091#1077#1090#1089#1103' '#1074' ScaleCeh'
+            DataBinding.FieldName = 'isScaleCeh'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
+          object isNotMobile: TcxGridDBColumn
+            Caption = #1053#1045' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1074' '#1052#1086#1073#1080#1083#1100#1085#1086#1084' '#1072#1075#1077#1085#1090#1077
+            DataBinding.FieldName = 'isNotMobile'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object Tax_Sh: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. '#1064#1090'.'
+            DataBinding.FieldName = 'Tax_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1064#1090'.'
+            Width = 55
+          end
+          object Tax_Nom: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. '#1053#1086#1084'.'
+            DataBinding.FieldName = 'Tax_Nom'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1086#1084#1080#1085#1072#1083
+            Width = 55
+          end
+          object Tax_Ves: TcxGridDBColumn
+            Caption = '% '#1086#1090#1082#1083'. '#1053#1077#1085#1086#1084'.'
+            DataBinding.FieldName = 'Tax_Ves'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = '0.####;-0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = '% '#1086#1090#1082#1083#1086#1085#1077#1085#1080#1103' '#1053#1077#1085#1086#1084#1080#1085#1072#1083
+            Width = 55
           end
           object Height: TcxGridDBColumn
             Caption = #1042#1099#1089#1086#1090#1072
@@ -853,7 +852,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1084#1080#1085'. '#1074#1077#1089#1091' (E2/E3) '#1053#1086#1084#1080#1085#1072#1083'.'
+            HeaderHint = #1052#1080#1085#1080#1084#1072#1083#1100#1085#1099#1081' '#1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086#1083#1085#1086#1075#1086' '#1103#1097#1080#1082#1072' '#1082#1072#1090#1077#1075#1086#1088#1080#1080' '#1053#1086#1084#1080#1085#1072#1083'.'
             Options.Editing = False
             Width = 70
           end

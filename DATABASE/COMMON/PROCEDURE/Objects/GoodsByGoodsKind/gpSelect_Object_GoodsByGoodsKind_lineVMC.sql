@@ -39,12 +39,15 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindSubId Integer, GoodsKindSubName TVarChar
              , GoodsPackId Integer, GoodsPackCode Integer, GoodsPackName TVarChar, MeasurePackName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
+             , GoodsId_Sh Integer, GoodsCode_Sh Integer, GoodsName_Sh TVarChar
+             , GoodsKindId_Sh Integer, GoodsKindName_Sh TVarChar
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
              , GoodsBrandName TVarChar
              , isCheck_basis Boolean, isCheck_main Boolean
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
+             , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
              , CodeCalc TVarChar      -- Код ВМС
 
              , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
@@ -62,9 +65,17 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , BoxHeight TFloat
              , BoxLength TFloat
              , BoxWidth TFloat
-             , WeightGross TFloat                               -- Вес брутто полного ящика "по ???" (E2/E3)
-             , WeightAvgGross TFloat                            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
-             , WeightAvgNet TFloat                              -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+             , WeightGross_Sh    TFloat, WeightGross_Nom    TFloat, WeightGross_Ves    TFloat                            -- Вес брутто полного ящика "по ???" (E2/E3)
+
+             , WeightAvgGross_Sh TFloat, WeightAvgGross_Nom TFloat, WeightAvgGross_Ves TFloat                            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , WeightMinGross_Sh TFloat, WeightMinGross_Nom TFloat, WeightMinGross_Ves TFloat                            -- Вес брутто полного ящика "по мин весу" (E2/E3)
+             , WeightMaxGross_Sh TFloat, WeightMaxGross_Nom TFloat, WeightMaxGross_Ves TFloat                            -- Вес брутто полного ящика "по макс весу" (E2/E3)
+
+             , WeightAvgNet_Sh   TFloat, WeightAvgNet_Nom   TFloat, WeightAvgNet_Ves   TFloat                            -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+             , WeightMinNet_Sh   TFloat, WeightMinNet_Nom   TFloat, WeightMinNet_Ves   TFloat                            -- Вес нетто полного ящика "по мин весу" (E2/E3)
+             , WeightMaxNet_Sh   TFloat, WeightMAxNet_Nom   TFloat, WeightMaxNet_Ves   TFloat                            -- Вес нетто полного ящика "по макс весу" (E2/E3)
+             
+
              , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
              , WeightOnBox_2 TFloat, CountOnBox_2 TFloat
              , BoxVolume_2 TFloat, BoxWeight_2 TFloat
@@ -235,6 +246,12 @@ BEGIN
            , tmpGoodsByGoodsKind.GoodsKindPackId
            , tmpGoodsByGoodsKind.GoodsKindPackName
 
+           , tmpGoodsByGoodsKind.GoodsId_Sh
+           , tmpGoodsByGoodsKind.GoodsCode_Sh
+           , tmpGoodsByGoodsKind.GoodsName_Sh
+           , tmpGoodsByGoodsKind.GoodsKindId_Sh
+           , tmpGoodsByGoodsKind.GoodsKindName_Sh
+
            , tmpGoodsByGoodsKind.ReceiptId
            , tmpGoodsByGoodsKind.ReceiptCode
            , tmpGoodsByGoodsKind.ReceiptName
@@ -250,6 +267,9 @@ BEGIN
 
            , tmpGoodsByGoodsKind.GoodsTypeKindId
            , Object_GoodsTypeKind.ValueData AS GoodsTypeKindName
+           , tmpGoodsByGoodsKind.isGoodsTypeKind_Sh
+           , tmpGoodsByGoodsKind.isGoodsTypeKind_Nom
+           , tmpGoodsByGoodsKind.isGoodsTypeKind_Ves
 
            , tmpGoodsByGoodsKind.CodeCalc                           -- расчет: код на упак+вид+бренд+категория
 /*           , tmpGoodsByGoodsKind.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
@@ -283,13 +303,38 @@ BEGIN
             , tmpGoodsByGoodsKind.BoxWidth
 
               -- Вес брутто полного ящика "??? по среднему весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightGross
-
+            --, tmpGoodsByGoodsKind.WeightGross
+            , tmpGoodsByGoodsKind.WeightGross_Sh
+            , tmpGoodsByGoodsKind.WeightGross_Nom
+            , tmpGoodsByGoodsKind.WeightGross_Ves
              -- Вес брутто полного ящика "по среднему весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightAvgGross
+            --, tmpGoodsByGoodsKind.WeightAvgGross
+            , tmpGoodsByGoodsKind.WeightAvgGross_Sh
+            , tmpGoodsByGoodsKind.WeightAvgGross_Nom
+            , tmpGoodsByGoodsKind.WeightAvgGross_Ves
+            -- Вес брутто полного ящика "по мин весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightMinGross_Sh
+            , tmpGoodsByGoodsKind.WeightMinGross_Nom
+            , tmpGoodsByGoodsKind.WeightMinGross_Ves
+            -- Вес брутто полного ящика "по макс весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightMaxGross_Sh
+            , tmpGoodsByGoodsKind.WeightMaxGross_Nom
+            , tmpGoodsByGoodsKind.WeightMaxGross_Ves
+
 
               -- Вес нетто по среднему весу ящика (E2/E3) - тоже что и WeightOnBox
-            , tmpGoodsByGoodsKind.WeightAvgNet
+            --, tmpGoodsByGoodsKind.WeightAvgNet
+            , tmpGoodsByGoodsKind.WeightAvgNet_Sh
+            , tmpGoodsByGoodsKind.WeightAvgNet_Nom
+            , tmpGoodsByGoodsKind.WeightAvgNet_Ves
+            -- Вес нетто полного ящика "по мин весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightMinNet_Sh
+            , tmpGoodsByGoodsKind.WeightMinNet_Nom
+            , tmpGoodsByGoodsKind.WeightMinNet_Ves
+            -- Вес нетто полного ящика "по макс весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightMaxNet_Sh
+            , tmpGoodsByGoodsKind.WeightMAxNet_Nom
+            , tmpGoodsByGoodsKind.WeightMaxNet_Ves
 
             -- ящик (Гофра)
             , tmpGoodsByGoodsKind.BoxId_2
