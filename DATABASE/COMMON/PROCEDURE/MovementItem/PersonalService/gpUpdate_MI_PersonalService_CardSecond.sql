@@ -382,7 +382,7 @@ BEGIN
                 --AND MovementItem.Amount     > 0
                )
      THEN
-         RAISE EXCEPTION 'Ошибка. В распределнии БН найдена ведомость <5>.'
+         RAISE EXCEPTION 'Ошибка. В распределнии БН найдена ведомость <%>.'
                        , lfGet_Object_ValueData_sh ((SELECT MILO_PersonalServiceList.ObjectId
                                                      FROM MovementItem
                                                           JOIN MovementItemLinkObject AS MILO_PersonalServiceList

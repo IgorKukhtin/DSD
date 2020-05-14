@@ -1,3 +1,17 @@
+ SELECT * 
+FROM Movement
+ join MovementDesc ON  MovementDesc.Id = Movement.DescId
+join MovementItem ON  MovementItem .MovementId = Movement.Id
+ join MovementLinkObject as mlo1 ON  mlo1.MovementId = Movement.Id
+join MovementLinkObjectDesc as mlod1 ON  mlod1 .Id = mlo1.DescId
+ join Object as o1 ON  o1.Id = mlo1 .ObjectId
+and MovementItem .ObjectId = 11982855
+and mlo1 .ObjectId = 9951517
+where Movement.OperDate >= CURRENT_DATE - INTERVAL '21 DAY'
+
+
+
+
  select *
 -- update Movement set OperDate = MovementOperDate
 -- , StatusId = zc_Enum_Status_Erased()

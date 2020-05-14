@@ -432,7 +432,7 @@ BEGIN
                   ELSE TRUE
              END  AS isCodeCalc_Diff                                         -- Повтор кода ВМС
 
-           , Object_GoodsByGoodsKind_View.WmsCellNum       :: Integer        -- 
+           , Object_GoodsByGoodsKind_View.WmsCellNum       :: Integer        -- № Ячейки на складе ВМС
            , Object_GoodsByGoodsKind_View.WmsCode          :: Integer        -- Код ВМС* для выгрузки
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Sh   :: TVarChar       -- шт. - Код ВМС* для выгрузки
            , Object_GoodsByGoodsKind_View.WmsCodeCalc_Nom  :: TVarChar       -- номинал - Код ВМС* для выгрузки

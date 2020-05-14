@@ -50,7 +50,7 @@ BEGIN
      WHERE Movement.Id = inMovementId;
 
 
-     -- 
+     --
      CREATE TEMP TABLE _tmpMI_master (MovementItemId Integer, GoodsId_detail Integer, GoodsKindId_detail Integer, GoodsId Integer, GoodsId_basis Integer, GoodsKindId_complete Integer
                                     , ReceiptId Integer, ReceiptId_basis Integer
                                     , Amount TFloat, AmountSecond TFloat, AmountRemains TFloat, AmountPartnerPrior TFloat, AmountPartner TFloat
@@ -129,24 +129,24 @@ BEGIN
                                    LEFT JOIN MovementItemFloat AS MIFloat_AmountForecastOrder
                                                                ON MIFloat_AmountForecastOrder.MovementItemId = MovementItem.Id
                                                               AND MIFloat_AmountForecastOrder.DescId = zc_MIFloat_AmountForecastOrder()
- 
+
                                    LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
-                                                               ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_CuterCount.MovementItemId = MovementItem.Id
                                                               AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
                                    LEFT JOIN MovementItemFloat AS MIFloat_CuterCountSecond
-                                                               ON MIFloat_CuterCountSecond.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_CuterCountSecond.MovementItemId = MovementItem.Id
                                                               AND MIFloat_CuterCountSecond.DescId = zc_MIFloat_CuterCountSecond()
                                    LEFT JOIN MovementItemFloat AS MIFloat_Koeff
-                                                               ON MIFloat_Koeff.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_Koeff.MovementItemId = MovementItem.Id
                                                               AND MIFloat_Koeff.DescId = zc_MIFloat_Koeff()
                                    LEFT JOIN MovementItemFloat AS MIFloat_TermProduction
-                                                               ON MIFloat_TermProduction.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_TermProduction.MovementItemId = MovementItem.Id
                                                               AND MIFloat_TermProduction.DescId = zc_MIFloat_TermProduction()
                                    LEFT JOIN MovementItemFloat AS MIFloat_NormInDays
-                                                               ON MIFloat_NormInDays.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_NormInDays.MovementItemId = MovementItem.Id
                                                               AND MIFloat_NormInDays.DescId = zc_MIFloat_NormInDays()
                                    LEFT JOIN MovementItemFloat AS MIFloat_StartProductionInDays
-                                                               ON MIFloat_StartProductionInDays.MovementItemId = MovementItem.Id 
+                                                               ON MIFloat_StartProductionInDays.MovementItemId = MovementItem.Id
                                                               AND MIFloat_StartProductionInDays.DescId = zc_MIFloat_StartProductionInDays()
 
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsBasis
@@ -173,9 +173,9 @@ BEGIN
                                                         AND ObjectFloat_TaxLoss.DescId = zc_ObjectFloat_Receipt_TaxLoss()
                              ;
 
-     -- 
+     --
      CREATE TEMP TABLE _tmpMI_child (MovementItemId Integer, GoodsId Integer, GoodsKindId Integer, GoodsKindId_complete Integer, PartionGoodsDate TDateTime, ContainerId Integer, Amount TFloat) ON COMMIT DROP;
-     -- 
+     --
      INSERT INTO _tmpMI_child (MovementItemId, GoodsId, GoodsKindId, GoodsKindId_complete, PartionGoodsDate, ContainerId, Amount)
              SELECT MovementItem.Id                                       AS MovementItemId
                   , MovementItem.ObjectId                                 AS GoodsId
@@ -203,10 +203,20 @@ BEGIN
 
        --
        OPEN Cursor1 FOR
-        WITH tmpMI_master_find_mi AS (SELECT MAX (_tmpMI_master.MovementItemId) AS MovementItemId
-                                       FROM _tmpMI_master
-                                       WHERE _tmpMI_master.isErased = FALSE
-                                       GROUP BY _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
+        WITH tmpMI_master_find_mi_ord AS (SELECT _tmpMI_master.MovementItemId
+                                               , ROW_NUMBER() OVER (PARTITION BY _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
+                                                                    ORDER BY CASE WHEN _tmpMI_master.GoodsId_basis = _tmpMI_master.GoodsId
+                                                                                       THEN 0
+                                                                                  ELSE 1
+                                                                             END ASC
+                                                                           , _tmpMI_master.MovementItemId DESC
+                                                                   ) AS Ord
+                                          FROM _tmpMI_master
+                                          WHERE _tmpMI_master.isErased = FALSE
+                                         )
+            , tmpMI_master_find_mi AS (SELECT tmpMI_master_find_mi_ord.MovementItemId
+                                       FROM tmpMI_master_find_mi_ord
+                                       WHERE tmpMI_master_find_mi_ord.Ord = 1
                                       )
            , tmpMI_master_find_all AS (SELECT tmpMI_master_find_mi.MovementItemId, _tmpMI_master.GoodsId_basis, _tmpMI_master.GoodsKindId_complete
                                        FROM tmpMI_master_find_mi
@@ -225,7 +235,7 @@ BEGIN
                                    GROUP BY tmpMI_master_find_all.MovementItemId
                                           , COALESCE (tmpMI_master_find_all.GoodsId_basis, _tmpMI_child.GoodsId)
                                           , COALESCE (tmpMI_master_find_all.GoodsKindId_complete, _tmpMI_child.GoodsKindId_complete)
-                                      )
+                                  )
            , tmpMIPartion_master AS (SELECT tmpMI_find.MovementItemId
                                           , tmpMI_find.GoodsId_basis
                                           , tmpMI_find.GoodsKindId_complete
@@ -310,8 +320,8 @@ BEGIN
            , tmpMI.CuterCount       :: TFloat AS CuterCount       -- Заказ на пр-во кутеров
            , tmpMI.CuterCountSecond :: TFloat AS CuterCountSecond -- Заказ на пр-во кутеров
 
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END AS AmountSend_sh
-           , tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend_Weight
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END :: TFloat AS AmountSend_sh
+           , (tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS AmountSend_Weight
 
            , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old                                AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc     -- Прогн. ост.
            , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsTerm_calc -- *Прогн. ост. на срок
@@ -331,7 +341,7 @@ BEGIN
                                 - (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next) )
                                  / ObjectFloat_TaxExit.ValueData  AS NUMERIC (16, 1) )
                   ELSE 0
-             END                                                   :: TFloat AS AmountReserveOrderCuter_calc     --Прогноз заказ (куттер) = "Прогноз Заказ кг" / zc_ObjectFloat_Receipt_TaxExit - 
+             END                                                   :: TFloat AS AmountReserveOrderCuter_calc     --Прогноз заказ (куттер) = "Прогноз Заказ кг" / zc_ObjectFloat_Receipt_TaxExit -
 
            , CAST (tmpMI.AmountProduction_old  AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_old  -- Произв. сегодня
            , CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_next -- Произв. далее
@@ -340,11 +350,21 @@ BEGIN
            , CASE WHEN tmpMI.StartDate_next = zc_DateEnd()                                                THEN NULL ELSE tmpMI.StartDate_next END :: TDateTime AS StartDate_next -- Партия-1 далее
            , CASE WHEN tmpMI.EndDate_next   = zc_DateStart() OR tmpMI.EndDate_next = tmpMI.StartDate_next THEN NULL ELSE tmpMI.EndDate_next   END :: TDateTime AS EndDate_next   -- Партия-2 далее
 
-           , CASE WHEN ABS (tmpMI.AmountRemains) < 1 THEN tmpMI.AmountRemains ELSE CAST (tmpMI.AmountRemains AS NUMERIC (16, 1)) END :: TFloat AS AmountRemains -- Ост. начальн.
-           , CAST (tmpMI.AmountPartnerPrior  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior  -- неотгуж. заявка
-           , CAST (tmpMI.AmountPartner       AS NUMERIC (16, 2)) :: TFloat AS AmountPartner       -- сегодня заявка
-           , CASE WHEN ABS (tmpMI.AmountForecast) < 1      THEN tmpMI.AmountForecast      ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1))      END :: TFloat AS AmountForecast      -- Прогноз по прод.
-           , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1 THEN tmpMI.AmountForecastOrder ELSE CAST (tmpMI.AmountForecastOrder AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder -- Прогноз по заяв.
+             -- Ост. начальн. ШТ
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0
+                       THEN CAST (tmpMI.AmountRemains / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0))
+                       ELSE 0
+             END :: TFloat AS AmountRemains_sh
+              -- Ост. начальн.
+           , CASE WHEN ABS (tmpMI.AmountRemains) < 1 THEN tmpMI.AmountRemains ELSE CAST (tmpMI.AmountRemains AS NUMERIC (16, 1)) END :: TFloat AS AmountRemains
+             -- неотгуж. заявка
+           , CAST (tmpMI.AmountPartnerPrior  AS NUMERIC (16, 2)) :: TFloat AS AmountPartnerPrior
+             -- сегодня заявка
+           , CAST (tmpMI.AmountPartner       AS NUMERIC (16, 2)) :: TFloat AS AmountPartner
+             -- Прогноз по прод.
+           , CASE WHEN ABS (tmpMI.AmountForecast) < 1      THEN tmpMI.AmountForecast      ELSE CAST (tmpMI.AmountForecast AS NUMERIC (16, 1))      END :: TFloat AS AmountForecast
+             -- Прогноз по заяв.
+           , CASE WHEN ABS (tmpMI.AmountForecastOrder) < 1 THEN tmpMI.AmountForecastOrder ELSE CAST (tmpMI.AmountForecastOrder AS NUMERIC (16, 1)) END :: TFloat AS AmountForecastOrder
 
            , CAST (tmpMI.CountForecast AS NUMERIC (16, 1))      :: TFloat AS CountForecast                     -- Норм 1д (по пр.) без К
            , CAST (tmpMI.CountForecastOrder AS NUMERIC (16, 1)) :: TFloat AS CountForecastOrder                -- Норм 1д (по зв.) без К
@@ -360,7 +380,7 @@ BEGIN
                              THEN tmpMI.AmountRemains / (tmpMI.CountForecastOrder * tmpMI.Koeff)
                          ELSE 0
                    END
-             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecastOrder -- Ост. в днях (по пр.) 
+             AS NUMERIC (16, 1)) :: TFloat AS DayCountForecastOrder -- Ост. в днях (по пр.)
 
            , tmpMI.Koeff                 :: TFloat AS Koeff                 -- Коэфф.
            , tmpMI.TermProduction        :: TFloat AS TermProduction        -- Срок произв. в дн.
@@ -476,7 +496,7 @@ BEGIN
             FULL JOIN tmpMI_Send ON tmpMI_Send.GoodsId = tmpMI.GoodsId
                                 AND tmpMI_Send.GoodsKindId  = tmpMI.GoodsKindId_complete
             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                  ON ObjectFloat_Weight.ObjectId = tmpMI_Send.GoodsId
+                                  ON ObjectFloat_Weight.ObjectId = COALESCE (tmpMI_Send.GoodsId, tmpMI.GoodsId)
                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
 
             LEFT JOIN Object AS Object_Goods_detail ON Object_Goods_detail.Id = tmpMI.GoodsId_detail
@@ -490,7 +510,7 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code
                                    ON ObjectString_Receipt_Code.ObjectId = Object_Receipt.Id
                                   AND ObjectString_Receipt_Code.DescId = zc_ObjectString_Receipt_Code()
- 
+
             LEFT JOIN Object AS Object_Receipt_basis ON Object_Receipt_basis.Id = tmpMI.ReceiptId_basis
             LEFT JOIN ObjectString AS ObjectString_Receipt_Code_basis
                                    ON ObjectString_Receipt_Code_basis.ObjectId = Object_Receipt_basis.Id
@@ -580,7 +600,7 @@ ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) O
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 11.03.20         * KoeffLoss 
+ 11.03.20         * KoeffLoss
  19.06.15                                        * all
  31.03.15         * add GoodsGroupNameFull
  02.03.14         * add AmountRemains, AmountPartner, AmountForecast, AmountForecastOrder

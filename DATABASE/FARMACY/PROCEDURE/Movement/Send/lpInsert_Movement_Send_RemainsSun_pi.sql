@@ -89,6 +89,8 @@ $BODY$
    
    DECLARE vbDOW_curr        TVarChar;
 
+   DECLARE vbDayIncome_max Integer;
+
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
@@ -153,16 +155,18 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v4
-     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat) ON COMMIT DROP;
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2)
+     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer) ON COMMIT DROP;
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
              , CASE WHEN OF_T1.ValueData > 0 THEN OF_T1.ValueData ELSE vbPeriod_t1 END AS Value_T1
              , 0           AS Value_T2
+             , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0 END :: Integer AS DayIncome
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN_pi()
              LEFT JOIN ObjectFloat  AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v4()
+             LEFT JOIN ObjectFloat  AS OF_DI  ON OF_DI.ObjectId  = OB.ObjectId AND OF_DI.DescId  = zc_ObjectFloat_Unit_Sun_v4Income()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
@@ -173,6 +177,8 @@ BEGIN
           --OR inUserId = 3 -- Админ - отладка
               )
        ;
+     -- находим максимальный
+     vbDayIncome_max:= (SELECT MAX (_tmpUnit_SUN.DayIncome) FROM _tmpUnit_SUN);
 
      -- находим максимальный
      vbPeriod_t_max := (SELECT MAX (CASE WHEN _tmpUnit_SUN.Value_T1 > _tmpUnit_SUN.Value_T2 THEN _tmpUnit_SUN.Value_T1 ELSE _tmpUnit_SUN.Value_T2 END)
@@ -552,7 +558,8 @@ BEGIN
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                         AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                       -- временно отключил - 13.05.20
+                       --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
@@ -769,8 +776,9 @@ BEGIN
                         AND tmpSUN_oth.GoodsId   = tmpObject_Price.GoodsId
 
              -- отбросили !!закрытые!!
-             INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-                                         AND Object_Goods_View.IsClose = FALSE
+             -- временно отключил - 13.05.20
+           --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
+           --                            AND Object_Goods_View.IsClose = FALSE
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
@@ -930,7 +938,10 @@ BEGIN
                 , tmpIncome AS (SELECT DISTINCT
                                        MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
-                                FROM Movement
+                                FROM MovementDate AS MovementDate_Branch
+                                     INNER JOIN Movement ON Movement.Id       = MovementDate_Branch.MovementId
+                                                        AND Movement.DescId   = zc_Movement_Income()
+                                                        AND Movement.StatusId = zc_Enum_Status_Complete()
                                      INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                                    ON MovementLinkObject_To.MovementId = Movement.Id
                                                                   AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
@@ -941,9 +952,19 @@ BEGIN
                                      -- !!!только для таких!!!
                                      INNER JOIN tmpNotSold_all ON tmpNotSold_all.UnitId  = MovementLinkObject_To.ObjectId
                                                               AND tmpNotSold_all.GoodsId = MovementItem.ObjectId
-                                WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '31 DAY' AND inOperDate - INTERVAL '1 DAY'
-                                  AND Movement.DescId   = zc_Movement_Income()
-                                  AND Movement.StatusId IN (zc_Enum_Status_Complete())
+
+                                     INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+                                                            AND _tmpUnit_SUN.DayIncome > 0
+
+                                WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
+                                  AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                            
+                                GROUP BY MovementLinkObject_To.ObjectId
+                                       , MovementItem.ObjectId
+                                HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                      THEN MovementItem.Amount
+                                                 ELSE 0
+                                            END) > 0
                                )
                  -- все что остается для NotSold
                , tmpNotSold AS (SELECT tmpNotSold_all.UnitID
@@ -1064,7 +1085,8 @@ BEGIN
                                INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                            AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                          -- временно отключил - 13.05.20
+                          --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                          )
         -- отбросили !!холод!!
       , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
@@ -1637,7 +1659,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN-v4
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 

@@ -154,6 +154,7 @@ type
     Color_production_old: TcxGridDBColumn;
     Color_production_next: TcxGridDBColumn;
     actPrintScan: TdsdPrintAction;
+    AmountRemains_sh: TcxGridDBColumn;
   private
     { Private declarations }
   public
