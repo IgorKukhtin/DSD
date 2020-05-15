@@ -391,7 +391,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Width = 85
           end
           object HT_SUN_v2: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1076#1085'. '#1076#1083#1103' HT ('#1057#1059#1053') (V.1)'
+            Caption = #1050#1086#1083'. '#1076#1085'. '#1076#1083#1103' HT ('#1057#1059#1053') (V.2)'
             DataBinding.FieldName = 'HT_SUN_v2'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
