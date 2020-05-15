@@ -112,6 +112,9 @@ type
     macUpdate_CountReceipt_list: TMultiAction;
     bbUpdate_AssetProd: TdxBarButton;
     bbUpdate_CountReceipt: TdxBarButton;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actOpenAssetChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

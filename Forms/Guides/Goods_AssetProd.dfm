@@ -146,10 +146,17 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
       object AssetProdName: TcxGridDBColumn
         Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'  ('#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1089#1103')'
         DataBinding.FieldName = 'AssetProdName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = actOpenAssetChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1054#1089#1085#1086#1074#1085#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086'  ('#1085#1072' '#1082#1086#1090#1086#1088#1086#1084' '#1087#1088#1086#1080#1079#1074#1086#1076#1080#1090#1089#1103')'
-        Options.Editing = False
         Width = 150
       end
       object MeasureName: TcxGridDBColumn
@@ -196,7 +203,6 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1087#1072#1088#1090#1080#1081' '#1087#1086' '#1088#1077#1094#1077#1087#1090#1091#1088#1077
-        Options.Editing = False
         Width = 96
       end
       object Value_min: TcxGridDBColumn
@@ -418,7 +424,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 4
+    TabOrder = 3
     Width = 186
   end
   object cxLabel13: TcxLabel
@@ -1022,6 +1028,47 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
         #1086' '#1085#1072' 1-'#1086#1081' '#1074#1090#1091#1083#1082#1077
       ImageIndex = 41
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object actOpenAssetChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'actOpenAssetChoiceForm'
+      FormName = 'TAssetForm'
+      FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AssetProdId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'AssetProdName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods_AssetProd'
@@ -1085,6 +1132,7 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 232
     Top = 184
   end
@@ -1208,5 +1256,39 @@ object Goods_AssetProdForm: TGoods_AssetProdForm
     PackSize = 1
     Left = 880
     Top = 147
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Goods_AssetProd'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAssetProdId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'AssetProdId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCountReceipt'
+        Value = 0.000000000000000000
+        Component = ClientDataSet
+        ComponentItem = 'CountReceipt'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 187
   end
 end
