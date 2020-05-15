@@ -19,6 +19,7 @@ inherited ProductionUnionTechReceiptJournalForm: TProductionUnionTechReceiptJour
     ClientRectBottom = 624
     ClientRectRight = 1076
     inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
       ExplicitWidth = 1076
       ExplicitHeight = 600
       inherited cxGrid: TcxGrid

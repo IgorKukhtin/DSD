@@ -1612,6 +1612,9 @@ end;
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_HT_SUN_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_HT_SUN_EditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SunIncome_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SunIncome_EditForm');
 
