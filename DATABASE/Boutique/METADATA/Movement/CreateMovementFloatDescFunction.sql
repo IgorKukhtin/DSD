@@ -100,6 +100,11 @@ CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPay_curr() RETURNS Integer 
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummPay_curr', 'Итого сумма оплаты (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPay_curr');
 
+  CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPayOth_curr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayOth_curr'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementFloatDesc(Code, ItemName)
+  SELECT 'zc_MovementFloat_TotalSummPayOth_curr', 'Итого сумма возврата оплаты (в валюте)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPayOth_curr'); 
+
+
 CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPriceListTo_start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPriceListTo_start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementFloatDesc (Code, ItemName)
   SELECT 'zc_MovementFloat_TotalSummPriceListTo_start', 'Итого сумма печать цеников по PriceList (в ГРН)' WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Code = 'zc_MovementFloat_TotalSummPriceListTo_start');
@@ -112,6 +117,7 @@ INSERT INTO MovementFloatDesc (Code, ItemName)
  !!!!!!!!!!!!!!!!!!! РАСПОЛАГАЙТЕ ДЕСКИ ПО АЛФАВИТУ !!!!!!!!!!!!!!!!!!!
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.   Роман
+ 15.05.20         * zc_MovementFloat_TotalSummPayOth_curr
  14.05.20         * zc_MovementFloat_TotalSummPriceListTo
                     zc_MovementFloat_TotalSummPriceListTo_start
  13.05.20         * zc_MovementFloat_TotalSumm_curr

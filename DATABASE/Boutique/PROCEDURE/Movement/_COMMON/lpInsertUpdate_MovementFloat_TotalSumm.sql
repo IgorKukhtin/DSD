@@ -35,6 +35,7 @@ $BODY$
   DECLARE vbTotalSummChange_curr TFloat;
   DECLARE vbTotalSummChangePay_curr TFloat;
   DECLARE vbTotalSummPay_curr TFloat;
+  DECLARE vbTotalSummPayOth_curr TFloat;
   DECLARE vbTotalSumm_curr TFloat;
   
   DECLARE vbTotalSummPriceListTo_start TFloat;
@@ -91,7 +92,8 @@ BEGIN
           , SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceList_curr.ValueData))              AS TotalSummPriceList_curr
           , SUM (COALESCE (MIFloat_TotalChangePercent_curr.ValueData,0) )                                       AS TotalSummChange_curr     
           , SUM (COALESCE (MIFloat_TotalChangePercentPay_curr.ValueData,0))                                     AS TotalSummChangePay_curr  
-          , SUM (COALESCE (MIFloat_TotalPay_curr.ValueData,0) )                                                 AS TotalSummPay_curr  
+          , SUM (COALESCE (MIFloat_TotalPay_curr.ValueData,0) )                                                 AS TotalSummPay_curr
+          , SUM (COALESCE (MIFloat_TotalPayOth_curr.ValueData,0) )                                              AS TotalSummPayOth_curr
           , SUM (zfCalc_SummIn (MovementItem.Amount, MIFloat_OperPrice.ValueData, MIFloat_CountForPrice.ValueData)) AS TotalSumm_curr
           
           , SUM (zfCalc_SummPriceList (MovementItem.Amount, MIFloat_OperPriceListTo_start.ValueData))               AS TotalSummPriceListTo_start
@@ -107,6 +109,7 @@ BEGIN
                , vbTotalSummChange_curr
                , vbTotalSummChangePay_curr
                , vbTotalSummPay_curr
+               , vbTotalSummPayOth_curr
                , vbTotalSumm_curr
                , vbTotalSummPriceListTo_start
                , vbTotalSummPriceListTo
@@ -192,6 +195,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
                                         ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
                                        AND MIFloat_TotalPay_curr.DescId = zc_MIFloat_TotalPay_curr()
+            LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_curr
+                                        ON MIFloat_TotalPayOth_curr.MovementItemId = MovementItem.Id
+                                       AND MIFloat_TotalPayOth_curr.DescId         = zc_MIFloat_TotalPayOth_curr()
             LEFT JOIN MovementItemFloat AS MIFloat_OperPrice
                                         ON MIFloat_OperPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_OperPrice.DescId = zc_MIFloat_OperPrice()
@@ -238,6 +244,9 @@ BEGIN
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummChangePay_curr(), inMovementId, vbTotalSummChangePay_curr);
              -- Сохранили свойство <Итого сумма оплаты (в валюте)>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPay_curr(), inMovementId, vbTotalSummPay_curr);   
+             -- Сохранили свойство <Итого сумма оплаты (в валюте)>
+             PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPayOth_curr(), inMovementId, vbTotalSummPayOth_curr);  
+             
              -- Сохранили свойство <Итого сумма вх. по документу (в валюте)>
              PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm_curr(), inMovementId, vbTotalSumm_curr);               
 
