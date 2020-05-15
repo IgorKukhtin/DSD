@@ -59,7 +59,7 @@ BEGIN
         IF COALESCE (inPrice, 0) = 0
         THEN
             -- задваивает, зараза, поэтому на этот случай - ТАК
-            ioId:= (SELECT MovementItem.Id
+            ioId:= (SELECT MAX(MovementItem.Id)
                     FROM MovementItem
                          LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -81,7 +81,7 @@ BEGIN
                       AND COALESCE (MIFloat_Price.ValueData, 0) = inPrice
                    );
         ELSE
-            ioId:= (SELECT MovementItem.Id
+            ioId:= (SELECT MAX(MovementItem.Id)
                     FROM MovementItem
                          INNER JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -106,7 +106,7 @@ BEGIN
         -- если не нашли позицию с нужной ценой, ищем любую другую позицию
         IF COALESCE(ioID, 0) = 0
         THEN
-            ioId:= (SELECT MovementItem.Id
+            ioId:= (SELECT Max(MovementItem.Id)
                     FROM MovementItem
                          INNER JOIN MovementItemFloat AS MIFloat_Price
                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id

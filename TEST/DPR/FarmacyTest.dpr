@@ -870,7 +870,8 @@ uses
   Report_IncomeVATBalance in '..\..\FormsFarmacy\Report\Report_IncomeVATBalance.pas' {Report_IncomeVATBalanceForm: TParentForm},
   Goods_KoeffSUN_Edit in '..\..\FormsFarmacy\Guides\Goods_KoeffSUN_Edit.pas' {Goods_KoeffSUN_EditForm: TParentForm},
   ProjectsImprovementsJournal in '..\..\FormsFarmacy\Document\ProjectsImprovementsJournal.pas' {ProjectsImprovementsJournalForm: TParentForm},
-  Unit_SunIncome_Edit in '..\..\FormsFarmacy\Guides\Unit_SunIncome_Edit.pas' {Unit_SunIncome_EditForm: TParentForm};
+  Unit_SunIncome_Edit in '..\..\FormsFarmacy\Guides\Unit_SunIncome_Edit.pas' {Unit_SunIncome_EditForm: TParentForm},
+  Report_ImplementationPeriod in '..\..\FormsFarmacy\Report\Report_ImplementationPeriod.pas' {Report_ImplementationPeriodForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

@@ -3623,6 +3623,17 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_ImplementationPeriod: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
+      MoveParams = <>
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      FormName = 'TReport_ImplementationPeriodForm'
+      FormNameParam.Value = 'TReport_ImplementationPeriodForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4121,6 +4132,9 @@ inherited MainForm: TMainForm
       end
       object N235: TMenuItem
         Action = actReport_IncomeVATBalance
+      end
+      object N236: TMenuItem
+        Action = actReport_ImplementationPeriod
       end
     end
     object miReports: TMenuItem [5]
