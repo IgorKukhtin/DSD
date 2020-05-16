@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
--- DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProductionUnionTech_Print (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inStartDate         TDateTime,
@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnionTech_Print(
     IN inFromId            Integer,
     IN inToId              Integer,
     IN inGroupNum          Integer,
+    IN inisCuterCount      Boolean,
     IN inSession           TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -421,7 +422,73 @@ BEGIN
     -- Все Результаты - 1
     OPEN Cursor1 FOR
 
-     SELECT _tmpRes_cur1.OperDate
+    SELECT tmp.OperDate
+         , tmpWeekDay.DayOfWeekName_Full  ::TVarChar AS DayOfWeekName
+         , tmp.GoodsCode
+         , tmp.GoodsName
+         , tmp.GoodsKindName_Complete
+         , tmp.CuterCount
+         , tmp.GoodsName
+         , tmp.GoodsName_child
+         , tmp.AmountReceipt
+         , tmp.CountReceipt
+         , tmp.GoodsKind_group
+         , tmp.Count_full
+         , tmp.Count_part
+         , tmp.CountReceipt_goods
+         , SUM (COALESCE (tmp.Amount,0)) AS  Amount
+         , SUM (COALESCE (tmp.AmountReceipt,0) * tmp.Count_full * tmp.CountReceipt_goods) AS Amount_full
+         , SUM (COALESCE (tmp.AmountReceipt,0) * tmp.Count_part ) AS Amount_part
+    FROM (
+          SELECT tmp.*
+               , CASE WHEN COALESCE (tmp.CountReceipt_goods,0) <> 0 THEN FLOOR (tmp.CuterCount / COALESCE (tmp.CountReceipt_goods,0)) ELSE 0 END AS Count_full
+               , (tmp.CuterCount
+                 - (COALESCE (tmp.CountReceipt_goods,0)
+                   *(CASE WHEN COALESCE (tmp.CountReceipt_goods,0) <> 0 THEN FLOOR (tmp.CuterCount / COALESCE (tmp.CountReceipt_goods,0)) ELSE 0 END)))  AS Count_part
+          FROM (
+                SELECT _tmpRes_cur1.OperDate
+                     
+                     , _tmpRes_cur1.GoodsCode
+                     , _tmpRes_cur1.GoodsName
+                     , CASE WHEN _tmpRes_cur1.GoodsKindId_Complete = zc_GoodsKind_Basis() THEN '' ELSE _tmpRes_cur1.GoodsKindName_Complete END :: TVarChar AS GoodsKindName_Complete
+           
+                     , CASE WHEN 1 <> 3 THEN (SELECT SUM (tmp.CuterCount) FROM _tmpRes_cur1 AS tmp WHERE tmp.GoodsId = _tmpRes_cur1.GoodsId)
+                            ELSE  _tmpRes_cur1.CuterCount
+                       END AS CuterCount 
+                                                                                 --_tmpRes_cur1.CuterCount --SUM (_tmpRes_cur1.CuterCount) OVER(PARTITION BY _tmpRes_cur1.GoodsName) AS CuterCount
+                     , _tmpRes_cur2.GoodsName  AS GoodsName_child
+                     , COALESCE (_tmpRes_cur2.AmountReceipt,0) AS AmountReceipt
+                     
+                     ,  (COALESCE (_tmpRes_cur2.Amount,0)) AS Amount
+                     
+                     , Count (*) OVER (PARTITION by _tmpRes_cur1.GoodsName, _tmpRes_cur2.GoodsName) :: integer AS CountReceipt
+                     , CASE WHEN 1 = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END GoodsKind_group  -- для группировки
+                     
+                     , _tmpRes_cur1.CountReceipt_goods
+           
+                FROM _tmpRes_cur1
+                     LEFT JOIN _tmpRes_cur2 ON _tmpRes_cur2.ParentId = _tmpRes_cur1.MovementItemId
+                WHERE (COALESCE (_tmpRes_cur2.AmountReceipt,0) <> 0 OR COALESCE (_tmpRes_cur2.Amount,0) <> 0)
+             ) AS tmp 
+          ) AS tmp 
+          LEFT JOIN zfCalc_DayOfWeekName (tmp.OperDate) AS tmpWeekDay ON 1=1  
+    GROUP BY tmp.OperDate
+           , tmpWeekDay.DayOfWeekName_Full
+           , tmp.GoodsName
+           , tmp.GoodsKindName_Complete
+           , tmp.CuterCount
+           , tmp.GoodsName
+           , tmp.GoodsName_child
+           , tmp.AmountReceipt
+           , tmp.CountReceipt
+           , tmp.GoodsKind_group
+           , tmp.CountReceipt_goods
+           , tmp.Count_full
+           , tmp.Count_part
+           , tmp.GoodsCode;
+
+
+ /*    SELECT _tmpRes_cur1.OperDate
           , tmpWeekDay.DayOfWeekName_Full ::TVarChar AS DayOfWeekName
           , _tmpRes_cur1.GoodsName
           , CASE WHEN _tmpRes_cur1.GoodsKindId_Complete = zc_GoodsKind_Basis() THEN '' ELSE _tmpRes_cur1.GoodsKindName_Complete END :: TVarChar AS GoodsKindName_Complete
@@ -440,7 +507,8 @@ BEGIN
           
           , SUM (COALESCE (_tmpRes_cur2.AmountReceipt,0) * _tmpRes_cur1.Count_full * _tmpRes_cur1.CountReceipt_goods) AS Amount_full
           , SUM (COALESCE (_tmpRes_cur2.AmountReceipt,0) * _tmpRes_cur1.Count_part ) AS Amount_part
-          , _tmpRes_cur1.Count_full
+          , SUM (_tmpRes_cur1.Count_full) AS Count_full_1
+          --, _tmpRes_cur1.Count_full
           , _tmpRes_cur1.Count_part
           , _tmpRes_cur1.CountReceipt_goods
 
@@ -459,11 +527,12 @@ BEGIN
           , COALESCE (_tmpRes_cur2.AmountReceipt,0)
           , CASE WHEN inGroupNum = 3 THEN _tmpRes_cur1.GoodsKindName_Complete ELSE '' END
           , _tmpres_cur1.goodsid
-          , _tmpRes_cur1.Count_full
+          --, _tmpRes_cur1.Count_full
           , _tmpRes_cur1.Count_part
           , _tmpRes_cur1.CountReceipt_goods
-
-     ;
+          ;
+*/
+     
     RETURN NEXT Cursor1;
 
 END;
@@ -474,6 +543,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.05.20         *
  14.04.20         *
 */
 

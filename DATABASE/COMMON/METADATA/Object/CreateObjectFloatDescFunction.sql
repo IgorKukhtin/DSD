@@ -1343,6 +1343,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_Sun_v4Income() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Unit_Sun_v4Income', zc_Object_Unit(), 'Кол-во дней приход от пост. (блокируем СУН-2-пи)' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_Sun_v4Income');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_HT_SUN_v1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_HT_SUN_v1', zc_Object_Unit(), 'кол-во дней для HammerTime СУН-1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v1');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_HT_SUN_v2() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v2'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_HT_SUN_v2', zc_Object_Unit(), 'кол-во дней для HammerTime СУН-2' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v2');
+
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_HT_SUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_Unit_HT_SUN_v4', zc_Object_Unit(), 'кол-во дней для HammerTime СУН-2-ПИ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_HT_SUN_v4');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Asset_PeriodUse() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Asset_PeriodUse'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1756,6 +1768,9 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 15.05.20         * zc_ObjectFloat_Unit_HT_SUN_v1
+                    zc_ObjectFloat_Unit_HT_SUN_v2
+                    zc_ObjectFloat_Unit_HT_SUN_v4
  12.05.20         * zc_ObjectFloat_Unit_Sun_v2Income
                     zc_ObjectFloat_Unit_Sun_v4Income
                   * zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh

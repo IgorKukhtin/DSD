@@ -484,14 +484,6 @@ inherited TechnicalRediscountCashierForm: TTechnicalRediscountCashierForm
           ComponentItem = 'CommentTRName'
           DataType = ftString
           MultiSelectSeparator = ','
-        end
-        item
-          Name = 'CommentTRCode'
-          Value = Null
-          Component = MasterCDS
-          ComponentItem = 'CommentTRCode'
-          DataType = ftString
-          MultiSelectSeparator = ','
         end>
       isShowModal = True
     end

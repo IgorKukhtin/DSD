@@ -33,6 +33,7 @@ type
     InvNumber: TcxGridDBColumn;
     DayOverdue: TcxGridDBColumn;
     MakerName: TcxGridDBColumn;
+    PriceWithVAT: TcxGridDBColumn;
   private
     { Private declarations }
   public

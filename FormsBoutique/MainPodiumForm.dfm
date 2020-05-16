@@ -600,8 +600,8 @@ inherited MainForm: TMainForm
       MoveParams = <>
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      FormName = 'TSendJournalForm'
-      FormNameParam.Value = 'TSendJournalForm'
+      FormName = 'TSendPodiumJournalForm'
+      FormNameParam.Value = 'TSendPodiumJournalForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>

@@ -40,6 +40,22 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
             HeaderAlignmentHorz = taCenter
             Options.Editing = False
             Width = 55
@@ -72,7 +88,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             Width = 51
           end
           object coTitle: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
             DataBinding.FieldName = 'Title'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -84,7 +100,6 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobEditKind = bekMemo
             Properties.BlobPaintStyle = bpsText
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 235
           end
@@ -98,7 +113,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitHeight = 478
+        ExplicitLeft = 550
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DetailDS
@@ -153,7 +168,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             Width = 49
           end
           object detTitle: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1086#1088#1086#1073#1086#1090#1082#1080
             DataBinding.FieldName = 'Title'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -165,9 +180,12 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
             PropertiesClassName = 'TcxBlobEditProperties'
             Properties.BlobEditKind = bekMemo
             Properties.BlobPaintStyle = bpsText
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 272
+          end
+          object dclisErased: TcxGridDBColumn
+            DataBinding.FieldName = 'isErased'
+            Visible = False
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -247,6 +265,19 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
           Component = deEnd
           DataType = ftDateTime
           MultiSelectSeparator = ','
+        end>
+    end
+    inherited MovementProtocolOpenForm: TdsdOpenForm
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1086#1077#1082#1090#1072'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1087#1088#1086#1077#1082#1090#1072'>'
+    end
+    inherited actShowErased: TBooleanStoredProcAction
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetai
         end>
     end
     object actPrint: TdsdPrintAction
@@ -334,6 +365,9 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectDetai
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -371,6 +405,115 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         end>
       Caption = 'actUpdateMainDS'
       DataSource = DetailDS
+    end
+    object actUpdateMovement_ApprovedBy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovement_ApprovedBy
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovement_ApprovedBy
+        end>
+      Caption = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
+      Hint = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
+      ImageIndex = 79
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072'"'
+    end
+    object actUpdateMovementItem_ApprovedBy: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementItem_ApprovedBy
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementItem_ApprovedBy
+        end>
+      Caption = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1076#1086#1088#1072#1073#1086#1090#1082#1080
+      Hint = #1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1076#1086#1088#1072#1073#1086#1090#1082#1080
+      ImageIndex = 79
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1059#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077' '#1076#1086#1088#1072#1073#1086#1090#1082#1080'"'
+    end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateMovementItem_Performed
+      StoredProcList = <
+        item
+          StoredProc = spUpdateMovementItem_Performed
+        end>
+      Caption = #1042#1099#1087#1086#1083#1085#1077#1085#1072' '#1076#1086#1088#1072#1073#1086#1090#1082#1080
+      Hint = #1042#1099#1087#1086#1083#1085#1077#1085#1072' '#1076#1086#1088#1072#1073#1086#1090#1082#1080
+      ImageIndex = 66
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1042#1099#1087#1086#1083#1085#1077#1085#1072' '#1076#1086#1088#1072#1073#1086#1090#1082#1080'"'
+    end
+    object actMISetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end
+        item
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1088#1072#1073#1086#1090#1082#1091'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1088#1072#1073#1086#1090#1082#1091'>'
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = DetailDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1088#1072#1073#1086#1090#1082#1080'?'
+    end
+    object actMISetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end
+        item
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1086#1088#1072#1073#1086#1090#1082#1091
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1044#1086#1088#1072#1073#1086#1090#1082#1091
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DetailDS
+    end
+    object MovementItemProtocolOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1083#1086#1088#1072#1073#1086#1090#1086#1082'>'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' <'#1055#1088#1086#1090#1086#1082#1086#1083#1072' '#1089#1090#1088#1086#1082' '#1083#1086#1088#1072#1073#1086#1090#1086#1082'>'
+      ImageIndex = 34
+      FormName = 'TMovementItemProtocolForm'
+      FormNameParam.Value = 'TMovementItemProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'GoodsName'
+          Value = Null
+          Component = DetailDCS
+          ComponentItem = 'Title'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -451,7 +594,7 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarButton4'
         end
         item
           Visible = True
@@ -460,6 +603,26 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton5'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton8'
         end
         item
           Visible = True
@@ -468,6 +631,10 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         item
           Visible = True
           ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton9'
         end
         item
           Visible = True
@@ -517,8 +684,35 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
       Action = actShowAll
       Category = 0
     end
+    object dxBarButton4: TdxBarButton
+      Action = actUpdateMovement_ApprovedBy
+      Category = 0
+    end
+    object dxBarButton5: TdxBarButton
+      Action = actUpdateMovementItem_ApprovedBy
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = dsdExecStoredProc1
+      Category = 0
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actMISetErased
+      Category = 0
+    end
+    object dxBarButton8: TdxBarButton
+      Action = actMISetUnErased
+      Category = 0
+    end
+    object dxBarButton9: TdxBarButton
+      Action = MovementItemProtocolOpenForm
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end>
     Left = 320
     Top = 224
   end
@@ -874,16 +1068,155 @@ inherited ProjectsImprovementsJournalForm: TProjectsImprovementsJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'ioisApprovedBy'
+        Name = 'inisApprovedBy'
         Value = Null
         Component = MasterCDS
         ComponentItem = 'isApprovedBy'
         DataType = ftBoolean
-        ParamType = ptInputOutput
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 394
     Top = 373
+  end
+  object DBViewAddOnDetail: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView1
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    PropertiesCellList = <>
+    Left = 656
+    Top = 360
+  end
+  object spUpdateMovementItem_ApprovedBy: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_ProjectsImprovements_ApprovedBy'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisApprovedBy'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isApprovedBy'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 834
+    Top = 349
+  end
+  object spUpdateMovementItem_Performed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_MovementItem_ProjectsImprovements_Performed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPerformed'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isPerformed'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 834
+    Top = 413
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProjectsImprovements_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 846
+    Top = 152
+  end
+  object spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProjectsImprovements_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = Null
+        Component = DetailDCS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 846
+    Top = 224
   end
 end

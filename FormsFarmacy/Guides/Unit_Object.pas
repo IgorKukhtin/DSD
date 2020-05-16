@@ -174,6 +174,12 @@ type
     macUpdateUnit_SunIncome_list: TMultiAction;
     macUpdateUnit_SunIncome: TMultiAction;
     bbUpdateUnit_SunIncome: TdxBarButton;
+    spUpdate_HT_SUN: TdsdStoredProc;
+    ExecuteDialogUnit_HT_SUN: TExecuteDialog;
+    actUpdate_Unit_HT_SUN: TdsdDataSetRefresh;
+    macUpdateUnit_HT_Sun_list: TMultiAction;
+    macUpdateUnit_HT_Sun: TMultiAction;
+    bb: TdxBarButton;
   private
     { Private declarations }
   public

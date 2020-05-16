@@ -164,9 +164,11 @@ type
     bbactPrintDays2: TdxBarButton;
     bbactPrintDays3: TdxBarButton;
     bbactPrintDays4: TdxBarButton;
-    actPrintDays1_test: TdsdPrintAction;
+    actPrintDays1_cuter: TdsdPrintAction;
     bbPrintDays1_test: TdxBarButton;
-    spPrintDays1_test: TdsdStoredProc;
+    spPrintDays1_cuter: TdsdStoredProc;
+    actPrintDays2_cuter: TdsdPrintAction;
+    bbPrintDays2_cuter: TdxBarButton;
   private
     { Private declarations }
   public

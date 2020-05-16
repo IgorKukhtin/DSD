@@ -124,6 +124,8 @@ type
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
     WmsNameCalc: TcxGridDBColumn;
+    actGoods_shOpenChoice: TOpenChoiceForm;
+    actGoodsKind_shOpenForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

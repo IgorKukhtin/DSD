@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
              , T1_SUN_v2 TFloat, T2_SUN_v2 TFloat, T1_SUN_v4 TFloat
              , SunIncome TFloat, Sun_v2Income TFloat, Sun_v4Income TFloat
+             , HT_SUN_v1 TFloat, HT_SUN_v2 TFloat, HT_SUN_v4 TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
              , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
@@ -142,6 +143,10 @@ BEGIN
       , CASE WHEN COALESCE (ObjectFloat_SunIncome.ValueData,0) > 0 THEN ObjectFloat_SunIncome.ValueData ELSE 30 END        ::TFloat AS SunIncome
       , CASE WHEN COALESCE (ObjectFloat_Sun_v2Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v2Income.ValueData ELSE 30 END  ::TFloat AS Sun_v2Income
       , CASE WHEN COALESCE (ObjectFloat_Sun_v4Income.ValueData,0) > 0 THEN ObjectFloat_Sun_v4Income.ValueData ELSE 30 END  ::TFloat AS Sun_v4Income
+
+      , COALESCE (ObjectFloat_HT_SUN_v1.ValueData,0) ::TFloat AS HT_SUN_v1
+      , COALESCE (ObjectFloat_HT_SUN_v2.ValueData,0) ::TFloat AS HT_SUN_v2
+      , COALESCE (ObjectFloat_HT_SUN_v4.ValueData,0) ::TFloat AS HT_SUN_v4
 
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
@@ -418,6 +423,16 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Sun_v4Income
                               ON ObjectFloat_Sun_v4Income.ObjectId = Object_Unit.Id
                              AND ObjectFloat_Sun_v4Income.DescId = zc_ObjectFloat_Unit_Sun_v4Income()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v1
+                              ON ObjectFloat_HT_SUN_v1.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_HT_SUN_v1.DescId = zc_ObjectFloat_Unit_HT_SUN_v1()
+        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v2
+                              ON ObjectFloat_HT_SUN_v2.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_HT_SUN_v2.DescId = zc_ObjectFloat_Unit_HT_SUN_v2()
+        LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v4
+                              ON ObjectFloat_HT_SUN_v4.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_HT_SUN_v4.DescId = zc_ObjectFloat_Unit_HT_SUN_v4()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id

@@ -861,15 +861,20 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeVATBalanceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeVATBalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');
    exit;
 
-{  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindDialogForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindDialogForm');
-  exit;
+{
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeVATBalanceForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeVATBalanceForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindForm');
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_IncomeSale_UseNDSKindDialogForm'));
+    TdsdFormStorageFactory.GetStorage.Load('TReport_IncomeSale_UseNDSKindDialogForm');
+    exit;
+
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodForm'));
     TdsdFormStorageFactory.GetStorage.Load('TReport_NomenclaturePeriodForm');
     TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_NomenclaturePeriodDialogForm'));
@@ -1606,6 +1611,9 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_HT_SUN_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_HT_SUN_EditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SunIncome_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_SunIncome_EditForm');

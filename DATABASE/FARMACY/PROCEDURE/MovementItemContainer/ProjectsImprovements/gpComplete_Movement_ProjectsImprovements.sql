@@ -18,7 +18,20 @@ BEGIN
     THEN
       RAISE EXCEPTION 'Провкдкние вам запрещено, обратитесь к системному администратору';
     END IF;
-                                                 
+    
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF EXISTS(SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Amount <> 1 AND MovementItem.isErased = False)
+    THEN
+        RAISE EXCEPTION 'Ошибка. Не все доработки выполнены.';
+    END IF;    
+
+    -- проверка - проведенные/удаленные документы Изменять нельзя
+    IF COALESCE((SELECT MovementBoolean.ValueData FROM MovementBoolean 
+                 WHERE MovementBoolean.MovementId = inMovementId AND MovementBoolean.DescId = zc_MovementBoolean_ApprovedBy()), False) = False
+    THEN
+        RAISE EXCEPTION 'Ошибка. Проект не утвержден.';
+    END IF;
+                                                     
     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 

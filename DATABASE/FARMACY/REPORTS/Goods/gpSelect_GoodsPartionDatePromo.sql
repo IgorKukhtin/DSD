@@ -12,7 +12,8 @@ RETURNS TABLE (UnitID Integer, UnitCode Integer, UnitName TVarChar,
                GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, PartionDateKindName TVarChar,
                Remains TFloat, ExpirationDate TDateTime, DayOverdue Integer,
                InvNumber TVarChar, MakerName TVarChar,
-               MainJuridicalId Integer, MainJuridicalName TVarChar  --Наше Юр. лицо
+               MainJuridicalId Integer, MainJuridicalName TVarChar,  --Наше Юр. лицо
+               PriceWithVAT TFloat
               ) AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -112,6 +113,7 @@ BEGIN
                                , Container.ObjectId
                                , Container.Amount
                                , ContainerLinkObject.ObjectId                       AS PartionGoodsId
+                               , MIFloat_PriceWithVAT.ValueData                     AS PriceWithVAT
                           FROM Container
                           
                                INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = Container.ObjectId
@@ -119,6 +121,23 @@ BEGIN
                                LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
 
+                               LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                             ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                            AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                               LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                               -- элемент прихода
+                               LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                               -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                               LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                           ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                          AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                               -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                               LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                               
+                               LEFT JOIN MovementItemFloat AS MIFloat_PriceWithVAT
+                                                           ON MIFloat_PriceWithVAT.MovementItemId = COALESCE(MI_Income_find.Id,MI_Income.Id)
+                                                          AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
+                               
                           WHERE Container.DescId = zc_Container_CountPartionDate()
                             AND (Container.WhereObjectId = inUnitId OR inUnitId = 0)
                             AND Container.Amount <> 0
@@ -139,6 +158,7 @@ BEGIN
                                              CURRENT_DATE)                                                                   AS DayOverdue
                                  , Object_PartionGoods.ObjectCode                                                            AS MovementIncomeID
                                  , Movement_Income.OperDate                                                                  AS IncomeOperDate
+                                 , Container.PriceWithVAT                                                                    AS PriceWithVAT  
                             FROM tmpContainer AS Container
 
                                  LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.ID = Container.PartionGoodsId
@@ -167,8 +187,9 @@ BEGIN
          , Container.DayOverdue::Integer          AS DayOverdue
          , tmpMIPromo.InvNumber                   AS InvNumber
          , Object_Maker.ValueData                 AS MakerName
-         , Object_MainJuridical.Id                  AS MainJuridicalId
-         , Object_MainJuridical.ValueData           AS MainJuridicalName
+         , Object_MainJuridical.Id                AS MainJuridicalId
+         , Object_MainJuridical.ValueData         AS MainJuridicalName
+         , Container.PriceWithVAT                 AS PriceWithVAT 
     FROM tmpPDContainer AS Container
 
          INNER JOIN tmpMIPromo ON tmpMIPromo.GoodsId = Container.ObjectId
