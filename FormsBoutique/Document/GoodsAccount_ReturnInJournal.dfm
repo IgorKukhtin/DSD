@@ -221,6 +221,15 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         Options.Editing = False
         Width = 160
       end
+      object CurrencyClientName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
+        DataBinding.FieldName = 'CurrencyClientName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+        Options.Editing = False
+        Width = 50
+      end
       object TotalSummChange: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080
         DataBinding.FieldName = 'TotalSummChange'
@@ -241,6 +250,26 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1057#1091#1084#1084#1072' '#1074#1086#1079#1074#1088#1072#1090#1072' '#1086#1087#1083#1072#1090#1099' '#1043#1056#1053
+        Width = 80
+      end
+      object TotalSummPay_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummPay_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object TotalSummChange_curr: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089#1082#1080#1076#1082#1080' ('#1074' '#1074#1072#1083#1102#1090#1077')'
+        DataBinding.FieldName = 'TotalSummChange_curr'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object Comment: TcxGridDBColumn
@@ -1084,6 +1113,7 @@ object GoodsAccount_ReturnInJournalForm: TGoodsAccount_ReturnInJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

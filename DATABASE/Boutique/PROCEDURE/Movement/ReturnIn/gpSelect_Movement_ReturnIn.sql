@@ -25,7 +25,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , TotalSummPay_curr TFloat
              , TotalSummPayOth_curr TFloat
              
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar
+             , ToId Integer, ToName TVarChar
+             , CurrencyClientId Integer, CurrencyClientName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isProtocol Boolean
@@ -114,6 +116,8 @@ BEGIN
            , Object_From.ValueData                       AS FromName
            , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
+           , Object_CurrencyClient.Id                    AS CurrencyClientId
+           , Object_CurrencyClient.ValueData             AS CurrencyClientName
            , MovementString_Comment.ValueData            AS Comment
 
            , Object_Insert.ValueData                     AS InsertName
@@ -165,6 +169,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyClient
+                                         ON MovementLinkObject_CurrencyClient.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyClient.DescId = zc_MovementLinkObject_CurrencyClient()
+            LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = MovementLinkObject_CurrencyClient.ObjectId
+
             /*LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()*/
@@ -173,7 +183,7 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
-    
+
             LEFT JOIN MovementLinkObject AS MLO_Insert
                                          ON MLO_Insert.MovementId = Movement.Id
                                         AND MLO_Insert.DescId = zc_MovementLinkObject_Insert()

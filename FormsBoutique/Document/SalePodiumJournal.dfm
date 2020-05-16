@@ -300,6 +300,15 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 159
       end
+      object CurrencyClientName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
+        DataBinding.FieldName = 'CurrencyClientName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+        Options.Editing = False
+        Width = 50
+      end
       object TotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
@@ -1366,6 +1375,7 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

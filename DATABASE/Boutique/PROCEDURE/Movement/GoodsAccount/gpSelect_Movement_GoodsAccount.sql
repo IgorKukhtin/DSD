@@ -16,8 +16,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSummPay TFloat
              , TotalSummChange TFloat
+             , TotalSummPay_curr TFloat
+             , TotalSummChange_curr TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , CurrencyClientId Integer, CurrencyClientName TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isProtocol Boolean
@@ -82,11 +85,17 @@ BEGIN
 
            , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
-       
+
+           , MovementFloat_TotalSummPay_curr.ValueData        ::TFloat AS TotalSummPay_curr
+           , MovementFloat_TotalSummChange_curr.ValueData     ::TFloat AS TotalSummChange_curr
+
            , Object_From.Id                              AS FromId
            , Object_From.ValueData                       AS FromName
            , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
+           , Object_CurrencyClient.Id                    AS CurrencyClientId
+           , Object_CurrencyClient.ValueData             AS CurrencyClientName
+
            , MovementString_Comment.ValueData            AS Comment
 
            , Object_Insert.ValueData                     AS InsertName
@@ -104,6 +113,13 @@ BEGIN
                                     ON MovementFloat_TotalSummChange.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummChange.DescId     = zc_MovementFloat_TotalSummChange()
 
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPay_curr
+                                    ON MovementFloat_TotalSummPay_curr.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPay_curr.DescId = zc_MovementFloat_TotalSummPay_curr()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange_curr
+                                    ON MovementFloat_TotalSummChange_curr.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummChange_curr.DescId = zc_MovementFloat_TotalSummChange_curr()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
@@ -114,7 +130,12 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyClient
+                                         ON MovementLinkObject_CurrencyClient.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyClient.DescId = zc_MovementLinkObject_CurrencyClient()
+            LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = MovementLinkObject_CurrencyClient.ObjectId
+
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id
                                   AND MovementDate_Insert.DescId     = zc_MovementDate_Insert()
@@ -139,6 +160,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .». 
+ 16.05.20         *
  14.07.17         *
  18.05.17         *
 */

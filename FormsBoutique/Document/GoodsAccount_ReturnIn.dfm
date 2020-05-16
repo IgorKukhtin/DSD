@@ -369,14 +369,12 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 310
     ClientRectBottom = 280
     ClientRectRight = 1054
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -384,7 +382,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Height = 256
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 286
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -999,9 +996,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitLeft = -115
-    ExplicitTop = 403
-    ExplicitWidth = 1169
     object DBLabelNameFull: TcxDBLabel
       Left = 0
       Top = 0
@@ -1017,7 +1011,6 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
       Style.Font.Name = 'Tahoma'
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
-      ExplicitWidth = 1169
       Height = 30
       Width = 1054
       AnchorX = 527
@@ -1064,7 +1057,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Value = Null
         Component = GuidesFrom
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1072,7 +1065,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Value = Null
         Component = GuidesTo
         ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end
       item
@@ -1820,6 +1813,7 @@ object GoodsAccount_ReturnInForm: TGoodsAccount_ReturnInForm
         Param.MultiSelectSeparator = ','
         DataSummaryItemIndex = 0
       end>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end

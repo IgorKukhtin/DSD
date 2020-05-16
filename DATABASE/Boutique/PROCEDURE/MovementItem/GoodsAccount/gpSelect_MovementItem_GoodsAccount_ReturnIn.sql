@@ -27,6 +27,7 @@ RETURNS TABLE (Id Integer, PartionId Integer
              , TotalSummToPay TFloat
              , TotalPay_Grn TFloat, TotalPay_USD TFloat, TotalPay_Eur TFloat, TotalPay_Card TFloat
              , TotalPay TFloat, SummChangePercent TFloat
+             , TotalPay_curr TFloat, SummChangePercent_curr TFloat
              
              , Amount_USD_Exc    TFloat
              , Amount_EUR_Exc    TFloat
@@ -142,6 +143,10 @@ BEGIN
                            , MovementItem.Amount                                   AS Amount
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
+                            --Итого сумма оплаты (в валюте)
+                           , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)          AS TotalPay_curr
+                            --Сумма дополнительной Скидки (в валюте)
+                           , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0) AS SummChangePercent_curr
                            , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased                                 AS isErased
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
@@ -161,7 +166,14 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay
                                                         ON MIFloat_TotalPay.MovementItemId = MovementItem.Id
                                                        AND MIFloat_TotalPay.DescId         = zc_MIFloat_TotalPay()    
-                           
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                        ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                        ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
@@ -189,6 +201,8 @@ BEGIN
                            , COALESCE (tmpMI_ReturnIn.TotalSummToPay, 0)                  AS TotalSummToPay
                            , COALESCE (tmpMI_ReturnIn.TotalChangePercent, 0)              AS TotalChangePercent
                            , COALESCE (tmpMI_Master.TotalPay, 0)                          AS TotalPay
+                           , COALESCE (tmpMI_Master.SummChangePercent_curr, 0)            AS SummChangePercent_curr
+                           , COALESCE (tmpMI_Master.TotalPay_curr, 0)                     AS TotalPay_curr
                            , COALESCE (tmpMI_ReturnIn.TotalPay, 0)                        AS TotalPay_ReturnIn
                            , COALESCE (tmpMI_ReturnIn.SummDebt, 0)                        AS SummDebt
                            , COALESCE (tmpMI_Master.Comment, '')                          AS Comment
@@ -271,6 +285,8 @@ BEGIN
            , tmpMI.TotalPay                    :: TFloat AS TotalPay
            , tmpMI.SummChangePercent           :: TFloat AS SummChangePercent
 
+           , tmpMI.TotalPay_curr               :: TFloat
+           , tmpMI.SummChangePercent_curr      :: TFloat
 
            , tmpMI_Child_Exc.Amount_USD        :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
            , tmpMI_Child_Exc.Amount_EUR        :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
@@ -324,6 +340,11 @@ BEGIN
                            , MovementItem.Amount                                   AS Amount
                            , COALESCE (MIFloat_TotalPay.ValueData, 0)              AS TotalPay
                            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)     AS SummChangePercent
+                            --Итого сумма оплаты (в валюте)
+                           , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)          AS TotalPay_curr
+                            --Сумма дополнительной Скидки (в валюте)
+                           , COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0) AS SummChangePercent_curr
+                           
                            , COALESCE (MIString_Comment.ValueData,'')              AS Comment
                            , MovementItem.isErased                                 AS isErased
                            , ROW_NUMBER() OVER (PARTITION BY MovementItem.isErased ORDER BY MovementItem.Id ASC) AS Ord
@@ -343,7 +364,14 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent
                                                         ON MIFloat_SummChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_SummChangePercent.DescId         = zc_MIFloat_SummChangePercent()    
-                           
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                        ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                            LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                        ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                              ON MILinkObject_PartionMI.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_PartionMI.DescId         = zc_MILinkObject_PartionMI()
@@ -425,7 +453,10 @@ BEGIN
            , tmpMI_Child.Amount_Bank                            :: TFloat AS TotalPay_Card
            , tmpMI.TotalPay                                     :: TFloat AS TotalPay
            , tmpMI.SummChangePercent                            :: TFloat AS SummChangePercent
-                                                             
+
+           , tmpMI.TotalPay_curr                                :: TFloat
+           , tmpMI.SummChangePercent_curr                       :: TFloat
+
            , tmpMI_Child_Exc.Amount_USD                         :: TFloat AS Amount_USD_Exc    -- Сумма USD - обмен приход
            , tmpMI_Child_Exc.Amount_EUR                         :: TFloat AS Amount_EUR_Exc    -- Сумма EUR - обмен приход
            , tmpMI_Child_Exc.Amount_GRN                         :: TFloat AS Amount_GRN_Exc    -- Сумма GRN - обмен расход
@@ -505,6 +536,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.05.20         *
  06.07.17         *
  18.05.17         *
 */

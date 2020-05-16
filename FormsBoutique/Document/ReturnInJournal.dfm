@@ -293,6 +293,15 @@ object ReturnInJournalForm: TReturnInJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 163
       end
+      object CurrencyClientName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
+        DataBinding.FieldName = 'CurrencyClientName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'
+        Options.Editing = False
+        Width = 50
+      end
       object ToName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ToName'
