@@ -138,7 +138,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_CountReceipt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountReceipt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_CountReceipt', 'Кол-во партий по рецептуре' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountReceipt');
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_CountReceipt', 'Кол-во партий для замеса' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_CountReceipt');
 
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsPropertyValue_Amount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsPropertyValue_Amount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;

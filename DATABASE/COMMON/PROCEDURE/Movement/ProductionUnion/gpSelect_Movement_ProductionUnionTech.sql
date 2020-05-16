@@ -148,6 +148,10 @@ BEGIN
                                , COALESCE (MIFloat_CuterCount.ValueData, 0)                     AS CuterCount
                                , COALESCE ((ObjectBoolean_UnitFrom_PartionDate.ValueData = TRUE AND ObjectBoolean_UnitTo_PartionDate.ValueData = TRUE), FALSE) AS isPartionDate
                           FROM Movement
+                               LEFT JOIN MovementBoolean AS MB_Peresort
+                                                         ON MB_Peresort.MovementId = Movement.Id
+                                                        AND MB_Peresort.DescId     = zc_MovementBoolean_Peresort()
+                                                        AND MB_Peresort.ValueData  = TRUE
                                INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                       AND MovementItem.isErased   = FALSE
                                                       AND MovementItem.DescId     = zc_MI_Master()
@@ -184,6 +188,7 @@ BEGIN
                               AND Movement.DescId = zc_Movement_ProductionUnion()
                               AND MLO_From.ObjectId = inFromId
                               AND MLO_To.ObjectId = inToId
+                              AND MB_Peresort.MovementId IS NULL
                            )
       , tmpMI_order22 AS (SELECT tmpMI_order2.OperDate
                                , tmpMI_order2.MovementItemId AS MovementItemId_order
