@@ -8,7 +8,8 @@ join MovementLinkObjectDesc as mlod1 ON  mlod1 .Id = mlo1.DescId
 and MovementItem .ObjectId = 11982855
 and mlo1 .ObjectId = 9951517
 where Movement.OperDate >= CURRENT_DATE - INTERVAL '21 DAY'
-
+-- and  (Movement.StatusId = zc_Enum_Status_Erased()
+-- or MovementItem .iserased = true)
 
 
 

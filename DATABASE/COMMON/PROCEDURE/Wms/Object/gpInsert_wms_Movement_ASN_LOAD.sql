@@ -91,7 +91,8 @@ BEGIN
                                                       AND wms_MI_Incoming.StatusId_wms    = zc_Enum_Status_UnComplete()
 
                        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
-                         AND Movement.StatusId IN (/*zc_Enum_Status_UnComplete(), */zc_Enum_Status_Complete())
+                            -- !!!сразу как закрыли ящик!!!
+                         AND Movement.StatusId IN (zc_Enum_Status_UnComplete()) -- , zc_Enum_Status_Complete()
                        GROUP BY -- ШК груза (EAN-128)
                                 Object_BarCodeBox.ValueData
                               --COALESCE (Object_BarCodeBox.ValueData, '') || '-' || MI.ParentId :: TVarChar

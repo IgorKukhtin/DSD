@@ -118,7 +118,7 @@ AS
            , CAST ('PrintMovement_Sale32294926' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198')
+       AND OH_JuridicalDetails.OKPO IN ('32294926', '40720198', '32294897')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 -- ≈œ≤÷≈Õ“–   “Œ¬, –≥‰Ó √ÛÔ, 

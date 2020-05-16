@@ -262,9 +262,15 @@ BEGIN
                    , SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T2 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) * COALESCE (MIContainer.Price,0) ELSE 0 END) AS Summ_t2
               FROM MovementItemContainer AS MIContainer
                    INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MIContainer.WhereObjectId_analyzer
+                   LEFT JOIN MovementBoolean AS MB_NotMCS
+                                             ON MB_NotMCS.MovementId = MIContainer.MovementId
+                                            AND MB_NotMCS.DescId     = zc_MovementBoolean_NotMCS()
+                                            AND MB_NotMCS.ValueData  = TRUE
               WHERE MIContainer.DescId         = zc_MIContainer_Count()
                 AND MIContainer.MovementDescId = zc_Movement_Check()
                 AND MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate
+                -- !!!не учитывать если галка "не для СУН"
+                AND MB_NotMCS.MovementId IS NULL
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0

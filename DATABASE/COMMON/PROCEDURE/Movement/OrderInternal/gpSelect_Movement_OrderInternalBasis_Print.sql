@@ -177,30 +177,30 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
            , zfFormat_BarCode (zc_BarCodePref_Object(), COALESCE (View_GoodsByGoodsKind.Id, Object_Goods.Id)) AS IdBarCode
 
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.Amount              ELSE 0 END AS Amount_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSecond        ELSE 0 END AS AmountSecond_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend          ELSE 0 END AS AmountSend_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSendOut       ELSE 0 END AS AmountSendOut_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountP             ELSE 0 END AS AmountP_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartner       ELSE 0 END AS AmountPartner_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerPrior  ELSE 0 END AS AmountPartnerPrior_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountPartnerSecond ELSE 0 END AS AmountPartnerSecond_sh
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSend          ELSE 0 END AS Amount_sh_calc
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountSendOut       ELSE 0 END AS AmountOut_sh_calc
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountP             ELSE 0 END AS AmountP_sh_calc
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.AmountRemains       ELSE 0 END AS AmountRemains_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.Amount              / ObjectFloat_Weight.ValueData ELSE 0 END AS Amount_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.AmountSecond        / ObjectFloat_Weight.ValueData ELSE 0 END AS AmountSecond_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountSend                                         ELSE 0 END AS AmountSend_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountSendOut                                      ELSE 0 END AS AmountSendOut_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountP                                            ELSE 0 END AS AmountP_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.AmountPartner       / ObjectFloat_Weight.ValueData ELSE 0 END AS AmountPartner_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.AmountPartnerPrior  / ObjectFloat_Weight.ValueData ELSE 0 END AS AmountPartnerPrior_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.AmountPartnerSecond / ObjectFloat_Weight.ValueData ELSE 0 END AS AmountPartnerSecond_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountSend                                         ELSE 0 END AS Amount_sh_calc
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountSendOut                                      ELSE 0 END AS AmountOut_sh_calc
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()                                      THEN tmpMI.AmountP                                            ELSE 0 END AS AmountP_sh_calc
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN tmpMI.AmountRemains       / ObjectFloat_Weight.ValueData ELSE 0 END AS AmountRemains_sh
 
-           , tmpMI.Amount               * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount
-           , tmpMI.AmountSecond         * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSecond
+           , tmpMI.Amount             /**CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS Amount
+           , tmpMI.AmountSecond       /**CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountSecond
            , tmpMI.AmountSend           * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSend
            , tmpMI.AmountSendOut        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountSendOut
            , tmpMI.AmountP              * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountP
-           , tmpMI.AmountPartner        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartner
-           , tmpMI.AmountPartnerPrior   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerPrior
-           , tmpMI.AmountPartnerSecond  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountPartnerSecond
-           , tmpMI.Amount_calc          * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc
-           , tmpMI.Amount_calc_Pack     * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS Amount_calc_Pack
-           , tmpMI.AmountRemains        * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END AS AmountRemains
+           , tmpMI.AmountPartner      /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartner
+           , tmpMI.AmountPartnerPrior /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartnerPrior
+           , tmpMI.AmountPartnerSecond/** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountPartnerSecond
+           , tmpMI.Amount_calc        /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS Amount_calc
+           , tmpMI.Amount_calc_Pack   /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS Amount_calc_Pack
+           , tmpMI.AmountRemains      /** CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END*/ AS AmountRemains
 
            , SUM (COALESCE (tmpMI.Amount,0) + COALESCE (tmpMI.AmountSecond,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData) AS PrintGroup_Scan
            , SUM (COALESCE (tmpMI.Amount_calc_Pack,0)) OVER (PARTITION BY Object_Unit.Id, Object_GoodsGroup.ValueData)                         AS PrintGroup_Scan_Pack

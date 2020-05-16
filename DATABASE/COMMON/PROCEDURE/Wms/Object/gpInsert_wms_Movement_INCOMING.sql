@@ -65,8 +65,9 @@ BEGIN
                                                                        --OR Movement.OperDate = CURRENT_DATE - INTERVAL '0 DAY'
                                                                             )
                          WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
-                           AND Movement.StatusId IN (zc_Enum_Status_Complete()) -- , zc_Enum_Status_UnComplete()
-                         )
+                             -- !!!сразу как закрыли ящик!!!
+                          AND Movement.StatusId IN (zc_Enum_Status_UnComplete()) -- , zc_Enum_Status_Complete()
+                        )
            , tmpMI AS (SELECT wms_MI_Incoming.sku_id
                               -- дата документа
                             , wms_MI_Incoming.OperDate

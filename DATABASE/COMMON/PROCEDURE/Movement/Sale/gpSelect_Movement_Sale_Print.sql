@@ -1442,6 +1442,7 @@ BEGIN
        ORDER BY CASE WHEN vbGoodsPropertyId IN (83954  -- Метро
                                               , 83963  -- Ашан
                                               , 404076 -- Новус
+                                              , 83956  -- Фора
                                                )
                           THEN zfConvert_StringToNumber (COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '0')))
                      ELSE '0'

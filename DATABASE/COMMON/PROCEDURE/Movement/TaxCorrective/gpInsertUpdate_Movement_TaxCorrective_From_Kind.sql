@@ -250,6 +250,7 @@ BEGIN
             GROUP BY MovementItem.ObjectId
                    , MILinkObject_GoodsKind.ObjectId
                    , MIFloat_Price.ValueData
+                   , MIFloat_PriceTax_calc.ValueData
                    , MIFloat_CountForPrice.ValueData
            ;
      ELSE

@@ -28,7 +28,7 @@ BEGIN
      
         , tmpReceiptMain AS (SELECT ObjectLink_Receipt_Goods.ChildObjectId     AS GoodsId
                                   , ObjectLink_Receipt_GoodsKind.ChildObjectId AS GoodsKindId
-                                  , ObjectLink_Receipt_GoodsKindComplete.ChildObjectId AS GoodsKindCompleteId
+                                  , COALESCE (ObjectLink_Receipt_GoodsKindComplete.ChildObjectId, zc_GoodsKind_Basis()) AS GoodsKindCompleteId
                                   , Object_Receipt.Id                          AS ReceiptId
                                   , Object_Receipt.ObjectCode                  AS ReceiptCode
                                   , ObjectString_Receipt_Code.ValueData        AS ReceiptCode_user

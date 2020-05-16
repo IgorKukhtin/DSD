@@ -158,6 +158,7 @@ BEGIN
 
            , Object_GoodsKind.Id                  AS GoodsKindId
            , Object_GoodsKind.ValueData           AS GoodsKindName
+           , Object_Measure.ValueData             AS MeasureName
 
            , 0                                    AS ReceiptId_basis
            , Object_Receipt.Id                    AS ReceiptId

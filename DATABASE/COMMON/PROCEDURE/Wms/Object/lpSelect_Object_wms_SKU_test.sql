@@ -180,7 +180,7 @@ BEGIN
                                                           -- расчетная Категория - некоторым ставим лучшую 
                                                         --AND tmpMovement_all.GoodsTypeKindId_calc = tmpGoods.GoodsTypeKindId
                            ORDER BY 1
-                           LIMIT 1
+                           LIMIT 2
                           )
         -- Результат
         SELECT DISTINCT
