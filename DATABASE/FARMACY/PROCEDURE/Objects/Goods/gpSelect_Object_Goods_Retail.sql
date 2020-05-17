@@ -35,6 +35,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
              , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat
+             , LimitSUN_T1 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
              , isInvisibleSUN boolean
@@ -308,6 +309,7 @@ BEGIN
            , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
            , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
            , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
+           , COALESCE (Object_Goods_Retail.LimitSUN_T1,0)   :: TFloat AS LimitSUN_T1
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
@@ -590,6 +592,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 17.05.20         * LimitSUN_T1
  11.05.20         *
  03.05.20         * isNot_Sun_v4
  29.10.19                                                                     * Плоские таблицы

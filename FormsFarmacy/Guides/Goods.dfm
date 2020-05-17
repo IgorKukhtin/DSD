@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 1166
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1182
-  ExplicitHeight = 482
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -525,6 +525,16 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
+          object LimitSUN_T1: TcxGridDBColumn
+            Caption = #1054#1089#1090'. '#1076#1083#1103' ('#1057#1059#1053' v2, v2-'#1055#1048')  (T1)'
+            DataBinding.FieldName = 'LimitSUN_T1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.##; ; '
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053'-2 '#1080' '#1057#1059#1053'-2-'#1087#1080' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1058'1'
+            Width = 70
+          end
           object isResolution_224: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
@@ -569,10 +579,80 @@ inherited GoodsForm: TGoodsForm
   inherited ActionList: TActionList
     Left = 103
     Top = 255
+    object actUpdate_Goods_LimitSun: TdsdDataSetRefresh [0]
+      Category = 'LimitSum'
+      MoveParams = <>
+      StoredProc = spUpdate_Goods_LimitSun_T
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Goods_LimitSun_T
+        end>
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
     inherited actRefresh: TdsdDataSetRefresh
       Category = 'Refresh'
     end
-    object macUpdate_isNot_Sun_v4_yes: TMultiAction [2]
+    object ExecuteDialogGoods_LimitSum: TExecuteDialog [2]
+      Category = 'LimitSum'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      ImageIndex = 26
+      FormName = 'TGoods_LimitSUN_T_EditForm'
+      FormNameParam.Value = 'TGoods_LimitSUN_T_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inLimitSUN_T1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inLimitSUN_T1'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inis_v1'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inis_v1'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateGoods_LimitSUN_list: TMultiAction [4]
+      Category = 'LimitSum'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Goods_LimitSun
+        end>
+      View = cxGridDBTableView
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      ImageIndex = 43
+    end
+    object macUpdate_isNot_Sun_v4_yes: TMultiAction [5]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       ActionList = <
@@ -590,7 +670,28 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
       ImageIndex = 7
     end
-    object actSimpleUpdateNot_v4_yes: TMultiAction [3]
+    object macUpdateGoods_LimitSUN: TMultiAction [6]
+      Category = 'LimitSum'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogGoods_LimitSum
+        end
+        item
+          Action = macUpdateGoods_LimitSUN_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      Hint = 
+        #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053' v2, v2-'#1055#1048' '#1079#1085#1072#1095#1077#1085#1080#1103' ' +
+        #1058'1'
+      ImageIndex = 43
+    end
+    object actSimpleUpdateNot_v4_yes: TMultiAction [7]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       ActionList = <
@@ -601,7 +702,7 @@ inherited GoodsForm: TGoodsForm
       Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
       Hint = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
     end
-    object actUpdate_isNot_Sun_v4_Yes: TdsdExecStoredProc [4]
+    object actUpdate_isNot_Sun_v4_Yes: TdsdExecStoredProc [8]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -612,7 +713,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1044#1040
     end
-    object macUpdateNot_v2_Yes: TMultiAction [5]
+    object macUpdateNot_v2_Yes: TMultiAction [9]
       Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
@@ -630,7 +731,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1044#1072
       ImageIndex = 7
     end
-    object actSimpleUpdateNot_v2_Yes: TMultiAction [6]
+    object actSimpleUpdateNot_v2_Yes: TMultiAction [10]
       Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
@@ -641,7 +742,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
       Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2 '#1044#1072
     end
-    object actUpdate_isNOT_v2_Yes: TdsdExecStoredProc [7]
+    object actUpdate_isNOT_v2_Yes: TdsdExecStoredProc [11]
       Category = 'UpdateNot'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -652,7 +753,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdateHot_Yes'
     end
-    object macUpdate_isNot_Sun_v4_No: TMultiAction [8]
+    object macUpdate_isNot_Sun_v4_No: TMultiAction [12]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       ActionList = <
@@ -670,7 +771,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
       ImageIndex = 77
     end
-    object actSimpleUpdateNot_v4_No: TMultiAction [9]
+    object actSimpleUpdateNot_v4_No: TMultiAction [13]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       ActionList = <
@@ -681,7 +782,7 @@ inherited GoodsForm: TGoodsForm
       Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
       Hint = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
     end
-    object actUpdate_isNot_Sun_v4_No: TdsdExecStoredProc [10]
+    object actUpdate_isNot_Sun_v4_No: TdsdExecStoredProc [14]
       Category = 'UpdateNot_v4'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -692,7 +793,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = '<'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2-'#1055#1048'> = '#1053#1045#1058
     end
-    object macUpdate_isSun_v3_yes: TMultiAction [11]
+    object macUpdate_isSun_v3_yes: TMultiAction [15]
       Category = 'v3'
       MoveParams = <>
       ActionList = <
@@ -708,7 +809,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1044#1040
       ImageIndex = 79
     end
-    object actSimpleUpdate_isSUN_v3_yes: TMultiAction [12]
+    object actSimpleUpdate_isSUN_v3_yes: TMultiAction [16]
       Category = 'v3'
       MoveParams = <>
       ActionList = <
@@ -719,7 +820,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1044#1040
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1044#1040
     end
-    object actUpdate_isSun_v3_yes: TdsdExecStoredProc [13]
+    object actUpdate_isSun_v3_yes: TdsdExecStoredProc [17]
       Category = 'v3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -730,7 +831,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdateNot_No'
     end
-    object macUpdate_isSun_v3_No: TMultiAction [14]
+    object macUpdate_isSun_v3_No: TMultiAction [18]
       Category = 'v3'
       MoveParams = <>
       ActionList = <
@@ -746,7 +847,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053'> = '#1053#1045#1058
       ImageIndex = 58
     end
-    object actSimpleUpdate_isSUN_v3_No: TMultiAction [15]
+    object actSimpleUpdate_isSUN_v3_No: TMultiAction [19]
       Category = 'v3'
       MoveParams = <>
       ActionList = <
@@ -757,7 +858,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1053#1045#1058
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1053#1045#1058
     end
-    object actUpdate_isSun_v3_No: TdsdExecStoredProc [16]
+    object actUpdate_isSun_v3_No: TdsdExecStoredProc [20]
       Category = 'v3'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -795,7 +896,7 @@ inherited GoodsForm: TGoodsForm
       FormNameParam.Value = 'TGoodsEditForm'
       DataSetRefresh = spRefreshOneRecord
     end
-    object InsertRecord1: TInsertRecord [19]
+    object InsertRecord1: TInsertRecord [23]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -803,7 +904,7 @@ inherited GoodsForm: TGoodsForm
       Params = <>
       Caption = 'InsertRecord1'
     end
-    object macUpdateNot_v2_No: TMultiAction [20]
+    object macUpdateNot_v2_No: TMultiAction [24]
       Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
@@ -821,7 +922,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' <'#1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1076#1083#1103' '#1057#1059#1053'-v2> = '#1053#1045#1058
       ImageIndex = 77
     end
-    object actSimpleUpdateNot_v2_No: TMultiAction [21]
+    object actSimpleUpdateNot_v2_No: TMultiAction [25]
       Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
@@ -832,7 +933,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
       Hint = #1053#1054#1058'-'#1085#1077#1087#1077#1088#1077#1084#1077#1097#1072#1077#1084#1099#1081' '#1086#1089#1090#1072#1090#1086#1082' '#1053#1045#1058
     end
-    object actUpdate_isSun_v2_No: TdsdExecStoredProc [22]
+    object actUpdate_isSun_v2_No: TdsdExecStoredProc [26]
       Category = 'UpdateNot'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -868,7 +969,7 @@ inherited GoodsForm: TGoodsForm
           MultiSelectSeparator = ','
         end>
     end
-    object macSimpleUpdateNDS: TMultiAction [26]
+    object macSimpleUpdateNDS: TMultiAction [30]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -879,7 +980,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
     end
-    object mactAfterInsert: TMultiAction [27]
+    object mactAfterInsert: TMultiAction [31]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -894,7 +995,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'mactAfterInsert'
     end
-    object macUpdateNDS: TMultiAction [28]
+    object macUpdateNDS: TMultiAction [32]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -910,7 +1011,7 @@ inherited GoodsForm: TGoodsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1053#1044#1057' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1087#1088#1072#1081#1089#1072
       ImageIndex = 76
     end
-    object actUpdateNDS: TdsdExecStoredProc [29]
+    object actUpdateNDS: TdsdExecStoredProc [33]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -921,7 +1022,7 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'actUpdateNDS'
     end
-    object macUpdateNot_Yes: TMultiAction [30]
+    object macUpdateNot_Yes: TMultiAction [34]
       Category = 'UpdateNot'
       MoveParams = <>
       ActionList = <
@@ -1817,6 +1918,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateGoods_LimitSUN'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -1957,6 +2062,10 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdateInvisibleSUN: TdxBarButton
       Action = actUpdateInvisibleSUN
+      Category = 0
+    end
+    object bbUpdateGoods_LimitSUN: TdxBarButton
+      Action = macUpdateGoods_LimitSUN
       Category = 0
     end
   end
@@ -3335,5 +3444,40 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 216
     Top = 352
+  end
+  object spUpdate_Goods_LimitSun_T: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_LimitSUN_T'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inis_v1'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inis_v1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLimitSUN_T1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inLimitSUN_T1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1096
+    Top = 267
   end
 end
