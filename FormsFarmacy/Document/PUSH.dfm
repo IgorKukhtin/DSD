@@ -8,23 +8,23 @@ inherited PUSHForm: TPUSHForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 226
+    Top = 238
     Width = 707
-    Height = 274
-    ExplicitTop = 206
+    Height = 262
+    ExplicitTop = 226
     ExplicitWidth = 707
-    ExplicitHeight = 294
-    ClientRectBottom = 274
+    ExplicitHeight = 274
+    ClientRectBottom = 262
     ClientRectRight = 707
     inherited tsMain: TcxTabSheet
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088#1099' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072#1084#1080
       ExplicitWidth = 707
-      ExplicitHeight = 270
+      ExplicitHeight = 250
       inherited cxGrid: TcxGrid
         Width = 707
-        Height = 250
+        Height = 238
         ExplicitWidth = 707
-        ExplicitHeight = 270
+        ExplicitHeight = 250
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
           Styles.Content = nil
@@ -93,16 +93,16 @@ inherited PUSHForm: TPUSHForm
     object tsChild: TcxTabSheet
       Caption = #1044#1083#1103' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       ImageIndex = 1
-      ExplicitHeight = 270
+      ExplicitHeight = 250
       object cxGridChild: TcxGrid
         Left = 0
         Top = 0
         Width = 707
-        Height = 250
+        Height = 238
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 0
-        ExplicitHeight = 270
+        ExplicitHeight = 250
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -168,10 +168,10 @@ inherited PUSHForm: TPUSHForm
   end
   inherited DataPanel: TPanel
     Width = 707
-    Height = 200
+    Height = 212
     TabOrder = 3
     ExplicitWidth = 707
-    ExplicitHeight = 200
+    ExplicitHeight = 212
     inherited edInvNumber: TcxTextEdit
       Left = 8
       Top = 54
@@ -226,7 +226,7 @@ inherited PUSHForm: TPUSHForm
       Lines.Strings = (
         'edMessage')
       TabOrder = 6
-      Height = 140
+      Height = 134
       Width = 532
     end
     object edDateEndPUSH: TcxDateEdit
@@ -265,13 +265,13 @@ inherited PUSHForm: TPUSHForm
     end
     object edFunction: TcxTextEdit
       Left = 368
-      Top = 158
+      Top = 150
       TabOrder = 13
       Width = 330
     end
     object cxLabel6: TcxLabel
       Left = 166
-      Top = 159
+      Top = 151
       Caption = #1060#1091#1085#1082#1094#1080#1103' '#1087#1086#1083#1091#1095#1077#1085#1080#1103' '#1090#1077#1082#1089#1090' '#1089#1086#1086#1073#1097#1077#1085#1080#1103
     end
     object chbPoll: TcxCheckBox
@@ -283,7 +283,7 @@ inherited PUSHForm: TPUSHForm
     end
     object edRetail: TcxButtonEdit
       Left = 368
-      Top = 178
+      Top = 190
       Properties.Buttons = <
         item
           Default = True
@@ -298,7 +298,7 @@ inherited PUSHForm: TPUSHForm
     end
     object cxLabel19: TcxLabel
       Left = 166
-      Top = 179
+      Top = 191
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1080':'
     end
     object chbPharmacist: TcxCheckBox
@@ -307,6 +307,17 @@ inherited PUSHForm: TPUSHForm
       Caption = #1058#1086#1083#1100#1082#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1072#1084
       TabOrder = 18
       Width = 152
+    end
+    object edForm: TcxTextEdit
+      Left = 368
+      Top = 170
+      TabOrder = 19
+      Width = 330
+    end
+    object cxLabel7: TcxLabel
+      Left = 166
+      Top = 171
+      Caption = #1054#1090#1082#1088#1099#1074#1072#1090#1100' '#1089#1088#1072#1079#1091' '#1092#1086#1088#1084#1091
     end
   end
   inherited ActionList: TActionList
@@ -700,6 +711,13 @@ inherited PUSHForm: TPUSHForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Form'
+        Value = Null
+        Component = edForm
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 176
     Top = 272
@@ -792,6 +810,14 @@ inherited PUSHForm: TPUSHForm
         Component = GuidesRetail
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inForm'
+        Value = Null
+        Component = edForm
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     NeedResetData = True
     ParamKeyField = 'ioId'
@@ -848,6 +874,9 @@ inherited PUSHForm: TPUSHForm
       end
       item
         Control = edRetail
+      end
+      item
+        Control = edForm
       end>
     Left = 208
     Top = 233
@@ -1095,6 +1124,7 @@ inherited PUSHForm: TPUSHForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 382
     Top = 385
   end
@@ -1125,6 +1155,6 @@ inherited PUSHForm: TPUSHForm
         MultiSelectSeparator = ','
       end>
     Left = 488
-    Top = 168
+    Top = 176
   end
 end

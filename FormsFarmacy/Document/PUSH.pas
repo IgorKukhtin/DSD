@@ -70,6 +70,8 @@ type
     cxLabel19: TcxLabel;
     GuidesRetail: TdsdGuides;
     chbPharmacist: TcxCheckBox;
+    edForm: TcxTextEdit;
+    cxLabel7: TcxLabel;
   private
     { Private declarations }
   public

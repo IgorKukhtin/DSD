@@ -873,7 +873,8 @@ uses
   Unit_SunIncome_Edit in '..\..\FormsFarmacy\Guides\Unit_SunIncome_Edit.pas' {Unit_SunIncome_EditForm: TParentForm},
   Report_ImplementationPeriod in '..\..\FormsFarmacy\Report\Report_ImplementationPeriod.pas' {Report_ImplementationPeriodForm: TParentForm},
   Unit_HT_SUN_Edit in '..\..\FormsFarmacy\Guides\Unit_HT_SUN_Edit.pas' {Unit_HT_SUN_EditForm: TParentForm},
-  Goods_LimitSUN_T_Edit in '..\..\FormsFarmacy\Guides\Goods_LimitSUN_T_Edit.pas' {Goods_LimitSUN_T_EditForm: TParentForm};
+  Goods_LimitSUN_T_Edit in '..\..\FormsFarmacy\Guides\Goods_LimitSUN_T_Edit.pas' {Goods_LimitSUN_T_EditForm: TParentForm},
+  Report_WillNotOrder in '..\..\FormsFarmacy\Report\Report_WillNotOrder.pas' {Report_WillNotOrderForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
