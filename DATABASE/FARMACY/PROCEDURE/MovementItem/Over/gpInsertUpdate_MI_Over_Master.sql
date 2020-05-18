@@ -29,6 +29,11 @@ BEGIN
    --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Over());
    vbUserId:= lpGetUserBySession (inSession);
 
+   IF COALESCE (inMovementId,0) = 0
+   THEN 
+       RETURN;
+   END IF;
+   
    -- получаем кол-во распределенное по аптекам, и кол-во аптек (из нижнего грида)
    SELECT Sum(MI.Amount)::TFloat AS Amount 
         , COUNT(*) ::TFloat AS CountUnit
