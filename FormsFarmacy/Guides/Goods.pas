@@ -200,6 +200,13 @@ type
     macUpdateGoods_LimitSUN_list: TMultiAction;
     macUpdateGoods_LimitSUN: TMultiAction;
     bbUpdateGoods_LimitSUN: TdxBarButton;
+    GoodsPairSunName: TcxGridDBColumn;
+    spUpdate_GoodsPairSun: TdsdStoredProc;
+    actUpdate_GoodsPairSun: TdsdDataSetRefresh;
+    GoodsPairSunCode: TcxGridDBColumn;
+    ExecuteDialogGoodsPairSun: TExecuteDialog;
+    macUpdate_GoodsPairSun: TMultiAction;
+    bbUpdate_GoodsPairSun: TdxBarButton;
   private
     { Private declarations }
   public
