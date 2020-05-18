@@ -31,6 +31,11 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
+    IF inSession <> '3'
+    THEN
+      Return;
+    END IF;
+
      RETURN QUERY
      WITH
         tmpMovement AS (SELECT Movement.id

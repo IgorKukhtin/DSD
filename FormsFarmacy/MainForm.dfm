@@ -4,7 +4,7 @@ inherited MainForm: TMainForm
   ClientWidth = 730
   KeyPreview = True
   ExplicitWidth = 746
-  ExplicitHeight = 203
+  ExplicitHeight = 204
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -3645,6 +3645,14 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSearchRemainsVIP: TdsdOpenStaticForm
+      Category = #1054#1090#1095#1077#1090#1099
+      MoveParams = <>
+      Caption = #1055#1086#1080#1089#1082' '#1084#1077#1076#1080#1082#1072#1084#1077#1085#1090#1086#1074' VIP'
+      ShortCut = 117
+      FormName = 'TSearchRemainsVIPForm'
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4168,6 +4176,9 @@ inherited MainForm: TMainForm
       end
       object mniReport_Movement_ByPartionGoodsForm: TMenuItem
         Action = actReport_Movement_ByPartionGoodsForm
+      end
+      object actSearchRemainsVIP1: TMenuItem
+        Action = actSearchRemainsVIP
       end
       object N39: TMenuItem
         Caption = '-'

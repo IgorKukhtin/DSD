@@ -3737,6 +3737,16 @@ inherited MainCashForm2: TMainCashForm2
       ShortCut = 57429
       OnExecute = actUpdateProgramExecute
     end
+    object actOpenFormPUSH: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenFormPUSH'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = True
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

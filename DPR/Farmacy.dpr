@@ -89,7 +89,8 @@ uses
   OrderSpFozzXML in '..\SOURCE\EDI\OrderSpFozzXML.pas',
   DesadvFozzXML in '..\SOURCE\EDI\DesadvFozzXML.pas',
   PUSHMessageFarmacy in '..\FormsFarmacy\System\PUSHMessageFarmacy.pas' {PUSHMessageFarmacyForm},
-  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas';
+  IftminFozzXML in '..\SOURCE\EDI\IftminFozzXML.pas',
+  SearchRemainsVIP in '..\FormsFarmacy\Document\SearchRemainsVIP.pas' {SearchRemainsVIPForm};
 
 {$R *.res}
 
@@ -112,7 +113,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
 

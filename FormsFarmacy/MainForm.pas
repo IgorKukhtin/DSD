@@ -683,6 +683,8 @@ type
     N236: TMenuItem;
     actUnitForOrderInternalPromo: TdsdOpenForm;
     miUnitForOrderInternalPromo: TMenuItem;
+    actSearchRemainsVIP: TdsdOpenStaticForm;
+    actSearchRemainsVIP1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
