@@ -1617,6 +1617,8 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForOrderInternalPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitForOrderInternalPromoForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_HT_SUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_HT_SUN_EditForm');

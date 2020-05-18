@@ -681,6 +681,8 @@ type
     actProjectsImprovements1: TMenuItem;
     actReport_ImplementationPeriod: TdsdOpenForm;
     N236: TMenuItem;
+    actUnitForOrderInternalPromo: TdsdOpenForm;
+    miUnitForOrderInternalPromo: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);
