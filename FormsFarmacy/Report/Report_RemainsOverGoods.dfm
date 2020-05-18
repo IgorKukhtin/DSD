@@ -32,7 +32,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Width = 1104
         Height = 211
         ExplicitWidth = 1104
-        ExplicitHeight = 217
+        ExplicitHeight = 211
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -290,6 +290,13 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object isChoice: TcxGridDBColumn
+            Caption = #1054#1090#1073#1086#1088
+            DataBinding.FieldName = 'isChoice'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 49
+          end
           object GoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -1155,7 +1162,6 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         Height = 5
         AlignSplitter = salBottom
         Control = cxGrid1
-        ExplicitTop = 195
       end
     end
     object cxTabSheetTotal: TcxTabSheet
@@ -2333,8 +2339,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     end
   end
   inherited MasterDS: TDataSource
-    Left = 16
-    Top = 160
+    Left = 456
+    Top = 88
   end
   inherited MasterCDS: TClientDataSet
     MasterFields = 'GoodsId'
@@ -2470,8 +2476,8 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 80
-    Top = 168
+    Left = 416
+    Top = 80
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -3383,6 +3389,7 @@ inherited Report_RemainsOverGoodsForm: TReport_RemainsOverGoodsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 880
     Top = 312
   end
