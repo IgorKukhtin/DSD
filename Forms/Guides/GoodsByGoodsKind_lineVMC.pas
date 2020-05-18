@@ -126,6 +126,7 @@ type
     WmsNameCalc: TcxGridDBColumn;
     actGoods_shOpenChoice: TOpenChoiceForm;
     actGoodsKind_shOpenForm: TOpenChoiceForm;
+    actGoodsTypeKindChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public
