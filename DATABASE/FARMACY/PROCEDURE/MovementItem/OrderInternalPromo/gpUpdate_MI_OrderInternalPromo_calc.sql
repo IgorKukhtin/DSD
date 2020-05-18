@@ -96,7 +96,7 @@ BEGIN
              AND MovementItem.isErased = FALSE
              AND tmpMIPartner.JuridicalId IS NULL
           ) AS tmp;
-        
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

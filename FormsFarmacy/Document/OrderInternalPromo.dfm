@@ -1195,6 +1195,62 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end>
       isShowModal = False
     end
+    object actUnitForOrderInternalPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      TabSheet = tsMain
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'> ('#1079#1072#1103#1074#1082#1080' '#1074#1085'. ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099'))'
+      Hint = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'> ('#1079#1072#1103#1074#1082#1080' '#1074#1085'. ('#1084#1072#1088#1082#1077#1090'-'#1090#1086#1074#1072#1088#1099'))'
+      ImageIndex = 32
+      FormName = 'TUnitForOrderInternalPromoForm'
+      FormNameParam.Value = 'TUnitForOrderInternalPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailId'
+          Value = ''
+          Component = GuidesRetail
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inRetailName'
+          Value = ''
+          Component = GuidesRetail
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inStartDate'
+          Value = 43580d
+          Component = edStartSale
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inEndDate'
+          Value = 43790d
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actPromoJournalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -1622,6 +1678,14 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
         end
         item
           Visible = True
+          ItemName = 'bbUnitForOrderInternalPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateMaster_calc'
         end
         item
@@ -1784,6 +1848,10 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     end
     object bbUpdate_Price: TdxBarButton
       Action = actUpdate_Price
+      Category = 0
+    end
+    object bbUnitForOrderInternalPromo: TdxBarButton
+      Action = actUnitForOrderInternalPromo
       Category = 0
     end
   end
@@ -2255,6 +2323,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 334
     Top = 409
   end
@@ -2443,6 +2512,7 @@ inherited OrderInternalPromoForm: TOrderInternalPromoForm
     ColumnEnterList = <>
     SummaryItemList = <>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 278
     Top = 513
   end

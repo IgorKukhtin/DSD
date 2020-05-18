@@ -142,6 +142,8 @@ type
     spUpdate_Price: TdsdStoredProc;
     actUpdate_Price: TdsdExecStoredProc;
     bbUpdate_Price: TdxBarButton;
+    actUnitForOrderInternalPromo: TdsdOpenForm;
+    bbUnitForOrderInternalPromo: TdxBarButton;
   private
     { Private declarations }
   public
