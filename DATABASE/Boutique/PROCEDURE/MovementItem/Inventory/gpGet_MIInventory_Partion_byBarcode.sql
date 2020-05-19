@@ -77,7 +77,7 @@ BEGIN
                             GROUP BY Container.ObjectId 
                                    , Object_PartionGoods.GoodsSizeId
                           ) AS tmp
-                          LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id    = tmp.GoodsSizeId
+                          LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId
                      )
 
        SELECT -1                               :: Integer AS Id
