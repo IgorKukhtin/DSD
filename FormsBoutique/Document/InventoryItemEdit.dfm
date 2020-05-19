@@ -2,7 +2,7 @@ object InventoryItemEditForm: TInventoryItemEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1058#1086#1074#1072#1088' '#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1102
-  ClientHeight = 285
+  ClientHeight = 310
   ClientWidth = 408
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,8 +22,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Caption = #1040#1088#1090#1080#1082#1091#1083
   end
   object cxButton1: TcxButton
-    Left = 109
-    Top = 242
+    Left = 104
+    Top = 277
     Width = 75
     Height = 25
     Action = actInsertUpdate
@@ -31,8 +31,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 253
-    Top = 242
+    Left = 248
+    Top = 277
     Width = 75
     Height = 25
     Action = actFormClose
@@ -218,9 +218,21 @@ object InventoryItemEditForm: TInventoryItemEditForm
     Top = 89
     Caption = #1057#1086#1089#1090#1072#1074
   end
+  object edText_info: TcxTextEdit
+    Left = 8
+    Top = 250
+    Properties.ReadOnly = True
+    TabOrder = 24
+    Width = 391
+  end
+  object cxLabel10: TcxLabel
+    Left = 8
+    Top = 233
+    Caption = #1056#1072#1079#1084#1077#1088' / '#1086#1089#1090#1072#1090#1086#1082' ('#1080#1085#1092#1086#1088#1084#1072#1090#1080#1074#1085#1086')'
+  end
   object ActionList: TActionList
-    Left = 32
-    Top = 213
+    Left = 72
+    Top = 165
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -321,8 +333,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 204
-    Top = 228
+    Left = 199
+    Top = 263
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -338,8 +350,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 104
-    Top = 213
+    Left = 107
+    Top = 264
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_MIInventory_Partion_byBarcode'
@@ -486,6 +498,13 @@ object InventoryItemEditForm: TInventoryItemEditForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Text_info'
+        Value = Null
+        Component = edText_info
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -906,8 +925,8 @@ object InventoryItemEditForm: TInventoryItemEditForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 65
-    Top = 245
+    Left = 41
+    Top = 261
   end
   object GuidesComposition: TdsdGuides
     KeyField = 'Id'
