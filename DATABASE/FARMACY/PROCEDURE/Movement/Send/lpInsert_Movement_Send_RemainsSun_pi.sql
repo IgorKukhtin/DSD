@@ -90,6 +90,7 @@ $BODY$
    DECLARE vbDOW_curr        TVarChar;
 
    DECLARE vbDayIncome_max Integer;
+   DECLARE vbDaySendSUN_max Integer;
 
 BEGIN
      --
@@ -123,6 +124,8 @@ BEGIN
      DELETE FROM _tmpSUN_oth;
      -- 2.4. товары для Кратность
      DELETE FROM _tmpGoods_SUN;
+     -- 2.5. Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
+     DELETE FROM _tmpGoods_SUN_Limit_T1;
      -- 3.1. все остатки, PI (Сверх запас)
      DELETE FROM _tmpRemains_Partion_all;
      -- 3.2. остатки, PI (Сверх запас) - для распределения
@@ -155,18 +158,19 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v4
-     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer) ON COMMIT DROP;
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
              , CASE WHEN OF_T1.ValueData > 0 THEN OF_T1.ValueData ELSE vbPeriod_t1 END AS Value_T1
              , 0           AS Value_T2
-             , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0 END :: Integer AS DayIncome
+             , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0  END :: Integer AS DayIncome
+             , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN_pi()
              LEFT JOIN ObjectFloat  AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v4()
              LEFT JOIN ObjectFloat  AS OF_DI  ON OF_DI.ObjectId  = OB.ObjectId AND OF_DI.DescId  = zc_ObjectFloat_Unit_Sun_v4Income()
+             LEFT JOIN ObjectFloat  AS OF_DS  ON OF_DS.ObjectId  = OB.ObjectId AND OF_DS.DescId  = zc_ObjectFloat_Unit_HT_SUN_v4()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
@@ -181,9 +185,22 @@ BEGIN
      vbDayIncome_max:= (SELECT MAX (_tmpUnit_SUN.DayIncome) FROM _tmpUnit_SUN);
 
      -- находим максимальный
+     vbDaySendSUN_max:= (SELECT MAX (_tmpUnit_SUN.DaySendSUN) FROM _tmpUnit_SUN);
+
+     -- находим максимальный
      vbPeriod_t_max := (SELECT MAX (CASE WHEN _tmpUnit_SUN.Value_T1 > _tmpUnit_SUN.Value_T2 THEN _tmpUnit_SUN.Value_T1 ELSE _tmpUnit_SUN.Value_T2 END)
                         FROM _tmpUnit_SUN
                        );
+
+     -- Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
+     INSERT INTO _tmpGoods_SUN_Limit_T1 (GoodsId, Value_N)
+        SELECT OF_LimitSUN_T1.ObjectId AS GoodsId
+               -- Значение N
+             , OF_LimitSUN_T1.ValueData AS Value_N
+        FROM ObjectFloat AS OF_LimitSUN_T1 
+        WHERE OF_LimitSUN_T1.ValueData > 0 AND OF_LimitSUN_T1.DescId = zc_ObjectFloat_Goods_LimitSUN_T1()
+       ;
+
 
      -- исключаем такие перемещения
      INSERT INTO _tmpUnit_SunExclusion (UnitId_from, UnitId_to, isMCS_to)
@@ -365,8 +382,8 @@ BEGIN
      --
      WITH -- приход - UnComplete - за последние +/-7 дней для Date_Branch
          tmpMI_Income AS (SELECT MovementLinkObject_To.ObjectId AS UnitId
-                                , MovementItem.ObjectId          AS GoodsId
-                                , SUM (MovementItem.Amount)      AS Amount
+                               , MovementItem.ObjectId          AS GoodsId
+                               , SUM (MovementItem.Amount)      AS Amount
                            FROM Movement
                                 INNER JOIN MovementDate AS MovementDate_Branch
                                                         ON MovementDate_Branch.MovementId = Movement.Id
@@ -883,6 +900,67 @@ BEGIN
                               GROUP BY tmpContainer.UnitID
                                      , tmpContainer.GoodsID
                              )
+               -- MCS + Price
+             , tmpMCS AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
+                               , OL_Price_Goods.ChildObjectId      AS GoodsId
+                               , MCS_Value.ValueData               AS MCSValue
+                          FROM ObjectLink AS OL_Price_Unit
+                               LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                       ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
+                                                      AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                               LEFT JOIN ObjectLink AS OL_Price_Goods
+                                                    ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
+                                                   AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+                               INNER JOIN Object AS Object_Goods
+                                                 ON Object_Goods.Id       = OL_Price_Goods.ChildObjectId
+                                                AND Object_Goods.isErased = FALSE
+                               LEFT JOIN ObjectFloat AS Price_Value
+                                                     ON Price_Value.ObjectId = OL_Price_Unit.ObjectId
+                                                    AND Price_Value.DescId = zc_ObjectFloat_Price_Value()
+                               LEFT JOIN ObjectFloat AS MCS_Value
+                                                     ON MCS_Value.ObjectId = OL_Price_Unit.ObjectId
+                                                    AND MCS_Value.DescId = zc_ObjectFloat_Price_MCSValue()
+                               -- !!!только для таких!!!
+                               INNER JOIN tmpOver_list ON tmpOver_list.UnitId  = OL_Price_Unit.ChildObjectId
+                                                      AND tmpOver_list.GoodsId = OL_Price_Goods.ChildObjectId
+                          WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                          -- временно отключил - 13.05.20
+                          --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                         )
+             -- SUN - zc_Movement_Send за X дней - если приходило, уходить уже не может
+           , tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
+                                  , MovementItem.ObjectId            AS GoodsId
+                             FROM Movement
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                               AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
+
+                                  --
+                                  INNER JOIN MovementBoolean AS MovementBoolean_SUN
+                                                             ON MovementBoolean_SUN.MovementId = Movement.Id
+                                                            AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
+                                                            AND MovementBoolean_SUN.ValueData  = TRUE
+                                  INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                         AND MovementItem.DescId     = zc_MI_Master()
+                                                         AND MovementItem.isErased   = FALSE
+                                                         AND MovementItem.Amount     > 0
+
+                                  INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+
+                                  -- !!!только для таких товаров!!!
+                                  INNER JOIN tmpOver_list ON tmpOver_list.UnitId  = MovementLinkObject_To.ObjectId
+                                                         AND tmpOver_list.GoodsID = MovementItem.ObjectId
+
+                             WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUN_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                               AND Movement.DescId   = zc_Movement_Send()
+                               AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                             GROUP BY MovementLinkObject_To.ObjectId
+                                    , MovementItem.ObjectId
+                             HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUN :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                   THEN MovementItem.Amount
+                                              ELSE 0
+                                         END) > 0
+                            )
              -- так можно определить OVER, Но потом надо еще раз, с учетом: отложенные Чеки + не проведенные с CommentError + Перемещение - расход (ожидается)
            , tmpNotSold_all AS (SELECT tmpOver_list.UnitID
                                      , tmpOver_list.GoodsID
@@ -898,14 +976,28 @@ BEGIN
                                                  THEN FLOOR (tmpOver_list.Amount - 1)
 
                                             --  Отправка: округляем ВВНИЗ: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправителя в разрезе T1=60 дней;
-                                            ELSE FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0))
+                                            ELSE FLOOR (tmpOver_list.Amount - CASE WHEN COALESCE (tmpMCS.MCSValue, 0) > COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                                        THEN COALESCE (tmpMCS.MCSValue, 0)
+                                                                                   ELSE COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                              END
+                                                       )
                                        END AS Amount_notSold
                                 FROM tmpOver_list
                                      LEFT JOIN _tmpSale_over ON _tmpSale_over.UnitId  = tmpOver_list.UnitId
                                                             AND _tmpSale_over.GoodsID = tmpOver_list.GoodsID
                                      LEFT JOIN _tmpSale_not ON _tmpSale_not.UnitId  = tmpOver_list.UnitId
                                                            AND _tmpSale_not.GoodsID = tmpOver_list.GoodsID
-                                WHERE CASE -- отдаем ВСЕ
+                                     LEFT JOIN tmpMCS ON tmpMCS.UnitId  = tmpOver_list.UnitId
+                                                     AND tmpMCS.GoodsID = tmpOver_list.GoodsID
+                                     -- !!!SUN - за X дней - если приходило, уходить уже не может!!!
+                                     LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = tmpOver_list.UnitId
+                                                          AND tmpSUN_Send.GoodsID   = tmpOver_list.GoodsID
+                                     -- отгружать товар по СУН, если у него остаток больше чем N
+                                     LEFT JOIN _tmpGoods_SUN_Limit_T1 ON _tmpGoods_SUN_Limit_T1.GoodsID = tmpOver_list.GoodsID
+
+                                WHERE -- !!!
+                                      tmpSUN_Send.GoodsId IS NULL
+                                  AND CASE -- отдаем ВСЕ
                                             WHEN _tmpSale_not.GoodsID > 0 
                                                  THEN tmpOver_list.Amount
 
@@ -914,8 +1006,13 @@ BEGIN
                                                  THEN FLOOR (tmpOver_list.Amount - 1)
 
                                             --  Отправка: округляем ВВНИЗ: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправителя в разрезе T1=60 дней;
-                                            ELSE FLOOR (tmpOver_list.Amount - COALESCE (_tmpSale_over.Amount_t1, 0))
+                                            ELSE FLOOR (tmpOver_list.Amount - CASE WHEN COALESCE (tmpMCS.MCSValue, 0) > COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                                        THEN COALESCE (tmpMCS.MCSValue, 0)
+                                                                                   ELSE COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                              END)
                                        END > 0
+                                  -- остаток больше чем N
+                                  AND COALESCE (_tmpGoods_SUN_Limit_T1.Value_N, 0) < tmpOver_list.Amount
                                )
      -- для PI - находим ВСЕ сроковые
    , tmpNotSold_PartionDate AS (SELECT tmpNotSold_all.UnitID
@@ -940,7 +1037,7 @@ BEGIN
                                        , tmpNotSold_all.GoodsID
                                 HAVING SUM (Container.Amount) > 0
                                )
-                  -- Income - за 30 дней - если приходило, PI уходить уже не может
+                  -- Income - за X дней - если приходило, PI уходить уже не может
                 , tmpIncome AS (SELECT DISTINCT
                                        MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
@@ -981,7 +1078,7 @@ BEGIN
                                      -- ВСЕ сроковые
                                      LEFT JOIN tmpNotSold_PartionDate ON tmpNotSold_PartionDate.UnitId  = tmpNotSold_all.UnitID
                                                                      AND tmpNotSold_PartionDate.GoodsID = tmpNotSold_all.GoodsID
-                                     -- Income - за 30 дней - если приходило, PI уходить уже не может
+                                     -- Income - за X дней - если приходило, PI уходить уже не может
                                      LEFT JOIN tmpIncome ON tmpIncome.UnitId_to = tmpNotSold_all.UnitID
                                                         AND tmpIncome.GoodsID   = tmpNotSold_all.GoodsID
                                 WHERE tmpNotSold_PartionDate.GoodsID  IS NULL
@@ -1123,8 +1220,8 @@ BEGIN
 
                  -- остатки, PI (Сверх запас)
                , tmp.Amount_notSold
-                 -- уменьшаем еще на НТЗ
-               - COALESCE (tmpMCS.MCSValue, 0)
+               /*-- уменьшаем еще на НТЗ
+               - COALESCE (tmpMCS.MCSValue, 0)*/
                  -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                - COALESCE (_tmpRemains_all.AmountReserve, 0)
                  -- уменьшаем - Перемещение - расход (ожидается)
@@ -1141,8 +1238,8 @@ BEGIN
 
                  --
                , FLOOR ((tmp.Amount_notSold
-                         -- уменьшаем еще на НТЗ
-                       - COALESCE (tmpMCS.MCSValue, 0)
+                       /*-- уменьшаем еще на НТЗ
+                       - COALESCE (tmpMCS.MCSValue, 0)*/
                          -- уменьшаем - отложенные Чеки + не проведенные с CommentError
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - Перемещение - расход (ожидается)
@@ -1668,7 +1765,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN-v4
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 
@@ -1686,6 +1783,9 @@ WHERE Movement.OperDate  >= '01.01.2019'
 
      -- 2.4. товары для Кратность
      CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
+
+     -- 2.5. Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
+     CREATE TEMP TABLE _tmpGoods_SUN_Limit_T1 (GoodsId Integer, Value_N TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;

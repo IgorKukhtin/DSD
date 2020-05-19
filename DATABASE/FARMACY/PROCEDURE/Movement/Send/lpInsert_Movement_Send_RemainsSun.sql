@@ -97,6 +97,7 @@ $BODY$
    DECLARE vbIsIn_partion  Boolean;
    
    DECLARE vbDayIncome_max Integer;
+   DECLARE vbDaySendSUN_max Integer;
 
 BEGIN
      --
@@ -151,6 +152,7 @@ BEGIN
      IF inStep = 1
      THEN
          DELETE FROM _tmpGoods_SUN;
+         DELETE FROM _tmpGoods_SUN_Limit_T1;
      END IF;
      -- 3.1. все остатки, СРОК
      DELETE FROM _tmpRemains_Partion_all;
@@ -168,6 +170,43 @@ BEGIN
      DELETE FROM _tmpResult_child;
 
 
+     -- день недели
+     vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
+                   FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
+                  ) :: TVarChar;
+
+     -- все Подразделения для схемы SUN
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN)
+        SELECT OB.ObjectId
+             , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
+             , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
+             , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0  END :: Integer AS DayIncome
+             , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
+        FROM ObjectBoolean AS OB
+             LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
+             LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
+             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectFloat  AS OF_DI          ON OF_DI.ObjectId          = OB.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
+             LEFT JOIN ObjectFloat  AS OF_DS          ON OF_DS.ObjectId          = OB.ObjectId AND OF_DS.DescId          = zc_ObjectFloat_Unit_HT_SUN_v1()
+             -- !!!только для этого водителя!!!
+             /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
+                                   ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
+                                  AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
+                                  AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
+        WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
+          -- если указан день недели - проверим его
+          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = ''
+          --OR inUserId = 3 -- Админ - отладка
+              )
+       ;
+
+     -- находим максимальный
+     vbDayIncome_max := (SELECT MAX (_tmpUnit_SUN.DayIncome)  FROM _tmpUnit_SUN);
+
+     -- находим максимальный
+     vbDaySendSUN_max:= (SELECT MAX (_tmpUnit_SUN.DaySendSUN) FROM _tmpUnit_SUN);
+
+
      IF inStep = 1
      THEN
          -- товары для Кратность
@@ -178,39 +217,16 @@ BEGIN
             WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v1()
               AND OF_KoeffSUN.ValueData > 0
            ;
+         -- Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
+         INSERT INTO _tmpGoods_SUN_Limit_T1 (GoodsId, Value_N)
+            SELECT OF_LimitSUN_T1.ObjectId AS GoodsId
+                   -- Значение N
+                 , OF_LimitSUN_T1.ValueData AS Value_N
+            FROM ObjectFloat AS OF_LimitSUN_T1 
+            WHERE OF_LimitSUN_T1.ValueData > 0 AND OF_LimitSUN_T1.DescId = zc_ObjectFloat_Goods_LimitSUN_T1()
+           ;
+
      END IF;
-
-     -- день недели
-     vbDOW_curr:= (SELECT CASE WHEN tmp.RetV = 0 THEN 7 ELSE tmp.RetV END
-                   FROM (SELECT EXTRACT(DOW FROM inOperDate) AS RetV) AS tmp
-                  ) :: TVarChar;
-
-     -- все Подразделения для схемы SUN
-     -- CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer) ON COMMIT DROP;
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome)
-        SELECT ObjectBoolean_SUN.ObjectId
-             , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
-             , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
-             , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0 END :: Integer AS DayIncome
-        FROM ObjectBoolean AS ObjectBoolean_SUN
-             LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = ObjectBoolean_SUN.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
-             LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = ObjectBoolean_SUN.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
-             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = ObjectBoolean_SUN.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
-             LEFT JOIN ObjectFloat  AS OF_DI          ON OF_DI.ObjectId          = ObjectBoolean_SUN.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
-             -- !!!только для этого водителя!!!
-             /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
-                                   ON ObjectLink_Unit_Driver.ObjectId      = ObjectBoolean_SUN.ObjectId
-                                  AND ObjectLink_Unit_Driver.DescId        = zc_ObjectLink_Unit_Driver()
-                                  AND ObjectLink_Unit_Driver.ChildObjectId = inDriverId*/
-        WHERE ObjectBoolean_SUN.ValueData = TRUE AND ObjectBoolean_SUN.DescId = zc_ObjectBoolean_Unit_SUN()
-          -- если указан день недели - проверим его
-          AND (OS_ListDaySUN.ValueData ILIKE '%' || vbDOW_curr || '%' OR COALESCE (OS_ListDaySUN.ValueData, '') = ''
-          --OR inUserId = 3 -- Админ - отладка
-              )
-       ;
-
-     -- находим максимальный
-     vbDayIncome_max:= (SELECT MAX (_tmpUnit_SUN.DayIncome) FROM _tmpUnit_SUN);
 
 
      -- исключаем такие перемещения
@@ -894,9 +910,8 @@ BEGIN
      -- CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold) ON COMMIT DROP;
      --
      INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold)
-        WITH -- SUN - zc_Movement_Send за 30 дней - если приходило, уходить уже не может
-             tmpSUN_Send AS (SELECT DISTINCT
-                                    MovementLinkObject_To.ObjectId   AS UnitId_to
+        WITH -- SUN - zc_Movement_Send за X дней - если приходило, уходить уже не может
+             tmpSUN_Send AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                                   , MovementItem.ObjectId            AS GoodsId
                              FROM Movement
                                   INNER JOIN MovementLinkObject AS MovementLinkObject_To
@@ -913,9 +928,18 @@ BEGIN
                                                          AND MovementItem.DescId     = zc_MI_Master()
                                                          AND MovementItem.isErased   = FALSE
                                                          AND MovementItem.Amount     > 0
-                             WHERE Movement.OperDate BETWEEN inOperDate - INTERVAL '31 DAY' AND inOperDate - INTERVAL '1 DAY'
+
+                                  LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = MovementLinkObject_To.ObjectId
+
+                             WHERE Movement.OperDate BETWEEN inOperDate - (vbDaySendSUN_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
                                AND Movement.DescId   = zc_Movement_Send()
                                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
+                             GROUP BY MovementLinkObject_To.ObjectId
+                                    , MovementItem.ObjectId
+                             HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DaySendSUN :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
+                                                   THEN MovementItem.Amount
+                                              ELSE 0
+                                         END) > 0
                             )
                    -- список для NotSold
                  , tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
@@ -1013,7 +1037,7 @@ BEGIN
                                      , tmpNotSold_all.GoodsID
                                 FROM tmpNotSold_all
                                )
-                  -- Income - за 30 дней - если приходило, 100дней без продаж уходить уже не может
+                  -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
                 , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
                                 FROM MovementDate AS MovementDate_Branch
@@ -1055,10 +1079,17 @@ BEGIN
                                      , tmpNotSold_all.Amount - COALESCE (tmpNotSold_PartionDate.Amount, 0) AS Amount
                                 FROM tmpNotSold_all
                                      LEFT JOIN tmpNotSold_PartionDate ON tmpNotSold_PartionDate.ContainerId = tmpNotSold_all.ContainerId
+                                     -- Income - за X дней - если приходило, 100дней без продаж уходить уже не может
                                      LEFT JOIN tmpIncome ON tmpIncome.UnitId_to = tmpNotSold_all.UnitID
                                                         AND tmpIncome.GoodsID   = tmpNotSold_all.GoodsID
+                                     -- отгружать товар по СУН, если у него остаток больше чем N
+                                     LEFT JOIN _tmpGoods_SUN_Limit_T1 ON _tmpGoods_SUN_Limit_T1.GoodsID = tmpNotSold_all.GoodsID
+                                                        
                                 WHERE tmpNotSold_all.Amount - COALESCE (tmpNotSold_PartionDate.Amount, 0) > 0
+                                  -- !!!
                                   AND tmpIncome.GoodsID IS NULL
+                                  -- остаток больше чем N
+                                  AND COALESCE (_tmpGoods_SUN_Limit_T1.Value_N, 0) < tmpNotSold_all.Amount
                                )
              -- Результат по сроковым
              /*   -- было так - немного оптимизировала
@@ -1117,7 +1148,7 @@ BEGIN
                                                                AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                                  -- !!!только для таких Аптек!!!
                                  INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = CLO_Unit.ObjectId
-                                 -- !!!SUN - за 30 дней - если приходило, уходить уже не может!!!
+                                 -- !!!SUN - за X дней - если приходило, уходить уже не может!!!
                                  LEFT JOIN tmpSUN_Send ON tmpSUN_Send.UnitId_to = CLO_Unit.ObjectId
                                                       AND tmpSUN_Send.GoodsId   = Container.ObjectId
 
@@ -1167,13 +1198,13 @@ BEGIN
 --                            AND ObjectDate_PartionGoods_Value.ValueData <= vbDate_6
                                   -- !!!оставили только эту категорию
                            )
-            -- для SUN - находим list
+         -- для SUN - находим list
        , tmpIncomeSUN_list AS (SELECT DISTINCT
                                        tmpRes_SUN.UnitID
                                      , tmpRes_SUN.GoodsID
                                 FROM tmpRes_SUN
                                )
-               -- IncomeSUN - за 30 дней - если приходило, SUN уходить уже не может
+               -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
              , tmpIncomeSUN AS (SELECT MovementLinkObject_To.ObjectId   AS UnitId_to
                                      , MovementItem.ObjectId            AS GoodsId
                                 FROM MovementDate AS MovementDate_Branch
@@ -1221,7 +1252,7 @@ BEGIN
              -- если он есть в tmpNotSold, тогда распределяем только ВСЕ кол-во из tmpNotSold
              LEFT JOIN tmpNotSold ON tmpNotSold.UnitId = tmpRes_SUN.UnitId
                                  AND tmpNotSold.GoodsId = tmpRes_SUN.GoodsId
-             -- IncomeSUN - за 30 дней - если приходило, SUN уходить уже не может
+             -- IncomeSUN - за X дней - если приходило, SUN уходить уже не может
              LEFT JOIN tmpIncomeSUN ON tmpIncomeSUN.UnitId_to = tmpRes_SUN.UnitId
                                    AND tmpIncomeSUN.GoodsId   = tmpRes_SUN.GoodsId
 
@@ -2614,7 +2645,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_partion (UnitId Integer, Summ_out TFloat, Summ_in TFloat, Summ_out_calc TFloat, Summ_in_calc TFloat) ON COMMIT DROP;
@@ -2623,11 +2654,12 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
 
-     -- 2.3. вся статистика продаж
-     CREATE TEMP TABLE _tmpSale (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
-
-     -- 2.4. товары для Кратность
+     -- 2.1. вся статистика продаж
+     CREATE TEMP TABLE _tmpSale   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
+     -- 2.2. товары для Кратность
      CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
+     -- 2.3. Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
+     CREATE TEMP TABLE _tmpGoods_SUN_Limit_T1 (GoodsId Integer, Value_N TFloat) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
