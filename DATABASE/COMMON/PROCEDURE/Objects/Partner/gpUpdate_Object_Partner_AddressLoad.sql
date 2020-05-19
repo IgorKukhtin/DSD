@@ -355,7 +355,26 @@ IF inPersonalTrade = 'Пономаренко Вікторія' THEN inPersonalTrade:= 'Пономаренко 
                              ELSE ''
                         END
                        )
-                  WHERE ObjectLink.ChildObjectId = vbJuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical());
+                 WHERE ObjectLink.ChildObjectId = vbJuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+
+                UNION 
+                 SELECT ObjectLink.ObjectId
+                 FROM ObjectLink INNER JOIN ObjectString ON ObjectString.ObjectId = ObjectLink.ObjectId AND ObjectString.DescId = zc_ObjectString_Partner_Address() AND ObjectString.ValueData
+                = TRIM (COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = vbCityKindId AND DescId = zc_ObjectString_CityKind_ShortName()), '')
+              || ' ' || COALESCE (inCityName, '')
+              || ' ' || COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = vbStreetKindId AND DescId = zc_ObjectString_StreetKind_ShortName()), '')
+              || ' ' || COALESCE (inStreetName, '')
+                     || CASE WHEN COALESCE (inHouseNumber, '') <> ''
+                                  THEN ' буд.' || COALESCE (inHouseNumber, '')
+                             ELSE ''
+                        END
+                     || CASE WHEN COALESCE (inCaseNumber, '') <> ''
+                                  THEN ' ' || COALESCE (inCaseNumber, '')
+                             ELSE ''
+                        END
+                       )
+                 WHERE ObjectLink.ChildObjectId = vbJuridicalId AND ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()
+                );
      END IF;
 
 
