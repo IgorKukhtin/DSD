@@ -147,4 +147,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Client(1,'2')
+-- SELECT * FROM gpGet_Object_Client (1,'2')

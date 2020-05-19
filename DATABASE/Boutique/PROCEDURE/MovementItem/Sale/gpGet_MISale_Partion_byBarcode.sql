@@ -43,8 +43,27 @@ BEGIN
      -- Если это Штрихкод
      IF COALESCE (inBarCode, '') <> '' AND CHAR_LENGTH (inBarCode) = 13
      THEN
+         -- Поиск в партии Подиум
+         IF SUBSTR (inBarCode, 1, 2) = '29' AND zc_Enum_GlobalConst_isTerry() = FALSE
+         THEN
+             -- последние 10 - это Код
+             vbGoodsCode:= zfConvert_StringToNumber (SUBSTR (inBarCode, 3, 10)) :: Integer;
+             -- пробуем найти
+             vbPartionId:= (SELECT Object_PartionGoods.MovementItemId
+                            FROM Object_PartionGoods
+                                 INNER JOIN Object AS Object_Goods
+                                                   ON Object_Goods.Id         = Object_PartionGoods.GoodsId
+                                                  AND Object_Goods.ObjectCode = vbGoodsCode
+                                                  AND vbGoodsCode             > 0
+                           );
+             -- если НЕ нашли
+             IF COALESCE (vbPartionId, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Товар с Кодом = <%> не найден.', vbGoodsCode;
+             END IF;
+         
          -- Поиск в партии Sybase - 1
-         IF SUBSTR (inBarCode, 1, 2) = '20'
+         ELSEIF SUBSTR (inBarCode, 1, 2) = '20'
          THEN
              -- первые 5 - это Код
              vbGoodsCode:= zfConvert_StringToNumber (SUBSTR (inBarCode, 3, 5)) :: Integer;
@@ -119,11 +138,26 @@ BEGIN
      
      -- Результат
      RETURN QUERY
+       WITH tmpCurrency AS (SELECT COALESCE (tmp.Amount, 0) AS CurrencyValue_pl, COALESCE (tmp.ParValue, 0) AS ParValue_pl
+                            FROM lfSelect_Movement_Currency_byDate (inOperDate      := CURRENT_DATE
+                                                                  , inCurrencyFromId:= zc_Currency_Basis()
+                                                                    -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
+                                                                  , inCurrencyToId  := zc_Currency_EUR() -- vbCurrencyId_pl
+                                                                   ) AS tmp)
        SELECT Object_PartionGoods.MovementItemId       AS PartionId
             , Object_PartionGoods.GoodsId              AS GoodsId
             , Object_PartionGoods.GoodsSizeId          AS GoodsSizeId
-            , Object_PartionGoods.OperPriceList        AS OperPriceList
+            , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE
+                        THEN Object_PartionGoods.OperPriceList
+                   ELSE zfCalc_SummPriceList (1, zfCalc_CurrencySumm ((SELECT lpGet.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (CURRENT_DATE, 18419, Object_PartionGoods.GoodsId) AS lpGet)
+                                                                    , (SELECT lpGet.CurrencyId FROM lpGet_ObjectHistory_PriceListItem (CURRENT_DATE, 18419, Object_PartionGoods.GoodsId) AS lpGet)
+                                                                    , zc_Currency_Basis()
+                                                                    , tmpCurrency.CurrencyValue_pl
+                                                                    , tmpCurrency.ParValue_pl
+                                                                     ))
+              END :: TFLoat AS OperPriceList
        FROM Object_PartionGoods
+            LEFT JOIN tmpCurrency ON 1=1
        WHERE Object_PartionGoods.MovementItemId = vbPartionId;
 
 END;
@@ -137,4 +171,4 @@ $BODY$
 */
 
 -- тест
--- SELECT tmp.*, Object_Goods.*, Object_GoodsSize.ValueData FROM gpGet_MISale_Partion_byBarCode (inBarCode:= '2210002606122', inSession:= zfCalc_UserAdmin()) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId
+-- SELECT tmp.*, Object_Goods.*, Object_GoodsSize.ValueData FROM gpGet_MISale_Partion_byBarCode (inBarCode:= '2900000129894', inSession:= zfCalc_UserAdmin()) AS tmp LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId LEFT JOIN Object AS Object_GoodsSize ON Object_GoodsSize.Id = tmp.GoodsSizeId

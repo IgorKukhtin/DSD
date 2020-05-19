@@ -283,10 +283,10 @@ BEGIN
            , tmpGoodsByGoodsKind.GoodsKindPackName
 
            , tmpGoodsByGoodsKind.GoodsId_Sh
-           , tmpGoodsByGoodsKind.GoodsCode_Sh
-           , tmpGoodsByGoodsKind.GoodsName_Sh
+           , CASE WHEN tmpGoodsByGoodsKind.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() THEN tmpGoodsByGoodsKind.GoodsCode_Sh ELSE 0 END :: Integer AS GoodsCode_Sh
+           , CASE WHEN tmpGoodsByGoodsKind.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() THEN tmpGoodsByGoodsKind.GoodsName_Sh ELSE '' END :: TVarChar AS GoodsName_Sh
            , tmpGoodsByGoodsKind.GoodsKindId_Sh
-           , tmpGoodsByGoodsKind.GoodsKindName_Sh
+           , CASE WHEN tmpGoodsByGoodsKind.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() THEN tmpGoodsByGoodsKind.GoodsKindName_Sh ELSE '' END :: TVarChar AS GoodsKindName_Sh
 
            , tmpGoodsByGoodsKind.ReceiptId
            , tmpGoodsByGoodsKind.ReceiptCode
@@ -307,13 +307,13 @@ BEGIN
            , tmpGoodsByGoodsKind.isGoodsTypeKind_Nom
            , tmpGoodsByGoodsKind.isGoodsTypeKind_Ves
 
-           , tmpGoodsByGoodsKind.CodeCalc                           -- расчет: код на упак+вид+бренд+категория
+           , COALESCE (tmpGoodsByGoodsKind_line_sh.CodeCalc, tmpGoodsByGoodsKind.CodeCalc) :: TVarChar AS CodeCalc -- расчет: код на упак+вид+бренд+категория
 
              -- Повтор кода ВМС - расчет: код на упак+вид+бренд+категория
            , tmpGoodsByGoodsKind.isCodeCalc_Diff                                         -- Повтор кода ВМС
 
-           , tmpGoodsByGoodsKind.WmsCellNum       :: Integer        -- 
-           , tmpGoodsByGoodsKind.WmsCode          :: Integer        -- Код ВМС* для выгрузки
+           , COALESCE (tmpGoodsByGoodsKind_line_sh.WmsCellNum, tmpGoodsByGoodsKind.WmsCellNum)  :: Integer AS WmsCellNum    -- 
+           , COALESCE (tmpGoodsByGoodsKind_line_sh.WmsCode, tmpGoodsByGoodsKind.WmsCode)        :: Integer AS WmsCode       -- Код ВМС* для выгрузки
             -- ящик (E2/E3)
             , tmpGoodsByGoodsKind.GoodsPropertyBoxId
             , tmpGoodsByGoodsKind.BoxId
@@ -396,11 +396,16 @@ BEGIN
             , tmpGoodsByGoodsKind.CountOnBox_Retail5
             , tmpGoodsByGoodsKind.CountOnBox_Retail6
 
-            , tmpGoodsByGoodsKind.WmsNameCalc :: TVarChar
-            , tmpGoodsByGoodsKind.sku_code    :: Integer
+            , COALESCE (tmpGoodsByGoodsKind_line_sh.WmsNameCalc, tmpGoodsByGoodsKind.WmsNameCalc) :: TVarChar AS WmsNameCalc
+            , COALESCE (tmpGoodsByGoodsKind_line_sh.sku_code, tmpGoodsByGoodsKind.sku_code)       :: Integer  AS sku_code
 
-       FROM tmpGoodsByGoodsKind_line AS tmpGoodsByGoodsKind
-            LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = tmpGoodsByGoodsKind.GoodsTypeKindId  
+        FROM tmpGoodsByGoodsKind_line AS tmpGoodsByGoodsKind
+             LEFT JOIN Object AS Object_GoodsTypeKind ON Object_GoodsTypeKind.Id = tmpGoodsByGoodsKind.GoodsTypeKindId  
+             LEFT JOIN tmpGoodsByGoodsKind_line AS tmpGoodsByGoodsKind_line_sh
+                                                ON tmpGoodsByGoodsKind_line_sh.GoodsId         = tmpGoodsByGoodsKind.GoodsId_sh
+                                               AND tmpGoodsByGoodsKind_line_sh.GoodsKindId     = tmpGoodsByGoodsKind.GoodsKindId_sh
+                                               AND tmpGoodsByGoodsKind_line_sh.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh()
+                                               AND tmpGoodsByGoodsKind.GoodsTypeKindId         = zc_Enum_GoodsTypeKind_Sh()
       ;
 
 END;

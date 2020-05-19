@@ -14,8 +14,9 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_Total(
     IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (AmountRemains TFloat -- Остаток, грн
-             , AmountDiff    TFloat -- Сдача, грн
+RETURNS TABLE (AmountRemains       TFloat -- Остаток, грн
+             , AmountRemains_curr  TFloat -- Остаток, EUR
+             , AmountDiff          TFloat -- Сдача, грн
               )
 AS
 $BODY$
@@ -34,7 +35,12 @@ BEGIN
                                           + COALESCE (inAmountDiscount, 0)) AS AmountDiff
                    )
        SELECT -- Остаток, грн
-              CASE WHEN tmp.AmountDiff > 0 THEN      tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
+              CASE WHEN tmp.AmountDiff > 0 THEN tmp.AmountDiff ELSE 0 END :: TFloat AS AmountRemains
+
+              -- Остаток, EUR
+            , zfCalc_SummPriceList (1, 
+              zfCalc_CurrencySumm (CASE WHEN tmp.AmountDiff > 0 THEN tmp.AmountDiff ELSE 0 END, zc_Currency_Basis(), zc_Currency_EUR(), inCurrencyValueEUR, 1)) :: TFloat AS AmountRemains_curr
+
               -- Сдача, грн
             , CASE WHEN tmp.AmountDiff < 0 THEN -1 * tmp.AmountDiff ELSE 0 END :: TFloat AS AmountDiff
        FROM tmp;
@@ -50,4 +56,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_MI_Sale_Child_Total (inId:= 92, inMovementId:= 28, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_MI_Sale_Child_Total (inCurrencyValueUSD:= 1, inCurrencyValueEUR:= 1, inAmountToPay:= 1, inAmountGRN:= 1, inAmountUSD:= 1, inAmountEUR:= 1, inAmountCard:= 1, inAmountDiscount:= 1, inSession:= zfCalc_UserAdmin());

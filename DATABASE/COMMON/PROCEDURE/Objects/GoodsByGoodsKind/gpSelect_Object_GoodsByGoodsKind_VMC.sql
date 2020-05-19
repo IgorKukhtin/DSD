@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             --, WeightMin TFloat, WeightMax TFloat--, WeightAvg TFloat
+             --, WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , WeightAvg_Sh TFloat, WeightAvg_Nom TFloat, WeightAvg_Ves TFloat

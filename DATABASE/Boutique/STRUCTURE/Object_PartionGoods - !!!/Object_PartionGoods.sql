@@ -19,6 +19,7 @@ CREATE TABLE Object_PartionGoods(
    GoodsId             Integer ,
    GoodsItemId         Integer ,
    CurrencyId          Integer ,
+   CurrencyId_pl       Integer ,
    Amount              TFloat  NOT NULL,
    OperPrice	       TFloat  NOT NULL,
    CountForPrice       TFloat  NOT NULL DEFAULT 1,

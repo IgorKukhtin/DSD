@@ -53,7 +53,7 @@ BEGIN
               || ' ' || COALESCE ((SELECT ValueData FROM ObjectString WHERE ObjectId = inStreetKindId AND DescId = zc_ObjectString_StreetKind_ShortName()), '')
               || ' ' || COALESCE (inStreetName, '')
                      || CASE WHEN COALESCE (inHouseNumber, '') <> ''
-                                  THEN ' ' || COALESCE (inHouseNumber, '')
+                                  THEN ' буд.' || COALESCE (inHouseNumber, '')
                              ELSE ''
                         END
                      || CASE WHEN COALESCE (inCaseNumber, '') <> ''
@@ -66,7 +66,7 @@ BEGIN
     -- !!!название состоит из: <Юридическое лицо> + <Условное обозначение> + <Адрес точки доставки>!!!
     outPartnerName:= COALESCE ((SELECT ValueData FROM Object WHERE Id = inJuridicalId), '')
                    || CASE WHEN inShortName <> ''
-                                THEN ' ' || inShortName
+                                THEN ' буд.' || inShortName
                            ELSE ''
                       END
                    || CASE WHEN TRIM (outAddress) <> ''
@@ -86,7 +86,7 @@ BEGIN
     PERFORM lpInsertUpdate_Object (inId, zc_Object_Partner(), inCode, outPartnerName);
 
     -- сохранили свойство <Адрес точки доставки>
-    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), inId, outAddress);
+    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Partner_Address(), inId, outAddress);
 
    
 END;

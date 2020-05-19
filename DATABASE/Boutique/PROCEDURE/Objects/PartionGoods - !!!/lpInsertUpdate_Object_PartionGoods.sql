@@ -358,6 +358,7 @@ BEGIN
                                        , FabrikaId, GoodsGroupId, MeasureId
                                        , CompositionId, GoodsInfoId, LineFabricaId
                                        , LabelId, CompositionGroupId, GoodsSizeId, JuridicalId
+                                       , CurrencyId_pl
                                        , isErased, isArc)
                                  VALUES (inMovementItemId, inMovementId, inPartnerId, inUnitId, inOperDate, inGoodsId, inGoodsItemId
                                        , inCurrencyId, 0 /*inAmount*/, inOperPrice, inCountForPrice
@@ -367,6 +368,7 @@ BEGIN
                                        , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                        , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
                                        , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId)
+                                       , zc_Currency_EUR()
                                        , TRUE, TRUE
                                         );
      ELSE

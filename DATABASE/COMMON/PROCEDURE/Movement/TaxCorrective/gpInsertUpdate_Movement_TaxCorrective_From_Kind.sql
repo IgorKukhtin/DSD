@@ -343,7 +343,27 @@ BEGIN
      THEN
           -- в этом случае привязка - zc_MI_Child
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice, OperPrice_original, CountForPrice)
-             WITH tmpMI AS (SELECT MovementLinkMovement_Tax.MovementChildId      AS MovementId_Tax
+             WITH tmpMovement AS (-- выбрали ВСЕ <Корректировка цены>
+                                  SELECT _tmpMovement_PriceCorrective.MovementId
+                                  FROM  _tmpMovement_PriceCorrective
+                                  WHERE inDocumentTaxKindId = zc_Enum_DocumentTaxKind_CorrectivePriceSummaryJuridical()
+                                 UNION
+                                  SELECT inMovementId AS MovementId
+                                 )
+                   , tmpMI_all AS (SELECT MI.*
+                                   FROM MovementItem AS MI
+                                   WHERE MI.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                   --AND MI.DescId     = zc_MI_Master()
+                                   --AND MI.isErased   = FALSE
+                                  )
+                 /*, tmpMI_Child AS (SELECT MI.*
+                                   FROM MovementItem AS MI
+                                   WHERE MI.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                                     AND MI.DescId     = zc_MI_Child()
+                                   --AND MI_Master.isErased   = FALSE
+                                  )*/
+
+                , tmpMI AS (SELECT MovementLinkMovement_Tax.MovementChildId      AS MovementId_Tax
                                  , MI_Master.ObjectId                            AS GoodsId
                                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                                  , SUM (MovementItem.Amount) AS Amount
@@ -410,9 +430,14 @@ BEGIN
                                    END AS OperPrice_original
                                    -- CountForPrice
                                  , MIFloat_CountForPrice.ValueData AS CountForPrice
-                            FROM MovementItem AS MI_Master
-                                 INNER JOIN MovementItem ON MovementItem.ParentId   = MI_Master.Id
-                                                        AND MovementItem.MovementId = inMovementId
+                            FROM tmpMovement
+                                 INNER JOIN tmpMI_all AS MI_Master
+                                                         ON MI_Master.MovementId = tmpMovement.MovementId
+                                                        AND MI_Master.DescId     = zc_MI_Master()
+                                                        AND MI_Master.isErased   = FALSE
+
+                                 INNER JOIN tmpMI_all AS MovementItem ON MovementItem.ParentId   = MI_Master.Id
+                                                        AND MovementItem.MovementId = tmpMovement.MovementId
                                                         AND MovementItem.DescId     = zc_MI_Child()
                                                         AND MovementItem.isErased   = FALSE
                                                         AND MovementItem.Amount <> 0
@@ -451,9 +476,6 @@ BEGIN
                                                                  AND MILinkObject_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
                                  LEFT JOIN Movement AS Movement_Tax_find ON Movement_Tax_find.Id = MovementLinkMovement_Tax.MovementChildId
 
-                            WHERE MI_Master.MovementId = inMovementId
-                              AND MI_Master.DescId     = zc_MI_Master()
-                              AND MI_Master.isErased   = FALSE
                             GROUP BY MovementLinkMovement_Tax.MovementChildId
                                    , MI_Master.ObjectId
                                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
@@ -930,6 +952,11 @@ BEGIN
           DELETE FROM MovementLinkMovement WHERE MovementId IN (SELECT MovementId_Corrective FROM _tmpMovement_PriceCorrective)
                                              AND MovementChildId IN (SELECT MovementId FROM _tmpMovement_PriceCorrective)
                                              AND DescId = zc_MovementLinkMovement_Master();
+
+          -- сформировали связь <Налогового документа> с Налоговыми
+          PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), MovementId_Corrective, MovementId_Tax)
+          FROM (SELECT DISTINCT MovementId_Corrective, MovementId_Tax FROM _tmpResult ) AS tmpResult_update;
+
      ELSE
           -- сформировали связь <Налогового документа> с <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены>
           PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), MovementId_Corrective, inMovementId)
@@ -968,7 +995,10 @@ BEGIN
 
 if inSession = '5' AND 1=1
 then
-    RAISE EXCEPTION 'Admin - Errr _end - <%>', outMessageText;
+    RAISE EXCEPTION 'Admin - Errr _end - <%>  <%>'
+                  , (SELECT COUNT(*) FROM _tmpResult)
+                  , outMessageText
+                   ;
     -- 'Повторите действие через 3 мин.'
 end if;
 
@@ -998,4 +1028,3 @@ $BODY$
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3409416, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective_From_Kind (inMovementId:= 3449385, inDocumentTaxKindId:= 0, inDocumentTaxKindId_inf:= 0, inIsTaxLink:= TRUE, inSession := '5');
 -- select * from gpInsertUpdate_Movement_TaxCorrective_From_Kind(inMovementId := 16691011 , inDocumentTaxKindId := 566452 , inDocumentTaxKindId_inf := 566452 , inStartDateTax := NULL , inIsTaxLink := 'True' ,  inSession := '5');
- 

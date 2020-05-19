@@ -1,6 +1,6 @@
 -- Function: lfSelect_ObjectHistory_PriceListItem ()
 
--- DROP FUNCTION lfSelect_ObjectHistory_PriceListItem (Integer, TDateTime);
+DROP FUNCTION IF EXISTS lfSelect_ObjectHistory_PriceListItem (Integer, TDateTime);
 
 CREATE OR REPLACE FUNCTION lfSelect_ObjectHistory_PriceListItem(
     IN inPriceListId        Integer   , -- ключ 

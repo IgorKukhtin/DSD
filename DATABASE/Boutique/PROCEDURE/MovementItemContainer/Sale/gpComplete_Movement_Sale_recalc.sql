@@ -17,7 +17,7 @@ BEGIN
 
 
      -- Проверка
-     IF zc_Enum_GlobalConst_isTerry() = TRUE
+     IF zc_Enum_GlobalConst_isTerry() = TRUE OR zfCalc_User_PriceListReal (vbUserId) = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Нет доступа для проведения - gpComplete_Movement_Sale_recalc.';
      END IF;
@@ -31,14 +31,21 @@ BEGIN
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_recalc (MovementItemId Integer, GoodsId Integer
-                                      , OperCount TFloat, OperPriceList TFloat, OperPriceList_pl TFloat, SummChangePercent TFloat
-                                      , TotalSummPriceList TFloat, TotalChangePercent TFloat, TotalPay TFloat
+                                      , OperCount TFloat, OperPriceList TFloat, OperPriceList_pl TFloat, OperPriceList_curr TFloat
+                                      , SummChangePercent TFloat, SummChangePercent_curr TFloat
+                                      , TotalSummPriceList      TFloat, TotalChangePercent      TFloat, TotalPay      TFloat
+                                      , TotalSummPriceList_curr TFloat, TotalChangePercent_curr TFloat, TotalPay_curr TFloat
+                                      , CurrencyId_pl Integer
                                       , CurrencyValue TFloat, ParValue TFloat
                                       , CashId Integer, CurrencyId_cash Integer
                                        ) ON COMMIT DROP;
      INSERT INTO _tmpItem_recalc (MovementItemId, GoodsId
-                                , OperCount, OperPriceList, OperPriceList_pl, SummChangePercent
-                                , TotalSummPriceList, TotalChangePercent, TotalPay
+                                , OperCount, OperPriceList, OperPriceList_pl, OperPriceList_curr
+                                , SummChangePercent, SummChangePercent_curr
+                                , TotalSummPriceList, TotalSummPriceList_curr
+                                , TotalChangePercent, TotalChangePercent_curr
+                                , TotalPay, TotalPay_curr
+                                , CurrencyId_pl
                                 , CurrencyValue, ParValue
                                 , CashId, CurrencyId_cash
                                  )
@@ -53,13 +60,35 @@ BEGIN
                                   , MovementItem.ObjectId               AS GoodsId
                                   , MovementItem.Amount                 AS OperCount
                                   , MIFloat_ChangePercent.ValueData     AS ChangePercent
+
+                                    -- Цена факт ГРН, со всеми скидками
                                   , MIFloat_OperPriceListReal.ValueData AS OperPriceList
-                                  , COALESCE ((SELECT zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmp.ValuePrice, tmpCurrency.Amount, tmpCurrency.ParValue))
+                                    -- Цена факт - в валюте, со всеми скидками - !!! ВРЕМЕННО - zc_Currency_EUR !!!
+                                  , zfCalc_SummPriceList (1, zfCalc_CurrencySumm (MIFloat_OperPriceListReal.ValueData, zc_Currency_Basis(), zc_Currency_EUR(), tmpCurrency.Amount, tmpCurrency.ParValue)) AS OperPriceListReal_curr
+
+                                    -- Цена по прайсу, без скидки - в ГРН
+                                  , COALESCE ((SELECT zfCalc_SummPriceList (1, zfCalc_CurrencySumm (tmp.ValuePrice, tmp.CurrencyId, zc_Currency_Basis(), tmpCurrency.Amount, tmpCurrency.ParValue))
                                                FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
                                                                                      , OL_pl.ChildObjectId
                                                                                      , MovementItem.ObjectId
                                                                                       ) AS tmp)
-                                             , 0.0) AS OperPriceList_pl
+                                            , 0.0) AS OperPriceList_pl
+                                    -- Цена по прайсу, без скидки - в валюте - !!! ВРЕМЕННО - zc_Currency_EUR !!!
+                                  , COALESCE ((SELECT zfCalc_SummPriceList (1, zfCalc_CurrencySumm (tmp.ValuePrice, tmp.CurrencyId, zc_Currency_EUR(), tmpCurrency.Amount, tmpCurrency.ParValue))
+                                               FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                     , OL_pl.ChildObjectId
+                                                                                     , MovementItem.ObjectId
+                                                                                      ) AS tmp)
+                                            , 0.0) AS OperPriceList_curr
+
+                                    -- CurrencyId_pl
+                                  , COALESCE ((SELECT tmp.CurrencyId
+                                               FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                     , OL_pl.ChildObjectId
+                                                                                     , MovementItem.ObjectId
+                                                                                      ) AS tmp)
+                                            , zc_Currency_Basis()) AS CurrencyId_pl
+
                                   , (SELECT lpSelect.CashId FROM lpSelect_Object_Cash (MovementLinkObject_From.ObjectId, vbUserId) AS lpSelect
                                      WHERE lpSelect.isBankAccount = FALSE
                                        AND lpSelect.CurrencyId    = zc_Currency_GRN()
@@ -99,23 +128,36 @@ BEGIN
              , tmpMI.OperCount
              , tmpMI.OperPriceList
              , tmpMI.OperPriceList_pl
+             , tmpMI.OperPriceList_curr
+
                -- SummChangePercent: 10% = 900 - 800 = 100
              , zfCalc_SummChangePercent (tmpMI.OperCount, tmpMI.OperPriceList_pl, tmpMI.ChangePercent)
              - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList) AS SummChangePercent
+               -- SummChangePercent_curr: 10% = 900 - 800 = 100
+             , zfCalc_SummChangePercent (tmpMI.OperCount, tmpMI.OperPriceList_curr, tmpMI.ChangePercent)
+             - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceListReal_curr) AS SummChangePercent_curr
 
                -- TotalSummPriceList: 1000
-             , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList_pl) AS TotalSummPriceList
+             , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList_pl)   AS TotalSummPriceList
+             , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList_curr) AS TotalSummPriceList_curr
 
                -- TotalChangePercent: 1000 - 800
              , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList_pl)
              - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList) AS TotalChangePercent
+               -- TotalChangePercent_curr: 1000 - 800
+             , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList_curr)
+             - zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceListReal_curr) AS TotalChangePercent_curr
 
                -- TotalPay: 1000 - 200
              , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceList) AS TotalPay
+               -- TotalPay_curr: 1000 - 200
+             , zfCalc_SummPriceList (tmpMI.OperCount, tmpMI.OperPriceListReal_curr) AS TotalPay_curr
+
+             , tmpMI.CurrencyId_pl
 
              , tmpMI.CurrencyValue
              , tmpMI.ParValue
-             
+
              , tmpMI.CashId
              , tmpMI.CurrencyId_cash
         FROM tmpMI
@@ -123,11 +165,22 @@ BEGIN
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.OperPriceList_pl)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),  _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),           _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.OperPriceList_curr)
+
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent_curr)
+
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent_curr)
+
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay_curr)
+
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency_pl(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CurrencyId_pl)
+
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CurrencyValue)
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),           _tmpItem_recalc.MovementItemId, _tmpItem_recalc.ParValue)
+
      FROM _tmpItem_recalc
     ;
 --    RAISE EXCEPTION '.<%>  <%>  <%>'
@@ -135,6 +188,12 @@ BEGIN
 --    , (select sum (_tmpItem_recalc.TotalChangePercent) from _tmpItem_recalc)
 --    , (select sum (_tmpItem_recalc.TotalPay) from _tmpItem_recalc)
 --    ;
+
+    RAISE EXCEPTION 'Ошибка.<%>   %   %', (select _tmpItem_recalc.TotalChangePercent from _tmpItem_recalc)
+, (select _tmpItem_recalc.TotalChangePercent_curr from _tmpItem_recalc)
+, (select _tmpItem_recalc.OperPriceList_pl from _tmpItem_recalc)
+
+;
 
      -- сохранили
      PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
