@@ -17,6 +17,7 @@ RETURNS TABLE (ID  Integer
              , MovementName TVarChar
              , UnitName TVarChar
              , Amount TFloat
+             , isErased boolean
              )
 AS
 $BODY$
@@ -39,6 +40,7 @@ BEGIN
          , MovementDesc.ItemName
          , Object_Unit.ValueData
          , MovementItem.Amount
+         , MovementItem.IsErased
     FROM MovementItem
 
        INNER JOIN Movement ON Movement.ID = MovementItem.movementid
@@ -73,4 +75,5 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_EntryGoodsMovement(inUnitId := 8156016 ,  inGoodsId := 6985100, inSession := '3');
+-- select * from gpReport_EntryGoodsMovement(inStartDate := ('01.01.2016')::TDateTime , inEndDate := ('30.04.2021')::TDateTime , inUnitId := 1529734 , inGoodsId := 1267302 ,  inSession := '3');
+

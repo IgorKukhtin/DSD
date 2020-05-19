@@ -144,6 +144,10 @@ type
     bbUpdate_Price: TdxBarButton;
     actUnitForOrderInternalPromo: TdsdOpenForm;
     bbUnitForOrderInternalPromo: TdxBarButton;
+    actUnitTreeForm: TOpenChoiceForm;
+    actInsert_Movement_Send: TdsdExecStoredProc;
+    spInsert_Movement_Send: TdsdStoredProc;
+    bbInsert_Movement_Send: TdxBarButton;
   private
     { Private declarations }
   public
