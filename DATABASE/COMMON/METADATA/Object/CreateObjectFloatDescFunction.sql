@@ -1431,6 +1431,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_KoeffSUN_v4() RETURNS Integer AS
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_KoeffSUN_v4', 'Кратность по СУН v2-ПИ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_KoeffSUN_v4');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Goods_LimitSUN_T1() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_LimitSUN_T1'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(),'zc_ObjectFloat_Goods_LimitSUN_T1', 'Остаток, при котором расчет для СУН-2 и СУН-2-пи значения Т1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_LimitSUN_T1');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_User_BillNumberMobile() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_User_BillNumberMobile'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1768,6 +1772,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 16.05.20         * zc_ObjectFloat_Goods_LimitSUN_T1
  15.05.20         * zc_ObjectFloat_Unit_HT_SUN_v1
                     zc_ObjectFloat_Unit_HT_SUN_v2
                     zc_ObjectFloat_Unit_HT_SUN_v4

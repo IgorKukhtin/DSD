@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_PUSH_Cash(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Text TBlob, isPoll boolean,
-               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar)
+               FormName TVarChar, Button TVarChar, Params TVarChar, TypeParams TVarChar, ValueParams TVarChar,
+               isFormOpen boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -51,7 +52,8 @@ BEGIN
                            , Button TVarChar
                            , Params TVarChar
                            , TypeParams TVarChar
-                           , ValueParams TVarChar) ON COMMIT DROP;
+                           , ValueParams TVarChar
+                           , isFormOpen boolean) ON COMMIT DROP;
 
      -- Отметка посещаемости
     IF vbRetailId = 4 AND
@@ -485,6 +487,7 @@ BEGIN
                                  , PUSH_Message.Params                                             AS Params
                                  , PUSH_Message.TypeParams                                         AS TypeParams
                                  , PUSH_Message.ValueParams                                        AS ValueParams
+                                 , PUSH_Message.isFormOpen                                         AS isFormOpen
                             FROM Movement
 
                                  LEFT JOIN MovementDate AS MovementDate_DateEndPUSH
@@ -520,6 +523,10 @@ BEGIN
                                                           ON MovementString_Function.MovementId = Movement.Id
                                                          AND MovementString_Function.DescId = zc_MovementString_Function()
 
+                                 LEFT JOIN MovementString AS MovementString_Form
+                                                          ON MovementString_Form.MovementId = Movement.Id
+                                                         AND MovementString_Form.DescId = zc_MovementString_Form()
+
                                  LEFT JOIN MovementItem AS MovementItem_Child
                                                         ON MovementItem_Child.MovementId = Movement.Id
                                                        AND MovementItem_Child.DescId = zc_MI_Child()
@@ -529,9 +536,10 @@ BEGIN
                                                                ON MovementItemUnit.MovementId = Movement.Id
 
                                  LEFT JOIN gpGet_Movement_PUSH_Message(MovementBlob_Message.ValueData,
-                                                                        MovementString_Function.ValueData,
-                                                                        vbUnitId,
-                                                                        vbUserId) AS PUSH_Message ON 1 = 1
+                                                                       MovementString_Function.ValueData,
+                                                                       MovementString_Form.ValueData,
+                                                                       vbUnitId,
+                                                                       vbUserId) AS PUSH_Message ON 1 = 1
 
                             WHERE Movement.OperDate <= CURRENT_TIMESTAMP
                               AND make_time(date_part('hour', Movement.OperDate)::integer, date_part('minute', Movement.OperDate)::integer, date_part('second', Movement.OperDate)::integer) <= CURRENT_TIME
@@ -565,7 +573,7 @@ BEGIN
                                                     AND MID_Viewed.ValueData < CURRENT_DATE + INTERVAL '1 DAY'), 0)))
 
 
-   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams)
+   INSERT INTO _PUSH (Id, Text, isPoll, FormName, Button, Params, TypeParams, ValueParams, isFormOpen)
    SELECT
           tmpMovementPUSH.Id
         , tmpMovementPUSH.Message                                            AS Message
@@ -575,19 +583,21 @@ BEGIN
         , tmpMovementPUSH.Params                                             AS Params
         , tmpMovementPUSH.TypeParams                                         AS TypeParams
         , tmpMovementPUSH.ValueParams                                        AS ValueParams
+        , tmpMovementPUSH.isFormOpen                                         AS isFormOpen
    FROM tmpMovementPUSH
-   WHERE tmpMovementPUSH.Message <> '';
+   WHERE tmpMovementPUSH.Message <> '' OR COALESCE(tmpMovementPUSH.FormName, '') <> '' AND tmpMovementPUSH.isFormOpen = True;
 
 
    RETURN QUERY
-     SELECT _PUSH.Id                      AS Id
-          , _PUSH.Text                    AS Text
-          , COALESCE(_PUSH.isPoll, False) AS isPoll
-          , _PUSH.FormName                AS FormName
-          , _PUSH.Button                  AS Button
-          , _PUSH.Params                  AS Params
-          , _PUSH.TypeParams              AS TypeParams
-          , _PUSH.ValueParams             AS ValueParams
+     SELECT _PUSH.Id                          AS Id
+          , _PUSH.Text                        AS Text
+          , COALESCE(_PUSH.isPoll, False)     AS isPoll
+          , _PUSH.FormName                    AS FormName
+          , _PUSH.Button                      AS Button
+          , _PUSH.Params                      AS Params
+          , _PUSH.TypeParams                  AS TypeParams
+          , _PUSH.ValueParams                 AS ValueParams
+          , COALESCE(_PUSH.isFormOpen, False) AS  isFormOpen
      FROM _PUSH;
 
 END;

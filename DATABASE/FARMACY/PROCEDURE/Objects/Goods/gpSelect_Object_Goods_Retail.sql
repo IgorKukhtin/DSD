@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
     IN inRetailId    Integer,       -- торговая сеть
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar
+             , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar
+             , isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
              , NDSKindId Integer, NDSKindName TVarChar
@@ -35,6 +37,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , NotTransferTime boolean
              , isSUN_v3 boolean, KoeffSUN_v3 TFloat
              , KoeffSUN_v1 TFloat, KoeffSUN_v2 TFloat, KoeffSUN_v4 TFloat
+             , LimitSUN_T1 TFloat
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
              , isInvisibleSUN boolean
@@ -239,6 +242,9 @@ BEGIN
            , Object_Goods_Main.ObjectCode                                             AS GoodsCodeInt
            , zfFormat_BarCode(zc_BarCodePref_Object(), Object_Goods_Retail.GoodsMainId) AS IdBarCode
            , Object_Goods_Main.Name                                                   AS GoodsName
+           , Object_GoodsPairSun.Id                                                   AS GoodsPairSunId
+           , Object_GoodsPairSun.ObjectCode                                           AS GoodsPairSunCode
+           , Object_GoodsPairSun.ValueData                                            AS GoodsPairSunName
            , Object_Goods_Retail.isErased
            , Object_Goods_Main.GoodsGroupId
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
@@ -308,6 +314,7 @@ BEGIN
            , COALESCE (Object_Goods_Retail.KoeffSUN_v1,0)   :: TFloat AS KoeffSUN_v1
            , COALESCE (Object_Goods_Retail.KoeffSUN_v2,0)   :: TFloat AS KoeffSUN_v2
            , COALESCE (Object_Goods_Retail.KoeffSUN_v4,0)   :: TFloat AS KoeffSUN_v4
+           , COALESCE (Object_Goods_Retail.LimitSUN_T1,0)   :: TFloat AS LimitSUN_T1
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
@@ -322,6 +329,7 @@ BEGIN
            LEFT JOIN Object AS Object_Update ON Object_Update.Id = Object_Goods_Retail.UserUpdateId
 
            LEFT JOIN tmpNDS ON tmpNDS.Id = Object_Goods_Main.NDSKindId
+           LEFT JOIN Object AS Object_GoodsPairSun ON Object_GoodsPairSun.Id = Object_Goods_Retail.GoodsPairSunId
 
            LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId = Object_Goods_Retail.GoodsMainId
 
@@ -590,6 +598,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Ярошенко Р.Ф.  Шаблий О.В.
+ 18.05.20         * GoodsPairSun
+ 17.05.20         * LimitSUN_T1
  11.05.20         *
  03.05.20         * isNot_Sun_v4
  29.10.19                                                                     * Плоские таблицы

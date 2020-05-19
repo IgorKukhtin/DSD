@@ -1770,6 +1770,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Area() RETURNS Integer AS $BODY$B
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Goods_Area', 'Регион', zc_Object_Goods(), zc_Object_Area() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_Area');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsPairSun() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsPairSun'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Goods_GoodsPairSun', 'Пара товара в СУН', zc_Object_Goods(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsPairSun');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ImportGroup_Object() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ImportGroup_Object'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
@@ -2321,6 +2324,7 @@ SELECT 'zc_ObjectLink_Hardware_CashRegister', 'Связь с Подразделением', zc_Objec
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 18.05.20         * zc_ObjectLink_Goods_GoodsPairSun
  13.05.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh
  12.05.20         * zc_ObjectLink_GoodsByGoodsKind_Goods_Sh
  29.04.20         * zc_ObjectLink_Goods_AssetProd

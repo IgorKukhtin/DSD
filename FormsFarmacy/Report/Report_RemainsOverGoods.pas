@@ -121,6 +121,7 @@ type
     actRefreshIncome: TdsdDataSetRefresh;
     cbSummSend: TcxCheckBox;
     edSummSend: TcxCurrencyEdit;
+    isChoice: TcxGridDBColumn;
   private
     { Private declarations }
   public

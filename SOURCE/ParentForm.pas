@@ -659,6 +659,7 @@ initialization
   RegisterClass (TdsdExportToXML);
   RegisterClass (TdsdDuplicateSearchAction);
   RegisterClass (TdsdDOCReportFormAction);
+  RegisterClass (TdsdOpenStaticForm);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

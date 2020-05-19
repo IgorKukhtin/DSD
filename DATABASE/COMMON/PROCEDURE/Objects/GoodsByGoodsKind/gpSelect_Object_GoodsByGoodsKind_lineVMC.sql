@@ -25,12 +25,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             --, WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
-             , WeightAvg_Sh TFloat, WeightAvg_Nom TFloat, WeightAvg_Ves TFloat
-             , Tax_Sh TFloat, Tax_Nom TFloat, Tax_Ves TFloat
-             , WeightMin_Sh  TFloat, WeightMax_Sh  TFloat
-             , WeightMin_Nom TFloat, WeightMax_Nom TFloat
-             , WeightMin_Ves TFloat, WeightMax_Ves TFloat
+             , WeightAvg TFloat
+             , Tax TFloat
+             , WeightMin TFloat, WeightMax TFloat
              
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
@@ -65,15 +62,15 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , BoxHeight TFloat
              , BoxLength TFloat
              , BoxWidth TFloat
-             , WeightGross_Sh    TFloat, WeightGross_Nom    TFloat, WeightGross_Ves    TFloat                            -- Вес брутто полного ящика "по ???" (E2/E3)
+             , WeightGross TFloat                               -- Вес брутто полного ящика "по ???" (E2/E3)
 
-             , WeightAvgGross_Sh TFloat, WeightAvgGross_Nom TFloat, WeightAvgGross_Ves TFloat                            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
-             , WeightMinGross_Sh TFloat, WeightMinGross_Nom TFloat, WeightMinGross_Ves TFloat                            -- Вес брутто полного ящика "по мин весу" (E2/E3)
-             , WeightMaxGross_Sh TFloat, WeightMaxGross_Nom TFloat, WeightMaxGross_Ves TFloat                            -- Вес брутто полного ящика "по макс весу" (E2/E3)
+             , WeightAvgGross TFloat                            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+             , WeightMinGross TFloat                            -- Вес брутто полного ящика "по мин весу" (E2/E3)
+             , WeightMaxGross TFloat                            -- Вес брутто полного ящика "по макс весу" (E2/E3)
 
-             , WeightAvgNet_Sh   TFloat, WeightAvgNet_Nom   TFloat, WeightAvgNet_Ves   TFloat                            -- Вес нетто полного ящика "по среднему весу" (E2/E3)
-             , WeightMinNet_Sh   TFloat, WeightMinNet_Nom   TFloat, WeightMinNet_Ves   TFloat                            -- Вес нетто полного ящика "по мин весу" (E2/E3)
-             , WeightMaxNet_Sh   TFloat, WeightMAxNet_Nom   TFloat, WeightMaxNet_Ves   TFloat                            -- Вес нетто полного ящика "по макс весу" (E2/E3)
+             , WeightAvgNet TFloat                              -- Вес нетто полного ящика "по среднему весу" (E2/E3)
+             , WeightMinNet TFloat                              -- Вес нетто полного ящика "по мин весу" (E2/E3)
+             , WeightMaxNet TFloat                              -- Вес нетто полного ящика "по макс весу" (E2/E3)
              
 
              , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
@@ -137,6 +134,19 @@ BEGIN
                                        , tmp.WmsCodeCalc_Sh   ::Integer   AS sku_code
                                        , tmp.CodeCalc_Sh                  AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Sh()       AS GoodsTypeKindId
+
+                                       , tmp.WeightAvg_Sh                 AS WeightAvg
+                                       , tmp.Tax_Sh                       AS Tax
+                                       , tmp.WeightMin_Sh                 AS WeightMin
+                                       , tmp.WeightMax_Sh                 AS WeightMax
+                                       , tmp.WeightGross_Sh               AS WeightGross
+                                       , tmp.WeightAvgGross_Sh            AS WeightAvgGross
+                                       , tmp.WeightMinGross_Sh            AS WeightMinGross
+                                       , tmp.WeightMaxGross_Sh            AS WeightMaxGross
+                                       , tmp.WeightAvgNet_Sh              AS WeightAvgNet
+                                       , tmp.WeightMinNet_Sh              AS WeightMinNet
+                                       , tmp.WeightMaxNet_Sh              AS WeightMaxNet
+            
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Sh  = TRUE
                                  UNION ALL
@@ -146,6 +156,19 @@ BEGIN
                                        , tmp.WmsCodeCalc_Nom  ::Integer   AS sku_code
                                        , tmp.CodeCalc_Nom                 AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Nom()      AS GoodsTypeKindId
+
+                                       , tmp.WeightAvg_Nom                AS WeightAvg
+                                       , tmp.Tax_Nom                      AS Tax
+                                       , tmp.WeightMin_Nom                AS WeightMin
+                                       , tmp.WeightMax_Nom                AS WeightMax
+                                       , tmp.WeightGross_Nom              AS WeightGross
+                                       , tmp.WeightAvgGross_Nom           AS WeightAvgGross
+                                       , tmp.WeightMinGross_Nom           AS WeightMinGross
+                                       , tmp.WeightMaxGross_Nom           AS WeightMaxGross
+                                       , tmp.WeightAvgNet_Nom             AS WeightAvgNet
+                                       , tmp.WeightMinNet_Nom             AS WeightMinNet
+                                       , tmp.WeightMaxNet_Nom             AS WeightMaxNet
+                                       
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Nom  = TRUE
                                  UNION ALL
@@ -155,6 +178,19 @@ BEGIN
                                        , tmp.WmsCodeCalc_Ves  ::Integer   AS sku_code
                                        , tmp.CodeCalc_Ves                 AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Ves()      AS GoodsTypeKindId
+
+                                       , tmp.WeightAvg_Ves                AS WeightAvg
+                                       , tmp.Tax_Ves                      AS Tax
+                                       , tmp.WeightMin_Ves                AS WeightMin
+                                       , tmp.WeightMax_Ves                AS WeightMax
+                                       , tmp.WeightGross_Ves              AS WeightGross
+                                       , tmp.WeightAvgGross_Ves           AS WeightAvgGross
+                                       , tmp.WeightMinGross_Ves           AS WeightMinGross
+                                       , tmp.WeightMaxGross_Ves           AS WeightMaxGross
+                                       , tmp.WeightAvgNet_Ves             AS WeightAvgNet
+                                       , tmp.WeightMinNet_Ves             AS WeightMinNet
+                                       , tmp.WeightMaxNet_Ves             AS WeightMaxNet
+                                       
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Ves  = TRUE
                                  UNION ALL
@@ -164,6 +200,18 @@ BEGIN
                                        , 0  :: Integer  AS sku_code
                                        , '' :: TVarChar AS CodeCalc
                                        , 0              AS GoodsTypeKindId
+
+                                       , 0  :: TFloat   AS WeightAvg
+                                       , 0  :: TFloat   AS Tax
+                                       , 0  :: TFloat   AS WeightMin
+                                       , 0  :: TFloat   AS WeightMax
+                                       , 0  :: TFloat   AS WeightGross
+                                       , 0  :: TFloat   AS WeightAvgGross
+                                       , 0  :: TFloat   AS WeightMinGross
+                                       , 0  :: TFloat   AS WeightMaxGross
+                                       , 0  :: TFloat   AS WeightAvgNet
+                                       , 0  :: TFloat   AS WeightMinNet
+                                       , 0  :: TFloat   AS WeightMaxNet
                                   FROM tmpGoodsByGoodsKind
                                   WHERE (tmpGoodsByGoodsKind.isGoodsTypeKind_Sh <> TRUE
                                     AND tmpGoodsByGoodsKind.isGoodsTypeKind_Ves <> TRUE
@@ -205,23 +253,11 @@ BEGIN
            , tmpGoodsByGoodsKind.WeightTotal
            , tmpGoodsByGoodsKind.ChangePercentAmount
 
-           --, tmpGoodsByGoodsKind.WeightMin
-           --, tmpGoodsByGoodsKind.WeightMax
-           --, tmpGoodsByGoodsKind.WeightAvg
+           , tmpGoodsByGoodsKind.WeightAvg
+           , tmpGoodsByGoodsKind.Tax
 
-           , tmpGoodsByGoodsKind.WeightAvg_Sh
-           , tmpGoodsByGoodsKind.WeightAvg_Nom
-           , tmpGoodsByGoodsKind.WeightAvg_Ves
-           , tmpGoodsByGoodsKind.Tax_Sh
-           , tmpGoodsByGoodsKind.Tax_Nom
-           , tmpGoodsByGoodsKind.Tax_Ves
-
-           , tmpGoodsByGoodsKind.WeightMin_Sh
-           , tmpGoodsByGoodsKind.WeightMax_Sh
-           , tmpGoodsByGoodsKind.WeightMin_Nom
-           , tmpGoodsByGoodsKind.WeightMax_Nom
-           , tmpGoodsByGoodsKind.WeightMin_Ves
-           , tmpGoodsByGoodsKind.WeightMax_Ves
+           , tmpGoodsByGoodsKind.WeightMin
+           , tmpGoodsByGoodsKind.WeightMax
            
            , tmpGoodsByGoodsKind.Height
            , tmpGoodsByGoodsKind.Length
@@ -272,19 +308,12 @@ BEGIN
            , tmpGoodsByGoodsKind.isGoodsTypeKind_Ves
 
            , tmpGoodsByGoodsKind.CodeCalc                           -- расчет: код на упак+вид+бренд+категория
-/*           , tmpGoodsByGoodsKind.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
-           , tmpGoodsByGoodsKind.CodeCalc_Nom  :: TVarChar          -- номинал - расчет: код на упак+вид+бренд+категория
-           , tmpGoodsByGoodsKind.CodeCalc_Ves  :: TVarChar          -- неноминал - расчет: код на упак+вид+бренд+категория
-*/
+
              -- Повтор кода ВМС - расчет: код на упак+вид+бренд+категория
            , tmpGoodsByGoodsKind.isCodeCalc_Diff                                         -- Повтор кода ВМС
 
            , tmpGoodsByGoodsKind.WmsCellNum       :: Integer        -- 
            , tmpGoodsByGoodsKind.WmsCode          :: Integer        -- Код ВМС* для выгрузки
- /*          , tmpGoodsByGoodsKind.WmsCodeCalc_Sh   :: TVarChar       -- шт. - Код ВМС* для выгрузки
-           , tmpGoodsByGoodsKind.WmsCodeCalc_Nom  :: TVarChar       -- номинал - Код ВМС* для выгрузки
-           , tmpGoodsByGoodsKind.WmsCodeCalc_Ves  :: TVarChar       -- неноминал - Код ВМС* для выгрузки
-*/
             -- ящик (E2/E3)
             , tmpGoodsByGoodsKind.GoodsPropertyBoxId
             , tmpGoodsByGoodsKind.BoxId
@@ -302,39 +331,23 @@ BEGIN
             , tmpGoodsByGoodsKind.BoxLength
             , tmpGoodsByGoodsKind.BoxWidth
 
-              -- Вес брутто полного ящика "??? по среднему весу" (E2/E3)
-            --, tmpGoodsByGoodsKind.WeightGross
-            , tmpGoodsByGoodsKind.WeightGross_Sh
-            , tmpGoodsByGoodsKind.WeightGross_Nom
-            , tmpGoodsByGoodsKind.WeightGross_Ves
-             -- Вес брутто полного ящика "по среднему весу" (E2/E3)
-            --, tmpGoodsByGoodsKind.WeightAvgGross
-            , tmpGoodsByGoodsKind.WeightAvgGross_Sh
-            , tmpGoodsByGoodsKind.WeightAvgGross_Nom
-            , tmpGoodsByGoodsKind.WeightAvgGross_Ves
+            -- Вес брутто полного ящика "??? по среднему весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightGross
+            -- Вес брутто полного ящика "по среднему весу" (E2/E3)
+            , tmpGoodsByGoodsKind.WeightAvgGross
             -- Вес брутто полного ящика "по мин весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightMinGross_Sh
-            , tmpGoodsByGoodsKind.WeightMinGross_Nom
-            , tmpGoodsByGoodsKind.WeightMinGross_Ves
+            , tmpGoodsByGoodsKind.WeightMinGross
             -- Вес брутто полного ящика "по макс весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightMaxGross_Sh
-            , tmpGoodsByGoodsKind.WeightMaxGross_Nom
-            , tmpGoodsByGoodsKind.WeightMaxGross_Ves
+            , tmpGoodsByGoodsKind.WeightMaxGross
 
 
               -- Вес нетто по среднему весу ящика (E2/E3) - тоже что и WeightOnBox
-            --, tmpGoodsByGoodsKind.WeightAvgNet
-            , tmpGoodsByGoodsKind.WeightAvgNet_Sh
-            , tmpGoodsByGoodsKind.WeightAvgNet_Nom
-            , tmpGoodsByGoodsKind.WeightAvgNet_Ves
+            , tmpGoodsByGoodsKind.WeightAvgNet
+            
             -- Вес нетто полного ящика "по мин весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightMinNet_Sh
-            , tmpGoodsByGoodsKind.WeightMinNet_Nom
-            , tmpGoodsByGoodsKind.WeightMinNet_Ves
+            , tmpGoodsByGoodsKind.WeightMinNet
             -- Вес нетто полного ящика "по макс весу" (E2/E3)
-            , tmpGoodsByGoodsKind.WeightMaxNet_Sh
-            , tmpGoodsByGoodsKind.WeightMAxNet_Nom
-            , tmpGoodsByGoodsKind.WeightMaxNet_Ves
+            , tmpGoodsByGoodsKind.WeightMaxNet
 
             -- ящик (Гофра)
             , tmpGoodsByGoodsKind.BoxId_2

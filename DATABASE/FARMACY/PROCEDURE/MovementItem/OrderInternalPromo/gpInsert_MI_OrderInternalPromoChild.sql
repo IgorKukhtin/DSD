@@ -77,6 +77,10 @@ BEGIN
                                                       ON ObjectLink_Juridical_Retail.ObjectId = ObjectLink_Unit_Juridical.ChildObjectId
                                                      AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
                                                      AND ObjectLink_Juridical_Retail.ChildObjectId = vbRetailId
+                                INNER JOIN ObjectBoolean AS ObjectBoolean_OrderPromo
+                                                         ON ObjectBoolean_OrderPromo.ObjectId = ObjectLink_Unit_Juridical.ObjectId
+                                                        AND ObjectBoolean_OrderPromo.DescId = zc_ObjectBoolean_Unit_OrderPromo()
+                                                        AND COALESCE (ObjectBoolean_OrderPromo.ValueData, FALSE) = TRUE
                            WHERE ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                            )
               -- продажи

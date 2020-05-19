@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_PUSH()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Boolean, Boolean, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PUSH (Integer, TVarChar, TDateTime, TDateTime, Integer, Boolean, TBlob, TVarChar, Boolean, Boolean, Integer, TVarChar, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
  INOUT ioId                    Integer    , -- Ключ объекта <Документ продажи>
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PUSH(
     IN inisPoll                Boolean    , -- Опрос
     IN inisPharmacist          Boolean    , -- Только фармацевтам
     IN inRetailId              Integer    , -- Только для торговая сети 
+    IN inForm                  TVarChar   , -- Открывать форму если функция возвращает не пусто
     IN inUserId                Integer     -- сессия пользователя
 )
 RETURNS Integer AS
@@ -48,6 +49,9 @@ BEGIN
 
     -- сохранили свойство <Функция>
     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Function(), ioId, inFunction);
+
+    -- сохранили свойство <Открывать форму если функция возвращает не пусто>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_Form(), ioId, inForm);
 
     -- сохранили свойство <Дата окончания>
     IF inDateEndPUSH > inOperDate

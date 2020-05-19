@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer
              , RetailName TVarChar
              , Message TBlob
              , Function TVarChar
+             , Form TVarChar
              )
 AS
 $BODY$
@@ -52,6 +53,7 @@ BEGIN
           , Null::TVarChar                                   AS RetailName 
           , Null::TBlob                                      AS Message
           , Null::TVarChar                                   AS Function
+          , Null::TVarChar                                   AS Form
 
         FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
     ELSE
@@ -71,6 +73,7 @@ BEGIN
           , Object_Retail.ValueData                               AS RetailName 
           , MovementBlob_Message.ValueData                        AS Message
           , MovementString_Function.ValueData                     AS Function  
+          , MovementString_Form.ValueData                         AS Form  
 
         FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -110,6 +113,10 @@ BEGIN
                                      ON MovementString_Function.MovementId = Movement.Id
                                     AND MovementString_Function.DescId = zc_MovementString_Function()
 
+            LEFT JOIN MovementString AS MovementString_Form
+                                     ON MovementString_Form.MovementId = Movement.Id
+                                    AND MovementString_Form.DescId = zc_MovementString_Form()
+
             LEFT JOIN MovementLinkObject AS MLO_Retail
                                          ON MLO_Retail.MovementId = Movement.Id
                                         AND MLO_Retail.DescId = zc_MovementLinkObject_Retail()
@@ -133,5 +140,5 @@ ALTER FUNCTION gpGet_Movement_EmployeeSchedule (Integer, TDateTime, TVarChar) OW
  10.03.19        *
 */
 
--- select * from gpGet_Movement_PUSH(inMovementId := 0 , inOperDate := ('30.07.2018')::TDateTime,  inSession := '3');
+-- select * from gpGet_Movement_PUSH(inMovementId := 17829304 , inOperDate := ('30.04.2021')::TDateTime ,  inSession := '3');
 

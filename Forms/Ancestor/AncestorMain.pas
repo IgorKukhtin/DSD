@@ -99,6 +99,7 @@ begin
   for I := 0 to ActionList.ActionCount - 1 do
       // Проверяем только открытие формы
       if (ActionList.Actions[i].ClassName = 'TdsdOpenForm') or
+         (ActionList.Actions[i].ClassName = 'TdsdOpenStaticForm') or
          (ActionList.Actions[i].Name = 'actReport_OLAPSold')  then
          if not ClientDataSet.Locate('ActionName', ActionList.Actions[i].Name, []) then begin
             TCustomAction(ActionList.Actions[i]).Enabled := false;
