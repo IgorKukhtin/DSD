@@ -63,7 +63,7 @@ BEGIN
      -- Результат
      RETURN QUERY
        WITH
-       tmpRemains AS (SELECT STRING_AGG ('['||Object_GoodsSize.ValueData||'] '|| tmp.Remains, ';' ORDER BY Object_GoodsSize.ValueData) AS Text_info
+       tmpRemains AS (SELECT STRING_AGG ('['||Object_GoodsSize.ValueData||'] '|| tmp.Remains, '; ' ORDER BY Object_GoodsSize.ValueData) AS Text_info
                       FROM (SELECT  Container.ObjectId AS GoodsId
                                   , Object_PartionGoods.GoodsSizeId
                                   , CAST (SUM (COALESCE (Container.Amount,0)) AS NUMERIC (16,0)) AS Remains
