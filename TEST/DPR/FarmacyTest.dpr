@@ -876,7 +876,8 @@ uses
   Goods_LimitSUN_T_Edit in '..\..\FormsFarmacy\Guides\Goods_LimitSUN_T_Edit.pas' {Goods_LimitSUN_T_EditForm: TParentForm},
   Report_WillNotOrder in '..\..\FormsFarmacy\Report\Report_WillNotOrder.pas' {Report_WillNotOrderForm: TParentForm},
   UnitForOrderInternalPromo in '..\..\FormsFarmacy\Guides\UnitForOrderInternalPromo.pas' {UnitForOrderInternalPromoForm: TParentForm},
-  Goods_GoodsPairSun_Edit in '..\..\FormsFarmacy\Guides\Goods_GoodsPairSun_Edit.pas' {Goods_GoodsPairSun_EditForm: TParentForm};
+  Goods_GoodsPairSun_Edit in '..\..\FormsFarmacy\Guides\Goods_GoodsPairSun_Edit.pas' {Goods_GoodsPairSun_EditForm: TParentForm},
+  Unit_LimitSUN_Edit in '..\..\FormsFarmacy\Guides\Unit_LimitSUN_Edit.pas' {Unit_LimitSUN_EditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

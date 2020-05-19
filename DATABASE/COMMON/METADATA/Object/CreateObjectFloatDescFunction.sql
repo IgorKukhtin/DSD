@@ -1565,14 +1565,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $B
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_LimitSUN_N() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_LimitSUN_N'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
-
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_T1_SUN_v4() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_T1_SUN_v4', 'кол-во дней для T1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_T1_SUN_v4');
-
+  SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_LimitSUN_N', 'Остаток, при котором работает СУН-1 и СУН-2 и СУН-2-пи значения Т1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_LimitSUN_N');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_UnitCategory_PenaltyNonMinPlan'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -1772,6 +1767,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 19.05.20         * zc_ObjectFloat_Unit_LimitSUN_N
  16.05.20         * zc_ObjectFloat_Goods_LimitSUN_T1
  15.05.20         * zc_ObjectFloat_Unit_HT_SUN_v1
                     zc_ObjectFloat_Unit_HT_SUN_v2

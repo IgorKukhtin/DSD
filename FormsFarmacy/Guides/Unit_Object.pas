@@ -179,7 +179,14 @@ type
     actUpdate_Unit_HT_SUN: TdsdDataSetRefresh;
     macUpdateUnit_HT_Sun_list: TMultiAction;
     macUpdateUnit_HT_Sun: TMultiAction;
-    bb: TdxBarButton;
+    bbUpdateUnit_HT_Sun: TdxBarButton;
+    spUpdate_Unit_LimitSUN_N: TdsdStoredProc;
+    ExecuteDialogUnit_LimitSun: TExecuteDialog;
+    actUpdate_Unit_LimitSUN: TdsdDataSetRefresh;
+    macUpdateUnit_LimitSUN_list: TMultiAction;
+    macUpdateUnit_LimitSUN: TMultiAction;
+    bbUpdateUnit_LimitSUN: TdxBarButton;
+    LimitSUN_N: TcxGridDBColumn;
   private
     { Private declarations }
   public

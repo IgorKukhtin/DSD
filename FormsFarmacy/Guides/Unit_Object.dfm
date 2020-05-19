@@ -412,6 +412,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 85
           end
+          object LimitSUN_N: TcxGridDBColumn
+            Caption = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053' v1, v2, v2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+            DataBinding.FieldName = 'LimitSUN_N'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+            Options.Editing = False
+            Width = 70
+          end
           object isRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
             DataBinding.FieldName = 'isRepriceAuto'
@@ -799,7 +808,56 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [2]
+    object ExecuteDialogUnit_LimitSun: TExecuteDialog [1]
+      Category = 'LimitSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      ImageIndex = 26
+      FormName = 'TUnit_LimitSUN_EditForm'
+      FormNameParam.Value = 'TUnit_LimitSUN_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inLimitSun_N'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inLimitSun_N'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object macUpdateUnit_LimitSUN_list: TMultiAction [2]
+      Category = 'LimitSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_LimitSUN
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      ImageIndex = 43
+    end
+    object actUpdate_Unit_LimitSUN: TdsdDataSetRefresh [4]
+      Category = 'LimitSUN'
+      MoveParams = <>
+      StoredProc = spUpdate_Unit_LimitSUN_N
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_LimitSUN_N
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      ImageIndex = 26
+      RefreshOnTabSetChanges = True
+    end
+    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [5]
       Category = 'HT_Sun'
       MoveParams = <>
       StoredProc = spUpdate_HT_SUN
@@ -813,7 +871,24 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macUpdateUnit_HT_Sun_list: TMultiAction [4]
+    object macUpdateUnit_LimitSUN: TMultiAction [6]
+      Category = 'LimitSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogUnit_LimitSun
+        end
+        item
+          Action = macUpdateUnit_LimitSUN_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
+      ImageIndex = 43
+    end
+    object macUpdateUnit_HT_Sun_list: TMultiAction [8]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -825,7 +900,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 42
     end
-    object macUpdateUnit_T_SUN_list: TMultiAction [5]
+    object macUpdateUnit_T_SUN_list: TMultiAction [9]
       Category = 'T_SUN'
       MoveParams = <>
       ActionList = <
@@ -837,7 +912,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1057#1059#1053' V2'
       ImageIndex = 43
     end
-    object macUpdateUnit_HT_Sun: TMultiAction [6]
+    object macUpdateUnit_HT_Sun: TMultiAction [10]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -854,7 +929,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 67
     end
-    object macUpdate_ListDaySUN_pi: TMultiAction [7]
+    object macUpdate_ListDaySUN_pi: TMultiAction [11]
       Category = 'ListDaySUN'
       MoveParams = <>
       AfterAction = actRefresh
@@ -869,7 +944,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       ImageIndex = 42
     end
-    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [8]
+    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [12]
       Category = 'ListDaySUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2192,7 +2267,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbUpdateUnit_HT_Sun'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit_LimitSUN'
         end
         item
           Visible = True
@@ -2392,8 +2471,12 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = macUpdateUnit_SunIncome
       Category = 0
     end
-    object bb: TdxBarButton
+    object bbUpdateUnit_HT_Sun: TdxBarButton
       Action = macUpdateUnit_HT_Sun
+      Category = 0
+    end
+    object bbUpdateUnit_LimitSUN: TdxBarButton
+      Action = macUpdateUnit_LimitSUN
       Category = 0
     end
   end
@@ -3752,5 +3835,31 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 944
     Top = 131
+  end
+  object spUpdate_Unit_LimitSUN_N: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_LimitSUN_N'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inLimitSUN_N'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inLimitSUN_N'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 115
   end
 end
