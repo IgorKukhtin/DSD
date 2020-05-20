@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer
              , ContractId Integer, ContractName TVarChar                
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar    
-             , InfoMoneyId Integer, InfoMoneyName TVarChar 
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractSendId Integer, ContractSendName TVarChar
              
              , ContractStateKindCode_Send Integer
@@ -46,6 +47,9 @@ BEGIN
          , Object_InfoMoney.Id                  AS InfoMoneyId
          , Object_InfoMoney.ValueData           AS InfoMoneyName
          
+         , Object_PaidKind.Id                   AS PaidKindId
+         , Object_PaidKind.ValueData            AS PaidKindName
+        
          , Object_ContractSend.Id               AS ContractSendId
          , Object_ContractSend.ValueData        AS ContractSendName
 
@@ -116,6 +120,11 @@ BEGIN
                                ON ObjectLink_ContractSend_InfoMoney.ObjectId = Object_ContractSend.Id
                               AND ObjectLink_ContractSend_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
           LEFT JOIN Object AS Object_InfoMoneySend ON Object_InfoMoneySend.Id = ObjectLink_ContractSend_InfoMoney.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_PaidKind
+                               ON ObjectLink_ContractCondition_PaidKind.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_PaidKind.DescId = zc_ObjectLink_ContractCondition_PaidKind()
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ContractCondition_PaidKind.ChildObjectId
 
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 

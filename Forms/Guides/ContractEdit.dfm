@@ -1,4 +1,4 @@
-inherited ContractEditForm: TContractEditForm
+﻿inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 711
   ClientWidth = 934
@@ -471,6 +471,21 @@ inherited ContractEditForm: TContractEditForm
           Options.Editing = False
           Width = 43
         end
+        object сolPaidKindName: TcxGridDBColumn
+          Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+          DataBinding.FieldName = 'PaidKindName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = PaidKindChoiceFormСС
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = False
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Width = 70
+        end
         object isErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
@@ -912,7 +927,7 @@ inherited ContractEditForm: TContractEditForm
   object edPartnerCode: TcxTextEdit [78]
     Left = 55
     Top = 41
-    TabOrder = 79
+    TabOrder = 78
     Width = 50
   end
   object cbisDefaultOut: TcxCheckBox [79]
@@ -922,7 +937,7 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1080#1089#1093'. '#1087#1083'.)'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 82
+    TabOrder = 81
     Width = 155
   end
   object cxLabel36: TcxLabel [80]
@@ -1288,6 +1303,33 @@ inherited ContractEditForm: TContractEditForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object PaidKindChoiceFormСС: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = ContractConditionCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited FormParams: TdsdFormParams
@@ -2323,7 +2365,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 396
+    Left = 420
     Top = 267
   end
   object PaidKindGuides: TdsdGuides
@@ -2438,10 +2480,27 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'ContractSendId'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = ContractConditionCDS
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inStartDate'
+        Value = 'NULL'
+        Component = ContractConditionCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 736
-    Top = 72
+    Left = 760
+    Top = 88
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractConditionByContract'
@@ -2460,8 +2519,8 @@ inherited ContractEditForm: TContractEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 426
-    Top = 87
+    Left = 410
+    Top = 103
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -2777,6 +2836,7 @@ inherited ContractEditForm: TContractEditForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 616
     Top = 72
   end

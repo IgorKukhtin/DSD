@@ -191,6 +191,8 @@ type
     edBankAccountPartner: TcxTextEdit;
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
+    ÒolPaidKindName: TcxGridDBColumn;
+    PaidKindChoiceForm——: TOpenChoiceForm;
   private
     { Private declarations }
   public
