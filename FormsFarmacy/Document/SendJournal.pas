@@ -97,6 +97,9 @@ type
     actExecSetErased_Filter: TdsdExecStoredProc;
     spSetErased_Filter: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
+    isVIP: TcxGridDBColumn;
+    isUrgently: TcxGridDBColumn;
+    isConfirmed: TcxGridDBColumn;
   private
     { Private declarations }
   public

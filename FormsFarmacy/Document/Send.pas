@@ -165,6 +165,9 @@ type
     cbSUN_v3: TcxCheckBox;
     cbSUN_v4: TcxCheckBox;
     isPromo: TcxGridDBColumn;
+    cbVIP: TcxCheckBox;
+    cbConfirmed: TcxCheckBox;
+    cbUrgently: TcxCheckBox;
   private
     { Private declarations }
   public
