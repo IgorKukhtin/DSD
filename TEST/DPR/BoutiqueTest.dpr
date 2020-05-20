@@ -337,7 +337,7 @@ begin
   dsdProject := prBoutique;
 
   if FindCmdLineSwitch('realboutique', true)
-  then gc_AdminPassword := 'Админqsxqsxw1Админ'
+  then gc_AdminPassword := 'qsxqsxw1'
   else gc_AdminPassword := 'Админ';
 
   gc_ProgramName := 'Boutique.exe';
