@@ -406,13 +406,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           'Date')
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -474,7 +474,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'BonusKindId'
           Value = ''
-          Component = DocumentTaxKindGuides
+          Component = GuidesDocumentTaxKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -482,7 +482,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'BonusKindName'
           Value = ''
-          Component = DocumentTaxKindGuides
+          Component = GuidesDocumentTaxKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -491,7 +491,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'PaidKindId'
           Value = Null
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -499,7 +499,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'PaidKindName'
           Value = Null
-          Component = PaidKindGuides
+          Component = GuidesPaidKind
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -508,7 +508,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'JuridicalId'
           Value = Null
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -516,7 +516,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         item
           Name = 'JuridicalName'
           Value = Null
-          Component = JuridicalGuides
+          Component = GuidesJuridical
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -594,7 +594,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'inPaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -602,7 +602,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -696,18 +696,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         Component = PeriodChoice
       end
       item
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end
       item
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
+      end
+      item
+        Component = GuidesBranch
       end>
     Left = 184
     Top = 136
   end
-  object DocumentTaxKindGuides: TdsdGuides
+  object GuidesDocumentTaxKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBonusKind
     FormNameParam.Value = 'TDocumentBonusKindForm'
@@ -719,7 +722,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'Key'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -728,7 +731,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = DocumentTaxKindGuides
+        Component = GuidesDocumentTaxKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -763,7 +766,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'inPaidKindId'
         Value = Null
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -771,7 +774,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'inJuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -780,7 +783,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Left = 368
     Top = 176
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -792,7 +795,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -801,7 +804,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -810,7 +813,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Left = 348
     Top = 24
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
@@ -822,7 +825,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -831,14 +834,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 797
-    Top = 14
+    Left = 669
+    Top = 30
   end
   object GuidesBranch: TdsdGuides
     KeyField = 'Id'
