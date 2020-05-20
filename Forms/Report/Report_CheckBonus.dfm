@@ -3,9 +3,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   ClientHeight = 341
   ClientWidth = 1180
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -526
   ExplicitWidth = 1196
-  ExplicitHeight = 380
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -335,11 +334,29 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Width = 208
     end
     object cbMovement: TcxCheckBox
-      Left = 612
+      Left = 640
       Top = 5
       Action = actRefreshMovement
       TabOrder = 6
+      Visible = False
       Width = 102
+    end
+    object cxLabel6: TcxLabel
+      Left = 425
+      Top = 32
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 472
+      Top = 31
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 8
+      Width = 153
     end
   end
   object cxLabel3: TcxLabel [2]
@@ -374,7 +391,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 287
+    Width = 327
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -512,6 +529,23 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       OpenBeforeShow = True
@@ -574,11 +608,19 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inisMovement'
         Value = Null
         Component = cbMovement
         DataType = ftBoolean
-        ParamType = ptInput
+        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 112
@@ -795,7 +837,37 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 453
-    Top = 65534
+    Left = 797
+    Top = 14
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 525
+    Top = 30
   end
 end

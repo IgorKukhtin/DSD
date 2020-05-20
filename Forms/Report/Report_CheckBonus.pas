@@ -61,6 +61,9 @@ type
     JuridicalGuides: TdsdGuides;
     actRefreshMovement: TdsdDataSetRefresh;
     cbMovement: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

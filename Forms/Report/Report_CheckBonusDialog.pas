@@ -25,14 +25,17 @@ type
     cxLabel3: TcxLabel;
     cxLabel6: TcxLabel;
     cxLabel7: TcxLabel;
-    BonusKindGuides: TdsdGuides;
+    GuidesBonusKind: TdsdGuides;
     cxLabel2: TcxLabel;
     edPaidKind: TcxButtonEdit;
     GuidesPaidKind: TdsdGuides;
     cxLabel1: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     cbMovement: TcxCheckBox;
+    cxLabel4: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

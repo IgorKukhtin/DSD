@@ -1,14 +1,16 @@
 -- FunctiON: gpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
     IN inJuridicalId         Integer   ,
+    IN inBranchId            Integer   , 
     -- IN inisMovement          Boolean   , -- по документам
     IN inSessiON             TVarChar    -- сессия пользователя
 )
@@ -267,6 +269,12 @@ inisMovement:= FALSE;
                                                  AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
                                                  AND tmpContractGroup.InfoMoneyId_child = ContainerLO_InfoMoney.ObjectId
                                                  AND tmpContractGroup.PaidKindId        = ContainerLO_PaidKind.ObjectId
+
+                            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                          ON ContainerLO_Branch.ContainerId = Container.Id
+                                                         AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_Branch()
+                       WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
+
                        -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        )
@@ -559,6 +567,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.05.20         * add inBranchId
  14.06.17         *
  20.05.14                                        * add View_Contract_find_tag
  08.05.14                                        * add <> 0
@@ -591,4 +600,4 @@ $BODY$
     where Sum_Bonus <> 0 -- and Sum_Bonus =30
 */
 -- тест
--- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inisMovement:= False, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
