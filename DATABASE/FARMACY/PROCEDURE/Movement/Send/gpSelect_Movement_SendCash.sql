@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean
              , isSUN_v3 Boolean, isSUN_v4 Boolean
              , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
+             , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -134,6 +135,9 @@ BEGIN
                    AND Movement.OperDate < CURRENT_DATE
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
+           , COALESCE (MovementBoolean_VIP.ValueData, FALSE)          ::Boolean AS isVIP
+           , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)     ::Boolean AS isUrgently
+           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)    ::Boolean AS isConfirmed           
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -245,6 +249,16 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Received
                                       ON MovementBoolean_Received.MovementId = Movement.Id
                                      AND MovementBoolean_Received.DescId = zc_MovementBoolean_Received()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                      ON MovementBoolean_VIP.MovementId = Movement.Id
+                                     AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Urgently
+                                      ON MovementBoolean_Urgently.MovementId = Movement.Id
+                                     AND MovementBoolean_Urgently.DescId = zc_MovementBoolean_Urgently()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                      ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                     AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
 
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
