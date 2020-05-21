@@ -109,9 +109,24 @@ implementation
 {$R *.dfm}
 
 function TSearchRemainsVIPForm.CreteSend : boolean;
+  var Urgently : boolean;
 begin
-   Result := False;
-   SelectedCDS.EmptyDataSet;
+  Result := False;
+
+  case MessageDlg('Внимание перемещение не созданы'#13#10#13#10 +
+        'Yes    - Перемещение с признаком СРОЧНО' + #13#10 +
+        'No     - Простое перемещение' + #13#10 +
+        'Cancel - Продолжить поиск',
+        mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+    mrYes : Urgently := True;
+    mrCancel : Exit;
+    else Urgently := False;
+  end;
+
+
+
+
+  SelectedCDS.EmptyDataSet;
 end;
 
 procedure TSearchRemainsVIPForm.actCreteSendExecute(Sender: TObject);
