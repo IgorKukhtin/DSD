@@ -1025,6 +1025,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractCondition_InfoMoney() RETURNS I
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_ContractCondition_InfoMoney', 'Статьи назначения', zc_Object_ContractCondition(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractCondition_InfoMoney');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractCondition_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractCondition_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContractCondition_PaidKind', ' 	Форма оплаты', zc_Object_ContractCondition(), zc_Object_PaidKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractCondition_PaidKind');
+
 
 -- !!!zc_Object_ContractKind!!!
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractKind_AccountKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractKind_AccountKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -2324,6 +2328,7 @@ SELECT 'zc_ObjectLink_Hardware_CashRegister', 'Связь с Подразделением', zc_Objec
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 20.05.20         * zc_ObjectLink_ContractCondition_PaidKind
  18.05.20         * zc_ObjectLink_Goods_GoodsPairSun
  13.05.20         * zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh
  12.05.20         * zc_ObjectLink_GoodsByGoodsKind_Goods_Sh

@@ -74,6 +74,8 @@ BEGIN
     THEN 
       RAISE EXCEPTION 'Ошибка. Вам разрешено работать только с подразделением <%>.', (SELECT ValueData FROM Object WHERE ID = vbUserUnitId);     
     END IF;     
+
+    RAISE EXCEPTION 'Ошибка. В перемещения удаление товара вам запрещено.';    
   END IF;     
 
   -- определяем <Статус>

@@ -133,6 +133,14 @@ BEGIN
             INNER JOIN tmpMovement_OrderInternal ON tmpMovement_OrderInternal.UnitId = tmpMI_Child.UnitId
             LEFT JOIN tmpMI_OrderInternal ON tmpMI_OrderInternal.MovementId = tmpMovement_OrderInternal.Id
                                          AND tmpMI_OrderInternal.GoodsId = tmpMI_Child.GoodsId;
+                                         
+           
+      -- Подписуем
+      PERFORM gpUpdate_Status_OrderInternal(inMovementId := tmpMovement_OrderInternal.ID 
+                                          , inStatusCode := 2 
+                                          , inSession := inSession)
+      FROM tmpMovement_OrderInternal;    
+                                           
    
 END;
 $BODY$

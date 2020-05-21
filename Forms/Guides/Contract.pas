@@ -225,6 +225,8 @@ type
     bbUpdateDefaultOut: TdxBarButton;
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
+    ccPaidKindName: TcxGridDBColumn;
+    PaidKindChoiceForm——: TOpenChoiceForm;
 
   private
     { Private declarations }

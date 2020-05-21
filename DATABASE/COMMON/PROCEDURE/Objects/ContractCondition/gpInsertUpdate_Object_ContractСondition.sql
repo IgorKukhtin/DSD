@@ -2,8 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 --DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
-                        
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
  INOUT ioId                        Integer   , -- ключ объекта <Условия договора>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
     IN inBonusKindId               Integer   , -- Виды бонусов
     IN inInfoMoneyId               Integer   , -- Статьи назначения
     IN inContractSendId            Integer   , -- Договор маркетинга
+    IN inPaidKindId                Integer   , -- Форма оплаты
     IN inStartDate                 TDateTime , -- Дейстует с...
     IN inSession                   TVarChar    -- сессия пользователя
 )
@@ -71,7 +73,10 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_ContractSend(), ioId, inContractSendId);   
-   
+
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_PaidKind(), ioId, inPaidKindId); 
+
    IF COALESCE (inStartDate, zc_DateStart()) > zc_DateStart()
    THEN
        --
@@ -137,6 +142,7 @@ $BODY$
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.05.20         * add inPaidKindId
  24.03.20         * add inStartDate
  08.05.14                                        * add lpCheckRight
  14.03.14         * add InfoMoney

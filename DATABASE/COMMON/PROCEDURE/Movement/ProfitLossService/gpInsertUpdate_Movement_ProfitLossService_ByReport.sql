@@ -56,7 +56,7 @@ BEGIN
                                                       , inIsLoad            := TRUE
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:=0, inSession:= inSession) AS tmp
      WHERE Sum_Bonus <> 0
     ;
 
@@ -67,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.20         * add inBranchId
  09.12.15         * 
  03.12.14         *
 */

@@ -3,7 +3,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084'>'
-  ClientHeight = 220
+  ClientHeight = 218
   ClientWidth = 338
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 58
+    Left = 48
     Top = 179
     Width = 75
     Height = 25
@@ -28,7 +28,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 227
+    Left = 217
     Top = 179
     Width = 75
     Height = 25
@@ -116,21 +116,39 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Width = 319
   end
   object cbMovement: TcxCheckBox
-    Left = 227
-    Top = 79
+    Left = 232
+    Top = 157
     Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
     Caption = #1087#1086' '#1044#1086#1082#1091#1084#1077#1085#1090#1072#1084
     TabOrder = 12
+    Visible = False
     Width = 104
+  end
+  object cxLabel4: TcxLabel
+    Left = 158
+    Top = 59
+    Caption = #1060#1080#1083#1080#1072#1083':'
+  end
+  object edBranch: TcxButtonEdit
+    Left = 158
+    Top = 79
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 14
+    Width = 172
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 16
+    Left = 6
     Top = 168
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 320
+    Left = 310
     Top = 176
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -145,12 +163,12 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         Component = GuidesPaidKind
       end
       item
-        Component = JuridicalGuides
+        Component = GuidesJuridical
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 76
+    Left = 248
+    Top = 108
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -173,7 +191,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'BonusKindId'
         Value = ''
-        Component = BonusKindGuides
+        Component = GuidesBonusKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -181,7 +199,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'BonusKindName'
         Value = ''
-        Component = BonusKindGuides
+        Component = GuidesBonusKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -207,7 +225,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'JuridicalId'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -215,7 +233,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'JuridicalName'
         Value = Null
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -228,11 +246,28 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BranchName'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-    Left = 160
+    Left = 150
     Top = 160
   end
-  object BonusKindGuides: TdsdGuides
+  object GuidesBonusKind: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBonusKind
     FormNameParam.Value = 'TDocumentBonusKindForm'
@@ -244,7 +279,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = BonusKindGuides
+        Component = GuidesBonusKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -253,13 +288,14 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = BonusKindGuides
+        Component = GuidesBonusKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 296
+    Left = 272
+    Top = 8
   end
   object GuidesPaidKind: TdsdGuides
     KeyField = 'Id'
@@ -291,7 +327,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
     Left = 77
     Top = 62
   end
-  object JuridicalGuides: TdsdGuides
+  object GuidesJuridical: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
     FormNameParam.Value = 'TJuridical_ObjectForm'
@@ -303,7 +339,7 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'Key'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -312,13 +348,43 @@ object Report_CheckBonusDialogForm: TReport_CheckBonusDialogForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = JuridicalGuides
+        Component = GuidesJuridical
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 77
-    Top = 126
+    Left = 125
+    Top = 110
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 229
+    Top = 62
   end
 end

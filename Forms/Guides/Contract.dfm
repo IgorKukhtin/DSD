@@ -1,4 +1,4 @@
-object ContractForm: TContractForm
+﻿object ContractForm: TContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
@@ -798,6 +798,8 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -56
+    ExplicitTop = 652
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -868,6 +870,21 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object ccPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PaidKindChoiceFormСС
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clccInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -1591,6 +1608,33 @@ object ContractForm: TContractForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object PaidKindChoiceFormСС: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2720,6 +2764,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 800
     Top = 224
   end
@@ -2810,6 +2855,14 @@ object ContractForm: TContractForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 'NULL'
         Component = CDSContractCondition
@@ -2819,8 +2872,8 @@ object ContractForm: TContractForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 456
+    Left = 200
+    Top = 464
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'
@@ -2940,6 +2993,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 376
   end
@@ -3053,6 +3107,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 616
     Top = 392
   end
@@ -3096,6 +3151,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1136
     Top = 360
   end

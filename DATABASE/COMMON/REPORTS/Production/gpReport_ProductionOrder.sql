@@ -1,4 +1,4 @@
--- FunctiON: gpReport_CheckBonus ()
+-- FunctiON: gpReport_ProductionOrder ()
 
 DROP FUNCTION IF EXISTS gpReport_ProductionOrder (TDateTime, Integer, TVarChar);
 
