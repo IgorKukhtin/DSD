@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
     IN inPaidKindID               Integer   ,
     IN inJuridicalId              Integer   ,
+    IN inBranchId                 Integer   ,
     IN inSession                  TVarChar        -- сессия пользователя
 )
 RETURNS VOID
@@ -53,10 +55,11 @@ BEGIN
                                                       , inUnitId            := 0 :: Integer
                                                       , inContractConditionKindId   := ConditionKindId
                                                       , inBonusKindId       := BonusKindId
+                                                      , inBranchId          := BranchId
                                                       , inIsLoad            := TRUE
                                                       , inUserId            := vbUserId
                                                        )
-     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:=0, inSession:= inSession) AS tmp
+     FROM gpReport_CheckBonus (inStartDate:= inStartDate, inEndDate:= inEndDate, inPaidKindID:= inPaidKindID, inJuridicalId:= inJuridicalId, inBranchId:= inBranchId, inSession:= inSession) AS tmp
      WHERE Sum_Bonus <> 0
     ;
 

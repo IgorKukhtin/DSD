@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService(
     IN inStartDate          TDateTime , --
@@ -30,6 +30,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
+             , BranchId Integer, BranchName TVarChar
              , isLoad Boolean
                )
 AS
@@ -39,6 +40,12 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ProfitLossService());
      vbUserId:= lpGetUserBySession (inSession);
+
+     -- переопределяем,  важно, в случае с БН - ограничени по Филиалу не делать, что бы не выбрали
+     IF COALESCE (inPaidKindId, 0) = zc_Enum_PaidKind_FirstForm()
+     THEN
+         inBranchId := 0;
+     END IF;
 
      -- Результат
      RETURN QUERY
@@ -95,6 +102,10 @@ BEGIN
 
            , Object_BonusKind.Id                            AS BonusKindId
            , Object_BonusKind.ValueData                     AS BonusKindName
+           
+           
+           , Object_Branch.Id                               AS BranchId
+           , Object_Branch.ValueData                        AS BranchName
 
            , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
@@ -177,19 +188,27 @@ BEGIN
             LEFT JOIN Object AS Object_Juridical_Child ON Object_Juridical_Child.Id = MILinkObject_Juridical.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ObjectHistory_JuridicalDetails_View_Child ON ObjectHistory_JuridicalDetails_View_Child.JuridicalId = MILinkObject_Juridical.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+
             LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
                                       ON MovementBoolean_isLoad.MovementId =  Movement.Id
                                      AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+       WHERE ( COALESCE (MILinkObject_PaidKind.ObjectId, 0) = inPaidKindId OR inPaidKindId = 0)
+         AND ( COALESCE (MILinkObject_Branch.ObjectId, 0) = inBranchId OR inBranchId = 0)
       ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
+--ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.20         *
  06.10.16         * add inJuridicalBasisId
  18.02.15         * add ContractMaster, ContractChild
  06.03.14                                        * add Object_RoleAccessKey_View
@@ -198,4 +217,4 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Intege
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2014' ::TDateTime, inEndDate:= '01.02.2014'::TDateTime, inJuridicalBasisId:=0, inBranchId:=0 , inPaidKindId := 0, inIsErased:=false::Boolean , inSession:= zfCalc_UserAdmin()::TVarChar)

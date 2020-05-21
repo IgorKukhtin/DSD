@@ -62,6 +62,7 @@ type
     cxLabel4: TcxLabel;
     edBranch: TcxButtonEdit;
     GuidesBranch: TdsdGuides;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public
