@@ -2323,11 +2323,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalVIPForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerVIPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerVIPJournalForm');
+
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');

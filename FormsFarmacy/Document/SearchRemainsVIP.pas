@@ -85,6 +85,11 @@ type
     colAmountSun: TcxGridDBColumn;
     DBViewAddOn: TdsdDBViewAddOn;
     dsdDBViewAddOnSelected: TdsdDBViewAddOn;
+    UnitCDS: TClientDataSet;
+    UnitCDSUnitId: TIntegerField;
+    UnitCDSMovementId: TIntegerField;
+    gpInsertUpdate_SendVIP: TdsdStoredProc;
+    gpInsertUpdate_MI_SendVIP: TdsdStoredProc;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word;
@@ -123,8 +128,39 @@ begin
     else Urgently := False;
   end;
 
+  UnitCDS.EmptyDataSet;
 
+  // Создание документов
 
+  SelectedCDS.DisableControls;
+  try
+    SelectedCDS.First;
+    while not SelectedCDS.EOF do
+    begin
+      if not UnitCDS.Locate('UnitId', SelectedCDS.FieldByName('UnitId').AsInteger, []) then
+      begin
+        gpInsertUpdate_SendVIP.ParamByName('ioId').Value := 0;
+        gpInsertUpdate_SendVIP.ParamByName('inFromId').Value := GuidesUnit.Key;
+        gpInsertUpdate_SendVIP.ParamByName('inToId').Value := SelectedCDS.FieldByName('UnitId').AsInteger;
+        gpInsertUpdate_SendVIP.ParamByName('inisUrgently').Value := Urgently;
+        gpInsertUpdate_SendVIP.Execute;
+        UnitCDS.Append;
+        UnitCDS.FieldByName('UnitId').AsInteger := SelectedCDS.FieldByName('UnitId').AsInteger;
+        UnitCDS.FieldByName('MovementId').AsInteger := gpInsertUpdate_SendVIP.ParamByName('ioId').Value;
+        UnitCDS.Post;
+      end;
+
+      gpInsertUpdate_MI_SendVIP.ParamByName('ioId').Value := 0;
+      gpInsertUpdate_MI_SendVIP.ParamByName('inMovementId').Value := UnitCDS.FieldByName('MovementId').AsInteger;
+      gpInsertUpdate_MI_SendVIP.ParamByName('inGoodsId').Value := SelectedCDS.FieldByName('Id').AsInteger;
+      gpInsertUpdate_MI_SendVIP.ParamByName('inAmount').Value := SelectedCDS.FieldByName('Amount').AsCurrency;
+      gpInsertUpdate_MI_SendVIP.Execute;
+
+      SelectedCDS.Next;
+    end;
+  finally
+    SelectedCDS.EnableControls;
+  end;
 
   SelectedCDS.EmptyDataSet;
 end;

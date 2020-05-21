@@ -3653,6 +3653,17 @@ inherited MainForm: TMainForm
       FormName = 'TSearchRemainsVIPForm'
       isShowModal = False
     end
+    object actSendMenegerVIPJournal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' (VIP)'
+      FormName = 'TSendMenegerVIPJournalForm'
+      FormNameParam.Value = 'TSendMenegerVIPJournalForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4095,6 +4106,9 @@ inherited MainForm: TMainForm
       end
       object N185: TMenuItem
         Action = actSendMenegerJournal
+      end
+      object VIP1: TMenuItem
+        Action = actSendMenegerVIPJournal
       end
       object miSendPartionDate: TMenuItem
         Action = actSendPartionDate

@@ -987,9 +987,12 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisVip'
         Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisVip'
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 136
@@ -1311,6 +1314,12 @@ inherited SendJournalForm: TSendJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVip'
+        Value = 'False'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 400

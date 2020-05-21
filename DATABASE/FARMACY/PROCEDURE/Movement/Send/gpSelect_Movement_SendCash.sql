@@ -2,15 +2,18 @@
 
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendCash(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
-    IN inisSUN         Boolean ,
-    IN inisSUNAll      Boolean ,
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inisSUN         Boolean,
+    IN inisSUNAll      Boolean,
+    IN inisVIP         Boolean,
+    IN inisVIPAll      Boolean,
+    IN inSession       TVarChar = ''    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat
@@ -72,8 +75,8 @@ BEGIN
 
      -- Результат
      RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId WHERE inisSUN = FALSE
-                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId WHERE inisSUN = FALSE AND inisVIP = FALSE
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId WHERE inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE OR inisVIP = FALSE
                   UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE OR inisSUN = TRUE
                        )
         -- , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
@@ -126,7 +129,7 @@ BEGIN
            , COALESCE (MovementBoolean_Deferred.ValueData, FALSE) ::Boolean  AS isDeferred
            , COALESCE (MovementBoolean_SUN.ValueData, FALSE)      ::Boolean  AS isSUN
            , COALESCE (MovementBoolean_DefSUN.ValueData, FALSE)   ::Boolean  AS isDefSUN
-           , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2 
+           , COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE)   ::Boolean  AS isSUN_v2
            , COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE)   ::Boolean  AS isSUN_v3
            , COALESCE (MovementBoolean_SUN_v4.ValueData, FALSE)   ::Boolean  AS isSUN_v4
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)     ::Boolean  AS isSent
@@ -137,7 +140,7 @@ BEGIN
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
            , COALESCE (MovementBoolean_VIP.ValueData, FALSE)          ::Boolean AS isVIP
            , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)     ::Boolean AS isUrgently
-           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)    ::Boolean AS isConfirmed           
+           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)    ::Boolean AS isConfirmed
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -153,7 +156,7 @@ BEGIN
 
            , Object_Driver.Id                     AS DriverId
            , Object_Driver.ValueData  :: TVarChar AS DriverName
-           
+
            , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff
@@ -161,7 +164,9 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON (inisSUN = TRUE AND Movement.OperDate = CURRENT_DATE
+                                    OR inisVIP = TRUE AND Movement.OperDate = CURRENT_DATE
                                     OR inisSUN = TRUE AND inisSUNAll = TRUE
+                                    OR inisVIP = TRUE AND inisVIPAll = TRUE
                                     OR Movement.OperDate BETWEEN inStartDate AND inEndDate)
                                AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -300,12 +305,14 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Driver
                                          ON MovementLinkObject_Driver.MovementId = Movement.Id
                                         AND MovementLinkObject_Driver.DescId = zc_MovementLinkObject_Driver()
-            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId 
+            LEFT JOIN Object AS Object_Driver ON Object_Driver.Id = MovementLinkObject_Driver.ObjectId
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (tmpUnit_To.UnitId = vbUnitId AND (inisSUN = FALSE OR inisSUN = TRUE AND inisSUNAll = TRUE) OR tmpUnit_FROM.UnitId = vbUnitId)
-         AND (inisSUN = FALSE OR inisSUN = TRUE AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR 
-                                                     COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE)) 
+         AND (inisSUN = FALSE AND inisVIP = FALSE
+           OR inisSUN = TRUE AND (COALESCE (MovementBoolean_SUN.ValueData, FALSE) = TRUE OR
+                                                     COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = TRUE)
+           OR inisVIP = TRUE AND (COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE))
          AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE
          AND (inisSUN = FALSE OR Movement.StatusId <> zc_Enum_Status_Erased()
            OR inisSUN = TRUE AND Movement.OperDate >= CURRENT_DATE AND Movement.StatusId = zc_Enum_Status_Erased()
@@ -334,5 +341,6 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')
--- select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'True' , inisSUNAll := 'True', inSession := '3');
+--
 
+select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'False' , inisSUNAll := 'False', inisVIP := 'True', inisVIPAll := 'True', inSession := '3');
