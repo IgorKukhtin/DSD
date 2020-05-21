@@ -28,7 +28,7 @@ BEGIN
                                                      ON MovementBoolean_SUN.MovementId = Movement.Id
                                                     AND MovementBoolean_SUN.DescId     = zc_MovementBoolean_SUN()
                                                     AND MovementBoolean_SUN.ValueData  = TRUE
-                     WHERE Movement.OperDate = CURRENT_DATE
+                     WHERE Movement.OperDate = inOperDate
                        -- AND Movement.DescId   = zc_Movement_Send()
                        AND Movement.StatusId = zc_Enum_Status_Erased()
                     )
@@ -38,7 +38,7 @@ BEGIN
                                                      ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                                     AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
                                                     AND MovementBoolean_DefSUN.ValueData = TRUE
-                     WHERE Movement.OperDate = CURRENT_DATE
+                     WHERE Movement.OperDate = inOperDate
                        AND Movement.DescId   = zc_Movement_Send()
                        AND Movement.StatusId = zc_Enum_Status_Erased()
                     )
@@ -50,8 +50,8 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN   (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN_a (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance   (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_a (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
@@ -74,8 +74,8 @@ BEGIN
      -- 2.4. товары для Кратность
      CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
 
-     -- 2.5. Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
-     CREATE TEMP TABLE _tmpGoods_SUN_Limit_T1 (GoodsId Integer, Value_N TFloat) ON COMMIT DROP;
+     -- 2.5. "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+     CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all   (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -165,7 +165,7 @@ BEGIN
                                            ON MovementBoolean_SUN_v4.MovementId = Movement.Id
                                           AND MovementBoolean_SUN_v4.DescId     = zc_MovementBoolean_SUN_v4()
                                           AND MovementBoolean_SUN_v4.ValueData  = TRUE
-           WHERE Movement.OperDate = CURRENT_DATE
+           WHERE Movement.OperDate = inOperDate
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
           ) AS tmp;
@@ -187,7 +187,7 @@ BEGIN
                                            ON MovementBoolean_DefSUN.MovementId = Movement.Id
                                           AND MovementBoolean_DefSUN.DescId     = zc_MovementBoolean_DefSUN()
                                           AND MovementBoolean_DefSUN.ValueData = TRUE
-           WHERE Movement.OperDate = CURRENT_DATE
+           WHERE Movement.OperDate = inOperDate
              AND Movement.DescId   = zc_Movement_Send()
              AND Movement.StatusId = zc_Enum_Status_Erased()
           ) AS tmp;*/

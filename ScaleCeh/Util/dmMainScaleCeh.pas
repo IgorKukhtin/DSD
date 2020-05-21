@@ -827,6 +827,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
+       Params.AddParam('inIsModeSorting', ftBoolean, ptInput, SettingMain.isModeSorting);
        Params.AddParam('inIsErased', ftBoolean, ptInput, NewValue);
        //try
          Execute;

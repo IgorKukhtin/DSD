@@ -148,11 +148,13 @@ BEGIN
      DELETE FROM _tmpRemains;
      -- 2.1. вся статистика продаж
      DELETE FROM _tmpSale;
-     -- 2.2. товары для Кратность
+     -- 2.2.
      IF inStep = 1
      THEN
+         -- товары для Кратность
          DELETE FROM _tmpGoods_SUN;
-         DELETE FROM _tmpGoods_SUN_Limit_T1;
+         -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+         DELETE FROM _tmpGoods_SUN_PairSun;
      END IF;
      -- 3.1. все остатки, СРОК
      DELETE FROM _tmpRemains_Partion_all;
@@ -176,18 +178,20 @@ BEGIN
                   ) :: TVarChar;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, Limit_N)
         SELECT OB.ObjectId
              , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
              , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
              , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0  END :: Integer AS DayIncome
              , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
+             , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat  AS Limit_N
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
              LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
              LEFT JOIN ObjectFloat  AS OF_DI          ON OF_DI.ObjectId          = OB.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
              LEFT JOIN ObjectFloat  AS OF_DS          ON OF_DS.ObjectId          = OB.ObjectId AND OF_DS.DescId          = zc_ObjectFloat_Unit_HT_SUN_v1()
+             LEFT JOIN ObjectFloat  AS OF_SN          ON OF_SN.ObjectId          = OB.ObjectId AND OF_SN.DescId          = zc_ObjectFloat_Unit_LimitSUN_N()
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -217,13 +221,12 @@ BEGIN
             WHERE OF_KoeffSUN.DescId    = zc_ObjectFloat_Goods_KoeffSUN_v1()
               AND OF_KoeffSUN.ValueData > 0
            ;
-         -- Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
-         INSERT INTO _tmpGoods_SUN_Limit_T1 (GoodsId, Value_N)
-            SELECT OF_LimitSUN_T1.ObjectId AS GoodsId
-                   -- Значение N
-                 , OF_LimitSUN_T1.ValueData AS Value_N
-            FROM ObjectFloat AS OF_LimitSUN_T1 
-            WHERE OF_LimitSUN_T1.ValueData > 0 AND OF_LimitSUN_T1.DescId = zc_ObjectFloat_Goods_LimitSUN_T1()
+         -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+         INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun)
+            SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
+                 , OL_GoodsPairSun.ChildObjectId AS GoodsId_PairSun
+            FROM ObjectLink AS OL_GoodsPairSun
+            WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
            ;
 
      END IF;
@@ -607,8 +610,7 @@ BEGIN
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                       -- временно отключил - 13.05.20
-                       --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                         AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
@@ -1083,13 +1085,13 @@ BEGIN
                                      LEFT JOIN tmpIncome ON tmpIncome.UnitId_to = tmpNotSold_all.UnitID
                                                         AND tmpIncome.GoodsID   = tmpNotSold_all.GoodsID
                                      -- отгружать товар по СУН, если у него остаток больше чем N
-                                     LEFT JOIN _tmpGoods_SUN_Limit_T1 ON _tmpGoods_SUN_Limit_T1.GoodsID = tmpNotSold_all.GoodsID
+                                     LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitID = tmpNotSold_all.UnitID
                                                         
                                 WHERE tmpNotSold_all.Amount - COALESCE (tmpNotSold_PartionDate.Amount, 0) > 0
                                   -- !!!
                                   AND tmpIncome.GoodsID IS NULL
                                   -- остаток больше чем N
-                                  AND COALESCE (_tmpGoods_SUN_Limit_T1.Value_N, 0) < tmpNotSold_all.Amount
+                                  AND COALESCE (_tmpUnit_SUN.Limit_N, 0) < tmpNotSold_all.Amount
                                )
              -- Результат по сроковым
              /*   -- было так - немного оптимизировала
@@ -1420,8 +1422,7 @@ BEGIN
                                INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                          -- временно отключил - 13.05.20
-                          --AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                            AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
                          )
                -- MCS + Price
              , tmpMCS AS (SELECT COALESCE (tmpMCS_all.UnitId,  tmpGoodsCategory.UnitId)  AS UnitId
@@ -2259,6 +2260,7 @@ BEGIN
 
      -- 6.1.5. !!!важно, ОТКЛЮЧИЛИ отложенные!!!
      UPDATE _tmpResult_Partion SET Amount_next = 0, Summ_next = 0;
+     DELETE FROM _tmpResult_Partion WHERE Amount = 0 AND Amount_next = 0;
 
 
      -- 6.2.1. !!!важно, документы - DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit - тогда они участвовать не будут !!!
@@ -2645,7 +2647,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_partion (UnitId Integer, Summ_out TFloat, Summ_in TFloat, Summ_out_calc TFloat, Summ_in_calc TFloat) ON COMMIT DROP;
@@ -2658,8 +2660,8 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpSale   (UnitId Integer, GoodsId Integer, Amount TFloat, Summ TFloat) ON COMMIT DROP;
      -- 2.2. товары для Кратность
      CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
-     -- 2.3. Товары при котором расчет для СУН-1(без продаж) + СУН-2 + СУН-2-пи - отгружать товар по СУН, если у него остаток больше чем N
-     CREATE TEMP TABLE _tmpGoods_SUN_Limit_T1 (GoodsId Integer, Value_N TFloat) ON COMMIT DROP;
+     -- 2.3. "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
+     CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
@@ -2684,5 +2686,5 @@ WHERE Movement.OperDate  >= '01.01.2019'
      -- 8. исключаем такие перемещения
      CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
 
- SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+ SELECT * FROM lpInsert_Movement_Send_RemainsSun (inOperDate:= CURRENT_DATE + INTERVAL '2 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */

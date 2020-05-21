@@ -368,7 +368,7 @@ BEGIN
                                        , zfConvert_IntToNull (inFabrikaId), inGoodsGroupId, inMeasureId
                                        , zfConvert_IntToNull (inCompositionId), zfConvert_IntToNull (inGoodsInfoId), zfConvert_IntToNull (inLineFabricaId)
                                        , inLabelId, zfConvert_IntToNull (inCompositionGroupId), inGoodsSizeId, zfConvert_IntToNull (inJuridicalId)
-                                       , zc_Currency_EUR()
+                                       , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN zc_Currency_Basis() ELSE zc_Currency_EUR() END
                                        , TRUE, TRUE
                                         );
      ELSE

@@ -41,7 +41,7 @@ object MainCehForm: TMainCehForm
         Top = 2
         Width = 31
         Height = 29
-        Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+        Hint = 'Del - '#1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
         Glyph.Data = {
           C6040000424DC60400000000000036040000280000000C0000000C0000000100
           0800000000009000000000000000000000000001000000000000000000004000
@@ -3053,6 +3053,7 @@ object MainCehForm: TMainCehForm
     ColumnEnterList = <>
     SummaryItemList = <>
     KeepSelectColor = True
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end

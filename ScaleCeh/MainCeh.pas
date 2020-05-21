@@ -510,7 +510,9 @@ begin
                  then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
           //
           if i2<5 then Columns:=1 else Columns:=2;
-          if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
+          if i2>22 then PanelGoodsKind.Height:=205
+          else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
+          if SettingMain.isModeSorting = TRUE then PanelGoodsKind.Height:= 225;
           //
           ItemIndex:=0;
      end;
@@ -2319,7 +2321,10 @@ begin
 
   SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
   if SettingMain.isModeSorting = TRUE
-  then Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>'
+  then begin
+       Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
+       PanelGoodsKind.Height:= 2 * PanelGoodsKind.Height;
+  end
   else begin
        Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
        DBViewAddOn.ColorRuleList.Clear;
@@ -2935,6 +2940,8 @@ begin
      if (Key = VK_F2) and (Shift = []) then GetParams_MovementDesc('');
      if (Key = VK_F4) and (Shift = []) then Save_MI;
      if (Key = VK_F5) and (Shift = []) then Save_Movement_all;
+     //
+     if (Key = VK_DELETE) and (Shift = []) then bbDeleteItemClick(self);
      // Меняется шрифт
      if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
      //

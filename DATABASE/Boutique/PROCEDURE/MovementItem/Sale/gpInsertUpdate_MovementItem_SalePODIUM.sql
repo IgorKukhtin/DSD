@@ -433,7 +433,7 @@ BEGIN
      -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
      IF vbIsOperPriceListReal = FALSE
      THEN
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, ioOperPriceList,      ioChangePercent) + COALESCE (ioSummChangePercent,      0);
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent,      0);
          outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
      ELSE
          -- !!!режим!!!
