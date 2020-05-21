@@ -227,6 +227,9 @@ type
     colEndDate: TcxGridDBColumn;
     ccPaidKindName: TcxGridDBColumn;
     PaidKindChoiceForm——: TOpenChoiceForm;
+    spUpdate_isWMS: TdsdStoredProc;
+    actUpdate_isWMS: TdsdExecStoredProc;
+    bbUpdate_isWMS: TdxBarButton;
 
   private
     { Private declarations }
