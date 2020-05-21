@@ -1108,6 +1108,8 @@ type
     miGoods_AssetProd: TMenuItem;
     actPartnerPersonal: TdsdOpenForm;
     miPartnerPersonal: TMenuItem;
+    actProfitLossServiceCash: TdsdOpenForm;
+    actProfitLossService1: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

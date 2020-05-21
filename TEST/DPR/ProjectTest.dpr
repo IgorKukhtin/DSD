@@ -1150,7 +1150,8 @@ uses
   ReceiptMainGoods_Object in '..\..\Forms\Guides\ReceiptMainGoods_Object.pas' {ReceiptMainGoods_ObjectForm: TParentForm},
   Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm},
   PartnerPersonal in '..\..\Forms\Guides\PartnerPersonal.pas' {PartnerPersonalForm: TParentForm},
-  JuridicalVatPriceDialog in '..\..\Forms\Guides\JuridicalVatPriceDialog.pas' {JuridicalVatPriceDialogForm: TParentForm};
+  JuridicalVatPriceDialog in '..\..\Forms\Guides\JuridicalVatPriceDialog.pas' {JuridicalVatPriceDialogForm: TParentForm},
+  Movement_Period_PaidKind_BranchDialog in '..\..\Forms\Document\Movement_Period_PaidKind_BranchDialog.pas' {Movement_Period_PaidKind_BranchDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

@@ -7,23 +7,24 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 1006
-  ExplicitHeight = 341
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 81
     Width = 990
-    Height = 245
+    Height = 221
     TabOrder = 3
     ExplicitWidth = 990
     ExplicitHeight = 245
-    ClientRectBottom = 245
+    ClientRectBottom = 221
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 990
       ExplicitHeight = 245
       inherited cxGrid: TcxGrid
         Width = 990
-        Height = 245
+        Height = 221
         ExplicitWidth = 990
         ExplicitHeight = 245
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -333,21 +334,74 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 990
+    Height = 55
     ExplicitWidth = 990
+    ExplicitHeight = 55
     inherited deStart: TcxDateEdit
+      Left = 121
       EditValue = 42005d
+      ExplicitLeft = 121
     end
     inherited deEnd: TcxDateEdit
+      Left = 121
+      Top = 28
       EditValue = 42005d
+      ExplicitLeft = 121
+      ExplicitTop = 28
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 29
+      ExplicitLeft = 29
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 29
+      ExplicitLeft = 10
+      ExplicitTop = 29
+    end
+    object cxLabel3: TcxLabel
+      Left = 223
+      Top = 6
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 306
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 5
+      Width = 113
+    end
+    object cxLabel4: TcxLabel
+      Left = 223
+      Top = 29
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 271
+      Top = 28
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 148
     end
   end
   object cxLabel27: TcxLabel [2]
-    Left = 651
+    Left = 679
     Top = 6
     Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086':'
   end
   object edJuridicalBasis: TcxButtonEdit [3]
-    Left = 751
+    Left = 779
     Top = 5
     Properties.Buttons = <
       item
@@ -455,8 +509,8 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 35
-      FormName = 'TMovement_PeriodDialogForm'
-      FormNameParam.Value = 'TMovement_PeriodDialogForm'
+      FormName = 'TMovement_Period_PaidKind_BranchDialogForm'
+      FormNameParam.Value = 'TMovement_Period_PaidKind_BranchDialogForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -473,6 +527,40 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           Value = 42005d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchId'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BranchName'
+          Value = Null
+          Component = GuidesBranch
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindId'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PaidKindName'
+          Value = Null
+          Component = GuidesPaidKind
+          ComponentItem = 'TextValue'
+          DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
@@ -528,6 +616,22 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         Name = 'inJuridicalBasisId'
         Value = Null
         Component = JuridicalBasisGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -754,5 +858,75 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPaidKind
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = 0
+        MultiSelectSeparator = ','
+      end>
+    Left = 474
+    Top = 34
+  end
+  object GuidesBranch: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TBranch_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesBranch
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractId'
+        Value = 0
+        MultiSelectSeparator = ','
+      end>
+    Left = 194
+    Top = 178
   end
 end

@@ -1,12 +1,15 @@
 -- Function: gpSelect_Movement_ProfitLossService()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProfitLossService(
     IN inStartDate          TDateTime , --
     IN inEndDate            TDateTime , --
     IN inJuridicalBasisId   Integer   , -- Главное юр.лицо
+    IN inBranchId           Integer  ,
+    IN inPaidKindId         Integer  ,
     IN inIsErased           Boolean ,
     IN inSession            TVarChar    -- сессия пользователя
 )
