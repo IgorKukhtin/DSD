@@ -988,6 +988,9 @@ procedure TLoadFormTest.LoadOrderTypeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderTypeForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderType_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderType_EditForm');
 end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;

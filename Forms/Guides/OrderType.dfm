@@ -15,6 +15,7 @@ object OrderTypeForm: TOrderTypeForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -460,11 +461,19 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Visible = True
-          ItemName = 'bb'
+          ItemName = 'bbh'
         end
         item
           Visible = True
           ItemName = 'bb1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Koeff'
         end
         item
           Visible = True
@@ -514,7 +523,7 @@ object OrderTypeForm: TOrderTypeForm
       Action = actShowAll
       Category = 0
     end
-    object bb: TdxBarControlContainerItem
+    object bbh: TdxBarControlContainerItem
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
@@ -530,6 +539,10 @@ object OrderTypeForm: TOrderTypeForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdate_Koeff: TdxBarButton
+      Action = macUpdate_Koeff
       Category = 0
     end
   end
@@ -714,6 +727,281 @@ object OrderTypeForm: TOrderTypeForm
         end>
       isShowModal = False
     end
+    object ExecuteDialogKoeff: TExecuteDialog
+      Category = 'Koeff'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 26
+      FormName = 'TOrderType_EditForm'
+      FormNameParam.Value = 'TOrderType_EditForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inKoeff1'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff1'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff2'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff2'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff3'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff3'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff4'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff4'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff5'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff5'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff6'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff6'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff7'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff7'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff8'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff8'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff9'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff9'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff10'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff10'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff11'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff11'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inKoeff12'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inKoeff12'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange1'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange1'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange2'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange2'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange3'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange3'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange4'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange4'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange5'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange5'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange6'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange6'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange7'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange7'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange8'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange8'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange9'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange9'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange10'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange10'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange11'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange11'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisChange12'
+          Value = 'false'
+          Component = FormParams
+          ComponentItem = 'inisChange12'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Koeff: TdsdDataSetRefresh
+      Category = 'Koeff'
+      MoveParams = <>
+      StoredProc = spUpdate_Koeff
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Koeff
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 26
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object macUpdate_Koeff_list: TMultiAction
+      Category = 'Koeff'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Koeff
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 43
+    end
+    object macUpdate_Koeff: TMultiAction
+      Category = 'Koeff'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogKoeff
+        end
+        item
+          Action = macUpdate_Koeff_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090#1099' '#1089#1077#1079#1086#1085#1085#1086#1089#1090#1080' '#1087#1086' '#1084#1077#1089#1103#1094#1072#1084
+      ImageIndex = 43
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_OrderType'
@@ -772,6 +1060,7 @@ object OrderTypeForm: TOrderTypeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 168
     Top = 216
   end
@@ -996,5 +1285,327 @@ object OrderTypeForm: TOrderTypeForm
       end>
     Left = 832
     Top = 168
+  end
+  object spUpdate_Koeff: TdsdStoredProc
+    StoredProcName = 'gpUpdate_OrderType_Koeff'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff1'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff2'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff3'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff4'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff5'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff6'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff7'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff8'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff8'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff9'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff9'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff10'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff10'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff11'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff11'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inKoeff12'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inKoeff12'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange1'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange2'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange3'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange3'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange4'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange5'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange5'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange6'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange6'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange7'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange7'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange8'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange8'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange9'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange9'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange10'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange10'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange11'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange11'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange12'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisChange12'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 504
+    Top = 403
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inisChange1'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange2'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange3'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange4'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange5'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange6'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange7'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange8'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange9'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange10'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange11'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisChange12'
+        Value = 'false'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 199
+    Top = 306
   end
 end

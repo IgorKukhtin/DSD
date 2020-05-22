@@ -16,6 +16,8 @@ program ProjectTest;
 
 
 
+
+
 uses
   DUnitTestRunner,
   VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
@@ -1151,7 +1153,8 @@ uses
   Goods_AssetProd in '..\..\Forms\Guides\Goods_AssetProd.pas' {Goods_AssetProdForm: TParentForm},
   PartnerPersonal in '..\..\Forms\Guides\PartnerPersonal.pas' {PartnerPersonalForm: TParentForm},
   JuridicalVatPriceDialog in '..\..\Forms\Guides\JuridicalVatPriceDialog.pas' {JuridicalVatPriceDialogForm: TParentForm},
-  Movement_Period_PaidKind_BranchDialog in '..\..\Forms\Document\Movement_Period_PaidKind_BranchDialog.pas' {Movement_Period_PaidKind_BranchDialogForm: TParentForm};
+  Movement_Period_PaidKind_BranchDialog in '..\..\Forms\Document\Movement_Period_PaidKind_BranchDialog.pas' {Movement_Period_PaidKind_BranchDialogForm: TParentForm},
+  OrderType_Edit in '..\..\Forms\Guides\OrderType_Edit.pas' {OrderType_EditForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
