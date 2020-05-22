@@ -195,6 +195,18 @@ type
     macUpdate_SUN_v2_LockSale_Yes: TMultiAction;
     bbUpdate_SUN_v2_LockSale_Yes: TdxBarButton;
     bbUpdate_SUN_v2_LockSale_No: TdxBarButton;
+    spUpdate_SUN_Lock: TdsdStoredProc;
+    actUpdate_SUN_Lock: TdsdExecStoredProc;
+    ExecuteDialog_SUN_Lock: TExecuteDialog;
+    macUpdate_SUN_Lock: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    dxBarLargeButton1: TdxBarLargeButton;
+    dxBarSeparator2: TdxBarSeparator;
+    dxBarSeparator3: TdxBarSeparator;
+    bbUpdate_SUN_Lock: TdxBarButton;
+    macUpdate_SUN_Lock_list: TMultiAction;
   private
     { Private declarations }
   public

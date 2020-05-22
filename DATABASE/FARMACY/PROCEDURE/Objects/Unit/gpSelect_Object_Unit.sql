@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , DriverId Integer, DriverName TVarChar
              , ListDaySUN TVarChar, ListDaySUN_pi TVarChar
+             , SUN_v1_Lock TVarChar, SUN_v2_Lock TVarChar, SUN_v4_Lock TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
@@ -128,6 +129,10 @@ BEGIN
       
       , COALESCE (ObjectString_ListDaySUN.ValueData, '')    :: TVarChar AS ListDaySUN
       , COALESCE (ObjectString_ListDaySUN_pi.ValueData, '') :: TVarChar AS ListDaySUN_pi
+
+      , COALESCE (ObjectString_SUN_v1_Lock.ValueData, '') :: TVarChar AS SUN_v1_Lock
+      , COALESCE (ObjectString_SUN_v2_Lock.ValueData, '') :: TVarChar AS SUN_v2_Lock
+      , COALESCE (ObjectString_SUN_v4_Lock.ValueData, '') :: TVarChar AS SUN_v4_Lock
                  
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -251,6 +256,16 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_ListDaySUN_pi
                                ON ObjectString_ListDaySUN_pi.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN_pi.DescId = zc_ObjectString_Unit_ListDaySUN_pi()
+
+        LEFT JOIN ObjectString AS ObjectString_SUN_v1_Lock
+                               ON ObjectString_SUN_v1_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v1_Lock.DescId = zc_ObjectString_Unit_SUN_v1_Lock()
+        LEFT JOIN ObjectString AS ObjectString_SUN_v2_Lock
+                               ON ObjectString_SUN_v2_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v2_Lock.DescId = zc_ObjectString_Unit_SUN_v2_Lock()
+        LEFT JOIN ObjectString AS ObjectString_SUN_v4_Lock
+                               ON ObjectString_SUN_v4_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v4_Lock.DescId = zc_ObjectString_Unit_SUN_v4_Lock()
 
         LEFT JOIN ObjectString AS ObjectString_EMail
                                ON ObjectString_EMail.ObjectId = Object_Member.Id 
@@ -540,6 +555,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 22.05.20         * SUN_v1_Lock...
  21.05.20         * isSUN_v2_LockSale
  12.05.20         *
  28.04.20         *
