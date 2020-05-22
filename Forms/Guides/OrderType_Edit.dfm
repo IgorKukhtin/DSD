@@ -40,7 +40,6 @@
   object edKoeff1: TcxCurrencyEdit
     Left = 17
     Top = 30
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -51,7 +50,6 @@
   object edKoeff2: TcxCurrencyEdit
     Left = 17
     Top = 70
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -77,7 +75,6 @@
   object edKoeff3: TcxCurrencyEdit
     Left = 17
     Top = 110
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -88,7 +85,6 @@
   object cbChange1: TcxCheckBox
     Left = 79
     Top = 30
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -99,7 +95,6 @@
   object cbСhange2: TcxCheckBox
     Left = 79
     Top = 70
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -110,7 +105,6 @@
   object cbСhange3: TcxCheckBox
     Left = 79
     Top = 110
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -126,7 +120,6 @@
   object edKoeff4: TcxCurrencyEdit
     Left = 17
     Top = 150
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -137,7 +130,6 @@
   object cbСhange4: TcxCheckBox
     Left = 79
     Top = 150
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -153,7 +145,6 @@
   object edKoeff5: TcxCurrencyEdit
     Left = 17
     Top = 190
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -164,7 +155,6 @@
   object cbСhange5: TcxCheckBox
     Left = 79
     Top = 190
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -180,7 +170,6 @@
   object edKoeff6: TcxCurrencyEdit
     Left = 17
     Top = 230
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -191,7 +180,6 @@
   object cbСhange6: TcxCheckBox
     Left = 79
     Top = 230
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -202,7 +190,6 @@
   object edKoeff7: TcxCurrencyEdit
     Left = 177
     Top = 30
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -213,7 +200,6 @@
   object edKoeff8: TcxCurrencyEdit
     Left = 177
     Top = 70
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -239,7 +225,6 @@
   object edKoeff9: TcxCurrencyEdit
     Left = 177
     Top = 110
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -250,7 +235,6 @@
   object cbСhange7: TcxCheckBox
     Left = 239
     Top = 30
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -261,7 +245,6 @@
   object cbСhange8: TcxCheckBox
     Left = 239
     Top = 70
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -272,7 +255,6 @@
   object cbСhange9: TcxCheckBox
     Left = 239
     Top = 110
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -288,7 +270,6 @@
   object edKoeff10: TcxCurrencyEdit
     Left = 177
     Top = 150
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -299,7 +280,6 @@
   object cbСhange10: TcxCheckBox
     Left = 239
     Top = 150
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -315,7 +295,6 @@
   object edKoeff11: TcxCurrencyEdit
     Left = 177
     Top = 190
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -326,7 +305,6 @@
   object cbСhange11: TcxCheckBox
     Left = 239
     Top = 190
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -342,7 +320,6 @@
   object edKoeff12: TcxCurrencyEdit
     Left = 177
     Top = 230
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -353,7 +330,6 @@
   object cbСhange12: TcxCheckBox
     Left = 239
     Top = 230
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True

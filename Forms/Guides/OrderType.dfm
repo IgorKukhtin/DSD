@@ -850,7 +850,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange1'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange1'
           DataType = ftBoolean
@@ -859,7 +859,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange2'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange2'
           DataType = ftBoolean
@@ -868,7 +868,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange3'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange3'
           DataType = ftBoolean
@@ -877,7 +877,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange4'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange4'
           DataType = ftBoolean
@@ -886,7 +886,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange5'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange5'
           DataType = ftBoolean
@@ -895,7 +895,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange6'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange6'
           DataType = ftBoolean
@@ -904,7 +904,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange7'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange7'
           DataType = ftBoolean
@@ -913,7 +913,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange8'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange8'
           DataType = ftBoolean
@@ -922,7 +922,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange9'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange9'
           DataType = ftBoolean
@@ -931,7 +931,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange10'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange10'
           DataType = ftBoolean
@@ -940,7 +940,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange11'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange11'
           DataType = ftBoolean
@@ -949,7 +949,7 @@ object OrderTypeForm: TOrderTypeForm
         end
         item
           Name = 'inisChange12'
-          Value = 'false'
+          Value = 'true'
           Component = FormParams
           ComponentItem = 'inisChange12'
           DataType = ftBoolean
@@ -1523,84 +1523,84 @@ object OrderTypeForm: TOrderTypeForm
     Params = <
       item
         Name = 'inisChange1'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange2'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange3'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange4'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange5'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange6'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange7'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange8'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange9'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange10'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange11'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'inisChange12'
-        Value = 'false'
+        Value = 'true'
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
