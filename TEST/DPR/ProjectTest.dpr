@@ -1154,7 +1154,9 @@ uses
   PartnerPersonal in '..\..\Forms\Guides\PartnerPersonal.pas' {PartnerPersonalForm: TParentForm},
   JuridicalVatPriceDialog in '..\..\Forms\Guides\JuridicalVatPriceDialog.pas' {JuridicalVatPriceDialogForm: TParentForm},
   Movement_Period_PaidKind_BranchDialog in '..\..\Forms\Document\Movement_Period_PaidKind_BranchDialog.pas' {Movement_Period_PaidKind_BranchDialogForm: TParentForm},
-  OrderType_Edit in '..\..\Forms\Guides\OrderType_Edit.pas' {OrderType_EditForm: TParentForm};
+  OrderType_Edit in '..\..\Forms\Guides\OrderType_Edit.pas' {OrderType_EditForm: TParentForm},
+  Report_BankAccount_Cash_Olap in '..\..\Forms\Report\Report_BankAccount_Cash_Olap.pas' {Report_BankAccount_Cash_OlapForm: TParentForm},
+  Report_BankAccount_Cash_OlapDialog in '..\..\Forms\Report\Report_BankAccount_Cash_OlapDialog.pas' {Report_BankAccount_Cash_OlapDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
