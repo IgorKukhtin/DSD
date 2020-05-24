@@ -162,7 +162,21 @@ BEGIN
 
 
          -- сохранили <Элемент документа>
-         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0), NULL);
+         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
+                                            , (SELECT CASE WHEN ioId > 0
+                                                            AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                                                )
+                                                                 THEN (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId)
+                                                           ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
+                                                      END
+                                               FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                    LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                               WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                              )
+                                            , NULL
+                                             );
 
          -- сохранили связь с <Виды товаров>
          PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
@@ -172,7 +186,21 @@ BEGIN
      THEN
 
          -- сохранили <Элемент документа>
-         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0), NULL);
+         ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
+                                            , (SELECT CASE WHEN ioId > 0
+                                                            AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                                               , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                                                )
+                                                                 THEN (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId)
+                                                           ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
+                                                      END
+                                               FROM ObjectLink AS ObjectLink_Goods_InfoMoney
+                                                    LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                               WHERE ObjectLink_Goods_InfoMoney.ObjectId = inGoodsId
+                                                 AND ObjectLink_Goods_InfoMoney.DescId   = zc_ObjectLink_Goods_InfoMoney()
+                                              )
+                                            , NULL
+                                             );
 
      -- !!!временно
      -- ELSE

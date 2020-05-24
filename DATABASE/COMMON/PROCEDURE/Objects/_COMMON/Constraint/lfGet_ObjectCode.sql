@@ -13,7 +13,7 @@ $BODY$
 BEGIN
      IF COALESCE (inObjectCode, 0) = 0
      THEN 
-         SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO vbObjectCode FROM Object WHERE DescId = inDescId;
+         SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO vbObjectCode FROM Object WHERE DescId = inDescId AND isErased = FALSE;
      ELSE
          vbObjectCode:= inObjectCode;
      END IF;

@@ -189,7 +189,7 @@ BEGIN
                  RAISE EXCEPTION 'Ошибка.Артикул товара = <%> не соответствует значению код = <%>.', inGoodsName, ioGoodsCode;
              END IF;
              -- поиск
-             vbGoodsId_find:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = ioGoodsCode  AND Object.DescId = zc_Object_Goods());
+             vbGoodsId_find:= (SELECT Object.Id FROM Object WHERE Object.ObjectCode = ioGoodsCode AND Object.DescId = zc_Object_Goods() AND Object.isErased = FALSE);
              -- проверка
              IF COALESCE (vbGoodsId_find, 0) = 0
              THEN

@@ -90,9 +90,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Вес = <%> не должен быть больше 9.999 кг.', inRealWeight;
      END IF;
      -- проверка - вес больше 0.010 кг.
-     IF inRealWeight <= 0.010
+     IF inRealWeight <= 0.050
      THEN
-         RAISE EXCEPTION 'Ошибка.Вес = <%> должен быть больше 0.010 кг.', inRealWeight;
+         RAISE EXCEPTION 'Ошибка.Вес = <%> должен быть больше 0.050 кг.', inRealWeight;
      END IF;
 
      -- нашли Дату партии

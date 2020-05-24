@@ -512,7 +512,11 @@ begin
           if i2<5 then Columns:=1 else Columns:=2;
           if i2>22 then PanelGoodsKind.Height:=205
           else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
-          if SettingMain.isModeSorting = TRUE then PanelGoodsKind.Height:= 225;
+          if SettingMain.isModeSorting = TRUE
+          then begin PanelGoodsKind.Height:= 275;
+                     PanelGoodsKind.Font.Size:= 10;
+                     rgGoodsKind.Font.Size:= 10;
+          end;
           //
           ItemIndex:=0;
      end;
@@ -2321,10 +2325,7 @@ begin
 
   SettingMain.BranchName:=DMMainScaleCehForm.lpGet_BranchName(SettingMain.BranchCode);
   if SettingMain.isModeSorting = TRUE
-  then begin
-       Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
-       PanelGoodsKind.Height:= 2 * PanelGoodsKind.Height;
-  end
+  then Caption:='Упаковка: Маркировка + Сортировка ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>'
   else begin
        Caption:='Производство ('+GetFileVersionString(ParamStr(0))+') - <'+SettingMain.BranchName+'>' + ' : <'+DMMainScaleCehForm.gpGet_Scale_User+'>';
        DBViewAddOn.ColorRuleList.Clear;

@@ -228,7 +228,6 @@ type
     procedure cbCompleteIncomeBNClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure cbTaxIntClick(Sender: TObject);
     procedure DocumentPanelClick(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
   private
@@ -495,6 +494,7 @@ type
     function fBeginVACUUM : Boolean;
 
     function fBeginPack_oneDay : Boolean;
+    function fBeginPartion_Period : Boolean;
 
   public
     procedure StartProcess;
@@ -1698,11 +1698,6 @@ procedure TMainForm.cbCompleteIncomeBNClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
-procedure TMainForm.cbTaxIntClick(Sender: TObject);
-begin
-
-end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
@@ -1876,6 +1871,9 @@ begin
 
      if (ParamStr(2)='autoPack_oneDay')
      then fBeginPack_oneDay;
+
+     if (ParamStr(2)='autoPartion_period')
+     then fBeginPartion_Period;
 
      if (ParamStr(2)='autoFillSoldTable_curr')
      then pLoadFillSoldTable_curr;
@@ -2504,6 +2502,39 @@ begin
      pCompleteDocument_Pack;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fBeginPartion_Period : Boolean;
+begin
+     cbPartion.Checked:= true;
+     //
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
+     cbComplete.Checked:=true;
+     cbUnComplete.Checked:=true;
+     //
+     Gauge.Visible:=true;
+     //
+     fOpenSqFromQuery ('select zf_CalcDate_onMonthStart('+FormatToDateServer_notNULL(now-1)+') as RetV');
+     StartDateCompleteEdit.Text:=DateToStr(fromSqlQuery.FieldByName('RetV').AsDateTime);
+     EndDateCompleteEdit.Text:=DateToStr(now-1);
+     //
+     //
+     pCompleteDocument_Partion;
+     //
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     //OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
+     //
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
+     //
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.myLogMemo_add(str :String);
 begin
      LogMemo.Lines.Add(DateTimeToStr(now) + ' - ' + trim(str));
@@ -2646,11 +2677,6 @@ begin
      cbOnlySale_save:=cbOnlySale.Checked;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=false;
      //
-     //!!!Integer!!!
-
-     //if not fStop then pCompleteDocument_Cash;
-
-     //
      //
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Defroster;
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Pack;
@@ -2658,32 +2684,15 @@ begin
      if (not fStop) and (isPeriodTwo = FALSE) then pCompleteDocument_Kopchenie;
      //
      //
-
      if {(cbOnlySale.Checked = FALSE)and***}(cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)
          // и - если необходимо 2 раза
          and (cbOnlyTwo.Checked = FALSE)
      then begin
-          {if not fStop then pCompleteDocument_Income(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_IncomeNal(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_Sale_IntBN(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_Sale_IntNAL(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ReturnIn_IntBN(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ReturnIn_IntNal(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
-          if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);}
-
-           //
            // сам расчет с/с - 1-ый - ТОЛЬКО производство
            if (not fStop)and(GroupId_branch <= 0) then pInsertHistoryCost(TRUE);
            //
            // перепроведение
            if (not fStop)and(GroupId_branch <= 0) then pCompleteDocument_List(TRUE, FALSE, FALSE);
-
      end;
      //
      // сам расчет с/с - 2-ой - производство + ФИЛИАЛЫ
@@ -2698,6 +2707,7 @@ begin
      // ВСЕГДА - Привязка Возвраты
      if (not fStop)and(GroupId_branch <= 0) {and ((ParamStr(4) <> '-') or (isPeriodTwo = true))} then pCompleteDocument_ReturnIn_Auto;
      //
+     //
      // перепроведение
      if not fStop then pCompleteDocument_List(FALSE, FALSE, FALSE);
      //
@@ -2706,27 +2716,6 @@ begin
      //
      if isPeriodTwo = TRUE then cbLastCost.Checked:=cbLastCost_save;
      if isPeriodTwo = TRUE then cbOnlySale.Checked:=cbOnlySale_save;
-     //
-     {if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then begin pCompleteDocument_Income(cbLastComplete.Checked);pCompleteDocument_IncomeNal(cbLastComplete.Checked);end;
-     if not fStop then pCompleteDocument_UpdateConrtact;
-     if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_ReturnOutNal(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Sale_IntBN(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Sale_IntNAL(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_ReturnIn_IntBN(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_ReturnIn_IntNal(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
-
-     if not fStop then pCompleteDocument_Loss(cbLastComplete.Checked);
-
-     if not fStop then pCompleteDocument_TaxInt(cbLastComplete.Checked);
-
-     if not fStop then pCompleteDocument_OrderExternal;
-     if not fStop then pCompleteDocument_OrderInternal;}
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21231,6 +21220,10 @@ begin
         end;
      end;
      //
+     //if fromQuery.Active = true
+     //then myLogMemo_add('fromQuery.Active = true')
+     //else myLogMemo_add('fromQuery.Active = false');
+     //
      myDisabledCB(cbComplete_List);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21344,6 +21337,8 @@ begin
      myDisabledCB(cbPack);
      //
      DBGrid.DataSource.DataSet:=fromQuery;
+     //
+     myLogMemo_add('end cbPack');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Kopchenie;
@@ -21410,6 +21405,8 @@ begin
      myDisabledCB(cbKopchenie);
      //
      DBGrid.DataSource.DataSet:=fromQuery;
+     //
+     myLogMemo_add('end cbKopchenie');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Diff;
@@ -21850,6 +21847,10 @@ begin
      pCompleteDocument_List(false,true, FALSE);
      //
      myDisabledCB(cbPartion);
+     //
+     DBGrid.DataSource.DataSet:=fromQuery;
+     //
+     myLogMemo_add('end cbPartion');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Loss;

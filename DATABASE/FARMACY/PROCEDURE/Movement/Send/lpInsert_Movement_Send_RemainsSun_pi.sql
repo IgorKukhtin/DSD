@@ -78,7 +78,7 @@ $BODY$
    DECLARE curResult       refcursor;
    DECLARE curPartion_next refcursor;
    DECLARE curResult_next  refcursor;
-   
+
    DECLARE vbContainerId     Integer;
    DECLARE vbAmount_remains  TFloat;
    DECLARE vbMovementId      Integer;
@@ -86,19 +86,22 @@ $BODY$
 
    DECLARE curRemains        refcursor;
    DECLARE curResult_partion refcursor;
-   
+
    DECLARE vbDOW_curr        TVarChar;
 
-   DECLARE vbDayIncome_max Integer;
-   DECLARE vbDaySendSUN_max Integer;
+   DECLARE vbDayIncome_max   Integer;
+   DECLARE vbDaySendSUN_max  Integer;
+
+   DECLARE vbGoodsId_PairSun Integer;
+   DECLARE vbPrice_PairSun   TFloat;
 
 BEGIN
      --
      vbObjectId := lpGet_DefaultValue ('zc_Object_Retail', inUserId);
-     
+
      -- !!!
      vbKoeff_over:= 2;
-     
+
      -- !!! в дн€х
      vbPeriod_t1    := 30;
      vbPeriod_t2    := 0;
@@ -130,7 +133,7 @@ BEGIN
      DELETE FROM _tmpRemains_Partion_all;
      -- 3.2. остатки, PI (—верх запас) - дл€ распределени€
      DELETE FROM _tmpRemains_Partion;
-     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и OVER
+     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и PI (—верх запас)
      DELETE FROM _tmpRemains_calc;
      -- 5. из каких аптек остатки со сроками "полностью" закрывают ј¬“ќ«ј ј«
      DELETE FROM _tmpSumm_limit;
@@ -166,11 +169,12 @@ BEGIN
              , 0           AS Value_T2
              , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0  END :: Integer AS DayIncome
              , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
-             , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat  AS Limit_N
+             , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat   AS Limit_N
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN_pi()
              LEFT JOIN ObjectFloat  AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v4()
-             LEFT JOIN ObjectFloat  AS OF_DI  ON OF_DI.ObjectId  = OB.ObjectId AND OF_DI.DescId  = zc_ObjectFloat_Unit_Sun_v4Income()
+             LEFT JOIN ObjectFloat  AS OF_DI  ON OF_DI.ObjectId  = OB.ObjectId AND OF_DI.DescId  = zc_ObjectFloat_Unit_Sun_v2Income()
+             LEFT JOIN ObjectFloat  AS OF_DS  ON OF_DS.ObjectId  = OB.ObjectId AND OF_DS.DescId  = zc_ObjectFloat_Unit_HT_SUN_v2()
              LEFT JOIN ObjectFloat  AS OF_SN  ON OF_SN.ObjectId  = OB.ObjectId AND OF_SN.DescId  = zc_ObjectFloat_Unit_LimitSUN_N()
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
@@ -220,7 +224,7 @@ BEGIN
                                  AND ObjectLink_Unit_Area_From.DescId        = zc_ObjectLink_Unit_Area()
              -- в этом случае возьмем всех
              LEFT JOIN _tmpUnit_SUN AS _tmpUnit_SUN_From ON ObjectLink_From.ChildObjectId IS NULL AND ObjectLink_Unit_Area_From.ObjectId IS NULL
-                                                        
+
              LEFT JOIN ObjectLink AS ObjectLink_To
                                   ON ObjectLink_To.ObjectId = Object.Id
                                  AND ObjectLink_To.DescId   = zc_ObjectLink_SunExclusion_To()
@@ -233,9 +237,8 @@ BEGIN
         WHERE Object.DescId   = zc_Object_SunExclusion()
           AND Object.isErased = FALSE
        ;
-       
-     -- 2.1. вс€ статистика продаж
-     -- CREATE TEMP TABLE _tmpSale_over (UnitId Integer, GoodsId Integer, Amount_t1 TFloat, Summ_t1 TFloat, Amount_t2 TFloat, Summ_t2 TFloat) ON COMMIT DROP;
+
+     -- 2.1. вс€ статистика продаж - PI (—верх запас)
      INSERT INTO _tmpSale_over (UnitId, GoodsId, Amount_t1, Summ_t1, Amount_t2, Summ_t2)
         SELECT tmp.UnitId
              , tmp.GoodsId
@@ -376,10 +379,7 @@ BEGIN
         --AND 1=0
        ;
 
-     -- 2.4. все остатки, продажи => расчет кол-ва ѕќ“–≈ЅЌќ—“№ у получател€
-     -- CREATE TEMP TABLE _tmpRemains_all (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     -- CREATE TEMP TABLE _tmpRemains (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat) ON COMMIT DROP;
-     --
+     -- 2.4. все остатки у ѕќЋ”„ј“≈Ћя, продажи => расчет кол-ва ѕќ“–≈ЅЌќ—“№
      WITH -- приход - UnComplete - за последние +/-7 дней дл€ Date_Branch
          tmpMI_Income AS (SELECT MovementLinkObject_To.ObjectId AS UnitId
                                , MovementItem.ObjectId          AS GoodsId
@@ -631,13 +631,13 @@ BEGIN
                                  OR COALESCE (tmpPrice.MCSValue, 0) <> 0
                                  OR COALESCE (tmpPrice.Price, 0) <> 0
                              )
-     -- 2.5. –езультат: все остатки, продажи => расчет кол-во ѕќ“–≈ЅЌќ—“№ у получател€: от колонки ќстаток отн€ть ƒанные по отложенным чекам - получитс€ реальный остаток на точке
+     -- 2.5. –езультат: все остатки у ѕќЋ”„ј“≈Ћя, продажи => расчет кол-во ѕќ“–≈ЅЌќ—“№: от колонки ќстаток отн€ть ƒанные по отложенным чекам - получитс€ реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
              , tmpObject_Price.MCSValue
-             , -- вот он PI
+             , -- расчет ѕќ“–≈ЅЌќ—“№
                CASE -- если Ќ“«_ћ»Ќ = 0 »Ћ» ост <= Ќ“«_ћ»Ќ
                     WHEN COALESCE (tmpObject_Price.MCSValue_min, 0) = 0 OR (COALESCE (tmpRemains.Amount, 0) <= COALESCE (tmpObject_Price.MCSValue_min, 0))
                          THEN CASE -- дл€ такого Ќ“«
@@ -812,12 +812,18 @@ BEGIN
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
        ;
-     -- 2.6. –езультат: все остатки, продажи => получаем кол-ва ѕќ“–≈ЅЌќ—“№ у получател€
+     -- 2.6. –езультат: все остатки ѕќЋ”„ј“≈Ћя, продажи => получаем кол-ва ѕќ“–≈ЅЌќ—“№
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
         SELECT _tmpRemains_all.UnitId, _tmpRemains_all.GoodsId, _tmpRemains_all.Price, _tmpRemains_all.MCS, _tmpRemains_all.AmountResult, _tmpRemains_all.AmountRemains, _tmpRemains_all.AmountIncome, _tmpRemains_all.AmountSend_in, _tmpRemains_all.AmountSend_out, _tmpRemains_all.AmountOrderExternal, _tmpRemains_all.AmountReserve
         FROM _tmpRemains_all
-        -- !!!только с таким AmountResult!!!
-        WHERE _tmpRemains_all.AmountResult >= 1.0
+             -- если товар среди парных
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all.GoodsId
+
+        WHERE -- !!!только с таким AmountResult!!!
+              _tmpRemains_all.AmountResult >= 1.0
+              -- !!!ƒобавили парные!!!
+           OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
        ;
 
 
@@ -871,9 +877,9 @@ BEGIN
                );
 
 
-     -- 3.1. все остатки, PI (—верх запас)
-     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, PartionDateKindId, ExpirationDate, Amount_sun, Amount_notSold)
-        WITH -- остатки - список дл€ OVER
+     -- 3.1. все остатки ќ“ѕ–ј¬»“≈Ћя, PI (—верх запас)
+     INSERT INTO _tmpRemains_Partion_all (ContainerDescId, UnitId, ContainerId_Parent, ContainerId, GoodsId, Amount, Amount_notSold)
+        WITH -- остатки - список дл€ PI
              tmpContainer AS (SELECT Container.DescId           AS ContainerDescId
                                    , Container.Id               AS ContainerId
                                    , Container.WhereObjectId    AS UnitId
@@ -888,10 +894,16 @@ BEGIN
                                    LEFT JOIN _tmpRemains ON _tmpRemains.UnitId       = _tmpUnit_SUN.UnitId
                                                         AND _tmpRemains.GoodsId      = Container.ObjectId
                                                         AND _tmpRemains.AmountResult > 0
+                                   -- если товар среди парных
+                                   LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                                             ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = Container.ObjectId
                               WHERE _tmpRemains.GoodsId IS NULL
+                                    -- !!!ƒобавили парные!!!
+                                OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+
                            -- WHERE 1=0
                              )
-             -- список дл€ OVER
+             -- список ќ“ѕ–ј¬»“≈Ћя дл€ PI (—верх запас)
            , tmpOver_list AS (SELECT tmpContainer.UnitID
                                    , tmpContainer.GoodsID
                                    , SUM (tmpContainer.Amount) AS Amount
@@ -959,18 +971,22 @@ BEGIN
                                               ELSE 0
                                          END) > 0
                             )
-             -- так можно определить OVER, Ќо потом надо еще раз, с учетом: отложенные „еки + не проведенные с CommentError + ѕеремещение - расход (ожидаетс€)
+             -- так можно определить PI (—верх запас), Ќо потом надо еще раз, с учетом: отложенные „еки + не проведенные с CommentError + ѕеремещение - расход (ожидаетс€)
            , tmpNotSold_all AS (SELECT tmpOver_list.UnitID
                                      , tmpOver_list.GoodsID
-                                       --  ќстаток
+                                       -- ќстаток
                                      , tmpOver_list.Amount
-                                       
-                                     , CASE -- отдаем ¬—≈
-                                            WHEN _tmpSale_not.GoodsID > 0 
+                                       -- остатки, PI (—верх запас) - его и будем распредел€ть
+                                     , CASE -- отдаем ¬—≈ - это парный
+                                            WHEN _tmpSale_not.GoodsID > 0
+                                                 THEN tmpOver_list.Amount
+
+                                            -- отдаем ¬—≈
+                                            WHEN _tmpSale_not.GoodsID > 0
                                                  THEN tmpOver_list.Amount
 
                                             -- оставл€ем 1
-                                            WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1 
+                                            WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1
                                                  THEN FLOOR (tmpOver_list.Amount - 1)
 
                                             --  ќтправка: округл€ем ¬¬Ќ»«: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправител€ в разрезе T1=60 дней;
@@ -993,24 +1009,37 @@ BEGIN
                                      -- отгружать товар по —”Ќ, если у него остаток больше чем N
                                      LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitID = tmpOver_list.UnitId
 
+                                    -- если товар среди парных
+                                    LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                                              ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = tmpOver_list.GoodsID
+
                                 WHERE -- !!!
                                       tmpSUN_Send.GoodsId IS NULL
-                                  AND CASE -- отдаем ¬—≈
-                                            WHEN _tmpSale_not.GoodsID > 0 
-                                                 THEN tmpOver_list.Amount
+                                      -- !!!
+                                  AND CASE -- отдаем ¬—≈ - это парный
+                                           WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+                                                THEN tmpOver_list.Amount
 
-                                            -- оставл€ем 1
-                                            WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1 
-                                                 THEN FLOOR (tmpOver_list.Amount - 1)
+                                           -- отдаем ¬—≈
+                                           WHEN _tmpSale_not.GoodsID > 0
+                                                THEN tmpOver_list.Amount
 
-                                            --  ќтправка: округл€ем ¬¬Ќ»«: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправител€ в разрезе T1=60 дней;
-                                            ELSE FLOOR (tmpOver_list.Amount - CASE WHEN COALESCE (tmpMCS.MCSValue, 0) > COALESCE (_tmpSale_over.Amount_t1, 0)
-                                                                                        THEN COALESCE (tmpMCS.MCSValue, 0)
-                                                                                   ELSE COALESCE (_tmpSale_over.Amount_t1, 0)
-                                                                              END)
-                                       END > 0
-                                  -- остаток больше чем N
-                                  AND COALESCE (_tmpUnit_SUN.Limit_N, 0) < tmpOver_list.Amount
+                                           -- оставл€ем 1
+                                           WHEN COALESCE (_tmpSale_over.Amount_t1, 0) < 1
+                                                THEN FLOOR (tmpOver_list.Amount - 1)
+
+                                           --  ќтправка: округл€ем ¬¬Ќ»«: если X1 больше Y1 на 1 и больше: Y1 - продажи у отправител€ в разрезе T1=60 дней;
+                                           ELSE FLOOR (tmpOver_list.Amount - CASE WHEN COALESCE (tmpMCS.MCSValue, 0) > COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                                       THEN COALESCE (tmpMCS.MCSValue, 0)
+                                                                                  ELSE COALESCE (_tmpSale_over.Amount_t1, 0)
+                                                                             END)
+                                      END > 0
+                                  
+                                  AND (-- остаток больше чем N
+                                       COALESCE (_tmpUnit_SUN.Limit_N, 0) < tmpOver_list.Amount
+                                       -- или это парный товар
+                                    OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+                                      )
                                )
      -- дл€ PI - находим ¬—≈ сроковые
    , tmpNotSold_PartionDate AS (SELECT tmpNotSold_all.UnitID
@@ -1059,7 +1088,7 @@ BEGIN
 
                                 WHERE MovementDate_Branch.DescId     = zc_MovementDate_Branch()
                                   AND MovementDate_Branch.ValueData BETWEEN inOperDate - (vbDayIncome_max :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
-                                                            
+
                                 GROUP BY MovementLinkObject_To.ObjectId
                                        , MovementItem.ObjectId
                                 HAVING SUM (CASE WHEN Movement.OperDate BETWEEN inOperDate - (_tmpUnit_SUN.DayIncome :: TVarChar || 'DAY') :: INTERVAL AND inOperDate - INTERVAL '1 DAY'
@@ -1067,10 +1096,12 @@ BEGIN
                                                  ELSE 0
                                             END) > 0
                                )
-                 -- все что остаетс€ дл€ NotSold
+                 -- все что остаетс€ дл€ PI
                , tmpNotSold AS (SELECT tmpNotSold_all.UnitID
                                      , tmpNotSold_all.GoodsID
+                                       -- ќстаток
                                      , tmpNotSold_all.Amount
+                                       -- остатки, PI (—верх запас) - его и будем распредел€ть
                                      , tmpNotSold_all.Amount_notSold
                                 FROM tmpNotSold_all
                                      -- ¬—≈ сроковые
@@ -1129,11 +1160,9 @@ BEGIN
              , tmpNotSold.GoodsId
                -- остатки, ¬—≈
              , tmpNotSold.Amount
-             , 0 AS PartionDateKindId
-             , zc_DateEnd()              AS ExpirationDate
-             , 0                         AS Amount_sun
-               -- остатки, PI (—верх запас)
+               -- остатки, PI (—верх запас) - их и будем распредел€ть
              , tmpNotSold.Amount_notSold AS Amount_notSold
+
         FROM tmpNotSold
              LEFT JOIN ObjectBoolean AS OB_Unit_SUN_in
                                      ON OB_Unit_SUN_in.ObjectId  = tmpNotSold.UnitId
@@ -1149,13 +1178,13 @@ BEGIN
        ;
 
 
-     -- 3.2. остатки, PI (—верх запас) - дл€ распределени€
-     -- CREATE TEMP TABLE _tmpRemains_Partion (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
-     --
+     -- 3.2. остатки ќ“ѕ–ј¬»“≈Ћя, PI (—верх запас) - дл€ распределени€
      WITH -- Goods_sum
           tmpGoods_sum AS (SELECT _tmpRemains_Partion_all.UnitId
                                 , _tmpRemains_Partion_all.GoodsId
+                                  -- остатки, ¬—≈
                                 , SUM (_tmpRemains_Partion_all.Amount)         AS Amount
+                                  -- остатки, PI (—верх запас) - их и будем распредел€ть
                                 , SUM (_tmpRemains_Partion_all.Amount_notSold) AS Amount_notSold
                            FROM _tmpRemains_Partion_all
                            GROUP BY _tmpRemains_Partion_all.UnitId
@@ -1206,50 +1235,38 @@ BEGIN
                               --AND 1=0
                              )
        -- –езультат: все остатки, PI (—верх запас) - дл€ распределени€
-       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real, Amount_sun, Amount_notSold)
+       INSERT INTO _tmpRemains_Partion (ContainerDescId, UnitId, GoodsId, MCSValue, Amount_sale, Amount, Amount_save, Amount_real)
           SELECT 0 AS ContainerDescId
                , tmp.UnitId
                , tmp.GoodsId
                , COALESCE (tmpMCS.MCSValue, 0) AS MCSValue
 
-                 -- продажи у отправител€ в разрезе T1=60 дней;
+                 -- продажи у отправител€ в разрезе T1=60 дней
                , COALESCE (_tmpSale.Amount_t1, 0) AS Amount_sale
 
-                 -- остатки, PI (—верх запас)
-               , tmp.Amount_notSold
-               /*-- уменьшаем еще на Ќ“«
-               - COALESCE (tmpMCS.MCSValue, 0)*/
-                 -- уменьшаем - отложенные „еки + не проведенные с CommentError
-               - COALESCE (_tmpRemains_all.AmountReserve, 0)
-                 -- уменьшаем - ѕеремещение - расход (ожидаетс€)
-               - COALESCE (_tmpRemains_all.AmountSend_out, 0)
-                 AS Amount
-
-                 -- остатки, PI (—верх запас) без корректировки
-               , tmp.Amount             AS Amount_save
-
-                 --
-               , tmp.Amount             AS Amount_real
-                 --
-               , 0 AS Amount_sun
-
-                 --
+                 -- остатки, PI (—верх запас) - их и будем распредел€ть
                , FLOOR ((tmp.Amount_notSold
-                       /*-- уменьшаем еще на Ќ“«
-                       - COALESCE (tmpMCS.MCSValue, 0)*/
-                         -- уменьшаем - отложенные „еки + не проведенные с CommentError
                        - COALESCE (_tmpRemains_all.AmountReserve, 0)
                          -- уменьшаем - ѕеремещение - расход (ожидаетс€)
                        - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                          -- все что "сейчас" отправлено по ¬—≈ SUN-кроме текущего - уменьшаем "излишки"
                        - COALESCE (tmpSUN_oth.Amount, 0)
+                         -- Ќ≈ уменьшаем еще на Ќ“«
+                         -- - COALESCE (tmpMCS.MCSValue, 0)
                           -- делим на кратность
                         ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                        ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
-                 AS Amount_notSold
+                 AS Amount
+
+                 -- остатки, ¬—≈
+               , tmp.Amount             AS Amount_save
+
+                 -- остатки, PI (—верх запас) без корректировки
+               , tmp.Amount_notSold     AS Amount_real
+
 
           FROM tmpGoods_sum AS tmp
-               -- ѕќ“–≈ЅЌќ—“№
+               -- остатки ќ“ѕ–ј¬»“≈Ћя
                LEFT JOIN _tmpRemains_all ON _tmpRemains_all.UnitId  = tmp.UnitId
                                         AND _tmpRemains_all.GoodsId = tmp.GoodsId
                -- Ќ“«
@@ -1271,17 +1288,17 @@ BEGIN
                LEFT JOIN tmpConditionsKeep ON tmpConditionsKeep.ObjectId = tmp.GoodsId
                -- а здесь, отбросили !!Ќќ“!!
                LEFT JOIN tmpGoods_NOT ON tmpGoods_NOT.ObjectId = tmp.GoodsId
-               
+
           -- маленькое кол-во не распредел€ем
           WHERE FLOOR ((tmp.Amount_notSold
-                        -- уменьшаем еще на Ќ“«
-                      - COALESCE (tmpMCS.MCSValue, 0)
                         -- уменьшаем - отложенные „еки + не проведенные с CommentError
                       - COALESCE (_tmpRemains_all.AmountReserve, 0)
                         -- уменьшаем - ѕеремещение - расход (ожидаетс€)
                       - COALESCE (_tmpRemains_all.AmountSend_out, 0)
                         -- все что "сейчас" отправлено по ¬—≈ SUN-кроме текущего - уменьшаем "излишки"
                       - COALESCE (tmpSUN_oth.Amount, 0)
+                        -- Ќ≈ уменьшаем еще на Ќ“«
+                        -- - COALESCE (tmpMCS.MCSValue, 0)
                          -- делим на кратность
                        ) / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                       ) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
@@ -1293,8 +1310,7 @@ BEGIN
           ;
 
 
-     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и OVER
-     -- CREATE TEMP TABLE _tmpRemains_calc (UnitId Integer, GoodsId Integer, Price TFloat, MCS TFloat, AmountResult TFloat, AmountRemains TFloat, AmountIncome TFloat, AmountSend_in TFloat, AmountSend_out TFloat, AmountOrderExternal TFloat, AmountReserve TFloat, AmountSun_real TFloat, AmountSun_summ TFloat, AmountSun_summ_save TFloat, AmountSun_unit TFloat, AmountSun_unit_save TFloat) ON COMMIT DROP;
+     -- 4. ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и PI (—верх запас)
      INSERT INTO _tmpRemains_calc (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve
                                  , AmountSun_real, AmountSun_summ, AmountSun_summ_save, AmountSun_unit, AmountSun_unit_save)
         SELECT _tmpRemains.UnitId
@@ -1312,11 +1328,12 @@ BEGIN
              , _tmpRemains.AmountSend_out
              , _tmpRemains.AmountOrderExternal
              , _tmpRemains.AmountReserve
-               -- итого сроковых по реальным остаткам, должно сходитьс€ с AmountSun_summ
+
+               -- остатки, PI (—верх запас) без корректировки
              , tmpRemains_Partion_sum.Amount_real       AS AmountSun_real
-               -- итого сроковые которые будем распредел€ть
+               -- остатки, PI (—верх запас) - их и будем распредел€ть
              , tmpRemains_Partion_sum.Amount            AS AmountSun_summ
-               -- итого сроковые
+               -- остатки, ¬—≈
              , tmpRemains_Partion_sum.Amount_save       AS AmountSun_summ_save
 
                -- инф.=0, сроковые на этой аптеке, тогда перемещени€ с других аптек не будет, т.е. этот јвтозаказ не учитываем
@@ -1324,49 +1341,54 @@ BEGIN
                -- инф.=0, сроковые на этой аптеке
              , COALESCE (_tmpRemains_Partion.Amount_save, 0) AS AmountSun_unit_save
 
-        FROM _tmpRemains
-             -- итого PI (—верх запас) которые будем распредел€ть
-           --LEFT JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount) AS Amount, SUM (_tmpRemains_Partion.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion.Amount_real) AS Amount_real
+        FROM -- у ѕолучател€ - AmountResult
+             _tmpRemains
+             -- итого у ќ“ѕ–ј¬»“≈Ћя - PI (—верх запас) которые будем распредел€ть - здесь и парные и обычные
              INNER JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount) AS Amount, SUM (_tmpRemains_Partion.Amount_save) AS Amount_save, SUM (_tmpRemains_Partion.Amount_real) AS Amount_real
                          FROM _tmpRemains_Partion
                          GROUP BY _tmpRemains_Partion.GoodsId
                          ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = _tmpRemains.GoodsId
+
              -- PI (—верх запас) на этой аптеке, тогда перемещени€ с других аптек не будет, т.е. этот јвтозаказ не учитываем
              LEFT JOIN _tmpRemains_Partion ON _tmpRemains_Partion.UnitId  = _tmpRemains.UnitId
                                           AND _tmpRemains_Partion.GoodsId = _tmpRemains.GoodsId
+             -- если товар среди парных
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains.GoodsId
+
         WHERE _tmpRemains.AmountResult >= 1.0
-   --        AND tmpRemains_Partion_sum.GoodsId > 0)
- --        OR _tmpRemains.GoodsId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = 20392)
+          -- или товар среди парных
+          OR _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0
+
+ --        AND (tmpRemains_Partion_sum.GoodsId > 0
+ --         OR _tmpRemains.GoodsId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Goods() AND Object.ObjectCode = 20392))
        ;
 
 
 
-     -- 5. из каких аптек остатки PI "максимально" закрывают ѕќ“–≈ЅЌќ—“№
-     -- CREATE TEMP TABLE _tmpSumm_limit (UnitId_from Integer, UnitId_to Integer, Summ TFloat) ON COMMIT DROP;
-     --
+     -- 5. из каких аптек остатки PI (—верх запас) - "максимально" закрывают ѕќ“–≈ЅЌќ—“№
      INSERT INTO _tmpSumm_limit (UnitId_from, UnitId_to, Summ)
-        WITH
-        tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
-                                   , Object_ConditionsKeep.ValueData 
-                              FROM ObjectLink AS OL_Goods_ConditionsKeep
-                                   LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
-                              WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_calc.GoodsId FROM _tmpRemains_calc)
-                                AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
-                              )
+        WITH tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
+                                        , Object_ConditionsKeep.ValueData
+                                   FROM ObjectLink AS OL_Goods_ConditionsKeep
+                                        LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
+                                   WHERE OL_Goods_ConditionsKeep.ObjectId IN (SELECT DISTINCT _tmpRemains_calc.GoodsId FROM _tmpRemains_calc)
+                                     AND OL_Goods_ConditionsKeep.DescId   = zc_ObjectLink_Goods_ConditionsKeep()
+                                   )
         SELECT _tmpRemains_Partion.UnitId AS UnitId_from
              , _tmpRemains_calc.UnitId    AS UnitId_to
                -- если PI больше чем в ѕќ“–≈ЅЌќ—“№
              , SUM (CASE WHEN _tmpRemains_Partion.Amount >= _tmpRemains_calc.AmountResult
-                              -- тогда PI = ѕќ“–≈ЅЌќ—“№
+                              -- тогда в PI достаточно дл€ ѕќ“–≈ЅЌќ—“№
                               THEN _tmpRemains_calc.AmountResult
-                              -- иначе закрываем "частично" - т.е. сколько есть OVER
+                              -- иначе закрываем "частично" - т.е. сколько есть PI (—верх запас)
                               ELSE FLOOR (_tmpRemains_Partion.Amount / COALESCE (_tmpGoods_SUN.KoeffSUN, 1)) * COALESCE (_tmpGoods_SUN.KoeffSUN, 1)
                     END
                   * _tmpRemains_calc.Price
                    )
-        FROM -- ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и OVER
+        FROM -- ќстатки по которым есть ѕќ“–≈ЅЌќ—“№ и PI (—верх запас)
              _tmpRemains_calc
-             -- все остатки, OVER
+             -- все остатки, PI (—верх запас)
              INNER JOIN _tmpRemains_Partion ON _tmpRemains_Partion.GoodsId = _tmpRemains_calc.GoodsId
 
              -- товары дл€  ратность
@@ -1403,9 +1425,36 @@ BEGIN
      -- 6.1.1. распредел€ем-1 остатки PI (—верх запас) - по всем аптекам
      -- CREATE TEMP TABLE _tmpResult_Partion (DriverId Integer, UnitId_from Integer, UnitId_to Integer, GoodsId Integer, Amount TFloat, Summ TFloat, Amount_next TFloat, Summ_next TFloat, MovementId Integer, MovementItemId Integer) ON COMMIT DROP;
      --
-     -- курсор1 - все остатки, PI (—верх запас) + PI (—верх запас) без корректировки
+     -- курсор1 - все остатки ќ“ѕ–ј¬»“≈Ћя, PI (—верх запас) + остатки без корректировки
      OPEN curPartion FOR
-        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId, _tmpRemains_Partion.Amount, _tmpRemains_Partion.Amount_save, COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
+        SELECT _tmpRemains_Partion.UnitId AS UnitId_from, _tmpRemains_Partion.GoodsId
+               --
+             , CASE -- если у парного ост = 0, не отдаем
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <=0
+                         THEN 0
+                    -- если у парного ост < чем у "основного", мен€ем на меньшее
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount < _tmpRemains_Partion.Amount
+                         THEN _tmpRemains_Partion_PairSun.Amount
+                    -- инче берем ост "основного"
+                    ELSE _tmpRemains_Partion.Amount
+               END AS Amount
+
+               -- дл€ получени€ дробной части, нужен весь ост.
+             , CASE -- если у парного ост = 0, не отдаем
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount_save, 0) <=0
+                         THEN 0
+                    -- если у парного ост < чем у "основного", мен€ем на меньшее
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount_save < _tmpRemains_Partion.Amount_save
+                         THEN _tmpRemains_Partion_PairSun.Amount_save
+                    -- инче берем ост "основного"
+                    ELSE _tmpRemains_Partion.Amount_save
+               END AS Amount_save
+
+               --
+             , COALESCE (_tmpGoods_SUN.KoeffSUN, 0)
+               -- парный
+             , _tmpGoods_SUN_PairSun.GoodsId_PairSun
+
         FROM _tmpRemains_Partion
              -- начинаем с аптек, где расход может быть максимальным
              INNER JOIN (SELECT _tmpSumm_limit.UnitId_from, MAX (_tmpSumm_limit.Summ) AS Summ FROM _tmpSumm_limit
@@ -1415,18 +1464,39 @@ BEGIN
                         ) AS tmpSumm_limit ON tmpSumm_limit.UnitId_from = _tmpRemains_Partion.UnitId
              -- товары - дл€  ратность
              LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId = _tmpRemains_Partion.GoodsId
+             -- нашли - есть ли у товара парный
+             LEFT JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpRemains_Partion.GoodsId
+             LEFT JOIN _tmpRemains_Partion AS _tmpRemains_Partion_PairSun
+                                           ON _tmpRemains_Partion_PairSun.GoodsId = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                          AND _tmpRemains_Partion_PairSun.UnitId  = _tmpRemains_Partion.UnitId
+             -- товар есть среди парных
+             LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
+                       ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_Partion.GoodsId
+
+        WHERE -- !!!ќтключили парные!!!
+              _tmpGoods_SUN_PairSun_find.GoodsId_PairSun IS NULL
+
+          AND CASE -- если у парного ост = 0, не отдаем
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND COALESCE (_tmpRemains_Partion_PairSun.Amount, 0) <= 0
+                         THEN 0
+                    -- если у парного ост < чем у "основного", мен€ем на меньшее
+                    WHEN _tmpGoods_SUN_PairSun_find.GoodsId_PairSun > 0 AND _tmpRemains_Partion_PairSun.Amount < _tmpRemains_Partion.Amount
+                         THEN _tmpRemains_Partion_PairSun.Amount
+                    -- инче берем ост "основного"
+                    ELSE _tmpRemains_Partion.Amount
+               END > 0
         ORDER BY tmpSumm_limit.Summ DESC, _tmpRemains_Partion.UnitId, _tmpRemains_Partion.GoodsId
        ;
      -- начало цикла по курсору1
      LOOP
          -- данные по курсору1
-         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbKoeffSUN;
+         FETCH curPartion INTO vbUnitId_from, vbGoodsId, vbAmount, vbAmount_save, vbKoeffSUN, vbGoodsId_PairSun;
          -- если данные закончились, тогда выход
          IF NOT FOUND THEN EXIT; END IF;
 
-         -- курсор2. - ѕќ“–≈ЅЌќ—“№ ћ»Ќ”— сколько уже распределили дл€ vbGoodsId
+         -- курсор2. - дл€ ѕќЋ”„ј“≈Ћя - потребность ћ»Ќ”— сколько уже распределили дл€ vbGoodsId
          OPEN curResult FOR
-            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price
+            SELECT _tmpRemains_calc.UnitId AS UnitId_to, _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) AS AmountResult, _tmpRemains_calc.Price, COALESCE (_tmpRemains_calc_PairSun.Price, _tmpRemains_calc.Price) AS Price_PairSun
             FROM _tmpRemains_calc
                  -- сколько уже пришло после распределени€-1
                  LEFT JOIN (SELECT _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId, SUM (_tmpResult_Partion.Amount) AS Amount FROM _tmpResult_Partion GROUP BY _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
@@ -1447,6 +1517,11 @@ BEGIN
                                                 AND _tmpUnit_SunExclusion_MCS.isMCS_to    = TRUE
                                                 AND COALESCE (_tmpRemains_calc.MCS, 0)     = 0
 
+                 -- найдем цену дл€ пары
+                 LEFT JOIN _tmpRemains_calc AS _tmpRemains_calc_PairSun
+                                            ON _tmpRemains_calc_PairSun.UnitId  = _tmpRemains_calc.UnitId
+                                           AND _tmpRemains_calc_PairSun.GoodsId = vbGoodsId_PairSun
+
             WHERE _tmpRemains_calc.GoodsId = vbGoodsId
               AND _tmpRemains_calc.AmountResult - COALESCE (tmp.Amount, 0) > 0
               AND _tmpUnit_SunExclusion_MCS.UnitId_to IS NULL
@@ -1459,7 +1534,7 @@ BEGIN
          -- начало цикла по курсору2 - остаток сроковых - под него надо найти јвтозаказ
          LOOP
              -- данные по јвтозаказ
-             FETCH curResult INTO vbUnitId_to, vbAmountResult, vbPrice;
+             FETCH curResult INTO vbUnitId_to, vbAmountResult, vbPrice, vbPrice_PairSun;
              -- если данные закончились, или все кол-во найдено тогда выход
              IF NOT FOUND OR vbAmount = 0 THEN EXIT; END IF;
 
@@ -1479,20 +1554,23 @@ BEGIN
                           vbAmount:= vbAmount_calc;
                      END IF;
                  END IF;*/
+                 --
                  -- получилось в јвтозаказе больше чем в остатках, т.е. отдаем весь "—–ќ "
                  INSERT INTO _tmpResult_Partion (DriverId, UnitId_from, UnitId_to, GoodsId, Amount, Summ, Amount_next, Summ_next, MovementId, MovementItemId)
                     SELECT inDriverId
                          , vbUnitId_from
                          , vbUnitId_to
-                         , vbGoodsId
+                           -- может оказатьс€ что дл€ двух товаров
+                         , tmpGoods.GoodsId
                            -- с учетом кратности - vbKoeffSUN
                          , CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END
-                         , CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * vbPrice
+                         , CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END * tmpGoods.Price
                            --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
+                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0) AS tmpGoods
                     WHERE CASE WHEN vbKoeffSUN > 0 THEN FLOOR (vbAmount / vbKoeffSUN) * vbKoeffSUN ELSE vbAmount END > 0
                    ;
                  -- обнул€ем кол-во что бы больше не искать
@@ -1520,15 +1598,17 @@ BEGIN
                     SELECT inDriverId
                          , vbUnitId_from
                          , vbUnitId_to
-                         , vbGoodsId
+                           -- может оказатьс€ что дл€ двух товаров
+                         , tmpGoods.GoodsId
                            -- здесь уже кратность учтена
                          , vbAmountResult
-                         , vbAmountResult * vbPrice
+                         , vbAmountResult * tmpGoods.Price
                            --
                          , 0 AS Amount_next
                          , 0 AS Summ_next
                          , 0 AS MovementId
                          , 0 AS MovementItemId
+                    FROM (SELECT vbGoodsId AS GoodsId, vbPrice AS Price UNION SELECT vbGoodsId_PairSun AS GoodsId, vbPrice_PairSun AS Price WHERE vbGoodsId_PairSun > 0) AS tmpGoods
                     WHERE vbAmountResult > 0
                    ;
                  -- уменьшаем на кол-во которое нашли и продолжаем поиск
@@ -1554,7 +1634,7 @@ BEGIN
           )
     ;
 
-    
+
      -- –езультат
      RETURN QUERY
        SELECT Object_Unit.Id          AS UnitId
@@ -1636,7 +1716,7 @@ BEGIN
                        GROUP BY _tmpSumm_limit.UnitId_to
                       ) AS tmpSumm ON tmpSumm.UnitId_to = _tmpRemains_calc.UnitId
              -- итого сроковые + notSold которые будем распредел€ть
-             LEFT JOIN (SELECT _tmpRemains_Partion.GoodsId, SUM (_tmpRemains_Partion.Amount_sun) AS Amount_sun, SUM (_tmpRemains_Partion.Amount_notSold) AS Amount_notSold
+             LEFT JOIN (SELECT _tmpRemains_Partion.GoodsId, 0 AS Amount_sun, SUM (_tmpRemains_Partion.Amount) AS Amount_notSold
                         FROM _tmpRemains_Partion
                         GROUP BY _tmpRemains_Partion.GoodsId
                        ) AS tmpRemains_Partion_sum ON tmpRemains_Partion_sum.GoodsId = _tmpRemains_calc.GoodsId
@@ -1747,7 +1827,7 @@ $BODY$
 /*
 -- !!!удаленные отложенные чеки!!!
 SELECT Movement.*
-FROM Movement 
+FROM Movement
      INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                    ON MovementLinkObject_Unit.MovementId = Movement.Id
                                   AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
@@ -1755,7 +1835,7 @@ FROM Movement
      INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                   AND MovementItem.DescId = zc_MI_Master()
                                   and MovementItem.ObjectId = 40183 -- ƒипроспан шприц 1мл N1
-WHERE Movement.OperDate  >= '01.01.2019' 
+WHERE Movement.OperDate  >= '01.01.2019'
   AND Movement.DescId   = zc_Movement_Check()
   AND Movement.StatusId in (  zc_Enum_Status_Erased())
 */
@@ -1785,9 +1865,9 @@ WHERE Movement.OperDate  >= '01.01.2019'
      CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
 
      -- 3.1. все остатки, —–ќ 
-     CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, Amount_notSold TFloat) ON COMMIT DROP;
      -- 3.2. остатки, —–ќ  - дл€ распределени€
-     CREATE TEMP TABLE _tmpRemains_Partion (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemains_Partion (ContainerDescId Integer, UnitId Integer, GoodsId Integer, MCSValue TFloat, Amount_sale TFloat, Amount TFloat, Amount_save TFloat, Amount_real TFloat) ON COMMIT DROP;
 
 
      -- 4. ќстатки по которым есть јвтозаказ и срок
@@ -1807,5 +1887,5 @@ WHERE Movement.OperDate  >= '01.01.2019'
      -- 8. исключаем такие перемещени€
      CREATE TEMP TABLE _tmpUnit_SunExclusion (UnitId_from Integer, UnitId_to Integer, isMCS_to Boolean) ON COMMIT DROP;
 
- SELECT * FROM lpInsert_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '1 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
+ SELECT * FROM lpInsert_Movement_Send_RemainsSun_pi (inOperDate:= CURRENT_DATE + INTERVAL '4 DAY', inDriverId:= (SELECT MAX (OL.ChildObjectId) FROM ObjectLink AS OL WHERE OL.DescId = zc_ObjectLink_Unit_Driver()), inStep:= 1, inUserId:= 3) -- WHERE Amount_calc < AmountResult_summ -- WHERE AmountSun_summ_save <> AmountSun_summ
 */
