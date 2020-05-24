@@ -1,25 +1,25 @@
 inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 477
-  ClientWidth = 1221
-  ExplicitWidth = 1237
+  ClientWidth = 1434
+  ExplicitWidth = 1450
   ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1221
+    Width = 1434
     Height = 451
-    ExplicitWidth = 1221
+    ExplicitWidth = 1434
     ExplicitHeight = 451
     ClientRectBottom = 451
-    ClientRectRight = 1221
+    ClientRectRight = 1434
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1221
+      ExplicitWidth = 1434
       ExplicitHeight = 451
       inherited cxGrid: TcxGrid
-        Width = 1221
+        Width = 1434
         Height = 451
-        ExplicitWidth = 1221
+        ExplicitWidth = 1434
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
@@ -325,6 +325,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object isSUN_v2_LockSale: TcxGridDBColumn
+            Caption = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053' (V.2)'
+            DataBinding.FieldName = 'isSUN_v2_LockSale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053' (V.2)'
+            Options.Editing = False
+            Width = 70
+          end
           object isSUN_NotSold: TcxGridDBColumn
             Caption = #1054#1090#1082#1083'. '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' (V.1)'
             DataBinding.FieldName = 'isSUN_NotSold'
@@ -349,6 +358,39 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1055#1086' '#1082#1072#1082#1080#1084' '#1076#1085#1103#1084' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053'2-'#1087#1077#1088#1077#1084#1077#1097'.'#1080#1079#1083#1080#1096#1082#1086#1074
+            Options.Editing = False
+            Width = 85
+          end
+          object SUN_v1_Lock: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'-1'
+            DataBinding.FieldName = 'SUN_v1_Lock'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'-1 '#1076#1083#1103' 1)'#1087#1086#1076#1082#1083#1102#1095#1072#1090#1100' '#1095#1077#1082' "'#1085#1077' '#1076#1083#1103' '#1053#1058#1047'" 2)'#1090#1086#1074#1072#1088#1099' "'#1079#1072#1082#1088#1099 +
+              #1090' '#1082#1086#1076'" 3)'#1090#1086#1074#1072#1088#1099' "'#1091#1073#1080#1090' '#1082#1086#1076
+            Options.Editing = False
+            Width = 85
+          end
+          object SUN_v2_Lock: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'-2'
+            DataBinding.FieldName = 'SUN_v2_Lock'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'-2 '#1076#1083#1103' 1)'#1087#1086#1076#1082#1083#1102#1095#1072#1090#1100' '#1095#1077#1082' "'#1085#1077' '#1076#1083#1103' '#1053#1058#1047'" 2)'#1090#1086#1074#1072#1088#1099' "'#1079#1072#1082#1088#1099 +
+              #1090' '#1082#1086#1076'" 3)'#1090#1086#1074#1072#1088#1099' "'#1091#1073#1080#1090' '#1082#1086#1076
+            Options.Editing = False
+            Width = 85
+          end
+          object SUN_v4_Lock: TcxGridDBColumn
+            Caption = #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'2-'#1055#1048
+            DataBinding.FieldName = 'SUN_v4_Lock'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = 
+              #1047#1072#1087#1088#1077#1090' '#1074' '#1057#1059#1053'-2-'#1055#1048' '#1076#1083#1103' 1)'#1087#1086#1076#1082#1083#1102#1095#1072#1090#1100' '#1095#1077#1082' "'#1085#1077' '#1076#1083#1103' '#1053#1058#1047'" 2)'#1090#1086#1074#1072#1088#1099' "'#1079#1072 +
+              #1082#1088#1099#1090' '#1082#1086#1076'" 3)'#1090#1086#1074#1072#1088#1099' "'#1091#1073#1080#1090' '#1082#1086#1076
             Options.Editing = False
             Width = 85
           end
@@ -744,7 +786,125 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   inherited ActionList: TActionList
-    object ExecuteDialogUnit_HT_SUN: TExecuteDialog [0]
+    object ExecuteDialog_SUN_Lock: TExecuteDialog [0]
+      Category = 'SUN_Lock'
+      MoveParams = <>
+      Caption = 'actUnit_SUN_LockDialog'
+      FormName = 'TUnit_SUN_LockDialogForm'
+      FormNameParam.Value = 'TUnit_SUN_LockDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inv1_Lock'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inv1_Lock'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inv2_Lock'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inv2_Lock'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inv4_Lock'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inv4_Lock'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisv1'
+          Value = 'true'
+          Component = FormParams
+          ComponentItem = 'inisv1'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisv2'
+          Value = 'true'
+          Component = FormParams
+          ComponentItem = 'inisv2'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inisv4'
+          Value = 'true'
+          Component = FormParams
+          ComponentItem = 'inisv4'
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SUN_v2_LockSale_No: TdsdExecStoredProc [1]
+      Category = 'SUN_v2_LockSale'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SUN_v2_LockSale_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SUN_v2_LockSale_No
+        end>
+      Caption = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1053#1077#1090
+      Hint = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1053#1077#1090
+    end
+    object macUpdate_SUN_Lock_list: TMultiAction [2]
+      Category = 'SUN_Lock'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_SUN_Lock
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
+      ImageIndex = 42
+    end
+    object actUpdate_SUN_Lock: TdsdExecStoredProc [3]
+      Category = 'SUN_Lock'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SUN_Lock
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SUN_Lock
+        end>
+      Caption = 'actUpdate_SUN_Lock'
+    end
+    object macUpdate_SUN_Lock: TMultiAction [4]
+      Category = 'SUN_Lock'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialog_SUN_Lock
+        end
+        item
+          Action = macUpdate_SUN_Lock_list
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
+      ImageIndex = 42
+    end
+    object ExecuteDialogUnit_HT_SUN: TExecuteDialog [5]
       Category = 'HT_Sun'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -808,7 +968,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object ExecuteDialogUnit_LimitSun: TExecuteDialog [1]
+    object actUpdate_SUN_v2_LockSale_Yes: TdsdExecStoredProc [6]
+      Category = 'SUN_v2_LockSale'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SUN_v2_LockSale_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SUN_v2_LockSale_Yes
+        end>
+      Caption = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1044#1072
+      Hint = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1044#1072
+    end
+    object ExecuteDialogUnit_LimitSun: TExecuteDialog [7]
       Category = 'LimitSUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -832,7 +1004,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macUpdateUnit_LimitSUN_list: TMultiAction [2]
+    object macUpdate_SUN_v2_LockSale_No: TMultiAction [8]
+      Category = 'SUN_v2_LockSale'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_SUN_v2_LockSale_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1053#1077#1090
+      ImageIndex = 58
+    end
+    object macUpdateUnit_LimitSUN_list: TMultiAction [9]
       Category = 'LimitSUN'
       MoveParams = <>
       ActionList = <
@@ -844,7 +1028,19 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       ImageIndex = 43
     end
-    object actUpdate_Unit_LimitSUN: TdsdDataSetRefresh [4]
+    object macUpdate_SUN_v2_LockSale_Yes: TMultiAction [10]
+      Category = 'SUN_v2_LockSale'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_SUN_v2_LockSale_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1044#1072
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1044#1072
+      ImageIndex = 52
+    end
+    object actUpdate_Unit_LimitSUN: TdsdDataSetRefresh [12]
       Category = 'LimitSUN'
       MoveParams = <>
       StoredProc = spUpdate_Unit_LimitSUN_N
@@ -855,9 +1051,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       ImageIndex = 26
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [5]
+    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [13]
       Category = 'HT_Sun'
       MoveParams = <>
       StoredProc = spUpdate_HT_SUN
@@ -871,7 +1068,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macUpdateUnit_LimitSUN: TMultiAction [6]
+    object macUpdateUnit_LimitSUN: TMultiAction [14]
       Category = 'LimitSUN'
       MoveParams = <>
       ActionList = <
@@ -888,7 +1085,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       ImageIndex = 43
     end
-    object macUpdateUnit_HT_Sun_list: TMultiAction [8]
+    object macUpdateUnit_HT_Sun_list: TMultiAction [16]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -900,7 +1097,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 42
     end
-    object macUpdateUnit_T_SUN_list: TMultiAction [9]
+    object macUpdateUnit_T_SUN_list: TMultiAction [17]
       Category = 'T_SUN'
       MoveParams = <>
       ActionList = <
@@ -912,7 +1109,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1057#1059#1053' V2'
       ImageIndex = 43
     end
-    object macUpdateUnit_HT_Sun: TMultiAction [10]
+    object macUpdateUnit_HT_Sun: TMultiAction [18]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -929,7 +1126,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 67
     end
-    object macUpdate_ListDaySUN_pi: TMultiAction [11]
+    object macUpdate_ListDaySUN_pi: TMultiAction [19]
       Category = 'ListDaySUN'
       MoveParams = <>
       AfterAction = actRefresh
@@ -944,7 +1141,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       ImageIndex = 42
     end
-    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [12]
+    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [20]
       Category = 'ListDaySUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -2171,7 +2368,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN'
+          ItemName = 'bbUpdate_SUN_v2_LockSale_Yes'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SUN_v2_LockSale_No'
         end
         item
           Visible = True
@@ -2179,59 +2380,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v2'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_in'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_out'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_NotSold'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v2_in'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v2_out'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v3'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v3_in'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v3_out'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v4_in'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_Unit_isSUN_v4_out'
+          ItemName = 'dxBarSubItem2'
         end
         item
           Visible = True
@@ -2304,6 +2453,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbUpdateisTopNo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SUN_Lock'
         end
         item
           Visible = True
@@ -2478,6 +2635,113 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object bbUpdateUnit_LimitSUN: TdxBarButton
       Action = macUpdateUnit_LimitSUN
       Category = 0
+    end
+    object bbUpdate_SUN_v2_LockSale_Yes: TdxBarButton
+      Action = macUpdate_SUN_v2_LockSale_Yes
+      Category = 0
+    end
+    object bbUpdate_SUN_v2_LockSale_No: TdxBarButton
+      Action = macUpdate_SUN_v2_LockSale_No
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarSubItem2: TdxBarSubItem
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'...'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_in'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_out'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_NotSold'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2_in'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2_out'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_in'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_out'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator2'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4_in'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4_out'
+        end>
+    end
+    object dxBarSeparator1: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarLargeButton1: TdxBarLargeButton
+      Caption = 'New Button'
+      Category = 0
+      Hint = 'New Button'
+      Visible = ivAlways
+    end
+    object dxBarSeparator2: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object dxBarSeparator3: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdate_SUN_Lock: TdxBarButton
+      Action = macUpdate_SUN_Lock
+      Category = 0
+      ImageIndex = 13
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3410,6 +3674,48 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv1'
+        Value = 'true'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv2'
+        Value = 'true'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv4'
+        Value = 'true'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSUN_v1_Lock'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSUN_v2_Lock'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSUN_v4_Lock'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 29
     Top = 146
@@ -3861,5 +4167,140 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 832
     Top = 115
+  end
+  object spUpdate_SUN_v2_LockSale_Yes: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SUN_v2_LockSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSUN_v2_LockSale'
+        Value = 'FALSE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSUN_v2_LockSale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN_v2_LockSale'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 360
+    Top = 179
+  end
+  object spUpdate_SUN_v2_LockSale_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SUN_v2_LockSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSUN_v2_LockSale'
+        Value = 'TRUE'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSUN_v2_LockSale'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSUN_v2_LockSale'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 352
+    Top = 227
+  end
+  object spUpdate_SUN_Lock: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_SUN_Lock'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv1'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inisv1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv2'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inisv2'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisv4'
+        Value = 'false'
+        Component = FormParams
+        ComponentItem = 'inisv4'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inv1_Lock'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inv1_Lock'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inV2_Lock'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inV2_Lock'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inV4_Lock'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inV4_Lock'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1240
+    Top = 219
   end
 end

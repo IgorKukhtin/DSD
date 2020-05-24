@@ -550,6 +550,15 @@
         Options.Editing = False
         Width = 61
       end
+      object isWMS: TcxGridDBColumn
+        Caption = #1054#1090#1087'. '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        DataBinding.FieldName = 'isWMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        Options.Editing = False
+        Width = 98
+      end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
@@ -798,8 +807,6 @@
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -56
-    ExplicitTop = 652
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -1343,6 +1350,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isWMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1579,6 +1594,10 @@
     end
     object bbUpdateDefaultOut: TdxBarButton
       Action = actUpdateDefaultOut
+      Category = 0
+    end
+    object bbUpdate_isWMS: TdxBarButton
+      Action = actUpdate_isWMS
       Category = 0
     end
   end
@@ -2641,6 +2660,22 @@
         end>
       isShowModal = False
     end
+    object actUpdate_isWMS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isWMS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isWMS
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 52
+    end
     object actUpdateVat: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -3310,5 +3345,39 @@
     PackSize = 1
     Left = 320
     Top = 235
+  end
+  object spUpdate_isWMS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Contract_isWMS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 184
   end
 end

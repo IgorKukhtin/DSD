@@ -187,6 +187,26 @@ type
     macUpdateUnit_LimitSUN: TMultiAction;
     bbUpdateUnit_LimitSUN: TdxBarButton;
     LimitSUN_N: TcxGridDBColumn;
+    spUpdate_SUN_v2_LockSale_Yes: TdsdStoredProc;
+    spUpdate_SUN_v2_LockSale_No: TdsdStoredProc;
+    actUpdate_SUN_v2_LockSale_No: TdsdExecStoredProc;
+    actUpdate_SUN_v2_LockSale_Yes: TdsdExecStoredProc;
+    macUpdate_SUN_v2_LockSale_No: TMultiAction;
+    macUpdate_SUN_v2_LockSale_Yes: TMultiAction;
+    bbUpdate_SUN_v2_LockSale_Yes: TdxBarButton;
+    bbUpdate_SUN_v2_LockSale_No: TdxBarButton;
+    spUpdate_SUN_Lock: TdsdStoredProc;
+    actUpdate_SUN_Lock: TdsdExecStoredProc;
+    ExecuteDialog_SUN_Lock: TExecuteDialog;
+    macUpdate_SUN_Lock: TMultiAction;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarSubItem2: TdxBarSubItem;
+    dxBarSeparator1: TdxBarSeparator;
+    dxBarLargeButton1: TdxBarLargeButton;
+    dxBarSeparator2: TdxBarSeparator;
+    dxBarSeparator3: TdxBarSeparator;
+    bbUpdate_SUN_Lock: TdxBarButton;
+    macUpdate_SUN_Lock_list: TMultiAction;
   private
     { Private declarations }
   public

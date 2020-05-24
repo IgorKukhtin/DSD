@@ -988,6 +988,9 @@ procedure TLoadFormTest.LoadOrderTypeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderTypeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderTypeForm');
+
+    TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderType_EditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderType_EditForm');
 end;
 
 procedure TLoadFormTest.LoadSendDebtFormTest;
@@ -1035,6 +1038,10 @@ end;
 
 procedure TLoadFormTest.LoadServiceFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovement_Period_PaidKind_BranchDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovement_Period_PaidKind_BranchDialogForm');
+  exit;
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDatePeriodDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDatePeriodDialogForm');
@@ -2188,13 +2195,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
-  {}
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
 
@@ -2259,7 +2266,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashDialogForm');
   exit;
-
+  }
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccount_Cash_OlapDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccount_Cash_OlapDialogForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Cash_OlapForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Cash_OlapDialogForm'));

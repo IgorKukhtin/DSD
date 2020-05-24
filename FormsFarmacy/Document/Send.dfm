@@ -722,7 +722,6 @@ inherited SendForm: TSendForm
       Top = 59
       ExplicitTop = 59
       ExplicitWidth = 181
-      ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
@@ -1918,7 +1917,7 @@ inherited SendForm: TSendForm
       item
         Name = 'TotalSumm'
         Value = Null
-        DataType = ftString
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     Left = 344

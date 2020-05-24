@@ -3747,6 +3747,25 @@ inherited MainCashForm2: TMainCashForm2
       GuiParams = <>
       isShowModal = True
     end
+    object actSendCashJournalVip: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
+      Hint = #1046#1091#1088#1085#1072#1083' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
+      FormName = 'TSendCashJournalVIPForm'
+      FormNameParam.Value = 'TSendCashJournalVIPForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isSUNAll'
+          Value = True
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object dsdDBViewAddOnMain: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -5596,6 +5615,9 @@ inherited MainCashForm2: TMainCashForm2
     end
     object N32: TMenuItem
       Action = actSendCashJournalSun
+    end
+    object VIP5: TMenuItem
+      Action = actSendCashJournalVip
     end
     object pmTechnicalRediscount: TMenuItem
       Action = actTechnicalRediscount

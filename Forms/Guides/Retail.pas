@@ -81,6 +81,9 @@ type
     spUpdate_IsOrderMin: TdsdStoredProc;
     actUpdate_IsOrderMin: TdsdExecStoredProc;
     bbUpdate_IsOrderMin: TdxBarButton;
+    spUpdate_isWMS: TdsdStoredProc;
+    actUpdate_isWMS: TdsdExecStoredProc;
+    bbUpdate_isWMS: TdxBarButton;
   private
     { Private declarations }
   public

@@ -471,6 +471,8 @@ type
     actUpdateProgram: TAction;
     N41: TMenuItem;
     actOpenFormPUSH: TdsdOpenForm;
+    actSendCashJournalVip: TdsdOpenForm;
+    VIP5: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);

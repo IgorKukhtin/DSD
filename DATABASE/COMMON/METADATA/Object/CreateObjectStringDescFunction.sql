@@ -1040,6 +1040,18 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_ListDaySUN_pi() RETURNS Integer 
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Unit_ListDaySUN_pi', zc_object_Unit(), 'По каким дням недели формируется СУН2-перемещ.излишков' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_ListDaySUN_pi');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_SUN_v1_Lock() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v1_Lock'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_SUN_v1_Lock', zc_object_Unit(), 'запрет в СУН-1 для 1)подключать чек "не для НТЗ" 2)товары "закрыт код" 3)товары "убит код"' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v1_Lock');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_SUN_v2_Lock() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v2_Lock'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_SUN_v2_Lock', zc_object_Unit(), 'запрет в СУН-2 для 1)подключать чек "не для НТЗ" 2)товары "закрыт код" 3)товары "убит код"' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v2_Lock');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Unit_SUN_v4_Lock() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v4_Lock'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Unit_SUN_v4_Lock', zc_object_Unit(), 'запрет в СУН-2-пи для 1)подключать чек "не для НТЗ" 2)товары "закрыт код" 3)товары "убит код"' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Unit_SUN_v4_Lock');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Buyer_Name() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Buyer_Name'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -1133,6 +1145,9 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 22.05.20         * zc_ObjectString_Unit_SUN_v4_Lock
+                    zc_ObjectString_Unit_SUN_v2_Lock
+                    zc_ObjectString_Unit_SUN_v1_Lock
  24.04.20                                                                                                         * zc_ObjectString_Goods_ActiveSubstance, zc_ObjectString_Goods_AnalogATC
  21.04.20         * zc_ObjectString_Unit_ListDaySUN_pi
  17.04.20                                                                                                         * zc_ObjectString_Hardware_ ...

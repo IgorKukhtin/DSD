@@ -62,7 +62,7 @@ type
     GoodsChoiceForm: TOpenChoiceForm;
     actShowAll: TBooleanStoredProcAction;
     bbactShowAll: TdxBarButton;
-    bb: TdxBarControlContainerItem;
+    bbh: TdxBarControlContainerItem;
     bb1: TdxBarControlContainerItem;
     ceUnit: TcxButtonEdit;
     dsdUnitGuides: TdsdGuides;
@@ -89,6 +89,13 @@ type
     GoodsTagName: TcxGridDBColumn;
     GoodsGroupAnalystName: TcxGridDBColumn;
     MeasureName: TcxGridDBColumn;
+    spUpdate_Koeff: TdsdStoredProc;
+    ExecuteDialogKoeff: TExecuteDialog;
+    actUpdate_Koeff: TdsdDataSetRefresh;
+    macUpdate_Koeff_list: TMultiAction;
+    macUpdate_Koeff: TMultiAction;
+    FormParams: TdsdFormParams;
+    bbUpdate_Koeff: TdxBarButton;
 
   private
     { Private declarations }

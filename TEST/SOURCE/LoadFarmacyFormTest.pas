@@ -867,7 +867,11 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');
+   exit;
+
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WillNotOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WillNotOrderForm');
    exit;
@@ -1622,6 +1626,9 @@ end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_SUN_LockDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_SUN_LockDialogForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_LimitSUN_EditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_LimitSUN_EditForm');
 
@@ -2319,11 +2326,18 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalSunForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalSunForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalVIPForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalVIPForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerVIPJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendMenegerVIPJournalForm');
+
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');

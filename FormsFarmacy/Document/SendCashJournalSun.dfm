@@ -1,11 +1,15 @@
 inherited SendCashJournalSunForm: TSendCashJournalSunForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1057#1059#1053'>'
   AddOnFormData.ExecuteDialogAction = nil
+  ExplicitWidth = 857
+  ExplicitHeight = 574
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     TabOrder = 1
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 841
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Content = nil
@@ -60,6 +64,24 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         Value = Null
         Component = FormParams
         ComponentItem = 'isSUNAll'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVIP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVIPAll'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'isVIPAll'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -118,6 +140,23 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
         Name = 'isSUNAll'
         Value = True
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 'NULL'
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVIP'
+        Value = 'False'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVIPAll'
+        Value = 'False'
         MultiSelectSeparator = ','
       end>
   end

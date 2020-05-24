@@ -52,6 +52,9 @@ type
     ContractChildGuides: TdsdGuides;
     ceBonusValue: TcxCurrencyEdit;
     cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

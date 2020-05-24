@@ -2,7 +2,8 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+--DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ProfitLossService (Integer, TVarChar, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ProfitLossService(
     IN inUnitId                   Integer   , -- Подразделение
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
     IN inBonusKindId              Integer   , -- Виды бонусов
+    IN inBranchId                 Integer   , -- филиал
     IN inIsLoad                   Boolean   , -- Сформирован автоматически (по отчету)
     IN inUserId                   Integer     -- Пользователь
 )
@@ -93,7 +95,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
      -- сохранили связь с <Виды бонусов>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BonusKind(), vbMovementItemId, inBonusKindId);
-     
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), vbMovementItemId, inBranchId);
+
      IF vbIsInsert = TRUE
      THEN
          -- сохранили свойство <сформирован автоматически да/нет>
@@ -128,6 +132,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.20         *
  18.02.15         * add ContractMaster, ContractChild
  10.05.14                                        * add lpInsert_MovementItemProtocol
  08.05.14                                        * set lp

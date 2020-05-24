@@ -685,6 +685,8 @@ type
     miUnitForOrderInternalPromo: TMenuItem;
     actSearchRemainsVIP: TdsdOpenStaticForm;
     actSearchRemainsVIP1: TMenuItem;
+    actSendMenegerVIPJournal: TdsdOpenForm;
+    VIP1: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

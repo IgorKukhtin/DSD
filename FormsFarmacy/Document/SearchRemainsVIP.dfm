@@ -418,7 +418,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
           Width = 260
         end
         object cxGridDBTableViewSelectedchAmount: TcxGridDBColumn
-          Caption = #1054#1089#1090#1072#1090#1086#1082
+          Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
           DataBinding.FieldName = 'Amount'
           PropertiesClassName = 'TcxCurrencyEditProperties'
           Properties.DecimalPlaces = 3
@@ -883,7 +883,103 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     ColumnEnterList = <>
     SummaryItemList = <>
     PropertiesCellList = <>
-    Left = 464
+    Left = 632
     Top = 320
+  end
+  object UnitCDS: TClientDataSet
+    Active = True
+    Aggregates = <>
+    FieldDefs = <
+      item
+        Name = 'UnitId'
+        DataType = ftInteger
+      end
+      item
+        Name = 'MovementId'
+        DataType = ftInteger
+      end>
+    IndexDefs = <>
+    IndexFieldNames = 'UnitId'
+    Params = <>
+    StoreDefs = True
+    Left = 248
+    Top = 344
+    Data = {
+      3C0000009619E0BD0100000018000000020000000000030000003C0006556E69
+      74496404000100000000000A4D6F76656D656E74496404000100000000000000}
+    object UnitCDSUnitId: TIntegerField
+      FieldName = 'UnitId'
+    end
+    object UnitCDSMovementId: TIntegerField
+      FieldName = 'MovementId'
+    end
+  end
+  object gpInsertUpdate_SendVIP: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_SendVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = ''
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisUrgently'
+        Value = Null
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 312
+  end
+  object gpInsertUpdate_MI_SendVIP: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_SendVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = ''
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = ''
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 400
+    Top = 376
   end
 end

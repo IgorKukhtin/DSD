@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
+    IN inisVip         Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -301,6 +303,7 @@ BEGIN
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE OR inisVip = FALSE)
 /*         AND (vbIsSUN_over = TRUE
            OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE
            OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
@@ -312,7 +315,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -339,4 +342,4 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inisVip := FALSE,  inSession:= '2')
