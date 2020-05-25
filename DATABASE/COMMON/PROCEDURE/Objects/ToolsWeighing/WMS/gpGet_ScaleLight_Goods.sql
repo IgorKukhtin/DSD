@@ -1,69 +1,87 @@
 -- Function: gpGet_ScaleLight_Goods()
 
 DROP FUNCTION IF EXISTS gpGet_Scale_GoodsLight (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_ScaleLight_Goods (Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_ScaleLight_Goods (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_ScaleLight_Goods (Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_ScaleLight_Goods(
     IN inGoodsId     Integer    , --
     IN inGoodsKindId Integer    ,
+    IN inIs_test     Boolean     , --
     IN inSession     TVarChar     -- сессия пользователя
 )
-RETURNS TABLE (GoodsId             Integer
-             , GoodsCode           Integer
-             , GoodsName           TVarChar
-             , GoodsKindId         Integer
-             , GoodsKindCode       Integer
-             , GoodsKindName       TVarChar
-             , MeasureId           Integer
-             , MeasureCode         Integer
-             , MeasureName         TVarChar
-             
-             , Count_box           Integer  -- сколько линий для ящиков - 1,2 или 3
-             , GoodsTypeKindId_Sh  Integer  -- Id - есть ли ШТ.  - ШТУКИ
-             , GoodsTypeKindId_Nom Integer  -- Id - есть ли НОМ. - НОМИНАЛ
-             , GoodsTypeKindId_Ves Integer  -- Id - есть ли ВЕС  - ВЕС
+RETURNS TABLE (GoodsId               Integer
+             , GoodsCode             Integer
+             , GoodsName             TVarChar
+             , GoodsKindId           Integer
+             , GoodsKindCode         Integer
+             , GoodsKindName         TVarChar
 
-             , WmsCode_Sh          TVarChar -- Код ВМС - ШТ.
-             , WmsCode_Nom         TVarChar -- Код ВМС - НОМ.
-             , WmsCode_Ves         TVarChar -- Код ВМС - ВЕС
-             , WeightMin           TFloat   -- минимальный вес 1шт.
-             , WeightMax           TFloat   -- максимальный вес 1шт.
+             , GoodsId_sh            Integer
+             , GoodsCode_sh          Integer
+             , GoodsName_sh          TVarChar
+             , GoodsKindId_sh        Integer
+             , GoodsKindCode_sh      Integer
+             , GoodsKindName_sh      TVarChar
 
-             , GoodsTypeKindId_1   Integer  -- Признак - 1-ая линия
-          -- , BarCodeBoxId_1      Integer  --
-          -- , BoxCode_1           Integer  --
-          -- , BoxBarCode_1        TVarChar --
-          -- , WeightOnBoxTotal_1  TFloat   --
-          -- , CountOnBoxTotal_1   TFloat   --
-             , BoxId_1             Integer  --
-             , BoxName_1           TVarChar --
-             , BoxWeight_1         TFloat   -- Вес самого ящика
-             , WeightOnBox_1       TFloat   -- вложенность - Вес
-             , CountOnBox_1        TFloat   -- Вложенность - шт (информативно?)
+             , MeasureId             Integer
+             , MeasureCode           Integer
+             , MeasureName           TVarChar
 
-             , GoodsTypeKindId_2   Integer  -- Признак - 2-ая линия
-          -- , BarCodeBoxId_2      Integer  --
-          -- , BoxCode_2           Integer  --
-          -- , BoxBarCode_2        TVarChar --
-          -- , WeightOnBoxTotal_2  TFloat   --
-          -- , CountOnBoxTotal_2   TFloat   --
-             , BoxId_2             Integer  --
-             , BoxName_2           TVarChar --
-             , BoxWeight_2         TFloat   -- Вес самого ящика
-             , WeightOnBox_2       TFloat   -- вложенность - Вес
-             , CountOnBox_2        TFloat   -- Вложенность - шт (информативно?)
+             , Count_box             Integer  -- сколько линий для ящиков - 1,2 или 3
+             , GoodsTypeKindId_Sh    Integer  -- Id - есть ли ШТ.  - ШТУКИ
+             , GoodsTypeKindId_Nom   Integer  -- Id - есть ли НОМ. - НОМИНАЛ
+             , GoodsTypeKindId_Ves   Integer  -- Id - есть ли ВЕС  - ВЕС
 
-             , GoodsTypeKindId_3   Integer  -- Признак - 3-ья линия
-          -- , BarCodeBoxId_3      Integer  --
-          -- , BoxCode_3           Integer  --
-          -- , BoxBarCode_3        TVarChar --
-          -- , WeightOnBoxTotal_3  TFloat   --
-          -- , CountOnBoxTotal_2   TFloat   --
-             , BoxId_3             Integer  --
-             , BoxName_3           TVarChar --
-             , BoxWeight_3         TFloat   -- Вес самого ящика
-             , WeightOnBox_3       TFloat   -- вложенность - Вес
-             , CountOnBox_3        TFloat   -- Вложенность - шт (информативно?)
+             , WmsCode_Sh            TVarChar -- Код ВМС - ШТ.
+             , WmsCode_Nom           TVarChar -- Код ВМС - НОМ.
+             , WmsCode_Ves           TVarChar -- Код ВМС - ВЕС
+
+             , WeightMin             TFloat   -- минимальный вес 1шт.  - !!!временно
+             , WeightMax             TFloat   -- максимальный вес 1шт. - !!!временно
+
+             , WeightMin_Sh          TFloat   -- минимальный вес 1шт.
+             , WeightMin_Nom         TFloat   --
+             , WeightMin_Ves         TFloat   --
+             , WeightMax_Sh          TFloat   -- максимальный вес 1шт.
+             , WeightMax_Nom         TFloat   --
+             , WeightMax_Ves         TFloat   --
+
+             , GoodsTypeKindId_1     Integer  -- Признак - 1-ая линия
+          -- , BarCodeBoxId_1        Integer  --
+          -- , BoxCode_1             Integer  --
+          -- , BoxBarCode_1          TVarChar --
+          -- , WeightOnBoxTotal_1    TFloat   --
+          -- , CountOnBoxTotal_1     TFloat   --
+             , BoxId_1               Integer  --
+             , BoxName_1             TVarChar --
+             , BoxWeight_1           TFloat   -- Вес самого ящика
+             , WeightOnBox_1         TFloat   -- вложенность - по Весу
+             , CountOnBox_1          TFloat   -- Вложенность - шт (НЕ информативно! - если введено, наполнения ящика по этому значению)
+
+             , GoodsTypeKindId_2     Integer  -- Признак - 2-ая линия
+          -- , BarCodeBoxId_2        Integer  --
+          -- , BoxCode_2             Integer  --
+          -- , BoxBarCode_2          TVarChar --
+          -- , WeightOnBoxTotal_2    TFloat   --
+          -- , CountOnBoxTotal_2     TFloat   --
+             , BoxId_2               Integer  --
+             , BoxName_2             TVarChar --
+             , BoxWeight_2           TFloat   -- Вес самого ящика
+             , WeightOnBox_2         TFloat   -- вложенность - по Весу
+             , CountOnBox_2          TFloat   -- Вложенность - шт (НЕ информативно! - если введено, наполнения ящика по этому значению)
+
+             , GoodsTypeKindId_3     Integer  -- Признак - 3-ья линия
+          -- , BarCodeBoxId_3        Integer  --
+          -- , BoxCode_3             Integer  --
+          -- , BoxBarCode_3          TVarChar --
+          -- , WeightOnBoxTotal_3    TFloat   --
+          -- , CountOnBoxTotal_2     TFloat   --
+             , BoxId_3               Integer  --
+             , BoxName_3             TVarChar --
+             , BoxWeight_3           TFloat   -- Вес самого ящика
+             , WeightOnBox_3         TFloat   -- вложенность - по Весу
+             , CountOnBox_3          TFloat   -- Вложенность - шт (НЕ информативно! - если введено, наполнения ящика по этому значению)
               )
 AS
 $BODY$
@@ -75,16 +93,95 @@ BEGIN
 
     --
     RETURN QUERY
-      WITH tmpRes AS (SELECT Object_Goods.Id             AS GoodsId
-                           , Object_Goods.ObjectCode     AS GoodsCode
-                           , Object_Goods.ValueData      AS GoodsName
-                           , Object_GoodsKind.Id         AS GoodsKindId
-                           , Object_GoodsKind.ObjectCode AS GoodsKindCode
-                           , Object_GoodsKind.ValueData  AS GoodsKindName
-                           , Object_Measure.Id           AS MeasureId
-                           , Object_Measure.ObjectCode   AS MeasureCode
-                           , Object_Measure.ValueData    AS MeasureName
-                
+      WITH -- поиск замены кода - на категорию "Штучный"
+           tmpObject_sh AS (SELECT OL_Goods.ObjectId                    AS GoodsByGoodsKindId
+                                 , OL_Goods.ChildObjectId               AS GoodsId
+                                 , OL_GoodsKind.ChildObjectId           AS GoodsKindId
+                                   -- категория "Штучный"
+                                 , OL_Goods_find.ObjectId               AS GoodsByGoodsKindId_sh
+                                   -- Товар + Вид из категории "Штучный"
+                                 , Object_Goods_Sh.Id                   AS GoodsId_sh
+                                 , Object_Goods_Sh.ObjectCode           AS GoodsCode_sh
+                                 , Object_Goods_Sh.ValueData            AS GoodsName_sh
+                                 , Object_GoodsKind_Sh.Id               AS GoodsKindId_sh
+                                 , Object_GoodsKind_Sh.ObjectCode       AS GoodsKindCode_sh
+                                 , Object_GoodsKind_Sh.ValueData        AS GoodsKindName_sh
+                                   -- св-ва
+                                 , ObjectFloat_WmsCode_Sh.ValueData     AS WmsCode_sh
+                                 , ObjectFloat_CountOnBox_Sh.ValueData  AS CountOnBox_sh
+                                 , ObjectFloat_WeightOnBox_Sh.ValueData AS WeightOnBox_sh
+
+                            FROM ObjectLink AS OL_Goods
+                                 INNER JOIN ObjectLink AS OL_GoodsKind
+                                                       ON OL_GoodsKind.ObjectId      = OL_Goods.ObjectId
+                                                      AND OL_GoodsKind.ChildObjectId = inGoodsKindId
+                                                      AND OL_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                 -- замена кода - на категорию "Штучный"
+                                 INNER JOIN ObjectLink AS OL_Goods_Sh
+                                                       ON OL_Goods_Sh.ObjectId = OL_Goods.ObjectId
+                                                      AND OL_Goods_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_Goods_Sh()
+                                 INNER JOIN ObjectLink AS OL_GoodsKind_Sh
+                                                       ON OL_GoodsKind_Sh.ObjectId = OL_Goods.ObjectId
+                                                      AND OL_GoodsKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh()
+                                 -- поиск св-в из категории "Штучный"
+                                 INNER JOIN ObjectLink AS OL_Goods_find
+                                                       ON OL_Goods_find.ChildObjectId = OL_Goods_Sh.ChildObjectId
+                                                      AND OL_Goods_find.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                 INNER JOIN ObjectLink AS OL_GoodsKind_find
+                                                       ON OL_GoodsKind_find.ObjectId      = OL_Goods_find.ObjectId
+                                                      AND OL_GoodsKind_find.ChildObjectId = OL_GoodsKind_Sh.ChildObjectId
+                                                      AND OL_GoodsKind_find.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                 -- Код ВМС - для расчета ...
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode_Sh
+                                                       ON ObjectFloat_WmsCode_Sh.ObjectId = OL_Goods_find.ObjectId
+                                                      AND ObjectFloat_WmsCode_Sh.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
+
+                                 -- нашли Ящик
+                                 INNER JOIN ObjectLink AS OL_GoodsPropertyBox_Goods
+                                                       ON OL_GoodsPropertyBox_Goods.ChildObjectId = OL_Goods_Sh.ChildObjectId
+                                                      AND OL_GoodsPropertyBox_Goods.DescId        = zc_ObjectLink_GoodsPropertyBox_Goods()
+                                 INNER JOIN ObjectLink AS OL_GoodsPropertyBox_GoodsKind
+                                                       ON OL_GoodsPropertyBox_GoodsKind.ObjectId      = OL_GoodsPropertyBox_Goods.ObjectId
+                                                      AND OL_GoodsPropertyBox_GoodsKind.ChildObjectId = OL_GoodsKind_Sh.ChildObjectId
+                                                      AND OL_GoodsPropertyBox_GoodsKind.DescId        = zc_ObjectLink_GoodsPropertyBox_GoodsKind()
+                                 -- ограничили - E2 + E3
+                                 INNER JOIN ObjectLink AS OL_GoodsPropertyBox_Box
+                                                       ON OL_GoodsPropertyBox_Box.ObjectId = OL_GoodsPropertyBox_Goods.ObjectId
+                                                      AND OL_GoodsPropertyBox_Box.DescId   = zc_ObjectLink_GoodsPropertyBox_Box()
+                                                      AND OL_GoodsPropertyBox_Box.ChildObjectId IN (zc_Box_E2(), zc_Box_E3())
+                                 -- вложенность в Ящик
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_WeightOnBox_Sh
+                                                       ON ObjectFloat_WeightOnBox_Sh.ObjectId = OL_GoodsPropertyBox_Goods.ObjectId
+                                                      AND ObjectFloat_WeightOnBox_Sh.DescId   = zc_ObjectFloat_GoodsPropertyBox_WeightOnBox()
+                                 LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox_Sh
+                                                       ON ObjectFloat_CountOnBox_Sh.ObjectId = OL_GoodsPropertyBox_Goods.ObjectId
+                                                      AND ObjectFloat_CountOnBox_Sh.DescId   = zc_ObjectFloat_GoodsPropertyBox_CountOnBox()
+      
+                                 -- Товар + Вид
+                                 LEFT JOIN Object AS Object_Goods_Sh     ON Object_Goods_Sh.Id     = OL_Goods_Sh.ChildObjectId
+                                 LEFT JOIN Object AS Object_GoodsKind_Sh ON Object_GoodsKind_Sh.Id = OL_GoodsKind_Sh.ChildObjectId
+
+                            WHERE OL_Goods.ChildObjectId = inGoodsId
+                              AND OL_Goods.DescId        = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                           )
+         , tmpRes AS (SELECT Object_Goods.Id                 AS GoodsId
+                           , Object_Goods.ObjectCode         AS GoodsCode
+                           , Object_Goods.ValueData          AS GoodsName
+                           , Object_GoodsKind.Id             AS GoodsKindId
+                           , Object_GoodsKind.ObjectCode     AS GoodsKindCode
+                           , Object_GoodsKind.ValueData      AS GoodsKindName
+
+                           , tmpObject_sh.GoodsId_sh
+                           , tmpObject_sh.GoodsCode_sh
+                           , tmpObject_sh.GoodsName_sh
+                           , tmpObject_sh.GoodsKindId_sh
+                           , tmpObject_sh.GoodsKindCode_sh
+                           , tmpObject_sh.GoodsKindName_sh
+
+                           , Object_Measure.Id               AS MeasureId
+                           , Object_Measure.ObjectCode       AS MeasureCode
+                           , Object_Measure.ValueData        AS MeasureName
+
                              -- Id - есть ли ШТ.
                            , COALESCE (OL_GoodsTypeKind_Sh.ChildObjectId,  0) AS GoodsTypeKindId_Sh
                            , 100 AS Npp_Sh
@@ -94,36 +191,62 @@ BEGIN
                              -- Id - есть ли ВЕС
                            , COALESCE (OL_GoodsTypeKind_Ves.ChildObjectId, 0) AS GoodsTypeKindId_Ves
                            , 250 AS Npp_Ves
-                
-                             -- Код ВМС - ШТ.
+
+                             -- Код ВМС - ШТ. - !!!замена
                            , CASE WHEN OL_GoodsTypeKind_Sh.ChildObjectId <> 0
-                                  THEN REPEAT ('0', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
-                                    || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
+                                  THEN REPEAT ('0', 3 - LENGTH ((COALESCE (tmpObject_sh.WmsCode_Sh, ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar))
+                                    || (COALESCE (tmpObject_sh.WmsCode_Sh, ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
                                     || '1'
                                   ELSE ''
                              END :: TVarChar AS WmsCode_Sh
+
                              -- Код ВМС - НОМ.
                            , CASE WHEN OL_GoodsTypeKind_Nom.ChildObjectId <> 0
                                   THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
                                      || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
-                                 --  || '.'
                                      || '2'
                                   ELSE ''
                              END :: TVarChar AS WmsCode_Nom
+
                              -- Код ВМС - ВЕС
                            , CASE WHEN OL_GoodsTypeKind_Ves.ChildObjectId  <> 0
                                   THEN REPEAT ('', 3 - LENGTH ((ObjectFloat_WmsCode.ValueData :: Integer) :: TVarChar))
                                      || (COALESCE (ObjectFloat_WmsCode.ValueData, 0) :: Integer) :: TVarChar
-                                  -- || '.'
                                      || '3'
                                   ELSE ''
                              END :: TVarChar AS WmsCode_Ves
-                
-                             -- минимальный вес 1шт.
-                           , COALESCE (ObjectFloat_WeightMin.ValueData,0) :: TFloat AS WeightMin
-                             -- максимальный вес 1шт.
-                           , COALESCE (ObjectFloat_WeightMax.ValueData,0) :: TFloat AS WeightMax
-                
+
+                             -- минимальный вес 1шт. - !!!временно
+                           , CASE WHEN OL_GoodsTypeKind_Sh.ChildObjectId  > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Sh.ValueData  * (1 - ObjectFloat_Tax_Sh.ValueData  / 100), 0)
+                                  WHEN OL_GoodsTypeKind_Nom.ChildObjectId > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Nom.ValueData * (1 - ObjectFloat_Tax_Nom.ValueData / 100), 0)
+                                  WHEN OL_GoodsTypeKind_Ves.ChildObjectId > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Ves.ValueData * (1 - ObjectFloat_Tax_Ves.ValueData / 100), 0)
+                                  ELSE 0
+                             END  :: TFloat AS WeightMin
+                         --, COALESCE (ObjectFloat_WeightMin.ValueData,0) :: TFloat AS WeightMin
+
+                             -- максимальный вес 1шт. - !!!временно
+                           , CASE WHEN OL_GoodsTypeKind_Sh.ChildObjectId  > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Sh.ValueData  * (1 + ObjectFloat_Tax_Sh.ValueData  / 100), 0)
+                                  WHEN OL_GoodsTypeKind_Nom.ChildObjectId > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Nom.ValueData * (1 + ObjectFloat_Tax_Nom.ValueData / 100), 0)
+                                  WHEN OL_GoodsTypeKind_Ves.ChildObjectId > 0
+                                       THEN COALESCE (ObjectFloat_Avg_Ves.ValueData * (1 + ObjectFloat_Tax_Ves.ValueData / 100), 0)
+                                  ELSE 0
+                             END  :: TFloat AS WeightMax
+                         --, COALESCE (ObjectFloat_WeightMax.ValueData,0) :: TFloat AS WeightMax
+
+                             -- минимальный вес 1шт. - для категорий
+                           , COALESCE (ObjectFloat_Avg_Sh.ValueData  * (1 - ObjectFloat_Tax_Sh.ValueData  / 100), 0) :: TFloat AS WeightMin_sh
+                           , COALESCE (ObjectFloat_Avg_Nom.ValueData * (1 - ObjectFloat_Tax_Nom.ValueData / 100), 0) :: TFloat AS WeightMin_Nom
+                           , COALESCE (ObjectFloat_Avg_Ves.ValueData * (1 - ObjectFloat_Tax_Ves.ValueData / 100), 0) :: TFloat AS WeightMin_Ves
+                             -- максимальный вес 1шт. - для категорий
+                           , COALESCE (ObjectFloat_Avg_Sh.ValueData  * (1 + ObjectFloat_Tax_Sh.ValueData  / 100), 0) :: TFloat AS WeightMax_sh
+                           , COALESCE (ObjectFloat_Avg_Nom.ValueData * (1 + ObjectFloat_Tax_Nom.ValueData / 100), 0) :: TFloat AS WeightMax_Nom
+                           , COALESCE (ObjectFloat_Avg_Ves.ValueData * (1 + ObjectFloat_Tax_Ves.ValueData / 100), 0) :: TFloat AS WeightMax_Ves
+
                              -- Признак - 1-ая линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_1
                         -- , 0  :: Integer  AS BarCodeBoxId_1
@@ -136,15 +259,18 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_1
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_1
-                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+
+                             -- вложенность - по Весу - !средняя! - !!!замена
+                         --, CASE WHEN COALESCE (tmpObject_sh.CountOnBox_sh, ObjectFloat_CountOnBox.ValueData) > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                           , CASE WHEN COALESCE (tmpObject_sh.CountOnBox_sh, ObjectFloat_CountOnBox.ValueData) > 0 AND ObjectFloat_Avg_Sh.ValueData > 0
                                     -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
-                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
-                                  ELSE ObjectFloat_WeightOnBox.ValueData
+                                       THEN COALESCE (tmpObject_sh.CountOnBox_sh, ObjectFloat_CountOnBox.ValueData) * ObjectFloat_Avg_Sh.ValueData
+                                  ELSE COALESCE (tmpObject_sh.WeightOnBox_sh, ObjectFloat_WeightOnBox.ValueData)
                              END                      :: TFloat AS WeightOnBox_1
-                             -- Вложенность - шт (информативно?)
-                           , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_1
-                
+
+                             -- Вложенность - ед. (НЕ информативно!) - !!!замена
+                           , COALESCE (tmpObject_sh.CountOnBox_sh, ObjectFloat_CountOnBox.ValueData) :: TFloat AS CountOnBox_1
+
                              -- Признак - 2-ая линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_2
                         -- , 0  :: Integer  AS BarCodeBoxId_2
@@ -157,15 +283,18 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_2
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_2
-                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+
+                             -- вложенность - по Весу - !средняя!
+                         --, CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_Avg_Nom.ValueData > 0
                                     -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
-                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
+                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_Avg_Nom.ValueData
                                   ELSE ObjectFloat_WeightOnBox.ValueData
                              END                      :: TFloat AS WeightOnBox_2
-                             -- Вложенность - шт (информативно?)
+
+                             -- Вложенность - ед. (НЕ информативно!)
                            , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_2
-                
+
                              -- Признак - 3-ья линия
                         -- , 0  :: Integer  AS GoodsTypeKindId_3
                         -- , 0  :: Integer  AS BarCodeBoxId_3
@@ -178,15 +307,18 @@ BEGIN
                            , Object_Box.ValueData               AS BoxName_3
                              -- Вес самого ящика
                            , ObjectFloat_Box_Weight.ValueData   AS BoxWeight_3
-                             -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+
+                             -- вложенность - по Весу - !средняя!
+                         --, CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_WeightMin.ValueData > 0 AND  ObjectFloat_WeightMax.ValueData > 0
+                           , CASE WHEN ObjectFloat_CountOnBox.ValueData > 0 AND ObjectFloat_Avg_Ves.ValueData > 0
                                     -- THEN ObjectFloat_CountOnBox.ValueData * (ObjectFloat_WeightMin.ValueData + ObjectFloat_WeightMax.ValueData) / 2
-                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_WeightMax.ValueData - ObjectFloat_WeightMin.ValueData
+                                       THEN ObjectFloat_CountOnBox.ValueData * ObjectFloat_Avg_Ves.ValueData
                                   ELSE ObjectFloat_WeightOnBox.ValueData
                              END                      :: TFloat AS WeightOnBox_3
-                             -- Вложенность - шт (информативно?)
+
+                             -- Вложенность - ед. (НЕ информативно!)
                            , ObjectFloat_CountOnBox.ValueData   AS CountOnBox_3
-                
+
                       FROM Object AS Object_GoodsByGoodsKind
                            INNER JOIN ObjectLink AS OL_Goods
                                                  ON OL_Goods.ObjectId      = Object_GoodsByGoodsKind.Id
@@ -196,7 +328,7 @@ BEGIN
                                                  ON OL_GoodsKind.ObjectId      = Object_GoodsByGoodsKind.Id
                                                 AND OL_GoodsKind.ChildObjectId = inGoodsKindId
                                                 AND OL_GoodsKind.DescId        = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-                
+                           -- Категории
                            LEFT JOIN ObjectLink AS OL_GoodsTypeKind_Sh
                                                 ON OL_GoodsTypeKind_Sh.ObjectId = Object_GoodsByGoodsKind.Id
                                                AND OL_GoodsTypeKind_Sh.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh()
@@ -206,23 +338,45 @@ BEGIN
                            LEFT JOIN ObjectLink AS OL_GoodsTypeKind_Ves
                                                 ON OL_GoodsTypeKind_Ves.ObjectId = Object_GoodsByGoodsKind.Id
                                                AND OL_GoodsTypeKind_Ves.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Ves()
+                           --
                            LEFT JOIN ObjectLink AS OL_Goods_Measure
                                                 ON OL_Goods_Measure.ObjectId = OL_Goods.ChildObjectId
                                                AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
-                
+
                            LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = OL_Goods.ChildObjectId
                            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = OL_GoodsKind.ChildObjectId
                            LEFT JOIN Object AS Object_Measure   ON Object_Measure.Id   = OL_Goods_Measure.ChildObjectId
-                
+
+                           -- замена кода - на категорию "Штучный"
+                           LEFT JOIN tmpObject_sh ON tmpObject_sh.GoodsByGoodsKindId   = Object_GoodsByGoodsKind.Id
+                                                 -- !!! только для "Штучный"
+                                                 AND OL_GoodsTypeKind_Sh.ChildObjectId > 0
+
+                           -- Код ВМС - для расчета ...
                            LEFT JOIN ObjectFloat AS ObjectFloat_WmsCode
                                                  ON ObjectFloat_WmsCode.ObjectId = Object_GoodsByGoodsKind.Id
                                                 AND ObjectFloat_WmsCode.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()
-                           LEFT JOIN ObjectFloat AS ObjectFloat_WeightMin
-                                                 ON ObjectFloat_WeightMin.ObjectId = Object_GoodsByGoodsKind.Id
-                                                AND ObjectFloat_WeightMin.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightMin()
-                           LEFT JOIN ObjectFloat AS ObjectFloat_WeightMax
-                                                 ON ObjectFloat_WeightMax.ObjectId = Object_GoodsByGoodsKind.Id
-                                                AND ObjectFloat_WeightMax.DescId   = zc_ObjectFloat_GoodsByGoodsKind_WeightMax()
+                           -- средний вес 1ед.
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Sh
+                                                 ON ObjectFloat_Avg_Sh.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Avg_Sh.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Nom
+                                                 ON ObjectFloat_Avg_Nom.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Avg_Nom.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Avg_Nom()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Avg_Ves
+                                                 ON ObjectFloat_Avg_Ves.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Avg_Ves.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Avg_Ves()
+                           -- % отклонения веса 1ед.
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Sh
+                                                 ON ObjectFloat_Tax_Sh.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Tax_Sh.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Nom
+                                                 ON ObjectFloat_Tax_Nom.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Tax_Nom.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom()
+                           LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Ves
+                                                 ON ObjectFloat_Tax_Ves.ObjectId = Object_GoodsByGoodsKind.Id
+                                                AND ObjectFloat_Tax_Ves.DescId   = zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves()
+
                            -- нашли Ящик
                            INNER JOIN ObjectLink AS OL_GoodsPropertyBox_Goods
                                                  ON OL_GoodsPropertyBox_Goods.ChildObjectId = inGoodsId
@@ -249,23 +403,29 @@ BEGIN
                            LEFT JOIN ObjectFloat AS ObjectFloat_CountOnBox
                                                  ON ObjectFloat_CountOnBox.ObjectId = OL_GoodsPropertyBox_Goods.ObjectId
                                                 AND ObjectFloat_CountOnBox.DescId   = zc_ObjectFloat_GoodsPropertyBox_CountOnBox()
-                
+
                       WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
                      )
+       -- Выбрали категории которые есть
      , tmpNpp_all AS (SELECT tmpRes.GoodsTypeKindId_Sh  AS GoodsTypeKindId, tmpRes.Npp_Sh  AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Sh  > 0
                      UNION
                       SELECT tmpRes.GoodsTypeKindId_Nom AS GoodsTypeKindId, tmpRes.Npp_Nom AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Nom > 0
                      UNION
                       SELECT tmpRes.GoodsTypeKindId_Ves AS GoodsTypeKindId, tmpRes.Npp_Ves AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Ves > 0
                      )
+           -- получили № п/п - по убыванию 3,2,1
          , tmpNpp AS (SELECT tmpNpp_all.GoodsTypeKindId, ROW_NUMBER() OVER (ORDER BY tmpNpp_all.Npp DESC) AS Ord FROM tmpNpp_all)
+
+     -- Выбрали категории которых НЕТ
    , tmpNppNo_all AS (SELECT -1 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Sh  = 0
                      UNION
                       SELECT -2 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Nom = 0
                      UNION
                       SELECT -3 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Ves = 0
                      )
+         -- получили № п/п - по возрастанию 1,2,3
        , tmpNppNo AS (SELECT tmpNppNo_all.GoodsTypeKindId, ROW_NUMBER() OVER (ORDER BY tmpNppNo_all.GoodsTypeKindId ASC) AS Ord FROM tmpNppNo_all)
+
       -- Результат
       SELECT tmpRes.GoodsId
            , tmpRes.GoodsCode
@@ -273,6 +433,14 @@ BEGIN
            , tmpRes.GoodsKindId
            , tmpRes.GoodsKindCode
            , tmpRes.GoodsKindName
+
+           , tmpRes.GoodsId_sh
+           , tmpRes.GoodsCode_sh
+           , tmpRes.GoodsName_sh
+           , tmpRes.GoodsKindId_sh
+           , tmpRes.GoodsKindCode_sh
+           , tmpRes.GoodsKindName_sh
+
            , tmpRes.MeasureId
            , tmpRes.MeasureCode
            , tmpRes.MeasureName
@@ -297,10 +465,17 @@ BEGIN
              -- Код ВМС - ВЕС
            , tmpRes.WmsCode_Ves
 
-             -- минимальный вес 1шт.
+             -- минимальный вес 1шт. - !!!временно
            , tmpRes.WeightMin
-             -- максимальный вес 1шт.
+             -- максимальный вес 1шт.- !!!временно
            , tmpRes.WeightMax
+
+           , tmpRes.WeightMin_Sh
+           , tmpRes.WeightMin_Nom
+           , tmpRes.WeightMin_Ves
+           , tmpRes.WeightMax_Sh
+           , tmpRes.WeightMax_Nom
+           , tmpRes.WeightMax_Ves
 
              -- Признак - 1-ая линия - № 1 по приоритету
            , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 1)
@@ -319,9 +494,9 @@ BEGIN
            , tmpRes.BoxName_1
              -- Вес самого ящика
            , tmpRes.BoxWeight_1
-             -- вложенность - Вес
+             -- вложенность - по Весу
            , tmpRes.WeightOnBox_1
-             -- Вложенность - шт (информативно?)
+             -- Вложенность - шт (НЕ информативно!)
            , tmpRes.CountOnBox_1
 
              -- Признак - 2-ая линия - № 2 по приоритету
@@ -341,9 +516,9 @@ BEGIN
            , tmpRes.BoxName_2
              -- Вес самого ящика
            , tmpRes.BoxWeight_2
-             -- вложенность - Вес
+             -- вложенность - по Весу
            , tmpRes.WeightOnBox_2
-             -- Вложенность - шт (информативно?)
+             -- Вложенность - шт (НЕ информативно!)
            , tmpRes.CountOnBox_2
 
              -- Признак - 3-ья линия - № 3 по приоритету
@@ -363,9 +538,9 @@ BEGIN
            , tmpRes.BoxName_3
              -- Вес самого ящика
            , tmpRes.BoxWeight_3
-             -- вложенность - Вес
+             -- вложенность - по Весу
            , tmpRes.WeightOnBox_3
-             -- Вложенность - шт (информативно?)
+             -- Вложенность - шт (НЕ информативно!)
            , tmpRes.CountOnBox_3
       FROM tmpRes
      ;
@@ -383,4 +558,4 @@ $BODY$
 
 -- тест
 -- SELECT GoodsTypeKindId_Sh, GoodsTypeKindId_Nom, GoodsTypeKindId_Ves, GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3 FROM gpGet_ScaleLight_Goods (inGoodsId:= 2153, inGoodsKindId:= 8352, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpGet_ScaleLight_Goods (inGoodsId:= 3812117, inGoodsKindId:= 8348, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleLight_Goods (inGoodsId:= 2153, inGoodsKindId:= 8352, inIs_test:= NULL, inSession:= zfCalc_UserAdmin())

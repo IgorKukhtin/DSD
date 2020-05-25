@@ -15,8 +15,13 @@ CREATE OR REPLACE FUNCTION gpSelect_ScaleLight_MI(
 )
 RETURNS TABLE (-- MovementItemId BigInt
                MovementItemId Integer
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureId Integer, MeasureName TVarChar
-             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar, StorageLineName TVarChar
+               -- Категория
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , MeasureId Integer, MeasureName TVarChar
+               -- Ш/К ящика
+             , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
+               -- 
+             , StorageLineName TVarChar
              , isStartWeighing Boolean
              , Amount TFloat, AmountWeight TFloat, AmountOneWeight TFloat
              , RealWeight TFloat, RealWeightWeight TFloat
@@ -26,7 +31,10 @@ RETURNS TABLE (-- MovementItemId BigInt
              , WeightSkewer1_k TFloat, WeightSkewer1 TFloat, WeightSkewer2 TFloat
              , TotalWeightSkewer1_k TFloat, TotalWeightSkewer1 TFloat, TotalWeightSkewer2 TFloat
              , Count TFloat, CountPack TFloat, HeadCount TFloat, LiveWeight TFloat
-             , PartionGoods TVarChar, PartionGoodsDate TDateTime
+               -- Ш/К единицы
+             , PartionGoods TVarChar
+               --
+             , PartionGoodsDate TDateTime
              , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean
              , LightColor Integer
@@ -58,20 +66,21 @@ BEGIN
             )
        SELECT
              tmpMI.MovementItemId  :: Integer   AS MovementItemId
+             -- Категория
            , Object_GoodsTypeKind.Id            AS GoodsId
            , Object_GoodsTypeKind.ObjectCode    AS GoodsCode
            , Object_GoodsTypeKind.ValueData     AS GoodsName
+             --
            , Object_Measure.Id                  AS MeasureId
            , Object_Measure.ValueData           AS MeasureName
-                                               
+             -- Ш/К ящика                                  
            , Object_BarCodeBox.Id               AS GoodsKindId
            , Object_BarCodeBox.ObjectCode       AS GoodsKindCode
            , Object_BarCodeBox.ValueData        AS GoodsKindName
-                                               
-           , ''                    :: TVarChar  AS StorageLineName
-                                                
+             -- Код ВМС                                  
+           , SUBSTRING (tmpMI.WmsCode FROM 5 FOR 4) :: TVarChar AS StorageLineName
+             -- Открыт ящик                                   
            , CASE WHEN tmpMI.ParentId > 0 THEN FALSE ELSE TRUE END :: Boolean AS isStartWeighing
-        -- , CASE WHEN tmpMI.ParentId > 0 THEN TRUE ELSE FALSE END :: Boolean AS isStartWeighing
                                                 
            , tmpMI.Amount          :: TFloat    AS Amount
            , (CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Kg() THEN tmpMI.RealWeight WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI.Amount * ObjectFloat_Weight.ValueData ELSE 0 END) :: TFloat AS AmountWeight
@@ -91,13 +100,15 @@ BEGIN
            , 0                     :: TFloat    AS TotalWeightSkewer1_k
            , 0                     :: TFloat    AS TotalWeightSkewer1
            , 0                     :: TFloat    AS TotalWeightSkewer2
-                                               
+             -- № линии                                  
            , tmpMI.LineCode        :: TFloat    AS Count
+             --
            , 0                     :: TFloat    AS CountPack
            , 0                     :: TFloat    AS HeadCount
            , 0                     :: TFloat    AS LiveWeight
-                                   
+             -- Ш/К единицы                      
            , tmpMI.WmsCode         :: TVarChar  AS PartionGoods
+             --
            , tmpMI.OperDate        :: TDateTime AS PartionGoodsDate
 
 
@@ -108,7 +119,7 @@ BEGIN
            , CASE WHEN tmpMI.LineCode = 1 THEN inColor_1
                   WHEN tmpMI.LineCode = 2 THEN inColor_2
                   WHEN tmpMI.LineCode = 3 THEN inColor_3
-                  ELSE 0
+                  ELSE zc_Color_White()
              END :: Integer AS LightColor
 
        FROM tmpMI

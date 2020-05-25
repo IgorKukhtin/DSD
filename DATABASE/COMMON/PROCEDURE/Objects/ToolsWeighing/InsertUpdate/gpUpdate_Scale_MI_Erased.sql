@@ -24,7 +24,7 @@ BEGIN
     IF inIsModeSorting = TRUE
     THEN
         -- устанавливаем новое значение
-        UPDATE wms_MI_WeighingProduction SET isErased = inIsErased, UpdateDate = CURRENT_TIMESTAMP WHERE Id = inMovementItemId;
+        UPDATE wms_MI_WeighingProduction SET isErased = inIsErased, UpdateDate = CURRENT_TIMESTAMP WHERE Id = inMovementItemId AND WmsCode <> '' AND GoodsTypeKindId > 0;
          -- Результат
          RETURN QUERY
            SELECT 0 :: TFloat AS TotalSumm;

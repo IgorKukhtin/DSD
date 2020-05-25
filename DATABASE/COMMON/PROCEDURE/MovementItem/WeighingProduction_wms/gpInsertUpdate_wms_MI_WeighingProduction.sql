@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_wms_MI_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_wms_MI_WeighingProduction (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_wms_MI_WeighingProduction (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_wms_MI_WeighingProduction (BigInt, BigInt, Integer, Integer, Integer, TFloat, TFloat, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_MI_WeighingProduction(
  INOUT ioId                  BigInt    , -- Ключ объекта <Элемент документа>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_MI_WeighingProduction(
     IN in_sku_id             TVarChar  , --
     IN in_sku_code           TVarChar  , --
     IN inPartionDate         TDateTime , --
+    IN inIsErrSave           Boolean   , -- режим, когда вызываем во второй раз и надо сохранить ошибку
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS BigInt
@@ -42,19 +44,19 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (inGoodsTypeKindId, 0) = 0
+     IF COALESCE (inGoodsTypeKindId, 0) = 0 AND inIsErrSave = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Категория товара не определена.<%>', inGoodsTypeKindId;
      END IF;
 
      -- проверка
-     IF COALESCE (inBarCodeBoxId, 0) = 0
+     IF COALESCE (inBarCodeBoxId, 0) = 0 AND inIsErrSave = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка. Ш/К ящика не определен.<%>', inBarCodeBoxId;
      END IF;
 
      -- проверка
-     IF COALESCE (inLineCode, 0) NOT IN (1, 2, 3)
+     IF COALESCE (inLineCode, 0) NOT IN (1, 2, 3) AND inIsErrSave = FALSE
      THEN
          RAISE EXCEPTION 'Ошибка.Код линии (1,2 или 3) не определен.<%>', inLineCode;
      END IF;
@@ -71,19 +73,19 @@ BEGIN
                                               )
                VALUES (inMovementId
                      , NULL
-                     , inGoodsTypeKindId
-                     , inBarCodeBoxId
-                     , inLineCode
+                     , COALESCE (inGoodsTypeKindId, 0)
+                     , COALESCE (inBarCodeBoxId, 0)
+                     , COALESCE (inLineCode, 0)
                      , inAmount
                      , inRealWeight
                      , CURRENT_TIMESTAMP
                      , NULL
-                     , inWmsBarCode
-                     , in_sku_id
-                     , in_sku_code
+                     , COALESCE (inWmsBarCode, '')
+                     , COALESCE (in_sku_id, '')
+                     , COALESCE (in_sku_code, '')
                      , inPartionDate
                      , NULL
-                     , FALSE
+                     , CASE WHEN inIsErrSave = TRUE THEN TRUE ELSE FALSE END
                       )
                  RETURNING Id INTO ioId;
      ELSE

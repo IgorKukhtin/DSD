@@ -21,9 +21,9 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- параметры из документа
-     SELECT Movement.DescId, Movement.StatusId, Movement.OperDate
+     SELECT zc_Movement_WeighingProduction(), Movement.StatusId, Movement.OperDate
             INTO vbDescId, vbStatusId
-     FROM Movement
+     FROM wms_Movement_WeighingProduction AS Movement
      WHERE Movement.Id = inMovementId;
 
     -- очень важная проверка
@@ -31,12 +31,12 @@ BEGIN
     THEN
         IF vbStatusId = zc_Enum_Status_Erased()
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> удален.', (SELECT ItemName || ' (ВМС)' FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM wms_Movement_WeighingProduction WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM wms_Movement_WeighingProduction WHERE Id = inMovementId);
         END IF;
-        IF vbStatusId = zc_Enum_Status_UnComplete()
+        /*IF vbStatusId = zc_Enum_Status_UnComplete()
         THEN
-            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM Movement WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM Movement WHERE Id = inMovementId);
-        END IF;
+            RAISE EXCEPTION 'Ошибка.Документ <%> № <%> от <%> не проведен.', (SELECT ItemName || ' (ВМС)'  FROM MovementDesc WHERE Id = vbDescId), (SELECT InvNumber FROM wms_Movement_WeighingProduction WHERE Id = inMovementId), (SELECT DATE (OperDate) FROM wms_Movement_WeighingProduction WHERE Id = inMovementId);
+        END IF;*/
     END IF;
 
      -- Результат

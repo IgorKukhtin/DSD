@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_ScaleLight_Movement()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleLight_Movement (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleLight_Movement (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ScaleLight_Movement (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleLight_Movement(
     IN inId                  BigInt    , -- Ключ объекта <Документ>
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ScaleLight_Movement(
     IN inBarCodeBoxId_3      Integer   , -- Id для Ш/К ящика
     IN inGoodsId             Integer   , -- 
     IN inGoodsKindId         Integer   , -- 
+    IN inGoodsId_sh          Integer   , -- 
+    IN inGoodsKindId_sh      Integer   , -- 
     IN inBranchCode          Integer   , -- 
     IN inPlaceNumber         Integer   , -- номер рабочего места
     IN inSession             TVarChar    -- сессия пользователя
@@ -36,6 +39,10 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_ScaleCeh_Movement());
      vbUserId:= lpGetUserBySession (inSession);
 
+-- if inSession = '5'
+-- then
+-- RAISE EXCEPTION 'Ошибка.ok';
+-- end if;
 
      -- сохранили
      inId:= gpInsertUpdate_wms_Movement_WeighingProduction (ioId                  := inId
@@ -56,6 +63,8 @@ BEGIN
                                                           , inBarCodeBoxId_3      := inBarCodeBoxId_3
                                                           , inGoodsId             := inGoodsId
                                                           , inGoodsKindId         := inGoodsKindId
+                                                          , inGoodsId_sh          := inGoodsId_sh
+                                                          , inGoodsKindId_sh      := inGoodsKindId_sh
                                                           , inSession             := inSession
                                                            );
      -- Результат
