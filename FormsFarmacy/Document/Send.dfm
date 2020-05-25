@@ -722,6 +722,7 @@ inherited SendForm: TSendForm
       Top = 59
       ExplicitTop = 59
       ExplicitWidth = 181
+      ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
@@ -963,12 +964,11 @@ inherited SendForm: TSendForm
       Left = 667
       Top = 109
       Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1089#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' VIP'
-      Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085
       ParentShowHint = False
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 33
-      Width = 126
+      Width = 30
     end
     object cbUrgently: TcxCheckBox
       Left = 716
@@ -980,6 +980,17 @@ inherited SendForm: TSendForm
       ShowHint = True
       TabOrder = 34
       Width = 64
+    end
+    object edConfirmed: TcxTextEdit
+      Left = 684
+      Top = 109
+      TabStop = False
+      ParentColor = True
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 35
+      Text = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
+      Width = 125
     end
   end
   object ceChecked: TcxCheckBox [2]
@@ -1560,6 +1571,7 @@ inherited SendForm: TSendForm
     object actOpenLossForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actOpenConfirmedDialog
       Caption = 'actOpenLossForm'
       FormName = 'TLossForm'
       FormNameParam.Value = 'TLossForm'
@@ -1589,6 +1601,41 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actExecSetConfirmed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actOpenConfirmedDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Confirmed
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Confirmed
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      ImageIndex = 51
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"?'
+    end
+    object actOpenConfirmedDialog: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StorageForm'
+      FormName = 'TConfirmedDialogForm'
+      FormNameParam.Value = 'TConfirmedDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isConfirmed'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isConfirmed'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1753,6 +1800,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1837,6 +1888,10 @@ inherited SendForm: TSendForm
       Action = actCreateLoss
       Category = 0
     end
+    object dxBarButton6: TdxBarButton
+      Action = actExecSetConfirmed
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1918,6 +1973,12 @@ inherited SendForm: TSendForm
         Name = 'TotalSumm'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConfirmed'
+        Value = 'False'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -2171,6 +2232,13 @@ inherited SendForm: TSendForm
         Value = Null
         Component = cbConfirmed
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedText'
+        Value = Null
+        Component = edConfirmed
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -3494,5 +3562,45 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 878
     Top = 400
+  end
+  object spUpdate_Movement_Confirmed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Confirmed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'isConfirmed'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisConfirmed'
+        Value = 'False'
+        Component = cbConfirmed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outConfirmedText'
+        Value = Null
+        Component = edConfirmed
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 291
   end
 end

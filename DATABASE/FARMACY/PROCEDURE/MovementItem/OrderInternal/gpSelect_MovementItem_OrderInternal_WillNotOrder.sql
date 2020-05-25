@@ -31,7 +31,7 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
-    IF inSession <> '3'
+    IF inSession <> '3' AND COALESCE(vbUnitId, 0) <> 377605 
     THEN
       Return;
     END IF;

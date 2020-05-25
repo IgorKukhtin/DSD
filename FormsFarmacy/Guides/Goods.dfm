@@ -543,16 +543,6 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 70
           end
-          object LimitSUN_T1: TcxGridDBColumn
-            Caption = #1054#1089#1090'. '#1076#1083#1103' ('#1057#1059#1053' v2, v2-'#1055#1048')  (T1)'
-            DataBinding.FieldName = 'LimitSUN_T1'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##; ; '
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1054#1089#1090#1072#1090#1086#1082', '#1087#1088#1080' '#1082#1086#1090#1086#1088#1086#1084' '#1088#1072#1089#1095#1077#1090' '#1076#1083#1103' '#1057#1059#1053'-2 '#1080' '#1057#1059#1053'-2-'#1087#1080' '#1079#1085#1072#1095#1077#1085#1080#1103' '#1058'1'
-            Width = 70
-          end
           object isResolution_224: TcxGridDBColumn
             Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
             DataBinding.FieldName = 'isResolution_224'
@@ -608,6 +598,7 @@ inherited GoodsForm: TGoodsForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1058#1086#1074#1072#1088' ('#1087#1072#1088#1072' '#1074' '#1057#1059#1053')'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1058#1086#1074#1072#1088' ('#1087#1072#1088#1072' '#1074' '#1057#1059#1053')'
       ImageIndex = 26
+      ShortCut = 116
       RefreshOnTabSetChanges = True
     end
     object ExecuteDialogGoodsPairSun: TExecuteDialog [1]
@@ -2001,10 +1992,6 @@ inherited GoodsForm: TGoodsForm
         item
           Visible = True
           ItemName = 'bbUpdateGoods_KoeffSUN'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateGoods_LimitSUN'
         end
         item
           Visible = True

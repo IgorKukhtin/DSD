@@ -3758,9 +3758,8 @@ inherited MainCashForm2: TMainCashForm2
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
         item
-          Name = 'isSUNAll'
-          Value = True
-          DataType = ftBoolean
+          Name = 'VIPType'
+          Value = '0'
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>

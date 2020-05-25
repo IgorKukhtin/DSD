@@ -3,7 +3,8 @@
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 --DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendCash (TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendCash(
     IN inStartDate     TDateTime , --
@@ -12,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendCash(
     IN inisSUN         Boolean,
     IN inisSUNAll      Boolean,
     IN inisVIP         Boolean,
-    IN inisVIPAll      Boolean,
+    IN inVIPType       Integer,
     IN inSession       TVarChar = ''    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -36,6 +37,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
              , DriverId Integer, DriverName TVarChar
              , NumberSeats Integer
+             , ConfirmedText TVarChar
               )
 
 AS
@@ -140,7 +142,7 @@ BEGIN
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
            , COALESCE (MovementBoolean_VIP.ValueData, FALSE)          ::Boolean AS isVIP
            , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)     ::Boolean AS isUrgently
-           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)    ::Boolean AS isConfirmed
+           , MovementBoolean_Confirmed.ValueData                      ::Boolean AS isConfirmed
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -158,6 +160,10 @@ BEGIN
            , Object_Driver.ValueData  :: TVarChar AS DriverName
 
            , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
+           , CASE WHEN COALESCE (MovementBoolean_VIP.ValueData, FALSE) = FALSE THEN Null   
+                  WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтверж.'   
+                  WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
+                  ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -166,7 +172,7 @@ BEGIN
                   JOIN Movement ON (inisSUN = TRUE AND Movement.OperDate = CURRENT_DATE
                                     OR inisVIP = TRUE AND Movement.OperDate = CURRENT_DATE
                                     OR inisSUN = TRUE AND inisSUNAll = TRUE
-                                    OR inisVIP = TRUE AND inisVIPAll = TRUE
+                                    OR inisVIP = TRUE AND inVIPType = 0
                                     OR Movement.OperDate BETWEEN inStartDate AND inEndDate)
                                AND Movement.DescId = zc_Movement_Send() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -341,6 +347,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inSession:= '3')
 -- SELECT * FROM gpSelect_Movement_SendCash (inStartDate:= '01.07.2019', inEndDate:= '14.07.2019', inIsErased := FALSE, inisSUN := FALSE, inSession:= '3')
---
-
-select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'False' , inisSUNAll := 'False', inisVIP := 'True', inisVIPAll := 'True', inSession := '3');
+--select * from gpSelect_Movement_SendCash(instartdate := ('01.01.2015')::TDateTime , inenddate := ('01.01.2015')::TDateTime , inIsErased := 'False' , inisSUN := 'False' , inisSUNAll := 'False', inisVIP := 'True', inVIPType := 0, inSession := '3');

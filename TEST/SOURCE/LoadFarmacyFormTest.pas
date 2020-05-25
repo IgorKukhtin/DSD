@@ -2338,6 +2338,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendMenegerVIPJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendMenegerVIPJournalForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TConfirmedDialogForm');
+
   // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');

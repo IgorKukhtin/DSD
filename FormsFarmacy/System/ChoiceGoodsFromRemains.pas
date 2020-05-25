@@ -50,6 +50,8 @@ type
     colDailyCheck: TcxGridDBColumn;
     colDailySale: TcxGridDBColumn;
     colColor_calc: TcxGridDBColumn;
+    colDeferredSend: TcxGridDBColumn;
+    colDeferredSendIn: TcxGridDBColumn;
   private
     { Private declarations }
   public

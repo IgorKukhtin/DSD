@@ -2833,7 +2833,7 @@ begin
                 Screen.MessageFont.Color := clRed;
                 Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
                 MessageDlg
-                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его зарегистрировать СЕЙЧАС НА САЙТЕ ХЕЛСИ.',
+                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
                   mtError, [mbOK], 0);
               finally
                 Screen.MessageFont.Size := Screen.MessageFont.Size - 2;

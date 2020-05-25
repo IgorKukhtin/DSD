@@ -19,6 +19,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       inherited cxGrid: TcxGrid
         Width = 1434
         Height = 451
+        ExplicitLeft = 328
+        ExplicitTop = -296
         ExplicitWidth = 1434
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -786,7 +788,137 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     end
   end
   inherited ActionList: TActionList
-    object ExecuteDialog_SUN_Lock: TExecuteDialog [0]
+    object actUpdate_Unit_isSUN_No: TdsdExecStoredProc [0]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_No
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 50
+    end
+    object actUpdate_Unit_isSUN_v4_out_yes: TdsdExecStoredProc [1]
+      Category = 'isSUN8'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v4_out_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v4_out_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 73
+    end
+    object actUpdate_Unit_isSUN_v3_yes: TdsdExecStoredProc [2]
+      Category = 'isSUN7'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object actUpdate_Unit_isSUN_v4_out_no: TdsdExecStoredProc [3]
+      Category = 'isSUN8'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v4_out_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v4_out_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 73
+    end
+    object actUpdate_Unit_isSUN_v4_yes: TdsdExecStoredProc [4]
+      Category = 'isSUN8'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v4_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v4_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 73
+    end
+    object actUpdate_Unit_isSUN_v4_no: TdsdExecStoredProc [5]
+      Category = 'isSUN8'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v4_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v4_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 73
+    end
+    object actUpdate_Unit_isSUN_v4_in_no: TdsdExecStoredProc [6]
+      Category = 'isSUN8'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v4_in_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v4_in_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 73
+    end
+    object actUpdate_Unit_isSUN_v3_out_no: TdsdExecStoredProc [7]
+      Category = 'isSUN7'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_out_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_out_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object actUpdate_Unit_isSUN_v3_out_yes: TdsdExecStoredProc [8]
+      Category = 'isSUN7'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_out_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_out_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object actUpdate_Unit_isSUN_v3_in_no: TdsdExecStoredProc [9]
+      Category = 'isSUN7'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_in_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_in_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object ExecuteDialog_SUN_Lock: TExecuteDialog [10]
       Category = 'SUN_Lock'
       MoveParams = <>
       Caption = 'actUnit_SUN_LockDialog'
@@ -852,7 +984,140 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actUpdate_SUN_v2_LockSale_No: TdsdExecStoredProc [1]
+    object actUpdate_Unit_isSUN_v3_no: TdsdExecStoredProc [11]
+      Category = 'isSUN7'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v3_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v3_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_No_list: TMultiAction [12]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1053#1077#1090
+      ImageIndex = 50
+    end
+    object actUpdate_Unit_isSUN_Yes: TdsdExecStoredProc [13]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_Yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 50
+    end
+    object macUpdate_Unit_isSUN_Yes_list: TMultiAction [14]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' - '#1044#1072
+      ImageIndex = 50
+    end
+    object macUpdate_Unit_isSUN_v3_in_yes: TMultiAction [15]
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_in_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1044#1072
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v2_Yes_list: TMultiAction [16]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_Yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1044#1072
+      ImageIndex = 47
+    end
+    object actUpdate_Unit_isSUN_v2_No: TdsdExecStoredProc [17]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v2_No
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v2_No
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1053#1077#1090
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1053#1077#1090
+      ImageIndex = 47
+    end
+    object macUpdate_Unit_isSUN_v2_No_list: TMultiAction [18]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_No
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1053#1077#1090
+      ImageIndex = 47
+    end
+    object actUpdate_Unit_isSUN_v2_Yes: TdsdExecStoredProc [19]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v2_Yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v2_Yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1044#1072
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V2) - '#1044#1072
+      ImageIndex = 47
+    end
+    object actUpdate_Unit_isSUN_in_yes: TdsdExecStoredProc [20]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_in_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_in_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 48
+    end
+    object actUpdate_Unit_isSUN_in_no: TdsdExecStoredProc [21]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_in_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_in_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 48
+    end
+    object actUpdate_SUN_v2_LockSale_No: TdsdExecStoredProc [22]
       Category = 'SUN_v2_LockSale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -864,7 +1129,66 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1053#1077#1090
       Hint = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1053#1077#1090
     end
-    object macUpdate_SUN_Lock_list: TMultiAction [2]
+    object macUpdate_Unit_isSUN_out_yes: TMultiAction [23]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_out_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') -'#1044#1072
+      ImageIndex = 49
+    end
+    object macUpdate_Unit_isSUN_out_no: TMultiAction [24]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_out_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') - '#1053#1077#1090
+      ImageIndex = 49
+    end
+    object macUpdate_Unit_isSUN_in_yes: TMultiAction [25]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_in_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') - '#1044#1072
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') - '#1044#1072
+      ImageIndex = 48
+    end
+    object macUpdate_Unit_isSUN_in_no: TMultiAction [26]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_in_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') - '#1053#1077#1090
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') - '#1053#1077#1090
+      ImageIndex = 48
+    end
+    object actUpdate_Unit_isSUN_out_yes: TdsdExecStoredProc [27]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_out_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_out_yes
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 49
+    end
+    object macUpdate_SUN_Lock_list: TMultiAction [28]
       Category = 'SUN_Lock'
       MoveParams = <>
       ActionList = <
@@ -876,7 +1200,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
       ImageIndex = 42
     end
-    object actUpdate_SUN_Lock: TdsdExecStoredProc [3]
+    object actUpdate_SUN_Lock: TdsdExecStoredProc [29]
       Category = 'SUN_Lock'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -887,7 +1211,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = 'actUpdate_SUN_Lock'
     end
-    object macUpdate_SUN_Lock: TMultiAction [4]
+    object macUpdate_SUN_Lock: TMultiAction [30]
       Category = 'SUN_Lock'
       MoveParams = <>
       ActionList = <
@@ -904,7 +1228,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1047#1072#1087#1088#1077#1090#1099' '#1087#1086' '#1057#1059#1053' (V.1, V.2, V.2-'#1055#1048')'
       ImageIndex = 42
     end
-    object ExecuteDialogUnit_HT_SUN: TExecuteDialog [5]
+    object ExecuteDialogUnit_HT_SUN: TExecuteDialog [31]
       Category = 'HT_Sun'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -968,7 +1292,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object actUpdate_SUN_v2_LockSale_Yes: TdsdExecStoredProc [6]
+    object actUpdate_SUN_v2_LockSale_Yes: TdsdExecStoredProc [32]
       Category = 'SUN_v2_LockSale'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -980,7 +1304,81 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1044#1072
       Hint = #1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2 - '#1044#1072
     end
-    object ExecuteDialogUnit_LimitSun: TExecuteDialog [7]
+    object actUpdate_Unit_isSUN_out_no: TdsdExecStoredProc [33]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_out_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_out_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 49
+    end
+    object actUpdate_Unit_isSUN_NotSold_no: TdsdExecStoredProc [34]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_NotSold_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_NotSold_no
+        end>
+      Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 68
+    end
+    object macUpdate_Unit_isSUN_NotSold_no: TMultiAction [35]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_NotSold_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' - '#1053#1077#1090
+      ImageIndex = 68
+    end
+    object macUpdate_Unit_isSUN_NotSold_yes: TMultiAction [36]
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_NotSold_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' - '#1044#1072
+      ImageIndex = 68
+    end
+    object actUpdate_Unit_isSUN_NotSold_yes: TdsdExecStoredProc [37]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_NotSold_yes
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_NotSold_yes
+        end>
+      Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 68
+    end
+    object actUpdate_Unit_isSUN_v2_in_no: TdsdExecStoredProc [38]
+      Category = 'isSUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Unit_isSUN_v2_in_no
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Unit_isSUN_v2_in_no
+        end>
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 69
+    end
+    object ExecuteDialogUnit_LimitSun: TExecuteDialog [39]
       Category = 'LimitSUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1004,7 +1402,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macUpdate_SUN_v2_LockSale_No: TMultiAction [8]
+    object macUpdate_SUN_v2_LockSale_No: TMultiAction [40]
       Category = 'SUN_v2_LockSale'
       MoveParams = <>
       ActionList = <
@@ -1016,7 +1414,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1053#1077#1090
       ImageIndex = 58
     end
-    object macUpdateUnit_LimitSUN_list: TMultiAction [9]
+    object macUpdateUnit_LimitSUN_list: TMultiAction [41]
       Category = 'LimitSUN'
       MoveParams = <>
       ActionList = <
@@ -1028,7 +1426,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       ImageIndex = 43
     end
-    object macUpdate_SUN_v2_LockSale_Yes: TMultiAction [10]
+    object macUpdate_SUN_v2_LockSale_Yes: TMultiAction [42]
       Category = 'SUN_v2_LockSale'
       MoveParams = <>
       ActionList = <
@@ -1040,7 +1438,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' "'#1053#1077' '#1089#1095#1080#1090#1072#1090#1100' '#1087#1088#1086#1076#1072#1078#1080' '#1076#1083#1103' '#1057#1059#1053'-2" - '#1044#1072
       ImageIndex = 52
     end
-    object actUpdate_Unit_LimitSUN: TdsdDataSetRefresh [12]
+    object actUpdate_Unit_LimitSUN: TdsdDataSetRefresh [44]
       Category = 'LimitSUN'
       MoveParams = <>
       StoredProc = spUpdate_Unit_LimitSUN_N
@@ -1054,7 +1452,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [13]
+    object actUpdate_Unit_HT_SUN: TdsdDataSetRefresh [45]
       Category = 'HT_Sun'
       MoveParams = <>
       StoredProc = spUpdate_HT_SUN
@@ -1068,7 +1466,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = True
     end
-    object macUpdateUnit_LimitSUN: TMultiAction [14]
+    object macUpdateUnit_LimitSUN: TMultiAction [46]
       Category = 'LimitSUN'
       MoveParams = <>
       ActionList = <
@@ -1085,7 +1483,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
       ImageIndex = 43
     end
-    object macUpdateUnit_HT_Sun_list: TMultiAction [16]
+    object macUpdateUnit_HT_Sun_list: TMultiAction [48]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -1097,7 +1495,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 42
     end
-    object macUpdateUnit_T_SUN_list: TMultiAction [17]
+    object macUpdateUnit_T_SUN_list: TMultiAction [49]
       Category = 'T_SUN'
       MoveParams = <>
       ActionList = <
@@ -1109,7 +1507,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' '#1057#1059#1053' V2'
       ImageIndex = 43
     end
-    object macUpdateUnit_HT_Sun: TMultiAction [18]
+    object macUpdateUnit_HT_Sun: TMultiAction [50]
       Category = 'HT_Sun'
       MoveParams = <>
       ActionList = <
@@ -1126,7 +1524,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1050#1086#1083'-'#1074#1086' '#1076#1085#1077#1081' '#1076#1083#1103' HammerTime ('#1057#1059#1053' v1, v2, v2-'#1055#1048')'
       ImageIndex = 67
     end
-    object macUpdate_ListDaySUN_pi: TMultiAction [19]
+    object macUpdate_ListDaySUN_pi: TMultiAction [51]
       Category = 'ListDaySUN'
       MoveParams = <>
       AfterAction = actRefresh
@@ -1141,7 +1539,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1085#1077#1076#1077#1083#1080' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       ImageIndex = 42
     end
-    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [20]
+    object actExecUpdate_ListDaySUN_pi: TdsdExecStoredProc [52]
       Category = 'ListDaySUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -1248,43 +1646,63 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1059#1095#1072#1089#1090#1074#1091#1077#1090' '#1074' '#1086#1090#1095#1077#1090#1077
       ImageIndex = 38
     end
-    object actUpdate_Unit_isSUN_v4_out: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actUpdate_Unit_isSUN_v2_in_yes: TdsdExecStoredProc
+      Category = 'isSUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v4_out
+      StoredProc = spUpdate_Unit_isSUN_v2_in_yes
       StoredProcList = <
         item
-          StoredProc = spUpdate_Unit_isSUN_v4_out
+          StoredProc = spUpdate_Unit_isSUN_v2_in_yes
         end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 73
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 69
     end
-    object actUpdate_Unit_isSUN_v4_in: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object macUpdate_Unit_isSUN_v2_in_yes: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_in_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' V2) - '#1044#1072
+      ImageIndex = 69
+    end
+    object macUpdate_Unit_isSUN_v2_in_no: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_in_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' V2) - '#1053#1077#1090
+      ImageIndex = 69
+    end
+    object actUpdate_Unit_isSUN_v4_in_yes: TdsdExecStoredProc
+      Category = 'isSUN8'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v4_in
+      StoredProc = spUpdate_Unit_isSUN_v4_in_yes
       StoredProcList = <
         item
-          StoredProc = spUpdate_Unit_isSUN_v4_in
+          StoredProc = spUpdate_Unit_isSUN_v4_in_yes
         end>
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 73
     end
-    object actUpdate_Unit_isSUN_v4: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object macUpdate_Unit_isSUN_v4_no: TMultiAction
+      Category = 'isSUN8'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v4
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = spUpdate_Unit_isSUN_v4
+          Action = actUpdate_Unit_isSUN_v4_no
         end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' ('#1044#1072'/'#1053#1077#1090')'
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' -'#1053#1077#1090
       ImageIndex = 73
     end
     object actUpdateisMarginCategory: TdsdExecStoredProc
@@ -1313,135 +1731,44 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Hint = #1042#1099#1075#1088#1091#1078#1072#1090#1100' '#1074' '#1086#1090#1095#1077#1090#1077' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' '#1041#1040#1044#1052' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 76
     end
-    object actUpdate_Unit_isSUN_v3_out: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actUpdate_Unit_isSUN_v3_in_yes: TdsdExecStoredProc
+      Category = 'isSUN7'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v3_out
+      StoredProc = spUpdate_Unit_isSUN_v3_in_yes
       StoredProcList = <
         item
-          StoredProc = spUpdate_Unit_isSUN_v3_out
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 71
-    end
-    object actUpdate_Unit_isSUN_v3_in: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v3_in
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_v3_in
+          StoredProc = spUpdate_Unit_isSUN_v3_in_yes
         end>
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 71
     end
-    object actUpdate_Unit_isSUN_v3: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actUpdate_Unit_isSUN_v2_out_yes: TdsdExecStoredProc
+      Category = 'isSUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v3
+      StoredProc = spUpdate_Unit_isSUN_v2_out_yes
       StoredProcList = <
         item
-          StoredProc = spUpdate_Unit_isSUN_v3
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 71
-    end
-    object actUpdate_Unit_isSUN_v2: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v2
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_v2
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 47
-    end
-    object actUpdate_Unit_isSUN_in: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_in
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_in
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084') ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 48
-    end
-    object actUpdate_Unit_isSUN_out: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_out
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_out
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072') ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 49
-    end
-    object actUpdate_Unit_isSUN_NotSold: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_NotSold
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_NotSold
-        end>
-      Caption = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1054#1090#1082#1083#1102#1095#1077#1085#1072' '#1084#1086#1076#1077#1083#1100' "'#1073#1077#1079' '#1087#1088#1086#1076#1072#1078'" '#1076#1083#1103' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 68
-    end
-    object actUpdate_Unit_isSUN_v2_in: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v2_in
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_v2_in
-        end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 69
-    end
-    object actUpdate_Unit_isSUN_v2_out: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN_v2_out
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Unit_isSUN_v2_out
+          StoredProc = spUpdate_Unit_isSUN_v2_out_yes
         end>
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
       Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
       ImageIndex = 70
     end
-    object actUpdate_Unit_isSUN: TdsdExecStoredProc
-      Category = 'DSDLib'
+    object actUpdate_Unit_isSUN_v2_out_no: TdsdExecStoredProc
+      Category = 'isSUN'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Unit_isSUN
+      StoredProc = spUpdate_Unit_isSUN_v2_out_no
       StoredProcList = <
         item
-          StoredProc = spUpdate_Unit_isSUN
+          StoredProc = spUpdate_Unit_isSUN_v2_out_no
         end>
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1044#1072'/'#1053#1077#1090')'
-      ImageIndex = 50
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      Hint = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' '#1074#1077#1088#1089#1080#1103' 2) ('#1044#1072'/'#1053#1077#1090')'
+      ImageIndex = 70
     end
     object actUpdateisOver: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -2249,6 +2576,138 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         '2, v2-'#1055#1048')'
       ImageIndex = 42
     end
+    object macUpdate_Unit_isSUN_v2_out_yes: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_out_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' V2) - '#1044#1072
+      ImageIndex = 70
+    end
+    object macUpdate_Unit_isSUN_v2_out_no: TMultiAction
+      Category = 'isSUN'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v2_out_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' V2) - '#1053#1077#1090
+      ImageIndex = 70
+    end
+    object macUpdate_Unit_isSUN_v3_yes: TMultiAction
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1044#1072
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v3_no: TMultiAction
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1053#1077#1090
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v3_out_yes: TMultiAction
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_out_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' -'#1044#1072
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v3_out_no: TMultiAction
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_out_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' - '#1053#1077#1090
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v3_in_no: TMultiAction
+      Category = 'isSUN7'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v3_in_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1069'-'#1057#1059#1053' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1053#1077#1090
+      ImageIndex = 71
+    end
+    object macUpdate_Unit_isSUN_v4_yes: TMultiAction
+      Category = 'isSUN8'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v4_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1044#1072
+      ImageIndex = 73
+    end
+    object macUpdate_Unit_isSUN_v4_out_yes: TMultiAction
+      Category = 'isSUN8'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v4_out_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' -'#1044#1072
+      ImageIndex = 73
+    end
+    object macUpdate_Unit_isSUN_v4_out_no: TMultiAction
+      Category = 'isSUN8'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v4_out_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1086#1090#1087#1088#1072#1074#1082#1072' - '#1053#1077#1090
+      ImageIndex = 73
+    end
+    object macUpdate_Unit_isSUN_v4_in_yes: TMultiAction
+      Category = 'isSUN8'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v4_in_yes
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1044#1072
+      ImageIndex = 73
+    end
+    object macUpdate_Unit_isSUN_v4_in_no: TMultiAction
+      Category = 'isSUN8'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_Unit_isSUN_v4_in_no
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1053#1077#1090
+      ImageIndex = 73
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -2368,18 +2827,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdate_SUN_v2_LockSale_Yes'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_SUN_v2_LockSale_No'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarSubItem2'
         end
         item
@@ -2388,7 +2835,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateKoeffSUN'
+          ItemName = 'dxBarSubItem3'
         end
         item
           Visible = True
@@ -2396,31 +2843,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'bbUpdateKoeffSUNv3'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateUnit_T_SUN'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateUnit_SunIncome'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateUnit_HT_Sun'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateUnit_LimitSUN'
+          ItemName = 'dxBarSubItem4'
         end
         item
           Visible = True
@@ -2440,27 +2863,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end
         item
           Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_ListDaySUN_pi'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
           ItemName = 'bbUpdateisTopNo'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdate_SUN_Lock'
         end
         item
           Visible = True
@@ -2538,7 +2945,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ImageIndex = 8
     end
     object bbUpdate_Unit_isSUN: TdxBarButton
-      Action = actUpdate_Unit_isSUN
+      Action = macUpdate_Unit_isSUN_Yes_list
       Category = 0
     end
     object bbUpdateisTopNo: TdxBarButton
@@ -2550,30 +2957,27 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Category = 0
     end
     object bbUpdate_Unit_isSUN_in: TdxBarButton
-      Action = actUpdate_Unit_isSUN_in
+      Action = macUpdate_Unit_isSUN_in_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_out: TdxBarButton
-      Action = actUpdate_Unit_isSUN_out
+      Action = macUpdate_Unit_isSUN_out_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v2: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v2
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' (V.2) ('#1044#1072'/'#1053#1077#1090')'
+      Action = macUpdate_Unit_isSUN_v2_Yes_list
       Category = 0
     end
     object bbUpdate_Unit_isSUN_NotSold: TdxBarButton
-      Action = actUpdate_Unit_isSUN_NotSold
+      Action = macUpdate_Unit_isSUN_NotSold_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v2_in: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v2_in
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1055#1088#1080#1077#1084' V.2) ('#1044#1072'/'#1053#1077#1090')'
+      Action = macUpdate_Unit_isSUN_v2_in_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v2_out: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v2_out
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053' ('#1054#1090#1087#1088#1072#1074#1082#1072' V.2) ('#1044#1072'/'#1053#1077#1090')'
+      Action = macUpdate_Unit_isSUN_v2_out_yes
       Category = 0
     end
     object dxBarButton3: TdxBarButton
@@ -2581,7 +2985,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v3: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v3
+      Action = macUpdate_Unit_isSUN_v3_yes
       Category = 0
     end
     object bbUpdateKoeffSUNv3: TdxBarButton
@@ -2589,11 +2993,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v3_in: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v3_in
+      Action = macUpdate_Unit_isSUN_v3_in_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v3_out: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v3_out
+      Action = macUpdate_Unit_isSUN_v3_out_yes
       Category = 0
     end
     object dxBarButton4: TdxBarButton
@@ -2609,15 +3013,15 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v4: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v4
+      Action = macUpdate_Unit_isSUN_v4_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v4_in: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v4_in
+      Action = macUpdate_Unit_isSUN_v4_in_yes
       Category = 0
     end
     object bbUpdate_Unit_isSUN_v4_out: TdxBarButton
-      Action = actUpdate_Unit_isSUN_v4_out
+      Action = macUpdate_Unit_isSUN_v4_out_yes
       Category = 0
     end
     object bbUpdateUnit_T_SUN: TdxBarButton
@@ -2651,7 +3055,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       ItemLinks = <>
     end
     object dxBarSubItem2: TdxBarSubItem
-      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'...'
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'... '#1044#1072
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -2718,6 +3122,14 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbUpdate_Unit_isSUN_v4_out'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SUN_v2_LockSale_Yes'
         end>
     end
     object dxBarSeparator1: TdxBarSeparator
@@ -2742,6 +3154,202 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Action = macUpdate_SUN_Lock
       Category = 0
       ImageIndex = 13
+    end
+    object bbUpdate_Unit_isSUN_No_list: TdxBarButton
+      Action = macUpdate_Unit_isSUN_No_list
+      Category = 0
+    end
+    object dxBarSubItem3: TdxBarSubItem
+      Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'... '#1053#1077#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_No_list'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2_No_list'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_in_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_out_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_NotSold_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2_in_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v2_out_no'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator5'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_in_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v3_out_no'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator6'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4_in_no'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Unit_isSUN_v4_out_yes'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SUN_v2_LockSale_No'
+        end>
+    end
+    object bbUpdate_Unit_isSUN_v2_No_list: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v2_No_list
+      Category = 0
+    end
+    object dxBarSeparator4: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdate_Unit_isSUN_in_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_in_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_out_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_out_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_NotSold_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_NotSold_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v2_in_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v2_in_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v2_out_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v2_out_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v3_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v3_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v3_in_no: TdxBarButton
+      Action = actUpdate_Unit_isSUN_v3_in_no
+      Category = 0
+    end
+    object dxBarSeparator5: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdate_Unit_isSUN_v3_out_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v3_out_no
+      Category = 0
+    end
+    object dxBarSeparator6: TdxBarSeparator
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbUpdate_Unit_isSUN_v4_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v4_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v4_out_yes: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v4_out_no
+      Category = 0
+    end
+    object bbUpdate_Unit_isSUN_v4_in_no: TdxBarButton
+      Action = macUpdate_Unit_isSUN_v4_in_no
+      Category = 0
+    end
+    object dxBarSubItem4: TdxBarSubItem
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100'...'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbUpdateKoeffSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateKoeffSUNv3'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit_T_SUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit_SunIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit_HT_Sun'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateUnit_LimitSUN'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton4'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_ListDaySUN_pi'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SUN_Lock'
+        end>
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -3104,7 +3712,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 224
     Top = 192
   end
-  object spUpdate_Unit_isSUN: TdsdStoredProc
+  object spUpdate_Unit_isSUN_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN'
     DataSets = <>
     OutputType = otResult
@@ -3119,9 +3727,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3135,8 +3741,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 291
+    Left = 1336
+    Top = 147
   end
   object spUpdate_Unit_isTopNo: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isTopNo'
@@ -3207,7 +3813,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 522
     Top = 320
   end
-  object spUpdate_Unit_isSUN_v2: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v2_Yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3222,9 +3828,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v2'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3245,10 +3849,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 56
+    Left = 40
     Top = 315
   end
-  object spUpdate_Unit_isSUN_in: TdsdStoredProc
+  object spUpdate_Unit_isSUN_in_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_in'
     DataSets = <>
     OutputType = otResult
@@ -3263,9 +3867,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_in'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_in'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3279,10 +3881,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 331
+    Left = 1352
+    Top = 275
   end
-  object spUpdate_Unit_isSUN_out: TdsdStoredProc
+  object spUpdate_Unit_isSUN_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_out'
     DataSets = <>
     OutputType = otResult
@@ -3297,9 +3899,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_out'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_out'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3313,10 +3913,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 379
+    Left = 1344
+    Top = 187
   end
-  object spUpdate_Unit_isSUN_NotSold: TdsdStoredProc
+  object spUpdate_Unit_isSUN_NotSold_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_NotSold'
     DataSets = <>
     OutputType = otResult
@@ -3331,9 +3931,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_NotSold'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_NotSold'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3347,10 +3945,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 347
+    Left = 1336
+    Top = 235
   end
-  object spUpdate_Unit_isSUN_v2_in: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v2_in_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3365,9 +3963,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v2_in'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3391,7 +3987,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 40
     Top = 363
   end
-  object spUpdate_Unit_isSUN_v2_out: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v2_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3406,9 +4002,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v2_out'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3463,10 +4057,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 400
-    Top = 411
+    Left = 688
+    Top = 131
   end
-  object spUpdate_Unit_isSUN_v3: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v3_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3481,9 +4075,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v3'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3504,8 +4096,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 816
-    Top = 307
+    Left = 264
+    Top = 299
   end
   object spUpdate_KoeffSUNv3: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_KoeffSUN_v3'
@@ -3542,7 +4134,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 522
     Top = 376
   end
-  object spUpdate_Unit_isSUN_v3_in: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v3_in_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3557,9 +4149,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v3_in'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3580,10 +4170,10 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 936
-    Top = 283
+    Left = 312
+    Top = 419
   end
-  object spUpdate_Unit_isSUN_v3_out: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v3_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3598,9 +4188,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v3_out'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3621,8 +4209,8 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 928
-    Top = 331
+    Left = 272
+    Top = 355
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -3806,7 +4394,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 848
     Top = 395
   end
-  object spUpdate_Unit_isSUN_v4: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v4_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3821,9 +4409,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v4'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3847,7 +4433,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 1080
     Top = 179
   end
-  object spUpdate_Unit_isSUN_v4_in: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v4_in_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3862,9 +4448,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v4_in'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3888,7 +4472,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     Left = 1080
     Top = 235
   end
-  object spUpdate_Unit_isSUN_v4_out: TdsdStoredProc
+  object spUpdate_Unit_isSUN_v4_out_yes: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isSUN_v2'
     DataSets = <>
     OutputType = otResult
@@ -3903,9 +4487,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       end
       item
         Name = 'inisSun_v2'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isSun_v4_out'
+        Value = 'false'
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -4300,7 +4882,486 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1240
-    Top = 219
+    Left = 1064
+    Top = 355
+  end
+  object spUpdate_Unit_isSUN_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1360
+    Top = 147
+  end
+  object spUpdate_Unit_isSUN_v2_No: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v2'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v2'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 315
+  end
+  object spUpdate_Unit_isSUN_v2_in_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v2_in'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v2_in'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 128
+    Top = 371
+  end
+  object spUpdate_Unit_isSUN_in_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_in'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_in'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_in'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_in'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1336
+    Top = 275
+  end
+  object spUpdate_Unit_isSUN_out_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_out'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_out'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_out'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_out'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1360
+    Top = 187
+  end
+  object spUpdate_Unit_isSUN_NotSold_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_NotSold'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_NotSold'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_NotSold'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_NotSold'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1368
+    Top = 235
+  end
+  object spUpdate_Unit_isSUN_v2_out_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v2_out'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v2_out'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 112
+    Top = 403
+  end
+  object spUpdate_Unit_isSUN_v3_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 304
+    Top = 299
+  end
+  object spUpdate_Unit_isSUN_v3_out_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_out'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3_out'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 355
+  end
+  object spUpdate_Unit_isSUN_v3_in_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v3_in'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3_in'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 376
+    Top = 411
+  end
+  object spUpdate_Unit_isSUN_v4_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v4'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v4'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1136
+    Top = 179
+  end
+  object spUpdate_Unit_isSUN_v4_in_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v4_in'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v4_in'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1160
+    Top = 243
+  end
+  object spUpdate_Unit_isSUN_v4_out_no: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_isSUN_v2'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisSun_v2'
+        Value = 'true'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisSun_v2'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSun_v4_out'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDescName'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v4_out'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1152
+    Top = 299
   end
 end

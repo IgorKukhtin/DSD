@@ -22,6 +22,8 @@ $BODY$
    DECLARE vbisReceived  Boolean;
    DECLARE vbNumberSeats Integer;
    DECLARE vbDriverSunID Integer;
+   DECLARE vbisVIP       Boolean;
+   DECLARE vbisConfirmed Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -43,7 +45,9 @@ BEGIN
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
         , MovementFloat_NumberSeats.ValueData::Integer                  AS NumberSeats
         , MovementLinkObject_DriverSun.ObjectId                         AS DriverSunID
-   INTO vbStatusId, vbUnitIdFrom, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats, vbDriverSunID
+        , COALESCE (MovementBoolean_VIP.ValueData, FALSE)        ::Boolean AS isVIP
+        , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)  ::Boolean AS isConfirmed
+   INTO vbStatusId, vbUnitIdFrom, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats, vbDriverSunID, vbisVIP, vbisConfirmed
    FROM Movement
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -77,6 +81,15 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DriverSun
                                          ON MovementLinkObject_DriverSun.MovementId = Movement.Id
                                         AND MovementLinkObject_DriverSun.DescId = zc_MovementLinkObject_DriverSun()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                      ON MovementBoolean_VIP.MovementId = Movement.Id
+                                     AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                      ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                     AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
    WHERE Movement.Id = inMovementId;
 
    IF COALESCE(inisSent, NOT vbisSent) <> vbisSent
@@ -95,9 +108,14 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Изменение <Отправлено-да> разрешено только сотруднику аптеки отправителя.';
    END IF;
 
-   IF inisSent = FALSE AND (vbisSUN <> TRUE OR vbisDeferred <> TRUE)
+   IF inisSent = FALSE AND (vbisSUN <> TRUE AND vbisVIP <> TRUE OR vbisDeferred <> TRUE)
    THEN
-      RAISE EXCEPTION 'Ошибка. Для установки <Отправлено-да> документ должен быть с признаками <Перемещение по СУН> и <Отложен>.';
+      RAISE EXCEPTION 'Ошибка. Для установки <Отправлено-да> документ должен быть с признаками <Перемещение по СУН> или <Перемещение по VIP> и <Отложен>.';
+   END IF;
+
+   IF vbisVIP = TRUE AND vbisConfirmed = FALSE
+   THEN
+      RAISE EXCEPTION 'Ошибка. Для установки <Отправлено-да> документ должен быть <Подтвержден>.';
    END IF;
 
    IF vbisReceived = TRUE

@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH(
 RETURNS TABLE (Id Integer, Views Integer, UserId Integer, UserCode Integer, UserName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , DateViewed TDateTime, Result TVarChar
+             , ViewsLastDay Integer, ViewsCurrDay Integer
              , isErased Boolean
               )
 AS
@@ -24,17 +25,19 @@ BEGIN
     RETURN QUERY
 
       SELECT
-             MovementItem.Id                                     AS Id
-           , MovementItem.Amount::Integer                        AS Views
-           , Object_User.Id                                      AS UserId
-           , Object_User.ObjectCode                              AS UserCode
-           , Object_User.ValueData                               AS UserName
-           , Object_Unit.Id                                      AS UnitId
-           , Object_Unit.ObjectCode                              AS UnitCode
-           , Object_Unit.ValueData                               AS UnitName
-           , MovementItemDate_Viewed.ValueData                   AS DateViewed
-           , MIString_Result.ValueData                           AS Result
-
+             MovementItem.Id                                      AS Id
+           , MovementItem.Amount::Integer                         AS Views
+           , Object_User.Id                                       AS UserId
+           , Object_User.ObjectCode                               AS UserCode
+           , Object_User.ValueData                                AS UserName
+           , Object_Unit.Id                                       AS UnitId
+           , Object_Unit.ObjectCode                               AS UnitCode
+           , Object_Unit.ValueData                                AS UnitName
+           , MovementItemDate_Viewed.ValueData                    AS DateViewed
+           , MIString_Result.ValueData                            AS Result
+           , COALESCE(MIFloat_AmountSecond.ValueData, 1)::Integer AS ViewsLastDay
+           , CASE WHEN date_trunc('day',MovementItemDate_Viewed.ValueData) = CURRENT_DATE 
+                  THEN COALESCE(MIFloat_AmountSecond.ValueData, 1) ELSE 0 END::Integer AS ViewsCurrDay
            , MovementItem.IsErased    AS isErased
       FROM MovementItem
       
@@ -54,6 +57,9 @@ BEGIN
                                             ON MIString_Result.MovementItemId = MovementItem.Id
                                            AND MIString_Result.DescId = zc_MIString_Result()
 
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
+                                            ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
+                                           AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
       WHERE MovementItem.MovementID = inMovementId
         AND MovementItem.DescId = zc_MI_Master();
 
