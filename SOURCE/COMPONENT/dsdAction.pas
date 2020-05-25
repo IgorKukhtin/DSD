@@ -3807,7 +3807,7 @@ begin
     raise Exception.Create('Класс ' + FFormName + ' не найден.')
   end;
 
-  with FormClass.Create(Application.MainForm) do
+  with FormClass.Create(Application) do
   begin
     if isShowModal then
     begin

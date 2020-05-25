@@ -20,13 +20,11 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , JuridicalName_Unit TVarChar
              , Phone TVarChar
              , Amount TFloat
-             , AmountIncome TFloat
              , AmountReserve TFloat
              , AmountSun TFloat
-             , AmountAll TFloat
              , PriceSale  TFloat
              , SummaSale TFloat
-             , PriceSaleIncome  TFloat
+             , PriceSaleUnit  TFloat
              , MinExpirationDate TDateTime
              , DailyCheck TFloat
              , DailySale TFloat
@@ -43,6 +41,11 @@ BEGIN
     vbUserId:= lpGetUserBySession (inSession);
     -- Ограничение на просмотр товарного справочника
     vbObjectId := lpGet_DefaultValue('zc_Object_Retail', vbUserId);
+
+    IF COALESCE (inUnitId, 0) = 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Не выбрано подразделение.';
+    END IF;
 
     -- Результат
     RETURN QUERY
@@ -141,37 +144,6 @@ BEGIN
                            , tmpData_all.UnitId
                     HAVING (SUM (tmpData_all.Amount) <> 0)
                     )
-
-      , tmpIncome AS (SELECT MovementLinkObject_To.ObjectId          AS UnitId
-                           , MI_Income.ObjectId                      AS GoodsId
-                           , SUM(COALESCE (MI_Income.Amount, 0))     AS AmountIncome
-                           , SUM(COALESCE (MI_Income.Amount, 0) * COALESCE(MIFloat_PriceSale.ValueData,0))  AS SummSale
-                      FROM Movement AS Movement_Income
-                           INNER JOIN MovementDate AS MovementDate_Branch
-                                                   ON MovementDate_Branch.MovementId = Movement_Income.Id
-                                                  AND MovementDate_Branch.DescId = zc_MovementDate_Branch()
-                                                  AND date_trunc('day', MovementDate_Branch.ValueData) between date_trunc('day', CURRENT_TIMESTAMP)-interval '1 day' AND date_trunc('day', CURRENT_TIMESTAMP)
-
-                           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                         ON MovementLinkObject_To.MovementId = Movement_Income.Id
-                                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
-                           LEFT JOIN MovementItem AS MI_Income
-                                                  ON MI_Income.MovementId = Movement_Income.Id
-                                                 AND MI_Income.isErased   = False
-
-                           LEFT JOIN MovementItemFloat AS MIFloat_PriceSale
-                                                       ON MIFloat_PriceSale.MovementItemId = MI_Income.Id
-                                                      AND MIFloat_PriceSale.DescId = zc_MIFloat_PriceSale()
-
-                           -- left join  Object ON Object.id = MI_Income.ObjectId
-                           -- left join  Object AS Object1 ON Object1.id = MovementLinkObject_To.ObjectId
-                       WHERE Movement_Income.DescId = zc_Movement_Income()
-                         AND Movement_Income.StatusId = zc_Enum_Status_UnComplete()
-                       GROUP BY MI_Income.ObjectId
-                              , MovementLinkObject_To.ObjectId
-                    )
-
        -- Отложенные чеки
       , tmpMovReserve AS (SELECT Movement.Id
                                , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -338,13 +310,11 @@ BEGIN
              , Object_Unit.JuridicalName_Unit
              , Object_Unit.Phone
              , COALESCE (tmpData.Amount,0)                                           :: TFloat AS Amount
-             , COALESCE (tmpIncome.AmountIncome,0)                                   :: TFloat AS AmountIncome
              , COALESCE (tmpReserve.Amount, 0)                                       :: TFloat AS AmountReserve
              , COALESCE (tmpReserveSun.Amount, 0)                                    :: TFloat AS AmountSun
-             , (COALESCE (tmpData.Amount,0) + COALESCE (tmpIncome.AmountIncome,0))   :: TFloat AS AmountAll
              , COALESCE (Object_Price.Price, 0)                                      :: TFloat AS PriceSale
              , (tmpData.Amount * COALESCE (Object_Price.Price, 0))                   :: TFloat AS SummaSale
-             , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE (tmpIncome.SummSale,0) / COALESCE (tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
+             , COALESCE (Object_PriceUnit.Price, 0)                                  :: TFloat AS PriceSaleUnit
              , tmpData.MinExpirationDate  ::TDateTime
              , containerCheck.DailyCheck:: TFloat
              , containerSale.DailySale:: TFloat
@@ -355,9 +325,6 @@ BEGIN
             LEFT JOIN tmpData ON tmpData.GoodsId = tmpGoods.Id
                              AND tmpData.UnitId  = Object_Unit.UnitId
 
-            LEFT JOIN tmpIncome ON tmpIncome.GoodsId = tmpGoods.Id
-                               AND tmpIncome.UnitId  = Object_Unit.UnitId
-
             LEFT JOIN tmpReserve ON tmpReserve.GoodsId = tmpGoods.Id
                                 AND tmpReserve.UnitId  = Object_Unit.UnitId
 
@@ -366,6 +333,10 @@ BEGIN
             LEFT OUTER JOIN tmpPrice_View AS Object_Price
                                           ON Object_Price.GoodsId = tmpGoods.Id
                                          AND Object_Price.UnitId  = Object_Unit.UnitId
+
+            LEFT OUTER JOIN tmpPrice_View AS Object_PriceUnit
+                                          ON Object_PriceUnit.GoodsId = tmpGoods.Id
+                                         AND Object_PriceUnit.UnitId  = inUnitId
 
             LEFT JOIN containerCheck ON containerCheck.GoodsId = tmpGoods.Id
                                     AND containerCheck.UnitId  = Object_Unit.UnitId
@@ -376,7 +347,7 @@ BEGIN
             LEFT JOIN tmpReserveSun ON tmpReserveSun.GoodsId = tmpGoods.Id
                                     AND tmpReserveSun.UnitId  = Object_Unit.UnitId
 
-          WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0
+          WHERE COALESCE(tmpData.Amount,0) <> 0
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
                  , tmpGoodsParams.GoodsName

@@ -53,9 +53,6 @@ type
     colPriceSale: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     AmountReserve: TcxGridDBColumn;
-    colPriceSaleIncome: TcxGridDBColumn;
-    colAmountIncome: TcxGridDBColumn;
-    colAmountAll: TcxGridDBColumn;
     colMinExpirationDate: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
     AreaName: TcxGridDBColumn;
@@ -90,6 +87,7 @@ type
     UnitCDSMovementId: TIntegerField;
     gpInsertUpdate_SendVIP: TdsdStoredProc;
     gpInsertUpdate_MI_SendVIP: TdsdStoredProc;
+    colPriceSaleUnit: TcxGridDBColumn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word;
@@ -99,6 +97,7 @@ type
     procedure cxGridDBTableViewDblClick(Sender: TObject);
     procedure actCreteSendExecute(Sender: TObject);
     procedure SelectedCDSBeforePost(DataSet: TDataSet);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     function CreteSend : boolean;
@@ -140,10 +139,15 @@ begin
       if not UnitCDS.Locate('UnitId', SelectedCDS.FieldByName('UnitId').AsInteger, []) then
       begin
         gpInsertUpdate_SendVIP.ParamByName('ioId').Value := 0;
-        gpInsertUpdate_SendVIP.ParamByName('inFromId').Value := GuidesUnit.Key;
-        gpInsertUpdate_SendVIP.ParamByName('inToId').Value := SelectedCDS.FieldByName('UnitId').AsInteger;
+        gpInsertUpdate_SendVIP.ParamByName('inFromId').Value := SelectedCDS.FieldByName('UnitId').AsInteger;
+        gpInsertUpdate_SendVIP.ParamByName('inToId').Value := GuidesUnit.Key;
         gpInsertUpdate_SendVIP.ParamByName('inisUrgently').Value := Urgently;
         gpInsertUpdate_SendVIP.Execute;
+        if gpInsertUpdate_SendVIP.ParamByName('ioId').Value = 0 then
+        begin
+          ShowMessage('Ошибка создания перемещения.');
+          Exit;
+        end;
         UnitCDS.Append;
         UnitCDS.FieldByName('UnitId').AsInteger := SelectedCDS.FieldByName('UnitId').AsInteger;
         UnitCDS.FieldByName('MovementId').AsInteger := gpInsertUpdate_SendVIP.ParamByName('ioId').Value;
@@ -167,6 +171,12 @@ end;
 
 procedure TSearchRemainsVIPForm.actCreteSendExecute(Sender: TObject);
 begin
+  if (GuidesUnit.Key = '0') OR (GuidesUnit.Key = '') then
+  begin
+    ShowMessage('Не выбрано подразделение.');
+    Exit;
+  end;
+
   if SelectedCDS.RecordCount > 0 then
   begin
     if MessageDlg('Формировать перемещение по выбранному товару',
@@ -221,9 +231,20 @@ procedure TSearchRemainsVIPForm.edSearchKeyDown(Sender: TObject;
 begin
   if (Key = VK_RETURN) AND (edCodeSearch.Focused or edGoodsSearch.Focused) then
   Begin
+    if (GuidesUnit.Key = '0') OR (GuidesUnit.Key = '') then
+    begin
+      ShowMessage('Не выбрано подразделение.');
+      Exit;
+    end;
+
     actRefresh.Execute;
     cxGrid.SetFocus;
   End;
+end;
+
+procedure TSearchRemainsVIPForm.FormActivate(Sender: TObject);
+begin
+  if (GuidesUnit.Key = '0') OR (GuidesUnit.Key = '') then edUnit.OnDblClick(Sender);
 end;
 
 procedure TSearchRemainsVIPForm.FormClose(Sender: TObject;
@@ -248,7 +269,6 @@ end;
 procedure TSearchRemainsVIPForm.FormCreate(Sender: TObject);
 begin
   UserSettingsStorageAddOn.LoadUserSettings;
-  actOpenChoiceUnitTree.Execute;
 end;
 
 procedure TSearchRemainsVIPForm.SelectedCDSBeforePost(DataSet: TDataSet);

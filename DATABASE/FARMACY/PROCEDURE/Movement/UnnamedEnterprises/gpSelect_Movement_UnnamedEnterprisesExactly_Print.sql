@@ -72,12 +72,16 @@ BEGIN
 
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MI_UnnamedEnterprises.ObjectId
 
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_NDSKind
+                                               ON MILinkObject_NDSKind.MovementItemId = MI_UnnamedEnterprises.Id
+                                              AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
+
               LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
                                    ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                                   AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
+              LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = COALESCE (MILinkObject_NDSKind.ObjectId, ObjectLink_Goods_NDSKind.ChildObjectId)
               LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
-                                    ON ObjectFloat_NDSKind_NDS.ObjectId = ObjectLink_Goods_NDSKind.ChildObjectId
+                                    ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id
                                    AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()
 
               LEFT JOIN MovementItemFloat AS MIFloat_Price

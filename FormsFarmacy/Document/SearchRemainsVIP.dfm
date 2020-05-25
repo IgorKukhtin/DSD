@@ -11,6 +11,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -97,12 +98,10 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
           item
             Format = ',0.00'
             Kind = skSum
-            Column = colAmountIncome
           end
           item
             Format = ',0.00'
             Kind = skSum
-            Column = colAmountAll
           end
           item
             Format = ',0.00'
@@ -118,12 +117,10 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
           item
             Format = ',0.00'
             Kind = skSum
-            Column = colAmountIncome
           end
           item
             Format = ',0.00'
             Kind = skSum
-            Column = colAmountAll
           end
           item
             Format = ',0.00'
@@ -233,6 +230,16 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
           Options.Editing = False
           Width = 93
         end
+        object colPriceSaleUnit: TcxGridDBColumn
+          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1086#1083#1091#1095#1072#1090#1077#1083#1103
+          DataBinding.FieldName = 'PriceSaleUnit'
+          PropertiesClassName = 'TcxCurrencyEditProperties'
+          Properties.DisplayFormat = ',0.00;-,0.00; ;'
+          HeaderAlignmentHorz = taCenter
+          HeaderAlignmentVert = vaCenter
+          Options.Editing = False
+          Width = 77
+        end
         object colPriceSale: TcxGridDBColumn
           Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080
           DataBinding.FieldName = 'PriceSale'
@@ -255,41 +262,6 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
           HeaderHint = #1054#1090#1083#1086#1078#1077#1085#1085#1099#1081' '#1090#1086#1074#1072#1088
           Options.Editing = False
           Width = 73
-        end
-        object colPriceSaleIncome: TcxGridDBColumn
-          Caption = #1062#1077#1085#1072' '#1087#1088#1086#1076#1072#1078#1080' ('#1090#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080')'
-          DataBinding.FieldName = 'PriceSaleIncome'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          Options.Editing = False
-          Width = 104
-        end
-        object colAmountIncome: TcxGridDBColumn
-          Caption = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080
-          DataBinding.FieldName = 'AmountIncome'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1058#1086#1074#1072#1088' '#1074' '#1087#1091#1090#1080' ('#1087#1088#1080#1093#1086#1076' '#1089#1077#1075#1086#1076#1085#1103') '
-          Options.Editing = False
-          Width = 98
-        end
-        object colAmountAll: TcxGridDBColumn
-          Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089' '#1091#1095'. '#1090#1086#1074'. '#1074' '#1087#1091#1090#1080
-          DataBinding.FieldName = 'AmountAll'
-          PropertiesClassName = 'TcxCurrencyEditProperties'
-          Properties.DisplayFormat = ',0.00;-,0.00; ;'
-          Properties.ReadOnly = True
-          HeaderAlignmentHorz = taCenter
-          HeaderAlignmentVert = vaCenter
-          HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1089' '#1091#1095#1077#1090#1086#1084' '#1090#1086#1074#1072#1088#1072' '#1074' '#1087#1091#1090#1080') '
-          Options.Editing = False
-          Width = 98
         end
         object colMinExpirationDate: TcxGridDBColumn
           Caption = #1057#1088#1086#1082' '#1075#1086#1076#1085#1086#1089#1090#1080' '#1086#1089#1090#1072#1090#1082#1072
@@ -730,7 +702,6 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     object actOpenChoiceUnitTree: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      PostDataSetBeforeExecute = False
       Caption = 'actOpenChoiceUnitTree'
       FormName = 'TUnitTreeForm'
       FormNameParam.Value = 'TUnitTreeForm'

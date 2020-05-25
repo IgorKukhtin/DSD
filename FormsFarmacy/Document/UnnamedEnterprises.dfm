@@ -181,6 +181,14 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
             HeaderAlignmentVert = vaCenter
             Width = 44
           end
+          object isResolution_224: TcxGridDBColumn
+            Caption = #1055#1086#1089#1090#1072#1085#1086#1074#1083#1077#1085#1080#1077' 224'
+            DataBinding.FieldName = 'isResolution_224'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 73
+          end
         end
       end
     end
@@ -1597,6 +1605,7 @@ inherited UnnamedEnterprisesForm: TUnnamedEnterprisesForm
         DataSummaryItemIndex = -1
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 409
   end

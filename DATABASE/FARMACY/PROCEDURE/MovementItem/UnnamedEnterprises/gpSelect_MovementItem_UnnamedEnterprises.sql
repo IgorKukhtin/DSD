@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Amount TFloat, AmountRemains TFloat, AmountOrder TFloat
              , Price TFloat, PriceUnit TFloat, Summ TFloat, SummOrder TFloat
              , CodeUKTZED TVarChar, ExchangeId Integer, ExchangeCode Integer, ExchangeName TVarChar
+             , isResolution_224  Boolean
              , isErased Boolean
               )
 AS
@@ -237,6 +238,7 @@ BEGIN
                  , Object_Exchange.Id                                   AS ExchangeId
                  , Object_Exchange.ObjectCode                           AS ExchangeCode
                  , Object_Exchange.ValueData                            AS ExchangeName
+                 , Object_Goods_Main.isResolution_224                   AS isResolution_224
 
                  , COALESCE(MovementItem_UnnamedEnterprises.IsErased,FALSE)           AS isErased
             FROM _tmpGoodsMinPrice_List as tmpGoods
@@ -327,13 +329,13 @@ BEGIN
                              )                                      
 
             SELECT
-                   MovementItem_UnnamedEnterprises.Id          AS Id
-                 , Object_Goods.Id                                      AS GoodsId
-                 , Object_Goods.ObjectCode                              AS GoodsCode
-                 , Object_Goods.ValueData                               AS GoodsName
-                 , ObjectString_Goods_NameUkr.ValueData                 AS GoodsNameUkr
+                   MovementItem_UnnamedEnterprises.Id                   AS Id
+                 , Object_Goods_Retail.Id                               AS GoodsId
+                 , Object_Goods_Main.ObjectCode                         AS GoodsCode
+                 , Object_Goods_Main.Name                               AS GoodsName
+                 , Object_Goods_Main.NameUkr                            AS GoodsNameUkr
 
-                 , ObjectLink_Goods_NDSKind.ChildObjectId               AS NDSKindId
+                 , Object_NDSKind.Id                                    AS NDSKindId
                  , Object_NDSKind.ObjectCode                            AS NDSKindCode
                  , Object_NDSKind.ValueData                             AS NDSKindName
                  , ObjectFloat_NDSKind_NDS.ValueData                    AS NDS
@@ -346,16 +348,18 @@ BEGIN
                  , MovementItem_UnnamedEnterprises.Summ                 AS Summ
                  , MovementItem_UnnamedEnterprises.SummOrder            AS SummOrder
 
-                 , ObjectString_Goods_CodeUKTZED.ValueData              AS CodeUKTZED
+                 , Object_Goods_Main.CodeUKTZED                         AS CodeUKTZED
 
                  , Object_Exchange.Id                                   AS ExchangeId
                  , Object_Exchange.ObjectCode                           AS ExchangeCode
                  , Object_Exchange.ValueData                            AS ExchangeName
+                 , Object_Goods_Main.isResolution_224                   AS isResolution_224
 
                  , MovementItem_UnnamedEnterprises.IsErased    AS isErased
             FROM MovementItem_UnnamedEnterprises
 
-                LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem_UnnamedEnterprises.GoodsId
+                LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.Id = MovementItem_UnnamedEnterprises.GoodsId
+                LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId
 
                 LEFT OUTER JOIN tmpRemains ON tmpRemains.GoodsId = MovementItem_UnnamedEnterprises.GoodsId
 
@@ -363,28 +367,14 @@ BEGIN
                                                  ON MILinkObject_NDSKind.MovementItemId = MovementItem_UnnamedEnterprises.Id
                                                 AND MILinkObject_NDSKind.DescId = zc_MILinkObject_NDSKind()
 
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                                     ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
-                                    AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
-                LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = COALESCE (MILinkObject_NDSKind.ObjectId, ObjectLink_Goods_NDSKind.ChildObjectId)
+                LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = COALESCE (MILinkObject_NDSKind.ObjectId, Object_Goods_Main.NDSKindId)
                 LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
                                       ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id 
                                      AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
 
-                LEFT JOIN ObjectString AS ObjectString_Goods_NameUkr
-                                       ON ObjectString_Goods_NameUkr.ObjectId = Object_Goods.Id
-                                      AND ObjectString_Goods_NameUkr.DescId = zc_ObjectString_Goods_NameUkr()
-
-                LEFT JOIN ObjectString AS ObjectString_Goods_CodeUKTZED
-                                       ON ObjectString_Goods_CodeUKTZED.ObjectId = Object_Goods.Id
-                                      AND ObjectString_Goods_CodeUKTZED.DescId = zc_ObjectString_Goods_CodeUKTZED()
-
-                LEFT JOIN ObjectLink AS ObjectLink_Goods_Exchange
-                                     ON ObjectLink_Goods_Exchange.ObjectId = Object_Goods.Id
-                                    AND ObjectLink_Goods_Exchange.DescId = zc_ObjectLink_Goods_Exchange()
-                LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = ObjectLink_Goods_Exchange.ChildObjectId
+                LEFT JOIN Object AS Object_Exchange ON Object_Exchange.Id = Object_Goods_Main.ExchangeId
                 
-                LEFT JOIN tmpPrice AS Price_Unit ON Price_Unit.GoodsId = Object_Goods.Id; 
+                LEFT JOIN tmpPrice AS Price_Unit ON Price_Unit.GoodsId = Object_Goods_Retail.Id; 
      END IF;
 END;
 $BODY$
