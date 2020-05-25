@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Sh(
     IN inId                    Integer  , -- ключ объекта <Товар>
     IN inGoodsId               Integer  , -- Товары
     IN inGoodsKindId           Integer  , -- Виды товаров
-    IN inisGoodsTypeKind_Sh   Boolean , -- 
+    IN inIsGoodsTypeKind_Sh    Boolean , -- 
     IN inSession               TVarChar 
 )
 RETURNS VOID
@@ -20,15 +20,16 @@ BEGIN
 
 
    -- проверка уникальности
-   IF EXISTS (SELECT ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId
+   IF EXISTS (SELECT 1
               FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                    LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                         ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
                                        AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-              WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
-                AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = inGoodsId
+              WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId                          = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   = inGoodsId
                 AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = COALESCE (inGoodsKindId, 0)
-                AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId <> COALESCE (inId, 0))
+                AND ObjectLink_GoodsByGoodsKind_Goods.ObjectId                        <> COALESCE (inId, 0)
+             )
    THEN 
        RAISE EXCEPTION 'Ошибка.Значение  <%> + <%> уже есть в справочнике. Дублирование запрещено.', lfGet_Object_ValueData (inGoodsId), lfGet_Object_ValueData (inGoodsKindId);
    END IF;   
@@ -65,7 +66,7 @@ BEGIN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), inId, zc_Enum_GoodsTypeKind_Sh());
 
-         --WmsCode
+         -- WmsCode
          IF NOT EXISTS (SELECT ObjectFloat.ValueData
                         FROM ObjectFloat
                         WHERE ObjectFloat.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCode()

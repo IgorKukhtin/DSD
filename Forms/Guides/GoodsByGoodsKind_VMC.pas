@@ -89,8 +89,6 @@ type
     bbUpdateNom_No: TdxBarButton;
     bbUpdateVes_Yes: TdxBarButton;
     bbUpdateVes_No: TdxBarButton;
-    CodeCalc_Sh: TcxGridDBColumn;
-    isCodeCalc_Diff: TcxGridDBColumn;
     BoxChoiceForm: TOpenChoiceForm;
     Box2ChoiceForm: TOpenChoiceForm;
     Panel: TPanel;

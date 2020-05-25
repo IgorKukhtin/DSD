@@ -210,7 +210,7 @@ BEGIN
                                               , inSession          := inSession
                                                ) AS MovementId
 
-           FROM (SELECT DISTINCT _tmpResult_Partion_a.UnitId_from, _tmpResult_Partion_a.UnitId_to FROM _tmpResult_Partion_a) AS tmp
+           FROM (SELECT DISTINCT _tmpResult_Partion_a.UnitId_from, _tmpResult_Partion_a.UnitId_to FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount > 0) AS tmp
           ) AS tmp
      WHERE _tmpResult_Partion_a.UnitId_from = tmp.UnitId_from
        AND _tmpResult_Partion_a.UnitId_to   = tmp.UnitId_to

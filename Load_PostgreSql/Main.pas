@@ -2533,6 +2533,7 @@ begin
      toZConnection.Connected:=false;
      if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
      //
+     fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.myLogMemo_add(str :String);

@@ -45,9 +45,9 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isCheck_basis Boolean, isCheck_main Boolean
              , GoodsTypeKindId Integer, GoodsTypeKindName TVarChar
              , isGoodsTypeKind_Sh Boolean, isGoodsTypeKind_Nom Boolean, isGoodsTypeKind_Ves Boolean
-             , CodeCalc TVarChar      -- Код ВМС
 
-             , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
+           --, CodeCalc TVarChar      -- Код ВМС
+           --, isCodeCalc_Diff Boolean   -- Повтор кода ВМС
 
              , WmsCellNum        Integer     -- № Ячейки на складе ВМС
              , WmsCode           Integer     -- новый Код ВМС*
@@ -132,7 +132,7 @@ BEGIN
                                   SELECT *
                                        , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Sh) :: TVarChar AS WmsNameCalc
                                        , tmp.WmsCodeCalc_Sh   ::Integer   AS sku_code
-                                       , tmp.CodeCalc_Sh                  AS CodeCalc
+                                     --, tmp.CodeCalc_Sh                  AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Sh()       AS GoodsTypeKindId
 
                                        , tmp.WeightAvg_Sh                 AS WeightAvg
@@ -154,7 +154,7 @@ BEGIN
                                   SELECT *
                                        , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Nom) :: TVarChar AS WmsNameCalc
                                        , tmp.WmsCodeCalc_Nom  ::Integer   AS sku_code
-                                       , tmp.CodeCalc_Nom                 AS CodeCalc
+                                     --, tmp.CodeCalc_Nom                 AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Nom()      AS GoodsTypeKindId
 
                                        , tmp.WeightAvg_Nom                AS WeightAvg
@@ -176,7 +176,7 @@ BEGIN
                                   SELECT *
                                        , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Ves) :: TVarChar AS WmsNameCalc
                                        , tmp.WmsCodeCalc_Ves  ::Integer   AS sku_code
-                                       , tmp.CodeCalc_Ves                 AS CodeCalc
+                                     --, tmp.CodeCalc_Ves                 AS CodeCalc
                                        , zc_Enum_GoodsTypeKind_Ves()      AS GoodsTypeKindId
 
                                        , tmp.WeightAvg_Ves                AS WeightAvg
@@ -198,7 +198,7 @@ BEGIN
                                   SELECT *
                                        , '' :: TVarChar AS WmsNameCalc
                                        , 0  :: Integer  AS sku_code
-                                       , '' :: TVarChar AS CodeCalc
+                                     --, '' :: TVarChar AS CodeCalc
                                        , 0              AS GoodsTypeKindId
 
                                        , 0  :: TFloat   AS WeightAvg
@@ -307,10 +307,9 @@ BEGIN
            , tmpGoodsByGoodsKind.isGoodsTypeKind_Nom
            , tmpGoodsByGoodsKind.isGoodsTypeKind_Ves
 
-           , COALESCE (tmpGoodsByGoodsKind_line_sh.CodeCalc, tmpGoodsByGoodsKind.CodeCalc) :: TVarChar AS CodeCalc -- расчет: код на упак+вид+бренд+категория
-
+         --, COALESCE (tmpGoodsByGoodsKind_line_sh.CodeCalc, tmpGoodsByGoodsKind.CodeCalc) :: TVarChar AS CodeCalc -- расчет: код на упак+вид+бренд+категория
              -- Повтор кода ВМС - расчет: код на упак+вид+бренд+категория
-           , tmpGoodsByGoodsKind.isCodeCalc_Diff                                         -- Повтор кода ВМС
+         --, tmpGoodsByGoodsKind.isCodeCalc_Diff                                         -- Повтор кода ВМС
 
            , COALESCE (tmpGoodsByGoodsKind_line_sh.WmsCellNum, tmpGoodsByGoodsKind.WmsCellNum)  :: Integer AS WmsCellNum    -- 
            , COALESCE (tmpGoodsByGoodsKind_line_sh.WmsCode, tmpGoodsByGoodsKind.WmsCode)        :: Integer AS WmsCode       -- Код ВМС* для выгрузки

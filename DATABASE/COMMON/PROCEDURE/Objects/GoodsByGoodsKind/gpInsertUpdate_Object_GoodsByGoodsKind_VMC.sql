@@ -139,10 +139,12 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbGoodsPropertyBoxId Integer;
-   DECLARE vbWmsCode Integer;
-   DECLARE vbBoxId_Retail Integer;
-   DECLARE vbGoodsPropertyValueId Integer;
+
+   DECLARE vbGoodsPropertyBoxId    Integer;
+   DECLARE vbWmsCode               Integer;
+   DECLARE vbBoxId_Retail          Integer;
+   DECLARE vbGoodsPropertyValueId  Integer;
+   DECLARE vbGoodsByGoodsKindId_sh Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_GoodsByGoodsKind_VMC());
@@ -228,6 +230,54 @@ BEGIN
    THEN
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, zc_Enum_GoodsTypeKind_Sh());
+
+       IF inGoodsId_sh > 0
+       THEN
+           -- проверка
+           IF COALESCE (inGoodsKindId_sh, 0) = 0
+           THEN 
+               RAISE EXCEPTION 'Ошибка.Не установлен <Альтернативный Вид товара (из кат."Штучный")>.';
+           END IF;   
+
+           -- нашли куда продублировать - только для Категории ШТ.
+           vbGoodsByGoodsKindId_sh:= (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                      FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                               AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                      WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId                          = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                        AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   = inGoodsId_sh
+                                        AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = inGoodsKindId_sh
+                                     );
+           --
+           PERFORM gpUpdate_Object_GoodsByGoodsKind_GoodsTypeKind_Sh (inId                 := vbGoodsByGoodsKindId_sh
+                                                                    , inGoodsId            := inGoodsId_sh
+                                                                    , inGoodsKindId        := inGoodsKindId_sh
+                                                                    , inIsGoodsTypeKind_Sh := TRUE
+                                                                    , inSession            := inSession
+                                                                     );
+           -- если был Insert
+           IF COALESCE (vbGoodsByGoodsKindId_sh, 0) = 0
+           THEN
+               -- еще раз - нашли куда продублировать - только для Категории ШТ.
+               vbGoodsByGoodsKindId_sh:= (SELECT ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                          FROM ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                               LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                                                    ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                                                   AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId   = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+                                          WHERE ObjectLink_GoodsByGoodsKind_Goods.DescId                          = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                                            AND ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId                   = inGoodsId_sh
+                                            AND COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) = inGoodsKindId_sh
+                                         );
+           END IF;
+
+           -- сохранили свойство <>
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Avg_Sh(), vbGoodsByGoodsKindId_sh, inWeightAvg_Sh);
+           -- сохранили свойство <>
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh(), vbGoodsByGoodsKindId_sh, inTax_Sh);
+
+       END IF;
+
    ELSE
          -- сохранили свойство <>
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind_GoodsTypeKind_Sh(), ioId, Null);

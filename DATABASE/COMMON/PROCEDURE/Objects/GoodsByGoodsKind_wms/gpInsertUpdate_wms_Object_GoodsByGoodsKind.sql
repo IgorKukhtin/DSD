@@ -15,56 +15,7 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_wms_Object_GoodsByGoodsKind());
 
-/*
-    -- заливаем в линейную табл. - данные из zc_Object_GoodsByGoodsKind
-    CREATE TEMP TABLE _tmpGoodsByGoodsKind (ObjectId Integer, GoodsId Integer, GoodsKindId Integer, MeasureId Integer, GoodsTypeKindId_Sh Integer, GoodsTypeKindId_Nom Integer, GoodsTypeKindId_Ves Integer
-                                          , WeightMin TFloat, WeightMax TFloat, NormInDays TFloat, Height TFloat, Length TFloat, Width TFloat, WmsCode Integer
-                                          , GoodsPropertyBoxId Integer, BoxId Integer, BoxWeight TFloat, WeightOnBox TFloat, CountOnBox TFloat
-                                          , WmsCellNum Integer
-                                          , sku_id_Sh   TVarChar, sku_id_Nom   TVarChar, sku_id_Ves   TVarChar
-                                          , sku_code_Sh TVarChar, sku_code_Nom TVarChar, sku_code_Ves TVarChar
-                                          , isErased Boolean
-                                           ) ON COMMIT DROP;
-          INSERT INTO _tmpGoodsByGoodsKind (ObjectId, GoodsId, GoodsKindId, MeasureId, GoodsTypeKindId_Sh, GoodsTypeKindId_Nom, GoodsTypeKindId_Ves
-                                          , WeightMin, WeightMax, NormInDays, Height, Length, Width, WmsCode
-                                          , GoodsPropertyBoxId, BoxId, BoxWeight, WeightOnBox, CountOnBox
-                                          , WmsCellNum
-                                          , sku_id_Sh,   sku_id_Nom,   sku_id_Ves
-                                          , sku_code_Sh, sku_code_Nom, sku_code_Ves
-                                          , isErased
-                                           )
-          -- Результат
-          SELECT tmp.Id AS ObjectId
-               , tmp.GoodsId
-               , tmp.GoodsKindId
-               , tmp.MeasureId
-               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Sh,   FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Sh()  ELSE NULL END AS GoodsTypeKindId_Sh
-               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Nom,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Nom() ELSE NULL END AS GoodsTypeKindId_Nom
-               , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Ves,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Ves() ELSE NULL END AS GoodsTypeKindId_Ves
-               , tmp.WeightMin
-               , tmp.WeightMax
-               , tmp.NormInDays
-               , tmp.Height
-               , tmp.Length
-               , tmp.Width
-               , tmp.WmsCode
-               , tmp.GoodsPropertyBoxId
-               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
-               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
-               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
-               , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
-               , tmp.WmsCellNum
-               , tmp.Id * 10 + 1 AS sku_id_Sh
-               , tmp.Id * 10 + 2 AS sku_id_Nom
-               , tmp.Id * 10 + 3 AS sku_id_Ves
-               , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
-               , Object_GoodsByGoodsKind.isErased
-          FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
-               LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
-          WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0
-         ;
-  */
-          -- Обновляем существующие ObjectId
+          -- 1.1. Обновляем существующие ObjectId
           UPDATE wms_Object_GoodsByGoodsKind
            SET GoodsId               = tmp.GoodsId
              , GoodsKindId           = tmp.GoodsKindId
@@ -97,20 +48,9 @@ BEGIN
              , WeightOnBox_Ves       = tmp.WeightOnBox_Ves
 
                -- calc = средниний вес 1ед. по всем категориям
-             , WeightMin             = (tmp.WeightMin_Sh + tmp.WeightMin_Nom + tmp.WeightMin_Ves)
-                                     / CASE WHEN tmp.WeightMin_Sh = 0 AND tmp.WeightMin_Nom = 0 AND tmp.WeightMin_Ves = 0
-                                                 THEN 1
-                                            ELSE CASE WHEN tmp.WeightMin_Sh  > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightMin_Nom > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightMin_Ves > 0  THEN 1 ELSE 0 END
-                                       END
-             , WeightMax             = (tmp.WeightMax_Sh + tmp.WeightMax_Nom + tmp.WeightMax_Ves)
-                                     / CASE WHEN tmp.WeightMax_Sh = 0 AND tmp.WeightMax_Nom = 0 AND tmp.WeightMax_Ves = 0
-                                                 THEN 1
-                                            ELSE CASE WHEN tmp.WeightMax_Sh  > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightMax_Nom > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightMax_Ves > 0  THEN 1 ELSE 0 END
-                                       END
+             , WeightMin             = tmp.WeightMin
+             , WeightMax             = tmp.WeightMax
+
                -- Cрок годности, дн.
              , NormInDays            = tmp.NormInDays
                -- Высота + Длина + Ширина
@@ -124,14 +64,8 @@ BEGIN
              , BoxId                 = tmp.BoxId
              , BoxWeight             = tmp.BoxWeight
 
-               -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
-             , WeightOnBox           = (tmp.WeightOnBox_Sh + tmp.WeightOnBox_Nom + tmp.WeightOnBox_Ves)
-                                     / CASE WHEN tmp.WeightOnBox_Sh = 0 AND tmp.WeightOnBox_Nom = 0 AND tmp.WeightOnBox_Ves = 0
-                                                 THEN 1
-                                            ELSE CASE WHEN tmp.WeightOnBox_Sh  > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightOnBox_Nom > 0  THEN 1 ELSE 0 END
-                                               + CASE WHEN tmp.WeightOnBox_Ves > 0  THEN 1 ELSE 0 END
-                                       END
+               -- !!!Вес нетто в ящ (E2/E3) - по всем категориям
+             , WeightOnBox           = tmp.WeightOnBox
                -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
              , CountOnBox            = tmp.CountOnBox
 
@@ -149,27 +83,99 @@ BEGIN
                --
              , isErased              = tmp.isErased
 
-        --FROM _tmpGoodsByGoodsKind AS tmp
-
-          -- Результат
-          FROM (SELECT -- GoodsByGoodsKindId
-                       tmp.Id AS ObjectId
-                       --
+          FROM (-- 1.1.
+                WITH _tmpGoodsByGoodsKind AS
+                        (SELECT tmp.Id AS ObjectId -- это GoodsByGoodsKind.Id
+                                --
+                              , tmp.GoodsId
+                              , tmp.GoodsKindId
+                              , tmp.MeasureId
+                                -- GoodsTypeKindId
+                              , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Sh,   FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Sh()  ELSE NULL END AS GoodsTypeKindId_Sh
+                              , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Nom,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Nom() ELSE NULL END AS GoodsTypeKindId_Nom
+                              , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Ves,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Ves() ELSE NULL END AS GoodsTypeKindId_Ves
+                                -- замена кода - на категорию "Штучный"
+                              , tmp.GoodsId_Sh
+                              , tmp.GoodsKindId_Sh
+                                -- средний вес 1ед.
+                              , tmp.WeightAvg_Sh
+                              , tmp.WeightAvg_Nom
+                              , tmp.WeightAvg_Ves
+                                -- % отклонения веса 1ед.
+                              , tmp.Tax_Sh
+                              , tmp.Tax_Nom
+                              , tmp.Tax_Ves
+                                -- мин/макс вес 1ед.
+                              , tmp.WeightMin_Sh
+                              , tmp.WeightMax_Sh
+                              , tmp.WeightMin_Nom
+                              , tmp.WeightMax_Nom
+                              , tmp.WeightMin_Ves
+                              , tmp.WeightMax_Ves
+                                -- Вес нетто в ящ. (E2/E3)
+                              , tmp.WeightOnBox_Sh
+                              , tmp.WeightOnBox_Nom
+                              , tmp.WeightOnBox_Ves
+                 
+                                -- calc = средниний вес 1ед. по всем категориям
+                            --, tmp.WeightMin
+                            --, tmp.WeightMax
+                                --
+                              , tmp.NormInDays
+         
+                              , tmp.Height
+                              , tmp.Length
+                              , tmp.Width
+         
+                                -- Код ВМС - для sku_code
+                              , tmp.WmsCode
+         
+                                --
+                              , tmp.GoodsPropertyBoxId
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
+         
+                                -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
+                            --, CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
+                                -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
+         
+                                -- № Ячейки на складе ВМС
+                              , tmp.WmsCellNum
+         
+                               -- !!! sku_id = GoodsByGoodsKindId + ... !!!
+                              , tmp.Id * 10 + 1 AS sku_id_Sh
+                              , tmp.Id * 10 + 2 AS sku_id_Nom
+                              , tmp.Id * 10 + 3 AS sku_id_Ves
+                                -- sku_code
+                              , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
+         
+                                --
+                              , Object_GoodsByGoodsKind.isErased
+         
+                         FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
+                              LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
+                         WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0
+                        )
+                -- 1.2.Результат
+                SELECT -- GoodsByGoodsKindId
+                       tmp.ObjectId
                      , tmp.GoodsId
                      , tmp.GoodsKindId
                      , tmp.MeasureId
-                       -- GoodsTypeKindId
-                     , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Sh,   FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Sh()  ELSE NULL END AS GoodsTypeKindId_Sh
-                     , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Nom,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Nom() ELSE NULL END AS GoodsTypeKindId_Nom
-                     , CASE WHEN COALESCE (tmp.isGoodsTypeKind_Ves,  FALSE) <> FALSE THEN zc_Enum_GoodsTypeKind_Ves() ELSE NULL END AS GoodsTypeKindId_Ves
-
+                     , tmp.GoodsTypeKindId_Sh
+                     , tmp.GoodsTypeKindId_Nom
+                     , tmp.GoodsTypeKindId_Ves
+          
                        -- замена кода - на категорию "Штучный"
                      , tmp.GoodsId_Sh
                      , tmp.GoodsKindId_Sh
+          
                        -- средний вес 1ед.
                      , tmp.WeightAvg_Sh
                      , tmp.WeightAvg_Nom
                      , tmp.WeightAvg_Ves
+          
                        -- % отклонения веса 1ед.
                      , tmp.Tax_Sh
                      , tmp.Tax_Nom
@@ -185,50 +191,69 @@ BEGIN
                      , tmp.WeightOnBox_Sh
                      , tmp.WeightOnBox_Nom
                      , tmp.WeightOnBox_Ves
-        
+          
                        -- calc = средниний вес 1ед. по всем категориям
-                   --, tmp.WeightMin
-                   --, tmp.WeightMax
-                       --
+                     , (tmp.WeightMin_Sh + tmp.WeightMin_Nom + tmp.WeightMin_Ves)
+                     / CASE WHEN tmp.WeightMin_Sh = 0 AND tmp.WeightMin_Nom = 0 AND tmp.WeightMin_Ves = 0
+                                 THEN 1
+                            ELSE CASE WHEN tmp.WeightMin_Sh  > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightMin_Nom > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightMin_Ves > 0  THEN 1 ELSE 0 END
+                       END AS WeightMin
+                     , (tmp.WeightMax_Sh + tmp.WeightMax_Nom + tmp.WeightMax_Ves)
+                     / CASE WHEN tmp.WeightMax_Sh = 0 AND tmp.WeightMax_Nom = 0 AND tmp.WeightMax_Ves = 0
+                                 THEN 1
+                            ELSE CASE WHEN tmp.WeightMax_Sh  > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightMax_Nom > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightMax_Ves > 0  THEN 1 ELSE 0 END
+                       END AS WeightMax
+          
+                       -- Cрок годности, дн.
                      , tmp.NormInDays
-
+                       -- Высота + Длина + Ширина
                      , tmp.Height
                      , tmp.Length
                      , tmp.Width
-
                        -- Код ВМС - для sku_code
                      , tmp.WmsCode
-
                        --
                      , tmp.GoodsPropertyBoxId
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
-
-                       -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
-                   --, CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
+                     , tmp.BoxId
+                     , tmp.BoxWeight
+          
+                       -- !!!***calc = Вес нетто в ящ (E2/E3) - по всем категориям
+                     , (tmp.WeightOnBox_Sh + tmp.WeightOnBox_Nom + tmp.WeightOnBox_Ves)
+                     / CASE WHEN tmp.WeightOnBox_Sh = 0 AND tmp.WeightOnBox_Nom = 0 AND tmp.WeightOnBox_Ves = 0
+                                 THEN 1
+                            ELSE CASE WHEN tmp.WeightOnBox_Sh  > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightOnBox_Nom > 0  THEN 1 ELSE 0 END
+                               + CASE WHEN tmp.WeightOnBox_Ves > 0  THEN 1 ELSE 0 END
+                       END AS WeightOnBox
                        -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
-
-                       -- № Ячейки на складе ВМС
+                     , tmp.CountOnBox
+          
+                       -- *** НЕ замена - WmsCellNum для Шт.
                      , tmp.WmsCellNum
-
-                      -- !!! sku_id = GoodsByGoodsKindId + ... !!!
-                     , tmp.Id * 10 + 1 AS sku_id_Sh
-                     , tmp.Id * 10 + 2 AS sku_id_Nom
-                     , tmp.Id * 10 + 3 AS sku_id_Ves
-                       -- sku_code
-                     , tmp.WmsCodeCalc_Sh AS sku_code_Sh, tmp.WmsCodeCalc_Nom AS sku_code_Nom, tmp.WmsCodeCalc_Ves AS sku_code_Ves
-
+                       -- ***замена - sku_id для Шт.
+                     , COALESCE (wms_Object_GoodsByGoodsKind_sh.sku_id_Sh, tmp.sku_id_Sh) AS sku_id_Sh
                        --
-                     , Object_GoodsByGoodsKind.isErased
-
-                FROM gpSelect_Object_GoodsByGoodsKind_VMC (0, 0 , 0, 0, 0, 0, inSession) AS tmp
-                     LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
-                WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0
+                     , tmp.sku_id_Nom,   tmp.sku_id_Ves
+                       -- ***замена - sku_code для Шт.
+                     , COALESCE (wms_Object_GoodsByGoodsKind_sh.sku_code_Sh, tmp.sku_code_Sh) AS sku_code_Sh
+                       --
+                     , tmp.sku_code_Nom, tmp.sku_code_Ves
+                     , tmp.isErased
+                FROM _tmpGoodsByGoodsKind AS tmp
+                     LEFT JOIN _tmpGoodsByGoodsKind AS wms_Object_GoodsByGoodsKind_sh
+                                                    ON wms_Object_GoodsByGoodsKind_sh.GoodsId            = tmp.GoodsId
+                                                   AND wms_Object_GoodsByGoodsKind_sh.GoodsKindId        = tmp.GoodsKindId
+                                                   AND wms_Object_GoodsByGoodsKind_sh.GoodsTypeKindId_Sh = tmp.GoodsTypeKindId_Sh
+                                                   AND tmp.GoodsTypeKindId_Sh                            > 0
+          
                ) AS tmp
           WHERE tmp.ObjectId = wms_Object_GoodsByGoodsKind.ObjectId;
 
-     -- добавляем новые ObjectId
+     -- 2. добавляем новые ObjectId
      INSERT INTO wms_Object_GoodsByGoodsKind (ObjectId
                                             , GoodsId
                                             , GoodsKindId
@@ -289,9 +314,9 @@ BEGIN
                                               --
                                             , isErased
                                              )
+       -- 2.1.
        WITH _tmpGoodsByGoodsKind AS
-               (SELECT -- GoodsByGoodsKindId
-                       tmp.Id AS ObjectId
+               (SELECT tmp.Id AS ObjectId -- это GoodsByGoodsKind.Id
                        --
                      , tmp.GoodsId
                      , tmp.GoodsKindId
@@ -363,7 +388,7 @@ BEGIN
                      LEFT JOIN Object AS Object_GoodsByGoodsKind ON Object_GoodsByGoodsKind.Id = tmp.Id
                 WHERE tmp.GoodsId > 0 AND tmp.GoodsKindId > 0
                )
-      -- Результат
+      -- 2.2. Результат
       SELECT tmp.ObjectId
            , tmp.GoodsId
            , tmp.GoodsKindId
@@ -371,13 +396,16 @@ BEGIN
            , tmp.GoodsTypeKindId_Sh
            , tmp.GoodsTypeKindId_Nom
            , tmp.GoodsTypeKindId_Ves
+
              -- замена кода - на категорию "Штучный"
            , tmp.GoodsId_Sh
            , tmp.GoodsKindId_Sh
+
              -- средний вес 1ед.
            , tmp.WeightAvg_Sh
            , tmp.WeightAvg_Nom
            , tmp.WeightAvg_Ves
+
              -- % отклонения веса 1ед.
            , tmp.Tax_Sh
            , tmp.Tax_Nom
@@ -423,7 +451,7 @@ BEGIN
            , tmp.BoxId
            , tmp.BoxWeight
 
-             -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
+             -- !!!***calc = Вес нетто в ящ (E2/E3) - по всем категориям
            , (tmp.WeightOnBox_Sh + tmp.WeightOnBox_Nom + tmp.WeightOnBox_Ves)
            / CASE WHEN tmp.WeightOnBox_Sh = 0 AND tmp.WeightOnBox_Nom = 0 AND tmp.WeightOnBox_Ves = 0
                        THEN 1
@@ -433,10 +461,16 @@ BEGIN
              END AS WeightOnBox
              -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
            , tmp.CountOnBox
+
+             -- *** НЕ замена - WmsCellNum для Шт.
            , tmp.WmsCellNum
+             -- ***замена - sku_id для Шт.
            , COALESCE (wms_Object_GoodsByGoodsKind_sh.sku_id_Sh, tmp.sku_id_Sh) AS sku_id_Sh
+             --
            , tmp.sku_id_Nom,   tmp.sku_id_Ves
+             -- ***замена - sku_code для Шт.
            , COALESCE (wms_Object_GoodsByGoodsKind_sh.sku_code_Sh, tmp.sku_code_Sh) AS sku_code_Sh
+             --
            , tmp.sku_code_Nom, tmp.sku_code_Ves
            , tmp.isErased
       FROM _tmpGoodsByGoodsKind AS tmp

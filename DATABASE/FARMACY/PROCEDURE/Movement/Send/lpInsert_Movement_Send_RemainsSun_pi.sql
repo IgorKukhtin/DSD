@@ -1034,7 +1034,7 @@ BEGIN
                                                                                   ELSE COALESCE (_tmpSale_over.Amount_t1, 0)
                                                                              END)
                                       END > 0
-                                  
+
                                   AND (-- остаток больше чем N
                                        COALESCE (_tmpUnit_SUN.Limit_N, 0) < tmpOver_list.Amount
                                        -- или это парный товар
@@ -1623,6 +1623,66 @@ BEGIN
      CLOSE curPartion; -- закрыли курсор1
 
 
+     -- !!!”дал€ем Ќ≈ получившиес€ пары!!!
+     DELETE FROM _tmpResult_Partion 
+     WHERE (_tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar)
+           IN (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
+               FROM _tmpResult_Partion
+                    -- отдаем парный
+                    JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId_PairSun = _tmpResult_Partion.GoodsId
+                    -- а основной не получилось
+                    LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
+                                                 ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId
+                                                AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
+                                                AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
+               WHERE _tmpResult_Partion_check.GoodsId IS NULL
+              );
+
+     -- !!! ƒобавили парные, которых нет в ѕрайсе ...
+     INSERT INTO _tmpRemains_calc (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve
+                                 , AmountSun_real, AmountSun_summ, AmountSun_summ_save, AmountSun_unit, AmountSun_unit_save)
+       SELECT _tmpResult_Partion.UnitId_to
+            , _tmpResult_Partion.GoodsId
+            , _tmpResult_Partion.Summ / _tmpResult_Partion.Amount AS Price
+            , 0 AS MCS, 0 AS AmountResult, 0 AS AmountRemains, 0 AS AmountIncome, 0 AS AmountSend_in, 0 AS AmountSend_out, 0 AS AmountOrderExternal, 0 AS AmountReserve
+            , 0 AS AmountSun_real, 0 AS AmountSun_summ, 0 AS AmountSun_summ_save, 0 AS AmountSun_unit, 0 AS AmountSun_unit_save
+       FROM _tmpResult_Partion
+            LEFT JOIN _tmpRemains_calc ON _tmpRemains_calc.UnitId  = _tmpResult_Partion.UnitId_to
+                                      AND _tmpRemains_calc.GoodsId = _tmpResult_Partion.GoodsId
+       WHERE _tmpRemains_calc.UnitId IS NULL
+         AND _tmpResult_Partion.Amount > 0
+      ;
+
+     -- !!!проверка - получившиес€ пары - дл€ теста!!!
+     IF (inUserId <> 5 OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 11)
+     AND EXISTS (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
+                 FROM _tmpResult_Partion
+                      -- нашли пару
+                      JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
+                      -- а здесь не нашли
+                      LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
+                                                   ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                  AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
+                                                  AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
+                                                  AND _tmpResult_Partion_check.Amount      = _tmpResult_Partion.Amount
+                 WHERE _tmpResult_Partion_check.GoodsId IS NULL
+                )
+     THEN
+         RAISE EXCEPTION 'ќшибка.Ќе найдена пара в перемещении дл€ <%>', (SELECT lfGet_Object_ValueData_sh (_tmpResult_Partion.UnitId_from) || ' => ' || lfGet_Object_ValueData_sh (_tmpResult_Partion.UnitId_to) || ' : ' || lfGet_Object_ValueData (_tmpResult_Partion.GoodsId)
+                                                                          FROM _tmpResult_Partion
+                                                                               -- нашли пару
+                                                                               JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
+                                                                               -- а здесь не нашли
+                                                                               LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
+                                                                                                            ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                                                                           AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
+                                                                                                           AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
+                                                                                                           AND _tmpResult_Partion_check.Amount      = _tmpResult_Partion.Amount
+                                                                          WHERE _tmpResult_Partion_check.GoodsId IS NULL
+                                                                         );
+     END IF;
+
+
      -- 6.1.2. !!!важно, дл€ vbSumm_limit - оставл€ем только по условию!!!
      DELETE FROM _tmpResult_Partion
      WHERE _tmpResult_Partion.UnitId_from :: TVarChar || ' - ' || _tmpResult_Partion.UnitId_to :: TVarChar
@@ -1806,7 +1866,12 @@ BEGIN
                       ) AS tmpRemains_sum ON tmpRemains_sum.GoodsId = _tmpRemains_calc.GoodsId
             LEFT JOIN _tmpSale_over AS _tmpSale ON _tmpSale.UnitId  = _tmpRemains_calc.UnitId
                                                AND _tmpSale.GoodsId = _tmpRemains_calc.GoodsId
-       -- ORDER BY Object_Goods.ObjectCode, Object_Unit.ValueData
+
+-- тест дл€ пары
+--     WHERE _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId FROM _tmpGoods_SUN_PairSun)
+--        OR _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun)
+
+     -- ORDER BY Object_Goods.ObjectCode, Object_Unit.ValueData
        ORDER BY Object_Goods.ValueData, Object_Unit.ValueData
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ValueData
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ObjectCode
