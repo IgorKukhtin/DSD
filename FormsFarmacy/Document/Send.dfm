@@ -722,6 +722,7 @@ inherited SendForm: TSendForm
       Top = 59
       ExplicitTop = 59
       ExplicitWidth = 181
+      ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
@@ -1590,6 +1591,20 @@ inherited SendForm: TSendForm
         end>
       isShowModal = False
     end
+    object actExecSetConfirmed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Confirmed
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Confirmed
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      ImageIndex = 51
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"?'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 424
@@ -1753,6 +1768,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1835,6 +1854,10 @@ inherited SendForm: TSendForm
     end
     object dxBarButton5: TdxBarButton
       Action = actCreateLoss
+      Category = 0
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actExecSetConfirmed
       Category = 0
     end
   end
@@ -3494,5 +3517,37 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 878
     Top = 400
+  end
+  object spUpdate_Movement_Confirmed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Confirmed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = 'False'
+        Component = cbConfirmed
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisConfirmed'
+        Value = 'False'
+        Component = cbConfirmed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 291
   end
 end

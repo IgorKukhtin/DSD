@@ -168,6 +168,9 @@ type
     cbVIP: TcxCheckBox;
     cbConfirmed: TcxCheckBox;
     cbUrgently: TcxCheckBox;
+    actExecSetConfirmed: TdsdExecStoredProc;
+    spUpdate_Movement_Confirmed: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
   private
     { Private declarations }
   public

@@ -40,6 +40,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Role_GoodsAccounting() RETURNS integer AS $BO
 
 CREATE OR REPLACE FUNCTION zc_Enum_Role_WorkWithTheFund() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_WorkWithTheFund' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Role_SendVIP() RETURNS integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Role_SendVIP' AND DescId = zc_ObjectString_Enum()); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- !!!
 -- !!! Подразделение для роли Директор Партнер
 -- !!!

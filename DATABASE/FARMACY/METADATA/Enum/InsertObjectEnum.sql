@@ -122,6 +122,16 @@ BEGIN
        PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_WorkWithTheFund(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_WorkWithTheFund'), inName:= 'Работа с Фондом', inEnumName:= 'zc_Enum_Role_WorkWithTheFund');
    END IF;
 
+   -- zc_Enum_Role_SendVIP
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Вип перемещения')
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Вип перемещения')
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_SendVIP');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_SendVIP(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_SendVIP'), inName:= 'Вип перемещения', inEnumName:= 'zc_Enum_Role_SendVIP');
+   END IF;
+
 
 END $$;
 /*

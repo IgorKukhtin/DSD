@@ -16,23 +16,7 @@ inherited SendCashJournalForm: TSendCashJournalForm
       end
     end
   end
-  inherited PrintHeaderCDS: TClientDataSet [2]
-  end
-  inherited PrintItemsCDS: TClientDataSet [3]
-  end
-  inherited spSelectPrint: TdsdStoredProc [4]
-  end
-  inherited PrintItemsSverkaCDS: TClientDataSet [5]
-  end
-  inherited spUpdate_Movement_OperDate: TdsdStoredProc [6]
-  end
-  inherited spUpdate_isDeferred_No: TdsdStoredProc [7]
-  end
-  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [8]
-  end
-  inherited spUpdate_Movement_Received: TdsdStoredProc [9]
-  end
-  inherited ActionList: TActionList [10]
+  inherited ActionList: TActionList
     inherited actPrint: TdsdPrintAction
       MoveParams = <
         item
@@ -50,11 +34,7 @@ inherited SendCashJournalForm: TSendCashJournalForm
         end>
     end
   end
-  inherited MasterDS: TDataSource [11]
-  end
-  inherited MasterCDS: TClientDataSet [12]
-  end
-  inherited spSelect: TdsdStoredProc [13]
+  inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendCash'
     Params = <
       item
@@ -98,34 +78,33 @@ inherited SendCashJournalForm: TSendCashJournalForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVIP'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'isVIP'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inVIPType'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'VIPType'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [14]
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore [15]
-  end
-  inherited BarManager: TdxBarManager [16]
+  inherited BarManager: TdxBarManager
     DockControlHeights = (
       0
       0
       26
       0)
   end
-  inherited DBViewAddOn: TdsdDBViewAddOn [17]
-  end
-  inherited PopupMenu: TPopupMenu [18]
-  end
-  inherited PeriodChoice: TPeriodChoice [19]
-  end
-  inherited RefreshDispatcher: TRefreshDispatcher [20]
-  end
-  inherited spMovementComplete: TdsdStoredProc [21]
-  end
-  inherited spMovementUnComplete: TdsdStoredProc [22]
-  end
-  inherited spMovementSetErased: TdsdStoredProc [23]
-  end
-  inherited FormParams: TdsdFormParams [24]
+  inherited FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -172,8 +151,19 @@ inherited SendCashJournalForm: TSendCashJournalForm
         Value = 'False'
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVIP'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VIPType'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
-  end
-  inherited spMovementReComplete: TdsdStoredProc [25]
   end
 end

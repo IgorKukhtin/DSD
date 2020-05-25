@@ -21,6 +21,7 @@ $BODY$
    DECLARE vbisSent     Boolean;
    DECLARE vbisReceived Boolean;
    DECLARE vbNumberSeats Integer;
+   DECLARE vbisVIP       Boolean;
 BEGIN
 
    IF COALESCE(inMovementId, 0) = 0 THEN
@@ -41,7 +42,8 @@ BEGIN
         , COALESCE (MovementBoolean_Sent.ValueData, FALSE)::Boolean     AS isSent
         , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
         , MovementFloat_NumberSeats.ValueData::Integer                  AS NumberSeats
-   INTO vbStatusId, vbUnitIdTo, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats
+        , COALESCE (MovementBoolean_VIP.ValueData, FALSE)        ::Boolean AS isVIP
+   INTO vbStatusId, vbUnitIdTo, vbisDeferred, vbisSUN, vbisDefSUN, vbisSent, vbisReceived, vbNumberSeats, vbisVIP
    FROM Movement
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
@@ -72,6 +74,10 @@ BEGIN
                                     ON MovementFloat_NumberSeats.MovementId =  Movement.Id
                                    AND MovementFloat_NumberSeats.DescId = zc_MovementFloat_NumberSeats()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                      ON MovementBoolean_VIP.MovementId = Movement.Id
+                                     AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+
    WHERE Movement.Id = inMovementId;
 
    IF COALESCE(inisReceived, NOT vbisReceived) <> vbisReceived
@@ -90,9 +96,9 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Изменение <Получено-да> разрешено только сотруднику аптеки получателя.';
    END IF;
 
-   IF inisReceived = FALSE AND (vbisSUN <> TRUE OR vbisDeferred <> TRUE OR vbisSent <> TRUE)
+   IF inisReceived = FALSE AND (vbisSUN <> TRUE AND vbisVIP <> TRUE OR vbisDeferred <> TRUE OR vbisSent <> TRUE)
    THEN
-      RAISE EXCEPTION 'Ошибка. Для установки <Получено-да> документ должен быть с признаками <Перемещение по СУН>, <Отложен> и <Отправлено-да>.';
+      RAISE EXCEPTION 'Ошибка. Для установки <Получено-да> документ должен быть с признаками <Перемещение по СУН> или <Перемещение по VIP>, <Отложен> и <Отправлено-да>.';
    END IF;
 
    IF inisReceived = TRUE AND 
