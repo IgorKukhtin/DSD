@@ -171,6 +171,8 @@ type
     actExecSetConfirmed: TdsdExecStoredProc;
     spUpdate_Movement_Confirmed: TdsdStoredProc;
     dxBarButton6: TdxBarButton;
+    edConfirmed: TcxTextEdit;
+    actOpenConfirmedDialog: TOpenChoiceForm;
   private
     { Private declarations }
   public

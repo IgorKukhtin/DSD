@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isDeferred Boolean
              , isSUN Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean, isSUN_v4 Boolean
              , isDefSUN Boolean, isSent Boolean, isReceived Boolean, isNotDisplaySUN Boolean
-             , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean
+             , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean, ConfirmedText TVarChar
              , NumberSeats Integer
               )
 AS
@@ -68,6 +68,7 @@ BEGIN
              , FALSE                                            AS isVIP
              , FALSE                                            AS isUrgently
              , FALSE                                            AS isConfirmed
+             , CAST ('Не определено' AS TVarChar)               AS ConfirmedText
              , CAST (0 AS Integer)                              AS NumberSeats
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -107,6 +108,10 @@ BEGIN
            , COALESCE (MovementBoolean_VIP.ValueData, FALSE)     ::Boolean AS isVIP
            , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)::Boolean AS isUrgently
            , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)::Boolean AS isConfirmed           
+           , CASE WHEN COALESCE (MovementBoolean_VIP.ValueData, FALSE) = FALSE THEN 'Подтверждение'   
+                  WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтвержд.'   
+                  WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
+                  ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -233,4 +238,4 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1,inOperDate:='01.01.2019' :: TDateTime, inSession:= '9818')
+-- select * from gpGet_Movement_Send(inMovementId := 18968591 , inOperDate := ('25.05.2020')::TDateTime ,  inSession := '3');

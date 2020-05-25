@@ -31,6 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
              , DriverSunId Integer, DriverSunName TVarChar
              , NumberSeats Integer
+             , ConfirmedText TVarChar
               )
 
 AS
@@ -158,6 +159,11 @@ BEGIN
            , Object_DriverSun.ValueData  :: TVarChar AS DriverSunName
            
            , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
+
+           , CASE WHEN COALESCE (MovementBoolean_VIP.ValueData, FALSE) = FALSE THEN Null   
+                  WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтвержд.'   
+                  WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
+                  ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff

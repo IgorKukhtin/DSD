@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpUpdate_Movement_Confirmed(
     IN inMovementId          Integer   ,    -- ключ документа
     IN inisConfirmed         Boolean   ,    -- Подтвержден
    OUT outisConfirmed        Boolean   ,    -- Подтвержден
+   OUT outConfirmedText      TVarChar  ,
     IN inSession             TVarChar       -- текущий пользователь
 )
-RETURNS Boolean AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId      Integer;
    DECLARE vbUnitId      Integer;
@@ -62,11 +63,6 @@ BEGIN
 
    WHERE Movement.Id = inMovementId;
 
-   IF COALESCE(inisConfirmed, NOT vbisConfirmed) <> vbisConfirmed
-   THEN
-      RAISE EXCEPTION 'Ошибка. Признак <Подтвержден> бал изменен. Обновите данные и повторите изменение признака.';
-   END IF;
-
    IF COALESCE (vbStatusId, 0) <> zc_Enum_Status_UnComplete()
    THEN
       RAISE EXCEPTION 'Ошибка. Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
@@ -78,7 +74,7 @@ BEGIN
       RAISE EXCEPTION 'Ошибка. Изменение <Подтвержден> разрешено только сотруднику аптеки отправителя.';
    END IF;
 
-   IF inisConfirmed = FALSE AND vbisVIP <> TRUE
+   IF vbisVIP <> TRUE
    THEN
       RAISE EXCEPTION 'Ошибка. Для установки <Подтвержден> документ должен быть с признаками <Перемещение ВИП>.';
    END IF;
@@ -96,12 +92,15 @@ BEGIN
 */
 
    -- сохранили признак
-   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Confirmed(), inMovementId, NOT inisConfirmed);
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Confirmed(), inMovementId, inisConfirmed);
 
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
-   outisConfirmed := not inisConfirmed;
+   outisConfirmed := inisConfirmed;
+   outConfirmedText := CASE WHEN outisConfirmed = TRUE  THEN 'Подтвержден'   
+                            ELSE 'Не подтвержден' END;
+                            
 END;
 $BODY$
 

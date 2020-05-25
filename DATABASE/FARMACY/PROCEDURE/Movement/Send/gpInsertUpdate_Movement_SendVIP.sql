@@ -19,6 +19,10 @@ BEGIN
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      vbUserId := inSession;
 
+     IF COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0
+     THEN 
+       RAISE EXCEPTION 'Ошибка. Не заполнено подразделение..';             
+     END IF;     
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Send (ioId               := ioId
