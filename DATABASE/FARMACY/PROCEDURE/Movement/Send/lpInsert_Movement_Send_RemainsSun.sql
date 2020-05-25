@@ -181,20 +181,27 @@ BEGIN
                   ) :: TVarChar;
 
      -- все Подразделения для схемы SUN
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, Limit_N)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, DayIncome, DaySendSUN, Limit_N, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
         SELECT OB.ObjectId
              , COALESCE (OF_KoeffInSUN.ValueData, 0)  AS KoeffInSUN
              , COALESCE (OF_KoeffOutSUN.ValueData, 0) AS KoeffOutSUN
              , CASE WHEN OF_DI.ValueData >= 0 THEN OF_DI.ValueData ELSE 0  END :: Integer AS DayIncome
              , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
              , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat  AS Limit_N
+               -- TRUE = НЕ подключать чек "не для НТЗ"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 1 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLockSale
+               -- TRUE = НЕТ товаров "закрыт код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
+               -- TRUE = НЕТ товаров "убит код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
         FROM ObjectBoolean AS OB
-             LEFT JOIN ObjectFloat  AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
-             LEFT JOIN ObjectFloat  AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
-             LEFT JOIN ObjectString AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
-             LEFT JOIN ObjectFloat  AS OF_DI          ON OF_DI.ObjectId          = OB.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
-             LEFT JOIN ObjectFloat  AS OF_DS          ON OF_DS.ObjectId          = OB.ObjectId AND OF_DS.DescId          = zc_ObjectFloat_Unit_HT_SUN_v1()
-             LEFT JOIN ObjectFloat  AS OF_SN          ON OF_SN.ObjectId          = OB.ObjectId AND OF_SN.DescId          = zc_ObjectFloat_Unit_LimitSUN_N()
+             LEFT JOIN ObjectFloat   AS OF_KoeffInSUN  ON OF_KoeffInSUN.ObjectId  = OB.ObjectId AND OF_KoeffInSUN.DescId  = zc_ObjectFloat_Unit_KoeffInSUN()
+             LEFT JOIN ObjectFloat   AS OF_KoeffOutSUN ON OF_KoeffOutSUN.ObjectId = OB.ObjectId AND OF_KoeffOutSUN.DescId = zc_ObjectFloat_Unit_KoeffOutSUN()
+             LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
+             LEFT JOIN ObjectFloat   AS OF_DI          ON OF_DI.ObjectId          = OB.ObjectId AND OF_DI.DescId          = zc_ObjectFloat_Unit_SunIncome()
+             LEFT JOIN ObjectFloat   AS OF_DS          ON OF_DS.ObjectId          = OB.ObjectId AND OF_DS.DescId          = zc_ObjectFloat_Unit_HT_SUN_v1()
+             LEFT JOIN ObjectFloat   AS OF_SN          ON OF_SN.ObjectId          = OB.ObjectId AND OF_SN.DescId          = zc_ObjectFloat_Unit_LimitSUN_N()
+             LEFT JOIN ObjectString  AS OS_LL          ON OS_LL.ObjectId          = OB.ObjectId AND OS_LL.DescId          = zc_ObjectString_Unit_SUN_v1_Lock()
              -- !!!только для этого водителя!!!
              /*INNER JOIN ObjectLink AS ObjectLink_Unit_Driver
                                    ON ObjectLink_Unit_Driver.ObjectId      = OB.ObjectId
@@ -225,16 +232,12 @@ BEGIN
               AND OF_KoeffSUN.ValueData > 0
            ;
          -- "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
-         INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun, isMain)
+         INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun)
             SELECT OL_GoodsPairSun.ObjectId      AS GoodsId
                  , OL_GoodsPairSun.ChildObjectId AS GoodsId_PairSun
-                 , TRUE
             FROM ObjectLink AS OL_GoodsPairSun
             WHERE OL_GoodsPairSun.ChildObjectId > 0 AND OL_GoodsPairSun.DescId = zc_ObjectLink_Goods_GoodsPairSun()
            ;
-         --
-       --INSERT INTO _tmpGoods_SUN_PairSun (GoodsId, GoodsId_PairSun, isMain)
-       --SELECT _tmpGoods_SUN_PairSun.GoodsId_PairSun, _tmpGoods_SUN_PairSun.GoodsId, FALSE FROM _tmpGoods_SUN_PairSun;
 
      END IF;
 
@@ -599,8 +602,9 @@ BEGIN
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
                             LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                    ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
-                                                   AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                                                    ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                   AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                   AND MCS_isClose.ValueData = TRUE
                             LEFT JOIN ObjectLink AS OL_Price_Goods
                                                  ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                 AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -617,7 +621,8 @@ BEGIN
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                         AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                         -- товары "убит код"
+                         AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
@@ -776,9 +781,12 @@ BEGIN
              LEFT JOIN _tmpGoods_SUN ON _tmpGoods_SUN.GoodsId  = tmpObject_Price.GoodsId
 
              -- отбросили !!закрытые!!
-             -- временно отключил - 13.05.20
-           --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-           --                            AND Object_Goods_View.IsClose = FALSE
+             -- 25.05.20 -- временно отключил - 13.05.20
+             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
+                                        AND Object_Goods_View.IsClose = TRUE
+             -- !!!
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
+
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
@@ -790,6 +798,9 @@ BEGIN
              LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
+          -- товары "закрыт код"
+          AND (Object_Goods_View.Id IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
+
         /*WHERE (Object_ConditionsKeep.ValueData NOT ILIKE '%холод%'
            AND Object_ConditionsKeep.ValueData NOT ILIKE '%прохладное%'
               )
@@ -1409,8 +1420,9 @@ BEGIN
                                  END AS MCSValue_min
                           FROM ObjectLink AS OL_Price_Unit
                                LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                       ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
-                                                      AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()
+                                                       ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                      AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                      AND MCS_isClose.ValueData = TRUE
                                LEFT JOIN ObjectLink AS OL_Price_Goods
                                                     ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                    AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -1429,8 +1441,12 @@ BEGIN
                                -- !!!только для таких!!!
                                INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
+                               -- !!!
+                               LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                            AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                            -- товары "убит код"
+                            AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                          )
                -- MCS + Price
              , tmpMCS AS (SELECT COALESCE (tmpMCS_all.UnitId,  tmpGoodsCategory.UnitId)  AS UnitId
@@ -2207,7 +2223,7 @@ BEGIN
      CLOSE curPartion_next; -- закрыли курсор1
 
 
-     -- !!!Удаляем не получившиеся пары!!!
+     -- !!!Удаляем НЕ получившиеся пары!!!
      DELETE FROM _tmpResult_Partion 
      WHERE (_tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar)
            IN (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
@@ -2216,11 +2232,12 @@ BEGIN
                     JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId_PairSun = _tmpResult_Partion.GoodsId
                     -- а основной не получилось
                     LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
-                                                 ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                 ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId
                                                 AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
                                                 AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
                WHERE _tmpResult_Partion_check.GoodsId IS NULL
               );
+
 
      -- 6.1.3. Проверка
      IF EXISTS (SELECT _tmpResult_Partion.UnitId_from, _tmpResult_Partion.UnitId_to, _tmpResult_Partion.GoodsId
@@ -2342,6 +2359,51 @@ BEGIN
      -- 6.1.5. !!!важно, ОТКЛЮЧИЛИ отложенные!!!
      UPDATE _tmpResult_Partion SET Amount_next = 0, Summ_next = 0;
      DELETE FROM _tmpResult_Partion WHERE Amount = 0 AND Amount_next = 0;
+
+
+     -- !!! Добавили парные, которых нет в Прайсе ...
+     INSERT INTO _tmpRemains_calc (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve
+                                 , AmountSun_real, AmountSun_summ, AmountSun_summ_save, AmountSun_unit, AmountSun_unit_save)
+       SELECT _tmpResult_Partion.UnitId_to
+            , _tmpResult_Partion.GoodsId
+            , _tmpResult_Partion.Summ / _tmpResult_Partion.Amount AS Price
+            , 0 AS MCS, 0 AS AmountResult, 0 AS AmountRemains, 0 AS AmountIncome, 0 AS AmountSend_in, 0 AS AmountSend_out, 0 AS AmountOrderExternal, 0 AS AmountReserve
+            , 0 AS AmountSun_real, 0 AS AmountSun_summ, 0 AS AmountSun_summ_save, 0 AS AmountSun_unit, 0 AS AmountSun_unit_save
+       FROM _tmpResult_Partion
+            LEFT JOIN _tmpRemains_calc ON _tmpRemains_calc.UnitId  = _tmpResult_Partion.UnitId_to
+                                      AND _tmpRemains_calc.GoodsId = _tmpResult_Partion.GoodsId
+       WHERE _tmpRemains_calc.UnitId IS NULL
+         AND _tmpResult_Partion.Amount > 0
+      ;
+
+     -- !!!проверка - получившиеся пары - для теста!!!
+     IF (inUserId <> 5 OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 11)
+     AND EXISTS (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
+                 FROM _tmpResult_Partion
+                      -- нашли пару
+                      JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
+                      -- а здесь не нашли
+                      LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
+                                                   ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                  AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
+                                                  AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
+                                                  AND _tmpResult_Partion_check.Amount      = _tmpResult_Partion.Amount
+                 WHERE _tmpResult_Partion_check.GoodsId IS NULL
+                )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не найдена пара в перемещении для <%>', (SELECT lfGet_Object_ValueData_sh (_tmpResult_Partion.UnitId_from) || ' => ' || lfGet_Object_ValueData_sh (_tmpResult_Partion.UnitId_to) || ' : ' || lfGet_Object_ValueData (_tmpResult_Partion.GoodsId)
+                                                                          FROM _tmpResult_Partion
+                                                                               -- нашли пару
+                                                                               JOIN _tmpGoods_SUN_PairSun ON _tmpGoods_SUN_PairSun.GoodsId = _tmpResult_Partion.GoodsId
+                                                                               -- а здесь не нашли
+                                                                               LEFT JOIN _tmpResult_Partion AS _tmpResult_Partion_check
+                                                                                                            ON _tmpResult_Partion_check.GoodsId     = _tmpGoods_SUN_PairSun.GoodsId_PairSun
+                                                                                                           AND _tmpResult_Partion_check.UnitId_from = _tmpResult_Partion.UnitId_from
+                                                                                                           AND _tmpResult_Partion_check.UnitId_to   = _tmpResult_Partion.UnitId_to
+                                                                                                           AND _tmpResult_Partion_check.Amount      = _tmpResult_Partion.Amount
+                                                                          WHERE _tmpResult_Partion_check.GoodsId IS NULL
+                                                                         );
+     END IF;
 
 
      -- 6.2.1. !!!важно, документы - DefSUN - если 2 дня есть в перемещении, т.к. < vbSumm_limit - тогда они участвовать не будут !!!
@@ -2687,8 +2749,9 @@ BEGIN
             LEFT JOIN _tmpSale ON _tmpSale.UnitId  = _tmpRemains_calc.UnitId
                               AND _tmpSale.GoodsId = _tmpRemains_calc.GoodsId
 
-       WHERE _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId FROM _tmpGoods_SUN_PairSun)
-          OR _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun)
+-- тест для пары
+--     WHERE _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId FROM _tmpGoods_SUN_PairSun)
+--        OR _tmpRemains_calc.GoodsId IN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun)
 
        -- ORDER BY Object_Goods.ObjectCode, Object_Unit.ValueData
        ORDER BY Object_Goods.ValueData, Object_Unit.ValueData
@@ -2732,7 +2795,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpUnit_SUN_balance_partion (UnitId Integer, Summ_out TFloat, Summ_in TFloat, Summ_out_calc TFloat, Summ_in_calc TFloat) ON COMMIT DROP;
@@ -2746,7 +2809,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
      -- 2.2. товары для Кратность
      CREATE TEMP TABLE _tmpGoods_SUN (GoodsId Integer, KoeffSUN TFloat) ON COMMIT DROP;
      -- 2.3. "Пара товара в СУН"... если в одном из видов СУН перемещается товар X, то в обязательном порядке должен перемещаться товар Y в том же количестве
-     CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer, isMain) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpGoods_SUN_PairSun (GoodsId Integer, GoodsId_PairSun Integer) ON COMMIT DROP;
 
      -- 3.1. все остатки, СРОК
      CREATE TEMP TABLE _tmpRemains_Partion_all (ContainerDescId Integer, UnitId Integer, ContainerId_Parent Integer, ContainerId Integer, GoodsId Integer, Amount TFloat, PartionDateKindId Integer, ExpirationDate TDateTime, Amount_sun TFloat, Amount_notSold TFloat) ON COMMIT DROP;

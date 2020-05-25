@@ -163,11 +163,11 @@ BEGIN
 
          -- сохранили <Элемент документа>
          ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId
-                                            , (SELECT CASE WHEN ioId > 0
-                                                            AND Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                            , (SELECT CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
                                                                                                                , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
                                                                                                                 )
-                                                                 THEN (SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId)
+                                                          --AND ioId > 0
+                                                                 THEN COALESCE ((SELECT MI.Amount FROM MovementItem AS MI WHERE MI.Id = ioId), 0)
                                                            ELSE COALESCE (CASE WHEN vbAmount_calc > 0 THEN vbAmount_calc ELSE 0 END, 0)
                                                       END
                                                FROM ObjectLink AS ObjectLink_Goods_InfoMoney

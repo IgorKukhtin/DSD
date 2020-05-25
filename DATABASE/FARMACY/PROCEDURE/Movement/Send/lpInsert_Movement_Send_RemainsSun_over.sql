@@ -161,7 +161,7 @@ BEGIN
 
 
      -- все Подразделения для схемы SUN-v2
-     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, Limit_N, isLockSale)
+     INSERT INTO _tmpUnit_SUN (UnitId, KoeffInSUN, KoeffOutSUN, Value_T1, Value_T2, DayIncome, DaySendSUN, Limit_N, isLockSale, isLock_CheckMSC, isLock_CloseGd, isLock_ClosePL)
         SELECT OB.ObjectId AS UnitId
              , 0           AS KoeffInSUN
              , 0           AS KoeffOutSUN
@@ -171,6 +171,12 @@ BEGIN
              , CASE WHEN OF_DS.ValueData >  0 THEN OF_DS.ValueData ELSE 10 END :: Integer AS DaySendSUN
              , CASE WHEN OF_SN.ValueData >  0 THEN OF_SN.ValueData ELSE 0  END :: TFloat  AS Limit_N
              , COALESCE (OB_LS.ValueData, FALSE)                                          AS isLockSale
+               -- TRUE = НЕ подключать чек "не для НТЗ"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 1 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLockSale
+               -- TRUE = НЕТ товаров "закрыт код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 3 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_CloseGd
+               -- TRUE = НЕТ товаров "убит код"
+             , COALESCE (CASE WHEN SUBSTRING (OS_LL.ValueData FROM 5 FOR 1) = '1' THEN TRUE ELSE FALSE END, TRUE) AS isLock_ClosePL
         FROM ObjectBoolean AS OB
              LEFT JOIN ObjectString  AS OS_ListDaySUN  ON OS_ListDaySUN.ObjectId  = OB.ObjectId AND OS_ListDaySUN.DescId  = zc_ObjectString_Unit_ListDaySUN()
              LEFT JOIN ObjectFloat   AS OF_T1  ON OF_T1.ObjectId  = OB.ObjectId AND OF_T1.DescId  = zc_ObjectFloat_Unit_T1_SUN_v2()
@@ -179,6 +185,7 @@ BEGIN
              LEFT JOIN ObjectFloat   AS OF_DS  ON OF_DS.ObjectId  = OB.ObjectId AND OF_DS.DescId  = zc_ObjectFloat_Unit_HT_SUN_v2()
              LEFT JOIN ObjectFloat   AS OF_SN  ON OF_SN.ObjectId  = OB.ObjectId AND OF_SN.DescId  = zc_ObjectFloat_Unit_LimitSUN_N()
              LEFT JOIN ObjectBoolean AS OB_LS  ON OB_LS.ObjectId  = OB.ObjectId AND OB_LS.DescId  = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
+             LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = OB.ObjectId AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v2_Lock()
              
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
@@ -293,7 +300,7 @@ BEGIN
                 AND MIContainer.MovementDescId = zc_Movement_Check()
                 AND MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((vbPeriod_t_max :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate
                 -- !!!не учитывать если галка "не для СУН"
-                AND MB_NotMCS.MovementId IS NULL
+                AND (MB_NotMCS.MovementId IS NULL OR _tmpUnit_SUN.isLock_CheckMSC = FALSE)
               GROUP BY MIContainer.ObjectId_analyzer
                      , MIContainer.WhereObjectId_analyzer
               HAVING SUM (CASE WHEN MIContainer.OperDate >= inOperDate + INTERVAL '0 DAY' - ((_tmpUnit_SUN.Value_T1 :: Integer) :: TVarChar || ' DAY') :: INTERVAL AND MIContainer.OperDate < inOperDate THEN COALESCE (-1 * MIContainer.Amount, 0) ELSE 0 END) <> 0
@@ -591,10 +598,11 @@ BEGIN
                        FROM ObjectLink AS OL_Price_Unit
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
-                            -- временно отключил - 21.05.20
-                            /*LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                    ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
-                                                   AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()*/
+                            -- 25.05.20 -- временно отключил - 21.05.20
+                            LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                    ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                   AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                   AND MCS_isClose.ValueData = TRUE
                             LEFT JOIN ObjectLink AS OL_Price_Goods
                                                  ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                 AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -611,8 +619,8 @@ BEGIN
                                                   ON Price_MCSValueMin.ObjectId = OL_Price_Unit.ObjectId
                                                  AND Price_MCSValueMin.DescId = zc_ObjectFloat_Price_MCSValueMin()
                        WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                         -- временно отключил - 21.05.20
-                         -- AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                         -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
+                         AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                       )
           -- данные из ассорт. матрицы
         , tmpGoodsCategory AS (SELECT ObjectLink_GoodsCategory_Unit.ChildObjectId AS UnitId
@@ -759,9 +767,12 @@ BEGIN
                         AND tmpSUN_oth.GoodsId   = tmpObject_Price.GoodsId
 
              -- отбросили !!закрытые!!
-             -- временно отключил - 13.05.20
-           --INNER JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-           --                            AND Object_Goods_View.IsClose = FALSE
+             -- 25.05.20 -- временно отключил - 13.05.20
+             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
+                                        AND Object_Goods_View.IsClose = TRUE
+             -- !!!
+             LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
+
              -- отбросили !!акционные!!
              INNER JOIN Object AS Object_Goods ON Object_Goods.Id        = tmpObject_Price.GoodsId
                                               AND Object_Goods.ValueData NOT ILIKE 'ААА%'
@@ -772,6 +783,8 @@ BEGIN
                LEFT JOIN Object AS Object_ConditionsKeep ON Object_ConditionsKeep.Id = OL_Goods_ConditionsKeep.ChildObjectId
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
+          -- товары "закрыт код"
+          AND (Object_Goods_View.Id IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
        ;
 
      -- 2.6. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
@@ -1121,10 +1134,11 @@ BEGIN
                                , Price_Value.ValueData             AS Price
                                , MCS_Value.ValueData               AS MCSValue
                           FROM ObjectLink AS OL_Price_Unit
-                               -- временно отключил - 21.05.20
-                               /*LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                       ON MCS_isClose.ObjectId = OL_Price_Unit.ObjectId
-                                                      AND MCS_isClose.DescId   = zc_ObjectBoolean_Price_MCSIsClose()*/
+                               -- 25.05.20 -- временно отключил - 21.05.20
+                               LEFT JOIN ObjectBoolean AS MCS_isClose
+                                                       ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                      AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                      AND MCS_isClose.ValueData = TRUE
                                LEFT JOIN ObjectLink AS OL_Price_Goods
                                                     ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                    AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -1140,9 +1154,12 @@ BEGIN
                                -- !!!только для таких!!!
                                INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
                                                       AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
+                               -- !!!
+                               LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+
                           WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
-                            -- временно отключил - 21.05.20
-                            -- AND COALESCE (MCS_isClose.ValueData, FALSE) = FALSE
+                            -- товары "убит код" - 25.05.20 -- временно отключил - 21.05.20
+                            AND (MCS_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_ClosePL = FALSE)
                          )
         -- отбросили !!холод!!
       , tmpConditionsKeep AS (SELECT OL_Goods_ConditionsKeep.ObjectId
@@ -1581,7 +1598,7 @@ BEGIN
       ;
 
      -- !!!проверка - получившиеся пары - для теста!!!
-     IF (inUserId <> 5 OR EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 11)
+     IF (inUserId = 5 AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 11)
      AND EXISTS (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
                  FROM _tmpResult_Partion
                       -- нашли пару
@@ -1833,7 +1850,7 @@ WHERE Movement.OperDate  >= '01.01.2019'
 -- тест
 /*
      -- все Подразделения для схемы SUN-v2
-     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat, isLockSale Boolean) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpUnit_SUN (UnitId Integer, KoeffInSUN TFloat, KoeffOutSUN TFloat, Value_T1 TFloat, Value_T2 TFloat, DayIncome Integer, DaySendSUN Integer, Limit_N TFloat, isLockSale Boolean, isLock_CheckMSC Boolean, isLock_CloseGd Boolean, isLock_ClosePL Boolean) ON COMMIT DROP;
      -- баланс по Аптекам - если не соответствует, соотв приход или расход блокируется
      CREATE TEMP TABLE _tmpUnit_SUN_balance (UnitId Integer, Summ_out TFloat, Summ_in TFloat, KoeffInSUN TFloat, KoeffOutSUN TFloat) ON COMMIT DROP;
 
