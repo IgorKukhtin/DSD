@@ -2,8 +2,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1064'/'#1050' '#1076#1083#1103' '#1103#1097#1080#1082#1086#1074
-  ClientHeight = 376
-  ClientWidth = 828
+  ClientHeight = 409
+  ClientWidth = 760
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,15 +21,17 @@ object BarCodeBoxForm: TBarCodeBoxForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 828
-    Height = 350
+    Width = 760
+    Height = 383
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -44,18 +46,19 @@ object BarCodeBoxForm: TBarCodeBoxForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object Code: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 49
+        Options.Editing = False
+        Width = 47
       end
       object BarCode: TcxGridDBColumn
         Caption = #1064#1090#1088#1080#1093#1082#1086#1076
@@ -63,7 +66,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 110
+        Width = 123
       end
       object BoxCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1103#1097'.'
@@ -80,7 +83,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 91
+        Width = 102
       end
       object BoxName: TcxGridDBColumn
         Caption = #1071#1097#1080#1082
@@ -88,7 +91,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 110
+        Width = 123
       end
       object Weight: TcxGridDBColumn
         Caption = #1058#1086#1095#1085#1099#1081' '#1074#1077#1089' '#1103#1097#1080#1082#1072
@@ -98,7 +101,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 91
+        Width = 74
       end
       object AmountPrint: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1087#1077#1095'.'
@@ -108,15 +111,16 @@ object BarCodeBoxForm: TBarCodeBoxForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1050#1086#1083'-'#1074#1086' '#1076#1083#1103' '#1087#1077#1095#1072#1090#1080' '#1064'/'#1050
-        Width = 37
+        Width = 70
       end
-      object clErased: TcxGridDBColumn
+      object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 78
       end
     end
@@ -126,14 +130,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 40
+    Left = 48
     Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -147,8 +151,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 368
-    Top = 144
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -167,8 +171,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 264
-    Top = 80
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -196,11 +200,11 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbErased'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbUnErased'
         end
         item
           Visible = True
@@ -233,6 +237,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
+          ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -249,7 +261,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint2'
+          ItemName = 'bbPrint_2'
         end
         item
           Visible = True
@@ -257,16 +269,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -286,30 +289,26 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Action = actUpdate
       Category = 0
     end
-    object bbSetErased: TdxBarButton
+    object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbSetUnErased: TdxBarButton
+    object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
-    object bbToExcel: TdxBarButton
+    object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
+      Caption = '     '
       Category = 0
-      Hint = '       '
+      Hint = '     '
       Visible = ivAlways
     end
-    object bbChoice: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
-      Category = 0
-    end
-    object bbShowAll: TdxBarButton
-      Action = actShowAll
       Category = 0
     end
     object bbInsert_BarCodeBox: TdxBarButton
@@ -324,22 +323,26 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Action = actPrint
       Category = 0
     end
-    object bbPrint2: TdxBarButton
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+    object bbPrint_2: TdxBarButton
       Action = actPrint_2
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = dsdStoredProc
+          StoredProc = spSelect
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -351,7 +354,6 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TBarCodeBoxEditForm'
@@ -364,7 +366,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
           Value = Null
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
@@ -373,7 +375,6 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TBarCodeBoxEditForm'
@@ -389,7 +390,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
           ParamType = ptInput
           MultiSelectSeparator = ','
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -442,21 +443,13 @@ object BarCodeBoxForm: TBarCodeBoxForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'BarCode'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'Code'
-          Value = Null
-          Component = ClientDataSet
-          ComponentItem = 'Code'
+          ComponentItem = 'BarCode_Value'
           MultiSelectSeparator = ','
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -467,36 +460,22 @@ object BarCodeBoxForm: TBarCodeBoxForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actShowAll: TBooleanStoredProcAction
+    object macInsert_BarCodeBox: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = dsdStoredProc
-      StoredProcList = <
+      ActionList = <
         item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = actUpdate_Print
-      StoredProcList = <
+          Action = ExecuteBarCodeBoxDialog
+        end
         item
-          StoredProc = actUpdate_Print
+          Action = actInsert_BarCodeBox
+        end
+        item
+          Action = actRefresh
         end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
+      ImageIndex = 50
     end
     object actInsert_BarCodeBox: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -526,7 +505,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
       GuiParams = <
         item
           Name = 'inBarCodePref'
-          Value = Null
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1087#1088#1080#1093'.'
           Component = FormParams
           ComponentItem = 'inBarCodePref'
           DataType = ftString
@@ -535,7 +514,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Name = 'inBarCode1'
-          Value = '0'
+          Value = #1050#1086#1101#1092'. '#1073#1072#1083'. '#1088#1072#1089#1093'.'
           Component = FormParams
           ComponentItem = 'inBarCode1'
           ParamType = ptInput
@@ -543,7 +522,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Name = 'inBarCode2'
-          Value = '0'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inBarCode2'
           ParamType = ptInput
@@ -551,7 +530,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Name = 'inBoxId'
-          Value = '0'
+          Value = Null
           Component = FormParams
           ComponentItem = 'inBoxId'
           ParamType = ptInput
@@ -586,23 +565,6 @@ object BarCodeBoxForm: TBarCodeBoxForm
       isShowModal = True
       OpenBeforeShow = True
     end
-    object macInsert_BarCodeBox: TMultiAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = ExecuteBarCodeBoxDialog
-        end
-        item
-          Action = actInsert_BarCodeBox
-        end
-        item
-          Action = actRefresh
-        end>
-      Caption = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
-      Hint = 'C'#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1086#1074#1099#1077' '#1096'/'#1082
-      ImageIndex = 50
-    end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -626,7 +588,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
           Name = 'TextValue'
           Value = Null
           Component = ClientDataSet
-          ComponentItem = 'BarCode'
+          ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -787,8 +749,39 @@ object BarCodeBoxForm: TBarCodeBoxForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = actUpdate_Print
+      StoredProcList = <
+        item
+          StoredProc = actUpdate_Print
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
-  object dsdStoredProc: TdsdStoredProc
+  object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_BarCodeBox'
     DataSet = ClientDataSet
     DataSets = <
@@ -805,8 +798,12 @@ object BarCodeBoxForm: TBarCodeBoxForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 144
-    Top = 104
+    Left = 40
+    Top = 208
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 160
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -822,12 +819,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 40
-    Top = 208
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
-    Top = 200
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -835,9 +828,6 @@ object BarCodeBoxForm: TBarCodeBoxForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -855,8 +845,55 @@ object BarCodeBoxForm: TBarCodeBoxForm
     ColumnEnterList = <>
     SummaryItemList = <>
     PropertiesCellList = <>
-    Left = 136
-    Top = 168
+    Left = 368
+    Top = 128
+  end
+  object spInsert_BarCodeBox: TdsdStoredProc
+    StoredProcName = 'gpInsert_Object_BarCodeBox'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inBoxId'
+        Value = 'zc_ObjectBoolean_Unit_SUN_v3'
+        Component = FormParams
+        ComponentItem = 'inBoxId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCode2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCode2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBarCodePref'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inBarCodePref'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 392
+    Top = 187
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 125
+    Top = 250
   end
   object actUpdate_Print: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_BarCodeBox_Print'
@@ -865,7 +902,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
     Params = <
       item
         Name = 'inId'
-        Value = Null
+        Value = '0'
         Component = ClientDataSet
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -883,11 +920,6 @@ object BarCodeBoxForm: TBarCodeBoxForm
     PackSize = 1
     Left = 456
     Top = 115
-  end
-  object FormParams: TdsdFormParams
-    Params = <>
-    Left = 125
-    Top = 226
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -912,47 +944,5 @@ object BarCodeBoxForm: TBarCodeBoxForm
     PackSize = 1
     Left = 639
     Top = 240
-  end
-  object spInsert_BarCodeBox: TdsdStoredProc
-    StoredProcName = 'gpInsert_Object_BarCodeBox'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inBoxId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inBoxId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode1'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inBarCode1'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCode2'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inBarCode2'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inBarCodePref'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inBarCodePref'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 464
-    Top = 203
   end
 end

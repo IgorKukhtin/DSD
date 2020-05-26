@@ -4,90 +4,78 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, dsdAddOn,
-  dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
-  cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, dxSkinBlack,
-  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
-  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   cxCurrencyEdit;
 
 type
   TBarCodeBoxForm = class(TParentForm)
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
-    BarCode: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
-    bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
-    bbGridToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
-    bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
+    bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
+    dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
-    spSelect: TdsdStoredProc;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    isErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    Weight: TcxGridDBColumn;
-    spInsert_BarCodeBox: TdsdStoredProc;
-    FormParams: TdsdFormParams;
-    actInsert_BarCodeBox: TdsdExecStoredProc;
-    macInsert_BarCodeBox: TMultiAction;
-    ExecuteBarCodeBoxDialog: TExecuteDialog;
-    bbInsert_BarCodeBox: TdxBarButton;
-    ProtocolOpenForm: TdsdOpenForm;
-    bbProtocol: TdxBarButton;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     actShowAll: TBooleanStoredProcAction;
-    bbShowAll: TdxBarButton;
-    BarCode_Value: TcxGridDBColumn;
-    AmountPrint: TcxGridDBColumn;
-    actUpdate_Print: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actUpdate_Print: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    bbShowAll: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
+    spInsert_BarCodeBox: TdsdStoredProc;
+    actInsert_BarCodeBox: TdsdExecStoredProc;
+    ExecuteBarCodeBoxDialog: TExecuteDialog;
+    macInsert_BarCodeBox: TMultiAction;
+    ProtocolOpenForm: TdsdOpenForm;
     actPrint_2: TdsdPrintAction;
-    bbPrint_2: TdxBarButton;
+    actPrint: TdsdPrintAction;
+    bbInsert_BarCodeBox: TdxBarButton;
+    bbProtocol: TdxBarButton;
+    bbPrint: TdxBarButton;
+    bbPrint2: TdxBarButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-
 implementation
 
 {$R *.dfm}
+
 initialization
   RegisterClass(TBarCodeBoxForm);
+
 end.
