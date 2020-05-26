@@ -1,8 +1,8 @@
-program ExportForSiteNeBoley;
+program SendingSendDriverVIP;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\ExportForSiteNeBoley\MainUnit.pas' {MainForm};
+  MainUnit in '..\FormsFarmacy\SendingSendDriverVIP\MainUnit.pas' {MainForm};
 
 {$R *.res}
 
