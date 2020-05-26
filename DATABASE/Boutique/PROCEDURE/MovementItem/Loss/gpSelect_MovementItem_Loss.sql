@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , LineFabricaName TVarChar
              , LabelName TVarChar
              , GoodsSizeId Integer, GoodsSizeName TVarChar
+             , PartnerName  TVarChar
              , BrandName    TVarChar
              , PeriodName   TVarChar
              , PeriodYear   Integer
@@ -108,6 +109,7 @@ BEGIN
                              , Object_PartionGoods.LineFabricaId
                              , Object_PartionGoods.LabelId
                              , Object_PartionGoods.GoodsSizeId
+                             , Object_PartionGoods.PartnerId
                              , Object_PartionGoods.BrandId
                              , Object_PartionGoods.PeriodId
                              , Object_PartionGoods.PeriodYear
@@ -189,6 +191,7 @@ BEGIN
                 , Object_Label.ValueData         AS LabelName
                 , Object_GoodsSize.Id            AS GoodsSizeId
                 , Object_GoodsSize.ValueData     AS GoodsSizeName 
+                , Object_Partner.ValueData       AS PartnerName
                 , Object_Brand.ValueData         AS BrandName
                 , Object_Period.ValueData        AS PeriodName
                 , tmpPartion.PeriodYear          AS PeriodYear
@@ -220,6 +223,7 @@ BEGIN
                 LEFT JOIN Object AS Object_LineFabrica ON Object_LineFabrica.Id = tmpPartion.LineFabricaId
                 LEFT JOIN Object AS Object_Label       ON Object_Label.Id       = tmpPartion.LabelId
                 LEFT JOIN Object AS Object_GoodsSize   ON Object_GoodsSize.Id   = tmpPartion.GoodsSizeId
+                LEFT JOIN Object AS Object_Partner     ON Object_Partner.Id     = tmpPartion.PartnerId
                 LEFT JOIN Object AS Object_Brand       ON Object_Brand.Id       = tmpPartion.BrandId
                 LEFT JOIN Object AS Object_Period      ON Object_Period.Id      = tmpPartion.PeriodId
 
@@ -247,6 +251,7 @@ BEGIN
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_Partner.ValueData       AS PartnerName
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
@@ -281,6 +286,7 @@ BEGIN
                 LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+                LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = Object_PartionGoods.PartnerId
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 
@@ -362,6 +368,7 @@ BEGIN
                , Object_Label.ValueData         AS LabelName
                , Object_GoodsSize.Id            AS GoodsSizeId
                , Object_GoodsSize.ValueData     AS GoodsSizeName 
+               , Object_Partner.ValueData       AS PartnerName
                , Object_Brand.ValueData         AS BrandName
                , Object_Period.ValueData        AS PeriodName
                , Object_PartionGoods.PeriodYear AS PeriodYear
@@ -397,6 +404,7 @@ BEGIN
                 LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
                 LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
                 LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+                LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = Object_PartionGoods.PartnerId
                 LEFT JOIN Object AS Object_Brand            ON Object_Brand.Id            = Object_PartionGoods.BrandId
                 LEFT JOIN Object AS Object_Period           ON Object_Period.Id           = Object_PartionGoods.PeriodId
 

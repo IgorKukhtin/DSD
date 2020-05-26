@@ -123,7 +123,7 @@ BEGIN
            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
            , Object_Measure.ValueData AS MeasureName
 
-           , Object_CompositionGroup.ValueData  AS CompositionGroupName  
+           , Object_Partner.ValueData       AS PartnerName
            , Object_Composition.ValueData   AS CompositionName
            , Object_GoodsInfo.ValueData     AS GoodsInfoName
            , Object_LineFabrica.ValueData   AS LineFabricaName
@@ -151,10 +151,12 @@ BEGIN
             LEFT JOIN Object AS Object_LineFabrica      ON Object_LineFabrica.Id      = Object_PartionGoods.LineFabricaId 
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = Object_PartionGoods.LabelId
             LEFT JOIN Object AS Object_GoodsSize        ON Object_GoodsSize.Id        = Object_PartionGoods.GoodsSizeId
+            LEFT JOIN Object AS Object_Partner          ON Object_Partner.Id          = Object_PartionGoods.PartnerId
            
             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = tmpMI.GoodsId
                                   AND ObjectString_Goods_GoodsGroupFull.DescId   = zc_ObjectString_Goods_GroupNameFull()
+       ORDER BY Object_Goods.ObjectCode
        ;
 
     RETURN NEXT Cursor2;
@@ -162,7 +164,6 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Loss_Print (Integer,  TVarChar) OWNER TO postgres;
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
