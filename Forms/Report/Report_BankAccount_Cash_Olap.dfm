@@ -132,8 +132,10 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     Align = alClient
     DataSource = DataSource
     Groups = <>
-    OptionsView.RowGrandTotalWidth = 693
+    OptionsView.RowGrandTotalWidth = 785
     TabOrder = 1
+    ExplicitLeft = 8
+    ExplicitTop = 73
     object pvMonthName: TcxDBPivotGridField
       AreaIndex = 3
       IsCaptionAssigned = True
@@ -269,7 +271,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvInfoMoneyName_all: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 0
+      AreaIndex = 1
       IsCaptionAssigned = True
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'InfoMoneyName_all'
@@ -309,9 +311,8 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
       UniqueName = #1043#1088#1091#1087#1087#1072' 2'
     end
     object pvStartAmount: TcxDBPivotGridField
-      Area = faData
-      AreaIndex = 1
-      AllowedAreas = [faFilter, faData]
+      Area = faRow
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086
       DataBinding.FieldName = 'StartAmount'
@@ -324,7 +325,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvStartAmount_Month: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 2
+      AreaIndex = 1
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1053#1072#1095'. '#1089#1072#1083#1100#1076#1086' '#1084#1077#1089'.'
@@ -338,7 +339,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvEndAmount: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 3
+      AreaIndex = 2
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1085#1077#1095#1085'. '#1089#1072#1083#1100#1076#1086
@@ -352,7 +353,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvEndAmount_Month: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 4
+      AreaIndex = 3
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1050#1086#1085#1077#1095#1085'. '#1089#1072#1083#1100#1076#1086' '#1084#1077#1089'.'
@@ -366,7 +367,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvDebetSumm: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 5
+      AreaIndex = 4
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090
@@ -380,7 +381,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvKreditSumm: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 7
+      AreaIndex = 6
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090
@@ -394,7 +395,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvDebetSumm_Currency: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 6
+      AreaIndex = 5
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1054#1073#1086#1088#1086#1090' '#1044#1077#1073#1077#1090' '#1074' '#1074#1072#1083'.'
@@ -408,7 +409,7 @@ object Report_BankAccount_Cash_OlapForm: TReport_BankAccount_Cash_OlapForm
     end
     object pvKreditSumm_Currency: TcxDBPivotGridField
       Area = faData
-      AreaIndex = 8
+      AreaIndex = 7
       AllowedAreas = [faFilter, faData]
       IsCaptionAssigned = True
       Caption = #1054#1073#1086#1088#1086#1090' '#1050#1088#1077#1076#1080#1090' '#1074' '#1074#1072#1083'.'

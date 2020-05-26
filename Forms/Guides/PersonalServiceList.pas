@@ -64,7 +64,7 @@ type
     MemberName: TcxGridDBColumn;
     MemberChoice: TOpenChoiceForm;
     actUpdateMember: TdsdUpdateDataSet;
-    spUpdate: TdsdStoredProc;
+    spUpdate_Member: TdsdStoredProc;
     MemberHeadManagerChoice: TOpenChoiceForm;
     MemberManagerChoice: TOpenChoiceForm;
     MemberBookkeeperChoice: TOpenChoiceForm;
@@ -73,6 +73,11 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     Compensation: TcxGridDBColumn;
     CompensationName: TcxGridDBColumn;
+    spUpdate_PersonalOut: TdsdStoredProc;
+    actUpdate_PersonalOut: TdsdUpdateDataSet;
+    bbUpdate_PersonalOut: TdxBarButton;
+    isPersonalOut: TcxGridDBColumn;
+    macUpdate_PersonalOut: TMultiAction;
   private
     { Private declarations }
   public

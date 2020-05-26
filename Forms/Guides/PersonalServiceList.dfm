@@ -39,7 +39,6 @@ object PersonalServiceListForm: TPersonalServiceListForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -50,21 +49,21 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 47
+        Width = 44
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 107
+        Width = 100
       end
       object JuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 75
+        Width = 70
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -82,7 +81,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 54
+        Width = 50
       end
       object BankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
@@ -90,7 +89,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 65
+        Width = 61
       end
       object PaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -98,7 +97,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 41
+        Width = 38
       end
       object MemberName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100') '
@@ -113,7 +112,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 78
       end
       object MemberHeadManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1080#1089#1087'. '#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -128,7 +127,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 75
       end
       object MemberManagerName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1076#1080#1088#1077#1082#1090#1086#1088') '
@@ -143,7 +142,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 101
       end
       object MemberBookkeeperName: TcxGridDBColumn
         Caption = #1060#1080#1079'.'#1083#1080#1094#1086' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088') '
@@ -158,7 +157,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 79
       end
       object isSecond: TcxGridDBColumn
         Caption = #1042#1090#1086#1088#1072#1103' '#1092#1086#1088#1084#1072
@@ -166,7 +165,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 41
+        Width = 59
       end
       object isRecalc: TcxGridDBColumn
         Caption = #1056#1072#1089#1087#1088#1077#1076'. '#1074' '#1074#1077#1076'. '#1092#1072#1082#1090
@@ -175,7 +174,16 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1044#1083#1103' '#1088#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1103' '#1074' '#1074#1077#1076#1086#1084#1086#1089#1090#1080' '#1092#1072#1082#1090
         Options.Editing = False
-        Width = 60
+        Width = 73
+      end
+      object isPersonalOut: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088'. '#1076#1083#1103' '#1091#1074#1086#1083'. ('#1044#1072'/'#1053#1077#1090')'
+        DataBinding.FieldName = 'isPersonalOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1056#1072#1079#1088#1077#1096#1077#1085#1086' '#1076#1083#1103' '#1091#1074#1086#1083#1077#1085#1085#1099#1093' ('#1044#1072'/'#1053#1077#1090')'
+        Options.Editing = False
+        Width = 56
       end
       object Compensation: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1082#1086#1084#1087#1077#1085#1089'.'
@@ -186,7 +194,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1052#1077#1089#1103#1094' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
         Options.Editing = False
-        Width = 98
+        Width = 88
       end
       object CompensationName: TcxGridDBColumn
         Caption = #1052#1077#1089#1103#1094' '#1085#1072#1095'. '#1082#1086#1084#1087#1077#1085#1089'. ('#1080#1085#1092'.)'
@@ -194,7 +202,7 @@ object PersonalServiceListForm: TPersonalServiceListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 93
+        Width = 85
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -295,6 +303,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbUpdate_PersonalOut'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -363,6 +375,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = ProtocolOpenForm
+      Category = 0
+    end
+    object bbUpdate_PersonalOut: TdxBarButton
+      Action = macUpdate_PersonalOut
       Category = 0
     end
   end
@@ -636,10 +652,10 @@ object PersonalServiceListForm: TPersonalServiceListForm
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
-      StoredProc = spUpdate
+      StoredProc = spUpdate_Member
       StoredProcList = <
         item
-          StoredProc = spUpdate
+          StoredProc = spUpdate_Member
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
@@ -674,6 +690,32 @@ object PersonalServiceListForm: TPersonalServiceListForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
+    end
+    object actUpdate_PersonalOut: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_PersonalOut
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_PersonalOut
+        end>
+      Caption = 'actUpdateDataSet'
+      ImageIndex = 5
+      DataSource = DataSource
+    end
+    object macUpdate_PersonalOut: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdate_PersonalOut
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = 'macUpdate_PersonalOut'
+      ImageIndex = 5
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -734,10 +776,11 @@ object PersonalServiceListForm: TPersonalServiceListForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end
-  object spUpdate: TdsdStoredProc
+  object spUpdate_Member: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_PersonalServiceList_Member'
     DataSets = <>
     OutputType = otResult
@@ -785,5 +828,31 @@ object PersonalServiceListForm: TPersonalServiceListForm
     PackSize = 1
     Left = 571
     Top = 110
+  end
+  object spUpdate_PersonalOut: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_PersonalServiceList_PersonalOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisPersonalOut'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isPersonalOut'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 691
+    Top = 126
   end
 end

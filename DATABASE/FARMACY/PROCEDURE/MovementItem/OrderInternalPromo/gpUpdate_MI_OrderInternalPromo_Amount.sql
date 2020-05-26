@@ -73,7 +73,7 @@ BEGIN
                                  AND MovementItem.isErased = FALSE
                                )
                                 
-                                
+
              , tmpMI_PriceSIP AS (SELECT tmpMI_Price.Id
                                        , tmpMI_Price.GoodsId
                                        , MIFloat_Price.ValueData     ::TFloat AS Price
