@@ -20,8 +20,14 @@ $BODY$
    DECLARE vbGoodsName       TVarChar;
    DECLARE vbAmountM         TFloat;
    DECLARE vbAmountC         TFloat;
-   DECLARE vbAmount        TFloat;
-   DECLARE vbSaldo         TFloat;
+   DECLARE vbAmount          TFloat;
+   DECLARE vbSaldo           TFloat;
+   DECLARE vbSUN             Boolean;
+
+   DECLARE vbDay_6  Integer;
+   DECLARE vbDate_6 TDateTime;
+   DECLARE vbDate_1 TDateTime;
+   DECLARE vbDate_0 TDateTime;
 BEGIN
 
 /*!!!test
@@ -67,6 +73,7 @@ end if;*/
          , ObjectLink_Juridical_Retail_From.ChildObjectId
          , ObjectLink_Juridical_Retail_To.ChildObjectId
          , COALESCE (MovementLinkObject_PartionDateKind.ObjectId, 0)
+         , COALESCE (MovementBoolean_SUN.ValueData, FALSE)
            INTO
                 vbUnitFromId
               , vbJuridicalFromId
@@ -76,6 +83,7 @@ end if;*/
               , vbRetailId_from
               , vbRetailId_to
               , vbPartionDateId
+              , vbSUN
     FROM
         Movement
         INNER JOIN MovementLinkObject AS MovementLinkObject_From
@@ -101,6 +109,10 @@ end if;*/
         LEFT JOIN MovementLinkObject AS MovementLinkObject_PartionDateKind
                                      ON MovementLinkObject_PartionDateKind.MovementId = Movement.Id
                                     AND MovementLinkObject_PartionDateKind.DescId = zc_MovementLinkObject_PartionDateKind()
+
+        LEFT JOIN MovementBoolean AS MovementBoolean_SUN
+                                  ON MovementBoolean_SUN.MovementId = Movement.Id
+                                 AND MovementBoolean_SUN.DescId = zc_MovementBoolean_SUN()
     WHERE Movement.Id = inMovementId;
 
     -- если это перемещение просрочки
@@ -183,21 +195,21 @@ end if;*/
              AND MI_Master.DescId     = zc_MI_Master()
              AND MI_Master.IsErased   = FALSE
            GROUP BY MI_Master.Id, Object_Goods.ValueData, MI_Master.Amount
-           HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0) 
+           HAVING MI_Master.Amount <> COALESCE (SUM (MI_Child.Amount), 0)
               AND COALESCE (SUM (MI_Child.Amount), 0) <> 0 LIMIT 1;
 
            RAISE EXCEPTION 'Ошибка.Как минимум у одного товара <%> количество <%> меньше распределено <%>. Испревте количество или распределение по срокам.', vbGoodsName, vbAmountM, vbAmountC;
         END IF;
     END IF;
 
-    -- Проверка на то что бы не списали больше чем есть на остатке по распределенным позициям 
+    -- Проверка на то что бы не списали больше чем есть на остатке по распределенным позициям
     IF EXISTS (SELECT 1
                FROM MovementItem AS MI_Child
                WHERE MI_Child.MovementId = inMovementId
                  AND MI_Child.DescId     = zc_MI_Child()
                  AND MI_Child.IsErased   = FALSE
                  AND MI_Child.Amount     <> 0
-              ) 
+              )
     THEN
       SELECT Object_Goods.ValueData, tmp.Amount, tmp.AmountRemains
              INTO vbGoodsName, vbAmount, vbSaldo
@@ -217,7 +229,7 @@ end if;*/
                                                             ON MIFloat_ContainerId.MovementItemId = MI_Child.Id
                                                            AND MIFloat_ContainerId.DescId         = zc_MIFloat_ContainerId()
                                 LEFT JOIN Container ON Container.Id = MIFloat_ContainerId.ValueData :: Integer
-                                              
+
                            WHERE MI_Master.MovementId = inMovementId
                              AND MI_Master.DescId     = zc_MI_Master()
                              AND MI_Master.IsErased   = FALSE
@@ -231,8 +243,8 @@ end if;*/
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
       LIMIT 1
      ;
-     
-      IF (COALESCE(vbGoodsName,'') <> '') 
+
+      IF (COALESCE(vbGoodsName,'') <> '')
       THEN
           RAISE EXCEPTION 'Ошибка. По одному <%> или более товарам кол-во распределено <%> больше, чем есть на остатке <%> по партии.', vbGoodsName, vbAmount, vbSaldo;
       END IF;
@@ -319,7 +331,7 @@ end if;*/
           , tmpAll AS  (-- расход с подразделения "From"
                         SELECT
                              ContainerId_count
-                           , ContainerPartionId_count  
+                           , ContainerPartionId_count
                            , MovementItemId
                            , ObjectId
                            , vbSendDate  AS OperDate
@@ -445,213 +457,511 @@ end if;*/
 
     END IF;
 
-    -- А сюда товары
-    WITH
-        -- строки документа перемещения
-        tmpMI_Send AS (SELECT MI_Master.Id       AS MovementItemId
-                            , MI_Master.ObjectId AS ObjectId
-                            , MI_Master.Amount - COALESCE(SUM(MI_Child.Amount), 0)  AS Amount
-                       FROM MovementItem AS MI_Master
-                            LEFT JOIN MovementItem AS MI_Child
-                                                   ON MI_Child.MovementId = inMovementId
-                                                  AND MI_Child.DescId     = zc_MI_Child()
-                                                  AND MI_Child.ParentId   = MI_Master.Id
-                                                  AND MI_Child.IsErased   = FALSE
-                                                  AND MI_Child.Amount     > 0
+    IF vbSUN = FALSE
+    THEN
+      -- А сюда товары для обычных перемещений
+      WITH
+          -- строки документа перемещения
+          tmpMI_Send AS (SELECT MI_Master.Id       AS MovementItemId
+                              , MI_Master.ObjectId AS ObjectId
+                              , MI_Master.Amount - COALESCE(SUM(MI_Child.Amount), 0)  AS Amount
+                         FROM MovementItem AS MI_Master
+                              LEFT JOIN MovementItem AS MI_Child
+                                                     ON MI_Child.MovementId = inMovementId
+                                                    AND MI_Child.DescId     = zc_MI_Child()
+                                                    AND MI_Child.ParentId   = MI_Master.Id
+                                                    AND MI_Child.IsErased   = FALSE
+                                                    AND MI_Child.Amount     > 0
 
-                       WHERE MI_Master.MovementId = inMovementId
-                         AND MI_Master.IsErased   = FALSE
-                         AND MI_Master.DescId     = zc_MI_Master()
-                         AND MI_Master.Amount     > 0
-                       GROUP BY MI_Master.Id , MI_Master.ObjectId
-                      )
-        -- находим товары для сети куда идет перемещение, если они разные
-      , GoodsRetial_to AS (SELECT tmp.ObjectId
-                                , ObjectLink_Child_to.ChildObjectId AS ObjectId_to
-                           FROM (SELECT DISTINCT tmpMI_Send.ObjectId FROM tmpMI_Send WHERE vbRetailId_from <> vbRetailId_to) AS tmp
-                                INNER JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.ObjectId
-                                                                          AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                         AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+                         WHERE MI_Master.MovementId = inMovementId
+                           AND MI_Master.IsErased   = FALSE
+                           AND MI_Master.DescId     = zc_MI_Master()
+                           AND MI_Master.Amount     > 0
+                         GROUP BY MI_Master.Id , MI_Master.ObjectId
+                        )
+          -- находим товары для сети куда идет перемещение, если они разные
+        , GoodsRetial_to AS (SELECT tmp.ObjectId
+                                  , ObjectLink_Child_to.ChildObjectId AS ObjectId_to
+                             FROM (SELECT DISTINCT tmpMI_Send.ObjectId FROM tmpMI_Send WHERE vbRetailId_from <> vbRetailId_to) AS tmp
+                                  INNER JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.ObjectId
+                                                                            AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                  INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                           AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
 
-                                INNER JOIN ObjectLink AS ObjectLink_Main_to ON ObjectLink_Main_to.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                           AND ObjectLink_Main_to.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                INNER JOIN ObjectLink AS ObjectLink_Child_to ON ObjectLink_Child_to.ObjectId = ObjectLink_Main_to.ObjectId
-                                                                            AND ObjectLink_Child_to.DescId   = zc_ObjectLink_LinkGoods_Goods()
-                                INNER JOIN ObjectLink AS ObjectLink_Goods_Object_to
-                                                      ON ObjectLink_Goods_Object_to.ObjectId = ObjectLink_Child_to.ChildObjectId
-                                                     AND ObjectLink_Goods_Object_to.DescId = zc_ObjectLink_Goods_Object()
-                                                     AND ObjectLink_Goods_Object_to.ChildObjectId = vbRetailId_to
+                                  INNER JOIN ObjectLink AS ObjectLink_Main_to ON ObjectLink_Main_to.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                             AND ObjectLink_Main_to.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                  INNER JOIN ObjectLink AS ObjectLink_Child_to ON ObjectLink_Child_to.ObjectId = ObjectLink_Main_to.ObjectId
+                                                                              AND ObjectLink_Child_to.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                  INNER JOIN ObjectLink AS ObjectLink_Goods_Object_to
+                                                        ON ObjectLink_Goods_Object_to.ObjectId = ObjectLink_Child_to.ChildObjectId
+                                                       AND ObjectLink_Goods_Object_to.DescId = zc_ObjectLink_Goods_Object()
+                                                       AND ObjectLink_Goods_Object_to.ChildObjectId = vbRetailId_to
+                            )
+        , ContainerUsed AS (SELECT _tmpMIContainer_insert.ContainerId
+                                 , SUM(_tmpMIContainer_insert.Amount) AS Amount
+                            FROM _tmpMIContainer_insert
+                            WHERE DescId = zc_MIContainer_Count()
+                            GROUP BY _tmpMIContainer_insert.ContainerId)
+          -- строки документа перемещения размазанные по текущему остатку(Контейнерам) на подразделении "From"
+        , DD AS (SELECT
+                     tmpMI_Send.MovementItemId
+                     -- сколько надо получить
+                   , tmpMI_Send.Amount
+                     -- остаток
+                   , Container.Amount + COALESCE (ContainerUsed.Amount, 0) AS AmountRemains
+                   , Container.ObjectId
+                   , Movement.OperDate   -- дата прихода от пост.
+                   , MovementItem.Id AS PartionMovementItemId
+                   , Container.Id    AS ContainerId
+                     -- итого "накопительный" остаток
+                   , SUM (Container.Amount + COALESCE (ContainerUsed.Amount, 0)) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id, tmpMI_Send.MovementItemId) AS AmountRemains_sum
+                     -- для последнего элемента - не смотрим на остаток
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_Send.MovementItemId ORDER BY Movement.OperDate DESC, Container.Id DESC, tmpMI_Send.MovementItemId DESC) AS DOrd
+                 FROM Container
+                      JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
+                      JOIN containerlinkObject AS CLI_MI
+                                               ON CLI_MI.ContainerId = Container.Id
+                                              AND CLI_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
+                      JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                      JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                      JOIN Movement ON Movement.Id = MovementItem.MovementId
+                      LEFT JOIN ContainerUsed ON ContainerUsed.ContainerId = Container.Id
+                 WHERE Container.WhereObjectId = vbUnitFromId
+                   AND Container.DescId        = zc_Container_Count()
+                   AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
+                )
+          -- контейнеры и zc_Container_Count, которые будут списаны (с подразделения "From")
+        , tmpItem AS (
+                      -- для простых перемещений - распределение
+                      SELECT
+                          DD.ContainerId            AS ContainerId_count
+                        , NULL           :: Integer AS ContainerId_summ
+                        , DD.PartionMovementItemId  AS PartionMovementItemId
+                        , DD.MovementItemId         AS MovementItemId
+                        , DD.ObjectId               AS ObjectId
+                        , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DD.ObjectId END AS ObjectId_to
+                        , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
+                                    THEN DD.AmountRemains
+                               ELSE DD.Amount - DD.AmountRemains_sum + DD.AmountRemains
+                          END AS Amount
+                        , 0 AS Summ
+                      FROM DD
+                           LEFT JOIN GoodsRetial_to ON GoodsRetial_to.ObjectId = DD.ObjectId
+                           -- !!! вообще убрал эту табл!!!
+                           /*LEFT JOIN Container AS Container_Summ
+                                               ON Container_Summ.ParentId = DD.Id
+                                              AND Container_Summ.DescId   = zc_Container_Summ()
+                                              AND 1=0 -- !!!убрал!!!
+                                              */
+                      WHERE  (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
+                     )
+          -- проводки кол-во
+        , tmpAll AS  (-- расход с подразделения "From"
+                      SELECT
+                           ContainerId_count
+                         , MovementItemId
+                         , ObjectId
+                         , vbSendDate  AS OperDate
+                         , -1 * Amount AS Amount
+                         , FALSE       AS IsActive
+                      FROM tmpItem
+
+                     UNION ALL
+                      -- приход на подразделение "To"
+                      SELECT
+                          -- определяется ContainerId
+                          lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                , inParentId          := NULL
+                                                , inObjectId          := tmpItem.ObjectId_to
+                                                , inJuridicalId_basis := vbJuridicalToId
+                                                , inBusinessId        := NULL
+                                                , inObjectCostDescId  := NULL
+                                                , inObjectCostId      := NULL
+                                                , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                , inObjectId_1        := vbUnitToId
+                                                , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                 ) AS ContainerId_count
+                         , tmpItem.MovementItemId  AS MovementItemId
+                         , tmpItem.ObjectId_to     AS ObjectId
+                         , vbSendDate              AS OperDate
+                         , 1 * tmpItem.Amount      AS Amount
+                         , TRUE                    AS IsActive
+                      FROM tmpItem
+                      WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
+                     )
+          -- проводки суммы
+        , tmpSumm AS (-- расход с подразделения "From"
+                      SELECT
+                           ContainerId_summ
+                         , MovementItemId
+                         , ObjectId
+                         , vbSendDate  AS OperDate
+                         , -1 * Summ   AS Summ
+                         , FALSE       AS isActive
+                      FROM tmpItem
+
+                     UNION ALL
+                      --  приход на подразделение "To"
+                      SELECT
+                           -- определяется ContainerId
+                           lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 , inParentId          := -- определяется ContainerId - кол-во
+                                                                          lpInsertFind_Container(inContainerDescId   := zc_Container_Count()
+                                                                                               , inParentId          := NULL
+                                                                                               , inObjectId          := tmpItem.ObjectId_to
+                                                                                               , inJuridicalId_basis := vbJuridicalToId
+                                                                                               , inBusinessId        := NULL
+                                                                                               , inObjectCostDescId  := NULL
+                                                                                               , inObjectCostId      := NULL
+                                                                                               , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                                                               , inObjectId_1        := vbUnitToId
+                                                                                               , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                                                               , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                                                                )
+                                                 , inObjectId          := tmpItem.ObjectId
+                                                 , inJuridicalId_basis := vbJuridicalToId
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                 , inObjectId_1        := vbUnitToId
+                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem  (tmpItem.PartionMovementItemId)
+                                                  ) AS ContainerId_summ
+                         , tmpItem.MovementItemId  AS MovementItemId
+                         , tmpItem.ObjectId_to     AS ObjectId
+                         , vbSendDate              AS OperDate
+                         , 1 * tmpItem.Summ        AS Summ
+                         , TRUE                    AS isActive
+                      FROM tmpItem
+                      WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
+                     )
+      -- Результат
+      INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate,IsActive)
+         -- обычные проводки по количеству
+         SELECT
+             zc_MIContainer_Count()
+           , zc_Movement_Send()
+           , inMovementId
+           , tmpAll.MovementItemId
+           , tmpAll.ContainerId_count
+           , vbAccountId
+           , tmpAll.Amount
+           , tmpAll.OperDate
+           , tmpAll.isActive
+         FROM tmpAll
+
+        UNION ALL
+         -- обычные проводки по суммам
+         SELECT
+             zc_MIContainer_Summ()
+           , zc_Movement_Send()
+           , inMovementId
+           , tmpSumm.MovementItemId
+           , tmpSumm.ContainerId_summ
+           , vbAccountId
+           , tmpSumm.Summ
+           , tmpSumm.OperDate
+           , tmpSumm.isActive
+         FROM tmpSumm
+        ;
+    ELSE
+          -- значения для разделения по срокам
+          -- дата + 6 месяцев
+          SELECT CURRENT_DATE + tmp.Date_6, tmp.Day_6
+                 INTO vbDate_6, vbDay_6
+          FROM (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                  , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                             FROM Object  AS Object_PartionDateKind
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                        ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                        ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                       AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                             WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_6()
+                            )
+                SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL AS Date_6
+                     , tmp.Value AS Day_6
+                FROM tmp
+               ) AS tmp;
+          -- дата + 1 месяц
+          vbDate_1:= CURRENT_DATE
+                   + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                        , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                                   FROM Object  AS Object_PartionDateKind
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                             AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                              ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                             AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                                   WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_1()
+                                  )
+                      SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
+                     );
+          -- дата + 0 месяцев
+          vbDate_0:= CURRENT_DATE
+                   + (WITH tmp AS (SELECT CASE WHEN ObjectFloat_Day.ValueData > 0 THEN ObjectFloat_Day.ValueData ELSE COALESCE (ObjectFloat_Month.ValueData, 0) END AS Value
+                                        , CASE WHEN ObjectFloat_Day.ValueData > 0 THEN FALSE ELSE TRUE END AS isMonth
+                                   FROM Object  AS Object_PartionDateKind
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Month
+                                                              ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
+                                                             AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+                                        LEFT JOIN ObjectFloat AS ObjectFloat_Day
+                                                              ON ObjectFloat_Day.ObjectId = Object_PartionDateKind.Id
+                                                             AND ObjectFloat_Day.DescId = zc_ObjectFloat_PartionDateKind_Day()
+                                   WHERE Object_PartionDateKind.Id = zc_Enum_PartionDateKind_0()
+                                  )
+                      SELECT CASE WHEN tmp.isMonth = TRUE THEN tmp.Value ||' MONTH'  ELSE tmp.Value ||' DAY' END :: INTERVAL FROM tmp
+                     );
+
+      -- А сюда товары для перемещений СУН
+      WITH
+          -- строки документа перемещения
+          tmpMI_Send AS (SELECT MI_Master.Id       AS MovementItemId
+                              , MI_Master.ObjectId AS ObjectId
+                              , MI_Master.Amount - COALESCE(SUM(MI_Child.Amount), 0)  AS Amount
+                         FROM MovementItem AS MI_Master
+                              LEFT JOIN MovementItem AS MI_Child
+                                                     ON MI_Child.MovementId = inMovementId
+                                                    AND MI_Child.DescId     = zc_MI_Child()
+                                                    AND MI_Child.ParentId   = MI_Master.Id
+                                                    AND MI_Child.IsErased   = FALSE
+                                                    AND MI_Child.Amount     > 0
+
+                         WHERE MI_Master.MovementId = inMovementId
+                           AND MI_Master.IsErased   = FALSE
+                           AND MI_Master.DescId     = zc_MI_Master()
+                           AND MI_Master.Amount     > 0
+                         GROUP BY MI_Master.Id , MI_Master.ObjectId
+                        )
+          -- находим товары для сети куда идет перемещение, если они разные
+        , GoodsRetial_to AS (SELECT tmp.ObjectId
+                                  , ObjectLink_Child_to.ChildObjectId AS ObjectId_to
+                             FROM (SELECT DISTINCT tmpMI_Send.ObjectId FROM tmpMI_Send WHERE vbRetailId_from <> vbRetailId_to) AS tmp
+                                  INNER JOIN  ObjectLink AS ObjectLink_Child ON ObjectLink_Child.ChildObjectId = tmp.ObjectId
+                                                                            AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
+                                  INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
+                                                                           AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
+
+                                  INNER JOIN ObjectLink AS ObjectLink_Main_to ON ObjectLink_Main_to.ChildObjectId = ObjectLink_Main.ChildObjectId
+                                                                             AND ObjectLink_Main_to.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
+                                  INNER JOIN ObjectLink AS ObjectLink_Child_to ON ObjectLink_Child_to.ObjectId = ObjectLink_Main_to.ObjectId
+                                                                              AND ObjectLink_Child_to.DescId   = zc_ObjectLink_LinkGoods_Goods()
+                                  INNER JOIN ObjectLink AS ObjectLink_Goods_Object_to
+                                                        ON ObjectLink_Goods_Object_to.ObjectId = ObjectLink_Child_to.ChildObjectId
+                                                       AND ObjectLink_Goods_Object_to.DescId = zc_ObjectLink_Goods_Object()
+                                                       AND ObjectLink_Goods_Object_to.ChildObjectId = vbRetailId_to
+                            )
+        , ContainerUsed AS (SELECT _tmpMIContainer_insert.ContainerId
+                                 , SUM(_tmpMIContainer_insert.Amount) AS Amount
+                            FROM _tmpMIContainer_insert
+                            WHERE DescId = zc_MIContainer_Count()
+                            GROUP BY _tmpMIContainer_insert.ContainerId)
+        , ContainerAll AS (SELECT
+                               Container.ID
+                             , Container.ObjectId
+                             , Container.Amount + COALESCE (ContainerUsed.Amount, 0) AS Amount
+                           FROM Container
+                                JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
+                                LEFT JOIN ContainerUsed ON ContainerUsed.ContainerId = Container.Id
+                           WHERE Container.WhereObjectId = vbUnitFromId
+                             AND Container.DescId        = zc_Container_Count()
+                             AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
+                           )
+        , ContainerPD AS (SELECT ContainerAll.Id
+                               , Min(ObjectDate_ExpirationDate.ValueData)               AS ExpirationDate
+                               , CASE WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_0  THEN 5      -- просрочено
+                                      WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_1  THEN 4      -- Меньше 1 месяца
+                                      WHEN Min(ObjectDate_ExpirationDate.ValueData) <= vbDate_6  THEN 1      -- Меньше 6 месяца
+                                      ELSE  2 END  AS PDOrd                                                  -- Востановлен с просрочки
+                          FROM ContainerAll
+
+                               INNER JOIN Container ON Container.ParentId = ContainerAll.Id
+                                                   AND Container.DescID = zc_Container_CountPartionDate()
+                                                   AND Container.Amount > 0
+
+                               INNER JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                                                             AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+                               INNER JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                     ON ObjectDate_ExpirationDate.ObjectId =  ContainerLinkObject.ObjectId
+                                                    AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                          GROUP BY ContainerAll.Id
                           )
-      , ContainerUsed AS (SELECT _tmpMIContainer_insert.ContainerId
-                               , SUM(_tmpMIContainer_insert.Amount) AS Amount
-                          FROM _tmpMIContainer_insert
-                          WHERE DescId = zc_MIContainer_Count()
-                          GROUP BY _tmpMIContainer_insert.ContainerId)
-        -- строки документа перемещения размазанные по текущему остатку(Контейнерам) на подразделении "From"
-      , DD AS (SELECT
-                   tmpMI_Send.MovementItemId
-                   -- сколько надо получить
-                 , tmpMI_Send.Amount
-                   -- остаток
-                 , Container.Amount + COALESCE (ContainerUsed.Amount, 0) AS AmountRemains
-                 , Container.ObjectId
-                 , Movement.OperDate   -- дата прихода от пост.
-                 , MovementItem.Id AS PartionMovementItemId
-                 , Container.Id    AS ContainerId
-                   -- итого "накопительный" остаток
-                 , SUM (Container.Amount + COALESCE (ContainerUsed.Amount, 0)) OVER (PARTITION BY Container.ObjectId ORDER BY Movement.OperDate, Container.Id, tmpMI_Send.MovementItemId) AS AmountRemains_sum
-                   -- для последнего элемента - не смотрим на остаток
-                 , ROW_NUMBER() OVER (PARTITION BY tmpMI_Send.MovementItemId ORDER BY Movement.OperDate DESC, Container.Id DESC, tmpMI_Send.MovementItemId DESC) AS DOrd
-               FROM Container
-                    JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
-                    JOIN containerlinkObject AS CLI_MI
-                                             ON CLI_MI.ContainerId = Container.Id
-                                            AND CLI_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
-                    JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
-                    JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
-                    JOIN Movement ON Movement.Id = MovementItem.MovementId
-                    LEFT JOIN ContainerUsed ON ContainerUsed.ContainerId = Container.Id
-               WHERE Container.WhereObjectId = vbUnitFromId
-                 AND Container.DescId        = zc_Container_Count()
-                 AND Container.Amount + COALESCE (ContainerUsed.Amount, 0) > 0
-              )
-        -- контейнеры и zc_Container_Count, которые будут списаны (с подразделения "From")
-      , tmpItem AS (
-                    -- для простых перемещений - распределение
-                    SELECT
-                        DD.ContainerId            AS ContainerId_count
-                      , NULL           :: Integer AS ContainerId_summ
-                      , DD.PartionMovementItemId  AS PartionMovementItemId
-                      , DD.MovementItemId         AS MovementItemId
-                      , DD.ObjectId               AS ObjectId
-                      , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DD.ObjectId END AS ObjectId_to
-                      , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
-                                  THEN DD.AmountRemains
-                             ELSE DD.Amount - DD.AmountRemains_sum + DD.AmountRemains
-                        END AS Amount
-                      , 0 AS Summ
-                    FROM DD
-                         LEFT JOIN GoodsRetial_to ON GoodsRetial_to.ObjectId = DD.ObjectId
-                         -- !!! вообще убрал эту табл!!!
-                         /*LEFT JOIN Container AS Container_Summ
-                                             ON Container_Summ.ParentId = DD.Id
-                                            AND Container_Summ.DescId   = zc_Container_Summ()
-                                            AND 1=0 -- !!!убрал!!!
-                                            */
-                    WHERE  (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
-                   )
-        -- проводки кол-во
-      , tmpAll AS  (-- расход с подразделения "From"
-                    SELECT
-                         ContainerId_count
-                       , MovementItemId
-                       , ObjectId
-                       , vbSendDate  AS OperDate
-                       , -1 * Amount AS Amount
-                       , FALSE       AS IsActive
-                    FROM tmpItem
+        , tmpContainer AS (SELECT
+                               Container.ID
+                             , Container.ObjectId
+                             , Container.Amount
+                             , COALESCE (ContainerPD.PDOrd, 3) AS PDOrd
+                           FROM ContainerAll AS Container
+                                LEFT JOIN ContainerPD ON ContainerPD.Id = Container.Id
+                           )
 
-                   UNION ALL
-                    -- приход на подразделение "To"
-                    SELECT
-                        -- определяется ContainerId
-                        lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
-                                              , inParentId          := NULL
-                                              , inObjectId          := tmpItem.ObjectId_to
-                                              , inJuridicalId_basis := vbJuridicalToId
-                                              , inBusinessId        := NULL
-                                              , inObjectCostDescId  := NULL
-                                              , inObjectCostId      := NULL
-                                              , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
-                                              , inObjectId_1        := vbUnitToId
-                                              , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
-                                              , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
-                                               ) AS ContainerId_count
-                       , tmpItem.MovementItemId  AS MovementItemId
-                       , tmpItem.ObjectId_to     AS ObjectId
-                       , vbSendDate              AS OperDate
-                       , 1 * tmpItem.Amount      AS Amount
-                       , TRUE                    AS IsActive
-                    FROM tmpItem
-                    WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
-                   )
-        -- проводки суммы
-      , tmpSumm AS (-- расход с подразделения "From"
-                    SELECT
-                         ContainerId_summ
-                       , MovementItemId
-                       , ObjectId
-                       , vbSendDate  AS OperDate
-                       , -1 * Summ   AS Summ
-                       , FALSE       AS isActive
-                    FROM tmpItem
+          -- строки документа перемещения размазанные по текущему остатку(Контейнерам) на подразделении "From"
+        , DD AS (SELECT
+                     tmpMI_Send.MovementItemId
+                     -- сколько надо получить
+                   , tmpMI_Send.Amount
+                     -- остаток
+                   , Container.Amount AS AmountRemains
+                   , Container.ObjectId
+                   , Movement.OperDate   -- дата прихода от пост.
+                   , MovementItem.Id AS PartionMovementItemId
+                   , Container.Id    AS ContainerId
+                     -- итого "накопительный" остаток
+                   , SUM (Container.Amount) OVER (PARTITION BY Container.ObjectId ORDER BY Container.PDOrd, Movement.OperDate, Container.Id, tmpMI_Send.MovementItemId) AS AmountRemains_sum
+                     -- для последнего элемента - не смотрим на остаток
+                   , ROW_NUMBER() OVER (PARTITION BY tmpMI_Send.MovementItemId ORDER BY Container.PDOrd DESC, Movement.OperDate DESC, Container.Id DESC, tmpMI_Send.MovementItemId DESC) AS DOrd
+                 FROM tmpContainer AS Container
+                      JOIN tmpMI_Send ON tmpMI_Send.ObjectId = Container.ObjectId
+                      JOIN containerlinkObject AS CLI_MI
+                                               ON CLI_MI.ContainerId = Container.Id
+                                              AND CLI_MI.DescId      = zc_ContainerLinkObject_PartionMovementItem()
+                      JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = CLI_MI.ObjectId
+                      JOIN MovementItem ON MovementItem.Id = Object_PartionMovementItem.ObjectCode
+                      JOIN Movement ON Movement.Id = MovementItem.MovementId
+                )
+          -- контейнеры и zc_Container_Count, которые будут списаны (с подразделения "From")
+        , tmpItem AS (
+                      -- для простых перемещений - распределение
+                      SELECT
+                          DD.ContainerId            AS ContainerId_count
+                        , NULL           :: Integer AS ContainerId_summ
+                        , DD.PartionMovementItemId  AS PartionMovementItemId
+                        , DD.MovementItemId         AS MovementItemId
+                        , DD.ObjectId               AS ObjectId
+                        , CASE WHEN vbRetailId_from <> vbRetailId_to THEN GoodsRetial_to.ObjectId_to ELSE DD.ObjectId END AS ObjectId_to
+                        , CASE WHEN DD.Amount - DD.AmountRemains_sum > 0.0 AND DD.DOrd <> 1
+                                    THEN DD.AmountRemains
+                               ELSE DD.Amount - DD.AmountRemains_sum + DD.AmountRemains
+                          END AS Amount
+                        , 0 AS Summ
+                      FROM DD
+                           LEFT JOIN GoodsRetial_to ON GoodsRetial_to.ObjectId = DD.ObjectId
+                           -- !!! вообще убрал эту табл!!!
+                           /*LEFT JOIN Container AS Container_Summ
+                                               ON Container_Summ.ParentId = DD.Id
+                                              AND Container_Summ.DescId   = zc_Container_Summ()
+                                              AND 1=0 -- !!!убрал!!!
+                                              */
+                      WHERE  (DD.Amount - (DD.AmountRemains_sum - DD.AmountRemains) > 0)
+                     )
+          -- проводки кол-во
+        , tmpAll AS  (-- расход с подразделения "From"
+                      SELECT
+                           ContainerId_count
+                         , MovementItemId
+                         , ObjectId
+                         , vbSendDate  AS OperDate
+                         , -1 * Amount AS Amount
+                         , FALSE       AS IsActive
+                      FROM tmpItem
 
-                   UNION ALL
-                    --  приход на подразделение "To"
-                    SELECT
-                         -- определяется ContainerId
-                         lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                               , inParentId          := -- определяется ContainerId - кол-во
-                                                                        lpInsertFind_Container(inContainerDescId   := zc_Container_Count()
-                                                                                             , inParentId          := NULL
-                                                                                             , inObjectId          := tmpItem.ObjectId_to
-                                                                                             , inJuridicalId_basis := vbJuridicalToId
-                                                                                             , inBusinessId        := NULL
-                                                                                             , inObjectCostDescId  := NULL
-                                                                                             , inObjectCostId      := NULL
-                                                                                             , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
-                                                                                             , inObjectId_1        := vbUnitToId
-                                                                                             , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
-                                                                                             , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
-                                                                                              )
-                                               , inObjectId          := tmpItem.ObjectId
-                                               , inJuridicalId_basis := vbJuridicalToId
-                                               , inBusinessId        := NULL
-                                               , inObjectCostDescId  := NULL
-                                               , inObjectCostId      := NULL
-                                               , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
-                                               , inObjectId_1        := vbUnitToId
-                                               , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
-                                               , inObjectId_2        := lpInsertFind_Object_PartionMovementItem  (tmpItem.PartionMovementItemId)
-                                                ) AS ContainerId_summ
-                       , tmpItem.MovementItemId  AS MovementItemId
-                       , tmpItem.ObjectId_to     AS ObjectId
-                       , vbSendDate              AS OperDate
-                       , 1 * tmpItem.Summ        AS Summ
-                       , TRUE                    AS isActive
-                    FROM tmpItem
-                    WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
-                   )
-    -- Результат
-    INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate,IsActive)
-       -- обычные проводки по количеству
-       SELECT
-           zc_MIContainer_Count()
-         , zc_Movement_Send()
-         , inMovementId
-         , tmpAll.MovementItemId
-         , tmpAll.ContainerId_count
-         , vbAccountId
-         , tmpAll.Amount
-         , tmpAll.OperDate
-         , tmpAll.isActive
-       FROM tmpAll
+                     UNION ALL
+                      -- приход на подразделение "To"
+                      SELECT
+                          -- определяется ContainerId
+                          lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                , inParentId          := NULL
+                                                , inObjectId          := tmpItem.ObjectId_to
+                                                , inJuridicalId_basis := vbJuridicalToId
+                                                , inBusinessId        := NULL
+                                                , inObjectCostDescId  := NULL
+                                                , inObjectCostId      := NULL
+                                                , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                , inObjectId_1        := vbUnitToId
+                                                , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                 ) AS ContainerId_count
+                         , tmpItem.MovementItemId  AS MovementItemId
+                         , tmpItem.ObjectId_to     AS ObjectId
+                         , vbSendDate              AS OperDate
+                         , 1 * tmpItem.Amount      AS Amount
+                         , TRUE                    AS IsActive
+                      FROM tmpItem
+                      WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
+                     )
+          -- проводки суммы
+        , tmpSumm AS (-- расход с подразделения "From"
+                      SELECT
+                           ContainerId_summ
+                         , MovementItemId
+                         , ObjectId
+                         , vbSendDate  AS OperDate
+                         , -1 * Summ   AS Summ
+                         , FALSE       AS isActive
+                      FROM tmpItem
 
-      UNION ALL
-       -- обычные проводки по суммам
-       SELECT
-           zc_MIContainer_Summ()
-         , zc_Movement_Send()
-         , inMovementId
-         , tmpSumm.MovementItemId
-         , tmpSumm.ContainerId_summ
-         , vbAccountId
-         , tmpSumm.Summ
-         , tmpSumm.OperDate
-         , tmpSumm.isActive
-       FROM tmpSumm
-      ;
+                     UNION ALL
+                      --  приход на подразделение "To"
+                      SELECT
+                           -- определяется ContainerId
+                           lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 , inParentId          := -- определяется ContainerId - кол-во
+                                                                          lpInsertFind_Container(inContainerDescId   := zc_Container_Count()
+                                                                                               , inParentId          := NULL
+                                                                                               , inObjectId          := tmpItem.ObjectId_to
+                                                                                               , inJuridicalId_basis := vbJuridicalToId
+                                                                                               , inBusinessId        := NULL
+                                                                                               , inObjectCostDescId  := NULL
+                                                                                               , inObjectCostId      := NULL
+                                                                                               , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                                                               , inObjectId_1        := vbUnitToId
+                                                                                               , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                                                               , inObjectId_2        := lpInsertFind_Object_PartionMovementItem (tmpItem.PartionMovementItemId)
+                                                                                                )
+                                                 , inObjectId          := tmpItem.ObjectId
+                                                 , inJuridicalId_basis := vbJuridicalToId
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := zc_ContainerLinkObject_Unit()                -- DescId для 1-ой Аналитики
+                                                 , inObjectId_1        := vbUnitToId
+                                                 , inDescId_2          := zc_ContainerLinkObject_PartionMovementItem() -- DescId для 2-ой Аналитики
+                                                 , inObjectId_2        := lpInsertFind_Object_PartionMovementItem  (tmpItem.PartionMovementItemId)
+                                                  ) AS ContainerId_summ
+                         , tmpItem.MovementItemId  AS MovementItemId
+                         , tmpItem.ObjectId_to     AS ObjectId
+                         , vbSendDate              AS OperDate
+                         , 1 * tmpItem.Summ        AS Summ
+                         , TRUE                    AS isActive
+                      FROM tmpItem
+                      WHERE vbIsDeferred = FALSE -- !!! если НЕ Отложен, тогда приходуем!!!
+                     )
+      -- Результат
+      INSERT INTO _tmpMIContainer_insert(DescId, MovementDescId, MovementId, MovementItemId, ContainerId, AccountId, Amount, OperDate,IsActive)
+         -- обычные проводки по количеству
+         SELECT
+             zc_MIContainer_Count()
+           , zc_Movement_Send()
+           , inMovementId
+           , tmpAll.MovementItemId
+           , tmpAll.ContainerId_count
+           , vbAccountId
+           , tmpAll.Amount
+           , tmpAll.OperDate
+           , tmpAll.isActive
+         FROM tmpAll
+
+        UNION ALL
+         -- обычные проводки по суммам
+         SELECT
+             zc_MIContainer_Summ()
+           , zc_Movement_Send()
+           , inMovementId
+           , tmpSumm.MovementItemId
+           , tmpSumm.ContainerId_summ
+           , vbAccountId
+           , tmpSumm.Summ
+           , tmpSumm.OperDate
+           , tmpSumm.isActive
+         FROM tmpSumm
+        ;
+
+    END IF;
 
     -- Списуем сроковые партии которые не попали в распределение
     IF EXISTS (SELECT 1 FROM Container
@@ -676,15 +986,15 @@ end if;*/
                               WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_CountPartionDate()
                               GROUP BY _tmpMIContainer_insert.ContainerId
                               )
-         , ContainerPD AS (SELECT Container.Id 
-                                , Container.ParentId 
+         , ContainerPD AS (SELECT Container.Id
+                                , Container.ParentId
                                   -- сколько осталось
                                 , Container.Amount + COALESCE (ContainerPDUse.Amount, 0) AS Amount
                            FROM _tmpMIContainer_insert
                                 JOIN Container ON Container.ParentId = _tmpMIContainer_insert.ContainerId
                                               AND Container.DescId   = zc_Container_CountPartionDate()
                                               AND Container.Amount > 0.0
-                                LEFT JOIN ContainerPDUse ON ContainerPDUse.ContainerId = Container.Id 
+                                LEFT JOIN ContainerPDUse ON ContainerPDUse.ContainerId = Container.Id
                            WHERE _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
                              AND _tmpMIContainer_insert.isActive    = FALSE -- только расход
                              AND _tmpMIContainer_insert.MovementItemId NOT IN
@@ -692,7 +1002,7 @@ end if;*/
                                   FROM _tmpMIContainer_insert
                                   WHERE _tmpMIContainer_insert.DescId = zc_MIContainer_CountPartionDate())
                            )
-           -- Остатки сроковых партий - zc_Container_CountPartionDate 
+           -- Остатки сроковых партий - zc_Container_CountPartionDate
          , DD AS (SELECT _tmpMIContainer_insert.MovementItemId
                          -- сколько надо получить
                        , -1 * _tmpMIContainer_insert.Amount                  AS Amount
@@ -704,8 +1014,8 @@ end if;*/
                        , SUM (Container.Amount) OVER (PARTITION BY Container.ParentId ORDER BY Container.Id, _tmpMIContainer_insert.MovementItemId) AS AmountRemains_sum
                          -- для последнего элемента - не смотрим на остаток
                        , ROW_NUMBER() OVER (PARTITION BY _tmpMIContainer_insert.MovementItemId ORDER BY Container.Id DESC, _tmpMIContainer_insert.MovementItemId DESC) AS DOrd
-                   FROM ContainerPD AS Container 
-                        JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId 
+                   FROM ContainerPD AS Container
+                        JOIN _tmpMIContainer_insert ON _tmpMIContainer_insert.ContainerId = Container.ParentId
                                                    AND _tmpMIContainer_insert.DescId      = zc_MIContainer_Count()
                                                    AND _tmpMIContainer_insert.isActive    = FALSE -- только расход
                                                    AND _tmpMIContainer_insert.MovementItemId NOT IN

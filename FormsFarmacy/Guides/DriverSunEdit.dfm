@@ -2,7 +2,7 @@ object DriverSunEditForm: TDriverSunEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1086#1076#1080#1090#1077#1083#1103' '#1057#1059#1053'>'
-  ClientHeight = 206
+  ClientHeight = 257
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,8 +28,8 @@ object DriverSunEditForm: TDriverSunEditForm
     Caption = #1048#1084#1103
   end
   object cxButton1: TcxButton
-    Left = 33
-    Top = 163
+    Left = 25
+    Top = 203
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -37,8 +37,8 @@ object DriverSunEditForm: TDriverSunEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 177
-    Top = 163
+    Left = 169
+    Top = 203
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -69,6 +69,19 @@ object DriverSunEditForm: TDriverSunEditForm
     Top = 121
     TabOrder = 7
     Width = 273
+  end
+  object edChatIDSendVIP: TcxCurrencyEdit
+    Left = 10
+    Top = 165
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 8
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 14
+    Top = 144
+    Caption = #1063#1072#1090' ID Telegram '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084' VIP'
   end
   object ActionList: TActionList
     Left = 208
@@ -137,9 +150,16 @@ object DriverSunEditForm: TDriverSunEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inChatIDSendVIP'
+        Value = Null
+        Component = edChatIDSendVIP
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 104
+    Left = 80
     Top = 64
   end
   object dsdFormParams: TdsdFormParams
@@ -150,7 +170,7 @@ object DriverSunEditForm: TDriverSunEditForm
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end>
-    Left = 96
+    Left = 80
     Top = 8
   end
   object spGet: TdsdStoredProc
@@ -184,6 +204,12 @@ object DriverSunEditForm: TDriverSunEditForm
         Value = Null
         Component = edPhone
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ChatIDSendVIP'
+        Value = Null
+        Component = edChatIDSendVIP
         MultiSelectSeparator = ','
       end>
     PackSize = 1

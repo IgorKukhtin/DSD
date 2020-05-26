@@ -48,6 +48,7 @@ type
     function SendDocument(AChatId : Integer; ADocument : string) : boolean;
 
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
+    property Id : Integer read FId;
     property FileNameChatId : String read FFileNameChatId write FFileNameChatId;
   end;
 
@@ -181,7 +182,7 @@ begin
   FRESTRequest.Resource := '/getUpdates';
   // required parameters
   FRESTRequest.Params.Clear;
-  FRESTRequest.AddParameter('offset', '0', TRESTRequestParameterKind.pkGETorPOST);
+  FRESTRequest.AddParameter('offset', IntToStr(Fupdate_id + 1), TRESTRequestParameterKind.pkGETorPOST);
 
   try
     FRESTRequest.Execute;
@@ -258,8 +259,7 @@ begin
   InitCDS;
   if not FChatIdCDS.Active then Exit;
 
-  GetUpdates;
-//  while GetUpdates > 0 do ;
+  while GetUpdates > 0 do ;
 
   FChatIdCDS.SaveToFile(FFileNameChatId, dfXML);
 

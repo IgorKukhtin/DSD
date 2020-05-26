@@ -19,11 +19,6 @@ $BODY$
   DECLARE vbDateViewed TDateTime;
 BEGIN
 
-  IF inUserId <> 3
-  THEN
-    RETURN;
-  END IF;
-
   IF EXISTS(SELECT MovementItemDate_Viewed.ValueData
             FROM MovementItem
 

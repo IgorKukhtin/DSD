@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_DriverSun()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DriverSun(Integer, Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DriverSun(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DriverSun(
  INOUT ioId             Integer   ,     -- ключ объекта <Водитель> 
     IN inCode           Integer   ,     -- Код объекта  
     IN inName           TVarChar  ,     -- Название объекта 
     IN inPhone          TVarChar  ,     -- Телефон
+    IN inChatIDSendVIP  Integer   ,     -- Чат ID для отправки сообщений в Telegram по перемещениям VIP
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
@@ -34,6 +36,9 @@ BEGIN
    -- сохранили Телефон
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DriverSun_Phone(), ioId, inPhone);
    
+   -- сохранили Чат ID для отправки сообщений в Telegram по перемещениям VIP
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_DriverSun_ChatIDSendVIP(), ioId, inChatIDSendVIP);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
@@ -44,6 +49,7 @@ END;$BODY$
 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Шаблий О.В.
+ 26.05.20                                                       *
  05.03.20                                                       *
 */
 

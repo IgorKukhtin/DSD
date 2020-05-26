@@ -40,6 +40,8 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel5: TcxLabel;
     edPhone: TcxTextEdit;
+    edChatIDSendVIP: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

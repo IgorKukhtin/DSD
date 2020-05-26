@@ -26,7 +26,8 @@ object DriverSunForm: TDriverSunForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 592
+    ExplicitLeft = 64
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -67,6 +68,13 @@ object DriverSunForm: TDriverSunForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 220
+      end
+      object ChatIDSendVIP: TcxGridDBColumn
+        Caption = #1063#1072#1090' ID Telegram '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097'. VIP'
+        DataBinding.FieldName = 'ChatIDSendVIP'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 129
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -469,6 +477,7 @@ object DriverSunForm: TDriverSunForm
       end>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end

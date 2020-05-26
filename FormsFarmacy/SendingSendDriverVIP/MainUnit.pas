@@ -17,7 +17,8 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
-  cxImageComboBox;
+  cxImageComboBox, cxNavigator, uTelegram,
+  cxDataControllerConditionalFormattingRulesManagerDialog;
 
 type
   TMainForm = class(TForm)
@@ -25,58 +26,63 @@ type
     Timer1: TTimer;
     qryDriver: TZQuery;
     dsDriver: TDataSource;
-    qryMailParam: TZQuery;
     Panel2: TPanel;
-    btnSendMail: TButton;
+    btnSendTelegram: TButton;
     btnExport: TButton;
     btnExecute: TButton;
     btnAll: TButton;
     qryReport_Upload: TZQuery;
     dsReport_Upload: TDataSource;
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    Code: TcxGridDBColumn;
-    Name: TcxGridDBColumn;
-    Email: TcxGridDBColumn;
-    isAllLetters: TcxGridDBColumn;
-    cxGridLevel: TcxGridLevel;
-    btnAllMaker: TButton;
+    grChatId: TcxGrid;
+    grChatIdDBTableView: TcxGridDBTableView;
+    ciFirstName: TcxGridDBColumn;
+    ciLastName: TcxGridDBColumn;
+    ciUserName: TcxGridDBColumn;
+    cidID: TcxGridDBColumn;
+    grChatIdLevel: TcxGridLevel;
+    btnAllDriver: TButton;
     grReport: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
-    colOperDate: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
+    isUrgently: TcxGridDBColumn;
     FromName: TcxGridDBColumn;
-    ProvinceCityName_From: TcxGridDBColumn;
     ToName: TcxGridDBColumn;
-    ProvinceCityName_To: TcxGridDBColumn;
-    TotalCount: TcxGridDBColumn;
-    Comment: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
+    Panel1: TPanel;
+    cxGrid1: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    drCode: TcxGridDBColumn;
+    drName: TcxGridDBColumn;
+    drChatIDSendVIP: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    ChatIdDS: TDataSource;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
     procedure btnExportClick(Sender: TObject);
-    procedure btnSendMailClick(Sender: TObject);
+    procedure btnSendTelegramClick(Sender: TObject);
     procedure btnAllClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnAllMakerClick(Sender: TObject);
+    procedure btnAllDriverClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
 
     FileName: String;
     SavePath: String;
-    Subject: String;
+    Token : String;
+    TelegramBot : TTelegramBot;
+    FDate: TDateTime;
 
-    function SendMail(const Host: String; const Port: integer; const Password,
-      Username: String; const Recipients: String; const FromAdres,
-      Subject, MessageText: String;
-      const Attachments: array of String): boolean;
-    procedure LInitializeISO(var VHeaderEncoding: Char; var VCharSet: string);
+    FMessage : TStringList;
+
+    FError : boolean;
+
+
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
 
-    procedure AllMaker;
+    procedure AllDriver;
   end;
 
 var
@@ -85,13 +91,6 @@ var
 implementation
 
 {$R *.dfm}
-
-function GetThousandSeparator : string;
-begin
-  if FormatSettings.ThousandSeparator = #160 then Result := ' '
-  else Result := FormatSettings.ThousandSeparator;
-end;
-
 
 procedure TMainForm.Add_Log(AMessage: String);
 var
@@ -113,17 +112,17 @@ begin
   end;
 end;
 
-procedure TMainForm.AllMaker;
+procedure TMainForm.AllDriver;
 begin
   try
 
     Add_Log('');
     Add_Log('-------------------');
-    Add_Log('Водитель СУН: ' + qryDriver.FieldByName('Name').AsString);
+    Add_Log('Водитель VIP: ' + qryDriver.FieldByName('Name').AsString);
 
     btnExecuteClick(Nil);
     btnExportClick(Nil);
-    btnSendMailClick(Nil);
+    btnSendTelegramClick(Nil);
 
   except
     on E: Exception do
@@ -133,44 +132,59 @@ end;
 
 
 procedure TMainForm.btnAllClick(Sender: TObject);
+var
+  Ini: TIniFile;
 begin
   try
+    FError := False;
+    btnExecuteClick(Nil);
+    btnExportClick(Nil);
+
+    if not qryReport_Upload.Active then Exit;
+    if qryReport_Upload.IsEmpty then Exit;
+
     qryDriver.First;
     while not qryDriver.Eof do
     begin
 
-      AllMaker;
+      btnSendTelegramClick(Nil);
 
       qryDriver.Next;
       Application.ProcessMessages;
     end;
+
+    if not FError then
+    begin
+      Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP.ini');
+      try
+        FDate := Now;
+        Ini.WriteDateTime('Options', 'Date', FDate);
+      finally
+        Ini.Free;
+      end;
+    end;
+
   except
     on E: Exception do
       Add_Log(E.Message);
   end;
-
-  qryDriver.Close;
-  qryDriver.Open;
 end;
 
-procedure TMainForm.btnAllMakerClick(Sender: TObject);
+procedure TMainForm.btnAllDriverClick(Sender: TObject);
 begin
-  AllMaker;
-  qryDriver.Close;
-  qryDriver.Open;
+  AllDriver;
 end;
 
 procedure TMainForm.btnExecuteClick(Sender: TObject);
   var APoint : TPoint;
 begin
-  inherited;
+  if not qryDriver.Active then Exit;
+  if qryDriver.IsEmpty then Exit;
+
   try
     FileName := qryDriver.FieldByName('Name').AsString;
-    Subject := 'Перемещения по доставке СУН';
     qryReport_Upload.Close;
-    if qryDriver.FieldByName('isAllLetters').AsBoolean then
-      qryReport_Upload.ParamByName('Driver').AsInteger :=  0
-    else qryReport_Upload.ParamByName('Driver').AsInteger :=  qryDriver.FieldByName('ID').AsInteger;
+    qryReport_Upload.ParamByName('Date').AsDateTime := FDate;
     qryReport_Upload.Open;
   except
     on E: Exception do Add_Log(E.Message);
@@ -179,56 +193,54 @@ end;
 
 procedure TMainForm.btnExportClick(Sender: TObject);
 var
-  sl: TStringList;
+  Urgently : boolean;
 begin
   if not qryReport_Upload.Active then Exit;
   if qryReport_Upload.IsEmpty then Exit;
+  if not qryDriver.Active then Exit;
+  if qryDriver.IsEmpty then Exit;
   Add_Log('Начало выгрузки отчета');
-  if not ForceDirectories(SavePath) then
-  Begin
-    Add_Log('Не могу создать директорию выгрузки');
-    exit;
+
+  FMessage.Clear;
+  qryReport_Upload.First;
+  if qryReport_Upload.FieldByName('isUrgently').AsBoolean then
+  begin
+    Urgently := True;
+    FMessage.Add('Срочный заказ:');
+  end else
+  begin
+    Urgently := False;
+    FMessage.Add('Доставить товар в течении 24 часов:');
   end;
 
-  try
-    try
-      ExportGridToExcel(SavePath + FileName, grReport);
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-        exit;
-      end;
+  while not qryReport_Upload.Eof do
+  begin
+    if qryReport_Upload.FieldByName('isUrgently').AsBoolean <> Urgently then
+    begin
+      Urgently := False;
+      FMessage.Add('');
+      FMessage.Add('Доставить товар в течении 24 часов:');
     end;
-  finally
+    FMessage.Add('c ' + qryReport_Upload.FieldByName('FromName').AsString + ' на ' + qryReport_Upload.FieldByName('ToName').AsString);
+    qryReport_Upload.Next;
   end;
+
+
 end;
 
-procedure TMainForm.btnSendMailClick(Sender: TObject);
+procedure TMainForm.btnSendTelegramClick(Sender: TObject);
 begin
 
-  if not FileExists(SavePath + FileName + '.xls') then Exit;
+  if FMessage.Count = 0 then Exit;
 
-  Add_Log('Начало отправки отчета: ' + SavePath + FileName + '.xls');
+  Add_Log('Начало отправки сообщения: ' + qryDriver.FieldByName('Name').AsString);
 
-  if SendMail(qryMailParam.FieldByName('Mail_Host').AsString,
-       qryMailParam.FieldByName('Mail_Port').AsInteger,
-       qryMailParam.FieldByName('Mail_Password').AsString,
-       qryMailParam.FieldByName('Mail_User').AsString,
-       qryDriver.FieldByName('Email').AsString,
-       qryMailParam.FieldByName('Mail_From').AsString,
-       Subject,
-       '',
-       [SavePath + FileName + '.xls']) then
-  begin
-    try
-      DeleteFile(SavePath + FileName + '.xls');
-      if FileExists(SavePath + FileName + '.xls') then DeleteFile(SavePath + FileName + '.xls');
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-      end;
+  try
+    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsInteger, FMessage.Text) then FError := True;
+  except
+    on E: Exception do
+    begin
+      Add_Log(E.Message);
     end;
   end;
 end;
@@ -242,7 +254,8 @@ procedure TMainForm.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingSendDriver.ini');
+  FMessage := TStringList.Create;
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP.ini');
 
   try
     SavePath := Trim(Ini.ReadString('Options', 'Path', ExtractFilePath(Application.ExeName)));
@@ -261,6 +274,14 @@ begin
     ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'eej9oponahT4gah3');
     Ini.WriteString('Connect', 'Password', ZConnection1.Password);
 
+    ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'eej9oponahT4gah3');
+    Ini.WriteString('Connect', 'Password', ZConnection1.Password);
+
+    Token := Ini.ReadString('Telegram', 'Token', '1063990679:AAEQS8XEsGQCFKOO7nUKFfNi5TpIpgSTuLw');
+    Ini.WriteString('Telegram', 'Token', Token);
+
+    FDate := Ini.ReadDateTime('Options', 'Date', Now);
+
   finally
     Ini.free;
   end;
@@ -278,6 +299,14 @@ begin
     end;
   end;
 
+  TelegramBot := TTelegramBot.Create(Token);
+  TelegramBot.FileNameChatId := 'SendingSendDriverVIP_ChatId.xml';
+  if TelegramBot.Id <> 0 then
+  begin
+    TelegramBot.LoadChatId;
+    ChatIdDS.DataSet := TelegramBot.ChatIdCDS;
+  end;
+
   if ZConnection1.Connected then
   begin
     qryDriver.Close;
@@ -292,29 +321,23 @@ begin
       end;
     end;
 
-    qryMailParam.Close;
-    try
-      qryMailParam.Open;
-    except
-      on E: Exception do
-      begin
-        Add_Log(E.Message);
-        Close;
-        Exit;
-      end;
-    end;
-
     if not (((ParamCount >= 1) and (CompareText(ParamStr(1), 'manual') = 0)) or
       (Pos('Farmacy.exe', Application.ExeName) <> 0)) then
     begin
       btnAll.Enabled := false;
-      btnAllMaker.Enabled := false;
+      btnAllDriver.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
-      btnSendMail.Enabled := false;
+      btnSendTelegram.Enabled := false;
       Timer1.Enabled := true;
     end;
   end;
+end;
+
+procedure TMainForm.FormDestroy(Sender: TObject);
+begin
+  FMessage.Free;
+  TelegramBot.Free;
 end;
 
 procedure TMainForm.Timer1Timer(Sender: TObject);
@@ -324,101 +347,6 @@ begin
     btnAllClick(nil);
   finally
     Close;
-  end;
-end;
-
-procedure TMainForm.LInitializeISO(var VHeaderEncoding: Char; var VCharSet: string);
-begin
-  VHeaderEncoding:='B';
-  VCharSet:='Windows-1251';
-end;
-
-function TMainForm.SendMail(const Host: String; const Port: integer;
-                          const Password, Username: String;
-                          const Recipients: String;
-                          const FromAdres, Subject: String;
-                          const MessageText:  String;
-                          const Attachments: array of String): boolean;
-
-var EMsg: TIdMessage;
-    FIdSMTP: TIdSMTP;
-    EText: TIdText;
-    i: integer;
-    Stream: TFileStream;
-    FIdSSLIOHandlerSocketOpenSSL: TIdSSLIOHandlerSocketOpenSSL;
-    Res: TArray<string>;
-begin
-  FIdSSLIOHandlerSocketOpenSSL := TIdSSLIOHandlerSocketOpenSSL.Create(nil);
-  FIdSSLIOHandlerSocketOpenSSL.MaxLineAction := maException;
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Method := sslvTLSv1;
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.Mode := sslmUnassigned;
-  FIdSSLIOHandlerSocketOpenSSL.SSLOptions.VerifyDepth := 0;
-
-  result := false;
-  FIdSMTP := TIdSMTP.Create(nil);
-  FIdSMTP.Host:= Host;
-  FIdSMTP.Port := Port;
-  FIdSMTP.Password:= Password;
-  FIdSMTP.Username:= Username;
-  FIdSMTP.IOHandler := FIdSSLIOHandlerSocketOpenSSL;
-  FIdSMTP.UseTLS := utUseImplicitTLS;
-
-  EMsg := TIdMessage.Create(FIdSMTP);
-  EMsg.OnInitializeISO := Self.LInitializeISO;
-
-  try
-    try
-      EMsg.CharSet := 'Windows-1251';
-      EMsg.Subject := Subject;
-      EMsg.ContentTransferEncoding  := '8bit';
-
-      EText := TIdText.Create(EMsg.MessageParts);
-
-      EText.Body.Text :=
-                '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'+
-                '<html><head>'+
-                                '<meta http-equiv="content-type" content="text/html; charset=Windows-1251">'+
-                                '<title>' + Subject + '</title></head>'+
-                '<body bgcolor="#ffffff">'+
-                ReplaceStr(MessageText, #10, '<br>') + '</body></html>';
-
-      EText.ContentType := 'text/html';
-      EText.CharSet := 'Windows-1251';
-      EText.ContentTransfer := '8bit';
-
-      Res := TRegEx.Split(Recipients, '[;]');
-      for i := 0 to high(Res) do
-          EMsg.Recipients.Add.Address :=Res[i];
-      EMsg.From.Address := FromAdres;
-      EMsg.Body.Clear;
-      EMsg.Date := now;
-      for i := 0 to high(Attachments) do
-        if FileExists(Trim(Attachments[i])) then begin
-           Stream := TFileStream.Create(Attachments[i], fmOpenReadWrite);
-           try
-              with TIdAttachmentFile.Create(EMsg.MessageParts) do begin
-                   FileName := ExtractFileName(Attachments[i]);
-                   LoadFromStream(Stream);
-              end;
-           finally
-              FreeAndNil(Stream);
-           end;
-        end;
-      EMsg.AfterConstruction;
-
-      FIdSMTP.Connect;
-      if FIdSMTP.Connected then begin
-         FIdSMTP.Send(EMsg);
-         result := true;
-      end;
-    Except ON E:Exception DO
-      Begin
-        Add_Log(E.Message);
-      end;
-    end;
-  finally
-    FIdSMTP.Disconnect;
-    FreeAndNil(FIdSMTP);
   end;
 end;
 

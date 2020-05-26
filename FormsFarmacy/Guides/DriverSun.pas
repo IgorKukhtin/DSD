@@ -58,6 +58,7 @@ type
     bbProtocolOpenForm: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    ChatIDSendVIP: TcxGridDBColumn;
   private
     { Private declarations }
   public

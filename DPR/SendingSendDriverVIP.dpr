@@ -2,7 +2,8 @@ program SendingSendDriverVIP;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\FormsFarmacy\SendingSendDriverVIP\MainUnit.pas' {MainForm};
+  MainUnit in '..\FormsFarmacy\SendingSendDriverVIP\MainUnit.pas' {MainForm},
+  uTelegram in '..\SOURCE\uTelegram.pas';
 
 {$R *.res}
 
