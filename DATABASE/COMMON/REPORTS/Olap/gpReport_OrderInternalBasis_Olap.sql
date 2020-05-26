@@ -465,7 +465,9 @@ BEGIN
                                                                   OR ObjectLink_Goods_GoodsGroup_parent.ChildObjectId IN (1942, 5064881) -- СО-ЭМУЛЬСИИ + СО-ПОСОЛ
                                                                     )
                                                                     THEN tmpData.FromId
-                                                                WHEN Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10200() -- Основное сырье + Прочее сырье
+                                                                                                                     , zc_Enum_InfoMoneyDestination_20600() -- Общефирменные  + Прочие материалы
+                                                                                                                      )
                                                                     THEN 8455 -- Склад специй
                                                                 ELSE 8439 -- Участок мясного сырья
                                                           END

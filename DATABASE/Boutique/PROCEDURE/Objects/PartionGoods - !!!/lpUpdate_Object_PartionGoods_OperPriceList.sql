@@ -14,6 +14,7 @@ BEGIN
 
        -- изменили во ¬сех парти€х “овара
        UPDATE Object_PartionGoods SET OperPriceList = COALESCE (OHF_PriceListItem_Value.ValueData, 0)
+                                    , CurrencyId_pl = COALESCE (ObjectHistoryLink_Currency.ObjectId, zc_Currency_Basis())
        FROM ObjectLink AS OL_PriceListItem_Goods
             INNER JOIN ObjectLink AS OL_PriceListItem_PriceList
                                   ON OL_PriceListItem_PriceList.ObjectId      = OL_PriceListItem_Goods.ObjectId
@@ -26,10 +27,15 @@ BEGIN
             LEFT JOIN ObjectHistoryFloat AS OHF_PriceListItem_Value
                                          ON OHF_PriceListItem_Value.ObjectHistoryId = OH_PriceListItem.Id
                                         AND OHF_PriceListItem_Value.DescId = zc_ObjectHistoryFloat_PriceListItem_Value()
+            LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Currency
+                                        ON ObjectHistoryLink_Currency.ObjectHistoryId = OH_PriceListItem.Id
+                                       AND ObjectHistoryLink_Currency.DescId          = zc_ObjectHistoryLink_PriceListItem_Currency()
        WHERE Object_PartionGoods.GoodsId          = inGoodsId
          AND OL_PriceListItem_Goods.ChildObjectId = Object_PartionGoods.GoodsId
          AND OL_PriceListItem_Goods.DescId        = zc_ObjectLink_PriceListItem_Goods()
-         AND Object_PartionGoods.OperPriceList    <> COALESCE (OHF_PriceListItem_Value.ValueData, 0) -- мен€ем - только если значение отличаетс€
+         AND (Object_PartionGoods.OperPriceList   <> COALESCE (OHF_PriceListItem_Value.ValueData, 0)                     -- мен€ем - только если значение отличаетс€
+           OR Object_PartionGoods.CurrencyId_pl   <> COALESCE (ObjectHistoryLink_Currency.ObjectId, zc_Currency_Basis()) -- мен€ем - только если значение отличаетс€
+             )
       ;
 
       -- ≈сли было изменение - надо записать в Object_GoodsPrint - потом распечатают ÷енник с Ќовой ценой

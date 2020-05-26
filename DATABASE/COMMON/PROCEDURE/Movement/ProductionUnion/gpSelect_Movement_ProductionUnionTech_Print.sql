@@ -174,15 +174,19 @@ BEGIN
     --
     -- Пр-во расход - строчная часть
     INSERT INTO _tmpMI_Child_two (ParentId, MovementItemId, GoodsId, Amount)
-       SELECT MovementItem.ParentId  AS ParentId
-            , MovementItem.Id        AS MovementItemId
-            , MovementItem.ObjectId  AS GoodsId
-            , MovementItem.Amount    AS Amount
+       SELECT MovementItem.ParentId                  AS ParentId
+            , MovementItem.Id                        AS MovementItemId
+            , MovementItem.ObjectId                  AS GoodsId
+          --, COALESCE (MILO_GoodsKind.ObjectId, 0)  AS GoodsKindId
+            , MovementItem.Amount                    AS Amount
        FROM _tmpListMaster
             INNER JOIN MovementItem ON MovementItem.ParentId   = _tmpListMaster.MovementItemId
                                    AND MovementItem.MovementId = _tmpListMaster.MovementId
                                    AND MovementItem.DescId     = zc_MI_Child()
                                    AND MovementItem.isErased   = FALSE
+          --LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
+          --                                 ON MILO_GoodsKind.MovementItemId = MovementItem.Id
+          --                                AND MILO_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
        WHERE _tmpListMaster.MovementId <> 0;
 
     -- !!!!!!!!!!!!!!!!!!!!!!!
@@ -211,6 +215,9 @@ BEGIN
  , tmpData AS (SELECT Object_Goods.Id                   AS GoodsId
                     , Object_Goods.ObjectCode           AS GoodsCode
                     , Object_Goods.ValueData            AS GoodsName
+                    , Object_GoodsKind.Id               AS GoodsKindId
+                    , Object_GoodsKind.ObjectCode       AS GoodsKindCode
+                    , Object_GoodsKind.ValueData        AS GoodsKindName
 
                     , tmpMI_Child.ParentId              AS ParentId
 
@@ -228,7 +235,7 @@ BEGIN
                FROM tmpMI_Child
                     LEFT JOIN Object AS Object_Goods     ON Object_Goods.Id     = tmpMI_Child.GoodsId
                     LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_Child.GoodsKindId
-
+                                                        AND tmpMI_Child.GoodsKindId <> zc_GoodsKind_Basis()
                     LEFT JOIN MovementItemBoolean AS MIBoolean_TaxExit
                                                   ON MIBoolean_TaxExit.MovementItemId = tmpMI_Child.MovementItemId
                                                  AND MIBoolean_TaxExit.DescId         = zc_MIBoolean_TaxExit()
@@ -273,6 +280,9 @@ BEGIN
        SELECT tmpData.GoodsId
             , tmpData.GoodsCode
             , tmpData.GoodsName
+            , tmpData.GoodsKindId
+            , tmpData.GoodsKindCode
+            , tmpData.GoodsKindName
             , _tmpRes_cur1.GoodsId AS GoodsId_master
             , _tmpRes_cur1.OperDate
               -- итого - Кол-во факт
@@ -287,6 +297,9 @@ BEGIN
        GROUP BY tmpData.GoodsId
               , tmpData.GoodsCode
               , tmpData.GoodsName
+              , tmpData.GoodsKindId
+              , tmpData.GoodsKindCode
+              , tmpData.GoodsKindName
               , _tmpRes_cur1.GoodsId
               , _tmpRes_cur1.OperDate
               , _tmpRes_cur1.CountReceipt_goods
@@ -306,6 +319,9 @@ BEGIN
          , tmp_Res.GoodsId_child
          , tmp_Res.GoodsCode_child
          , tmp_Res.GoodsName_child
+         , tmp_Res.GoodsKindId_child
+         , tmp_Res.GoodsKindCode_child
+         , tmp_Res.GoodsKindName_child
 
            -- Кол-во куттеров
          , tmp_Res.CuterCount         :: TFloat AS CuterCount
@@ -332,9 +348,12 @@ BEGIN
                , tmpRes_cur1.GoodsId
                , tmpRes_cur1.GoodsCode
                , tmpRes_cur1.GoodsName
-               , tmpRes_cur2.GoodsId    AS GoodsId_child
-               , tmpRes_cur2.GoodsCode  AS GoodsCode_child
-               , tmpRes_cur2.GoodsName  AS GoodsName_child
+               , tmpRes_cur2.GoodsId        AS GoodsId_child
+               , tmpRes_cur2.GoodsCode      AS GoodsCode_child
+               , tmpRes_cur2.GoodsName      AS GoodsName_child
+               , tmpRes_cur2.GoodsKindId    AS GoodsKindId_child
+               , tmpRes_cur2.GoodsKindCode  AS GoodsKindCode_child
+               , tmpRes_cur2.GoodsKindName  AS GoodsKindName_child
                  -- Кол-во куттеров
                , tmpRes_cur1.CuterCount
                  -- Кол-во партий рецептуры для замеса

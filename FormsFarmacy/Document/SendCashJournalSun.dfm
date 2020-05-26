@@ -20,59 +20,11 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
   inherited Panel: TPanel
     Visible = False
   end
-  inherited spSelect: TdsdStoredProc
-    Params = <
-      item
-        Name = 'instartdate'
-        Value = 41640d
-        Component = deStart
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inenddate'
-        Value = 41640d
-        Component = deEnd
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSUN'
-        Value = False
-        Component = FormParams
-        ComponentItem = 'isSUN'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inisSUNAll'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'isSUNAll'
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
+  inherited spMovementReComplete: TdsdStoredProc [2]
   end
-  inherited BarManager: TdxBarManager
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
+  inherited spSelect: TdsdStoredProc [3]
   end
-  inherited FormParams: TdsdFormParams
+  inherited FormParams: TdsdFormParams [4]
     Params = <
       item
         Name = 'Id'
@@ -116,9 +68,83 @@ inherited SendCashJournalSunForm: TSendCashJournalSunForm
       end
       item
         Name = 'isSUNAll'
-        Value = True
+        Value = 'True'
         DataType = ftBoolean
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVIP'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'VIPType'
+        Value = '0'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
+  end
+  inherited PrintHeaderCDS: TClientDataSet [5]
+  end
+  inherited PrintItemsCDS: TClientDataSet [6]
+  end
+  inherited spSelectPrint: TdsdStoredProc [7]
+  end
+  inherited PrintItemsSverkaCDS: TClientDataSet [8]
+  end
+  inherited spUpdate_Movement_OperDate: TdsdStoredProc [9]
+  end
+  inherited spUpdate_isDeferred_No: TdsdStoredProc [10]
+  end
+  inherited spUpdate_isDeferred_Yes: TdsdStoredProc [11]
+  end
+  inherited spUpdate_Movement_Received: TdsdStoredProc [12]
+  end
+  inherited spUpdate_Movement_Sent: TdsdStoredProc [13]
+  end
+  inherited spUpdate_isDefSun: TdsdStoredProc [14]
+  end
+  inherited spUpdate_isSun: TdsdStoredProc [15]
+  end
+  inherited spUnCompleteView: TdsdStoredProc [16]
+  end
+  inherited spUpdate_NotDisplaySUN_Yes: TdsdStoredProc [17]
+  end
+  inherited spComplete_Filter: TdsdStoredProc [18]
+  end
+  inherited spSetErased_Filter: TdsdStoredProc [19]
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher [20]
+  end
+  inherited spMovementComplete: TdsdStoredProc [21]
+  end
+  inherited spMovementUnComplete: TdsdStoredProc [22]
+  end
+  inherited spMovementSetErased: TdsdStoredProc [23]
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn [24]
+  end
+  inherited ActionList: TActionList [25]
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore [26]
+  end
+  inherited BarManager: TdxBarManager [27]
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn [28]
+  end
+  inherited MasterDS: TDataSource [29]
+  end
+  inherited MasterCDS: TClientDataSet [30]
+  end
+  inherited PopupMenu: TPopupMenu [31]
+  end
+  inherited PeriodChoice: TPeriodChoice [32]
   end
 end

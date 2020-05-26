@@ -70,6 +70,11 @@ type
     actRefreshCard: TdsdDataSetRefresh;
     actRefreshEUR: TdsdDataSetRefresh;
     HeaderChanger: THeaderChanger;
+    cxLabel5: TcxLabel;
+    ceAmountToPay_curr: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceAmountRemains_curr: TcxCurrencyEdit;
+    ceAmountDiscount_curr: TcxCurrencyEdit;
   private
     { Private declarations }
   public

@@ -190,6 +190,10 @@ type
     OperPriceListReal: TcxGridDBColumn;
     OperPriceList_curr: TcxGridDBColumn;
     CurrencyName_pl: TcxGridDBColumn;
+    OperPriceList_original: TcxGridDBColumn;
+    TotalSummPriceList_curr: TcxGridDBColumn;
+    TotalSummToPay_curr: TcxGridDBColumn;
+    TotalSummDebt_curr: TcxGridDBColumn;
   private
   public
   end;

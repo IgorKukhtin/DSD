@@ -116,6 +116,7 @@ begin
          Params.AddParam('inPlaceNumber', ftInteger, ptInput, SettingMain.PlaceNumber);
          Params.AddParam('inOperDate', ftDateTime, ptInput, execParamsMovement.ParamByName('OperDate').AsDateTime);
          Params.AddParam('inIsNext', ftBoolean, ptInput, isNext);
+         Params.AddParam('inIs_test', ftBoolean, ptInput, true);
 
          //try
            Execute;
@@ -148,6 +149,14 @@ begin
            ParamsLight.ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').AsInteger;
            ParamsLight.ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').asInteger;
            ParamsLight.ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+
+           ParamsLight.ParamByName('GoodsId_sh').AsInteger  := DataSet.FieldByName('GoodsId_sh').AsInteger;
+           ParamsLight.ParamByName('GoodsCode_sh').AsInteger:= DataSet.FieldByName('GoodsCode_sh').asInteger;
+           ParamsLight.ParamByName('GoodsName_sh').asString := DataSet.FieldByName('GoodsName_sh').asString;
+           ParamsLight.ParamByName('GoodsKindId_sh').AsInteger  := DataSet.FieldByName('GoodsKindId_sh').AsInteger;
+           ParamsLight.ParamByName('GoodsKindCode_sh').AsInteger:= DataSet.FieldByName('GoodsKindCode_sh').asInteger;
+           ParamsLight.ParamByName('GoodsKindName_sh').asString := DataSet.FieldByName('GoodsKindName_sh').asString;
+
            ParamsLight.ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').AsInteger;
            ParamsLight.ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').asInteger;
            ParamsLight.ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
@@ -167,6 +176,15 @@ begin
            ParamsLight.ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
            // максимальный вес 1шт.
            ParamsLight.ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMax').AsFloat;
+
+           // минимальный вес 1ед.
+           ParamsLight.ParamByName('WeightMin_Sh').AsFloat := DataSet.FieldByName('WeightMin_Sh').AsFloat;
+           ParamsLight.ParamByName('WeightMin_Nom').AsFloat:= DataSet.FieldByName('WeightMin_Nom').AsFloat;
+           ParamsLight.ParamByName('WeightMin_Ves').AsFloat:= DataSet.FieldByName('WeightMin_Ves').AsFloat;
+           // максимальный вес 1ед.
+           ParamsLight.ParamByName('WeightMax_Sh').AsFloat := DataSet.FieldByName('WeightMax_Sh').AsFloat;
+           ParamsLight.ParamByName('WeightMax_Nom').AsFloat:= DataSet.FieldByName('WeightMax_Nom').AsFloat;
+           ParamsLight.ParamByName('WeightMax_Ves').AsFloat:= DataSet.FieldByName('WeightMax_Ves').AsFloat;
 
            //1-ая линия - Всегда этот цвет
            ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;
@@ -611,6 +629,8 @@ begin
          Params.AddParam('inBarCodeBoxId_3', ftInteger, ptInput, ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger);
          Params.AddParam('inGoodsId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId').AsInteger);
          Params.AddParam('inGoodsKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId').AsInteger);
+         Params.AddParam('inGoodsId_sh', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId_sh').AsInteger);
+         Params.AddParam('inGoodsKindId_sh', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId_sh').AsInteger);
          Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
          Params.AddParam('inPlaceNumber', ftInteger, ptInput, SettingMain.PlaceNumber);
          //try
@@ -669,6 +689,8 @@ begin
            Params.AddParam('inMovementId', ftInteger, ptInput, execParamsMovement.ParamByName('MovementId').AsInteger);
            Params.AddParam('inGoodsId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId').AsInteger);
            Params.AddParam('inGoodsKindId', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId').AsInteger);
+           Params.AddParam('inGoodsId_sh', ftInteger, ptInput, ParamsLight.ParamByName('GoodsId_sh').AsInteger);
+           Params.AddParam('inGoodsKindId_sh', ftInteger, ptInput, ParamsLight.ParamByName('GoodsKindId_sh').AsInteger);
            Params.AddParam('inMeasureId', ftInteger, ptInput, ParamsLight.ParamByName('MeasureId').AsInteger);
 
            Params.AddParam('inWmsCode_Sh',  ftString, ptInput, ParamsLight.ParamByName('WmsCode_Sh').AsString);
@@ -712,14 +734,27 @@ begin
            // Вложенность - шт (информативно?)
            Params.AddParam('inCountOnBox_3', ftFloat, ptInput, ParamsLight.ParamByName('CountOnBox_3').asFloat);
 
-           // минимальный вес 1шт.
+           // минимальный вес 1ед.
            Params.AddParam('inWeightMin', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin').AsFloat);
-           // максимальный вес 1шт.
+           // максимальный вес 1ед.
            Params.AddParam('inWeightMax', ftFloat, ptInput, ParamsLight.ParamByName('WeightMax').AsFloat);
+
+           // минимальный вес 1ед.
+           Params.AddParam('inWeightMin_Sh', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin_Sh').AsFloat);
+           Params.AddParam('inWeightMin_Nom', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin_Nom').AsFloat);
+           Params.AddParam('inWeightMin_Ves', ftFloat, ptInput, ParamsLight.ParamByName('WeightMin_Ves').AsFloat);
+           // максимальный вес 1ед.
+           Params.AddParam('inWeightMax_Sh', ftFloat, ptInput, ParamsLight.ParamByName('WeightMax_Sh').AsFloat);
+           Params.AddParam('inWeightMax_Nom', ftFloat, ptInput, ParamsLight.ParamByName('WeightMax_Nom').AsFloat);
+           Params.AddParam('inWeightMax_Ves', ftFloat, ptInput, ParamsLight.ParamByName('WeightMax_Ves').AsFloat);
 
            Params.AddParam('inAmount', ftFloat, ptInput, 1);
            Params.AddParam('inRealWeight', ftFloat, ptInput, execParamsMI.ParamByName('RealWeight').AsFloat);
            Params.AddParam('inBranchCode', ftInteger, ptInput, SettingMain.BranchCode);
+           //
+           Params.AddParam('inIsErrSave', ftBoolean, ptInput, ParamsLight.ParamByName('isErrSave').AsBoolean);
+
+
            //try
              Result:= false;
              Execute;
@@ -731,6 +766,8 @@ begin
            //
            // вернули Id строки
            ParamsLight.ParamByName('MovementItemId').asInteger:= DataSet.FieldByName('Id').asInteger;
+           // вернули если была ошибка
+           ParamsLight.ParamByName('ResultText').asString:= DataSet.FieldByName('ResultText').asString;
            // вернули какой наполнен
            ParamsLight.ParamByName('isFull_1').asBoolean:= DataSet.FieldByName('isFull_1').asBoolean;
            ParamsLight.ParamByName('isFull_2').asBoolean:= DataSet.FieldByName('isFull_2').asBoolean;
@@ -827,6 +864,7 @@ begin
        OutputType:=otDataSet;
        Params.Clear;
        Params.AddParam('inMovementItemId', ftInteger, ptInput, MovementItemId);
+       Params.AddParam('inIsModeSorting', ftBoolean, ptInput, SettingMain.isModeSorting);
        Params.AddParam('inIsErased', ftBoolean, ptInput, NewValue);
        //try
          Execute;
@@ -1212,6 +1250,7 @@ begin
        Params.Clear;
        Params.AddParam('inGoodsId', ftInteger, ptInput, inGoodsId);
        Params.AddParam('inGoodsKindId', ftInteger, ptInput, inGoodsKindId);
+       Params.AddParam('inIs_test', ftBoolean, ptInput, true);
        //try
          Execute;
          //
@@ -1225,6 +1264,14 @@ begin
          ParamByName('GoodsKindId').AsInteger  := DataSet.FieldByName('GoodsKindId').AsInteger;
          ParamByName('GoodsKindCode').AsInteger:= DataSet.FieldByName('GoodsKindCode').asInteger;
          ParamByName('GoodsKindName').asString := DataSet.FieldByName('GoodsKindName').asString;
+
+         ParamByName('GoodsId_sh').AsInteger  := DataSet.FieldByName('GoodsId_sh').AsInteger;
+         ParamByName('GoodsCode_sh').AsInteger:= DataSet.FieldByName('GoodsCode_sh').asInteger;
+         ParamByName('GoodsName_sh').asString := DataSet.FieldByName('GoodsName_sh').asString;
+         ParamByName('GoodsKindId_sh').AsInteger  := DataSet.FieldByName('GoodsKindId_sh').AsInteger;
+         ParamByName('GoodsKindCode_sh').AsInteger:= DataSet.FieldByName('GoodsKindCode_sh').asInteger;
+         ParamByName('GoodsKindName_sh').asString := DataSet.FieldByName('GoodsKindName_sh').asString;
+
          ParamByName('MeasureId').AsInteger  := DataSet.FieldByName('MeasureId').AsInteger;
          ParamByName('MeasureCode').AsInteger:= DataSet.FieldByName('MeasureCode').asInteger;
          ParamByName('MeasureName').asString := DataSet.FieldByName('MeasureName').asString;
@@ -1244,6 +1291,15 @@ begin
          ParamByName('WeightMin').AsFloat:= DataSet.FieldByName('WeightMin').AsFloat;
          // максимальный вес 1шт.
          ParamByName('WeightMax').AsFloat:= DataSet.FieldByName('WeightMax').AsFloat;
+
+         // минимальный вес 1ед.
+         ParamByName('WeightMin_Sh').AsFloat := DataSet.FieldByName('WeightMin_Sh').AsFloat;
+         ParamByName('WeightMin_Nom').AsFloat:= DataSet.FieldByName('WeightMin_Nom').AsFloat;
+         ParamByName('WeightMin_Ves').AsFloat:= DataSet.FieldByName('WeightMin_Ves').AsFloat;
+         // максимальный вес 1ед.
+         ParamByName('WeightMax_Sh').AsFloat := DataSet.FieldByName('WeightMax_Sh').AsFloat;
+         ParamByName('WeightMax_Nom').AsFloat:= DataSet.FieldByName('WeightMax_Nom').AsFloat;
+         ParamByName('WeightMax_Ves').AsFloat:= DataSet.FieldByName('WeightMax_Ves').AsFloat;
 
          //1-ая линия - Всегда этот цвет
          ParamByName('GoodsTypeKindId_1').AsInteger := DataSet.FieldByName('GoodsTypeKindId_1').AsInteger;

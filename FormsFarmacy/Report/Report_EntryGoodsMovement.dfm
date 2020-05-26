@@ -91,6 +91,10 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
             Options.Editing = False
             Width = 119
           end
+          object isErased: TcxGridDBColumn
+            DataBinding.FieldName = 'isErased'
+            Visible = False
+          end
         end
       end
     end
@@ -148,13 +152,13 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
           'Date')
       end
       item
-        Component = GuidesUnit
+        Component = GuidesGoods
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = GuidesGoods
+        Component = UnitGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -191,7 +195,7 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
         item
           Name = 'UnitId'
           Value = ''
-          Component = GuidesUnit
+          Component = UnitGuides
           ComponentItem = 'Key'
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -199,7 +203,7 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
         item
           Name = 'UnitName'
           Value = ''
-          Component = GuidesUnit
+          Component = UnitGuides
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -333,8 +337,6 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
       item
         Name = 'inUnitId'
         Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
@@ -414,35 +416,6 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
     Left = 80
     Top = 152
   end
-  object GuidesUnit: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 232
-    Top = 24
-  end
   object GuidesGoods: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
@@ -475,13 +448,31 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PartyId'
-        Value = Null
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
         MultiSelectSeparator = ','
       end
       item
-        Name = 'PartyName'
+        Name = 'EndDate'
+        Value = 'NULL'
+        Component = deEnd
+        DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
         Value = Null
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
         MultiSelectSeparator = ','
       end
       item
@@ -496,26 +487,6 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
         Value = Null
         Component = GuidesGoods
         ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'UnitName'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'TextValue'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'RemainsDate'
-        Value = Null
-        Component = deEnd
         MultiSelectSeparator = ','
       end
       item
@@ -551,5 +522,36 @@ inherited Report_EntryGoodsMovementForm: TReport_EntryGoodsMovementForm
     PackSize = 1
     Left = 296
     Top = 216
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    Key = '0'
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'TUnitTreeForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 206
+    Top = 22
   end
 end

@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Compensation TFloat, CompensationName TVarChar
              , isSecond Boolean
              , isRecalc Boolean
+             , isPersonalOut Boolean
              , isErased Boolean
               )
 AS
@@ -77,6 +78,7 @@ BEGIN
 
            , COALESCE (ObjectBoolean_Second.ValueData,FALSE)  ::Boolean   AS isSecond
            , COALESCE (ObjectBoolean_Recalc.ValueData,FALSE)  ::Boolean   AS isRecalc
+           , COALESCE (ObjectBoolean_PersonalOut.ValueData, FALSE) ::Boolean AS isPersonalOut
 
            , Object_PersonalServiceList.isErased  AS isErased
 
@@ -87,6 +89,9 @@ BEGIN
            LEFT JOIN ObjectBoolean AS ObjectBoolean_Recalc 
                                    ON ObjectBoolean_Recalc.ObjectId = Object_PersonalServiceList.Id 
                                   AND ObjectBoolean_Recalc.DescId = zc_ObjectBoolean_PersonalServiceList_Recalc()
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_PersonalOut
+                                   ON ObjectBoolean_PersonalOut.ObjectId = Object_PersonalServiceList.Id 
+                                  AND ObjectBoolean_PersonalOut.DescId = zc_ObjectBoolean_PersonalServiceList_PersonalOut()
 
            LEFT JOIN ObjectFloat AS ObjectFloat_Compensation
                                  ON ObjectFloat_Compensation.ObjectId = Object_PersonalServiceList.Id 
@@ -145,6 +150,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                  ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.05.20          * isPersonalOut
  17.01.20          * add isRecalc
  27.01.20          * add Compensation
  16.12.15          * add MemberHeadManager, MemberManager, MemberBookkeeper

@@ -25,7 +25,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
-             --, WeightMin TFloat, WeightMax TFloat--, WeightAvg TFloat
+             --, WeightMin TFloat, WeightMax TFloat, WeightAvg TFloat
              , Height TFloat, Length TFloat, Width TFloat
              , NormInDays TFloat
              , WeightAvg_Sh TFloat, WeightAvg_Nom TFloat, WeightAvg_Ves TFloat
@@ -52,10 +52,11 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , isGoodsTypeKind_Sh Boolean
              , isGoodsTypeKind_Nom Boolean
              , isGoodsTypeKind_Ves Boolean
-             , CodeCalc_Sh TVarChar      -- Код ВМС шт.
-             , CodeCalc_Nom TVarChar     -- Код ВМС номинал
-             , CodeCalc_Ves TVarChar     -- Код ВМС неноминал
-             , isCodeCalc_Diff Boolean   -- Повтор кода ВМС
+
+           --, CodeCalc_Sh TVarChar      -- Код ВМС шт.
+           --, CodeCalc_Nom TVarChar     -- Код ВМС номинал
+           --, CodeCalc_Ves TVarChar     -- Код ВМС неноминал
+           --, isCodeCalc_Diff Boolean   -- Повтор кода ВМС
 
              , WmsCellNum        Integer     -- № Ячейки на складе ВМС
              , WmsCode           Integer     -- новый Код ВМС*
@@ -434,15 +435,15 @@ BEGIN
            , Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom                -- Номинальный
            , Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves                -- Неноминальный
 
-           , Object_GoodsByGoodsKind_View.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
-           , Object_GoodsByGoodsKind_View.CodeCalc_Nom  :: TVarChar          -- номинал - расчет: код на упак+вид+бренд+категория
-           , Object_GoodsByGoodsKind_View.CodeCalc_Ves  :: TVarChar          -- неноминал - расчет: код на упак+вид+бренд+категория
+         --, Object_GoodsByGoodsKind_View.CodeCalc_Sh  :: TVarChar           -- шт. - расчет: код на упак+вид+бренд+категория
+         --, Object_GoodsByGoodsKind_View.CodeCalc_Nom  :: TVarChar          -- номинал - расчет: код на упак+вид+бренд+категория
+         --, Object_GoodsByGoodsKind_View.CodeCalc_Ves  :: TVarChar          -- неноминал - расчет: код на упак+вид+бренд+категория
 
              -- Повтор кода ВМС - расчет: код на упак+вид+бренд+категория
-           , CASE WHEN Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves = FALSE THEN FALSE
-                  WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE
-                  ELSE TRUE
-             END  AS isCodeCalc_Diff                                         -- Повтор кода ВМС
+         --, CASE WHEN Object_GoodsByGoodsKind_View.isGoodsTypeKind_Sh = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Nom = FALSE AND Object_GoodsByGoodsKind_View.isGoodsTypeKind_Ves = FALSE THEN FALSE
+         --       WHEN (COALESCE (tmpCodeCalc_1.Count1, 1) + COALESCE (tmpCodeCalc_2.Count2, 1) + COALESCE (tmpCodeCalc_3.Count3, 1)) <= 3 THEN FALSE
+         --       ELSE TRUE
+         --  END  AS isCodeCalc_Diff                                         -- Повтор кода ВМС
 
            , Object_GoodsByGoodsKind_View.WmsCellNum       :: Integer        -- № Ячейки на складе ВМС
            , Object_GoodsByGoodsKind_View.WmsCode          :: Integer        -- Код ВМС* для выгрузки

@@ -8,6 +8,8 @@ uses
 const
     fmtWeight:String = ',0.##### кг.';
     fmtFloat:String = ',0.#####';
+    fmtFloat_2:String = ',0.##';
+    fmtFloat_3:String = ',0.###';
     fmtHead:String = ',0.##### глв.';
     lStickerPackGroupId:Integer = 1;
 type
@@ -333,6 +335,10 @@ begin
           //
           //
           ParamAdd(Params,'MovementItemId',ftInteger); // Id строки
+          //
+          ParamAdd(Params,'ResultText',ftString);     // вернули если была ошибка
+          ParamAdd(Params,'isErrSave',ftBoolean);     // режим, когда вызываем во второй раз и надо сохранить ошибку
+
           // локально
           ParamAdd(Params,'Count_box',ftInteger);     // сколько линий для ящиков - 1,2 или 3
           ParamAdd(Params,'LineCode_begin',ftInteger);// вернули № линии, что б подсветить
@@ -343,6 +349,15 @@ begin
           ParamAdd(Params,'GoodsKindId',ftInteger);   // Вид товара
           ParamAdd(Params,'GoodsKindCode',ftInteger); // Вид товара
           ParamAdd(Params,'GoodsKindName',ftString);  // Вид товара
+
+          //
+          ParamAdd(Params,'GoodsId_sh',ftInteger);       // Товар
+          ParamAdd(Params,'GoodsCode_sh',ftInteger);     // Товар
+          ParamAdd(Params,'GoodsName_sh',ftString);      // Товар
+          ParamAdd(Params,'GoodsKindId_sh',ftInteger);   // Вид товара
+          ParamAdd(Params,'GoodsKindCode_sh',ftInteger); // Вид товара
+          ParamAdd(Params,'GoodsKindName_sh',ftString);  // Вид товара
+
           ParamAdd(Params,'MeasureId',ftInteger);     // Ед.изм.
           ParamAdd(Params,'MeasureCode',ftInteger);   // Ед.изм.
           ParamAdd(Params,'MeasureName',ftString);    // Ед.изм.
@@ -353,8 +368,16 @@ begin
           ParamAdd(Params,'WmsCode_Sh',ftString);          // Код ВМС - ШТ.
           ParamAdd(Params,'WmsCode_Nom',ftString);         // Код ВМС - НОМ.
           ParamAdd(Params,'WmsCode_Ves',ftString);         // Код ВМС - ВЕС
+
           ParamAdd(Params,'WeightMin',ftFloat);            // минимальный вес 1шт.
           ParamAdd(Params,'WeightMax',ftFloat);            // максимальный вес 1шт.
+
+          ParamAdd(Params,'WeightMin_Sh',ftFloat);         // максимальный вес 1шт.
+          ParamAdd(Params,'WeightMin_Nom',ftFloat);        //
+          ParamAdd(Params,'WeightMin_Ves',ftFloat);        //
+          ParamAdd(Params,'WeightMax_Sh',ftFloat);         // максимальный вес 1шт.
+          ParamAdd(Params,'WeightMax_Nom',ftFloat);        //
+          ParamAdd(Params,'WeightMax_Ves',ftFloat);        //
 
           //1-ая линия - Всегда этот цвет
           ParamAdd(Params,'GoodsTypeKindId_1',ftInteger);// выбранный тип для этого ЦВЕТА

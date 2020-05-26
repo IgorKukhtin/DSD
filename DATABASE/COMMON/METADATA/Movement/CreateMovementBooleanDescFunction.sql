@@ -239,10 +239,22 @@ CREATE OR REPLACE FUNCTION zc_MovementBoolean_ApprovedBy() RETURNS integer AS $B
 INSERT INTO MovementBooleanDesc (Code, ItemName)
   SELECT 'zc_MovementBoolean_ApprovedBy', 'Утверждено'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_ApprovedBy');
 
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_VIP() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_VIP'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_VIP', 'ВИП'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_VIP');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Urgently() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Urgently'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Urgently', 'Срочно'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Urgently');
+
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_Confirmed() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Confirmed'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
+INSERT INTO MovementBooleanDesc (Code, ItemName)
+  SELECT 'zc_MovementBoolean_Confirmed', 'Подтвержено'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_Confirmed');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.   Шаблий О.В.
+ 20.05.20                                                                                    * zc_MovementBoolean_VIP, zc_MovementBoolean_Urgently, zc_MovementBoolean_Confirmed
  12.05.20                                                                                    * zc_MovementBoolean_ApprovedBy
  21.04.20         * zc_MovementBoolean_SUN_v4
  14.04.20                                                                                    * zc_MovementBoolean_UseNDSKind

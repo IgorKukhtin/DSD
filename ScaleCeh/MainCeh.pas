@@ -510,7 +510,13 @@ begin
                  then begin i2:=i2+1;Items.Add('('+IntToStr(GoodsKind_Array[i].Code)+') '+ GoodsKind_Array[i].Name);end;
           //
           if i2<5 then Columns:=1 else Columns:=2;
-          if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
+          if i2>22 then PanelGoodsKind.Height:=205
+          else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
+          if SettingMain.isModeSorting = TRUE
+          then begin PanelGoodsKind.Height:= 275;
+                     PanelGoodsKind.Font.Size:= 10;
+                     rgGoodsKind.Font.Size:= 10;
+          end;
           //
           ItemIndex:=0;
      end;
@@ -644,113 +650,115 @@ begin
      Result:=false;
      //
      try
-     fSaveAll:= true;
+       //Timer_GetWeight.Enabled:= false;
+       fSaveAll:= true;
 
-     OperDateEdit.Text:=DateToStr(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement));
-     //
-     // проверка
-     if (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE)
-     then begin
-              MessageErr:= DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkStorageLine(ParamsMovement.ParamByName('MovementId').AsInteger);
-              if MessageErr <> ''
-              then if (MessageDlg (MessageErr+#10+#13+'Хотите исправить?', mtConfirmation, mbYesNoCancel, 0) = 6)
-                   then begin
-                             ActiveControl:=EditStorageLine;
-                             exit;
-                   end;
-     end;
-     //Проверка
-     if {(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
-         and}(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
-         and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
-     then begin
-         if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
-         then begin pSetSubjectDoc; exit; end;
-     end;
-     //Проверка
-     if  (ParamsMovement.ParamByName('ToId').asInteger = 0)
-      and(ParamsMovement.ParamByName('isArticleLoss').AsBoolean = FALSE)
-     then begin
-         ShowMessage('Ошибка.Статья списания НЕ выбрана.');
-         exit;
-     end;
-     //Проверка
-     if ParamsMovement.ParamByName('MovementId').AsInteger=0
-     then begin
-         ShowMessage('Ошибка.Продукция не взвешена.');
-         exit;
-     end;
-     //Проверка - если есть несохраненный элемент, тогда формирование документа не произойдет
-     if (ParamsMI.ParamByName('GoodsId').AsInteger <> 0)and (SettingMain.isModeSorting = FALSE) then
-     begin
-          ShowMessage('Сохраните элемент взвешивания нажатием клавиши <F4>.');
-          ActiveControl:=EditGoodsCode;
-          exit;
-     end;
-     //Проверка - только для Обв.
-     if SettingMain.isGoodsComplete = FALSE
-     then
-         //Проверка - партий
-         if FALSE = DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ValueStep_obv, ParamsMovement.ParamByName('MovementId').AsInteger,0,'',0)
-         then exit;
-
-
-     //if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
-     if DialogMessageForm.Execute = FALSE
-     then exit;
+       OperDateEdit.Text:=DateToStr(DMMainScaleCehForm.gpGet_Scale_OperDate(ParamsMovement));
+       //
+       // проверка
+       if (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE)
+       then begin
+                MessageErr:= DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkStorageLine(ParamsMovement.ParamByName('MovementId').AsInteger);
+                if MessageErr <> ''
+                then if (MessageDlg (MessageErr+#10+#13+'Хотите исправить?', mtConfirmation, mbYesNoCancel, 0) = 6)
+                     then begin
+                               ActiveControl:=EditStorageLine;
+                               exit;
+                     end;
+       end;
+       //Проверка
+       if {(ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_Send)
+           and}(ParamsMovement.ParamByName('SubjectDocId').AsInteger = 0)
+           and(ParamsMovement.ParamByName('isSubjectDoc').AsBoolean = TRUE)
+       then begin
+           if MessageDlg('Ошибка.'+#10+#13+'Не установлено значение <Основание Возврат>.'+#10+#13+'Хотите исправить?',mtConfirmation,mbYesNoCancel,0) = 6
+           then begin pSetSubjectDoc; exit; end;
+       end;
+       //Проверка
+       if  (ParamsMovement.ParamByName('ToId').asInteger = 0)
+        and(ParamsMovement.ParamByName('isArticleLoss').AsBoolean = FALSE)
+       then begin
+           ShowMessage('Ошибка.Статья списания НЕ выбрана.');
+           exit;
+       end;
+       //Проверка
+       if ParamsMovement.ParamByName('MovementId').AsInteger=0
+       then begin
+           ShowMessage('Ошибка.Продукция не взвешена.');
+           exit;
+       end;
+       //Проверка - если есть несохраненный элемент, тогда формирование документа не произойдет
+       if (ParamsMI.ParamByName('GoodsId').AsInteger <> 0)and (SettingMain.isModeSorting = FALSE) then
+       begin
+            ShowMessage('Сохраните элемент взвешивания нажатием клавиши <F4>.');
+            ActiveControl:=EditGoodsCode;
+            exit;
+       end;
+       //Проверка - только для Обв.
+       if SettingMain.isGoodsComplete = FALSE
+       then
+           //Проверка - партий
+           if FALSE = DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ValueStep_obv, ParamsMovement.ParamByName('MovementId').AsInteger,0,'',0)
+           then exit;
 
 
-     //параметры для печати
-     if SettingMain.isModeSorting = FALSE then
-     if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
-                                   ,1
-                                   ,ParamsMovement.ParamByName('isMovement').asBoolean
-                                   ,ParamsMovement.ParamByName('isAccount').asBoolean
-                                   ,ParamsMovement.ParamByName('isTransport').asBoolean
-                                   ,ParamsMovement.ParamByName('isQuality').asBoolean
-                                   ,ParamsMovement.ParamByName('isPack').asBoolean
-                                   ,FALSE // isPackGross
-                                   ,ParamsMovement.ParamByName('isSpec').asBoolean
-                                   ,ParamsMovement.ParamByName('isTax').asBoolean
-                                   )
-     then begin
-         //!!!без печати ничего не надо делать!!!
-         ShowMessage('Параметры печати не определены.'+#10+#13+'Документ НЕ будет закрыт.');
-         exit;
-     end;
+       //if MessageDlg('Документ попадет в смену за <'+OperDateEdit.Text+'>.Продолжить?',mtConfirmation,mbYesNoCancel,0) <> 6
+       if DialogMessageForm.Execute = FALSE
+       then exit;
 
-     // потушили все
-     //!!!Set_LightOff_all;
-     //!!!Сохранили документ!!!
-     if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
-     begin
-          //
-          ValueStep_obv:= 0;
-          //
-          //Print and Create Quality + Transport + Tax
-          if SettingMain.isModeSorting = FALSE then
-          Print_Movement_afterSave;
-          //Initialize or Empty
-          //НЕ будем автоматов открывать предыдущий док.
-          //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
-          //DMMainScaleCehForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
-          //
-          EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
-          if SettingMain.isModeSorting = TRUE then EmptyValuesParams(ParamsLight);
 
-          gpInitialize_MovementDesc;
-          if SettingMain.isModeSorting = TRUE then GetParams_MovementDesc('')
-          else InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
-          //
-          Initialize_afterSave_all;
-          Initialize_afterSave_MI;
-          //
-          RefreshDataSet;
-          WriteParamsMovement;
-     end;
+       //параметры для печати
+       if SettingMain.isModeSorting = FALSE then
+       if not DialogPrintForm.Execute(ParamsMovement.ParamByName('MovementDescId').asInteger
+                                     ,1
+                                     ,ParamsMovement.ParamByName('isMovement').asBoolean
+                                     ,ParamsMovement.ParamByName('isAccount').asBoolean
+                                     ,ParamsMovement.ParamByName('isTransport').asBoolean
+                                     ,ParamsMovement.ParamByName('isQuality').asBoolean
+                                     ,ParamsMovement.ParamByName('isPack').asBoolean
+                                     ,FALSE // isPackGross
+                                     ,ParamsMovement.ParamByName('isSpec').asBoolean
+                                     ,ParamsMovement.ParamByName('isTax').asBoolean
+                                     )
+       then begin
+           //!!!без печати ничего не надо делать!!!
+           ShowMessage('Параметры печати не определены.'+#10+#13+'Документ НЕ будет закрыт.');
+           exit;
+       end;
+
+       // потушили все
+       //!!!Set_LightOff_all;
+       //!!!Сохранили документ!!!
+       if DMMainScaleCehForm.gpInsert_MovementCeh_all(ParamsMovement) then
+       begin
+            //
+            ValueStep_obv:= 0;
+            //
+            //Print and Create Quality + Transport + Tax
+            if SettingMain.isModeSorting = FALSE then
+            Print_Movement_afterSave;
+            //Initialize or Empty
+            //НЕ будем автоматов открывать предыдущий док.
+            //ParamsMovement.ParamByName('MovementId').AsInteger:=0;//!!!нельзя обнулять, т.к. это будет значить isLast=TRUE!!!
+            //DMMainScaleCehForm.gpGet_Scale_Movement(ParamsMovement,FALSE,FALSE);//isLast=FALSE,isNext=FALSE
+            //
+            EmptyValuesParams(ParamsMovement);//!!!кроме даты!!!
+            if SettingMain.isModeSorting = TRUE then EmptyValuesParams(ParamsLight);
+
+            gpInitialize_MovementDesc;
+            if SettingMain.isModeSorting = TRUE then GetParams_MovementDesc('')
+            else InitializeGoodsKind(ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger);
+            //
+            Initialize_afterSave_all;
+            Initialize_afterSave_MI;
+            //
+            RefreshDataSet;
+            WriteParamsMovement;
+       end;
 
      finally
-     fSaveAll:= false;
+       fSaveAll:= false;
+       //Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
      end;
 
 end;
@@ -761,223 +769,255 @@ var ParamsWorkProgress:TParams;
 begin
      Result:=false;
      //
-     // проверка
-     if  (oldGoodsId=ParamsMI.ParamByName('GoodsId').AsInteger)
-      and(MessageDlg ('Повторно введен код.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6)
-      then begin
-           ActiveControl:=EditGoodsCode;
-           exit;
-     end;
-     // проверка
-     if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
-     begin ActiveControl:=EditGoodsCode;
-           PanelMovementDesc.Font.Color:=clRed;
-           PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
-           exit;
-     end;
-     //Сначала пересчитали кол-во
-     SetParams_OperCount;
-     // проверка
-     if ParamsMI.ParamByName('OperCount').AsFloat <= 0 then
-     begin ActiveControl:=EditGoodsCode;
-           PanelMovementDesc.Font.Color:=clRed;
-           PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
-           exit;
-     end;
-     // проверка
-     if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1) then
-     begin ActiveControl:=EditGoodsKindCode;
-           PanelMovementDesc.Font.Color:=clRed;
-           PanelMovementDesc.Caption:='Ошибка.Не определено значение <Код вида упаковки>';
-           exit;
-     end;
-     // проверка
-     if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ProductionSeparate)
-        or (trim(EditPartionGoods.Text) <> '')
-     then begin
-               //если партия с ошибкой
-               if (Recalc_PartionGoods(EditPartionGoods) = FALSE) or (trim(EditPartionGoods.Text) = '') then
-               begin
-                    ActiveControl:=EditPartionGoods;
-                    PanelMovementDesc.Font.Color:=clRed;
-                    PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
-                    exit;
-               end;
-     end;
+     try
+       //Timer_GetWeight.Enabled:= false;
+       //
+       // проверка
+       if  (oldGoodsId=ParamsMI.ParamByName('GoodsId').AsInteger)
+        and(MessageDlg ('Повторно введен код.Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 6)
+        then begin
+             ActiveControl:=EditGoodsCode;
+             exit;
+       end;
+       // проверка
+       if ParamsMI.ParamByName('GoodsId').AsInteger = 0 then
+       begin ActiveControl:=EditGoodsCode;
+             PanelMovementDesc.Font.Color:=clRed;
+             PanelMovementDesc.Caption:='Ошибка.Не определен код <Продукции>';
+             exit;
+       end;
+       //Сначала пересчитали кол-во
+       SetParams_OperCount;
+       // проверка
+       if ParamsMI.ParamByName('OperCount').AsFloat <= 0 then
+       begin ActiveControl:=EditGoodsCode;
+             PanelMovementDesc.Font.Color:=clRed;
+             PanelMovementDesc.Caption:='Ошибка.Вес Продукции не может быть <= 0';
+             exit;
+       end;
+       // проверка
+       if (rgGoodsKind.ItemIndex=-1)and (rgGoodsKind.Items.Count>1) then
+       begin ActiveControl:=EditGoodsKindCode;
+             PanelMovementDesc.Font.Color:=clRed;
+             PanelMovementDesc.Caption:='Ошибка.Не определено значение <Код вида упаковки>';
+             exit;
+       end;
+       // проверка
+       if (ParamsMovement.ParamByName('MovementDescId').AsInteger = zc_Movement_ProductionSeparate)
+          or (trim(EditPartionGoods.Text) <> '')
+       then begin
+                 //если партия с ошибкой
+                 if (Recalc_PartionGoods(EditPartionGoods) = FALSE) or (trim(EditPartionGoods.Text) = '') then
+                 begin
+                      ActiveControl:=EditPartionGoods;
+                      PanelMovementDesc.Font.Color:=clRed;
+                      PanelMovementDesc.Caption:='Ошибка.Не определена <ПАРТИЯ СЫРЬЯ>';
+                      exit;
+                 end;
+       end;
 
-     // проверили параметр
-     if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
-        and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
-     then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
-          then
-              begin
-                   PanelMovementDesc.Font.Color:=clRed;
-                   PanelMovementDesc.Caption:='Ошибка.Значение <Вид упаковки> может быть только таким: <' + ParamsMI.ParamByName('GoodsKindName_List').AsString + '>.';
-                   ActiveControl:=EditGoodsKindCode;
-                   exit;
-              end;
-
-
-     // доопределили параметр
-     if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
-     then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
-     else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
-
-     // доопределили параметр
-     try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
-     except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
-     end;
-     // проверка
-     if (PanelPartionDate.Visible) then
-     begin
-          {*****
-          if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime>ParamsMovement.ParamByName('OperDate').AsDateTime) then
-          begin
-               ShowMessage('Неверно установлена дата <Партия за>. Не может быть позже <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
-               exit;
-          end;}
-          if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime<ParamsMovement.ParamByName('OperDate').AsDateTime - StrToInt(GetArrayList_Value_byName(Default_Array,'PeriodPartionGoodsDate'))) then
-          begin
-               ShowMessage('Неверно установлена дата <Партия за>. Не может быть раньше <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
-               exit;
-          end;
-     end;
-
-     // доопределили параметр
-     if  (ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight)
-      and(ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_RealWeight)
-     then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
-     ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
-
-     //обязательно перед Проверка - только для Обв.
-     if ParamsMovement.ParamByName('MovementId').AsInteger = 0 then
-     begin
-           Result:= DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
-           if not Result then exit;
-     end;
-     //Проверка - только для Обв.
-     if SettingMain.isGoodsComplete = FALSE
-     then
-         //Проверка - партий
-         if FALSE = DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ValueStep_obv, ParamsMovement.ParamByName('MovementId').AsInteger,ParamsMI.ParamByName('GoodsId').AsInteger,ParamsMI.ParamByName('PartionGoods').AsString,ParamsMI.ParamByName('OperCount').AsFloat)
-         then exit;
+       // проверили параметр
+       if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMI.ParamByName('GoodsKindId_list').AsString <> '')
+          and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
+       then if System.Pos(',' + IntToStr(GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id) + ',', ',' + ParamsMI.ParamByName('GoodsKindId_list').AsString + ',') = 0
+            then
+                begin
+                     PanelMovementDesc.Font.Color:=clRed;
+                     PanelMovementDesc.Caption:='Ошибка.Значение <Вид упаковки> может быть только таким: <' + ParamsMI.ParamByName('GoodsKindName_List').AsString + '>.';
+                     ActiveControl:=EditGoodsKindCode;
+                     exit;
+                end;
 
 
-     //Проверка - все ящики должны быть
-     if (SettingMain.isModeSorting = TRUE) then
-     begin
-          if ((ParamsLight.ParamByName('GoodsTypeKindId_Sh').AsInteger  = 0)
-           and(ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger = 0)
-           and(ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger = 0))
-          then
-              // в первый раз - определяем ВСЕ ящики
-              if not GetParams_Light(0) then exit
-              else
-          else
-          if (ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger > 0)
-          then
-              // только для Линия 1
-              if not GetParams_Light(1) then exit
-              else
-          else
-          if (ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger > 0)
-          then
-              // только для Линия 2
-              if not GetParams_Light(2) then exit
-              else
-          else
-          if (ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger > 0)
-          then
-              // только для Линия 3
-              if not GetParams_Light(3) then exit
-              else;
+       // доопределили параметр
+       if (PanelGoodsKind.Visible) and (rgGoodsKind.ItemIndex>=0) and (ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger > 0)
+       then ParamsMI.ParamByName('GoodsKindId').AsInteger:= GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id
+       else ParamsMI.ParamByName('GoodsKindId').AsInteger:= 0;
 
-         // проверка Goods
-         if (CDS.RecordCount > 0) and (ParamsMI.ParamByName('GoodsId').AsInteger <> ParamsLight.ParamByName('GoodsId').AsInteger) then
-         begin ActiveControl:=EditGoodsCode;
-               PanelMovementDesc.Font.Color:=clRed;
-               PanelMovementDesc.Caption:='Ошибка.Должен быть выбран товар = <('+ParamsLight.ParamByName('GoodsCode').AsString+')'+ ParamsLight.ParamByName('GoodsName').AsString+'>';
-               exit;
-         end;
-         // проверка GoodsKind
-         if (CDS.RecordCount > 0) and (ParamsMI.ParamByName('GoodsKindId').AsInteger <> ParamsLight.ParamByName('GoodsKindId').AsInteger) then
-         begin ActiveControl:=EditGoodsKindCode;
-               PanelMovementDesc.Font.Color:=clRed;
-               PanelMovementDesc.Caption:='Ошибка.Должен быть выбран вид упаковки = <('+ParamsLight.ParamByName('GoodsKindCode').AsString+')'+ ParamsLight.ParamByName('GoodsKindName').AsString+'>';
-               exit;
-         end;
+       // доопределили параметр
+       try ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=StrToDate(PartionDateEdit.Text)
+       except ParamsMI.ParamByName('PartionGoodsDate').AsDateTime:=ParamsMovement.ParamByName('OperDate').AsDateTime + 1;
+       end;
+       // проверка
+       if (PanelPartionDate.Visible) then
+       begin
+            {*****
+            if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime>ParamsMovement.ParamByName('OperDate').AsDateTime) then
+            begin
+                 ShowMessage('Неверно установлена дата <Партия за>. Не может быть позже <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
+                 exit;
+            end;}
+            if (ParamsMI.ParamByName('PartionGoodsDate').AsDateTime<ParamsMovement.ParamByName('OperDate').AsDateTime - StrToInt(GetArrayList_Value_byName(Default_Array,'PeriodPartionGoodsDate'))) then
+            begin
+                 ShowMessage('Неверно установлена дата <Партия за>. Не может быть раньше <'+DateToStr(ParamsMovement.ParamByName('OperDate').AsDateTime)+'>.');
+                 exit;
+            end;
+       end;
 
-     end;
+       // доопределили параметр
+       if  (ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_CuterWeight)
+        and(ParamsMovement.ParamByName('DocumentKindId').AsInteger <> zc_Enum_DocumentKind_RealWeight)
+       then ParamsMI.ParamByName('PartionGoods').AsString:=trim(EditPartionGoods.Text);
+       ParamsMI.ParamByName('isStartWeighing').AsBoolean:=gbStartWeighing.ItemIndex = 0;
+
+       //обязательно перед Проверка - только для Обв.
+       if ParamsMovement.ParamByName('MovementId').AsInteger = 0 then
+       begin
+             Result:= DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
+             if not Result then exit;
+       end;
+       //Проверка - только для Обв.
+       if SettingMain.isGoodsComplete = FALSE
+       then
+           //Проверка - партий
+           if FALSE = DMMainScaleCehForm.gpGet_ScaleCeh_Movement_checkPartion(ValueStep_obv, ParamsMovement.ParamByName('MovementId').AsInteger,ParamsMI.ParamByName('GoodsId').AsInteger,ParamsMI.ParamByName('PartionGoods').AsString,ParamsMI.ParamByName('OperCount').AsFloat)
+           then exit;
 
 
-     //сохранение MovementItem
-     Result:=DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
-     //
-     // Сразу печатаем Этикетку - для сырья
-     if (Length(PrinterSticker_Array) > 0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE)
-     then
-       if PrinterSticker_Array[0].Name <> ''
-       then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
-                             , ParamsMovement.ParamByName('MovementId').AsInteger
-                             , ParamsMI.ParamByName('MovementItemId').AsInteger
-                             , FALSE);
-     //
-     //подсветить - № линии на какую складываем
-     if (Result = TRUE) and (SettingMain.isModeSorting = TRUE) then
-     begin
-          //подсветили
-          if not Set_LightOn(ParamsLight.ParamByName('LineCode_begin').asInteger) then ShowMessage ('Error Light - On - '+IntToStr(ParamsLight.ParamByName('LineCode_begin').asInteger));
-          //
-          RefreshDataSet;
-          WriteParamsMovement;
-          //печатаем стикер
-          if fPrintModeSorting_test = FALSE
-          then
-              Print_Sticker_Wms(ParamsMovement.ParamByName('MovementDescId').AsInteger
-                              , ParamsMovement.ParamByName('MovementId').AsInteger
-                              , ParamsLight.ParamByName('MovementItemId').AsInteger
-                              , FALSE);
-          //если ящик заполнен - надо новый + показали вес по линиям - ящики
-          if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then GetParams_Light (1);
-          if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then GetParams_Light (2);
-          if ParamsLight.ParamByName('isFull_3').asBoolean = TRUE then GetParams_Light (3);
-     end;
-     //
-     //
-     if Result then
-     begin
-          MovementInfo:= '';
-          if (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
-           or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
-          then begin
-                Create_ParamsWorkProgress(ParamsWorkProgress);
+       //Проверка - все ящики должны быть
+       if (SettingMain.isModeSorting = TRUE) then
+       begin
+            if ((ParamsLight.ParamByName('GoodsTypeKindId_Sh').AsInteger  = 0)
+             and(ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger = 0)
+             and(ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger = 0))
+            then
+                // в первый раз - определяем ВСЕ ящики
+                if not GetParams_Light(0) then exit
+                else
+            else
+            if (ParamsLight.ParamByName('BarCodeBoxId_1').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_1').AsInteger > 0)
+            then
+                // только для Линия 1
+                if not GetParams_Light(1) then exit
+                else
+            else
+            if (ParamsLight.ParamByName('BarCodeBoxId_2').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_2').AsInteger > 0)
+            then
+                // только для Линия 2
+                if not GetParams_Light(2) then exit
+                else
+            else
+            if (ParamsLight.ParamByName('BarCodeBoxId_3').AsInteger = 0) and (ParamsLight.ParamByName('GoodsTypeKindId_3').AsInteger > 0)
+            then
+                // только для Линия 3
+                if not GetParams_Light(3) then exit
+                else;
 
-                ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
-                try ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:=-1 * ParamsMI.ParamByName('PartionGoods').AsInteger;
-                except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
-                ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=0;
-                ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
-                ParamsWorkProgress.ParamByName('DocumentKindId').AsInteger:=ParamsMovement.ParamByName('DocumentKindId').AsInteger;
+           // проверка Goods
+           if (CDS.RecordCount > 0) and (ParamsMI.ParamByName('GoodsId').AsInteger <> ParamsLight.ParamByName('GoodsId').AsInteger) then
+           begin ActiveControl:=EditGoodsCode;
+                 PanelMovementDesc.Font.Color:=clRed;
+                 PanelMovementDesc.Caption:='Ошибка.Должен быть выбран товар = <('+ParamsLight.ParamByName('GoodsCode').AsString+')'+ ParamsLight.ParamByName('GoodsName').AsString+'>';
+                 exit;
+           end;
+           // проверка GoodsKind
+           if (CDS.RecordCount > 0) and (ParamsMI.ParamByName('GoodsKindId').AsInteger <> ParamsLight.ParamByName('GoodsKindId').AsInteger) then
+           begin ActiveControl:=EditGoodsKindCode;
+                 PanelMovementDesc.Font.Color:=clRed;
+                 PanelMovementDesc.Caption:='Ошибка.Должен быть выбран вид упаковки = <('+ParamsLight.ParamByName('GoodsKindCode').AsString+')'+ ParamsLight.ParamByName('GoodsKindName').AsString+'>';
+                 exit;
+           end;
 
-                if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
-                then MovementInfo:=ParamsWorkProgress.ParamByName('MovementInfo').AsString;
+       end;
 
-                ParamsWorkProgress.Free;
-          end;
+       // режим, когда вызываем во второй раз и надо сохранить ошибку
+       if (SettingMain.isModeSorting = TRUE)
+       then ParamsLight.ParamByName('isErrSave').AsBoolean:= FALSE;
 
-          oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
-          if SettingMain.isModeSorting = TRUE
-          then begin ActiveControl:=EditGoodsCode; oldGoodsId:=0; end
-          else
-          begin
-               Initialize_afterSave_MI;
-               RefreshDataSet;
-               WriteParamsMovement;
-          end;
+       //сохранение MovementItem
+       Result:= DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI);
 
-         if MovementInfo <> ''
-         then MemoMovementInfo.Text:=MovementInfo;
-     end;
+       //
+       // Сразу печатаем Этикетку - для сырья
+       if (Result = TRUE) and (Length(PrinterSticker_Array) > 0) and (ParamsMovement.ParamByName('isSticker_Ceh').asBoolean = TRUE)
+       then
+         if PrinterSticker_Array[0].Name <> ''
+         then Print_Sticker_Ceh (ParamsMovement.ParamByName('MovementDescId').AsInteger
+                               , ParamsMovement.ParamByName('MovementId').AsInteger
+                               , ParamsMI.ParamByName('MovementItemId').AsInteger
+                               , FALSE);
+       //
+       //подсветить - № линии на какую складываем
+       if (Result = TRUE) and (SettingMain.isModeSorting = TRUE) then
+       begin
+            if ParamsLight.ParamByName('ResultText').AsString <> '' then
+            begin
+                // !!! ERROR !!!
+                Result:= false;
+
+                //показали НЕФОРМАТ Для ВЕСА или что-то другое ...
+                if (MessageDlg (ParamsLight.ParamByName('ResultText').AsString+#10+#13+'Продолжить?', mtConfirmation, mbYesNoCancel, 0) <> 543216)
+                then begin
+                        // режим, когда вызываем во второй раз и надо сохранить ошибку
+                        ParamsLight.ParamByName('isErrSave').AsBoolean:= TRUE;
+
+                        //сохранили НЕФОРМАТ Для ВЕСА или что-то другое ...
+                        if not DMMainScaleCehForm.gpInsert_ScaleCeh_MI(ParamsMovement,ParamsMI)
+                        then ShowMessage ('Не сохранилось ошибочное взвешивание.');
+                        //
+                        RefreshDataSet;
+                        WriteParamsMovement;
+                     end;
+                //
+            end
+            else begin
+                  //подсветили
+                  if not Set_LightOn(ParamsLight.ParamByName('LineCode_begin').asInteger) then ShowMessage ('Error Light - On - '+IntToStr(ParamsLight.ParamByName('LineCode_begin').asInteger));
+                  //
+                  RefreshDataSet;
+                  WriteParamsMovement;
+                  //печатаем стикер
+                  if fPrintModeSorting_test = FALSE
+                  then
+                      Print_Sticker_Wms(ParamsMovement.ParamByName('MovementDescId').AsInteger
+                                      , ParamsMovement.ParamByName('MovementId').AsInteger
+                                      , ParamsLight.ParamByName('MovementItemId').AsInteger
+                                      , FALSE);
+                  //если ящик заполнен - надо новый + показали вес по линиям - ящики
+                  if ParamsLight.ParamByName('isFull_1').asBoolean = TRUE then GetParams_Light (1);
+                  if ParamsLight.ParamByName('isFull_2').asBoolean = TRUE then GetParams_Light (2);
+                  if ParamsLight.ParamByName('isFull_3').asBoolean = TRUE then GetParams_Light (3);
+            end;
+       end;
+       //
+       //
+       if Result then
+       begin
+            MovementInfo:= '';
+            if (ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_CuterWeight)
+             or(ParamsMovement.ParamByName('DocumentKindId').asInteger = zc_Enum_DocumentKind_RealWeight)
+            then begin
+                  Create_ParamsWorkProgress(ParamsWorkProgress);
+
+                  ParamsWorkProgress.ParamByName('OperDate').AsDateTime:=StrToDate(PartionDateEdit.Text);
+                  try ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:=-1 * ParamsMI.ParamByName('PartionGoods').AsInteger;
+                  except ParamsWorkProgress.ParamByName('MovementItemId').AsInteger:= 0; end;
+                  ParamsWorkProgress.ParamByName('GoodsCode').AsInteger:=0;
+                  ParamsWorkProgress.ParamByName('UnitId').AsInteger:=ParamsMovement.ParamByName('FromId').AsInteger;
+                  ParamsWorkProgress.ParamByName('DocumentKindId').AsInteger:=ParamsMovement.ParamByName('DocumentKindId').AsInteger;
+
+                  if GuideWorkProgressForm.Execute(ParamsWorkProgress)//isChoice=TRUE
+                  then MovementInfo:=ParamsWorkProgress.ParamByName('MovementInfo').AsString;
+
+                  ParamsWorkProgress.Free;
+            end;
+
+            oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
+            if SettingMain.isModeSorting = TRUE
+            then begin ActiveControl:=EditGoodsCode; oldGoodsId:=0; end
+            else
+            begin
+                 Initialize_afterSave_MI;
+                 RefreshDataSet;
+                 WriteParamsMovement;
+            end;
+
+           if MovementInfo <> ''
+           then MemoMovementInfo.Text:=MovementInfo;
+       end;
+    finally
+      //Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
+   end;
 end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.Print_Movement_afterSave:Boolean;
@@ -1041,11 +1081,14 @@ begin
      if (ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_CuterWeight)
       or(ParamsMovement.ParamByName('DocumentKindId').AsInteger = zc_Enum_DocumentKind_RealWeight)
      then cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible := TRUE;
-     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE;
+     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible := (ParamsMovement.ParamByName('isStorageLine').AsBoolean = TRUE) or (SettingMain.isModeSorting = TRUE);
 end;
 //------------------------------------------------------------------------------------------------
 procedure TMainCehForm.WriteParamsLight;
     procedure lWriteParamsLight(num, Id, Id_Sh, Id_Nom, Id_Ves : Integer;
+                                WeightMin_Sh, WeightMax_Sh   : Double;
+                                WeightMin_Nom, WeightMax_Nom : Double;
+                                WeightMin_Ves, WeightMax_Ves : Double;
                                 Total_Label : TLabel;
                                 Total_Panel, All_Panel : TcxLabel;
                                 BarCode_Label : TcxLabel
@@ -1056,11 +1099,11 @@ procedure TMainCehForm.WriteParamsLight;
          begin
              //!!!замена!!!
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
-             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Sh
+             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Sh + ': ' + FormatFloat(fmtFloat_3, WeightMin_Sh) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Sh)
              else
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
-             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Sh
-             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Sh;
+             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Sh + ': ' + FormatFloat(fmtFloat_3, WeightMin_Sh) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Sh)
+             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Sh + ': ' + FormatFloat(fmtFloat_3, WeightMin_Sh) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Sh);
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Sh;
          end
          else
@@ -1069,11 +1112,11 @@ procedure TMainCehForm.WriteParamsLight;
          begin
              //!!!замена!!!
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
-             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Nom
+             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Nom + ': ' + FormatFloat(fmtFloat_3, WeightMin_Nom) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Nom)
              else
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
-             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Nom
-             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Nom;
+             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Nom + ': ' + FormatFloat(fmtFloat_3, WeightMin_Nom) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Nom)
+             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Nom + ': ' + FormatFloat(fmtFloat_3, WeightMin_Nom) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Nom);
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Nom;
          end
          else
@@ -1082,11 +1125,11 @@ procedure TMainCehForm.WriteParamsLight;
          begin
              //!!!замена!!!
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 1)
-             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Ves
+             then Total_Label.Caption:= '№'+IntToStr(3)+' - ' + SettingMain.ShName_Ves + ': ' + FormatFloat(fmtFloat_3, WeightMin_Ves) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Ves)
              else
              if (SettingMain.isLightLEFT_123 = FALSE) and (num = 3)
-             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Ves
-             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Ves;
+             then Total_Label.Caption:= '№'+IntToStr(1)+' - ' + SettingMain.ShName_Ves + ': ' + FormatFloat(fmtFloat_3, WeightMin_Ves) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Ves)
+             else Total_Label.Caption:= '№'+IntToStr(num)+' - ' + SettingMain.ShName_Ves + ': ' + FormatFloat(fmtFloat_3, WeightMin_Ves) + ' - ' + FormatFloat(fmtFloat_3, WeightMax_Ves);
               //All_Label.Caption:= 'Итого №'+IntToStr(num)+' - ' + SettingMain.ShName_Ves;
          end
          else begin
@@ -1107,11 +1150,14 @@ procedure TMainCehForm.WriteParamsLight;
                if (num = 1) then
                begin
                    //1 - итого накопительный (в незакрытом ящике)
-                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_1').asFloat) + ' шт.'
-                               + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightOnBoxTotal_1').asFloat) + ' кг.';
+                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_1').asFloat)
+                             + ' из '  + FormatFloat(fmtFloat, ParamByName('CountOnBox_1').asFloat) + 'шт.'
+                             + '/ '    + FormatFloat(fmtFloat_2, ParamByName('WeightOnBoxTotal_1').asFloat)
+                             + ' из '  + FormatFloat(fmtFloat_2, ParamByName('WeightOnBox_1').asFloat) + 'кг.'
+                                ;
                    //1 - итого накопительный (в закрытых ящиках) - информативно
                    All_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('BoxTotal_1').asFloat) + ' ящ.'
-                             + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightTotal_1').asFloat) + ' кг.';
+                             + ' / ' + FormatFloat(fmtFloat_3, ParamByName('WeightTotal_1').asFloat) + ' кг.';
                    //1 - Ш/К ящика
                    BarCode_Label.Caption:= '(' + ParamByName('BoxCode_1').asString + ') ' + ParamByName('BoxBarCode_1').asString;
                    //
@@ -1122,11 +1168,14 @@ procedure TMainCehForm.WriteParamsLight;
                else if (num = 2) then
                begin
                    //2 - итого накопительный (в незакрытом ящике)
-                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_2').asFloat) + ' шт.'
-                               + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightOnBoxTotal_2').asFloat) + ' кг.';
+                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_2').asFloat)
+                              + ' из ' + FormatFloat(fmtFloat, ParamByName('CountOnBox_2').asFloat) + 'шт.'
+                              + '/ '   + FormatFloat(fmtFloat_2, ParamByName('WeightOnBoxTotal_2').asFloat)
+                              + ' из ' + FormatFloat(fmtFloat_2, ParamByName('WeightOnBox_2').asFloat) + 'кг.'
+                               ;
                    //2 - итого накопительный (в закрытых ящиках) - информативно
                    All_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('BoxTotal_2').asFloat) + ' ящ.'
-                             + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightTotal_2').asFloat) + ' кг.';
+                             + ' / ' + FormatFloat(fmtFloat_3, ParamByName('WeightTotal_2').asFloat) + ' кг.';
                    //2 - Ш/К ящика
                    BarCode_Label.Caption:= '(' + ParamByName('BoxCode_2').asString + ') ' + ParamByName('BoxBarCode_2').asString;
                    //
@@ -1137,11 +1186,13 @@ procedure TMainCehForm.WriteParamsLight;
                else if (num = 3) then
                begin
                    //3 - итого накопительный (в незакрытом ящике)
-                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_3').asFloat) + ' шт.'
-                               + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightOnBoxTotal_3').asFloat) + ' кг.';
+                   Total_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('CountOnBoxTotal_3').asFloat)
+                              + ' из ' + FormatFloat(fmtFloat, ParamByName('CountOnBox_3').asFloat) + 'шт.'
+                              + '/ '   + FormatFloat(fmtFloat_2, ParamByName('WeightOnBoxTotal_3').asFloat)
+                              + ' из ' + FormatFloat(fmtFloat_2, ParamByName('WeightOnBox_3').asFloat) + 'кг.';
                    //3 - итого накопительный (в закрытых ящиках) - информативно
                    All_Panel.Caption:= FormatFloat(fmtFloat, ParamByName('BoxTotal_3').asFloat) + ' ящ.'
-                             + ' / ' + FormatFloat(fmtFloat, ParamByName('WeightTotal_3').asFloat) + ' кг.';
+                             + ' / ' + FormatFloat(fmtFloat_3, ParamByName('WeightTotal_3').asFloat) + ' кг.';
                    //3 - Ш/К ящика
                    BarCode_Label.Caption:= '(' + ParamByName('BoxCode_3').asString + ') ' + ParamByName('BoxBarCode_3').asString;
                    //
@@ -1178,14 +1229,31 @@ begin
    //
    with ParamsLight do
    begin
-     InfoBoxLabel.Caption:= ' = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                             +'  ' + ParamByName('BoxName_1').asString
-                             +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
+     if ParamByName('Count_box').AsInteger > 0
+     then
+       InfoBoxLabel.Caption:= ' = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                               +'  ' + ParamByName('BoxName_1').asString
+                               +' (' + FormatFloat(fmtFloat_3, (ParamByName('WeightOnBox_1').asFloat
+                                                              + ParamByName('WeightOnBox_2').asFloat
+                                                              + ParamByName('WeightOnBox_3').asFloat
+                                                               ) / ParamByName('Count_box').AsInteger
+                                                  ) + ' кг.)'
+     else
+       InfoBoxLabel.Caption:= ' = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                               +'  ' + ParamByName('BoxName_1').asString
+                               +' (' + FormatFloat(fmtFloat_3, 0.0) + ' кг.)'
+                             ;
      // 1
      lWriteParamsLight(1, ParamByName('GoodsTypeKindId_1').AsInteger
                         , ParamByName('GoodsTypeKindId_Sh').AsInteger
                         , ParamByName('GoodsTypeKindId_Nom').AsInteger
                         , ParamByName('GoodsTypeKindId_Ves').AsInteger
+                        , ParamByName('WeightMin_Sh').AsFloat
+                        , ParamByName('WeightMax_Sh').AsFloat
+                        , ParamByName('WeightMin_Nom').AsFloat
+                        , ParamByName('WeightMax_Nom').AsFloat
+                        , ParamByName('WeightMin_Ves').AsFloat
+                        , ParamByName('WeightMax_Ves').AsFloat
                         , infoWeightOnBoxTotal_1Label
                         , WeightOnBoxTotal_1Label, WeightOnBoxAll_1Label
                         , BarCodeOnBox_1Label);
@@ -1194,6 +1262,12 @@ begin
                         , ParamByName('GoodsTypeKindId_Sh').AsInteger
                         , ParamByName('GoodsTypeKindId_Nom').AsInteger
                         , ParamByName('GoodsTypeKindId_Ves').AsInteger
+                        , ParamByName('WeightMin_Sh').AsFloat
+                        , ParamByName('WeightMax_Sh').AsFloat
+                        , ParamByName('WeightMin_Nom').AsFloat
+                        , ParamByName('WeightMax_Nom').AsFloat
+                        , ParamByName('WeightMin_Ves').AsFloat
+                        , ParamByName('WeightMax_Ves').AsFloat
                         , infoWeightOnBoxTotal_2Label
                         , WeightOnBoxTotal_2Label, WeightOnBoxAll_2Label
                         , BarCodeOnBox_2Label);
@@ -1202,6 +1276,12 @@ begin
                         , ParamByName('GoodsTypeKindId_Sh').AsInteger
                         , ParamByName('GoodsTypeKindId_Nom').AsInteger
                         , ParamByName('GoodsTypeKindId_Ves').AsInteger
+                        , ParamByName('WeightMin_Sh').AsFloat
+                        , ParamByName('WeightMax_Sh').AsFloat
+                        , ParamByName('WeightMin_Nom').AsFloat
+                        , ParamByName('WeightMax_Nom').AsFloat
+                        , ParamByName('WeightMin_Ves').AsFloat
+                        , ParamByName('WeightMax_Ves').AsFloat
                         , infoWeightOnBoxTotal_3Label
                         , WeightOnBoxTotal_3Label, WeightOnBoxAll_3Label
                         , BarCodeOnBox_3Label);
@@ -1213,40 +1293,47 @@ end;
 function TMainCehForm.GetParams_Light(num : Integer):Boolean;
 begin
      Result:= false;
-     //
-     if SettingMain.isModeSorting = FALSE then exit;
-     //
-     // определили ящики по линиям
-     if num > 0 then
-     begin
-       PanelMovementDesc.Font.Color:=clRed;
-       if (SettingMain.isLightLEFT_123 = false) and (num = 3)
-       then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(1)+'>.'
+     try
+       //Timer_GetWeight.Enabled:= false;
+       //
+       if SettingMain.isModeSorting = FALSE then exit;
+       //
+       // определили ящики по линиям
+       if num > 0 then
+       begin
+         PanelMovementDesc.Font.Color:=clRed;
+         if (SettingMain.isLightLEFT_123 = false) and (num = 3)
+         then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(1)+'>.'
+         else
+         if (SettingMain.isLightLEFT_123 = false) and (num = 1)
+         then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(3)+'>.'
+         else PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(num)+'>.';
+         // только один
+         Result:= DialogBoxLightForm.Execute(FALSE, -1 * num, 0)
+       end
        else
-       if (SettingMain.isLightLEFT_123 = false) and (num = 1)
-       then PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(3)+'>.'
-       else PanelMovementDesc.Caption:='Необходимо определить Ш/К ящика для <Линия '+IntToStr(num)+'>.';
-       // только один
-       Result:= DialogBoxLightForm.Execute(FALSE, -1 * num, 0)
-     end
-     else
-     begin
-       PanelMovementDesc.Font.Color:=clRed;
-       PanelMovementDesc.Caption:='Необходимо определить Ш/К ящиков.';
-       // все
-       Result:= DialogBoxLightForm.Execute(TRUE, ParamsMI.ParamByName('GoodsId').AsInteger
-                                         , GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id);
+       begin
+         PanelMovementDesc.Font.Color:=clRed;
+         PanelMovementDesc.Caption:='Необходимо определить Ш/К ящиков.';
+         // все
+         Result:= DialogBoxLightForm.Execute(TRUE, ParamsMI.ParamByName('GoodsId').AsInteger
+                                           , GoodsKind_Array[GetArrayList_gpIndex_GoodsKind(GoodsKind_Array,ParamsMovement.ParamByName('GoodsKindWeighingGroupId').AsInteger,rgGoodsKind.ItemIndex)].Id);
+       end;
+       //
+       if Result
+       then begin
+                 DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
+                 if num > 0 then RefreshDataSet;
+                 //показали вес по линиям в ящиках
+                 WriteParamsLight;
+                 //показали
+                 WriteParamsMovement;
+            end;
+       //получили Вес, и если 3-ье значение ПОДРЯД одинаковое, вес стабилизироваляс и его надо сохранить
+       fGetScale_TimerWeight;
+     finally
+       //Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
      end;
-     //
-     if Result
-     then begin
-               DMMainScaleCehForm.gpInsertUpdate_ScaleCeh_Movement(ParamsMovement);
-               if num > 0 then RefreshDataSet;
-               //показали вес по линиям в ящиках
-               WriteParamsLight;
-               //показали
-               WriteParamsMovement;
-          end;
 end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.bbChangeCountClick(Sender: TObject);
@@ -2347,7 +2434,7 @@ begin
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoodsDate').Index].Visible    :=(SettingMain.isGoodsComplete = TRUE)  or (SettingMain.isModeSorting = TRUE);
   // or isModeSorting = WmsCode
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('PartionGoods').Index].Visible        :=(SettingMain.isGoodsComplete = FALSE) or (SettingMain.isModeSorting = TRUE);
-  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=(SettingMain.isGoodsComplete = FALSE) and(SettingMain.isModeSorting = FALSE);
+  cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName').Index].Visible     :=(SettingMain.isGoodsComplete = FALSE) or (SettingMain.isModeSorting = TRUE);
   // or isModeSorting = LineCode
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count').Index].Visible               :=(SettingMain.isGoodsComplete = TRUE)  or (SettingMain.isModeSorting = TRUE);
   cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('CountPack').Index].Visible           :=(SettingMain.isGoodsComplete = TRUE)  and(SettingMain.isModeSorting = FALSE);
@@ -2372,6 +2459,17 @@ begin
   //rename Columns
   if SettingMain.isModeSorting = TRUE then
   begin
+    PanelSaveItem.Width:= 180;
+    //
+    bbChoice_UnComlete.Visible:= false;
+    bbView_all.Visible:= false;
+    bbSale_Order_all.Visible:= false;
+    bbSale_Order_diff.Visible:= false;
+    bbSale_Order_diffTax.Visible:= false;
+    bbChangeStorageLine.Visible:= false;
+
+    SubjectDocPanel.Visible:= false;
+    //
     testButton1.Visible:= gc_User.Session = '5';
     testButton2.Visible:= gc_User.Session = '5';
     testButton3.Visible:= gc_User.Session = '5';
@@ -2380,6 +2478,7 @@ begin
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count')           .Index].Index  := 0;
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsName')       .Index].Width  := 100;
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight')      .Index].Index  := cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount').Index].Index;
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName') .Index].Width  := 40;
 
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsName')       .Index].Caption:= 'Категория';    // GoodsTypeKind
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('GoodsKindName')   .Index].Caption:= 'Ш/К ящика';    // BarCodeBox
@@ -2388,6 +2487,7 @@ begin
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Count')           .Index].Caption:= '№ линии';      // LineCode
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('RealWeight')      .Index].Caption:= 'ВЕС';          // RealWeight
     cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('isStartWeighing') .Index].Caption:= 'Открыт ящик';  // ParentId
+    cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('StorageLineName') .Index].Caption:= 'Код ВМС';      //
   //cxDBGridDBTableView.Columns[cxDBGridDBTableView.GetColumnByFieldName('Amount')          .Index].Caption:= 'Кол-во';       // Amount
   end;
   //
@@ -2440,9 +2540,9 @@ begin
   bbChangePartionGoods.Visible:=PanelPartionGoods.Visible;
   bbInsertPartionGoodsOpen_out.Visible:=PanelPartionGoods.Visible;
   bbInsertPartionGoodsClose_out.Visible:=PanelPartionGoods.Visible;
-  bbChangeCount.Visible:=not PanelPartionGoods.Visible;
-  bbChangeCountPack.Visible:=not PanelPartionGoods.Visible;;
-  bbChangePartionGoodsDate.Visible:=not PanelPartionGoods.Visible;
+  bbChangeCount.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
+  bbChangeCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
+  bbChangePartionGoodsDate.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
   //local enabled
   gbStartWeighing.Enabled:=(SettingMain.isGoodsComplete = TRUE)and (SettingMain.isModeSorting = FALSE);
   //
@@ -2791,6 +2891,7 @@ end;
 //------------------------------------------------------------------------------------------------
 function TMainCehForm.fGetScale_TimerWeight:Boolean;
 var tmpCurrentWeight : Double;
+    WeightMin_test, WeightMax_test : Double;
 begin
      Result:= false;
      // если вообще не надо
@@ -2831,18 +2932,51 @@ begin
                        then begin
                                  lTimerWeight_zero:= true;
                                  //
-                                 if  (tmpWeight_test < ParamsLight.ParamByName('WeightMin').AsFloat)
-                                   or(tmpWeight_test > ParamsLight.ParamByName('WeightMax').AsFloat)
+                                 // get Test Weight
+                                 if ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger > 0
+                                 then begin
+                                          WeightMin_test:= ParamsLight.ParamByName('WeightMin_Ves').AsFloat;
+                                          WeightMax_test:= ParamsLight.ParamByName('WeightMax_Ves').AsFloat;
+                                 end
+                                 else
+                                 if ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger > 0
+                                 then begin
+                                          WeightMin_test:= ParamsLight.ParamByName('WeightMin_Nom').AsFloat;
+                                          WeightMax_test:= ParamsLight.ParamByName('WeightMax_Nom').AsFloat;
+                                 end
+                                 else begin
+                                          WeightMin_test:= ParamsLight.ParamByName('WeightMin_Sh').AsFloat;
+                                          WeightMax_test:= ParamsLight.ParamByName('WeightMax_Sh').AsFloat;
+                                 end;
+                                 //
+                                 //
+                                 if  WeightMin_test > tmpWeight_test
                                  then //Min
-                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat
-                                 else if tmpWeight_test + 0.001 < ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-                                 then //Min + 1/2
-                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMin').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-                                 else if tmpWeight_test = ParamsLight.ParamByName('WeightMax').AsFloat
-                                 then //Max + 1/2
-                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat + (ParamsLight.ParamByName('WeightMax').AsFloat - ParamsLight.ParamByName('WeightMin').AsFloat) / 2
-                                 else //Max
-                                      tmpWeight_test:= ParamsLight.ParamByName('WeightMax').AsFloat;
+                                      tmpWeight_test:= WeightMin_test
+
+                                 else if tmpWeight_test > WeightMax_test
+                                 then //Min - 0.001 - err
+                                      tmpWeight_test:= WeightMin_test - 0.001
+
+                                 else if abs (tmpWeight_test - WeightMin_test) < 0.0001
+                                 then //Min + 1/4
+                                      tmpWeight_test:= WeightMin_test + (WeightMax_test - WeightMin_test) / 4
+
+                                 else if abs (tmpWeight_test - WeightMin_test - (WeightMax_test - WeightMin_test) / 4) < 0.0001
+                                 then //Min + 1/4 + 1/4
+                                      tmpWeight_test:= WeightMin_test + (WeightMax_test - WeightMin_test) / 2
+
+                                 else if abs (tmpWeight_test - WeightMin_test - (WeightMax_test - WeightMin_test) / 2) < 0.0001
+                                 then //Min + 1/4 + 1/4 + 1/4
+                                      tmpWeight_test:= WeightMin_test + (WeightMax_test - WeightMin_test) / 4 * 3
+
+                                 else if abs (tmpWeight_test - WeightMin_test - (WeightMax_test - WeightMin_test) / 4 * 3) < 0.0001
+                                 then //Max
+                                      tmpWeight_test:= WeightMax_test
+
+                                 else //Max + 0.001 - err
+                                      //tmpWeight_test:= WeightMax_test + 0.001;
+                                      tmpWeight_test:= 0;
                                  //
                                  //tmpWeight_test:= 0.495;
                                  //
@@ -2935,6 +3069,8 @@ begin
      if (Key = VK_F2) and (Shift = []) then GetParams_MovementDesc('');
      if (Key = VK_F4) and (Shift = []) then Save_MI;
      if (Key = VK_F5) and (Shift = []) then Save_Movement_all;
+     //
+     if (Key = VK_DELETE) and (Shift = []) then bbDeleteItemClick(self);
      // Меняется шрифт
      if (Key = VK_F10) and (Shift = [ssCtrl]) then miFontClick(Self);
      //

@@ -86,6 +86,7 @@ type
     actPrintScopeXLS: TdsdExportToXLS;
     PriceUnit: TcxGridDBColumn;
     actChoiceNDSKind: TOpenChoiceForm;
+    isResolution_224: TcxGridDBColumn;
   private
     { Private declarations }
   public

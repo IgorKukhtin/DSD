@@ -470,6 +470,9 @@ type
     MainGoodsActiveSubstance: TcxGridDBColumn;
     actUpdateProgram: TAction;
     N41: TMenuItem;
+    actOpenFormPUSH: TdsdOpenForm;
+    actSendCashJournalVip: TdsdOpenForm;
+    VIP5: TMenuItem;
     procedure WM_KEYDOWN(var Msg: TWMKEYDOWN);
     procedure FormCreate(Sender: TObject);
     procedure actChoiceGoodsInRemainsGridExecute(Sender: TObject);
@@ -2077,7 +2080,20 @@ begin
         TimerPUSH.Interval := 1000;
         if PUSHDS.FieldByName('Id').AsInteger > 1000 then
         begin
-          if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
+          if PUSHDS.FieldByName('isFormOpen').AsBoolean then
+          begin
+            actOpenFormPUSH.FormNameParam.Value := PUSHDS.FieldByName('FormName').AsString;
+            actOpenFormPUSH.Execute;
+            try
+              spInsert_MovementItem_PUSH.ParamByName('inMovement').Value :=
+                PUSHDS.FieldByName('Id').AsInteger;
+              spInsert_MovementItem_PUSH.ParamByName('inResult').Value := '';
+              spInsert_MovementItem_PUSH.Execute;
+            except
+              ON E: Exception do
+                Add_Log('Marc_PUSH err=' + E.Message);
+            end;
+          end else if ShowPUSHMessageCash(PUSHDS.FieldByName('Text').AsString, cResult,
             PUSHDS.FieldByName('isPoll').AsBoolean,
             PUSHDS.FieldByName('FormName').AsString,
             PUSHDS.FieldByName('Button').AsString, PUSHDS.FieldByName('Params')
@@ -2817,7 +2833,7 @@ begin
                 Screen.MessageFont.Color := clRed;
                 Screen.MessageFont.Size := Screen.MessageFont.Size + 2;
                 MessageDlg
-                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его зарегистрировать СЕЙЧАС НА САЙТЕ ХЕЛСИ.',
+                  ('РЕЦЕПТ НЕ ПРОШЕЛ ПО ХЕЛСИ !!!'#13#10#13#10'Нужно его погасить в FCASH в "Чеки->Сверка Чеков с Хелси"!',
                   mtError, [mbOK], 0);
               finally
                 Screen.MessageFont.Size := Screen.MessageFont.Size - 2;

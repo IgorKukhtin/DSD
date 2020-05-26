@@ -165,6 +165,14 @@ type
     cbSUN_v3: TcxCheckBox;
     cbSUN_v4: TcxCheckBox;
     isPromo: TcxGridDBColumn;
+    cbVIP: TcxCheckBox;
+    cbConfirmed: TcxCheckBox;
+    cbUrgently: TcxCheckBox;
+    actExecSetConfirmed: TdsdExecStoredProc;
+    spUpdate_Movement_Confirmed: TdsdStoredProc;
+    dxBarButton6: TdxBarButton;
+    edConfirmed: TcxTextEdit;
+    actOpenConfirmedDialog: TOpenChoiceForm;
   private
     { Private declarations }
   public

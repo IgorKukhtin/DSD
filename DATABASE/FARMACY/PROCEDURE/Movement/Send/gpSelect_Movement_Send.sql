@@ -1,11 +1,13 @@
 -- Function: gpSelect_Movement_Send()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
+    IN inisVip         Boolean ,
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -21,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isSUN Boolean, isDefSUN Boolean, isSUN_v2 Boolean --, isSUN_over Boolean
              , isSUN_v3 Boolean, isSUN_v4 Boolean
              , isSent Boolean, isReceived Boolean, isOverdueSUN Boolean, isNotDisplaySUN Boolean
+             , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean
              , InsertName TVarChar, InsertDate TDateTime
              , UpdateName TVarChar, UpdateDate TDateTime
              , InsertDateDiff TFloat
@@ -28,6 +31,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , MovementId_Report Integer, InvNumber_Report TVarChar, ReportInvNumber_full TVarChar
              , DriverSunId Integer, DriverSunName TVarChar
              , NumberSeats Integer
+             , ConfirmedText TVarChar
               )
 
 AS
@@ -135,6 +139,9 @@ BEGIN
                    AND Movement.OperDate < CURRENT_DATE
                    AND Movement.StatusId = zc_Enum_Status_Erased() THEN TRUE ELSE FALSE END AS isOverdueSUN
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
+           , COALESCE (MovementBoolean_VIP.ValueData, FALSE)          ::Boolean AS isVIP
+           , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)     ::Boolean AS isUrgently
+           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)    ::Boolean AS isConfirmed           
 
            , Object_Insert.ValueData              AS InsertName
            , MovementDate_Insert.ValueData        AS InsertDate
@@ -152,6 +159,11 @@ BEGIN
            , Object_DriverSun.ValueData  :: TVarChar AS DriverSunName
            
            , MovementFloat_NumberSeats.ValueData::Integer  AS NumberSeats
+
+           , CASE WHEN COALESCE (MovementBoolean_VIP.ValueData, FALSE) = FALSE THEN Null   
+                  WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтвержд.'   
+                  WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
+                  ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
 
            --, date_part('day', MovementDate_Insert.ValueData - Movement.OperDate) ::TFloat AS InsertDateDiff 
            --, date_part('day', MovementDate_Update.ValueData - Movement.OperDate) ::TFloat AS UpdateDateDiff
@@ -243,6 +255,16 @@ BEGIN
                                       ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
                                      AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                      ON MovementBoolean_VIP.MovementId = Movement.Id
+                                     AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Urgently
+                                      ON MovementBoolean_Urgently.MovementId = Movement.Id
+                                     AND MovementBoolean_Urgently.DescId = zc_MovementBoolean_Urgently()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                      ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                     AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -287,6 +309,7 @@ BEGIN
 
        WHERE (COALESCE (tmpUnit_To.UnitId,0) <> 0 OR COALESCE (tmpUnit_FROM.UnitId,0) <> 0)
          AND (vbUnitId = 0 OR tmpUnit_To.UnitId = vbUnitId OR tmpUnit_FROM.UnitId = vbUnitId)
+         AND (COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE OR inisVip = FALSE)
 /*         AND (vbIsSUN_over = TRUE
            OR COALESCE (MovementBoolean_SUN.ValueData, FALSE) = FALSE
            OR COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
@@ -298,7 +321,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -325,4 +348,4 @@ ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '01.08.2019', inEndDate:= '01.08.2019', inIsErased := FALSE, inisVip := FALSE,  inSession:= '2')

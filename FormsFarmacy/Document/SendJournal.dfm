@@ -385,6 +385,30 @@ inherited SendJournalForm: TSendJournalForm
             Options.Editing = False
             Width = 93
           end
+          object isVIP: TcxGridDBColumn
+            Caption = #1042#1048#1055
+            DataBinding.FieldName = 'isVIP'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 48
+          end
+          object isUrgently: TcxGridDBColumn
+            Caption = #1057#1088#1086#1095#1085#1086
+            DataBinding.FieldName = 'isUrgently'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object isConfirmed: TcxGridDBColumn
+            Caption = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1080#1077
+            DataBinding.FieldName = 'ConfirmedText'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 104
+          end
           object MCSPeriod: TcxGridDBColumn
             Caption = #1055#1077#1088#1080#1086#1076' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
             DataBinding.FieldName = 'MCSPeriod'
@@ -963,9 +987,12 @@ inherited SendJournalForm: TSendJournalForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inisVip'
         Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisVip'
         DataType = ftBoolean
-        ParamType = ptUnknown
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     Left = 136
@@ -1287,6 +1314,12 @@ inherited SendJournalForm: TSendJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVip'
+        Value = 'False'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 400

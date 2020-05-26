@@ -25,6 +25,8 @@ CREATE TABLE wms_Movement_WeighingProduction(
    BarCodeBoxId_3      Integer   NOT NULL,
    GoodsId             Integer   NOT NULL,
    GoodsKindId	       Integer   NOT NULL,
+   GoodsId_link_sh     Integer       NULL, -- ***Товар (из категории "Штучный")
+   GoodsKindId_link_sh Integer       NULL, -- ***Вид товара (из категории "Штучный")
    MovementDescId      Integer   NOT NULL,
    MovementDescNumber  Integer   NOT NULL,
    PlaceNumber         Integer   NOT NULL,

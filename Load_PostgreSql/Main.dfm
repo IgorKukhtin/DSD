@@ -1126,7 +1126,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 25
       Visible = False
-      OnClick = cbTaxIntClick
     end
     object cbClearDelete: TCheckBox
       Left = 3

@@ -22,7 +22,6 @@ type
     edUnit: TcxButtonEdit;
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
-    GuidesUnit: TdsdGuides;
     GuidesGoods: TdsdGuides;
     StatusName: TcxGridDBColumn;
     UnitName: TcxGridDBColumn;
@@ -39,6 +38,8 @@ type
     actOpenDocument: TdsdOpenForm;
     MovementProtocolOpenForm: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    isErased: TcxGridDBColumn;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -1,13 +1,15 @@
 -- Function: gpGet_ScaleLight_Movement()
 
 DROP FUNCTION IF EXISTS gpGet_ScaleLight_Movement (Integer, Integer, TDateTime, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_ScaleLight_Movement (BigInt, Integer, TDateTime, Boolean, TVarChar);
+-- DROP FUNCTION IF EXISTS gpGet_ScaleLight_Movement (BigInt, Integer, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_ScaleLight_Movement (BigInt, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_ScaleLight_Movement(
     IN inMovementId            BigInt      , --
     IN inPlaceNumber           Integer     , --
     IN inOperDate              TDateTime   , --
     IN inIsNext                Boolean     , --
+    IN inIs_test               Boolean     , --
     IN inSession               TVarChar      -- сессия пользователя
 )
 RETURNS TABLE (MovementId       Integer
@@ -20,12 +22,14 @@ RETURNS TABLE (MovementId       Integer
              , MovementDescNumber Integer
 
              , MovementDescId Integer
-             , FromId         Integer, FromCode         Integer, FromName       TVarChar
-             , ToId           Integer, ToCode           Integer, ToName         TVarChar
-               --
-             , GoodsId        Integer, GoodsCode        Integer, GoodsName      TVarChar
-             , GoodsKindId    Integer, GoodsKindCode    Integer, GoodsKindName  TVarChar
-             , MeasureId      Integer, MeasureCode      Integer, MeasureName    TVarChar
+             , FromId         Integer, FromCode         Integer, FromName         TVarChar
+             , ToId           Integer, ToCode           Integer, ToName           TVarChar
+               --                                                                 
+             , GoodsId        Integer, GoodsCode        Integer, GoodsName        TVarChar
+             , GoodsKindId    Integer, GoodsKindCode    Integer, GoodsKindName    TVarChar
+             , GoodsId_sh     Integer, GoodsCode_sh     Integer, GoodsName_sh     TVarChar
+             , GoodsKindId_sh Integer, GoodsKindCode_sh Integer, GoodsKindName_sh TVarChar
+             , MeasureId      Integer, MeasureCode      Integer, MeasureName      TVarChar
 
              , Count_box           Integer   -- сколько линий для ящиков - 1,2 или 3
              , GoodsTypeKindId_Sh  Integer   -- Id - есть ли ШТ.
@@ -34,8 +38,16 @@ RETURNS TABLE (MovementId       Integer
              , WmsCode_Sh          TVarChar  -- Код ВМС - ШТ.
              , WmsCode_Nom         TVarChar  -- Код ВМС - НОМ.
              , WmsCode_Ves         TVarChar  -- Код ВМС - ВЕС
-             , WeightMin           TFloat    -- минимальный вес 1шт.
-             , WeightMax           TFloat    -- максимальный вес 1шт.
+
+             , WeightMin           TFloat    -- минимальный вес 1шт. - !!!временно
+             , WeightMax           TFloat    -- максимальный вес 1шт.- !!!временно
+
+             , WeightMin_Sh        TFloat   -- минимальный вес 1шт.
+             , WeightMin_Nom       TFloat   --
+             , WeightMin_Ves       TFloat   --
+             , WeightMax_Sh        TFloat   -- максимальный вес 1шт.
+             , WeightMax_Nom       TFloat   --
+             , WeightMax_Ves       TFloat   --
 
                -- 1-ая линия - Всегда этот цвет
              , GoodsTypeKindId_1  Integer    -- выбранный тип для этого ЦВЕТА
@@ -43,7 +55,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxCode_1          Integer    -- код для Ш/К ящика
              , BoxBarCode_1       TVarChar   -- Ш/К ящика
           -- , WeightOnBoxTotal_1 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-          -- , CountOnBoxTotal_1  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+          -- , CountOnBoxTotal_1  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
           -- , WeightTotal_1      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
           -- , CountTotal_1       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
           -- , BoxTotal_1         TFloat     -- ящиков итого (закрытых) - информативно
@@ -52,7 +64,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxName_1          TVarChar   -- название ящика Е2 или Е3
              , BoxWeight_1        TFloat     -- Вес самого ящика
              , WeightOnBox_1      TFloat     -- вложенность - Вес
-             , CountOnBox_1       TFloat     -- Вложенность - шт (информативно?)
+             , CountOnBox_1       TFloat     -- Вложенность - шт (НЕ информативно!)
 
                -- 2-ая линия - Всегда этот цвет
              , GoodsTypeKindId_2  Integer    -- выбранный тип для этого ЦВЕТА
@@ -60,7 +72,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxCode_2          Integer    -- код для Ш/К ящика
              , BoxBarCode_2       TVarChar   -- Ш/К ящика
           -- , WeightOnBoxTotal_2 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-          -- , CountOnBoxTotal_2  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+          -- , CountOnBoxTotal_2  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
           -- , WeightTotal_2      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
           -- , CountTotal_2       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
           -- , BoxTotal_2         TFloat     -- ящиков итого (закрытых) - информативно
@@ -69,7 +81,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxName_2          TVarChar   -- название ящика Е2 или Е3
              , BoxWeight_2        TFloat     -- Вес самого ящика
              , WeightOnBox_2      TFloat     -- вложенность - Вес
-             , CountOnBox_2       TFloat     -- Вложенность - шт (информативно?)
+             , CountOnBox_2       TFloat     -- Вложенность - шт (НЕ информативно!)
 
                -- 3-ья линия - Всегда этот цвет
              , GoodsTypeKindId_3  Integer    -- выбранный тип для этого ЦВЕТА
@@ -77,7 +89,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxCode_3          Integer    -- код для Ш/К ящика
              , BoxBarCode_3       TVarChar   -- Ш/К ящика
           -- , WeightOnBoxTotal_3 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-          -- , CountOnBoxTotal_3  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+          -- , CountOnBoxTotal_3  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
           -- , WeightTotal_3      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
           -- , CountTotal_3       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
           -- , BoxTotal_3         TFloat     -- ящиков итого (закрытых) - информативно
@@ -86,7 +98,7 @@ RETURNS TABLE (MovementId       Integer
              , BoxName_3          TVarChar   -- название ящика Е2 или Е3
              , BoxWeight_3        TFloat     -- Вес самого ящика
              , WeightOnBox_3      TFloat     -- вложенность - Вес
-             , CountOnBox_3       TFloat     -- Вложенность - шт (информативно?)
+             , CountOnBox_3       TFloat     -- Вложенность - шт (НЕ информативно!)
               )
 AS
 $BODY$
@@ -133,6 +145,7 @@ BEGIN
                            )
          , tmpGoods AS (SELECT * FROM gpGet_ScaleLight_Goods (inGoodsId     := (SELECT tmpMovement.GoodsId     FROM tmpMovement)
                                                             , inGoodsKindId := (SELECT tmpMovement.GoodsKindId FROM tmpMovement)
+                                                            , inIs_test     := NULL
                                                             , inSession     := inSession
                                                              ))
            , tmpBox AS (SELECT OL_GoodsPropertyBox_Box.ChildObjectId AS BoxId
@@ -141,7 +154,7 @@ BEGIN
                              , ObjectFloat_Box_Weight.ValueData      AS BoxWeight
                                -- вложенность - Вес                  
                              , ObjectFloat_WeightOnBox.ValueData     AS WeightOnBox
-                               -- Вложенность - шт (информативно?)
+                               -- Вложенность - шт (НЕ информативно!)
                              , ObjectFloat_CountOnBox.ValueData      AS CountOnBox
                         FROM -- нашли Ящик
                              ObjectLink AS OL_GoodsPropertyBox_Goods
@@ -191,6 +204,8 @@ BEGIN
              --
            , tmpGoods.GoodsId, tmpGoods.GoodsCode, tmpGoods.GoodsName
            , tmpGoods.GoodsKindId, tmpGoods.GoodsKindCode, tmpGoods.GoodsKindName
+           , tmpGoods.GoodsId_sh, tmpGoods.GoodsCode_sh, tmpGoods.GoodsName_sh
+           , tmpGoods.GoodsKindId_sh, tmpGoods.GoodsKindCode_sh, tmpGoods.GoodsKindName_sh
            , tmpGoods.MeasureId, tmpGoods.MeasureCode, tmpGoods.MeasureName
 
              -- сколько линий для ящиков - 1,2 или 3
@@ -224,8 +239,16 @@ BEGIN
            , tmpGoods.WmsCode_Sh           -- Код ВМС - ШТ.
            , tmpGoods.WmsCode_Nom          -- Код ВМС - НОМ.
            , tmpGoods.WmsCode_Ves          -- Код ВМС - ВЕС
-           , tmpGoods.WeightMin            -- минимальный вес 1шт.
-           , tmpGoods.WeightMax            -- максимальный вес 1шт.
+
+           , tmpGoods.WeightMin            -- минимальный вес 1шт. - !!!временно
+           , tmpGoods.WeightMax            -- максимальный вес 1шт.- !!!временно
+
+           , tmpGoods.WeightMin_Sh
+           , tmpGoods.WeightMin_Nom
+           , tmpGoods.WeightMin_Ves
+           , tmpGoods.WeightMax_Sh
+           , tmpGoods.WeightMax_Nom
+           , tmpGoods.WeightMax_Ves
 
              -- 1-ая линия - Всегда этот цвет
            , Movement.GoodsTypeKindId_1                      -- выбранный тип для этого ЦВЕТА
@@ -233,20 +256,16 @@ BEGIN
            , Object_BarCodeBox_1.ObjectCode AS BoxCode_1     -- код для Ш/К ящика
            , Object_BarCodeBox_1.ValueData  AS BoxBarCode_1  -- Ш/К ящика
         -- , WeightOnBoxTotal_1 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-        -- , CountOnBoxTotal_1  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+        -- , CountOnBoxTotal_1  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
         -- , WeightTotal_1      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
         -- , CountTotal_1       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
         -- , BoxTotal_1         TFloat     -- ящиков итого (закрытых) - информативно
 
-           , tmpBox.BoxId        AS BoxId_1                  -- Id ящика
-           , tmpBox.BoxName      AS BoxName_1                -- название ящика Е2 или Е3
-           , tmpBox.BoxWeight    AS BoxWeight_1              -- Вес самого ящика
-           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
-                  ELSE tmpBox.WeightOnBox
-             END       :: TFloat AS WeightOnBox_1            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-           , tmpBox.CountOnBox   AS CountOnBox_1             -- Вложенность - шт (информативно?)
+           , tmpGoods.BoxId_1                  -- Id ящика
+           , tmpGoods.BoxName_1                -- название ящика Е2 или Е3
+           , tmpGoods.BoxWeight_1              -- Вес самого ящика
+           , tmpGoods.WeightOnBox_1            -- вложенность - по Весу - !средняя!
+           , tmpGoods.CountOnBox_1             -- Вложенность - шт (НЕ информативно!)
 
              -- 2-ая линия - Всегда этот цвет
            , Movement.GoodsTypeKindId_2                      -- выбранный тип для этого ЦВЕТА
@@ -254,20 +273,16 @@ BEGIN
            , Object_BarCodeBox_2.ObjectCode AS BoxCode_2     -- код для Ш/К ящика
            , Object_BarCodeBox_2.ValueData  AS BoxBarCode_2  -- Ш/К ящика
         -- , WeightOnBoxTotal_2 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-        -- , CountOnBoxTotal_2  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+        -- , CountOnBoxTotal_2  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
         -- , WeightTotal_2      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
         -- , CountTotal_2       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
         -- , BoxTotal_2         TFloat     -- ящиков итого (закрытых) - информативно
 
-           , tmpBox.BoxId        AS BoxId_2                  -- Id ящика
-           , tmpBox.BoxName      AS BoxName_2                -- название ящика Е2 или Е3
-           , tmpBox.BoxWeight    AS BoxWeight_2              -- Вес самого ящика
-           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
-                  ELSE tmpBox.WeightOnBox
-             END       :: TFloat AS WeightOnBox_2            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-           , tmpBox.CountOnBox   AS CountOnBox_2             -- Вложенность - шт (информативно?)
+           , tmpGoods.BoxId_2                  -- Id ящика
+           , tmpGoods.BoxName_2                -- название ящика Е2 или Е3
+           , tmpGoods.BoxWeight_2              -- Вес самого ящика
+           , tmpGoods.WeightOnBox_2            -- вложенность - по Весу - !средняя!
+           , tmpGoods.CountOnBox_2             -- Вложенность - шт (НЕ информативно!)
 
              -- 3-ья линия - Всегда этот цвет
            , Movement.GoodsTypeKindId_3                      -- выбранный тип для этого ЦВЕТА
@@ -275,20 +290,16 @@ BEGIN
            , Object_BarCodeBox_3.ObjectCode AS BoxCode_3     -- код для Ш/К ящика
            , Object_BarCodeBox_3.ValueData  AS BoxBarCode_3  -- Ш/К ящика
         -- , WeightOnBoxTotal_3 TFloat     -- Вес итого накопительный (в незакрытом ящике) - при достижении будет сброс
-        -- , CountOnBoxTotal_3  TFloat     -- шт итого накопительно (в незакрытом ящике) - информативно?
+        -- , CountOnBoxTotal_3  TFloat     -- шт итого накопительно (в незакрытом ящике) - НЕ информативно!
         -- , WeightTotal_3      TFloat     -- Вес итого накопительный (в закрытых ящиках) - информативно
         -- , CountTotal_3       TFloat     -- шт итого накопительный (в закрытых ящиках) - информативно
         -- , BoxTotal_3         TFloat     -- ящиков итого (закрытых) - информативно
 
-           , tmpBox.BoxId        AS BoxId_3                  -- Id ящика
-           , tmpBox.BoxName      AS BoxName_3                -- название ящика Е2 или Е3
-           , tmpBox.BoxWeight    AS BoxWeight_3              -- Вес самого ящика
-           , CASE WHEN tmpBox.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                    -- THEN tmpBox.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                       THEN tmpBox.CountOnBox * tmpGoods.WeightMax - tmpGoods.WeightMin
-                  ELSE tmpBox.WeightOnBox
-             END       :: TFloat AS WeightOnBox_3            -- вложенность - Вес - !МАКСИМАЛЬНАЯ!
-           , tmpBox.CountOnBox   AS CountOnBox_3             -- Вложенность - шт (информативно?)
+           , tmpGoods.BoxId_3                  -- Id ящика
+           , tmpGoods.BoxName_3                -- название ящика Е2 или Е3
+           , tmpGoods.BoxWeight_3              -- Вес самого ящика
+           , tmpGoods.WeightOnBox_3            -- вложенность - по Весу - !средняя!
+           , tmpGoods.CountOnBox_3             -- Вложенность - шт (НЕ информативно!)
 
       FROM tmpMovement AS Movement
            LEFT JOIN Object AS Object_From ON Object_From.Id = Movement.FromId
@@ -314,5 +325,5 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleLight_Movement (0, 1, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
--- SELECT * FROM gpGet_ScaleLight_Movement (0, 1, CURRENT_TIMESTAMP, FALSE, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleLight_Movement (0, 1, CURRENT_TIMESTAMP, FALSE, NULL, zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleLight_Movement (0, 1, CURRENT_TIMESTAMP, FALSE, NULL, zfCalc_UserAdmin())

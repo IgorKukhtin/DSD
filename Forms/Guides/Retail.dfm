@@ -151,6 +151,15 @@ object RetailForm: TRetailForm
         Options.Editing = False
         Width = 86
       end
+      object isWMS: TcxGridDBColumn
+        Caption = #1054#1090#1087'. '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        DataBinding.FieldName = 'isWMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        Options.Editing = False
+        Width = 86
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -273,6 +282,14 @@ object RetailForm: TRetailForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbUpdate_isWMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -364,6 +381,10 @@ object RetailForm: TRetailForm
     end
     object bbUpdate_IsOrderMin: TdxBarButton
       Action = actUpdate_IsOrderMin
+      Category = 0
+    end
+    object bbUpdate_isWMS: TdxBarButton
+      Action = actUpdate_isWMS
       Category = 0
     end
   end
@@ -677,6 +698,19 @@ object RetailForm: TRetailForm
       Caption = 'macUpdate_ClientKind_Null_List'
       ImageIndex = 58
     end
+    object actUpdate_isWMS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isWMS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isWMS
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 52
+    end
     object actUpdate_IsOrderMin: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -749,6 +783,7 @@ object RetailForm: TRetailForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 48
     Top = 216
   end
@@ -899,5 +934,39 @@ object RetailForm: TRetailForm
     PackSize = 1
     Left = 464
     Top = 184
+  end
+  object spUpdate_isWMS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Retail_isWMS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 424
+    Top = 248
   end
 end

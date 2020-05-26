@@ -117,8 +117,6 @@ object Report_Cash_OlapForm: TReport_Cash_OlapForm
     Groups = <>
     OptionsView.RowGrandTotalWidth = 693
     TabOrder = 1
-    ExplicitLeft = -8
-    ExplicitTop = 73
     object pvMonthName: TcxDBPivotGridField
       AreaIndex = 0
       IsCaptionAssigned = True
@@ -743,7 +741,6 @@ object Report_Cash_OlapForm: TReport_Cash_OlapForm
     FormNameParam.MultiSelectSeparator = ','
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
-    ParentDataSet = 'TreeDataSet'
     Params = <
       item
         Name = 'Key'
@@ -764,6 +761,7 @@ object Report_Cash_OlapForm: TReport_Cash_OlapForm
         MultiSelectSeparator = ','
       end>
     Left = 272
+    Top = 16
   end
   object GuidesAccount: TdsdGuides
     KeyField = 'Id'

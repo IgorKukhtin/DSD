@@ -64,6 +64,8 @@ type
     edComposition: TcxButtonEdit;
     cxLabel7: TcxLabel;
     GuidesComposition: TdsdGuides;
+    edText_info: TcxTextEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public

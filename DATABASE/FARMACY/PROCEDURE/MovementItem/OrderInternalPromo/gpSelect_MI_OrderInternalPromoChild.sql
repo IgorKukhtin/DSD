@@ -141,8 +141,8 @@ BEGIN
                 , MovementItem.AmountManual :: TFloat
                 , MovementItem.AmountOut    :: TFloat
                 , MovementItem.Remains      :: TFloat
-                , CASE WHEN COALESCE (tmpMI_Child_Calc.KoeffSUM,0) > 0 THEN (tmpMI_Child_Calc.Koeff / tmpMI_Child_Calc.KoeffSUM) ELSE 0 END :: TFloat AS Koeff
-                , CASE WHEN COALESCE (tmpMI_Child_Calc2.KoeffSUM2,0) > 0 THEN (tmpMI_Child_Calc2.Koeff2 / tmpMI_Child_Calc2.KoeffSUM2) ELSE 0 END :: TFloat AS Koeff2
+                , CASE WHEN COALESCE (tmpMI_Child_Calc.KoeffSUM,0)::TFloat > 0 THEN (tmpMI_Child_Calc.Koeff / tmpMI_Child_Calc.KoeffSUM) ELSE 0 END :: TFloat AS Koeff
+                , CASE WHEN COALESCE (tmpMI_Child_Calc2.KoeffSUM2,0)::TFloat > 0 THEN (tmpMI_Child_Calc2.Koeff2 / tmpMI_Child_Calc2.KoeffSUM2) ELSE 0 END :: TFloat AS Koeff2
                 , MovementItem.RemainsDay   :: TFloat 
                 , MovementItem.IsErased
            FROM tmpMI_Child AS MovementItem

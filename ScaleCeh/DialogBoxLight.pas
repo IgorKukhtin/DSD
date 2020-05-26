@@ -164,10 +164,6 @@ begin
        ActiveControl:= Box1Edit;
        // мигающее сообщение - какая линия заполняется
        //WriteMsgBlink(1);
-       //
-       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                             +' вид = ' + ParamByName('BoxName_1').asString
-                             +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
      end
      else begin
              if (ParamByName('Count_box').AsInteger = 2) and (inGoodsId > 0) then
@@ -188,11 +184,22 @@ begin
                // мигающее сообщение - какая линия заполняется
                //WriteMsgBlink(3);
              end;
-             //
-             MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                                   +' вид = ' + ParamByName('BoxName_1').asString
-                                   +' (' + FloatToStr(ParamByName('WeightOnBox_1').asFloat) + ' кг.)';
      end;
+     //
+     if ParamByName('Count_box').AsInteger > 0
+     then
+       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                             +' вид = ' + ParamByName('BoxName_1').asString
+                             +' (' + FormatFloat(fmtFloat_3, (ParamByName('WeightOnBox_1').asFloat
+                                                            + ParamByName('WeightOnBox_2').asFloat / 3
+                                                            + ParamByName('WeightOnBox_3').asFloat
+                                                             ) / ParamByName('Count_box').AsInteger
+                                                ) + ' кг.)'
+     else
+       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                             +' вид = ' + ParamByName('BoxName_1').asString
+                             +' (' + FormatFloat(fmtFloat_3, 0.0) + ' кг.)'
+                            ;
    end;
    //
    fStartWrite:= false;

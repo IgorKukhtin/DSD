@@ -139,9 +139,16 @@ BEGIN
     RETURN QUERY
     WITH
           -- Отложенные перемещения
-         tmpMovementSend AS (SELECT
+         tmpMovementID AS (SELECT
+                                  Movement.Id
+                                , Movement.DescId
+                           FROM Movement
+                           WHERE Movement.DescId IN (zc_Movement_Send(), zc_Movement_Check())
+                            AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         )
+         , tmpMovementSend AS (SELECT
                                     Movement.Id
-                             FROM Movement
+                             FROM tmpMovementID AS Movement
 
                                   INNER JOIN MovementBoolean AS MovementBoolean_Deferred
                                                              ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -152,9 +159,9 @@ BEGIN
                                                                 ON MovementLinkObject_From.MovementId = Movement.Id
                                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                                                                AND MovementLinkObject_From.ObjectId = vbUnitId
+                             WHERE  Movement.DescId = zc_Movement_Send()
 
-                             WHERE Movement.DescId = zc_Movement_Send()
-                              AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                             )
          , tmpDeferredSendAll AS (SELECT
                                     Container.Id
                                   , Container.ParentId
@@ -218,9 +225,8 @@ BEGIN
                                           )
          -- Отложенные чеки
        , tmpMovementCheck AS (SELECT Movement.Id
-                              FROM Movement
-                              WHERE Movement.DescId = zc_Movement_Check()
-                               AND Movement.StatusId = zc_Enum_Status_UnComplete())
+                              FROM tmpMovementID AS Movement
+                              WHERE Movement.DescId = zc_Movement_Check())
        , tmpMovReserveAll AS (
                              SELECT Movement.Id
                              FROM MovementBoolean AS MovementBoolean_Deferred

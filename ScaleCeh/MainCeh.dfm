@@ -3,7 +3,7 @@ object MainCehForm: TMainCehForm
   Top = 0
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086
   ClientHeight = 641
-  ClientWidth = 977
+  ClientWidth = 1040
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,25 +23,27 @@ object MainCehForm: TMainCehForm
   object GridPanel: TPanel
     Left = 352
     Top = 33
-    Width = 625
+    Width = 688
     Height = 608
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 625
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 625
+      Width = 688
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      ExplicitWidth = 625
       object bbDeleteItem: TSpeedButton
         Left = 246
         Top = 2
         Width = 31
         Height = 29
-        Hint = #1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+        Hint = 'Del - '#1091#1076#1072#1083#1080#1090#1100'/'#1074#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
         Glyph.Data = {
           C6040000424DC60400000000000036040000280000000C0000000C0000000100
           0800000000009000000000000000000000000001000000000000000000004000
@@ -87,7 +89,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbDeleteItemClick
       end
       object bbExit: TSpeedButton
-        Left = 570
+        Left = 524
         Top = 2
         Width = 31
         Height = 29
@@ -105,7 +107,7 @@ object MainCehForm: TMainCehForm
         ShowHint = True
       end
       object bbRefresh: TSpeedButton
-        Left = 380
+        Left = 359
         Top = 2
         Width = 31
         Height = 29
@@ -395,7 +397,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbInsertPartionGoodsClose_outClick
       end
       object bbSale_Order_all: TSpeedButton
-        Left = 436
+        Left = 400
         Top = 2
         Width = 31
         Height = 29
@@ -419,7 +421,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_allClick
       end
       object bbSale_Order_diff: TSpeedButton
-        Left = 473
+        Left = 432
         Top = 2
         Width = 31
         Height = 29
@@ -438,7 +440,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_diffClick
       end
       object bbSale_Order_diffTax: TSpeedButton
-        Left = 506
+        Left = 463
         Top = 2
         Width = 31
         Height = 29
@@ -457,7 +459,7 @@ object MainCehForm: TMainCehForm
         OnClick = bbSale_Order_diffTaxClick
       end
       object bbPrint: TSpeedButton
-        Left = 537
+        Left = 494
         Top = 2
         Width = 31
         Height = 29
@@ -479,11 +481,12 @@ object MainCehForm: TMainCehForm
     object infoPanelTotalSumm: TPanel
       Left = 0
       Top = 567
-      Width = 625
+      Width = 688
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 625
       object gbWeightTare: TGroupBox
         Left = 240
         Top = 0
@@ -613,11 +616,12 @@ object MainCehForm: TMainCehForm
     object cxDBGrid: TcxGrid
       Left = 0
       Top = 33
-      Width = 625
+      Width = 688
       Height = 534
       Align = alClient
       PopupMenu = PopupMenuGrid
       TabOrder = 2
+      ExplicitWidth = 625
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1360,10 +1364,9 @@ object MainCehForm: TMainCehForm
       Left = 0
       Top = 160
       Width = 130
-      Height = 49
+      Height = 494
       Align = alTop
       BevelOuter = bvNone
-      Caption = '494'
       TabOrder = 7
       object infoWeightOnBoxTotal_2Panel: TPanel
         Left = 0
@@ -1672,7 +1675,6 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 57
         end
       end
       object Space1Panel: TPanel
@@ -2040,7 +2042,7 @@ object MainCehForm: TMainCehForm
   object infoPanel_mastre: TPanel
     Left = 0
     Top = 0
-    Width = 977
+    Width = 1040
     Height = 33
     Align = alTop
     BevelOuter = bvNone
@@ -2051,8 +2053,9 @@ object MainCehForm: TMainCehForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
+    ExplicitWidth = 977
     object PanelMovement: TPanel
-      Left = 657
+      Left = 720
       Top = 0
       Width = 320
       Height = 33
@@ -2060,11 +2063,12 @@ object MainCehForm: TMainCehForm
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
+      ExplicitLeft = 657
     end
     object PanelMovementDesc: TPanel
       Left = 0
       Top = 0
-      Width = 657
+      Width = 720
       Height = 33
       Align = alClient
       BevelOuter = bvNone
@@ -2076,6 +2080,7 @@ object MainCehForm: TMainCehForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
+      ExplicitWidth = 657
       object testButton1: TButton
         Left = 5
         Top = 2
@@ -3053,6 +3058,7 @@ object MainCehForm: TMainCehForm
     ColumnEnterList = <>
     SummaryItemList = <>
     KeepSelectColor = True
+    PropertiesCellList = <>
     Left = 408
     Top = 392
   end

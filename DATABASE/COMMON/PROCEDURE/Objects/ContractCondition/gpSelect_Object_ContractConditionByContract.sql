@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar      
              , BonusKindId Integer, BonusKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , ContractSendId Integer, ContractSendName TVarChar 
              , ContractStateKindCode_Send Integer
              , ContractTagName_Send TVarChar             
@@ -41,6 +42,9 @@ BEGIN
          , Object_InfoMoney.Id          AS InfoMoneyId
          , Object_InfoMoney.ValueData   AS InfoMoneyName
 
+         , Object_PaidKind.Id                   AS PaidKindId
+         , Object_PaidKind.ValueData            AS PaidKindName
+         
          , Object_ContractSend.Id               AS ContractSendId
          , Object_ContractSend.ValueData        AS ContractSendName
          , Object_ContractSendStateKind.ObjectCode  AS ContractStateKindCode_Send
@@ -80,6 +84,11 @@ BEGIN
                               AND ObjectLink_ContractCondition_ContractSend.DescId = zc_ObjectLink_ContractCondition_ContractSend()
           LEFT JOIN Object AS Object_ContractSend ON Object_ContractSend.Id = ObjectLink_ContractCondition_ContractSend.ChildObjectId
 
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_PaidKind
+                               ON ObjectLink_ContractCondition_PaidKind.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_PaidKind.DescId = zc_ObjectLink_ContractCondition_PaidKind()
+          LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_ContractCondition_PaidKind.ChildObjectId
+
           LEFT JOIN ObjectLink AS ObjectLink_ContractSend_Juridical
                                ON ObjectLink_ContractSend_Juridical.ObjectId = Object_ContractSend.Id 
                               AND ObjectLink_ContractSend_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
@@ -100,7 +109,6 @@ BEGIN
                               AND ObjectLink_ContractSend_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
           LEFT JOIN Object AS Object_InfoMoneySend ON Object_InfoMoneySend.Id = ObjectLink_ContractSend_InfoMoney.ChildObjectId
 
-           
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()

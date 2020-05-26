@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_wms_Movement_WeighingProduction()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_wms_Movement_WeighingProduction (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpInsertUpdate_wms_Movement_WeighingProduction (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_wms_Movement_WeighingProduction (BigInt, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_Movement_WeighingProduction(
  INOUT ioId                  BigInt    , -- Ключ объекта <Документ>
@@ -21,6 +22,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_wms_Movement_WeighingProduction(
     IN inBarCodeBoxId_3      Integer   , -- Id для Ш/К ящика
     IN inGoodsId             Integer   , -- 
     IN inGoodsKindId         Integer   , -- 
+    IN inGoodsId_sh          Integer   , -- 
+    IN inGoodsKindId_sh      Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS BigInt
@@ -62,7 +65,7 @@ BEGIN
         -- создали <Документ>
         INSERT INTO wms_Movement_WeighingProduction (InvNumber, OperDate, StatusId, FromId, ToId
                                                    , GoodsTypeKindId_1, GoodsTypeKindId_2, GoodsTypeKindId_3, BarCodeBoxId_1, BarCodeBoxId_2, BarCodeBoxId_3
-                                                   , GoodsId, GoodsKindId, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing
+                                                   , GoodsId, GoodsKindId, GoodsId_link_sh, GoodsKindId_link_sh, MovementDescId, MovementDescNumber, PlaceNumber, UserId, StartWeighing, EndWeighing
                                                     )
                VALUES (CAST (NEXTVAL ('wms_Movement_WeighingProduction_seq') AS TVarChar)
                      , inOperDate
@@ -77,6 +80,8 @@ BEGIN
                      , inBarCodeBoxId_3
                      , inGoodsId
                      , inGoodsKindId
+                     , inGoodsId_sh
+                     , inGoodsKindId_sh
                      , inMovementDescId
                      , inMovementDescNumber
                      , inPlaceNumber
@@ -100,6 +105,8 @@ BEGIN
                  , BarCodeBoxId_3       = inBarCodeBoxId_3
                  , GoodsId              = inGoodsId
                  , GoodsKindId          = inGoodsKindId
+                 , GoodsId_link_sh      = inGoodsId_sh
+                 , GoodsKindId_link_sh  = inGoodsKindId_sh
                  , MovementDescId       = inMovementDescId
                  , MovementDescNumber   = inMovementDescNumber
                  , PlaceNumber          = inPlaceNumber

@@ -39,7 +39,7 @@ type
     InfoMoneyName_master: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edBonusKind: TcxButtonEdit;
-    DocumentTaxKindGuides: TdsdGuides;
+    GuidesDocumentTaxKind: TdsdGuides;
     Sum_BonusFact: TcxGridDBColumn;
     InvNumber_child: TcxGridDBColumn;
     InvNumber_find: TcxGridDBColumn;
@@ -55,12 +55,15 @@ type
     bbExecuteDialog: TdxBarButton;
     cxLabel3: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    PaidKindGuides: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel5: TcxLabel;
     edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
+    GuidesJuridical: TdsdGuides;
     actRefreshMovement: TdsdDataSetRefresh;
     cbMovement: TcxCheckBox;
+    cxLabel6: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
   private
     { Private declarations }
   public

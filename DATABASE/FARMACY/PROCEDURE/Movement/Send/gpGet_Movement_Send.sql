@@ -19,10 +19,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , isComplete Boolean
              , isDeferred Boolean
              , isSUN Boolean, isSUN_v2 Boolean, isSUN_v3 Boolean, isSUN_v4 Boolean
-             , isDefSUN Boolean
-             , isSent Boolean
-             , isReceived Boolean
-             , isNotDisplaySUN Boolean
+             , isDefSUN Boolean, isSent Boolean, isReceived Boolean, isNotDisplaySUN Boolean
+             , isVIP Boolean, isUrgently Boolean, isConfirmed Boolean, ConfirmedText TVarChar
              , NumberSeats Integer
               )
 AS
@@ -67,6 +65,10 @@ BEGIN
              , FALSE                                            AS isSent
              , FALSE                                            AS isReceived
              , FALSE                                            AS NotDisplaySUN
+             , FALSE                                            AS isVIP
+             , FALSE                                            AS isUrgently
+             , FALSE                                            AS isConfirmed
+             , CAST ('Не определено' AS TVarChar)               AS ConfirmedText
              , CAST (0 AS Integer)                              AS NumberSeats
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
 
@@ -103,6 +105,13 @@ BEGIN
            , COALESCE (MovementBoolean_Sent.ValueData, FALSE)    ::Boolean AS isSent
            , COALESCE (MovementBoolean_Received.ValueData, FALSE)::Boolean AS isReceived
            , COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE)::Boolean AS isNotDisplaySUN
+           , COALESCE (MovementBoolean_VIP.ValueData, FALSE)     ::Boolean AS isVIP
+           , COALESCE (MovementBoolean_Urgently.ValueData, FALSE)::Boolean AS isUrgently
+           , COALESCE (MovementBoolean_Confirmed.ValueData, FALSE)::Boolean AS isConfirmed           
+           , CASE WHEN COALESCE (MovementBoolean_VIP.ValueData, FALSE) = FALSE THEN 'Подтверждение'   
+                  WHEN MovementBoolean_Confirmed.ValueData IS NULL THEN 'Ожидает подтвержд.'   
+                  WHEN MovementBoolean_Confirmed.ValueData = TRUE  THEN 'Подтвержден'   
+                  ELSE 'Не подтвержден' END ::TVarChar          AS ConfirmedText
            , MovementFloat_NumberSeats.ValueData::Integer       AS NumberSeats
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -176,6 +185,16 @@ BEGIN
                                       ON MovementBoolean_NotDisplaySUN.MovementId = Movement.Id
                                      AND MovementBoolean_NotDisplaySUN.DescId = zc_MovementBoolean_NotDisplaySUN()
 
+            LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                      ON MovementBoolean_VIP.MovementId = Movement.Id
+                                     AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Urgently
+                                      ON MovementBoolean_Urgently.MovementId = Movement.Id
+                                     AND MovementBoolean_Urgently.DescId = zc_MovementBoolean_Urgently()
+            LEFT JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                      ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                     AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
             LEFT JOIN MovementFloat AS MovementFloat_MCSPeriod
                                     ON MovementFloat_MCSPeriod.MovementId =  Movement.Id
                                    AND MovementFloat_MCSPeriod.DescId = zc_MovementFloat_MCSPeriod()
@@ -201,6 +220,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 20.05.20                                                                                     * Перемещение ВИП
  31.03.20         * zc_MovementBoolean_SUN_v3
  05.03.20                                                                                     * zc_MovementLinkObject_DriverSun
  09.12.19         *
@@ -218,4 +238,4 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TDateTime, TVarChar) OWNER TO postg
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1,inOperDate:='01.01.2019' :: TDateTime, inSession:= '9818')
+-- select * from gpGet_Movement_Send(inMovementId := 18968591 , inOperDate := ('25.05.2020')::TDateTime ,  inSession := '3');

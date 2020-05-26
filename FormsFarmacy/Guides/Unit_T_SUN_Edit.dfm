@@ -40,7 +40,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object edT1_SUN_v2: TcxCurrencyEdit
     Left = 17
     Top = 34
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -51,7 +50,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object edT2_SUN_v2: TcxCurrencyEdit
     Left = 17
     Top = 84
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -77,7 +75,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object edT1_SUN_v4: TcxCurrencyEdit
     Left = 17
     Top = 140
-    Hint = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1073#1072#1083#1072#1085#1089#1072' '#1088#1072#1089#1093#1086#1076'/'#1087#1088#1080#1093#1086#1076
     ParentShowHint = False
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
@@ -88,7 +85,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object cbT1_SUN_v2: TcxCheckBox
     Left = 261
     Top = 34
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -98,7 +94,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object cbT2_SUN_v2: TcxCheckBox
     Left = 261
     Top = 84
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True
@@ -108,7 +103,6 @@ object Unit_T_SUN_EditForm: TUnit_T_SUN_EditForm
   object cbT1_SUN_v4: TcxCheckBox
     Left = 261
     Top = 140
-    Hint = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1074#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081')'
     Caption = #1080#1079#1084#1077#1085#1080#1090#1100
     ParentShowHint = False
     ShowHint = True

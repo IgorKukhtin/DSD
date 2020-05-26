@@ -25,12 +25,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PartnerMedicalId Integer, PartnerMedicalName TVarChar
              , DriverId Integer, DriverName TVarChar
              , ListDaySUN TVarChar, ListDaySUN_pi TVarChar
+             , SUN_v1_Lock TVarChar, SUN_v2_Lock TVarChar, SUN_v4_Lock TVarChar
              , TaxService TFloat, TaxServiceNigth TFloat
              , KoeffInSUN TFloat, KoeffOutSUN TFloat
              , KoeffInSUN_v3 TFloat, KoeffOutSUN_v3 TFloat
              , T1_SUN_v2 TFloat, T2_SUN_v2 TFloat, T1_SUN_v4 TFloat
              , SunIncome TFloat, Sun_v2Income TFloat, Sun_v4Income TFloat
              , HT_SUN_v1 TFloat, HT_SUN_v2 TFloat, HT_SUN_v4 TFloat
+             , LimitSUN_N TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
              , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
@@ -50,6 +52,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , isSUN_v2_in  Boolean, isSUN_v2_out Boolean
              , isSUN_v3_in  Boolean, isSUN_v3_out Boolean
              , isSUN_v4     Boolean, isSUN_v4_in  Boolean, isSUN_v4_out Boolean
+             , isSUN_v2_LockSale Boolean
              , isSUN_NotSold Boolean
              , isTopNo     Boolean
              , isNotCashMCS     Boolean, isNotCashListDiff     Boolean
@@ -126,6 +129,10 @@ BEGIN
       
       , COALESCE (ObjectString_ListDaySUN.ValueData, '')    :: TVarChar AS ListDaySUN
       , COALESCE (ObjectString_ListDaySUN_pi.ValueData, '') :: TVarChar AS ListDaySUN_pi
+
+      , COALESCE (ObjectString_SUN_v1_Lock.ValueData, '') :: TVarChar AS SUN_v1_Lock
+      , COALESCE (ObjectString_SUN_v2_Lock.ValueData, '') :: TVarChar AS SUN_v2_Lock
+      , COALESCE (ObjectString_SUN_v4_Lock.ValueData, '') :: TVarChar AS SUN_v4_Lock
                  
       , ObjectFloat_TaxService.ValueData                     AS TaxService
       , ObjectFloat_TaxServiceNigth.ValueData                AS TaxServiceNigth
@@ -147,6 +154,8 @@ BEGIN
       , COALESCE (ObjectFloat_HT_SUN_v1.ValueData,0) ::TFloat AS HT_SUN_v1
       , COALESCE (ObjectFloat_HT_SUN_v2.ValueData,0) ::TFloat AS HT_SUN_v2
       , COALESCE (ObjectFloat_HT_SUN_v4.ValueData,0) ::TFloat AS HT_SUN_v4
+      
+      , COALESCE (ObjectFloat_LimitSUN_N.ValueData,0) ::TFloat AS LimitSUN_N
 
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
@@ -182,12 +191,14 @@ BEGIN
       , COALESCE (ObjectBoolean_SUN_v4_in.ValueData, FALSE)  :: Boolean   AS isSUN_v4_in
       , COALESCE (ObjectBoolean_SUN_v4_out.ValueData, FALSE) :: Boolean   AS isSUN_v4_out
       
-      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE) :: Boolean  AS isSUN_NotSold
-      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)       :: Boolean  AS isTopNo
-      , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)     :: Boolean   AS isNotCashMCS
-      , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE):: Boolean   AS isNotCashListDiff
-      , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean   AS isTechnicalRediscount
-      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE):: Boolean   AS isAlertRecounting
+      , COALESCE (ObjectBoolean_SUN_v2_LockSale.ValueData, FALSE) :: Boolean  AS isSUN_v2_LockSale
+
+      , COALESCE (ObjectBoolean_SUN_NotSold.ValueData, FALSE)     :: Boolean  AS isSUN_NotSold
+      , COALESCE (ObjectBoolean_TopNo.ValueData, FALSE)           :: Boolean  AS isTopNo
+      , COALESCE (ObjectBoolean_NotCashMCS.ValueData, FALSE)      :: Boolean  AS isNotCashMCS
+      , COALESCE (ObjectBoolean_NotCashListDiff.ValueData, FALSE) :: Boolean  AS isNotCashListDiff
+      , COALESCE (ObjectBoolean_TechnicalRediscount.ValueData, FALSE):: Boolean AS isTechnicalRediscount
+      , COALESCE (ObjectBoolean_AlertRecounting.ValueData, FALSE) :: Boolean  AS isAlertRecounting
 
       , (CASE WHEN COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00' AND COALESCE(ObjectDate_MondayStart.ValueData ::Time,'00:00') <> '00:00'
              THEN 'œÌ-œÚ '||LEFT ((ObjectDate_MondayStart.ValueData::Time)::TVarChar,5)||'-'||LEFT ((ObjectDate_MondayEnd.ValueData::Time)::TVarChar,5)||'; '
@@ -245,6 +256,16 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_ListDaySUN_pi
                                ON ObjectString_ListDaySUN_pi.ObjectId = Object_Unit.Id 
                               AND ObjectString_ListDaySUN_pi.DescId = zc_ObjectString_Unit_ListDaySUN_pi()
+
+        LEFT JOIN ObjectString AS ObjectString_SUN_v1_Lock
+                               ON ObjectString_SUN_v1_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v1_Lock.DescId = zc_ObjectString_Unit_SUN_v1_Lock()
+        LEFT JOIN ObjectString AS ObjectString_SUN_v2_Lock
+                               ON ObjectString_SUN_v2_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v2_Lock.DescId = zc_ObjectString_Unit_SUN_v2_Lock()
+        LEFT JOIN ObjectString AS ObjectString_SUN_v4_Lock
+                               ON ObjectString_SUN_v4_Lock.ObjectId = Object_Unit.Id 
+                              AND ObjectString_SUN_v4_Lock.DescId = zc_ObjectString_Unit_SUN_v4_Lock()
 
         LEFT JOIN ObjectString AS ObjectString_EMail
                                ON ObjectString_EMail.ObjectId = Object_Member.Id 
@@ -374,6 +395,10 @@ BEGIN
                                 ON ObjectBoolean_AlertRecounting.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_AlertRecounting.DescId = zc_ObjectBoolean_Unit_AlertRecounting()
 
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_SUN_v2_LockSale
+                                ON ObjectBoolean_SUN_v2_LockSale.ObjectId = Object_Unit.Id 
+                               AND ObjectBoolean_SUN_v2_LockSale.DescId = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
+
         LEFT JOIN ObjectString AS ObjectString_Unit_Address
                                ON ObjectString_Unit_Address.ObjectId = Object_Unit.Id
                               AND ObjectString_Unit_Address.DescId = zc_ObjectString_Unit_Address()
@@ -433,6 +458,10 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_HT_SUN_v4
                               ON ObjectFloat_HT_SUN_v4.ObjectId = Object_Unit.Id
                              AND ObjectFloat_HT_SUN_v4.DescId = zc_ObjectFloat_Unit_HT_SUN_v4()
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_LimitSUN_N
+                              ON ObjectFloat_LimitSUN_N.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_LimitSUN_N.DescId = zc_ObjectFloat_Unit_LimitSUN_N()
 
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
@@ -526,6 +555,8 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 22.05.20         * SUN_v1_Lock...
+ 21.05.20         * isSUN_v2_LockSale
  12.05.20         *
  28.04.20         *
  21.04.20         * add ListDaySUN_pi

@@ -5,8 +5,10 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -266
+  ExplicitTop = 2
   ExplicitWidth = 1055
-  ExplicitHeight = 458
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -147,7 +149,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Properties.DisplayFormat = '0.;-0.; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1050#1086#1076' '#1057#1050#1070' '#1074' '#1042#1052#1057
+            HeaderHint = #1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1050#1086#1076' SKU '#1074' '#1042#1052#1057
             Options.Editing = False
             Width = 70
           end
@@ -156,7 +158,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             DataBinding.FieldName = 'WmsCodeCalc_Sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1057#1050#1070' '#1096#1090'. ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
+            HeaderHint = #1050#1086#1076' SKU '#1096#1090'. ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
             Options.Editing = False
             Width = 70
           end
@@ -165,7 +167,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             DataBinding.FieldName = 'WmsCodeCalc_Nom'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1057#1050#1070' '#1085#1086#1084#1080#1085#1072#1083' ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
+            HeaderHint = #1050#1086#1076' SKU '#1085#1086#1084#1080#1085#1072#1083' ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
             Options.Editing = False
             Width = 70
           end
@@ -174,7 +176,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             DataBinding.FieldName = 'WmsCodeCalc_Ves'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1086#1076' '#1057#1050#1070' '#1085#1077#1085#1086#1084#1080#1085#1072#1083' ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
+            HeaderHint = #1050#1086#1076' SKU '#1085#1077#1085#1086#1084#1080#1085#1072#1083' ('#1076#1083#1103' '#1074#1099#1075#1088#1091#1079#1082#1080' '#1074' '#1042#1052#1057')'
             Options.Editing = False
             Width = 83
           end
@@ -605,46 +607,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Options.Editing = False
             Width = 138
           end
-          object CodeCalc_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1042#1052#1057' '#1096#1090'.'
-            DataBinding.FieldName = 'CodeCalc_Sh'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088#1072#1089#1095#1077#1090': '#1082#1086#1076' '#1085#1072' '#1091#1087#1072#1082'+'#1074#1080#1076'+'#1073#1088#1077#1085#1076'+'#1082#1072#1090#1077#1075#1086#1088#1080#1103
-            Options.Editing = False
-            Width = 70
-          end
-          object CodeCalc_Nom: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1086#1084'.'
-            DataBinding.FieldName = 'CodeCalc_Nom'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088#1072#1089#1095#1077#1090': '#1082#1086#1076' '#1085#1072' '#1091#1087#1072#1082'+'#1074#1080#1076'+'#1073#1088#1077#1085#1076'+'#1082#1072#1090#1077#1075#1086#1088#1080#1103
-            Options.Editing = False
-            Width = 70
-          end
-          object CodeCalc_Ves: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1042#1052#1057' '#1085#1077#1085#1086#1084'.'
-            DataBinding.FieldName = 'CodeCalc_Ves'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088#1072#1089#1095#1077#1090': '#1082#1086#1076' '#1085#1072' '#1091#1087#1072#1082'+'#1074#1080#1076'+'#1073#1088#1077#1085#1076'+'#1082#1072#1090#1077#1075#1086#1088#1080#1103
-            Options.Editing = False
-            Width = 83
-          end
-          object isCodeCalc_Diff: TcxGridDBColumn
-            Caption = #1055#1086#1074#1090#1086#1088' '#1082#1086#1076#1072' '#1042#1052#1057
-            DataBinding.FieldName = 'isCodeCalc_Diff'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1088#1072#1089#1095#1077#1090': '#1082#1086#1076' '#1085#1072' '#1091#1087#1072#1082'+'#1074#1080#1076'+'#1073#1088#1077#1085#1076'+'#1082#1072#1090#1077#1075#1086#1088#1080#1103
-            Options.Editing = False
-            Width = 81
-          end
           object BoxCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1103#1097#1080#1082#1072' (E2/E3)'
             DataBinding.FieldName = 'BoxCode'
@@ -1031,6 +993,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 71
           end
           object BoxName_2: TcxGridDBColumn
@@ -1047,6 +1010,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 125
           end
           object CountOnBox_2: TcxGridDBColumn
@@ -1058,6 +1022,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_2: TcxGridDBColumn
@@ -1070,6 +1035,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1083#1080' = '#1074#1074#1086#1076' '#1047#1053#1040#1063#1045#1053#1048#1045', '#1080#1083#1080' = '#1082#1086#1083'.'#1077#1076'.*'#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxVolume_2: TcxGridDBColumn
@@ -1082,6 +1048,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 71
           end
           object BoxWeight_2: TcxGridDBColumn
@@ -1095,6 +1062,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1042#1077#1089' '#1087#1091#1089#1090#1086#1075#1086' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 57
           end
           object BoxHeight_2: TcxGridDBColumn
@@ -1107,6 +1075,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 60
           end
           object BoxLength_2: TcxGridDBColumn
@@ -1119,6 +1088,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 45
           end
           object BoxWidth_2: TcxGridDBColumn
@@ -1131,6 +1101,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 56
           end
           object WeightGross_2: TcxGridDBColumn
@@ -1144,6 +1115,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 73
           end
           object WeightAvgGross_2: TcxGridDBColumn
@@ -1157,6 +1129,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 76
           end
           object WeightAvgNet_2: TcxGridDBColumn
@@ -1170,6 +1143,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
+            VisibleForCustomization = False
             Width = 78
           end
           object BoxName_Retail1: TcxGridDBColumn
@@ -1186,6 +1160,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail1: TcxGridDBColumn
@@ -1197,6 +1172,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_Retail1: TcxGridDBColumn
@@ -1208,6 +1184,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxName_Retail2: TcxGridDBColumn
@@ -1224,6 +1201,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail2: TcxGridDBColumn
@@ -1235,6 +1213,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_Retail2: TcxGridDBColumn
@@ -1246,6 +1225,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxName_Retail3: TcxGridDBColumn
@@ -1262,6 +1242,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail3: TcxGridDBColumn
@@ -1273,6 +1254,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_Retail3: TcxGridDBColumn
@@ -1284,6 +1266,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxName_Retail4: TcxGridDBColumn
@@ -1300,6 +1283,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail4: TcxGridDBColumn
@@ -1311,6 +1295,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_Retail4: TcxGridDBColumn
@@ -1322,6 +1307,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxName_Retail5: TcxGridDBColumn
@@ -1338,6 +1324,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail51: TcxGridDBColumn
@@ -1349,6 +1336,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_Retail5: TcxGridDBColumn
@@ -1360,6 +1348,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object BoxName_Retail6: TcxGridDBColumn
@@ -1376,6 +1365,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 66
           end
           object CountOnBox_Retail6: TcxGridDBColumn
@@ -1387,6 +1377,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 61
           end
           object WeightOnBox_Retail6: TcxGridDBColumn
@@ -1398,6 +1389,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            VisibleForCustomization = False
             Width = 63
           end
           object IsErased: TcxGridDBColumn
@@ -3159,38 +3151,6 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ComponentItem = 'isGoodsTypeKind_Ves'
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outisCodeCalc_Diff'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'isCodeCalc_Diff'
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCodeCalc_Sh'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CodeCalc_Sh'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCodeCalc_Nom'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CodeCalc_Nom'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'outCodeCalc_Ves'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'CodeCalc_Ves'
-        DataType = ftString
         MultiSelectSeparator = ','
       end
       item

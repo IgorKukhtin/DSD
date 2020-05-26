@@ -74,6 +74,14 @@ BEGIN
                                 ON ObjectFloat_LimitSUN.ObjectId = ObjectLink_Juridical_Retail.ChildObjectId
                                AND ObjectFloat_LimitSUN.DescId = zc_ObjectFloat_Retail_LimitSUN()
      WHERE Movement.Id = inMovementId;
+     
+     IF vbIsInsert AND vbIsSUN = False AND
+        EXISTS(SELECT 1 FROM MovementItem AS MI 
+               WHERE MI.MovementId = inMovementId AND MI.ObjectId = inGoodsId)
+     THEN
+          RAISE EXCEPTION 'Ошибка.В документе уже использован товар <%> откройте удаленные и востановите его.', 
+            (SELECT Object.ValueData FROM Object WHERE Object.ID = inGoodsId);
+     END IF;
 
      -- определяются данные из MovementItem
      SELECT MI.Amount 

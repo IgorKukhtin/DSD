@@ -16,7 +16,6 @@ inherited SendForm: TSendForm
     ClientRectBottom = 462
     ClientRectRight = 1001
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 1001
       ExplicitHeight = 438
       inherited cxGrid: TcxGrid
@@ -524,7 +523,7 @@ inherited SendForm: TSendForm
       object cxSplitter1: TcxSplitter
         Left = 0
         Top = 318
-        Width = 8
+        Width = 1001
         Height = 8
         HotZoneClassName = 'TcxMediaPlayer8Style'
         AlignSplitter = salBottom
@@ -686,46 +685,54 @@ inherited SendForm: TSendForm
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Top = 19
       ExplicitLeft = 8
+      ExplicitTop = 19
       ExplicitWidth = 74
       Width = 74
     end
     inherited cxLabel1: TcxLabel
       Left = 8
+      Top = 1
       ExplicitLeft = 8
+      ExplicitTop = 1
     end
     inherited edOperDate: TcxDateEdit
       Left = 89
+      Top = 19
       EditValue = 42951d
       Properties.SaveTime = False
       Properties.ShowTime = False
       ExplicitLeft = 89
+      ExplicitTop = 19
     end
     inherited cxLabel2: TcxLabel
       Left = 89
+      Top = 1
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
       ExplicitLeft = 89
+      ExplicitTop = 1
       ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
-      Top = 45
-      ExplicitTop = 45
+      Top = 41
+      ExplicitTop = 41
     end
     inherited ceStatus: TcxButtonEdit
-      Top = 63
-      ExplicitTop = 63
+      Top = 59
+      ExplicitTop = 59
       ExplicitWidth = 181
       ExplicitHeight = 22
       Width = 181
     end
     object cxLabel3: TcxLabel
       Left = 195
-      Top = 5
+      Top = 1
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
       Left = 195
-      Top = 23
+      Top = 19
       Properties.Buttons = <
         item
           Default = True
@@ -736,7 +743,7 @@ inherited SendForm: TSendForm
     end
     object edTo: TcxButtonEdit
       Left = 477
-      Top = 23
+      Top = 19
       Properties.Buttons = <
         item
           Default = True
@@ -747,17 +754,17 @@ inherited SendForm: TSendForm
     end
     object cxLabel4: TcxLabel
       Left = 477
-      Top = 5
+      Top = 1
       Caption = #1050#1086#1084#1091
     end
     object cxLabel5: TcxLabel
       Left = 804
-      Top = 5
+      Top = 1
       Caption = #1055#1077#1088#1080#1086#1076' '#1076#1083#1103' '#1088#1072#1089#1095#1077#1090#1072' '#1053#1058#1047
     end
     object cbisDeferred: TcxCheckBox
       Left = 667
-      Top = 52
+      Top = 39
       Caption = #1054#1090#1083#1086#1078#1077#1085
       Properties.ReadOnly = True
       TabOrder = 11
@@ -765,12 +772,12 @@ inherited SendForm: TSendForm
     end
     object cxLabel29: TcxLabel
       Left = 195
-      Top = 45
+      Top = 41
       Caption = #1058#1080#1087#1099' '#1089#1088#1086#1082'/'#1085#1077' '#1089#1088#1086#1082
     end
     object edPartionDateKind: TcxButtonEdit
       Left = 195
-      Top = 63
+      Top = 59
       Properties.Buttons = <
         item
           Default = True
@@ -783,7 +790,7 @@ inherited SendForm: TSendForm
     end
     object cbSun: TcxCheckBox
       Left = 477
-      Top = 88
+      Top = 67
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.1)'
       ParentShowHint = False
@@ -794,7 +801,7 @@ inherited SendForm: TSendForm
     end
     object cbDefSun: TcxCheckBox
       Left = 667
-      Top = 106
+      Top = 81
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1086' '#1057#1059#1053
       ParentShowHint = False
@@ -805,7 +812,7 @@ inherited SendForm: TSendForm
     end
     object cbReceived: TcxCheckBox
       Left = 667
-      Top = 88
+      Top = 67
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1055#1086#1083#1091#1095#1077#1085#1086'-'#1076#1072
       ParentShowHint = False
@@ -816,7 +823,7 @@ inherited SendForm: TSendForm
     end
     object cbSent: TcxCheckBox
       Left = 667
-      Top = 70
+      Top = 53
       Hint = #1054#1090#1083#1086#1078#1077#1085#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053
       Caption = #1054#1090#1087#1088#1072#1074#1083#1077#1085#1086'-'#1076#1072
       ParentShowHint = False
@@ -827,7 +834,7 @@ inherited SendForm: TSendForm
     end
     object edIsAuto: TcxCheckBox
       Left = 477
-      Top = 52
+      Top = 39
       Hint = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Caption = #1057#1086#1079#1076#1072#1085' '#1072#1074#1090#1086#1084#1072#1090#1080#1095#1077#1089#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
       Properties.ReadOnly = True
@@ -836,7 +843,7 @@ inherited SendForm: TSendForm
     end
     object cbSun_v2: TcxCheckBox
       Left = 477
-      Top = 106
+      Top = 81
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' ('#1074#1077#1088#1089#1080#1103'2)'
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053' (v.2)'
       ParentShowHint = False
@@ -847,7 +854,7 @@ inherited SendForm: TSendForm
     end
     object cxCurrencyEdit1: TcxCurrencyEdit
       Left = 804
-      Top = 23
+      Top = 19
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = '0'
       Properties.ReadOnly = True
@@ -856,12 +863,12 @@ inherited SendForm: TSendForm
     end
     object cxLabel9: TcxLabel
       Left = 400
-      Top = 45
+      Top = 41
       Caption = #1050#1086#1083'-'#1074#1086' '#1084#1077#1089#1090
     end
     object cbSUN_v3: TcxCheckBox
-      Left = 799
-      Top = 88
+      Left = 477
+      Top = 95
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1069'-'#1057#1059#1053
       ParentShowHint = False
@@ -871,8 +878,8 @@ inherited SendForm: TSendForm
       Width = 148
     end
     object cbSUN_v4: TcxCheckBox
-      Left = 799
-      Top = 106
+      Left = 477
+      Top = 109
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1057#1059#1053'2-'#1055#1048
       ParentShowHint = False
@@ -881,83 +888,126 @@ inherited SendForm: TSendForm
       TabOrder = 23
       Width = 176
     end
+    object cbNotDisplaySUN: TcxCheckBox
+      Left = 477
+      Top = 53
+      Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
+      Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 188
+    end
+    object edNumberSeats: TcxCurrencyEdit
+      Left = 400
+      Top = 59
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = False
+      TabOrder = 25
+      Width = 65
+    end
+    object edDay: TcxCurrencyEdit
+      Left = 804
+      Top = 59
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = '0'
+      Properties.ReadOnly = True
+      TabOrder = 26
+      Width = 37
+    end
+    object cxLabel6: TcxLabel
+      Left = 804
+      Top = 41
+      Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
+    end
+    object cxLabel8: TcxLabel
+      Left = 8
+      Top = 87
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1083#1091#1095#1080#1074#1096#1080#1081' '#1090#1086#1074#1072#1088
+    end
+    object edDriverSun: TcxButtonEdit
+      Left = 8
+      Top = 103
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = False
+      TabOrder = 29
+      Width = 181
+    end
+    object cxLabel7: TcxLabel
+      Left = 195
+      Top = 87
+      Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    end
+    object edComment: TcxTextEdit
+      Left = 195
+      Top = 103
+      Properties.ReadOnly = False
+      TabOrder = 31
+      Width = 270
+    end
+    object cbVIP: TcxCheckBox
+      Left = 667
+      Top = 95
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1042#1048#1055
+      Caption = #1042#1048#1055
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 32
+      Width = 46
+    end
+    object cbConfirmed: TcxCheckBox
+      Left = 667
+      Top = 109
+      Hint = #1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1086' '#1089#1073#1086#1088' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' VIP'
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 33
+      Width = 30
+    end
+    object cbUrgently: TcxCheckBox
+      Left = 716
+      Top = 95
+      Hint = #1057#1088#1086#1095#1085#1086' '
+      Caption = #1057#1088#1086#1095#1085#1086' '
+      ParentShowHint = False
+      Properties.ReadOnly = True
+      ShowHint = True
+      TabOrder = 34
+      Width = 64
+    end
+    object edConfirmed: TcxTextEdit
+      Left = 684
+      Top = 109
+      TabStop = False
+      ParentColor = True
+      Properties.ReadOnly = True
+      Style.BorderStyle = ebsNone
+      TabOrder = 35
+      Text = #1054#1078#1080#1076#1072#1077#1090' '#1087#1086#1076#1090#1074#1077#1088#1078#1076'.'
+      Width = 125
+    end
   end
-  object cxLabel7: TcxLabel [2]
-    Left = 195
-    Top = 87
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-  end
-  object edComment: TcxTextEdit [3]
-    Left = 195
-    Top = 103
-    Properties.ReadOnly = False
-    TabOrder = 7
-    Width = 270
-  end
-  object cbNotDisplaySUN: TcxCheckBox [4]
-    Left = 477
-    Top = 70
-    Hint = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
-    Caption = #1053#1077' '#1086#1090#1086#1073#1088#1072#1078#1072#1090#1100' '#1076#1083#1103' '#1089#1073#1086#1088#1072' '#1057#1059#1053
-    Properties.ReadOnly = True
-    TabOrder = 8
-    Width = 188
-  end
-  object cxLabel6: TcxLabel [5]
-    Left = 804
-    Top = 45
-    Caption = #1057#1090#1088#1072#1093#1086#1074#1086#1081' '#1079#1072#1087#1072#1089' '#1053#1058#1047' '#1076#1083#1103' '#1061' '#1076#1085#1077#1081
-  end
-  object edNumberSeats: TcxCurrencyEdit [6]
-    Left = 400
-    Top = 63
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.ReadOnly = False
-    TabOrder = 10
-    Width = 65
-  end
-  object edDay: TcxCurrencyEdit [7]
-    Left = 804
-    Top = 63
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    Properties.ReadOnly = True
-    TabOrder = 11
-    Width = 37
-  end
-  object ceChecked: TcxCheckBox [8]
+  object ceChecked: TcxCheckBox [2]
     Left = 732
     Top = 133
     Caption = #1055#1088#1086#1074#1077#1088#1077#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1084
-    TabOrder = 12
+    TabOrder = 6
     Visible = False
     Width = 220
   end
-  object edisComplete: TcxCheckBox [9]
+  object edisComplete: TcxCheckBox [3]
     Left = 514
     Top = 134
     Caption = #1057#1086#1073#1088#1072#1085#1086' '#1092#1072#1088#1084#1072#1094#1077#1074#1090#1086#1084'-'#1086#1090#1087#1088#1072#1074#1080#1090#1077#1083#1077#1084
-    TabOrder = 13
+    TabOrder = 7
     Visible = False
     Width = 214
-  end
-  object cxLabel8: TcxLabel [10]
-    Left = 8
-    Top = 87
-    Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1087#1086#1083#1091#1095#1080#1074#1096#1080#1081' '#1090#1086#1074#1072#1088
-  end
-  object edDriverSun: TcxButtonEdit [11]
-    Left = 8
-    Top = 103
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = False
-    TabOrder = 15
-    Width = 181
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 259
@@ -1521,6 +1571,7 @@ inherited SendForm: TSendForm
     object actOpenLossForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
+      BeforeAction = actOpenConfirmedDialog
       Caption = 'actOpenLossForm'
       FormName = 'TLossForm'
       FormNameParam.Value = 'TLossForm'
@@ -1550,6 +1601,41 @@ inherited SendForm: TSendForm
           MultiSelectSeparator = ','
         end>
       isShowModal = False
+    end
+    object actExecSetConfirmed: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      BeforeAction = actOpenConfirmedDialog
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Movement_Confirmed
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Movement_Confirmed
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"'
+      ImageIndex = 51
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1055#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085'"?'
+    end
+    object actOpenConfirmedDialog: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'StorageForm'
+      FormName = 'TConfirmedDialogForm'
+      FormNameParam.Value = 'TConfirmedDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'isConfirmed'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'isConfirmed'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -1714,6 +1800,10 @@ inherited SendForm: TSendForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1798,6 +1888,10 @@ inherited SendForm: TSendForm
       Action = actCreateLoss
       Category = 0
     end
+    object dxBarButton6: TdxBarButton
+      Action = actExecSetConfirmed
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     SummaryItemList = <
@@ -1878,7 +1972,13 @@ inherited SendForm: TSendForm
       item
         Name = 'TotalSumm'
         Value = Null
-        DataType = ftString
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConfirmed'
+        Value = 'False'
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     Left = 344
@@ -2111,6 +2211,34 @@ inherited SendForm: TSendForm
         Value = Null
         Component = cbSUN_v4
         DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isVIP'
+        Value = Null
+        Component = cbVIP
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isUrgently'
+        Value = Null
+        Component = cbUrgently
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isConfirmed'
+        Value = Null
+        Component = cbConfirmed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ConfirmedText'
+        Value = Null
+        Component = edConfirmed
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 216
@@ -3165,6 +3293,7 @@ inherited SendForm: TSendForm
         DataSummaryItemIndex = 0
       end>
     SearchAsFilter = False
+    PropertiesCellList = <>
     Left = 318
     Top = 529
   end
@@ -3433,5 +3562,45 @@ inherited SendForm: TSendForm
     PackSize = 1
     Left = 878
     Top = 400
+  end
+  object spUpdate_Movement_Confirmed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_Confirmed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisConfirmed'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'isConfirmed'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisConfirmed'
+        Value = 'False'
+        Component = cbConfirmed
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outConfirmedText'
+        Value = Null
+        Component = edConfirmed
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 291
   end
 end

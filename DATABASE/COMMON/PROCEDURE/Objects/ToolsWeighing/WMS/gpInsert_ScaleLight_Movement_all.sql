@@ -112,7 +112,8 @@ BEGIN
                                                            , inSession             := inSession
                                                             )
      FROM (SELECT _tmpMovement_WeighingProduction.MovementId
-                , Movement.GoodsId, Movement.GoodsKindId
+                , CASE WHEN MovementItem.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh     ELSE Movement.GoodsId     END AS GoodsId
+                , CASE WHEN MovementItem.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsKindId_link_sh ELSE Movement.GoodsKindId END AS GoodsKindId
                 , ObjectLink_Goods_Measure.ChildObjectId AS MeasureId
                 , SUM (MovementItem.RealWeight) AS RealWeight
                 , SUM (MovementItem.Amount)     AS Amount
@@ -124,11 +125,12 @@ BEGIN
                 LEFT JOIN _tmpMovement_WeighingProduction ON _tmpMovement_WeighingProduction.GoodsTypeKindId = MovementItem.GoodsTypeKindId
                                                          AND _tmpMovement_WeighingProduction.BarCodeBoxId    = MovementItem.BarCodeBoxId
                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                     ON ObjectLink_Goods_Measure.ObjectId = Movement.GoodsId
+                                     ON ObjectLink_Goods_Measure.ObjectId = CASE WHEN MovementItem.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh ELSE Movement.GoodsId END
                                     AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
            WHERE Movement.Id = inMovementId
            GROUP BY _tmpMovement_WeighingProduction.MovementId
-                  , Movement.GoodsId, Movement.GoodsKindId
+                  , CASE WHEN MovementItem.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh     ELSE Movement.GoodsId     END
+                  , CASE WHEN MovementItem.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsKindId_link_sh ELSE Movement.GoodsKindId END
                   , ObjectLink_Goods_Measure.ChildObjectId
           ) AS Movement;
 
@@ -144,7 +146,7 @@ BEGIN
     ;
     
      -- провели текущий документ
-     UPDATE wms_Movement_WeighingProduction SET StatusId    = zc_Enum_Status_Complete() WHERE wms_Movement_WeighingProduction.Id = inMovementId;
+     UPDATE wms_Movement_WeighingProduction SET StatusId = zc_Enum_Status_Complete() WHERE wms_Movement_WeighingProduction.Id = inMovementId;
 
 
 

@@ -873,6 +873,23 @@ type
     property FileName: string read FFileName write FFileName;
   end;
 
+  TdsdOpenStaticForm = class(TdsdCustomAction)
+  private
+    FFormName : String;
+    FisShowModal : Boolean;
+  protected
+    function LocalExecute: Boolean; override;
+  public
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+    property FormName: string read FFormName write FFormName;
+    property isShowModal: Boolean read FisShowModal write FisShowModal;
+  end;
+
 procedure Register;
 
 implementation
@@ -924,6 +941,7 @@ begin
   RegisterActions('DSDLib', [TdsdShowPUSHMessage], TdsdShowPUSHMessage);
   RegisterActions('DSDLib', [TdsdDuplicateSearchAction], TdsdDuplicateSearchAction);
   RegisterActions('DSDLib', [TdsdDOCReportFormAction], TdsdDOCReportFormAction);
+  RegisterActions('DSDLib', [TdsdOpenStaticForm], TdsdOpenStaticForm);
   RegisterActions('DSDLibExport', [TdsdGridToExcel], TdsdGridToExcel);
   RegisterActions('DSDLibExport', [TdsdExportToXLS], TdsdExportToXLS);
   RegisterActions('DSDLibExport', [TdsdExportToXML], TdsdExportToXML);
@@ -3768,6 +3786,41 @@ end;
 procedure TdsdDOCReportFormAction.SetDataSet(const Value: TDataSet);
 begin
   FDataSet := Value;
+end;
+
+{ TdsdOpenStaticForm }
+
+function TdsdOpenStaticForm.LocalExecute: Boolean;
+var FormClass: TFormClass;
+begin
+  Result := False;
+
+  if FFormName = '' then
+  begin
+    raise Exception.Create('Не задано имя формы.')
+  end;
+
+  FormClass := TFormClass(GetClass(FFormName));
+
+  if not Assigned(FormClass) then
+  begin
+    raise Exception.Create('Класс ' + FFormName + ' не найден.')
+  end;
+
+  with FormClass.Create(Application) do
+  begin
+    if isShowModal then
+    begin
+      try
+        ShowModal;
+      finally
+        Free;
+      end;
+    end
+    else Show;
+  end;
+
+  Result := True;
 end;
 
 initialization

@@ -56,6 +56,13 @@ type
     JuridicalBasisGuides: TdsdGuides;
     spGet_UserJuridicalBasis: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
+    cxLabel3: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    GuidesPaidKind: TdsdGuides;
+    cxLabel4: TcxLabel;
+    edBranch: TcxButtonEdit;
+    GuidesBranch: TdsdGuides;
+    BranchName: TcxGridDBColumn;
   private
     { Private declarations }
   public

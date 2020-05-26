@@ -56,6 +56,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , isPersonal Boolean
              , isUnique Boolean
              , isVat Boolean
+             , isWMS Boolean
 
              , DayTaxSummary TFloat
              , DocumentCount TFloat, DateDocument TDateTime
@@ -233,6 +234,7 @@ BEGIN
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        , COALESCE (ObjectBoolean_Vat.ValueData, False)      AS isVat
+       , COALESCE (ObjectBoolean_isWMS.ValueData, FALSE) ::Boolean AS isWMS
        
        , ObjectFloat_DayTaxSummary.ValueData AS DayTaxSummary
        , ObjectFloat_DocumentCount.ValueData AS DocumentCount
@@ -314,7 +316,11 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Vat
                                 ON ObjectBoolean_Vat.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Vat.DescId = zc_ObjectBoolean_Contract_Vat()
-        
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_isWMS
+                                ON ObjectBoolean_isWMS.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_isWMS.DescId = zc_ObjectBoolean_Contract_isWMS()
+
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
@@ -453,6 +459,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TDateTime, TDateTime, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.20         * isWMS
  04.02.19         * BankAccountPartner
  18.01.19         * add isDefaultOut
  05.10.18         * add PartnerCode

@@ -170,8 +170,8 @@ BEGIN
                            WHERE (CLO_BankAccount.ContainerId IS NOT NULL OR CLO_Juridical.ContainerId IS NOT NULL)
                             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
                             AND (CLO_BankAccount.ObjectId = inBankAccountId OR inBankAccountId = 0)
-                            AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0)
-                            AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount) -- ограничиваем по гл. юр.лицу)
+                            AND (CLO_Currency.ObjectId = inCurrencyId OR inCurrencyId = 0 OR inCurrencyId = zc_Enum_Currency_Basis())
+                            AND (COALESCE (CLO_BankAccount.ObjectId, CLO_Juridical.ObjectId) IN (SELECT DISTINCT tmpBankAccount.Id FROM tmpBankAccount)) -- ограничиваем по гл. юр.лицу)
                           )
 
         , tmpUnit_byProfitLoss AS (SELECT * FROM lfSelect_Object_Unit_byProfitLossDirection ())
@@ -533,7 +533,8 @@ BEGIN
      WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0
          OR Operation.StartAmount_Currency <> 0 OR Operation.EndAmount_Currency <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0
          OR Operation.Summ_Currency <> 0 OR Operation.Summ_pl <> 0
-           );
+           )
+       AND (tmpBankAccount.CurrencyId = inCurrencyId OR inCurrencyId <> zc_Enum_Currency_Basis());
 
 END;
 $BODY$

@@ -134,6 +134,34 @@ BEGIN
          END IF;
      END IF;
 
+     -- проверка - 12 часов нельз€ повторно использовать €щик
+     IF EXISTS (SELECT 1
+                FROM wms_Movement_WeighingProduction AS Movement
+                            INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId   = Movement.Id
+                                                                      AND MI.isErased     = FALSE
+                                                                      AND MI.BarCodeBoxId = vbBarCodeBoxId
+                                                                      AND MI.InsertDate   >=  CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
+                            LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
+                WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                  AND Movement.StatusId <> zc_Enum_Status_Erased()
+               )
+     THEN
+          RAISE EXCEPTION 'ќшибка.ящик с Ў/  = <%> не может использоватьс€ повторно, последнее использование : <%>.'
+                         , CASE WHEN vbBoxBarCode <> '' THEN vbBoxBarCode :: TVarChar ELSE vbBoxCode :: TVarChar END
+                         , (SELECT zfConvert_DateTimeToString (MIN (MI.InsertDate))
+                            FROM wms_Movement_WeighingProduction AS Movement
+                                        INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId   = Movement.Id
+                                                                                  AND MI.isErased     = FALSE
+                                                                                  AND MI.BarCodeBoxId = vbBarCodeBoxId
+                                                                                  AND MI.InsertDate   >=  CURRENT_TIMESTAMP - INTERVAL '12 HOUR'
+                                        LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
+                            WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
+                              AND Movement.StatusId <> zc_Enum_Status_Erased()
+                           )
+                          ;
+     END IF;
+
+
      -- еще раз проверим что это тот €щик
      IF COALESCE (vbBoxId, 0) <> COALESCE ((SELECT ObjectLink_BarCodeBox_Box.ChildObjectId
                                             FROM ObjectLink AS ObjectLink_BarCodeBox_Box

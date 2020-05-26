@@ -140,7 +140,7 @@ end if;
      END IF;
 
      -- !!!заменили параметр!!! : Перемещение -> производство ПЕРЕРАБОТКА
-     IF vbMovementDescId = zc_Movement_Send() AND vbGoodsId_ReWork > 0
+     IF vbMovementDescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion()) AND vbGoodsId_ReWork > 0
      THEN
          -- Проверка
          IF EXISTS (SELECT 1

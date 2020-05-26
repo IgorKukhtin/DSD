@@ -44,37 +44,19 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 
-   DECLARE vbOperDate      TDateTime;
-   DECLARE vbCurrencyId    Integer;
-   DECLARE vbCurrencyId_pl Integer;
-   DECLARE vbUnitId        Integer;
-   DECLARE vbUnitId_user   Integer;
-   DECLARE vbClientId      Integer;
-   DECLARE vbCashId        Integer;
-
-   DECLARE vbCurrencyValue_pl  TFloat; -- *Курс для перевода из валюты прайса в ГРН
-   DECLARE vbParValue_pl       TFloat; -- *Номинал для перевода из валюты прайса в ГРН
-   DECLARE vbOperPriceList_pl  TFloat; -- *Цена из прайса
+   DECLARE vbOperDate    TDateTime;
+   DECLARE vbCurrencyId  Integer;
+   DECLARE vbUnitId      Integer;
+   DECLARE vbUnitId_user Integer;
+   DECLARE vbClientId    Integer;
+   DECLARE vbCashId      Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Получили для Пользователя - к какому Подразделению он привязан
-     vbUnitId_user:= lpGetUnit_byUser (vbUserId);
-
-     -- !!!временно - для Sybase!!!
-     -- IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
-     -- THEN
-     --     RETURN;
-     -- END IF;
 
      -- замена
-     IF zc_Enum_GlobalConst_isTerry() = FALSE
-     THEN inIsPay:= TRUE;
-     END IF;
-
-     -- замена Кол-во
      IF COALESCE (ioAmount, 0) = 0 AND COALESCE (ioId, 0) = 0 AND vbUserId <> zc_User_Sybase()
      THEN
          -- По умолчанию
@@ -82,129 +64,8 @@ BEGIN
      END IF;
 
 
-     -- параметры из Документа
-     SELECT Movement.OperDate
-          , COALESCE (MovementLinkObject_From.ObjectId, 0)            AS UnitId
-          , COALESCE (MovementLinkObject_To.ObjectId, 0)              AS ClientId
-          , COALESCE (OL_currency.ChildObjectId, zc_Currency_Basis()) AS CurrencyId_pl -- Получили валюту для прайса
-            INTO vbOperDate, vbUnitId, vbClientId, vbCurrencyId_pl
-     FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN ObjectLink AS OL_pl ON OL_pl.ObjectId = MovementLinkObject_From.ObjectId
-                                         AND OL_pl.DescId   = zc_ObjectLink_Unit_PriceList()
-            LEFT JOIN ObjectLink AS OL_currency ON OL_currency.ObjectId = OL_pl.ChildObjectId
-                                               AND OL_currency.DescId   = zc_ObjectLink_PriceList_Currency()
-     WHERE Movement.Id = inMovementId;
-
-     -- проверка - документ должен быть сохранен
-     IF COALESCE (inMovementId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
-     END IF;
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (vbUnitId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Подразделение>.';
-     END IF;
-     -- проверка - Пользователя
-     IF vbUnitId_user > 0 AND vbUnitId_user <> vbUnitId THEN
-        RAISE EXCEPTION 'Ошибка.Нет прав проводить операцию для подразделения <%>.', lfGet_Object_ValueData_sh (vbUnitId);
-     END IF;
-     
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (inPartionId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
-     END IF;
-     -- проверка - свойство должно быть установлено
-     IF ioAmount < 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
-     END IF;
-     -- проверка - Уникальный inPartionId
-     IF vbUserId <> zc_User_Sybase()
-        AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.Id <> COALESCE (ioId, 0)) THEN
-        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
-                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
-                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
-                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
-                       ;
-     END IF;
-
-
-     -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
-     SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
-          , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
-          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
-          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
-            INTO ioGoodsId, outCountForPrice, outOperPrice, vbCurrencyId
-     FROM Object_PartionGoods
-     WHERE Object_PartionGoods.MovementItemId = inPartionId;
-
-     -- проверка - свойство должно быть установлено
-     IF COALESCE (ioGoodsId, 0) = 0 THEN
-        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
-     END IF;
-
-
-     -- Если Вх.цена НЕ в Базовой Валюте
-     IF COALESCE (vbCurrencyId, 0) <> zc_Currency_Basis()
-     THEN
-         -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
-                INTO outCurrencyValue, outParValue
-         FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
-                                               , inCurrencyFromId:= zc_Currency_Basis()
-                                               , inCurrencyToId  := vbCurrencyId
-                                                ) AS tmp;
-         -- проверка
-         IF COALESCE (vbCurrencyId, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
-         END IF;
-         -- проверка
-         IF COALESCE (outCurrencyValue, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
-         END IF;
-         -- проверка
-         IF COALESCE (outParValue, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
-         END IF;
-
-     ELSE
-         -- курс не нужен
-         outCurrencyValue:= 0;
-         outParValue     := 0;
-     END IF;
-
-     -- Если цена прайса НЕ в Базовой Валюте
-     IF COALESCE (vbCurrencyId_pl, 0) <> zc_Currency_Basis()
-     THEN
-         -- Определили курс на Дату документа
-         SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
-                INTO vbCurrencyValue_pl, vbParValue_pl
-         FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
-                                               , inCurrencyFromId:= zc_Currency_Basis()
-                                               , inCurrencyToId  := vbCurrencyId_pl
-                                                ) AS tmp;
-         -- проверка
-         IF COALESCE (vbCurrencyId_pl, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта прайса>.';
-         END IF;
-         -- проверка
-         IF COALESCE (vbCurrencyValue_pl, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
-         END IF;
-         -- проверка
-         IF COALESCE (vbParValue_pl, 0) = 0 THEN
-            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
-         END IF;
-
-     ELSE
-         -- курс не нужен
-         vbCurrencyValue_pl:= 0;
-         vbParValue_pl     := 0;
-     END IF;
+     -- Получили для Пользователя - к какому Подразделению он привязан
+     vbUnitId_user:= lpGetUnit_byUser (vbUserId);
 
 
      -- Если Штрих-код Поставщика - ОБЯЗАТЕЛЕН
@@ -240,6 +101,61 @@ BEGIN
      END IF;
 
 
+     -- параметры из Документа
+     SELECT Movement.OperDate
+          , COALESCE (MovementLinkObject_From.ObjectId, 0) AS UnitId
+          , COALESCE (MovementLinkObject_To.ObjectId, 0)   AS ClientId
+            INTO vbOperDate, vbUnitId, vbClientId
+     FROM Movement
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+     WHERE Movement.Id = inMovementId;
+
+
+     -- проверка - документ должен быть сохранен
+     IF COALESCE (inMovementId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Документ не сохранен.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (vbUnitId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Подразделение>.';
+     END IF;
+     -- проверка - Пользователя
+     IF vbUnitId_user > 0 AND vbUnitId_user <> vbUnitId THEN
+        RAISE EXCEPTION 'Ошибка.Нет прав проводить операцию для подразделения <%>.', lfGet_Object_ValueData_sh (vbUnitId);
+     END IF;
+     
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (inPartionId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Партия>.';
+     END IF;
+     -- проверка - свойство должно быть установлено
+     IF ioAmount < 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Кол-во>.';
+     END IF;
+     -- проверка - Уникальный inPartionId
+     IF vbUserId <> zc_User_Sybase()
+        AND EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.PartionId = inPartionId AND MI.Id <> COALESCE (ioId, 0)) THEN
+        RAISE EXCEPTION 'Ошибка.В документе уже есть Товар <% %> р.<%>.Дублирование запрещено.'
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.LabelId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData    ((SELECT Object_PartionGoods.GoodsId     FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                      , lfGet_Object_ValueData_sh ((SELECT Object_PartionGoods.GoodsSizeId FROM Object_PartionGoods WHERE Object_PartionGoods.MovementItemId = inPartionId))
+                       ;
+     END IF;
+
+
+     -- !!!временно - для Sybase!!!
+     IF vbUserId = zc_User_Sybase() AND EXISTS (SELECT 1 FROM MovementItem WHERE MovementItem.MovementId = inMovementId AND MovementItem.Id = ioId AND MovementItem.isErased = TRUE)
+     THEN
+         RETURN;
+     END IF;
+
+
+
      -- проверка: ОСТАТОК должен быть
      IF vbUserId <> zc_User_Sybase()
         AND ioAmount > COALESCE ((SELECT Container.Amount
@@ -273,46 +189,68 @@ BEGIN
      END IF;
 
 
+     -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
+     SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
+          , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
+          , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
+          , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
+            INTO ioGoodsId, outCountForPrice, outOperPrice, vbCurrencyId
+     FROM Object_PartionGoods
+     WHERE Object_PartionGoods.MovementItemId = inPartionId;
+
+     -- проверка - свойство должно быть установлено
+     IF COALESCE (ioGoodsId, 0) = 0 THEN
+        RAISE EXCEPTION 'Ошибка.Не установлено значение <Товар>.';
+     END IF;
+
      -- Цена (прайс)
      IF vbUserId = zc_User_Sybase()
      THEN
          -- !!!для SYBASE - потом убрать!!!
          IF 1=0 THEN RAISE EXCEPTION 'Ошибка.Параметр только для загрузки из Sybase.'; END IF;
      ELSE
-         IF zc_Enum_GlobalConst_isTerry() = TRUE
-         THEN
-             -- из Истории
-             ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
-                                                                                                       , zc_PriceList_Basis()
-                                                                                                       , ioGoodsId
-                                                                                                        ) AS tmp), 0);
-             -- проверка - свойство должно быть установлено
-             IF COALESCE (ioOperPriceList, 0) <= 0 THEN
-                RAISE EXCEPTION 'Ошибка.Не найдено значение <Цена (прайс)>.';
-             END IF;
-
-         ELSE -- для Podium берется значение введенное в гриде   
-
-              -- проверка - свойство должно быть установлено
-              IF COALESCE (ioOperPriceList, 0) <= 0 THEN
-                 RAISE EXCEPTION 'Ошибка.Не введено значение <Цена (прайс)>.';
-              END IF;
-
-              -- *Цена из прайса - для расчета суммы скидки
-              vbOperPriceList_pl:= COALESCE ((SELECT zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (tmp.ValuePrice, vbCurrencyValue_pl, vbParValue_pl))
-                                              FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
-                                                                                    , zc_PriceList_Basis()
-                                                                                    , ioGoodsId
-                                                                                     ) AS tmp), 0);
-              -- проверка - свойство должно быть установлено
-              IF COALESCE (vbOperPriceList_pl, 0) <= 0 THEN
-                 RAISE EXCEPTION 'Ошибка.Не найдено значение <Цена (прайс)>.';
-              END IF;
-                                                                                                        
-         
+         -- из Истории
+         ioOperPriceList := COALESCE ((SELECT tmp.ValuePrice FROM lpGet_ObjectHistory_PriceListItem (vbOperDate
+                                                                                                   , zc_PriceList_Basis()
+                                                                                                   , ioGoodsId
+                                                                                                    ) AS tmp), 0);
+         -- проверка - свойство должно быть установлено
+         IF COALESCE (ioOperPriceList, 0) <= 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
          END IF;
 
      END IF;
+
+
+     -- Если НЕ Базовая Валюта
+     IF COALESCE (vbCurrencyId, 0) <> zc_Currency_Basis()
+     THEN
+         -- Определили курс на Дату документа
+         SELECT COALESCE (tmp.Amount, 0), COALESCE (tmp.ParValue, 0)
+                INTO outCurrencyValue, outParValue
+         FROM lfSelect_Movement_Currency_byDate (inOperDate      := vbOperDate
+                                               , inCurrencyFromId:= zc_Currency_Basis()
+                                               , inCurrencyToId  := vbCurrencyId
+                                                ) AS tmp;
+         -- проверка
+         IF COALESCE (vbCurrencyId, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Валюта>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outCurrencyValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Курс>.';
+         END IF;
+         -- проверка
+         IF COALESCE (outParValue, 0) = 0 THEN
+            RAISE EXCEPTION 'Ошибка.Не определено значение <Номинал>.';
+         END IF;
+
+     ELSE
+         -- курс не нужен
+         outCurrencyValue:= 0;
+         outParValue     := 0;
+     END IF;
+
 
      -- Скидка
      IF vbUserId = zc_User_Sybase()
@@ -333,39 +271,15 @@ BEGIN
          IF (inIsPay = TRUE AND ioAmount <> COALESCE ((SELECT MovementItem.Amount FROM MovementItem WHERE MovementItem.Id = ioId), 0))
             OR ioAmount = 0
          THEN
-             IF zc_Enum_GlobalConst_isTerry() = TRUE OR ioAmount = 0
-             THEN
-                 -- !!!обнулили!!!
-                 ioSummChangePercent:= 0;
-             ELSE
-                 -- !!!посчитали для ПОДИУМ!!!
-                 IF inIsPay = FALSE
-                 THEN -- !!!обнулили!!!
-                      ioSummChangePercent:= 0;
-                 ELSE
-                      ioSummChangePercent:= zfCalc_SummPriceList (ioAmount, vbOperPriceList_pl)
-                                          - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
-                 END IF;
-             END IF;
+             -- !!!обнулили!!!
+             ioSummChangePercent:= 0;
          ELSE
-             IF zc_Enum_GlobalConst_isTerry() = TRUE
-             THEN
-                 -- взяли ту что есть
-                 ioSummChangePercent:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent()), 0);
-             ELSE
-                 -- !!!посчитали для ПОДИУМ!!!
-                 IF inIsPay = FALSE
-                 THEN 
-                      ioSummChangePercent:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent()), 0);
-                 ELSE
-                      ioSummChangePercent:= zfCalc_SummPriceList (ioAmount, vbOperPriceList_pl)
-                                          - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
-                 END IF;
-             END IF;
+             -- взяли ту что есть
+             ioSummChangePercent:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent()), 0);
          END IF;
 
      END IF;
-     -- вернули название Скидки
+     -- вернули название Скики
      outDiscountSaleKindName := (SELECT Object.ValueData FROM Object WHERE Object.Id = ioDiscountSaleKindId);
 
 
@@ -374,18 +288,10 @@ BEGIN
      -- вернули сумму вх. в грн по элементу, для грида
      outTotalSummBalance := zfCalc_CurrencyFrom (outTotalSumm, outCurrencyValue, outParValue);
      -- расчитали Сумма по прайсу по элементу, для грида
-     IF zc_Enum_GlobalConst_isTerry() = TRUE
-     THEN outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, ioOperPriceList);
-     ELSE outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, vbOperPriceList_pl);
-     END IF;
+     outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, ioOperPriceList);
 
      -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
-     IF zc_Enum_GlobalConst_isTerry() = TRUE OR inIsPay = FALSE
-     THEN
-         outTotalChangePercent := outTotalSummPriceList - zfCalc_SummChangePercent (ioAmount, ioOperPriceList, ioChangePercent) + COALESCE (ioSummChangePercent, 0);
-     ELSE
-         outTotalChangePercent := COALESCE (ioSummChangePercent, 0);
-     END IF;
+     outTotalChangePercent := outTotalSummPriceList - zfCalc_SummChangePercent (ioAmount, ioOperPriceList, ioChangePercent) + COALESCE (ioSummChangePercent, 0);
 
      -- вернули Итого оплата в продаже ГРН, для грида
      IF inIsPay = TRUE
@@ -443,7 +349,7 @@ BEGIN
                                               -- , inSummChangePercent     := COALESCE (ioSummChangePercent, 0)
                                               , inOperPrice             := COALESCE (outOperPrice, 0)
                                               , inCountForPrice         := COALESCE (outCountForPrice, 0)
-                                              , inOperPriceList         := CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN ioOperPriceList ELSE vbOperPriceList_pl END
+                                              , inOperPriceList         := ioOperPriceList
                                               , inCurrencyValue         := outCurrencyValue
                                               , inParValue              := outParValue
                                               , inTotalChangePercent    := COALESCE (outTotalChangePercent, 0)
@@ -463,15 +369,6 @@ BEGIN
                                               , inUserId                := vbUserId
                                                );
 
-
-     IF zc_Enum_GlobalConst_isTerry() = TRUE
-     THEN
-         -- записать - 
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListReal(), ioId, ioOperPriceList);
-     ELSE 
-         -- записать - 
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListReal(), ioId, CASE WHEN ioAmount <> 0 THEN (COALESCE (outTotalSummPriceList, 0) - COALESCE (outTotalChangePercent, 0)) / ioAmount ELSE 0 END);
-     END IF;
 
      -- !!!для SYBASE - потом убрать!!!
      IF vbUserId = zc_User_Sybase() AND inIsPay = FALSE
@@ -550,8 +447,8 @@ BEGIN
                     , COALESCE (_tmpCash.CashId, tmpMI.CashId)                  AS CashId
                     , COALESCE (_tmpCash.CurrencyId, tmpMI.CurrencyId)          AS CurrencyId
                     , CASE WHEN _tmpCash.CashId > 0 THEN outTotalPay ELSE 0 END AS Amount
-                    , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN COALESCE (tmpMI.CurrencyValue, 0) ELSE vbCurrencyValue_pl END AS CurrencyValue
-                    , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN COALESCE (tmpMI.CurrencyId, 0)    ELSE vbParValue_pl      END AS ParValue
+                    , COALESCE (tmpMI.CurrencyValue, 0)                         AS CurrencyValue
+                    , COALESCE (tmpMI.CurrencyId, 0)                            AS ParValue
                FROM (SELECT vbCashId AS CashId, zc_Currency_GRN() AS CurrencyId
                     ) AS _tmpCash
                     FULL JOIN tmpMI ON tmpMI.CashId = _tmpCash.CashId

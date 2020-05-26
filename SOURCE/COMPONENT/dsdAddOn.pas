@@ -25,6 +25,7 @@ type
     FOnDblClickActionList: TActionItemList;
     FActionItemList: TActionItemList;
     FOnKeyDown: TKeyEvent;
+    FOnDblClick: TNotifyEvent;
     FErasedFieldName: string;
     FAfterInsert: TDataSetNotifyEvent;
     procedure OnAfterInsert(DataSet: TDataSet);
@@ -1722,6 +1723,7 @@ begin
     FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
     FView.DataController.Filter.OnChanged := onFilterChanged;
     FView.OnColumnHeaderClick := OnColumnHeaderClick;
+    FOnDblClick := FView.OnDblClick;
     FView.OnDblClick := OnDblClick;
     FView.OnCustomDrawCell := OnCustomDrawCell;
     FGridEditKeyEvent := FView.OnEditKeyDown;
@@ -2270,6 +2272,8 @@ end;
 procedure TCustomDBControlAddOn.OnDblClick(Sender: TObject);
 var i: integer;
 begin
+  if Assigned(FOnDblClick) then FOnDblClick(Sender);
+
   // Выполняем События на DblClick
   for I := 0 to FOnDblClickActionList.Count - 1 do
     if Assigned(FOnDblClickActionList[i].Action) then

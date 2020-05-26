@@ -22,7 +22,7 @@ BEGIN
      PERFORM lpComplete_Movement_Sale_CreateTemp();
 
      -- формирование
-     IF 1=1 AND zc_Enum_GlobalConst_isTerry() = FALSE
+     IF 1=1 AND zc_Enum_GlobalConst_isTerry() = FALSE AND zfCalc_User_PriceListReal (vbUserId) = TRUE
      THEN
          PERFORM gpComplete_Movement_Sale_recalc (inMovementId := inMovementId
                                                 , inSession    := inSession

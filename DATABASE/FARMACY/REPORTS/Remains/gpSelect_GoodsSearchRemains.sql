@@ -29,6 +29,8 @@ RETURNS TABLE (Id integer, GoodsCode Integer, GoodsName TVarChar
              , MinExpirationDate TDateTime
              , DailyCheck TFloat
              , DailySale TFloat
+             , DeferredSend TFloat
+             , DeferredSendIn TFloat
              , Color_calc Integer
              )
 AS
@@ -173,6 +175,56 @@ BEGIN
                               , MovementLinkObject_To.ObjectId
                     )
 
+          -- Отложенные перемещения
+      , tmpMovementID AS (SELECT
+                                 Movement.Id
+                          FROM Movement
+                          WHERE Movement.DescId = zc_Movement_Send()
+                           AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                         )
+     , tmpMovementSend AS (SELECT
+                                  Movement.Id
+                                , MovementLinkObject_To.ObjectId                 AS UnitID
+                           FROM tmpMovementID AS Movement
+
+                                INNER JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                           ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                          AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+                                                          AND MovementBoolean_Deferred.ValueData = TRUE
+                                                          
+                                INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                           )
+     , tmpDeferredSend AS (SELECT
+                                  Container.WhereObjectId             AS UnitID
+                                , Container.ObjectId                  AS GoodsId
+                                , SUM(- MovementItemContainer.Amount) AS Amount
+                           FROM tmpMovementSend AS Movement
+ 
+                                INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                                AND MovementItemContainer.DescId = zc_Container_Count()
+ 
+                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                  
+                           GROUP BY Container.WhereObjectId
+                                  , Container.ObjectId
+                         )
+     , tmpDeferredSendIn AS (SELECT
+                                  Movement.UnitID                     AS UnitID
+                                , Container.ObjectId                  AS GoodsId
+                                , SUM(- MovementItemContainer.Amount) AS Amount
+                           FROM tmpMovementSend AS Movement
+ 
+                                INNER JOIN MovementItemContainer ON MovementItemContainer.MovementId = Movement.Id
+                                                                AND MovementItemContainer.DescId = zc_Container_Count()
+ 
+                               INNER JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+                                  
+                           GROUP BY Movement.UnitID
+                                  , Container.ObjectId
+                         )
+
        -- Отложенные чеки
       , tmpMovReserve AS (SELECT Movement.Id
                                , MovementLinkObject_Unit.ObjectId AS UnitId
@@ -207,6 +259,9 @@ BEGIN
                                                    AND MovementItem.isErased   = FALSE
                        GROUP BY MovementItem.ObjectId, tmpMovReserve.UnitId
                        )
+
+
+
       , tmpUnitAll AS (SELECT *
                        FROM Object AS Object_Unit
                        WHERE Object_Unit.DescId = zc_Object_Unit()
@@ -325,13 +380,16 @@ BEGIN
              , COALESCE (tmpData.Amount,0)         :: TFloat AS Amount
              , COALESCE (tmpIncome.AmountIncome,0)                                   :: TFloat AS AmountIncome
              , COALESCE (tmpReserve.Amount, 0)                                       :: TFloat AS AmountReserve
-             , (COALESCE (tmpData.Amount,0) + COALESCE (tmpIncome.AmountIncome,0))   :: TFloat AS AmountAll
+             , (COALESCE (tmpData.Amount,0) + COALESCE (tmpIncome.AmountIncome,0) +
+               COALESCE (tmpDeferredSendIn.Amount, 0))                               :: TFloat AS AmountAll
              , COALESCE (ObjectHistoryFloat_Price.ValueData, 0)                      :: TFloat AS PriceSale
              , (tmpData.Amount * COALESCE (ObjectHistoryFloat_Price.ValueData, 0))   :: TFloat AS SummaSale
              , CASE WHEN COALESCE(tmpIncome.AmountIncome,0) <> 0 THEN COALESCE (tmpIncome.SummSale,0) / COALESCE (tmpIncome.AmountIncome,0) ELSE 0 END  :: TFloat AS PriceSaleIncome
              , tmpData.MinExpirationDate  ::TDateTime
              , containerCheck.DailyCheck:: TFloat
              , containerSale.DailySale:: TFloat
+             , tmpDeferredSend.Amount:: TFloat AS DeferredSend
+             , tmpDeferredSendIn.Amount:: TFloat AS DeferredSendIn
              , CASE WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) < (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) THEN zc_Color_Red()
                     WHEN vbisAdmin AND COALESCE (tmpData.Amount,0) > (COALESCE (containerCheck.DailyCheck,0) + COALESCE (containerSale.DailySale,0)) * 3 THEN zc_Color_Greenl()
                     ELSE zc_Color_White() END      AS Color_calc
@@ -365,8 +423,14 @@ BEGIN
 
             LEFT JOIN containerSale ON containerSale.GoodsId = tmpGoods.Id
                                     AND containerSale.UnitId  = Object_Unit.UnitId
+                                    
+            LEFT JOIN tmpDeferredSend ON tmpDeferredSend.GoodsId = tmpGoods.Id
+                                     AND tmpDeferredSend.UnitId  = Object_Unit.UnitId
+                                     
+            LEFT JOIN tmpDeferredSendIn ON tmpDeferredSendIn.GoodsId = tmpGoods.Id
+                                       AND tmpDeferredSendIn.UnitId  = Object_Unit.UnitId
 
-          WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0
+          WHERE COALESCE(tmpData.Amount,0)<>0 OR COALESCE(tmpIncome.AmountIncome,0)<>0 OR COALESCE(tmpDeferredSend.Amount,0)<>0 OR COALESCE(tmpDeferredSendIn.Amount,0)<>0
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
                  , tmpGoodsParams.GoodsName

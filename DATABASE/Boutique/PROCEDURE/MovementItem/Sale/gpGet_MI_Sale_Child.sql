@@ -11,20 +11,23 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child(
 RETURNS TABLE (Id Integer
              , CurrencyValue_USD TFloat, ParValue_USD TFloat
              , CurrencyValue_EUR TFloat, ParValue_EUR TFloat
-             , AmountGRN      TFloat
-             , AmountUSD      TFloat
-             , AmountEUR      TFloat
-             , AmountCard     TFloat
-             , AmountDiscount TFloat
-             , AmountToPay    TFloat
-             , AmountRemains  TFloat
-             , AmountDiff     TFloat
-             , isPayTotal     Boolean
-             , isGRN          Boolean
-             , isUSD          Boolean
-             , isEUR          Boolean
-             , isCard         Boolean
-             , isDiscount     Boolean
+             , AmountGRN           TFloat
+             , AmountUSD           TFloat
+             , AmountEUR           TFloat
+             , AmountCard          TFloat
+             , AmountDiscount      TFloat
+             , AmountDiscount_curr TFloat
+             , AmountToPay         TFloat
+             , AmountToPay_curr    TFloat
+             , AmountRemains       TFloat
+             , AmountRemains_curr  TFloat
+             , AmountDiff          TFloat
+             , isPayTotal          Boolean
+             , isGRN               Boolean
+             , isUSD               Boolean
+             , isEUR               Boolean
+             , isCard              Boolean
+             , isDiscount          Boolean
               )
 AS
 $BODY$
@@ -133,11 +136,34 @@ BEGIN
            , tmpMI.AmountEUR     :: TFloat
            , tmpMI.AmountCard    :: TFloat
 
-           , vbSummChangePercent :: TFloat  AS AmountDiscount -- сумма доп.скидки, грн
-           , vbSummToPay         :: TFloat  AS AmountToPay    -- сумма к оплате, грн
+             -- сумма доп.скидки, грн + EUR
+           , vbSummChangePercent :: TFloat  AS AmountDiscount
+           , zfCalc_SummPriceList (1, 
+             zfCalc_CurrencySumm (vbSummChangePercent, zc_Currency_Basis(), zc_Currency_EUR()
+                                , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END
+                                , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END
+                                  )) :: TFloat  AS AmountDiscount_curr
 
-           , CASE WHEN tmpMI.AmountDiff > 0 THEN      tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountRemains -- Остаток, грн
-           , CASE WHEN tmpMI.AmountDiff < 0 THEN -1 * tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountDiff    -- Сдача, грн
+             -- сумма к оплате, грн + EUR
+           , vbSummToPay         :: TFloat  AS AmountToPay
+           , zfCalc_SummPriceList (1, 
+             zfCalc_CurrencySumm (vbSummToPay, zc_Currency_Basis(), zc_Currency_EUR()
+                                , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END
+                                , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END
+                                 )) :: TFloat  AS AmountDiscount_curr
+
+             -- Остаток, грн + EUR
+           , CASE WHEN tmpMI.AmountDiff > 0 THEN tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountRemains
+           , CASE WHEN tmpMI.AmountDiff > 0 THEN zfCalc_SummPriceList (1, 
+                                                 zfCalc_CurrencySumm (tmpMI.AmountDiff, zc_Currency_Basis(), zc_Currency_EUR()
+                                                                    , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END
+                                                                    , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END
+                                                                     ))
+                                            ELSE 0
+             END :: TFloat  AS AmountRemains_curr
+  
+             -- Сдача, грн
+           , CASE WHEN tmpMI.AmountDiff < 0 THEN -1 * tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountDiff
 
            , TRUE AS isPayTotal
 

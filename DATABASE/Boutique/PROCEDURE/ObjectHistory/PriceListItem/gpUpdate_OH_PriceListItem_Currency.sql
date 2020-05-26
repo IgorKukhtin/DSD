@@ -25,6 +25,15 @@ BEGIN
    WHERE OH_PriceListItem.Id = inId
   ;
 
+   -- изменили во Всех партиях Товара
+   PERFORM lpUpdate_Object_PartionGoods_OperPriceList (inGoodsId:= ObjectLink_PriceListItem_Goods.ChildObjectId, inUserId:= vbUserId)
+   FROM ObjectHistory AS OH_PriceListItem
+        LEFT JOIN ObjectLink AS ObjectLink_PriceListItem_Goods
+                             ON ObjectLink_PriceListItem_Goods.ObjectId = OH_PriceListItem.ObjectId
+                            AND ObjectLink_PriceListItem_Goods.DescId   = zc_ObjectLink_PriceListItem_Goods()
+   WHERE OH_PriceListItem.Id = inId
+  ;
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
   

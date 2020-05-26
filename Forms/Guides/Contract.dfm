@@ -1,4 +1,4 @@
-object ContractForm: TContractForm
+﻿object ContractForm: TContractForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
@@ -550,6 +550,15 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 61
       end
+      object isWMS: TcxGridDBColumn
+        Caption = #1054#1090#1087'. '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        DataBinding.FieldName = 'isWMS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057
+        Options.Editing = False
+        Width = 98
+      end
       object InsertName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1089#1086#1079#1076'.)'
         DataBinding.FieldName = 'InsertName'
@@ -868,6 +877,21 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 60
+      end
+      object ccPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PaidKindChoiceFormСС
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clccInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -1326,6 +1350,14 @@ object ContractForm: TContractForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate_isWMS'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1564,6 +1596,10 @@ object ContractForm: TContractForm
       Action = actUpdateDefaultOut
       Category = 0
     end
+    object bbUpdate_isWMS: TdxBarButton
+      Action = actUpdate_isWMS
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -1591,6 +1627,33 @@ object ContractForm: TContractForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object PaidKindChoiceFormСС: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'PaidKindId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = CDSContractCondition
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
     end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2597,6 +2660,22 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object actUpdate_isWMS: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isWMS
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isWMS
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 52
+    end
     object actUpdateVat: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2720,6 +2799,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 800
     Top = 224
   end
@@ -2810,6 +2890,14 @@ object ContractForm: TContractForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inPaidKindId'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inStartDate'
         Value = 'NULL'
         Component = CDSContractCondition
@@ -2819,8 +2907,8 @@ object ContractForm: TContractForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 248
-    Top = 456
+    Left = 200
+    Top = 464
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractCondition'
@@ -2940,6 +3028,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 432
     Top = 376
   end
@@ -3053,6 +3142,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 616
     Top = 392
   end
@@ -3096,6 +3186,7 @@ object ContractForm: TContractForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1136
     Top = 360
   end
@@ -3254,5 +3345,39 @@ object ContractForm: TContractForm
     PackSize = 1
     Left = 320
     Top = 235
+  end
+  object spUpdate_isWMS: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Contract_isWMS'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outisWMS'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'isWMS'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 680
+    Top = 184
   end
 end

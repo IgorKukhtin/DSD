@@ -194,12 +194,18 @@ type
     bbUpdateInvisibleSUN: TdxBarButton;
     spUpdate_isInvisibleSUN_Revert: TdsdStoredProc;
     spUpdate_Goods_LimitSun_T: TdsdStoredProc;
-    LimitSUN_T1: TcxGridDBColumn;
     actUpdate_Goods_LimitSun: TdsdDataSetRefresh;
     ExecuteDialogGoods_LimitSum: TExecuteDialog;
     macUpdateGoods_LimitSUN_list: TMultiAction;
     macUpdateGoods_LimitSUN: TMultiAction;
     bbUpdateGoods_LimitSUN: TdxBarButton;
+    GoodsPairSunName: TcxGridDBColumn;
+    spUpdate_GoodsPairSun: TdsdStoredProc;
+    actUpdate_GoodsPairSun: TdsdDataSetRefresh;
+    GoodsPairSunCode: TcxGridDBColumn;
+    ExecuteDialogGoodsPairSun: TExecuteDialog;
+    macUpdate_GoodsPairSun: TMultiAction;
+    bbUpdate_GoodsPairSun: TdxBarButton;
   private
     { Private declarations }
   public

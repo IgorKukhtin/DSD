@@ -15,9 +15,10 @@ CREATE OR REPLACE FUNCTION gpGet_MI_Sale_Child_isGRN(
     IN inAmountDiscount    TFloat   , --
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (AmountRemains TFloat
-             , AmountChange  TFloat
-             , AmountGRN     TFloat
+RETURNS TABLE (AmountRemains       TFloat
+             , AmountRemains_curr  TFloat -- Остаток, EUR
+             , AmountDiff          TFloat -- Сдача, грн
+             , AmountGRN           TFloat
               )
 AS
 $BODY$
@@ -31,43 +32,56 @@ BEGIN
      IF inisGRN = TRUE THEN
          IF inAmountGRN = 0 THEN
          vbAmountGRN := (inAmount - ( (COALESCE (inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE (inAmountCard,0) 
+                                    + (COALESCE (inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                    +  COALESCE (inAmountCard,0)
                                     +  COALESCE (inAmountDiscount,0)) );
           ELSE vbAmountGRN := inAmountGRN;
           END IF;
-     ELSE 
+     ELSE
          vbAmountGRN := 0;
      END IF;
 
          -- Результат
-         RETURN QUERY 
-          SELECT CASE WHEN inAmount - (  COALESCE(vbAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) > 0 
-                      THEN inAmount - (  COALESCE(vbAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )
-                      ELSE 0
-                 END                                            ::TFloat AS AmountRemains          
-               , CASE WHEN inAmount - (  COALESCE(vbAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0)
-                                    +  COALESCE(inAmountDiscount,0) ) < 0 
-                      THEN (inAmount - ( COALESCE(vbAmountGRN,0) 
-                                    + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
-                                    + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1)) 
-                                    +  COALESCE(inAmountCard,0) 
-                                    +  COALESCE(inAmountDiscount,0) )) * (-1)
-                      ELSE 0
-                 END                                            ::TFloat AS AmountChange
-               , vbAmountGRN                                    ::TFloat AS AmountGRN
-                ;
+         RETURN QUERY
+          WITH tmpData AS (SELECT CASE WHEN inAmount - (  COALESCE(vbAmountGRN,0)
+                                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
+                                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                                     +  COALESCE(inAmountCard,0)
+                                                     +  COALESCE(inAmountDiscount,0) ) > 0
+                                       THEN inAmount - (  COALESCE(vbAmountGRN,0)
+                                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
+                                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                                     +  COALESCE(inAmountCard,0)
+                                                     +  COALESCE(inAmountDiscount,0) )
+                                       ELSE 0
+                                  END                                            ::TFloat AS AmountRemains
+                                , CASE WHEN inAmount - (  COALESCE(vbAmountGRN,0)
+                                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
+                                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                                     +  COALESCE(inAmountCard,0)
+                                                     +  COALESCE(inAmountDiscount,0) ) < 0
+                                       THEN (inAmount - ( COALESCE(vbAmountGRN,0)
+                                                     + (COALESCE(inAmountUSD,0) * COALESCE(inCurrencyValueUSD,1))
+                                                     + (COALESCE(inAmountEUR,0) * COALESCE(inCurrencyValueEUR,1))
+                                                     +  COALESCE(inAmountCard,0)
+                                                     +  COALESCE(inAmountDiscount,0) )) * (-1)
+                                       ELSE 0
+                                  END                                            ::TFloat AS AmountDiff
+                                , vbAmountGRN                                    ::TFloat AS AmountGRN
+                          )
+          -- Результат
+          SELECT -- Остаток, грн
+                 tmpData.AmountRemains
+                 -- Остаток, EUR
+               , zfCalc_SummPriceList (1, 
+                 zfCalc_CurrencySumm (tmpData.AmountRemains, zc_Currency_Basis(), zc_Currency_EUR(), inCurrencyValueEUR, 1)) :: TFloat AS AmountRemains_curr
+
+                 -- Сдача, грн
+               , tmpData.AmountDiff
+
+               , tmpData.AmountGRN
+          FROM tmpData
+         ;
 
 
 END;
@@ -82,4 +96,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpGet_MI_Sale_Child_isGRN(inisGRN := 'True' , inCurrencyValueUSD := 26.25 , inCurrencyValueEUR := 31.2 , inAmount := 5247.4 , inAmountGRN := 100 ,inAmountUSD := 100 , inAmountEUR := 84 , inAmountCard := 0 , inAmountDiscount := 0.4 ,  inSession := '2');
+-- SELECT * FROM gpGet_MI_Sale_Child_isGRN(inisGRN := 'True' , inCurrencyValueUSD := 26.25 , inCurrencyValueEUR := 31.2 , inAmount := 5247.4 , inAmountGRN := 100 ,inAmountUSD := 100 , inAmountEUR := 84 , inAmountCard := 0 , inAmountDiscount := 0.4 ,  inSession := '2');

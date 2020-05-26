@@ -874,7 +874,14 @@ uses
   Report_ImplementationPeriod in '..\..\FormsFarmacy\Report\Report_ImplementationPeriod.pas' {Report_ImplementationPeriodForm: TParentForm},
   Unit_HT_SUN_Edit in '..\..\FormsFarmacy\Guides\Unit_HT_SUN_Edit.pas' {Unit_HT_SUN_EditForm: TParentForm},
   Goods_LimitSUN_T_Edit in '..\..\FormsFarmacy\Guides\Goods_LimitSUN_T_Edit.pas' {Goods_LimitSUN_T_EditForm: TParentForm},
-  Report_WillNotOrder in '..\..\FormsFarmacy\Report\Report_WillNotOrder.pas' {Report_WillNotOrderForm: TParentForm};
+  Report_WillNotOrder in '..\..\FormsFarmacy\Report\Report_WillNotOrder.pas' {Report_WillNotOrderForm: TParentForm},
+  UnitForOrderInternalPromo in '..\..\FormsFarmacy\Guides\UnitForOrderInternalPromo.pas' {UnitForOrderInternalPromoForm: TParentForm},
+  Goods_GoodsPairSun_Edit in '..\..\FormsFarmacy\Guides\Goods_GoodsPairSun_Edit.pas' {Goods_GoodsPairSun_EditForm: TParentForm},
+  Unit_LimitSUN_Edit in '..\..\FormsFarmacy\Guides\Unit_LimitSUN_Edit.pas' {Unit_LimitSUN_EditForm: TParentForm},
+  SendCashJournalVIP in '..\..\FormsFarmacy\Document\SendCashJournalVIP.pas' {SendCashJournalVIPForm: TParentForm},
+  SendMenegerVIPJournal in '..\..\FormsFarmacy\Document\SendMenegerVIPJournal.pas' {SendMenegerVIPJournalForm: TParentForm},
+  Unit_SUN_LockDialog in '..\..\FormsFarmacy\Guides\Unit_SUN_LockDialog.pas' {Unit_SUN_LockDialogForm: TParentForm},
+  ConfirmedDialog in '..\..\FormsFarmacy\Document\ConfirmedDialog.pas' {ConfirmedDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

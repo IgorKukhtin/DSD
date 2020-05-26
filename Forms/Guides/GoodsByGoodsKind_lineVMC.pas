@@ -88,8 +88,6 @@ type
     bbUpdateNom_No: TdxBarButton;
     bbUpdateVes_Yes: TdxBarButton;
     bbUpdateVes_No: TdxBarButton;
-    CodeCalc: TcxGridDBColumn;
-    isCodeCalc_Diff: TcxGridDBColumn;
     BoxChoiceForm: TOpenChoiceForm;
     Box2ChoiceForm: TOpenChoiceForm;
     Panel: TPanel;
@@ -126,6 +124,7 @@ type
     WmsNameCalc: TcxGridDBColumn;
     actGoods_shOpenChoice: TOpenChoiceForm;
     actGoodsKind_shOpenForm: TOpenChoiceForm;
+    actGoodsTypeKindChoice: TOpenChoiceForm;
   private
     { Private declarations }
   public

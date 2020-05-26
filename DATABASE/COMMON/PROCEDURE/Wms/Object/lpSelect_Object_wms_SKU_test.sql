@@ -70,12 +70,12 @@ BEGIN
                                 -- , zc_Enum_GoodsTypeKind_Nom() AS GoodsTypeKind
                               FROM Object
                               WHERE Object.DescId = zc_Object_PartnerTag()
-                                AND Object.Id IN (310821 -- 1;"експорт"
+                                AND Object.Id IN (/*310821 -- 1;"експорт"
                                               , 310822 -- 2;"роздрібна мережа";f
                                                 , 310823 -- 3;"HoReCa";f
                                                 , 310824 -- 4;"супермаркет";f
                                                 , 310825 -- 5;"тендери";f
-                                              , 310826 -- 6;"роздрібна торгівля";f
+                                              , */310826 -- 6;"роздрібна торгівля";f
                                               , 310827 -- 7;"дистриб`ютор";f
                                                  )
                              )

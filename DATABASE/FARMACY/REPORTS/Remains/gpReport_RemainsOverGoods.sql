@@ -270,7 +270,8 @@ BEGIN
                                                        ON MI_Send.MovementId = Movement_Send.Id
                                                       AND MI_Send.DescId = zc_MI_Master()
                                                       AND MI_Send.isErased = FALSE
-                        WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
+                        WHERE Movement_Send.OperDate >= inStartDate - INTERVAL '30 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '7 DAY'   -- 22,05,2020 Ыўср
+                           -- Movement_Send.OperDate >= inStartDate - INTERVAL '1 DAY' AND Movement_Send.OperDate < inStartDate + INTERVAL '1 DAY'
                           AND Movement_Send.DescId = zc_Movement_Send()
                           AND Movement_Send.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
                           AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
@@ -718,6 +719,8 @@ BEGIN
                , (COALESCE (tmpChildTo.RemainsMCS_result, 0) - COALESCE (tmpMIMaster.Amount, 0)) :: TFloat AS Amount_OverDiff
                
                , CASE WHEN COALESCE (tmpMIMaster.Amount, 0) > tmpData.RemainsStart THEN TRUE ELSE FALSE END ::Boolean AS isError
+               
+               , FALSE :: Boolean AS isChoice
              
      FROM tmpData
                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpData.GoodsId

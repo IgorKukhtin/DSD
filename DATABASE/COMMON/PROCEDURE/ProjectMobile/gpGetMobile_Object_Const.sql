@@ -169,10 +169,10 @@ BEGIN
     --        , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_three
       --      , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_four
 
-            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
-            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
-            , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_three
-            , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_four
+            , LOWER ('http://integer-srv2.alan.dp.ua/projectmobile/index.php')    :: TVarChar AS WebService
+            , LOWER ('http://integer-srv.alan.dp.ua/projectmobile/index.php')   :: TVarChar AS WebService_two
+            , LOWER ('http://integer-srv2-r.alan.dp.ua/projectmobile/index.php')  :: TVarChar AS WebService_three
+            , LOWER ('http://integer-srv-r.alan.dp.ua/projectmobile/index.php') :: TVarChar AS WebService_four
 
             -- AS LastDateIn
             -- AS LastDateOut
