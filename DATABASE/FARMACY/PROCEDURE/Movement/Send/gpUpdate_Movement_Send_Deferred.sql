@@ -266,6 +266,10 @@ BEGIN
            PERFORM lpUnComplete_Movement (inMovementId
                                         , vbUserId);
        END IF;
+
+       -- сохранили свойство <Дата изменения>
+       PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_Deferred(), inMovementId, CURRENT_TIMESTAMP);
+
    ELSE
        RAISE EXCEPTION 'Ошибка. Отлаживать документ в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);   
    END IF;

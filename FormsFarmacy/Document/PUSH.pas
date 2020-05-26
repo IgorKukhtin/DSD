@@ -72,6 +72,8 @@ type
     chbPharmacist: TcxCheckBox;
     edForm: TcxTextEdit;
     cxLabel7: TcxLabel;
+    ViewsLastDay: TcxGridDBColumn;
+    ViewsCurrDay: TcxGridDBColumn;
   private
     { Private declarations }
   public

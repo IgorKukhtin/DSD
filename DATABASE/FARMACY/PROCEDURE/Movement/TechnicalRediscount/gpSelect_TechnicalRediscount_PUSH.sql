@@ -1,8 +1,9 @@
 -- Function: gpSelect_TechnicalRediscount_PUSH()
 
-DROP FUNCTION IF EXISTS gpSelect_TechnicalRediscount_PUSH (Integer, Integer);
+DROP FUNCTION IF EXISTS gpSelect_TechnicalRediscount_PUSH (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpSelect_TechnicalRediscount_PUSH(
+    IN inMovementID    Integer    , -- Movement PUSH
     IN inUnitID                Integer    , -- Подразделение
     IN inUserId                Integer      -- Сотрудник
 )

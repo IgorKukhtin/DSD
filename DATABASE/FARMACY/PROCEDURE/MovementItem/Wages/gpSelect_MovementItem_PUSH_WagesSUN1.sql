@@ -1,8 +1,9 @@
 -- Function: gpSelect_MovementItem_PUSH_WagesSUN1()
 
-DROP FUNCTION IF EXISTS gpSelect_MovementItem_PUSH_WagesSUN1 (Integer, Integer);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PUSH_WagesSUN1 (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PUSH_WagesSUN1(
+    IN inMovementID            Integer    , -- Movement PUSH
     IN inUnitID                Integer    , -- Подразделение
     IN inUserId                Integer      -- Сотрудник
 )
