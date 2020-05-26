@@ -1,8 +1,9 @@
 -- Function: gpSelect_AlertRecounting_PUSH_Cash()
 
-DROP FUNCTION IF EXISTS gpSelect_AlertRecounting_PUSH_Cash (Integer, Integer);
+DROP FUNCTION IF EXISTS gpSelect_AlertRecounting_PUSH_Cash (Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION gpSelect_AlertRecounting_PUSH_Cash(
+    IN inMovementID            Integer    , -- Movement PUSH
     IN inUnitID                Integer    , -- Подразделение
     IN inUserId                Integer      -- Сотрудник
 )

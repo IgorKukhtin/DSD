@@ -182,10 +182,14 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_Sent() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_Sent', 'Дата изменения признака Отправлено' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Sent');
 
+CREATE OR REPLACE FUNCTION zc_MovementDate_Deferred() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Deferred'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDateDesc (Code, ItemName)
+  SELECT 'zc_MovementDate_Deferred', 'Дата изменения признака Отложен' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_Deferred');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.    Воробкало А.А.   Ярошенко Р.Ф.   Шаблий О.В.
+ 26.05.20                                                                                                        * zc_MovementDate_Deferred
  07.08.19                                                                                                        * zc_MovementDate_Sent
  18.04.19                                                                                                        * zc_MovementDate_Delay
  11.03.19                                                                                                        * zc_MovementDate_DateEndPUSH
