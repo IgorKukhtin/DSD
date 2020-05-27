@@ -673,6 +673,7 @@ BEGIN
                                                         , inAmount              := tmp.Amount
                                                         , inPrice               := 0
                                                         , inCountForPrice       := 0
+                                                        , inPartionGoodsDate    := tmp.PartionGoodsDate
                                                         , inPartionGoods        := tmp.PartionGoods
                                                         , inGoodsKindId         := tmp.GoodsKindId
                                                         , inUserId              := vbUserId
@@ -852,6 +853,10 @@ BEGIN
                                   WHEN inBranchCode = 101 -- если Упаковка
                                    AND vbMovementDescId = zc_Movement_Send()
                                        THEN MovementItem.Id -- не надо суммировать
+
+                                  WHEN inBranchCode BETWEEN 201 AND 210 -- если Обвалка
+                                   AND vbMovementDescId = zc_Movement_ProductionUnion() AND vbIsReWork = TRUE
+                                       THEN 0 -- надо суммировать
 
                                   WHEN inBranchCode NOT BETWEEN 201 AND 210 -- если НЕ Обвалка
                                        THEN 0 -- можно суммировать

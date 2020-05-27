@@ -222,11 +222,12 @@ BEGIN
        -- Пытаемся найти расчетный счет ТОЛЬКО ВО ВНУТРЕННИХ ФИРМАХ!!!
        SELECT Object_BankAccount_View.JuridicalId INTO vbJuridicalId
        FROM Object_BankAccount_View
-            JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                               ON ObjectBoolean_isCorporate.ObjectId  = Object_BankAccount_View.JuridicalId
-                              AND ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
-                              AND ObjectBoolean_isCorporate.ValueData = TRUE
-       WHERE Object_BankAccount_View.Name = inBankAccount AND TRIM (inBankAccount) <> '';
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                                    ON ObjectBoolean_isCorporate.ObjectId  = Object_BankAccount_View.JuridicalId
+                                   AND ObjectBoolean_isCorporate.DescId    = zc_ObjectBoolean_Juridical_isCorporate()
+       WHERE Object_BankAccount_View.Name = inBankAccount AND TRIM (inBankAccount) <> ''
+         AND (ObjectBoolean_isCorporate.ValueData = TRUE /*OR Object_BankAccount_View.JuridicalId = 15505*/) -- ДУКО ТОВ 
+       ;
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- Пытаемся найти юр. лицо по OKPO

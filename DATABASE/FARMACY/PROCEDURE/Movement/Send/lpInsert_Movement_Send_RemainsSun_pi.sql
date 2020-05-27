@@ -808,8 +808,10 @@ BEGIN
 
              -- отбросили !!закрытые!!
              -- 25.05.20 -- временно отключил - 13.05.20
-             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-                                        AND Object_Goods_View.IsClose = TRUE
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isClose
+                                     ON ObjectBoolean_Goods_isClose.ObjectId  = tmpObject_Price.GoodsId
+                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()   
+                                    AND ObjectBoolean_Goods_isClose.ValueData = TRUE
              -- !!!
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
 
@@ -824,7 +826,7 @@ BEGIN
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
-          AND (Object_Goods_View.Id IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
+          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
        ;
      -- 2.6. –езультат: все остатки ѕќЋ”„ј“≈Ћя, продажи => получаем кол-ва ѕќ“–≈ЅЌќ—“№
      INSERT INTO  _tmpRemains (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)

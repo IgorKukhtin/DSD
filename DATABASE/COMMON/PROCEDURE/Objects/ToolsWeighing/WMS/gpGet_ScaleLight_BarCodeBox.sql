@@ -34,6 +34,11 @@ BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId:= lpGetUserBySession (inSession);
 
+    -- !!!замена!!!
+    IF CHAR_LENGTH (TRIM (inBoxBarCode)) > 5
+    THEN
+        inBoxBarCode:= 'AHC-' || SUBSTRING (TRIM (inBoxBarCode) FROM 5 FOR CHAR_LENGTH (TRIM (inBoxBarCode)) - 4);
+    END IF;
 
     IF CHAR_LENGTH (inBoxBarCode) >= 8
        OR (zfConvert_StringToFloat(inBoxBarCode) = 0 AND CHAR_LENGTH (TRIM (inBoxBarCode)) > 5)
@@ -220,4 +225,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpGet_ScaleLight_BarCodeBox (inGoodsId:= 2153, inGoodsKindId:= 8352, inBoxId:= zc_Box_E2(), inBoxBarCode:= '1111111111111', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_ScaleLight_BarCodeBox (inGoodsId:= 2153, inGoodsKindId:= 8352, inBoxId:= zc_Box_E2(), inBoxBarCode:= 'AHC-00508', inSession:= zfCalc_UserAdmin())

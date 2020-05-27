@@ -215,21 +215,14 @@ BEGIN
        AND _tmpResult_Partion_a.UnitId_to   = tmp.UnitId_to
           ;
 
-     -- сохранили свойство <Перемещение по СУН-v2> + isAuto + zc_Enum_PartionDateKind_6
+     -- сохранили свойство <Перемещение по СУН-v2> + isAuto
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN(),    tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_SUN_v2(), tmp.MovementId, TRUE)
            , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
+         --, lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
      FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount > 0
           ) AS tmp;
-     -- сохранили свойство <Отложено перемещение по СУН> + isAuto + zc_Enum_PartionDateKind_6
-     /*PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_DefSUN(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isAuto(), tmp.MovementId, TRUE)
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PartionDateKind(), tmp.MovementId, zc_Enum_PartionDateKind_6())
-           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Driver(),          tmp.MovementId, tmp.DriverId)
-     FROM (SELECT DISTINCT _tmpResult_Partion_a.MovementId, _tmpResult_Partion_a.DriverId FROM _tmpResult_Partion_a WHERE _tmpResult_Partion_a.Amount_next > 0
-          ) AS tmp;*/
 
 
      -- 6.1. создали строки - Перемещение по СУН

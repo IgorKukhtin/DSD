@@ -63,7 +63,9 @@ BEGIN
                             AND tmp.WeightMin > 0 AND tmp.WeightMax > 0
                                 -- Доходы + Продукция + Тушенка
                             AND tmp.InfoMoneyId <> zc_Enum_InfoMoney_30102()  
-                            AND tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
+                         -- AND tmp.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
+                            AND tmp.sku_id IN (27154672, 27154682)
+                         -- AND tmp.sku_code     :: Integer  -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
                          )
             -- этим покупателям ставим лучшую Категорию
           , tmpPartnerTag AS (SELECT Object.Id AS PartnerTagId
@@ -152,7 +154,11 @@ BEGIN
                                                               ON MIF_AmountSecond.MovementItemId = MovementItem.Id
                                                              AND MIF_AmountSecond.DescId         = zc_MIFloat_AmountSecond()
                                   LEFT JOIN tmpPartnerTag ON tmpPartnerTag.PartnerTagId = OL_Partner_PartnerTag.ChildObjectId
-                             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '2 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
+
+                                  INNER JOIN tmpGoods ON tmpGoods.GoodsId     = MovementItem.ObjectId
+                                                     AND tmpGoods.GoodsKindId = MILO_GoodsKind.ObjectId
+
+                             WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '12 DAY' AND CURRENT_DATE - INTERVAL '1 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
@@ -160,17 +166,44 @@ BEGIN
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) <= 50
                                -- Способ обработки заказа (может быть пустое): Оптовый
-                               AND tmpPartnerTag.PartnerTagId > 0
+                             --AND tmpPartnerTag.PartnerTagId > 0
                             )
         , tmpRes_goods AS (SELECT tmpGoods.GoodsId, tmpGoods.GoodsKindId
                            FROM tmpGoods
-                                INNER JOIN tmpMovement_all ON tmpMovement_all.GoodsId              = tmpGoods.GoodsId
-                                                          AND tmpMovement_all.GoodsKindId          = tmpGoods.GoodsKindId
-                                                          -- расчетная Категория - некоторым ставим лучшую 
-                                                          AND tmpMovement_all.GoodsTypeKindId_calc = tmpGoods.GoodsTypeKindId
-                                                          -- только 1-ый с миним. кол-вом
-                                                          AND tmpMovement_all.Ord                  = 1
-                           ORDER BY tmpMovement_all.Amount DESC, tmpGoods.GoodsId, tmpGoods.GoodsKindId
+                                LEFT JOIN tmpMovement_all ON tmpMovement_all.GoodsId               = tmpGoods.GoodsId
+                                                         AND tmpMovement_all.GoodsKindId          = tmpGoods.GoodsKindId
+                                                         -- расчетная Категория - некоторым ставим лучшую 
+                                                         AND tmpMovement_all.GoodsTypeKindId_calc = tmpGoods.GoodsTypeKindId
+                                                         -- только 1-ый с миним. кол-вом
+                                                         AND tmpMovement_all.Ord                  = 1
+                                LEFT JOIN tmpMovement_all AS tmpMovement_all_find_1
+                                                          ON tmpMovement_all_find_1.GoodsId              = tmpGoods.GoodsId
+                                                         AND tmpMovement_all_find_1.GoodsKindId          = tmpGoods.GoodsKindId
+                                                         -- расчетная Категория - некоторым ставим лучшую 
+                                                         AND CASE WHEN tmpMovement_all_find_1.GoodsTypeKindId_calc = zc_Enum_GoodsTypeKind_Ves()
+                                                                       THEN zc_Enum_GoodsTypeKind_Nom()
+                                                                  WHEN tmpMovement_all_find_1.GoodsTypeKindId_calc = zc_Enum_GoodsTypeKind_Nom()
+                                                                       THEN zc_Enum_GoodsTypeKind_Sh()
+                                                             END = tmpGoods.GoodsTypeKindId
+                                                         -- только 1-ый с миним. кол-вом
+                                                         AND tmpMovement_all_find_1.Ord                  = 1
+                                                         --
+                                                         AND tmpMovement_all.GoodsId IS NULL
+                                LEFT JOIN tmpMovement_all AS tmpMovement_all_find_2
+                                                          ON tmpMovement_all_find_2.GoodsId              = tmpGoods.GoodsId
+                                                         AND tmpMovement_all_find_2.GoodsKindId          = tmpGoods.GoodsKindId
+                                                         -- расчетная Категория - некоторым ставим лучшую 
+                                                         AND CASE WHEN tmpMovement_all_find_2.GoodsTypeKindId_calc = zc_Enum_GoodsTypeKind_Ves()
+                                                                       THEN zc_Enum_GoodsTypeKind_Sh()
+                                                             END = tmpGoods.GoodsTypeKindId
+                                                         -- только 1-ый с миним. кол-вом
+                                                         AND tmpMovement_all_find_2.Ord                  = 1
+                                                         --
+                                                         AND tmpMovement_all.GoodsId        IS NULL
+                                                         AND tmpMovement_all_find_1.GoodsId IS NULL
+
+                           WHERE COALESCE (tmpMovement_all.GoodsId, tmpMovement_all_find_1.GoodsId, tmpMovement_all_find_2.GoodsId) > 0
+                           ORDER BY COALESCE (tmpMovement_all.Amount, tmpMovement_all_find_1.Amount, tmpMovement_all_find_2.Amount) DESC, tmpGoods.GoodsId, tmpGoods.GoodsKindId
                            LIMIT 10
                           )
           , tmpRes_mov AS (SELECT DISTINCT tmpMovement_all.MovementId
@@ -205,7 +238,7 @@ BEGIN
              , tmpGoods.BoxId, tmpGoods.BoxCode, tmpGoods.BoxName
 
                -- *заменили - Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
-             ,tmpGoods.WeightOnBox
+             , tmpGoods.WeightOnBox
 
              , tmpGoods.CountOnBox               -- Кол-во ед. в ящ. (E2/E3)
              , tmpGoods.BoxVolume                -- Объем ящ., м3. (E2/E3)

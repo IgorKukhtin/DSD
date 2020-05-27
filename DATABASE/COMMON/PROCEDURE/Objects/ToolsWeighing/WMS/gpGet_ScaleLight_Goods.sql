@@ -184,13 +184,10 @@ BEGIN
 
                              -- Id - есть ли ШТ.
                            , COALESCE (OL_GoodsTypeKind_Sh.ChildObjectId,  0) AS GoodsTypeKindId_Sh
-                           , 100 AS Npp_Sh
                              -- Id - есть ли НОМ.
                            , COALESCE (OL_GoodsTypeKind_Nom.ChildObjectId, 0) AS GoodsTypeKindId_Nom
-                           , 200 AS Npp_Nom
                              -- Id - есть ли ВЕС
                            , COALESCE (OL_GoodsTypeKind_Ves.ChildObjectId, 0) AS GoodsTypeKindId_Ves
-                           , 250 AS Npp_Ves
 
                              -- Код ВМС - ШТ. - !!!замена
                            , CASE WHEN OL_GoodsTypeKind_Sh.ChildObjectId <> 0
@@ -406,25 +403,15 @@ BEGIN
 
                       WHERE Object_GoodsByGoodsKind.DescId = zc_Object_GoodsByGoodsKind()
                      )
-       -- Выбрали категории которые есть
-     , tmpNpp_all AS (SELECT tmpRes.GoodsTypeKindId_Sh  AS GoodsTypeKindId, tmpRes.Npp_Sh  AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Sh  > 0
+       -- Выбрали категории которые есть, на всякий случай с LIMIT 1
+     , tmpNpp_all AS (SELECT zc_Enum_GoodsTypeKind_Sh()  AS GoodsTypeKindId, CASE WHEN tmpRes.GoodsTypeKindId_Sh  > 0 THEN 10 ELSE 500 END AS Npp FROM tmpRes
                      UNION
-                      SELECT tmpRes.GoodsTypeKindId_Nom AS GoodsTypeKindId, tmpRes.Npp_Nom AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Nom > 0
+                      SELECT zc_Enum_GoodsTypeKind_Nom() AS GoodsTypeKindId, CASE WHEN tmpRes.GoodsTypeKindId_Nom > 0 THEN 20 ELSE 200 END AS Npp FROM tmpRes
                      UNION
-                      SELECT tmpRes.GoodsTypeKindId_Ves AS GoodsTypeKindId, tmpRes.Npp_Ves AS Npp FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Ves > 0
+                      SELECT zc_Enum_GoodsTypeKind_Ves() AS GoodsTypeKindId, CASE WHEN tmpRes.GoodsTypeKindId_Ves > 0 THEN 30 ELSE 300 END AS Npp FROM tmpRes
                      )
-           -- получили № п/п - по убыванию 3,2,1
-         , tmpNpp AS (SELECT tmpNpp_all.GoodsTypeKindId, ROW_NUMBER() OVER (ORDER BY tmpNpp_all.Npp DESC) AS Ord FROM tmpNpp_all)
-
-     -- Выбрали категории которых НЕТ
-   , tmpNppNo_all AS (SELECT -1 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Sh  = 0
-                     UNION
-                      SELECT -2 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Nom = 0
-                     UNION
-                      SELECT -3 AS GoodsTypeKindId FROM tmpRes WHERE tmpRes.GoodsTypeKindId_Ves = 0
-                     )
-         -- получили № п/п - по возрастанию 1,2,3
-       , tmpNppNo AS (SELECT tmpNppNo_all.GoodsTypeKindId, ROW_NUMBER() OVER (ORDER BY tmpNppNo_all.GoodsTypeKindId ASC) AS Ord FROM tmpNppNo_all)
+           -- получили № п/п - по возрастанию 1,2,3
+         , tmpNpp AS (SELECT tmpNpp_all.GoodsTypeKindId, tmpNpp_all.Npp, ROW_NUMBER() OVER (ORDER BY tmpNpp_all.Npp ASC) AS Ord FROM tmpNpp_all)
 
       -- Результат
       SELECT tmpRes.GoodsId
@@ -478,9 +465,21 @@ BEGIN
            , tmpRes.WeightMax_Ves
 
              -- Признак - 1-ая линия - № 1 по приоритету
-           , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 1)
-                     , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 3)
-                      ) :: Integer  AS GoodsTypeKindId_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.GoodsTypeKindId_Sh
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.GoodsTypeKindId_Nom
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.GoodsTypeKindId_Ves
+
+                  WHEN tmpNpp_3.Npp = 500
+                       THEN -1
+                  WHEN tmpNpp_3.Npp = 200
+                       THEN -2
+                  WHEN tmpNpp_3.Npp = 300
+                       THEN -3
+
+             END :: Integer AS GoodsTypeKindId_1
         -- , 0  :: Integer  AS BarCodeBoxId_1
         -- , 0  :: Integer  AS BoxCode_1
         -- , '' :: TVarChar AS BoxBarCode_1
@@ -490,59 +489,179 @@ BEGIN
         -- , 0  :: TFloat   AS CountTotal_1
         -- , 0  :: TFloat   AS BoxTotal_1
              -- Ящик
-           , tmpRes.BoxId_1
-           , tmpRes.BoxName_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxId_1
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxId_2
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxId_3
+             END :: Integer AS BoxId_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxName_1
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxName_2
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxName_3
+             END :: TVarChar AS BoxName_1
              -- Вес самого ящика
-           , tmpRes.BoxWeight_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxWeight_1
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxWeight_2
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxWeight_3
+             END :: TFloat AS BoxWeight_1
              -- вложенность - по Весу
-           , tmpRes.WeightOnBox_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.WeightOnBox_1
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.WeightOnBox_2
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.WeightOnBox_3
+             END :: TFloat AS WeightOnBox_1
              -- Вложенность - шт (НЕ информативно!)
-           , tmpRes.CountOnBox_1
+           , CASE WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.CountOnBox_1
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.CountOnBox_2
+                  WHEN tmpNpp_1.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.CountOnBox_3
+             END :: TFloat AS CountOnBox_1
 
              -- Признак - 2-ая линия - № 2 по приоритету
-           , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 2)
-                     , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 2)
-                      ) :: Integer  AS GoodsTypeKindId_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.GoodsTypeKindId_Sh
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.GoodsTypeKindId_Nom
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.GoodsTypeKindId_Ves
+
+                  WHEN tmpNpp_3.Npp = 500
+                       THEN -1
+                  WHEN tmpNpp_3.Npp = 200
+                       THEN -2
+                  WHEN tmpNpp_3.Npp = 300
+                       THEN -3
+
+             END :: Integer AS GoodsTypeKindId_2
         -- , 0  :: Integer  AS BarCodeBoxId_2
         -- , 0  :: Integer  AS BoxCode_2
         -- , '' :: TVarChar AS BoxBarCode_2
         -- , 0  :: TFloat   AS WeightOnBoxTotal_2
         -- , 0  :: TFloat   AS CountOnBoxTotal_2
-        -- , 0  :: TFloat   AS WeightTotal_1
-        -- , 0  :: TFloat   AS CountTotal_1
-        -- , 0  :: TFloat   AS BoxTotal_1
+        -- , 0  :: TFloat   AS WeightTotal_2
+        -- , 0  :: TFloat   AS CountTotal_2
+        -- , 0  :: TFloat   AS BoxTotal_2
              -- Ящик
-           , tmpRes.BoxId_2
-           , tmpRes.BoxName_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxId_1
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxId_2
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxId_3
+             END :: Integer AS BoxId_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxName_1
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxName_2
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxName_3
+             END :: TVarChar AS BoxName_2
              -- Вес самого ящика
-           , tmpRes.BoxWeight_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxWeight_1
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxWeight_2
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxWeight_3
+             END :: TFloat AS BoxWeight_2
              -- вложенность - по Весу
-           , tmpRes.WeightOnBox_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.WeightOnBox_1
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.WeightOnBox_2
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.WeightOnBox_3
+             END :: TFloat AS WeightOnBox_2
              -- Вложенность - шт (НЕ информативно!)
-           , tmpRes.CountOnBox_2
+           , CASE WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.CountOnBox_1
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.CountOnBox_2
+                  WHEN tmpNpp_2.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.CountOnBox_3
+             END :: TFloat AS CountOnBox_2
+
 
              -- Признак - 3-ья линия - № 3 по приоритету
-           , COALESCE ((SELECT tmpNpp.GoodsTypeKindId   FROM tmpNpp   WHERE tmpNpp.Ord   = 3)
-                     , (SELECT tmpNppNo.GoodsTypeKindId FROM tmpNppNo WHERE tmpNppNo.Ord = 1)
-                      ) :: Integer  AS GoodsTypeKindId_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.GoodsTypeKindId_Sh
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.GoodsTypeKindId_Nom
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.GoodsTypeKindId_Ves
+
+                  WHEN tmpNpp_3.Npp = 500
+                       THEN -1
+                  WHEN tmpNpp_3.Npp = 200
+                       THEN -2
+                  WHEN tmpNpp_3.Npp = 300
+                       THEN -3
+
+             END :: Integer AS GoodsTypeKindId_3
         -- , 0  :: Integer  AS BarCodeBoxId_3
         -- , 0  :: Integer  AS BoxCode_3
         -- , '' :: TVarChar AS BoxBarCode_3
         -- , 0  :: TFloat   AS WeightOnBoxTotal_3
         -- , 0  :: TFloat   AS CountOnBoxTotal_3
-        -- , 0  :: TFloat   AS WeightTotal_1
-        -- , 0  :: TFloat   AS CountTotal_1
-        -- , 0  :: TFloat   AS BoxTotal_1
+        -- , 0  :: TFloat   AS WeightTotal_3
+        -- , 0  :: TFloat   AS CountTotal_3
+        -- , 0  :: TFloat   AS BoxTotal_3
              -- Ящик
-           , tmpRes.BoxId_3
-           , tmpRes.BoxName_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxId_1
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxId_2
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxId_3
+             END :: Integer AS BoxId_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxName_1
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxName_2
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxName_3
+             END :: TVarChar AS BoxName_3
              -- Вес самого ящика
-           , tmpRes.BoxWeight_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.BoxWeight_1
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.BoxWeight_2
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.BoxWeight_3
+             END :: TFloat AS BoxWeight_3
              -- вложенность - по Весу
-           , tmpRes.WeightOnBox_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.WeightOnBox_1
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.WeightOnBox_2
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.WeightOnBox_3
+             END :: TFloat AS WeightOnBox_3
              -- Вложенность - шт (НЕ информативно!)
-           , tmpRes.CountOnBox_3
+           , CASE WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Sh
+                       THEN tmpRes.CountOnBox_1
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Nom
+                       THEN tmpRes.CountOnBox_2
+                  WHEN tmpNpp_3.GoodsTypeKindId = tmpRes.GoodsTypeKindId_Ves
+                       THEN tmpRes.CountOnBox_3
+             END :: TFloat AS CountOnBox_3
+
       FROM tmpRes
+           -- находим на какой линии какая категория "распологается" или "НЕ распологается" 
+           LEFT JOIN tmpNpp AS tmpNpp_1 ON tmpNpp_1.Ord = 1
+           LEFT JOIN tmpNpp AS tmpNpp_2 ON tmpNpp_2.Ord = 2
+           LEFT JOIN tmpNpp AS tmpNpp_3 ON tmpNpp_3.Ord = 3
      ;
 
 END;

@@ -114,6 +114,10 @@ BEGIN
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Sh  AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
                                    , tmpGoods_all.GoodsTypeKindId_Sh                                                       AS GoodsTypeKindId
+                                   , tmpGoods_all.WeightMin_Sh                                                             AS WeightMin_real
+                                   , tmpGoods_all.WeightMax_Sh                                                             AS WeightMax_real
+                                   , tmpGoods_all.WeightAvg_Sh                                                             AS WeightAvg_real
+                                   , tmpGoods_all.WeightOnBox_Sh                                                           AS WeightOnBox_real
                                    , *
                               FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Sh  = zc_Enum_GoodsTypeKind_Sh()
                              UNION ALL
@@ -123,6 +127,10 @@ BEGIN
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Nom AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
                                    , tmpGoods_all.GoodsTypeKindId_Nom                                                      AS GoodsTypeKindId
+                                   , tmpGoods_all.WeightMin_Nom                                                            AS WeightMin_real
+                                   , tmpGoods_all.WeightMax_Nom                                                            AS WeightMax_real
+                                   , tmpGoods_all.WeightAvg_Nom                                                            AS WeightAvg_real
+                                   , tmpGoods_all.WeightOnBox_Nom                                                          AS WeightOnBox_real
                                    , *
                               FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Nom = zc_Enum_GoodsTypeKind_Nom()
                              UNION ALL
@@ -132,6 +140,10 @@ BEGIN
                                    , tmpGoods_all.GoodsName_repl || ' ' || tmpGoods_all.GoodsKindName || ' ' || vbName_Ves AS name
                                    , tmpGoods_all.NormInDays                                                               AS product_life
                                    , tmpGoods_all.GoodsTypeKindId_Ves                                                      AS GoodsTypeKindId
+                                   , tmpGoods_all.WeightMin_Ves                                                            AS WeightMin_real
+                                   , tmpGoods_all.WeightMax_Ves                                                            AS WeightMax_real
+                                   , tmpGoods_all.WeightAvg_Ves                                                            AS WeightAvg_real
+                                   , tmpGoods_all.WeightOnBox_Ves                                                          AS WeightOnBox_real
                                    , *
                               FROM tmpGoods_all WHERE tmpGoods_all.GoodsTypeKindId_Ves = zc_Enum_GoodsTypeKind_Ves()
                              )
@@ -145,9 +157,9 @@ BEGIN
              , tmpGoods.InfoMoneyGroupId, tmpGoods.InfoMoneyDestinationId, tmpGoods.InfoMoneyId
 
                -- Вес 1-ой ед.
-             , tmpGoods.WeightMin
-             , tmpGoods.WeightMax
-             , ((tmpGoods.WeightMin + tmpGoods.WeightMax) / 2) :: TFloat AS WeightAvg
+             , tmpGoods.WeightMin_real AS WeightMin
+             , tmpGoods.WeightMax_real AS WeightMax_real
+             , tmpGoods.WeightAvg_real AS WeightAvg
                -- размеры 1-ой ед.
              , tmpGoods.Height
              , tmpGoods.Length
@@ -158,10 +170,7 @@ BEGIN
              , tmpGoods.BoxId, tmpGoods.BoxCode, tmpGoods.BoxName
 
                -- *заменили - Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
-             , CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                         THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                    ELSE tmpGoods.WeightOnBox
-               END :: TFloat AS WeightOnBox
+             , tmpGoods.WeightOnBox_real AS WeightOnBox
 
              , tmpGoods.CountOnBox               -- Кол-во ед. в ящ. (E2/E3)
              , tmpGoods.BoxVolume                -- Объем ящ., м3. (E2/E3)
@@ -171,40 +180,26 @@ BEGIN
              , tmpGoods.BoxWidth                 -- Ширина ящ. (E2/E3)
 
                -- *заменили - Вес брутто полного ящика "??? по среднему весу" (E2/E3)
-             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                     ELSE tmpGoods.WeightOnBox
-                END
-              + tmpGoods.BoxWeight
-               ) :: TFloat AS WeightGross
+             , (tmpGoods.WeightOnBox_real + tmpGoods.BoxWeight) :: TFloat AS WeightGross
 
                -- *заменили - Вес брутто полного ящика "по среднему весу" (E2/E3)
-             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                     ELSE tmpGoods.WeightOnBox
-                END
-              + tmpGoods.BoxWeight
-               ) :: TFloat AS WeightAvgGross
+             , (tmpGoods.WeightOnBox_real + tmpGoods.BoxWeight) :: TFloat AS WeightAvgGross
 
                -- *заменили - Вес нетто полного ящика "по среднему весу" (E2/E3) - тоже что и WeightOnBox
-             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMin > 0 AND tmpGoods.WeightMax > 0
-                          THEN tmpGoods.CountOnBox * (tmpGoods.WeightMin + tmpGoods.WeightMax) / 2
-                     ELSE tmpGoods.WeightOnBox
-                END
-               ) :: TFloat AS WeightAvgNet
+             , tmpGoods.WeightOnBox_real :: TFloat AS WeightAvgNet
 
                -- ***заменили - Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
-             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax > 0
-                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax
-                     ELSE tmpGoods.WeightOnBox
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax_real > 0
+                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax_real
+                     ELSE tmpGoods.WeightOnBox_real
                 END
               + tmpGoods.BoxWeight
                ) :: TFloat AS WeightMaxGross
 
                -- ***заменили - Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3) - тоже что и WeightOnBox
-             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax > 0
-                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax
-                     ELSE tmpGoods.WeightOnBox
+             , (CASE WHEN tmpGoods.CountOnBox > 0 AND tmpGoods.WeightMax_real > 0
+                          THEN tmpGoods.CountOnBox * tmpGoods.WeightMax_real
+                     ELSE tmpGoods.WeightOnBox_real
                 END
                ) :: TFloat AS WeightMaxNet
 

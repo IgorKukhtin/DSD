@@ -45,15 +45,15 @@ BEGIN
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML
      INSERT INTO wms_Message (GUID, ProcName, TagName, ActionName, RowNum, RowData, ObjectId, GroupId, InsertDate)
-        WITH tmpGoods AS (SELECT tmp.sku_id            :: Integer -- ***Уникальный код товара в товарном справочнике предприятия
-                               , tmp.sku_code                     -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
-                               , tmp.GoodsId                      -- 
-                               , tmp.GoodsKindId                  -- 
-                               , tmp.GoodsTypeKindId              -- 
-                               , tmp.WeightMin                    -- 
-                               , tmp.WeightMax                    -- 
-                          FROM lpSelect_wms_Object_SKU() AS tmp
-                         )
+        WITH tmpGoods_wms AS (SELECT tmp.sku_id            :: Integer -- ***Уникальный код товара в товарном справочнике предприятия
+                                   , tmp.sku_code                     -- Уникальный, человеко-читаемый код товара для отображения в экранных формах.
+                                   , tmp.GoodsId                      -- 
+                                   , tmp.GoodsKindId                  -- 
+                                   , tmp.GoodsTypeKindId              -- 
+                                   , tmp.WeightMin                    -- 
+                                   , tmp.WeightMax                    -- 
+                              FROM lpSelect_wms_Object_SKU() AS tmp
+                             )
             -- этим покупателям ставим лучшую Категорию
           , tmpPartnerTag AS (SELECT Object.Id AS PartnerTagId
                                 -- , zc_Enum_GoodsTypeKind_Nom() AS GoodsTypeKind
@@ -83,23 +83,38 @@ BEGIN
                                    , MILO_GoodsKind.ObjectId                           AS GoodsKindId
                                    , OL_Goods_Measure.ChildObjectId                    AS MeasureId
                                      -- !!!test
-                                   , CASE WHEN tmpTest.MovementId > 0
+                                   , CASE /*when MILO_GoodsKind.ObjectId = 8352
+                                               then 29
+                                          when MILO_GoodsKind.ObjectId = 8347
+                                               then 58*/
+
+                                          WHEN tmpTest.MovementId > 0
                                            AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 100
-                                          THEN 4
+                                           AND 1=0
+                                               THEN 4
+
                                           WHEN tmpTest.MovementId > 0
                                            AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 10
-                                          THEN CEIL((MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)) / 10)
+                                           AND 1=0
+                                               THEN CEIL((MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)) / 10)
+ 
                                           ELSE MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0)
+
                                      END AS Amount
                                  --, 1 AS Amount
+
                                      -- расчетная Категория - некоторым ставим лучшую 
                                    , CASE WHEN OL_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                                            AND tmpPartnerTag.PartnerTagId > 0
                                                THEN zc_Enum_GoodsTypeKind_Sh()
+
                                           WHEN tmpPartnerTag.PartnerTagId > 0
                                                THEN zc_Enum_GoodsTypeKind_Nom()
+
                                           ELSE zc_Enum_GoodsTypeKind_Ves()
+
                                      END AS GoodsTypeKindId_calc
+
                                    , tmpPartnerTag.PartnerTagId AS PartnerTagId_find
                                 -- , COALESCE (OL_Partner_Juridical.ChildObjectId, 0)  AS JuridicalId
                              FROM Movement
@@ -142,11 +157,11 @@ BEGIN
                                   JOIN tmpTest ON tmpTest.MovementId  = Movement.Id
                                               AND tmpTest.GoodsId     = MovementItem.ObjectId
                                               AND tmpTest.GoodsKindId = MILO_GoodsKind.ObjectId
-                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '7 DAY'
+                             WHERE Movement.OperDate >= CURRENT_DATE - INTERVAL '12 DAY'
                                AND Movement.DescId   = zc_Movement_OrderExternal()
                                AND Movement.StatusId = zc_Enum_Status_Complete()
                                AND MovementLinkObject_To.ObjectId = 8459 -- Склад Реализации
-                               -- AND Movement.InvNumber IN ('980741') -- 952893
+                               -- AND Movement.InvNumber IN ('1035691') -- 952893
                                AND MovementItem.Amount + COALESCE (MIF_AmountSecond.ValueData, 0) > 0
                             )
           -- результат - Документы
@@ -172,60 +187,60 @@ BEGIN
                          )
             -- нашли св-ва WMS 
           , tmpMI_all AS (SELECT tmpMovement_all.*
-                               , COALESCE (tmpGoods_best.sku_code
-                                         , COALESCE (tmpGoods_best.sku_code
-                                         , COALESCE (tmpGoods_Nom.sku_code
-                                         , COALESCE (tmpGoods_Sh.sku_code
-                                         , COALESCE (tmpGoods_Ves.sku_code, 0)
+                               , COALESCE (tmpGoods_wms_best.sku_code
+                                         , COALESCE (tmpGoods_wms_best.sku_code
+                                         , COALESCE (tmpGoods_wms_Nom.sku_code
+                                         , COALESCE (tmpGoods_wms_Sh.sku_code
+                                         , COALESCE (tmpGoods_wms_Ves.sku_code, 0)
                                           )))) AS sku_code
-                               , COALESCE (tmpGoods_best.sku_id
-                                         , COALESCE (tmpGoods_best.sku_id
-                                         , COALESCE (tmpGoods_Nom.sku_id
-                                         , COALESCE (tmpGoods_Sh.sku_id
-                                         , COALESCE (tmpGoods_Ves.sku_id, 0)
+                               , COALESCE (tmpGoods_wms_best.sku_id
+                                         , COALESCE (tmpGoods_wms_best.sku_id
+                                         , COALESCE (tmpGoods_wms_Nom.sku_id
+                                         , COALESCE (tmpGoods_wms_Sh.sku_id
+                                         , COALESCE (tmpGoods_wms_Ves.sku_id, 0)
                                           )))) AS sku_id
                                  -- Количество товара (для весового количество передается в гр.) 
-                               ,  COALESCE (tmpGoods_best.GoodsTypeKindId
-                                         , COALESCE (tmpGoods_best.GoodsTypeKindId
-                                         , COALESCE (tmpGoods_Nom.GoodsTypeKindId
-                                         , COALESCE (tmpGoods_Sh.GoodsTypeKindId
-                                         , COALESCE (tmpGoods_Ves.GoodsTypeKindId, 0)
+                               ,  COALESCE (tmpGoods_wms_best.GoodsTypeKindId
+                                         , COALESCE (tmpGoods_wms_best.GoodsTypeKindId
+                                         , COALESCE (tmpGoods_wms_Nom.GoodsTypeKindId
+                                         , COALESCE (tmpGoods_wms_Sh.GoodsTypeKindId
+                                         , COALESCE (tmpGoods_wms_Ves.GoodsTypeKindId, 0)
                                           )))) AS GoodsTypeKindId
-                               , COALESCE (tmpGoods_best.WeightMin
-                                         , COALESCE (tmpGoods_best.WeightMin
-                                         , COALESCE (tmpGoods_Nom.WeightMin
-                                         , COALESCE (tmpGoods_Sh.WeightMin
-                                         , COALESCE (tmpGoods_Ves.WeightMin, 0)
+                               , COALESCE (tmpGoods_wms_best.WeightMin
+                                         , COALESCE (tmpGoods_wms_best.WeightMin
+                                         , COALESCE (tmpGoods_wms_Nom.WeightMin
+                                         , COALESCE (tmpGoods_wms_Sh.WeightMin
+                                         , COALESCE (tmpGoods_wms_Ves.WeightMin, 0)
                                           )))) AS WeightMin
-                               , COALESCE (tmpGoods_best.WeightMax
-                                         , COALESCE (tmpGoods_best.WeightMax
-                                         , COALESCE (tmpGoods_Nom.WeightMax
-                                         , COALESCE (tmpGoods_Sh.WeightMax
-                                         , COALESCE (tmpGoods_Ves.WeightMax, 0)
+                               , COALESCE (tmpGoods_wms_best.WeightMax
+                                         , COALESCE (tmpGoods_wms_best.WeightMax
+                                         , COALESCE (tmpGoods_wms_Nom.WeightMax
+                                         , COALESCE (tmpGoods_wms_Sh.WeightMax
+                                         , COALESCE (tmpGoods_wms_Ves.WeightMax, 0)
                                           )))) AS WeightMax
                           FROM tmpMovement_all
-                               LEFT JOIN tmpGoods AS tmpGoods_best
-                                                  ON tmpGoods_best.GoodsId         = tmpMovement_all.GoodsId
-                                                 AND tmpGoods_best.GoodsKindId     = tmpMovement_all.GoodsKindId
-                                                 AND tmpGoods_best.GoodsTypeKindId = tmpMovement_all.GoodsTypeKindId_calc
-                               LEFT JOIN tmpGoods AS tmpGoods_Nom
-                                                  ON tmpGoods_Nom.GoodsId          = tmpMovement_all.GoodsId
-                                                 AND tmpGoods_Nom.GoodsKindId      = tmpMovement_all.GoodsKindId
-                                                 AND tmpGoods_Nom.GoodsTypeKindId  = zc_Enum_GoodsTypeKind_Nom()
-                                                 AND tmpGoods_best.GoodsTypeKindId IS NULL
-                               LEFT JOIN tmpGoods AS tmpGoods_Sh
-                                                  ON tmpGoods_Sh.GoodsId           = tmpMovement_all.GoodsId
-                                                 AND tmpGoods_Sh.GoodsKindId       = tmpMovement_all.GoodsKindId
-                                                 AND tmpGoods_Sh.GoodsTypeKindId   = zc_Enum_GoodsTypeKind_Sh()
-                                                 AND tmpGoods_best.GoodsTypeKindId IS NULL
-                                                 AND tmpGoods_Nom.GoodsTypeKindId  IS NULL
-                               LEFT JOIN tmpGoods AS tmpGoods_Ves
-                                                  ON tmpGoods_Ves.GoodsId           = tmpMovement_all.GoodsId
-                                                 AND tmpGoods_Ves.GoodsKindId       = tmpMovement_all.GoodsKindId
-                                                 AND tmpGoods_Ves.GoodsTypeKindId   = zc_Enum_GoodsTypeKind_Ves()
-                                                 AND tmpGoods_best.GoodsTypeKindId IS NULL
-                                                 AND tmpGoods_Nom.GoodsTypeKindId  IS NULL
-                                                 AND tmpGoods_Sh.GoodsTypeKindId   IS NULL
+                               LEFT JOIN tmpGoods_wms AS tmpGoods_wms_best
+                                                  ON tmpGoods_wms_best.GoodsId         = tmpMovement_all.GoodsId
+                                                 AND tmpGoods_wms_best.GoodsKindId     = tmpMovement_all.GoodsKindId
+                                                 AND tmpGoods_wms_best.GoodsTypeKindId = tmpMovement_all.GoodsTypeKindId_calc
+                               LEFT JOIN tmpGoods_wms AS tmpGoods_wms_Nom
+                                                  ON tmpGoods_wms_Nom.GoodsId          = tmpMovement_all.GoodsId
+                                                 AND tmpGoods_wms_Nom.GoodsKindId      = tmpMovement_all.GoodsKindId
+                                                 AND tmpGoods_wms_Nom.GoodsTypeKindId  = zc_Enum_GoodsTypeKind_Nom()
+                                                 AND tmpGoods_wms_best.GoodsTypeKindId IS NULL
+                               LEFT JOIN tmpGoods_wms AS tmpGoods_wms_Sh
+                                                  ON tmpGoods_wms_Sh.GoodsId           = tmpMovement_all.GoodsId
+                                                 AND tmpGoods_wms_Sh.GoodsKindId       = tmpMovement_all.GoodsKindId
+                                                 AND tmpGoods_wms_Sh.GoodsTypeKindId   = zc_Enum_GoodsTypeKind_Sh()
+                                                 AND tmpGoods_wms_best.GoodsTypeKindId IS NULL
+                                                 AND tmpGoods_wms_Nom.GoodsTypeKindId  IS NULL
+                               LEFT JOIN tmpGoods_wms AS tmpGoods_wms_Ves
+                                                  ON tmpGoods_wms_Ves.GoodsId           = tmpMovement_all.GoodsId
+                                                 AND tmpGoods_wms_Ves.GoodsKindId       = tmpMovement_all.GoodsKindId
+                                                 AND tmpGoods_wms_Ves.GoodsTypeKindId   = zc_Enum_GoodsTypeKind_Ves()
+                                                 AND tmpGoods_wms_best.GoodsTypeKindId IS NULL
+                                                 AND tmpGoods_wms_Nom.GoodsTypeKindId  IS NULL
+                                                 AND tmpGoods_wms_Sh.GoodsTypeKindId   IS NULL
                          )
                 -- результат - Строки
               , tmpMI AS (SELECT tmpMovement.order_id

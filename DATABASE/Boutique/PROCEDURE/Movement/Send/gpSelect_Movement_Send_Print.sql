@@ -228,6 +228,7 @@ BEGIN
               , tmpData.OperPrice
               , tmpData.OperPriceList
               , tmpData.OperPriceListTo
+       ORDER BY 4
        ;
 
     RETURN NEXT Cursor2;

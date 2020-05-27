@@ -186,7 +186,7 @@ BEGIN
              LEFT JOIN ObjectFloat   AS OF_SN  ON OF_SN.ObjectId  = OB.ObjectId AND OF_SN.DescId  = zc_ObjectFloat_Unit_LimitSUN_N()
              LEFT JOIN ObjectBoolean AS OB_LS  ON OB_LS.ObjectId  = OB.ObjectId AND OB_LS.DescId  = zc_ObjectBoolean_Unit_SUN_v2_LockSale()
              LEFT JOIN ObjectString  AS OS_LL  ON OS_LL.ObjectId  = OB.ObjectId AND OS_LL.DescId  = zc_ObjectString_Unit_SUN_v2_Lock()
-             
+
       --WHERE OB.ValueData = TRUE AND OB.DescId = zc_ObjectBoolean_Unit_SUN()
         WHERE (OB.ValueData = TRUE
           --OR OB.ObjectId in (183292, 9771036) -- select * from object where Id in (183292, 9771036)
@@ -586,6 +586,18 @@ BEGIN
                          GROUP BY Container.WhereObjectId
                                 , Container.ObjectId
                         )
+          -- MCS_isClose
+        , tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
+                                   FROM ObjectLink AS OL_Price_Unit
+                                        -- !!!только для таких Аптек!!!
+                                        INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
+                                        --
+                                        INNER JOIN ObjectBoolean AS MCS_isClose
+                                                                 ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                                AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                                AND MCS_isClose.ValueData = TRUE
+                                   WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                  )
           -- цены
         , tmpPrice AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                             , OL_Price_Goods.ChildObjectId      AS GoodsId
@@ -599,10 +611,8 @@ BEGIN
                             -- !!!только для таких Аптек!!!
                             INNER JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = OL_Price_Unit.ChildObjectId
                             -- 25.05.20 -- временно отключил - 21.05.20
-                            LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                    ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
-                                                   AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
-                                                   AND MCS_isClose.ValueData = TRUE
+                            LEFT JOIN tmpPrice_MCS_isClose AS MCS_isClose
+                                                           ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
                             LEFT JOIN ObjectLink AS OL_Price_Goods
                                                  ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                 AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -672,6 +682,7 @@ BEGIN
                              )
      -- 2.5. Результат: все остатки, продажи => расчет кол-во ПОТРЕБНОСТЬ у получателя: от колонки Остаток отнять Данные по отложенным чекам - получится реальный остаток на точке
      INSERT INTO  _tmpRemains_all (UnitId, GoodsId, Price, MCS, AmountResult, AmountRemains, AmountIncome, AmountSend_in, AmountSend_out, AmountOrderExternal, AmountReserve)
+        --
         SELECT tmpObject_Price.UnitId
              , tmpObject_Price.GoodsId
              , tmpObject_Price.Price
@@ -768,8 +779,10 @@ BEGIN
 
              -- отбросили !!закрытые!!
              -- 25.05.20 -- временно отключил - 13.05.20
-             LEFT JOIN Object_Goods_View ON Object_Goods_View.Id      = tmpObject_Price.GoodsId
-                                        AND Object_Goods_View.IsClose = TRUE
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isClose
+                                     ON ObjectBoolean_Goods_isClose.ObjectId  = tmpObject_Price.GoodsId
+                                    AND ObjectBoolean_Goods_isClose.DescId    = zc_ObjectBoolean_Goods_Close()   
+                                    AND ObjectBoolean_Goods_isClose.ValueData = TRUE
              -- !!!
              LEFT JOIN _tmpUnit_SUN ON _tmpUnit_SUN.UnitId = tmpObject_Price.UnitId
 
@@ -784,7 +797,7 @@ BEGIN
              */
         WHERE OB_Unit_SUN_out.ObjectId IS NULL
           -- товары "закрыт код"
-          AND (Object_Goods_View.Id IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
+          AND (ObjectBoolean_Goods_isClose.ObjectId IS NULL OR _tmpUnit_SUN.isLock_CloseGd = FALSE)
        ;
 
      -- 2.6. Результат: все остатки, продажи => получаем кол-ва ПОТРЕБНОСТЬ у получателя
@@ -794,7 +807,7 @@ BEGIN
              -- если товар среди парных
              LEFT JOIN (SELECT DISTINCT _tmpGoods_SUN_PairSun.GoodsId_PairSun FROM _tmpGoods_SUN_PairSun
                        ) AS _tmpGoods_SUN_PairSun_find ON _tmpGoods_SUN_PairSun_find.GoodsId_PairSun = _tmpRemains_all.GoodsId
-        
+
         WHERE -- !!!только с таким AmountResult!!!
               _tmpRemains_all.AmountResult >= 1.0
               -- !!!Добавили парные!!!
@@ -1128,6 +1141,22 @@ BEGIN
                            GROUP BY _tmpRemains_Partion_all.UnitId
                                   , _tmpRemains_Partion_all.GoodsId
                           )
+          -- MCS_isClose
+        , tmpPrice_MCS_isClose AS (SELECT MCS_isClose.*
+                                   FROM ObjectLink AS OL_Price_Unit
+                                        INNER JOIN ObjectLink AS OL_Price_Goods
+                                                              ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
+                                                             AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
+                                        -- !!!только для таких!!!
+                                        INNER JOIN tmpGoods_sum ON tmpGoods_sum.UnitId  = OL_Price_Unit.ChildObjectId
+                                                               AND tmpGoods_sum.GoodsId = OL_Price_Goods.ChildObjectId
+                                        --
+                                        INNER JOIN ObjectBoolean AS MCS_isClose
+                                                                 ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
+                                                                AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
+                                                                AND MCS_isClose.ValueData = TRUE
+                                   WHERE OL_Price_Unit.DescId = zc_ObjectLink_Price_Unit()
+                                  )
                -- MCS + Price
              , tmpMCS AS (SELECT OL_Price_Unit.ChildObjectId       AS UnitId
                                , OL_Price_Goods.ChildObjectId      AS GoodsId
@@ -1135,10 +1164,8 @@ BEGIN
                                , MCS_Value.ValueData               AS MCSValue
                           FROM ObjectLink AS OL_Price_Unit
                                -- 25.05.20 -- временно отключил - 21.05.20
-                               LEFT JOIN ObjectBoolean AS MCS_isClose
-                                                       ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
-                                                      AND MCS_isClose.DescId    = zc_ObjectBoolean_Price_MCSIsClose()
-                                                      AND MCS_isClose.ValueData = TRUE
+                               LEFT JOIN tmpPrice_MCS_isClose AS MCS_isClose
+                                                              ON MCS_isClose.ObjectId  = OL_Price_Unit.ObjectId
                                LEFT JOIN ObjectLink AS OL_Price_Goods
                                                     ON OL_Price_Goods.ObjectId = OL_Price_Unit.ObjectId
                                                    AND OL_Price_Goods.DescId   = zc_ObjectLink_Price_Goods()
@@ -1567,7 +1594,7 @@ BEGIN
 
 
      -- !!!Удаляем НЕ получившиеся пары!!!
-     DELETE FROM _tmpResult_Partion 
+     DELETE FROM _tmpResult_Partion
      WHERE (_tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar)
            IN (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
                FROM _tmpResult_Partion
@@ -1598,7 +1625,7 @@ BEGIN
       ;
 
      -- !!!проверка - получившиеся пары - для теста!!!
-     IF (inUserId = 5 AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) > 11)
+     IF (inUserId = 5 AND EXTRACT (HOUR FROM CURRENT_TIMESTAMP) >= 10)
      AND EXISTS (SELECT _tmpResult_Partion.UnitId_from :: TVarChar || '_' || _tmpResult_Partion.UnitId_to :: TVarChar || '_' || _tmpResult_Partion.GoodsId :: TVarChar
                  FROM _tmpResult_Partion
                       -- нашли пару
@@ -1820,7 +1847,7 @@ BEGIN
        -- ORDER BY Object_Unit.ValueData, Object_Goods.ObjectCode
       ;
 
-    -- RAISE EXCEPTION '<ok>';
+  --  RAISE EXCEPTION '<ok>';
 
 
 END;

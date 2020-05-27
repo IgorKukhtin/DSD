@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_MovementItem_Loss_scale() - !!!сделана т.к. для печати из scale нужны цены и суммы!!!
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
+-- DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Loss_scale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TDateTime, TVarChar, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss_scale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Loss_scale(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
+    IN inPartionGoodsDate    TDateTime , -- Дата партии/Дата перемещения
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inUserId              Integer     -- пользователь
@@ -24,7 +26,7 @@ BEGIN
                                             , inAmount              := inAmount
                                             , inCount               := 0    -- !!!не ошибка, здесь не формируется!!!
                                             , inHeadCount           := 0    -- !!!не ошибка, здесь не формируется!!!
-                                            , inPartionGoodsDate    := NULL -- !!!не ошибка, здесь не формируется!!!
+                                            , inPartionGoodsDate    := inPartionGoodsDate
                                             , inPartionGoods        := inPartionGoods
                                             , inGoodsKindId         := inGoodsKindId
                                             , inGoodsKindCompleteId := NULL -- !!!не ошибка, здесь не формируется!!!

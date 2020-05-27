@@ -60,7 +60,7 @@ BEGIN
                             , MI.PartionDate - INTERVAL '0 DAY' AS production_date
                               -- Вес (вес товара)
                             , SUM (MI.RealWeight) AS real_weight
-                              -- Вес лотка
+                              -- Вес самого ящ. (E2/E3)
                             , COALESCE (wms_Object_GoodsByGoodsKind.BoxWeight, 0.0) :: TFloat AS pack_weight
                               -- Номер задания на упаковку
                             , COALESCE (wms_MI_Incoming.Id, 0) :: Integer AS inc_id
@@ -77,18 +77,18 @@ BEGIN
                                                                           )
                             LEFT JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId
                             LEFT JOIN ObjectLink AS OL_Goods_Measure
-                                                 ON OL_Goods_Measure.ObjectId = Movement.GoodsId
+                                                 ON OL_Goods_Measure.ObjectId = CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh ELSE Movement.GoodsId END
                                                 AND OL_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                             -- линейная табл.
-                            LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = Movement.GoodsId
-                                                                 AND wms_Object_GoodsByGoodsKind.GoodsKindId = Movement.GoodsKindId
+                            LEFT JOIN wms_Object_GoodsByGoodsKind ON wms_Object_GoodsByGoodsKind.GoodsId     = CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh     ELSE Movement.GoodsId     END
+                                                                 AND wms_Object_GoodsByGoodsKind.GoodsKindId = CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsKindId_link_sh ELSE Movement.GoodsKindId END
                             -- линейная табл.
                             INNER JOIN wms_MI_Incoming ON wms_MI_Incoming.OperDate        = Movement.OperDate
-                                                      AND wms_MI_Incoming.GoodsId         = Movement.GoodsId
-                                                      AND wms_MI_Incoming.GoodsKindId     = Movement.GoodsKindId
+                                                      AND wms_MI_Incoming.GoodsId         = CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh     ELSE Movement.GoodsId     END
+                                                      AND wms_MI_Incoming.GoodsKindId     = CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsKindId_link_sh ELSE Movement.GoodsKindId END
                                                       AND wms_MI_Incoming.GoodsTypeKindId = MI.GoodsTypeKindId
                                                       -- !!!обязательно сначала должен уйти Incoming!!!
-                                                      AND wms_MI_Incoming.StatusId_wms    = zc_Enum_Status_UnComplete()
+                                                      AND wms_MI_Incoming.StatusId_wms    IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Complete())
 
                        WHERE Movement.OperDate BETWEEN CURRENT_DATE - INTERVAL '1 DAY' AND CURRENT_DATE + INTERVAL '1 DAY'
                              -- не удален

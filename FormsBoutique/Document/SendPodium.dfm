@@ -1384,7 +1384,7 @@ object SendPodiumForm: TSendPodiumForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsCode;GoodsSizeName'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
         end>
       Params = <
         item
@@ -1445,7 +1445,7 @@ object SendPodiumForm: TSendPodiumForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsCode;GoodsSizeName'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
         end>
       Params = <
         item
@@ -1513,7 +1513,7 @@ object SendPodiumForm: TSendPodiumForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'PartnerName;GoodsCode;GoodsSizeName'
+          IndexFieldNames = 'GoodsCode;GoodsSizeName'
         end>
       Params = <
         item

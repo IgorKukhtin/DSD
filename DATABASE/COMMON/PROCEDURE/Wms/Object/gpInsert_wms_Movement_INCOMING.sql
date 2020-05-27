@@ -54,7 +54,8 @@ BEGIN
         WITH tmpTest AS (SELECT lpSelect.GoodsId, lpSelect.sku_id :: TVarChar AS sku_id FROM lpSelect_Object_wms_SKU_test() AS lpSelect
                          WHERE 1=0
                        UNION
-                         SELECT Movement.GoodsId, MI.sku_id :: TVarChar AS sku_id 
+                         SELECT CASE WHEN MI.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Sh() AND Movement.GoodsId_link_sh > 0 THEN Movement.GoodsId_link_sh ELSE Movement.GoodsId END AS GoodsId
+                              , MI.sku_id :: TVarChar AS sku_id 
                          FROM wms_Movement_WeighingProduction AS Movement
                               INNER JOIN wms_MI_WeighingProduction AS MI ON MI.MovementId = Movement.Id
                                                                         AND MI.isErased   = FALSE
