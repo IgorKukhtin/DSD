@@ -135,12 +135,13 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
-         , tmpMI_Child_ContainerId AS (SELECT tmpMIFloat_ContainerId.ContainerId
+         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
                                             , MovementItem.Id                     AS MovementItemId
                                             , MovementItem.ParentID               AS ParentID
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                       GROUP BY MovementItem.Id, MovementItem.ParentID, tmpMIFloat_ContainerId.ContainerId
+                                            INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                       GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId 
                                        )
          , tmpMIContainerPD AS (SELECT MovementItemContainer.MovementItemID     AS Id
                                      , Container.ParentId                       AS ParentId
@@ -290,13 +291,14 @@ BEGIN
                                       WHERE MovementItemFloat.MovementItemId IN (SELECT tmpMI_Child.Id FROM tmpMI_Child WHERE tmpMI_Child.IsErased = FALSE)
                                         AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                       )
-         , tmpMI_Child_ContainerId AS (SELECT tmpMIFloat_ContainerId.ContainerId
+         , tmpMI_Child_ContainerId AS (SELECT Container.ParentId                  AS ContainerId
                                             , MovementItem.Id                     AS MovementItemId
                                             , MovementItem.ParentID               AS ParentID
                                             , SUM(MovementItem.Amount)            AS Amount
                                        FROM tmpMI_Child AS MovementItem
                                             INNER JOIN tmpMIFloat_ContainerId ON tmpMIFloat_ContainerId.MovementItemId = MovementItem.ID
-                                       GROUP BY MovementItem.Id, MovementItem.ParentID, tmpMIFloat_ContainerId.ContainerId
+                                            INNER JOIN Container ON Container.Id = tmpMIFloat_ContainerId.ContainerId
+                                       GROUP BY MovementItem.Id, MovementItem.ParentID, Container.ParentId
                                        )
          , REMAINS AS ( --остатки
                        SELECT Container.Id

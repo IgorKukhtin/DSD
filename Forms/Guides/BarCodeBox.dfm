@@ -55,6 +55,7 @@ object BarCodeBoxForm: TBarCodeBoxForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 49
       end
       object BarCode: TcxGridDBColumn
@@ -249,6 +250,14 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end
         item
           Visible = True
+          ItemName = 'bbInsert_Object_PrintGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint2'
         end
         item
@@ -326,6 +335,10 @@ object BarCodeBoxForm: TBarCodeBoxForm
     end
     object bbPrint2: TdxBarButton
       Action = actPrint_2
+      Category = 0
+    end
+    object bbInsert_Object_PrintGrid: TdxBarButton
+      Action = macInsert_Object_PrintGrid
       Category = 0
     end
   end
@@ -498,6 +511,32 @@ object BarCodeBoxForm: TBarCodeBoxForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object actDelete_Object_Print: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spDelete_Object_Print
+      StoredProcList = <
+        item
+          StoredProc = spDelete_Object_Print
+        end>
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1074#1088'. '#1090#1072#1073#1083#1080#1094#1091
+      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1074#1088'. '#1090#1072#1073#1083#1080#1094#1091
+      ImageIndex = 23
+    end
+    object actInsert_Object_Print: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsert_Object_Print
+      StoredProcList = <
+        item
+          StoredProc = spInsert_Object_Print
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096'/'#1082' '#1074#1086' '#1074#1088#1077#1084' '#1090#1072#1073#1083#1080#1094#1091
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096'/'#1082' '#1074#1086' '#1074#1088#1077#1084' '#1090#1072#1073#1083#1080#1094#1091
+      ImageIndex = 23
+    end
     object actInsert_BarCodeBox: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -633,6 +672,62 @@ object BarCodeBoxForm: TBarCodeBoxForm
         end>
       isShowModal = False
     end
+    object actPrint_Grid: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Value = '0'
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'StartDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end
+        item
+          FromParam.Value = 42186d
+          FromParam.DataType = ftDateTime
+          FromParam.MultiSelectSeparator = ','
+          ToParam.Name = 'EndDate'
+          ToParam.Value = 'NULL'
+          ToParam.DataType = ftDateTime
+          ToParam.ParamType = ptInputOutput
+          ToParam.MultiSelectSeparator = ','
+        end>
+      StoredProc = spSelectPrintByGrid
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintByGrid
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' ('#1082#1086#1083'-'#1074#1086' '#1087#1077#1095')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
+      ImageIndex = 21
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <>
+      ReportName = 'Print_Object_BarCodeBox'
+      ReportNameParam.Value = 'Print_Object_BarCodeBox'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
     object actPrint_2: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -723,8 +818,8 @@ object BarCodeBoxForm: TBarCodeBoxForm
           ToParam.MultiSelectSeparator = ','
         end>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
-      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074
+      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' (1 '#1101#1082#1079#1077#1084#1087#1083#1103#1088')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' (1 '#1101#1082#1079#1077#1084#1087#1083#1103#1088')'
       ImageIndex = 22
       ShortCut = 16464
       DataSets = <
@@ -786,6 +881,33 @@ object BarCodeBoxForm: TBarCodeBoxForm
       PrinterNameParam.Value = ''
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object macInsert_Object_Print_list: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsert_Object_Print
+        end>
+      View = cxGridDBTableView
+      Caption = 'macInsert_Object_Print_list'
+    end
+    object macInsert_Object_PrintGrid: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actDelete_Object_Print
+        end
+        item
+          Action = macInsert_Object_Print_list
+        end
+        item
+          Action = actPrint_Grid
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' ('#1074#1099#1073#1088#1072#1085#1085#1099#1077')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1096'/'#1082' '#1103#1097#1080#1082#1086#1074' ('#1074#1099#1073#1088#1072#1085#1085#1099#1077')'
+      ImageIndex = 15
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -954,5 +1076,51 @@ object BarCodeBoxForm: TBarCodeBoxForm
     PackSize = 1
     Left = 464
     Top = 203
+  end
+  object spInsert_Object_Print: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = '0'
+        Component = ClientDataSet
+        ComponentItem = 'AmountPrint'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 448
+    Top = 275
+  end
+  object spDelete_Object_Print: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_Print'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    PackSize = 1
+    Left = 552
+    Top = 227
+  end
+  object spSelectPrintByGrid: TdsdStoredProc
+    StoredProcName = 'gpSelect_ObjectPrint_BarCodeBox_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <>
+    PackSize = 1
+    Left = 639
+    Top = 160
   end
 end
