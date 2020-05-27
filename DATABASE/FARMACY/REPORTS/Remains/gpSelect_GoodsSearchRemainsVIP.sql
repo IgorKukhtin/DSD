@@ -34,6 +34,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbObjectId Integer;
+   DECLARE vbSummaFormSendVIP TFloat;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -46,6 +47,15 @@ BEGIN
     THEN
         RAISE EXCEPTION 'Ошибка. Не выбрано подразделение.';
     END IF;
+    
+    SELECT COALESCE(ObjectFloat_CashSettings_SummaFormSendVIP.ValueData, 0)
+    INTO vbSummaFormSendVIP
+    FROM Object AS Object_CashSettings
+         LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SummaFormSendVIP
+                               ON ObjectFloat_CashSettings_SummaFormSendVIP.ObjectId = Object_CashSettings.Id 
+                              AND ObjectFloat_CashSettings_SummaFormSendVIP.DescId = zc_ObjectFloat_CashSettings_SummaFormSendVIP()
+    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+    LIMIT 1;
 
     -- Результат
     RETURN QUERY
@@ -348,6 +358,7 @@ BEGIN
                                     AND tmpReserveSun.UnitId  = Object_Unit.UnitId
 
           WHERE COALESCE(tmpData.Amount,0) <> 0
+            AND (tmpData.Amount * COALESCE (Object_Price.Price, 0)) >= vbSummaFormSendVIP
           ORDER BY Object_Unit.UnitName
                  , tmpGoodsParams.GoodsGroupName
                  , tmpGoodsParams.GoodsName

@@ -30,62 +30,55 @@ BEGIN
 
      -- Ðåçóëüòàò
      RETURN QUERY
-       WITH tmpUser AS (SELECT Object_User.Id                    AS UserId
-                             -- , COALESCE (Object_Member.ValueData, Object_User.ValueData) AS Name
+       WITH tmpUserAll AS (SELECT Object_User.Id                    AS Id
+                                , Object_User.ValueData
+                                , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
+                                , COALESCE (ObjectBoolean_Site.ValueData, FALSE)       AS isSite
+                           FROM Object AS Object_User 
+                                                                
+                                LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
+                                                        ON ObjectBoolean_Site.ObjectId = Object_User.Id
+                                                       AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
+                                           
+                           WHERE Object_User.DescId   = zc_Object_User()
+                             AND Object_User.isErased = FALSE
+                             AND COALESCE (ObjectBoolean_Site.ValueData, FALSE) = TRUE
+                          )
+          , tmpUser AS (SELECT Object_User.Id                    AS UserId
                              , Object_Member.Id                  AS MemberId
                              , Object_Member.ValueData           AS MemberName
                              , Object_User.ValueData             AS Name
                              , ObjectString_Foto.ValueData       AS Foto
                              , Object_Education.ValueData        AS EducationName
-                             , zfConvert_StringToNumber (DefaultValue.DefaultValue) AS UnitId
+                             , zfConvert_StringToNumber (lpGet_DefaultValue('zc_Object_Unit', Object_User.Id)) AS UnitId
                              , ObjectDate_Personal_In.ValueData AS DateIn
-                             , COALESCE (ObjectBoolean_Site.ValueData, FALSE)       AS isSite
-                        FROM DefaultKeys
-                             INNER JOIN DefaultValue ON DefaultValue.DefaultKeyId = DefaultKeys.Id
-                                                    AND (DefaultValue.DefaultValue = inUnitId :: TVarChar
-                                                      OR COALESCE (inUnitId, 0) = 0)
-                             INNER JOIN Object AS Object_User ON Object_User.Id       = DefaultValue.UserKeyId
-                                                             AND Object_User.DescId   = zc_Object_User()
-                                                             AND Object_User.isErased = FALSE
-                                                             
-                             LEFT JOIN ObjectBoolean AS ObjectBoolean_Site
-                                                     ON ObjectBoolean_Site.ObjectId = Object_User.Id
-                                                    AND ObjectBoolean_Site.DescId = zc_ObjectBoolean_User_Site()
-                               
+                             , Object_User.isSite
+                        FROM tmpUserAll AS Object_User 
+                                                                 
                              LEFT JOIN ObjectString AS ObjectString_Foto
                                                     ON ObjectString_Foto.ObjectId  = Object_User.Id
                                                    AND ObjectString_Foto.DescId    = zc_ObjectString_User_Foto()
                              LEFT JOIN ObjectDate AS ObjectDate_Personal_In
                                                   ON ObjectDate_Personal_In.ObjectId  = Object_User.Id
                                                  AND ObjectDate_Personal_In.DescId    = zc_ObjectDate_Personal_In()
-                
+                     
                              LEFT JOIN ObjectLink AS ObjectLink_User_Member
                                                   ON ObjectLink_User_Member.ObjectId = Object_User.Id
                                                  AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                              LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
-                             
+                                
                              LEFT JOIN ObjectLink AS ObjectLink_Member_Education
                                                   ON ObjectLink_Member_Education.ObjectId = Object_Member.Id
                                                  AND ObjectLink_Member_Education.DescId = zc_ObjectLink_Member_Education()
                              LEFT JOIN Object AS Object_Education ON Object_Education.Id = ObjectLink_Member_Education.ChildObjectId
-         
-                        WHERE LOWER (DefaultKeys.Key) = LOWER ('zc_Object_Unit')
+             
+                        WHERE Object_User.UnitId = inUnitId OR COALESCE (inUnitId, 0) = 0
                        )
-          /*, tmpPersonal AS (SELECT View_Personal.MemberId
-                                 , View_Personal.UnitId
-                                 , View_Personal.PositionId
-                                 -- , View_Personal.DateIn
-                                   --  ¹ ï/ï
-                                 , ROW_NUMBER() OVER (PARTITION BY View_Personal.MemberId ORDER BY View_Personal.PersonalId ASC) AS Ord
-                            FROM Object_Personal_View AS View_Personal
-                            WHERE View_Personal.isErased = FALSE
-                           )
-          */
-       , tmpCashSession AS (SELECT CashSession.UserId
-                                 , MAX (CashSession.LastConnect) AS LastConnect
-                            FROM CashSession
-                            GROUP BY CashSession.UserId
-                           )
+          , tmpCashSession AS (SELECT CashSession.UserId
+                                    , MAX (CashSession.LastConnect) AS LastConnect
+                               FROM CashSession
+                               GROUP BY CashSession.UserId
+                              )
           , tmpProtocol AS (SELECT tmpUser.UserId
                                  , MAX (MovementProtocol.OperDate) AS OperDate
                             FROM tmpUser
@@ -121,7 +114,7 @@ BEGIN
              --LEFT JOIN Object AS Object_Position ON Object_Position.Id = tmpPersonal.PositionId
              LEFT JOIN tmpCashSession ON tmpCashSession.UserId = tmpUser.UserId
              LEFT JOIN tmpProtocol    ON tmpProtocol.UserId    = tmpUser.UserId
-        WHERE tmpUser.UnitId > 0
+        WHERE COALESCE (tmpUser.UnitId, 0) <> 0
           AND tmpUser.isSite = TRUE
        ;
   
@@ -129,13 +122,15 @@ END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
 
-/*-------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.  Âîðîáêàëî À.À.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.  Âîðîáêàëî À.À.   Øàáëèé Î.Â.
+ 26.05.20                                                                       *
  06.11.17         *
  08.09.17                                        *
 */
 
 -- òåñò
 -- SELECT * FROM gpSelect_Object_User_For_Site (inUnitId:= 375626, inSession:= '3'); -- Àïòåêà_1 ïð_Ãåðîåâ_40 WHERE DateAction >= '08.09.2017'
+

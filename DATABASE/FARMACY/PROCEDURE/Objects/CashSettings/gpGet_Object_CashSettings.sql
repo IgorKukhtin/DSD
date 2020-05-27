@@ -9,7 +9,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , ShareFromPriceName TVarChar
              , ShareFromPriceCode TVarChar
              , isGetHardwareData Boolean
-             , DateBanSUN TDateTime) AS
+             , DateBanSUN TDateTime
+             , SummaFormSendVIP TFloat) AS
 $BODY$
 BEGIN
 
@@ -17,13 +18,14 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   SELECT Object_CashSettings.Id                     AS Id
-        , Object_CashSettings.ObjectCode             AS Code
-        , Object_CashSettings.ValueData              AS Name
-        , ObjectString_CashSettings_ShareFromPriceName.ValueData  AS ShareFromPriceName
-        , ObjectString_CashSettings_ShareFromPriceCode.ValueData  AS ShareFromPriceCode
+   SELECT Object_CashSettings.Id                                                   AS Id
+        , Object_CashSettings.ObjectCode                                           AS Code
+        , Object_CashSettings.ValueData                                            AS Name
+        , ObjectString_CashSettings_ShareFromPriceName.ValueData                   AS ShareFromPriceName
+        , ObjectString_CashSettings_ShareFromPriceCode.ValueData                   AS ShareFromPriceCode
         , COALESCE(ObjectBoolean_CashSettings_GetHardwareData.ValueData, FALSE)    AS isGetHardwareData
         , ObjectDate_CashSettings_DateBanSUN.ValueData                             AS DateBanSUN
+        , ObjectFloat_CashSettings_SummaFormSendVIP.ValueData                      AS SummaFormSendVIP
    FROM Object AS Object_CashSettings
         LEFT JOIN ObjectString AS ObjectString_CashSettings_ShareFromPriceName
                                ON ObjectString_CashSettings_ShareFromPriceName.ObjectId = Object_CashSettings.Id 
@@ -37,6 +39,9 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_CashSettings_DateBanSUN
                              ON ObjectDate_CashSettings_DateBanSUN.ObjectId = Object_CashSettings.Id 
                             AND ObjectDate_CashSettings_DateBanSUN.DescId = zc_ObjectDate_CashSettings_DateBanSUN()
+        LEFT JOIN ObjectFloat AS ObjectFloat_CashSettings_SummaFormSendVIP
+                              ON ObjectFloat_CashSettings_SummaFormSendVIP.ObjectId = Object_CashSettings.Id 
+                             AND ObjectFloat_CashSettings_SummaFormSendVIP.DescId = zc_ObjectFloat_CashSettings_SummaFormSendVIP()
    WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
    LIMIT 1;
   

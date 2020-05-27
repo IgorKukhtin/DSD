@@ -33,6 +33,8 @@ type
     cbGetHardwareData: TcxCheckBox;
     edDateBanSUN: TcxDateEdit;
     cxLabel11: TcxLabel;
+    edSummaFormSendVIP: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public
