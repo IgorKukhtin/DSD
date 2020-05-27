@@ -12,6 +12,82 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited TotalSumm: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummMVAT: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummPVAT: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummFrom: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited TotalSummTo: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isAuto: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited Checked: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isComplete: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isSUN_v2: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isSUN_v3: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isSUN_v4: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isSUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isDefSUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isOverdueSUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited isNotDisplaySUN: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited MCSPeriod: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited MCSDay: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited UpdateDateDiff: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
+          inherited ReportInvNumber_full: TcxGridDBColumn
+            Visible = False
+            VisibleForCustomization = False
+          end
         end
       end
     end
@@ -93,6 +169,42 @@ inherited SendMenegerVIPJournalForm: TSendMenegerVIPJournalForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+  end
+  inherited spSelect: TdsdStoredProc
+    Params = <
+      item
+        Name = 'instartdate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inenddate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisVip'
+        Value = 'False'
+        Component = FormParams
+        ComponentItem = 'inisVip'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
