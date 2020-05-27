@@ -65,6 +65,15 @@ type
     bbProtocol: TdxBarButton;
     bbPrint: TdxBarButton;
     bbPrint2: TdxBarButton;
+    spInsert_Object_Print: TdsdStoredProc;
+    actInsert_Object_Print: TdsdExecStoredProc;
+    spDelete_Object_Print: TdsdStoredProc;
+    actDelete_Object_Print: TdsdExecStoredProc;
+    spSelectPrintByGrid: TdsdStoredProc;
+    actPrint_Grid: TdsdPrintAction;
+    macInsert_Object_Print_list: TMultiAction;
+    macInsert_Object_PrintGrid: TMultiAction;
+    bbInsert_Object_PrintGrid: TdxBarButton;
   private
     { Private declarations }
   public
