@@ -1768,9 +1768,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_DriverSun_ChatIDSendVIP() RETURNS Inte
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_DriverSun(), 'zc_ObjectFloat_DriverSun_ChatIDSendVIP', 'Чат ID для отправки сообщений в Telegram по перемещениям VIP' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_DriverSun_ChatIDSendVIP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_SummaFormSendVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SummaFormSendVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_SummaFormSendVIP', 'Сумма от которой показан товар при формировании перемещений VIP' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SummaFormSendVIP');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 27.05.20                                                                                      * zc_ObjectFloat_CashSettings_SummaFormSendVIP
  26.05.20                                                                                      * zc_ObjectFloat_DriverSun_ChatIDSendVIP
  19.05.20         * zc_ObjectFloat_Unit_LimitSUN_N
  16.05.20         * zc_ObjectFloat_Goods_LimitSUN_T1

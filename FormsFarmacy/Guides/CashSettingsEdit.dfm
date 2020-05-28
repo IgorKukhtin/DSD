@@ -2,7 +2,7 @@ object CashSettingsEditForm: TCashSettingsEditForm
   Left = 0
   Top = 0
   Caption = #1054#1073#1097#1080#1077' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1082#1072#1089#1089
-  ClientHeight = 252
+  ClientHeight = 263
   ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -30,8 +30,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
       #1077#1085#1086#1081
   end
   object cxButton1: TcxButton
-    Left = 159
-    Top = 207
+    Left = 156
+    Top = 223
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -40,8 +40,8 @@ object CashSettingsEditForm: TCashSettingsEditForm
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 309
-    Top = 207
+    Left = 306
+    Top = 223
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -85,6 +85,19 @@ object CashSettingsEditForm: TCashSettingsEditForm
     Left = 16
     Top = 155
     Caption = ' '#1044#1072#1090#1072' '#1079#1072#1087#1088#1077#1090#1072' '#1088#1072#1073#1086#1090#1099' '#1087#1086' '#1057#1059#1053' '
+  end
+  object edSummaFormSendVIP: TcxCurrencyEdit
+    Left = 404
+    Top = 185
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 9
+    Width = 121
+  end
+  object cxLabel3: TcxLabel
+    Left = 20
+    Top = 186
+    Caption = #1057#1091#1084#1084#1072' '#1086#1090' '#1082#1086#1090#1086#1088#1086#1081' '#1087#1086#1082#1072#1079#1072#1085' '#1090#1086#1074#1072#1088' '#1087#1088#1080' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1081' VIP'
   end
   object ActionList: TActionList
     Left = 344
@@ -155,6 +168,14 @@ object CashSettingsEditForm: TCashSettingsEditForm
         DataType = ftDateTime
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummaFormSendVIP'
+        Value = Null
+        Component = edSummaFormSendVIP
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 456
@@ -191,6 +212,13 @@ object CashSettingsEditForm: TCashSettingsEditForm
         Value = 'NULL'
         Component = edDateBanSUN
         DataType = ftDateTime
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'SummaFormSendVIP'
+        Value = Null
+        Component = edSummaFormSendVIP
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

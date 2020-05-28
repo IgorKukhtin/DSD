@@ -277,7 +277,7 @@ begin
     ZConnection1.Password := Ini.ReadString('Connect', 'Password', 'eej9oponahT4gah3');
     Ini.WriteString('Connect', 'Password', ZConnection1.Password);
 
-    Token := Ini.ReadString('Telegram', 'Token', '1063990679:AAEQS8XEsGQCFKOO7nUKFfNi5TpIpgSTuLw');
+    Token := Ini.ReadString('Telegram', 'Token', '');
     Ini.WriteString('Telegram', 'Token', Token);
 
     FDate := Ini.ReadDateTime('Options', 'Date', Now);
