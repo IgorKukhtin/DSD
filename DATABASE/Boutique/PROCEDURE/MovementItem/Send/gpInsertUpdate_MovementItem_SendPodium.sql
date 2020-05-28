@@ -130,7 +130,8 @@ BEGIN
      SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
           , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
           , COALESCE (Object_PartionGoods.CurrencyId, zc_Currency_Basis()) AS CurrencyId
-            INTO outCountForPrice, outOperPrice, vbCurrencyId
+          , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
+            INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
      FROM Object_PartionGoods
      WHERE Object_PartionGoods.GoodsId = vbGoodsId; --Object_PartionGoods.MovementItemId = inPartionId;
 
@@ -248,7 +249,7 @@ BEGIN
 
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), vbGoodsId, inPartionId, inMovementId, ioAmount, NULL);
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), vbGoodsId, vbPartionId, inMovementId, ioAmount, NULL);
 
      -- сохранили свойство <>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPrice(), ioId, outOperPrice);
