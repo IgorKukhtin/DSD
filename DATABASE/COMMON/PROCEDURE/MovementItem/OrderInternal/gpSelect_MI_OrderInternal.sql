@@ -369,27 +369,27 @@ BEGIN
            , CASE WHEN tmpMI.EndDate_next   = zc_DateStart() OR tmpMI.EndDate_next = tmpMI.StartDate_next THEN NULL ELSE tmpMI.EndDate_next   END :: TDateTime AS EndDate_next   -- Партия-2 далее
 
             -- Ост. начальн. ШТ
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountRemains_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountRemains_sh --
            -- Заказ на пр-во шт
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.Amount / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS Amount_sh
            -- Дозаказ на пр-во шт
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountSecond / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountSecond_sh
            -- сегодня заявка ШТ
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountPartner / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPartner_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountPartner / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPartner_sh   --
            -- неотгуж. заявка ШТ
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountPartnerPrior / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPartnerPrior_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountPartnerPrior / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPartnerPrior_sh  --
              -- Прогноз по прод. ШТ
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountForecast / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountForecast_sh
            -- Прогноз по заяв. ШТ
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountForecastOrder / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountForecastOrder_sh
            -- Норма запас (по пр.) шт
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.NormInDays * tmpMI.CountForecast * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognoz_calc_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.NormInDays * tmpMI.CountForecast * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognoz_calc_sh --
            -- Норма запас (по зв.) шт
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.NormInDays * tmpMI.CountForecastOrder* tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozOrder_calc_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.NormInDays * tmpMI.CountForecastOrder* tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozOrder_calc_sh --
            -- *Норма зап. на срок (по пр.) ШТ
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.TermProduction * tmpMI.CountForecast * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozTerm_calc_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.TermProduction * tmpMI.CountForecast * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozTerm_calc_sh  --
            -- *Норма зап. на срок (по зв.) ШТ
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.TermProduction * tmpMI.CountForecastOrder * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozOrderTerm_calc_sh
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.TermProduction * tmpMI.CountForecastOrder * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountPrognozOrderTerm_calc_sh --
            -- Норма запаса пр-во+склад = AmountPrognozOrder_calc + AmountPrognozOrderTerm_calc ШТ
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST ((tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS AmountReserve_calc_sh
            -- Прогноз Заказ кг = "Норма запаса пр-во+склад" - AmountRemainsTerm_calc ШТ
@@ -407,6 +407,20 @@ BEGIN
            -- Норм 1д (по зв.)
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.CountForecastOrder * tmpMI.Koeff / ObjectFloat_Weight.ValueData AS NUMERIC (16, 0)) ELSE 0 END :: TFloat AS CountForecastOrderK_sh
 
+            -- Произв. сегодня ШТ
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountProduction_old  AS NUMERIC (16, 1)) ELSE 0 END :: TFloat AS AmountProduction_old_sh    -- 
+           -- Произв. далее ШТ
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) ELSE 0 END :: TFloat AS AmountProduction_next_sh   -- 
+             -- *Прогн. ост. на срок
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+                                                                                                                              + tmpMI.AmountProduction_old   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                                                                              + tmpMI.AmountProduction_next  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                                                                          AS NUMERIC (16, 1))  ELSE 0 END  :: TFloat AS AmountRemainsTerm_calc_sh
+             -- Прогн. ост.
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+                                                                                                                              + tmpMI.AmountProduction_old  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                                                                          AS NUMERIC (16, 1))  ELSE 0 END  :: TFloat AS AmountRemains_calc_sh
+             
               -- Ост. начальн.
            , CASE WHEN ABS (tmpMI.AmountRemains) < 1 THEN tmpMI.AmountRemains ELSE CAST (tmpMI.AmountRemains AS NUMERIC (16, 1)) END :: TFloat AS AmountRemains
              -- неотгуж. заявка
