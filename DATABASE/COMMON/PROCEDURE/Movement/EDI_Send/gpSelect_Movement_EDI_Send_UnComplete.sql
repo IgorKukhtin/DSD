@@ -100,6 +100,7 @@ BEGIN
 
            WHERE Movement.DescId   = zc_Movement_EDI_Send()
              AND Movement.StatusId = zc_Enum_Status_UnComplete()
+             AND Movement.OperDate >= CURRENT_DATE - INTERVAL '3 DAY'
              AND ((Movement.OperDate < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
               AND COALESCE (MovementDate_Update.ValueData, zc_DateStart()) < CURRENT_TIMESTAMP - INTERVAL '55 MIN'
                   )

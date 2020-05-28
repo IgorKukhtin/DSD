@@ -38,15 +38,18 @@ BEGIN
     --
     -- Список партий кол-во для всех подразделений (группа "От кого" + группа "Кому")
     INSERT INTO tmpContainer_Count (MIDescId, ContainerId, GoodsId, GoodsKindId, Amount)
-                                 WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
+                                 WITH tmpUnit AS (SELECT UnitId, zc_MI_Master() AS MIDescId
+                                                  FROM lfSelect_Object_Unit_byGroup (inFromId) AS lfSelect_Object_Unit_byGroup
+                                                  WHERE UnitId <> 1078643 -- Склад Карантин Тушенка
                                                  UNION
                                                   SELECT UnitId, zc_MI_Child() AS MIDescId
                                                   FROM lfSelect_Object_Unit_byGroup (inToId) AS lfSelect
-                                                  WHERE lfSelect.UnitId <> inToId
-                                                     OR (inToId          = 2790412 -- ЦЕХ Тушенка
-                                                     AND lfSelect.UnitId = inToId
-                                                     AND vbIsBasis       = FALSE
-                                                        )
+                                                  WHERE (lfSelect.UnitId <> inToId
+                                                      OR (inToId          = 2790412 -- ЦЕХ Тушенка
+                                                      AND lfSelect.UnitId = inToId
+                                                      AND vbIsBasis       = FALSE
+                                                         ))
+                                                    AND UnitId <> 1078643 -- Склад Карантин Тушенка
                                                  )
                                       -- Документ Инвентаризации
                                     , tmpInventory AS (SELECT Movement.Id AS MovementId, Movement.OperDate, MLO_From.ObjectId AS UnitId

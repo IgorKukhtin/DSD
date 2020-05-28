@@ -10496,6 +10496,7 @@ begin
      EndDateCompleteEdit.Text:=DateToStr(saveEndDate);
      //
      myDisabledCB(cbInsertHistoryCost);
+     myLogMemo_add('end cbInsertHistoryCost');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Cash;

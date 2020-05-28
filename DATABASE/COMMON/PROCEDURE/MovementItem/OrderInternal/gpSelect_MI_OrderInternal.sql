@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbOperDate TDateTime;
    DECLARE vbFromId Integer;
    DECLARE vbToId Integer;
+
    DECLARE vbDayCount Integer;
    DECLARE vbMonth Integer;
 BEGIN
@@ -320,11 +321,19 @@ BEGIN
            , tmpMI.CuterCount       :: TFloat AS CuterCount       -- Заказ на пр-во кутеров
            , tmpMI.CuterCountSecond :: TFloat AS CuterCountSecond -- Заказ на пр-во кутеров
 
+             -- Приход с пр. шт.
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN tmpMI_Send.Amount ELSE 0 END :: TFloat AS AmountSend_sh
            , (tmpMI_Send.Amount * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END) :: TFloat AS AmountSend_Weight
 
-           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old                                AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc     -- Прогн. ост.
-           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner + tmpMI.AmountProduction_old  + tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsTerm_calc -- *Прогн. ост. на срок
+             -- Прогн. ост.
+           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+                 + tmpMI.AmountProduction_old  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+             AS NUMERIC (16, 1)) :: TFloat AS AmountRemains_calc
+             -- *Прогн. ост. на срок
+           , CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+                 + tmpMI.AmountProduction_old  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                 + tmpMI.AmountProduction_next  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+             AS NUMERIC (16, 1)) :: TFloat AS AmountRemainsTerm_calc
 
            , CAST (tmpMI.NormInDays     * tmpMI.CountForecast      * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognoz_calc          -- Норма запас (по пр.)
            , CAST (tmpMI.NormInDays     * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountPrognozOrder_calc     -- Норма запас (по зв.)
