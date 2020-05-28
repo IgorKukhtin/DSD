@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbUserUnitId Integer;
   DECLARE vbisDefSUN Boolean;
   DECLARE vbIsSUN Boolean;
+  DECLARE vbIsVIP Boolean;
   DECLARE vbInsertDate TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -28,13 +29,15 @@ BEGIN
         Movement_To.ObjectId AS Unit_To,
         COALESCE (MovementBoolean_DefSUN.ValueData, FALSE),
         COALESCE (MovementBoolean_SUN.ValueData, FALSE),
-        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
+        COALESCE (MovementBoolean_VIP.ValueData, FALSE)
     INTO
         vbFromId,
         vbUnitId,
         vbisDefSUN,
         vbIsSUN,
-        vbInsertDate
+        vbInsertDate,
+        vbIsVIP
     FROM Movement
         INNER JOIN MovementLinkObject AS Movement_From
                                       ON Movement_From.MovementId = Movement.Id
@@ -51,6 +54,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                  ON MovementBoolean_VIP.MovementId = Movement.Id
+                                 AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
     WHERE Movement.Id = inMovementId;     
     
     IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
@@ -95,6 +101,12 @@ BEGIN
 
       RAISE EXCEPTION 'Ошибка. Удаление перемещений вам запрещено.';     
     END IF;     
+    
+    IF vbIsVIP = TRUE AND NOT EXISTS (SELECT 1 FROM ObjectLink_UserRole_View  WHERE UserId = vbUserId AND RoleId in (zc_Enum_Role_Admin()))
+                      AND vbUserId <> 235009 
+    THEN
+      RAISE EXCEPTION 'Ошибка. Удаление VIP перемещений вам запрещено.';         
+    END IF;
 
      -- проверка
      IF EXISTS (SELECT MIC.Id FROM MovementItemContainer AS MIC WHERE MIC.Movementid = inMovementId)

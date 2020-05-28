@@ -881,7 +881,9 @@ uses
   SendCashJournalVIP in '..\..\FormsFarmacy\Document\SendCashJournalVIP.pas' {SendCashJournalVIPForm: TParentForm},
   SendMenegerVIPJournal in '..\..\FormsFarmacy\Document\SendMenegerVIPJournal.pas' {SendMenegerVIPJournalForm: TParentForm},
   Unit_SUN_LockDialog in '..\..\FormsFarmacy\Guides\Unit_SUN_LockDialog.pas' {Unit_SUN_LockDialogForm: TParentForm},
-  ConfirmedDialog in '..\..\FormsFarmacy\Document\ConfirmedDialog.pas' {ConfirmedDialogForm: TParentForm};
+  ConfirmedDialog in '..\..\FormsFarmacy\Document\ConfirmedDialog.pas' {ConfirmedDialogForm: TParentForm},
+  SendVIP_ToGenerateCheck in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheck.pas' {SendVIP_ToGenerateCheckForm: TParentForm},
+  SendVIP_ToGenerateCheckDialog in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas' {SendVIP_ToGenerateCheckDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
