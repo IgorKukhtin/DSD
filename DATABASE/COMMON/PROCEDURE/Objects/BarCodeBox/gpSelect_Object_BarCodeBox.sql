@@ -30,8 +30,8 @@ BEGIN
 
            , Object_BarCodeBox.ValueData     AS BarCode
            , CASE WHEN POSITION ('-' IN Object_BarCodeBox.ValueData) > 0
-                  THEN zfConvert_StringToFloat (RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('0' IN Object_BarCodeBox.ValueData) ))-- (RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('-' IN Object_BarCodeBox.ValueData))) :: integer
-                  ELSE 0
+                  THEN zfConvert_StringToFloat (RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('-' IN Object_BarCodeBox.ValueData) ))-- (RIGHT (Object_BarCodeBox.ValueData , LENGTH(Object_BarCodeBox.ValueData) - POSITION ('-' IN Object_BarCodeBox.ValueData))) :: integer
+                  ELSE zfConvert_StringToFloat (Object_BarCodeBox.ValueData)
              END  :: TFloat AS BarCode_Value
            , ObjectFloat_Weight.ValueData    AS Weight
            , ObjectFloat_Print.ValueData     AS AmountPrint
