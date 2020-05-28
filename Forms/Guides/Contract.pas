@@ -230,6 +230,7 @@ type
     spUpdate_isWMS: TdsdStoredProc;
     actUpdate_isWMS: TdsdExecStoredProc;
     bbUpdate_isWMS: TdxBarButton;
+    clPercentRetBonus: TcxGridDBColumn;
 
   private
     { Private declarations }
