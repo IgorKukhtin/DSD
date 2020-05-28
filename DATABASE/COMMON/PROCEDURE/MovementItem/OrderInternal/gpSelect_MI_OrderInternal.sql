@@ -342,12 +342,14 @@ BEGIN
 
            , CAST ((tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff AS NUMERIC (16, 1)) :: TFloat AS AmountReserve_calc     -- Норма запаса пр-во+склад = AmountPrognozOrder_calc + AmountPrognozOrderTerm_calc
 
+            -- Прогноз Заказ кг = "Норма запаса пр-во+склад" - AmountRemainsTerm_calc
            , CAST (( (tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff)
                    - (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
                     + tmpMI.AmountProduction_old  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                     + tmpMI.AmountProduction_next * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                     ) AS NUMERIC (16, 1)) :: TFloat AS AmountReserveOrderKg_calc     -- Прогноз Заказ кг = "Норма запаса пр-во+склад" - AmountRemainsTerm_calc
+                     ) AS NUMERIC (16, 1)) :: TFloat AS AmountReserveOrderKg_calc
 
+            -- Прогноз заказ (куттер) = "Прогноз Заказ кг" / zc_ObjectFloat_Receipt_TaxExit -
            , CASE WHEN COALESCE (ObjectFloat_TaxExit.ValueData,0) <> 0
                   THEN CAST (( ((tmpMI.NormInDays + tmpMI.TermProduction) * tmpMI.CountForecastOrder * tmpMI.Koeff)
                               - (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
@@ -357,7 +359,7 @@ BEGIN
                              ) / ObjectFloat_TaxExit.ValueData
                             AS NUMERIC (16, 1))
                   ELSE 0
-             END                                                   :: TFloat AS AmountReserveOrderCuter_calc     --Прогноз заказ (куттер) = "Прогноз Заказ кг" / zc_ObjectFloat_Receipt_TaxExit -
+             END                                                   :: TFloat AS AmountReserveOrderCuter_calc
 
            , CAST (tmpMI.AmountProduction_old  AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_old  -- Произв. сегодня
            , CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) :: TFloat AS AmountProduction_next -- Произв. далее

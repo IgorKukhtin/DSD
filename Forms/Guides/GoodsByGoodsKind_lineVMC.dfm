@@ -5,6 +5,7 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -266
   ExplicitTop = 2
   ExplicitWidth = 1055
   ExplicitHeight = 455
@@ -700,7 +701,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 71
           end
           object BoxName_2: TcxGridDBColumn
@@ -718,7 +718,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 125
           end
           object CountOnBox_2: TcxGridDBColumn
@@ -730,7 +729,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            VisibleForCustomization = False
             Width = 66
           end
           object WeightOnBox_2: TcxGridDBColumn
@@ -743,7 +741,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1080#1083#1080' = '#1074#1074#1086#1076' '#1047#1053#1040#1063#1045#1053#1048#1045', '#1080#1083#1080' = '#1082#1086#1083'.'#1077#1076'.*'#1089#1088#1077#1076#1085#1080#1081' '#1074#1077#1089
-            VisibleForCustomization = False
             Width = 63
           end
           object BoxVolume_2: TcxGridDBColumn
@@ -756,7 +753,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 71
           end
           object BoxWeight_2: TcxGridDBColumn
@@ -770,7 +766,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderGlyphAlignmentHorz = taCenter
             HeaderHint = #1042#1077#1089' '#1087#1091#1089#1090#1086#1075#1086' '#1103#1097#1080#1082#1072' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 57
           end
           object BoxHeight_2: TcxGridDBColumn
@@ -783,7 +778,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 60
           end
           object BoxLength_2: TcxGridDBColumn
@@ -796,7 +790,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 45
           end
           object BoxWidth_2: TcxGridDBColumn
@@ -809,7 +802,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 56
           end
           object WeightGross_2: TcxGridDBColumn
@@ -823,7 +815,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 73
           end
           object WeightAvgGross_2: TcxGridDBColumn
@@ -837,7 +828,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1073#1088#1091#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 76
           end
           object WeightAvgNet_2: TcxGridDBColumn
@@ -851,7 +841,6 @@ inherited GoodsByGoodsKind_lineVMCForm: TGoodsByGoodsKind_lineVMCForm
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1042#1077#1089' '#1085#1077#1090#1090#1086' '#1087#1086' '#1089#1088#1077#1076#1085#1077#1084#1091' '#1074#1077#1089#1091' ('#1043#1086#1092#1088#1086')'
             Options.Editing = False
-            VisibleForCustomization = False
             Width = 78
           end
           object BoxName_Retail1: TcxGridDBColumn
