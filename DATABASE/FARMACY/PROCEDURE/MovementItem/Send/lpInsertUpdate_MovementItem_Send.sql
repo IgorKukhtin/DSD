@@ -141,6 +141,31 @@ BEGIN
               ) AS tmpPrice;
      END IF;
 
+     -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
+     -- для ObjectId
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+      FROM MovementItem
+           INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
+                                 ON ObjectLink_GoodsPairSun.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
+                                AND ObjectLink_GoodsPairSun.ChildObjectId = inGoodsId
+      WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.isErased = FALSE
+         AND MovementItem.Id <> ioId;
+      -- для ChildObjectId
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+      FROM MovementItem
+           INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
+                                 ON ObjectLink_GoodsPairSun.ChildObjectId = MovementItem.ObjectId
+                                AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
+                                AND ObjectLink_GoodsPairSun.ObjectId = inGoodsId
+      WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND MovementItem.isErased = FALSE
+         AND MovementItem.Id <> ioId;
+     
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSummSend (inMovementId);
