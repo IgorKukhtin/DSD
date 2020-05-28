@@ -50,6 +50,7 @@ $BODY$
    DECLARE vbValueAdd TFloat;
    DECLARE vbMemberExternalId Integer;
    DECLARE vbDriverCertificate TVarChar;
+   DECLARE vbSummReestr TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportService());
@@ -306,6 +307,22 @@ BEGIN
      -- сохранили связь с <Физические лица(сторонние)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MemberExternal(), ioMIId, vbMemberExternalId);
      
+     --рассчитываем и сохраняем св-во Сумма отгрузки по реестру накладных
+     vbSummReestr := COALESCE ((SELECT SUM (COALESCE (MovementFloat_TotalSumm.ValueData,0)) AS vbSummReestr
+                                FROM MovementLinkMovement
+                                     INNER JOIN MovementItem ON MovementItem.MovementId = MovementLinkMovement.MovementId
+                                     JOIN MovementFloat AS MovementFloat_MovementItemId
+                                                        ON MovementFloat_MovementItemId.ValueData ::Integer = MovementItem.Id
+                                                       AND MovementFloat_MovementItemId.DescId = zc_MovementFloat_MovementItemId()
+                                     JOIN MovementFloat AS MovementFloat_TotalSumm
+                                                        ON MovementFloat_TotalSumm.MovementId = MovementFloat_MovementItemId.MovementId
+                                                       AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                WHERE MovementLinkMovement.MovementChildId = ioId
+                                  AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Transport() )
+                               ,0) ::TFloat;
+     
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummReestr(), ioMIId, vbSummReestr );
+
 
      -- создаются временные таблицы - для формирование данных для проводок
      PERFORM lpComplete_Movement_Finance_CreateTemp();
