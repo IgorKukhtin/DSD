@@ -883,7 +883,8 @@ uses
   Unit_SUN_LockDialog in '..\..\FormsFarmacy\Guides\Unit_SUN_LockDialog.pas' {Unit_SUN_LockDialogForm: TParentForm},
   ConfirmedDialog in '..\..\FormsFarmacy\Document\ConfirmedDialog.pas' {ConfirmedDialogForm: TParentForm},
   SendVIP_ToGenerateCheck in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheck.pas' {SendVIP_ToGenerateCheckForm: TParentForm},
-  SendVIP_ToGenerateCheckDialog in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas' {SendVIP_ToGenerateCheckDialogForm: TParentForm};
+  SendVIP_ToGenerateCheckDialog in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas' {SendVIP_ToGenerateCheckDialogForm: TParentForm},
+  SendVIP_VIPDialog in '..\..\FormsFarmacy\Document\SendVIP_VIPDialog.pas' {SendVIP_VIPDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

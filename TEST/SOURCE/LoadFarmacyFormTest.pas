@@ -2314,7 +2314,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
@@ -2340,8 +2340,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TConfirmedDialogForm');
+  }
 
-  // диалог изменения цены получателя
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_ToGenerateCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_ToGenerateCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_ToGenerateCheckDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_ToGenerateCheckDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_VIPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_VIPDialogForm');
+
+    // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
   }

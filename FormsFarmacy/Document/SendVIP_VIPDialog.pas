@@ -1,4 +1,4 @@
-unit SendVIP_ToGenerateCheckDialog;
+unit SendVIP_VIPDialog;
 
 interface
 
@@ -22,24 +22,19 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TSendVIP_ToGenerateCheckDialogForm = class(TParentForm)
+  TSendVIP_VIPDialogForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
-    PeriodChoice: TPeriodChoice;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     FormParams: TdsdFormParams;
-    edUnit: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    GuidesUnit: TdsdGuides;
-    ActionList: TActionList;
-    actRefresh: TdsdDataSetRefresh;
-    actGet_UserUnit: TdsdExecStoredProc;
-    actRefreshStart: TdsdDataSetRefresh;
-    deEnd: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    deStart: TcxDateEdit;
+    ceMember: TcxButtonEdit;
+    MemberGuides: TdsdGuides;
+    edBayerName: TcxTextEdit;
+    edBayerPhone: TcxTextEdit;
     cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public
@@ -51,6 +46,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendVIP_ToGenerateCheckDialogForm);
+  RegisterClass(TSendVIP_VIPDialogForm);
 
 end.

@@ -2,7 +2,7 @@ object SendVIP_ToGenerateCheckDialogForm: TSendVIP_ToGenerateCheckDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
-  Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' <'#1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053'>'
+  Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1095#1077#1082#1086#1074' '#1087#1086' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084
   ClientHeight = 172
   ClientWidth = 344
   Color = clBtnFace
@@ -83,10 +83,10 @@ object SendVIP_ToGenerateCheckDialogForm: TSendVIP_ToGenerateCheckDialogForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 207
-    Top = 75
+    Top = 83
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 254
+    Left = 262
     Top = 17
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -99,8 +99,8 @@ object SendVIP_ToGenerateCheckDialogForm: TSendVIP_ToGenerateCheckDialogForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 271
-    Top = 79
+    Left = 279
+    Top = 87
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -166,12 +166,12 @@ object SendVIP_ToGenerateCheckDialogForm: TSendVIP_ToGenerateCheckDialogForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 54
-    Top = 9
+    Left = 126
+    Top = 81
   end
   object ActionList: TActionList
-    Left = 155
-    Top = 10
+    Left = 115
+    Top = 18
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -204,34 +204,5 @@ object SendVIP_ToGenerateCheckDialogForm: TSendVIP_ToGenerateCheckDialogForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-  end
-  object GuidesRetail: TdsdGuides
-    KeyField = 'Id'
-    FormNameParam.Value = 'TRetailForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TRetailForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRetail
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRetail
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end>
-    Left = 120
-    Top = 80
   end
 end

@@ -35,32 +35,20 @@ type
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
     spGet_UserUnit: TdsdStoredProc;
-    actGet_UserUnit: TdsdExecStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
-    actRefreshIsPartion: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
-    actRefreshPartionPrice: TdsdDataSetRefresh;
-    actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    actRefreshJuridical: TdsdDataSetRefresh;
-    actUpdateMainDS: TdsdUpdateDataSet;
     spUpdate_Price_MCSIsClose: TdsdStoredProc;
-    UnitName: TcxGridDBColumn;
+    FromName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
     Amount: TcxGridDBColumn;
     Summa: TcxGridDBColumn;
-    AmountSend: TcxGridDBColumn;
-    SummaSend: TcxGridDBColumn;
-    AmountCheck: TcxGridDBColumn;
-    SummaCheck: TcxGridDBColumn;
-    AmountSendTheir: TcxGridDBColumn;
-    SummaSendTheir: TcxGridDBColumn;
-    AmountLoss: TcxGridDBColumn;
-    SummaLoss: TcxGridDBColumn;
-    actMoneyBoxSun: TdsdOpenForm;
     bbMoneyBoxSun: TdxBarButton;
+    InvNumber: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

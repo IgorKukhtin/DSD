@@ -1,29 +1,30 @@
 inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
-  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1089#1088#1086#1082#1086#1074' '#1087#1086' '#1057#1059#1053'>'
+  Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1095#1077#1082#1086#1074' '#1087#1086' '#1087#1086#1076#1090#1074#1077#1088#1078#1076#1077#1085#1085#1099#1084' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103#1084
   ClientHeight = 480
-  ClientWidth = 1019
+  ClientWidth = 794
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitWidth = 1035
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 810
   ExplicitHeight = 519
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 59
-    Width = 1019
+    Width = 794
     Height = 421
     TabOrder = 3
     ExplicitTop = 59
-    ExplicitWidth = 1019
+    ExplicitWidth = 794
     ExplicitHeight = 421
     ClientRectBottom = 421
-    ClientRectRight = 1019
+    ClientRectRight = 794
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1019
+      ExplicitWidth = 794
       ExplicitHeight = 421
       inherited cxGrid: TcxGrid
-        Width = 1019
+        Width = 794
         Height = 421
-        ExplicitWidth = 1019
+        ExplicitWidth = 794
         ExplicitHeight = 421
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -89,89 +90,73 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountSend
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountCheck
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountSend
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountCheck
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = SummaSend
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = SummaCheck
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaSend
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaCheck
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaSendTheir
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = SummaSendTheir
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountSendTheir
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountSendTheir
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Position = spFooter
-              Column = AmountLoss
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountLoss
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
               Position = spFooter
-              Column = SummaLoss
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaLoss
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -203,42 +188,34 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountSend
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountCheck
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaSend
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaCheck
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaSendTheir
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountSendTheir
             end
             item
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
-              Column = AmountLoss
             end
             item
               Format = ',0.##;-,0.##; ;'
               Kind = skSum
-              Column = SummaLoss
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -248,14 +225,30 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object UnitName: TcxGridDBColumn
+          object FromName: TcxGridDBColumn
             AlternateCaption = 'UnitName'
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+            DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 140
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1055#1077#1088#1077#1084'.'
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
+          end
+          object cxGridDBTableViewColumn2: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 82
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -274,7 +267,7 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
             Width = 209
           end
           object Amount: TcxGridDBColumn
-            Caption = #1055#1088#1080#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -285,92 +278,8 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
             Width = 91
           end
           object Summa: TcxGridDBColumn
-            Caption = #1055#1088#1080#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
+            Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Summa'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object AmountSend: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'AmountSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object SummaSend: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'SummaSend'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object AmountCheck: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'AmountCheck'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object SummaCheck: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086' '#1089#1091#1084#1084#1072'  ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'SummaCheck'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object AmountSendTheir: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086'  ('#1089#1074#1086#1080' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'AmountSendTheir'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object SummaSendTheir: TcxGridDBColumn
-            Caption = #1059#1096#1083#1086' '#1089#1091#1084#1084#1072'  ('#1089#1074#1086#1080' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'SummaSendTheir'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.##;-,0.##; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object AmountLoss: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'AmountLoss'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 91
-          end
-          object SummaLoss: TcxGridDBColumn
-            Caption = #1055#1088#1086#1089#1088#1086#1095#1077#1085#1086' '#1089#1091#1084#1084#1072' ('#1095#1091#1078#1080#1077' '#1089#1088#1086#1082#1080')'
-            DataBinding.FieldName = 'SummaLoss'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.##;-,0.##; ;'
             HeaderAlignmentHorz = taCenter
@@ -383,9 +292,9 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
     end
   end
   inherited Panel: TPanel
-    Width = 1019
+    Width = 794
     Height = 33
-    ExplicitWidth = 1019
+    ExplicitWidth = 794
     ExplicitHeight = 33
     inherited deStart: TcxDateEdit
       Left = 119
@@ -433,17 +342,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
     end
   end
   inherited ActionList: TActionList
-    object actGet_UserUnit: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spGet_UserUnit
-      StoredProcList = <
-        item
-          StoredProc = spGet_UserUnit
-        end>
-      Caption = 'actGet_UserUnit'
-    end
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -457,45 +355,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshJuridical: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      Hint = #1087#1086' '#1055#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshPartionPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      Hint = #1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1072#1088#1090#1080#1080' '#1094#1077#1085#1099
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object actRefreshIsPartion: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
-      Hint = #1087#1086' '#1055#1072#1088#1090#1080#1103#1084
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
@@ -545,75 +404,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          UserName = 'frxDBDMaster'
-          IndexFieldNames = 'JuridicalName;GoodsName'
-          GridView = cxGridDBTableView
-        end>
-      Params = <
-        item
-          Name = 'StartDate'
-          Value = 42370d
-          Component = deStart
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'EndDate'
-          Value = 42370d
-          Component = deEnd
-          DataType = ftDateTime
-          MultiSelectSeparator = ','
-        end
-        item
-          Name = 'UnitName'
-          Value = ''
-          Component = GuidesUnit
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          MultiSelectSeparator = ','
-        end>
-      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
-      ReportNameParam.DataType = ftString
-      ReportNameParam.MultiSelectSeparator = ','
-      PrinterNameParam.Value = ''
-      PrinterNameParam.DataType = ftString
-      PrinterNameParam.MultiSelectSeparator = ','
-    end
-    object actUpdateMainDS: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spUpdate_Price_MCSIsClose
-      StoredProcList = <
-        item
-          StoredProc = spUpdate_Price_MCSIsClose
-        end>
-      Caption = 'actUpdateMainDS'
-      DataSource = MasterDS
-    end
-    object actMoneyBoxSun: TdsdOpenForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1050#1086#1087#1080#1083#1082#1091' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053'1'
-      ImageIndex = 56
-      FormName = 'TReport_MoneyBoxSunForm'
-      FormNameParam.Value = 'TReport_MoneyBoxSunForm'
-      FormNameParam.DataType = ftString
-      FormNameParam.MultiSelectSeparator = ','
-      GuiParams = <>
-      isShowModal = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 48
@@ -624,8 +414,16 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
     Top = 160
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSendVIP_ToGenerateCheck'
+    StoredProcName = 'gpSelect_SendVIP_ToGenerateCheck'
     Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inStartDate'
         Value = 'NULL'
@@ -639,14 +437,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
         Value = 'NULL'
         Component = deEnd
         DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inUnitId'
-        Value = Null
-        Component = GuidesUnit
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -684,10 +474,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
         end
         item
           Visible = True
-          ItemName = 'bbMoneyBoxSun'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -711,12 +497,18 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       Category = 0
     end
     object bbPrint: TdxBarButton
-      Action = actPrint
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
       Category = 0
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1076#1072#1078#1072#1084' '#1085#1072' '#1082#1072#1089#1089#1072#1093
+      Visible = ivAlways
+      ImageIndex = 3
+      ShortCut = 16464
     end
     object bbMoneyBoxSun: TdxBarButton
-      Action = actMoneyBoxSun
+      Caption = #1050#1086#1087#1080#1083#1082#1091' '#1086#1090' '#1087#1088#1086#1076#1072#1078#1080' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1085#1099#1093' '#1090#1086#1074#1072#1088#1086#1074' '#1057#1059#1053'1'
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 56
     end
   end
   inherited PeriodChoice: TPeriodChoice
@@ -832,5 +624,42 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
     PackSize = 1
     Left = 688
     Top = 240
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'StartDate'
+        Value = 'NULL'
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'EndDate'
+        Value = Null
+        Component = deEnd
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitId'
+        Value = False
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'UnitName'
+        Value = Null
+        Component = GuidesUnit
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    Left = 280
+    Top = 160
   end
 end
