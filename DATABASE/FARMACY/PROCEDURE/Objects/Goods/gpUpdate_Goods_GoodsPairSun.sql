@@ -28,11 +28,11 @@ BEGIN
    -- записываем только при первом сохранении
    IF COALESCE (vbGoodsPairSunId,0) = 0 AND COALESCE (inGoodsPairSunId) <> 0
    THEN
-       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PairSun(), inId, CURRENT_TIMESTAMP);
+       PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Goods_PairSun(), inId, CURRENT_Date);
 
        -- Сохранили в плоскую таблицй
        BEGIN
-         UPDATE Object_Goods_Retail SET PairSunDate = CURRENT_TIMESTAMP
+         UPDATE Object_Goods_Retail SET PairSunDate = CURRENT_Date
          WHERE Object_Goods_Retail.Id = inId;  
        EXCEPTION
           WHEN others THEN 

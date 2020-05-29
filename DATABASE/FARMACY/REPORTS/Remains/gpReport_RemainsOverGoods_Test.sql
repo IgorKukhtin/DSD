@@ -631,22 +631,22 @@ BEGIN
                            WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
                                 THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
                                           WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                               THEN RemainsMCS_to
+                                               THEN CASE WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) - RemainsMCS_to  < 1 THEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) else  RemainsMCS_to end
                                           ELSE -- иначе остаток "излишков"
-                                               RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                               CASE WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) <=1 THEN 0 ELSE RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) END
                                      END
                            ELSE 0
                       END AS RemainsMCS_result
                FROM tmpDataAll
-               WHERE  CASE -- для первого - учитывается ТОЛЬКО "не хватает"
+               WHERE CASE -- для первого - учитывается ТОЛЬКО "не хватает"
                            WHEN Ord = 1 THEN CASE WHEN RemainsMCS_to <= RemainsMCS_from THEN RemainsMCS_to ELSE RemainsMCS_from END
                            -- для остальных - учитывается "накопительная" сумма "не хватает" !!!минус!!! то что в текущей записи
                            WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) > 0 -- сколько осталось "излишков" если всем предыдущим уже распределили
                                 THEN CASE -- если "не хватает" меньше сколько осталось "излишков"
                                           WHEN RemainsMCS_to <= RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
-                                               THEN RemainsMCS_to
+                                               THEN CASE WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) - RemainsMCS_to  < 1 THEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) else  RemainsMCS_to end
                                           ELSE -- иначе остаток "излишков"
-                                               RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to)
+                                               CASE WHEN RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) <=1 THEN 0 ELSE RemainsMCS_from - (RemainsMCS_period - RemainsMCS_to) END
                                      END
                            ELSE 0
                       END <> 0
