@@ -884,7 +884,8 @@ uses
   ConfirmedDialog in '..\..\FormsFarmacy\Document\ConfirmedDialog.pas' {ConfirmedDialogForm: TParentForm},
   SendVIP_ToGenerateCheck in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheck.pas' {SendVIP_ToGenerateCheckForm: TParentForm},
   SendVIP_ToGenerateCheckDialog in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas' {SendVIP_ToGenerateCheckDialogForm: TParentForm},
-  SendVIP_VIPDialog in '..\..\FormsFarmacy\Document\SendVIP_VIPDialog.pas' {SendVIP_VIPDialogForm: TParentForm};
+  SendVIP_VIPDialog in '..\..\FormsFarmacy\Document\SendVIP_VIPDialog.pas' {SendVIP_VIPDialogForm: TParentForm},
+  Report_RemainsOverGoods_N in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_N.pas' {Report_RemainsOverGoods_NForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

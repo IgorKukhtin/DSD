@@ -141,6 +141,8 @@ BEGIN
               ) AS tmpPrice;
      END IF;
 
+/* -- пока убрали 
+
      -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
      -- для ObjectId
       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
@@ -164,7 +166,7 @@ BEGIN
          AND MovementItem.DescId = zc_MI_Master()
          AND MovementItem.isErased = FALSE
          AND MovementItem.Id <> ioId;
-     
+     */
 
 
      -- пересчитали Итоговые суммы по накладной

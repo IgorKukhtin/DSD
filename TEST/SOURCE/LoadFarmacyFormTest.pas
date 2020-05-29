@@ -867,6 +867,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_NForm');
+   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');
    exit;
