@@ -123,7 +123,29 @@ BEGIN
                                                 AND MIFloat_TotalReturn.DescId         = zc_MIFloat_TotalReturn()
                  GROUP BY tmpData.SummDebt 
                  )
+          , tmpMI AS (SELECT SUM (zfCalc_SummPriceList (MovementItem.Amount, COALESCE (MIFloat_OperPriceList_curr.ValueData, 0))) AS TotalSummPriceList_curr
+                           , SUM (COALESCE (MIFloat_SummChangePercent_curr.ValueData, 0))  AS SummChangePercent_curr
+                           , SUM (COALESCE (MIFloat_TotalPay_curr.ValueData, 0))           AS TotalPay_curr
+                           , SUM (COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)) AS TotalChangePercent_curr
+                      FROM MovementItem 
+                           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                       ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
+                           LEFT JOIN MovementItemFloat AS MIFloat_SummChangePercent_curr
+                                                       ON MIFloat_SummChangePercent_curr.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_SummChangePercent_curr.DescId         = zc_MIFloat_SummChangePercent_curr()
+                           LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                       ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+                           LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                       ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
 
+                      WHERE MovementItem.MovementId = inMovementId
+                        AND MovementItem.DescId     = zc_MI_Master()
+                        AND MovementItem.isErased   = FALSE
+                     )
+       -- Результат
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -131,10 +153,15 @@ BEGIN
            , MovementDate_Insert.ValueData               AS InsertDate
 
            , MovementFloat_TotalSummPriceList.ValueData      AS TotalSummPriceList
-           , MovementFloat_TotalSummPriceList_curr.ValueData AS TotalSummPriceList_curr
+           , COALESCE (tmpMI.TotalSummPriceList_curr , MovementFloat_TotalSummPriceList_curr.ValueData) :: TFloat AS TotalSummPriceList_curr
 
-           , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
-           , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
+           , MovementFloat_TotalSummChange.ValueData                 AS TotalSummChange
+           , COALESCE (tmpMI.TotalChangePercent_curr , 0) :: TFloat  AS TotalSummChange_curr
+           , COALESCE (tmpMI.SummChangePercent_curr , 0)  :: TFloat  AS SummChangePercent_curr
+
+           , MovementFloat_TotalSummPay.ValueData                    AS TotalSummPay
+           , COALESCE (tmpMI.TotalPay_curr , 0)           :: TFloat  AS TotalSummPay_curr
+
            , MovementFloat_TotalSummPayOth.ValueData     AS TotalSummPayOth
 
            , MovementFloat_TotalSummReturn.ValueData     AS TotalSummReturn
@@ -156,6 +183,7 @@ BEGIN
            , (tmpDiscount.StartSumm_Next - tmpData.TotalSumm)  ::TFloat  AS Discount_diff
            , CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN TRUE ELSE FALSE END :: Boolean AS isReturnIn
        FROM Movement
+            LEFT JOIN tmpMI ON 1=1
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId     = zc_MovementFloat_TotalSummPriceList()

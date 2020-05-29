@@ -75,7 +75,7 @@ $BODY$
    DECLARE vbCurrencyValue_pl   TFloat;  -- *Курс для перевода из валюты прайса в ГРН
    DECLARE vbParValue_pl        TFloat;  -- *Номинал для перевода из валюты прайса в ГРН
    DECLARE vbOperPriceList_pl   TFloat;  -- *Цена из прайса - переводим в ГРН
-   DECLARE vbOperPriceList_curr TFloat;  -- *Цена из прайса - в той валюте что есть
+   DECLARE vbOperPriceList_curr TFloat;  -- *Цена из прайса - если в ГРН, тогда переводим в ту валюту что надо (временно zc_Currency_EUR)
 
    DECLARE vbIsOperPriceListReal Boolean; -- режим
 BEGIN
@@ -359,13 +359,13 @@ BEGIN
               -- переводим в ГРН
               vbOperPriceList_pl:= zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (vbOperPriceList_curr, vbCurrencyValue_pl, vbParValue_pl));
           ELSE
-              -- она в прайсе в ГРН
+              -- в прайсе она в ГРН
               vbOperPriceList_pl:= vbOperPriceList_curr;
               -- !!! ВРЕМЕННО - а здесь надо в zc_Currency_EUR !!!
               vbOperPriceList_curr:= zfCalc_SummPriceList (1, zfCalc_CurrencySumm (vbOperPriceList_curr, vbCurrencyId_pl, zc_Currency_EUR(), vbCurrencyValue_pl, vbParValue_pl));
           END IF;
 
-          -- цена в ГРН из Истории со скидкой - ТОЛЬКО когда INSERT
+          -- цена в ГРН из Истории со скидкой - ТОЛЬКО когда INSERT + если вводит IsOperPriceListReal = TRUE
           IF COALESCE (ioId, 0) = 0 AND vbIsOperPriceListReal = TRUE
           THEN
               -- на самом деле возвращается в грид как Цена факт ГРН
@@ -501,7 +501,7 @@ BEGIN
                                               -- , inSummChangePercent     := COALESCE (ioSummChangePercent, 0)
                                               , inOperPrice             := COALESCE (outOperPrice, 0)
                                               , inCountForPrice         := COALESCE (outCountForPrice, 0)
-                                                -- передаем оригинальную цену в той валюте что введена в прайсе
+                                                -- передаем цену прайса в ГРН
                                               , inOperPriceList         := vbOperPriceList_pl
                                               , inCurrencyValue         := outCurrencyValue
                                               , inParValue              := outParValue

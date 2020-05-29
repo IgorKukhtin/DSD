@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsPlatformName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , MeasureId Integer, MeasureName TVarChar  ---20
-             
+
              , Weight TFloat
              , WeightPackage TFloat, WeightPackageSticker TFloat
              , WeightTotal TFloat, ChangePercentAmount TFloat
@@ -43,7 +43,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , GoodsKindPackId Integer, GoodsKindPackName TVarChar
              , GoodsId_Sh Integer, GoodsCode_Sh Integer, GoodsName_Sh TVarChar
              , GoodsKindId_Sh Integer, GoodsKindName_Sh TVarChar
-           
+
              , ReceiptId Integer, ReceiptCode TVarChar, ReceiptName TVarChar
              , GoodsCode_basis Integer, GoodsName_basis TVarChar
              , GoodsCode_main Integer, GoodsName_main TVarChar
@@ -83,7 +83,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WeightAvgNet_Sh   TFloat, WeightAvgNet_Nom   TFloat, WeightAvgNet_Ves   TFloat                            -- Вес нетто полного ящика "по среднему весу" (E2/E3)
              , WeightMinNet_Sh   TFloat, WeightMinNet_Nom   TFloat, WeightMinNet_Ves   TFloat                            -- Вес нетто полного ящика "по мин весу" (E2/E3)
              , WeightMaxNet_Sh   TFloat, WeightMAxNet_Nom   TFloat, WeightMaxNet_Ves   TFloat                            -- Вес нетто полного ящика "по макс весу" (E2/E3)
-             
+
+             , GoodsPropertyBoxId_2 Integer
              , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
              , WeightOnBox_2 TFloat, CountOnBox_2 TFloat
              , BoxVolume_2 TFloat, BoxWeight_2 TFloat
@@ -205,7 +206,7 @@ BEGIN
                                   LEFT JOIN ObjectFloat AS ObjectFloat_WmsCellNum
                                                         ON ObjectFloat_WmsCellNum.ObjectId = Object_GoodsByGoodsKind_View.Id
                                                        AND ObjectFloat_WmsCellNum.DescId = zc_ObjectFloat_GoodsByGoodsKind_WmsCellNum()
-                          -- WHERE Object_GoodsByGoodsKind_View.isErased = FALSE 
+                          -- WHERE Object_GoodsByGoodsKind_View.isErased = FALSE
                             )
    , tmpCodeCalc AS (SELECT tmp.CodeCalc_Sh, tmp.CodeCalc_Nom, tmp.CodeCalc_Ves
                           , COUNT (*) OVER (PARTITION BY tmp.CodeCalc_Sh) AS Count1
@@ -226,8 +227,8 @@ BEGIN
                                   , Object_Box.ObjectCode                AS BoxCode
                                   , Object_Box.ValueData                 AS BoxName
 
-                                  , ObjectFloat_WeightOnBox.ValueData    AS WeightOnBox
-                                  , ObjectFloat_CountOnBox.ValueData     AS CountOnBox
+                                  , COALESCE (ObjectFloat_WeightOnBox.ValueData, 0) :: TFloat AS WeightOnBox
+                                  , COALESCE (ObjectFloat_CountOnBox.ValueData, 0)  :: TFloat AS CountOnBox
 
                                   , ObjectFloat_Volume.ValueData         AS BoxVolume
                                   , ObjectFloat_Weight.ValueData         AS BoxWeight
@@ -365,12 +366,12 @@ BEGIN
            --, COALESCE (ObjectFloat_WeightMin.ValueData,0)       ::TFloat  AS WeightMin
            --, COALESCE (ObjectFloat_WeightMax.ValueData,0)       ::TFloat  AS WeightMax
            --, ((COALESCE (ObjectFloat_WeightMin.ValueData,0) + COALESCE (ObjectFloat_WeightMax.ValueData,0)) / 2) :: TFloat AS WeightAvg
-           
+
            , COALESCE (ObjectFloat_Height.ValueData,0)          ::TFloat  AS Height
            , COALESCE (ObjectFloat_Length.ValueData,0)          ::TFloat  AS Length
            , COALESCE (ObjectFloat_Width.ValueData,0)           ::TFloat  AS Width
            , COALESCE (ObjectFloat_NormInDays.ValueData,0)      ::TFloat  AS NormInDays
-           
+
            , COALESCE (ObjectFloat_Avg_Sh.ValueData,0)        ::TFloat  AS WeightAvg_Sh
            , COALESCE (ObjectFloat_Avg_Nom.ValueData,0)       ::TFloat  AS WeightAvg_Nom
            , COALESCE (ObjectFloat_Avg_Ves.ValueData,0)       ::TFloat  AS WeightAvg_Ves
@@ -385,7 +386,7 @@ BEGIN
            , (COALESCE (ObjectFloat_Avg_Ves.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Ves.ValueData,0)/100))  ::TFloat  AS WeightMin_Ves
            , (COALESCE (ObjectFloat_Avg_Ves.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Ves.ValueData,0)/100))  ::TFloat  AS WeightMax_Ves
 
-           
+
            , COALESCE (ObjectBoolean_Order.ValueData, False)           AS isOrder
            , COALESCE (ObjectBoolean_ScaleCeh.ValueData, False)        AS isScaleCeh
            , COALESCE (ObjectBoolean_NotMobile.ValueData, False)       AS isNotMobile
@@ -458,8 +459,9 @@ BEGIN
             , tmpGoodsPropertyBox.BoxName
 
               -- Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
-            , CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
-                        THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
+            , CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
+                        THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                           * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
                    ELSE tmpGoodsPropertyBox.WeightOnBox
               END :: TFloat AS WeightOnBox_Sh
 
@@ -473,8 +475,16 @@ BEGIN
                    ELSE tmpGoodsPropertyBox.WeightOnBox
               END :: TFloat AS WeightOnBox_Ves
 
-              -- Кол-во кг. в ящ. (E2/E3)
-            , tmpGoodsPropertyBox.WeightOnBox
+              -- Кол-во кг. в ящ. (E2/E3) - средний по всем категориям
+            , CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0 AND (ObjectFloat_Avg_Sh.ValueData > 0 OR ObjectFloat_Avg_Nom.ValueData > 0 OR ObjectFloat_Avg_Ves.ValueData > 0)
+                        THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                           * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) + COALESCE (ObjectFloat_Avg_Nom.ValueData,0) + COALESCE (ObjectFloat_Avg_Ves.ValueData,0))
+                           / (CASE WHEN ObjectFloat_Avg_Sh.ValueData  > 0 THEN 1 ELSE 0 END
+                            + CASE WHEN ObjectFloat_Avg_Nom.ValueData > 0 THEN 1 ELSE 0 END
+                            + CASE WHEN ObjectFloat_Avg_Ves.ValueData > 0 THEN 1 ELSE 0 END
+                             )
+                   ELSE tmpGoodsPropertyBox.WeightOnBox
+              END :: TFloat AS WeightOnBox
 
               -- Кол-во ед. в ящ. (E2/E3)
             , tmpGoodsPropertyBox.CountOnBox
@@ -487,8 +497,9 @@ BEGIN
 
               -- Вес брутто полного ящика "??? по среднему весу" (E2/E3)
               --шт
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
                     ELSE tmpGoodsPropertyBox.WeightOnBox
                END
              + tmpGoodsPropertyBox.BoxWeight
@@ -510,8 +521,9 @@ BEGIN
 
              -- Вес брутто полного ящика "по среднему весу" (E2/E3)
              --шт.
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) > 0 + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
                     ELSE 0
                END
              + tmpGoodsPropertyBox.BoxWeight
@@ -530,11 +542,12 @@ BEGIN
                END
              + tmpGoodsPropertyBox.BoxWeight
               ) :: TFloat AS WeightAvgGross_Ves
-            
+
              -- Вес брутто полного ящика "по мин весу" (E2/E3)
              --шт.
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) > 0 + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
                     ELSE 0
                END
              + tmpGoodsPropertyBox.BoxWeight
@@ -556,8 +569,9 @@ BEGIN
 
              -- Вес брутто полного ящика "макс весу" (E2/E3)
              --шт.
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
                     ELSE 0
                END
              + tmpGoodsPropertyBox.BoxWeight
@@ -576,11 +590,12 @@ BEGIN
                END
              + tmpGoodsPropertyBox.BoxWeight
               ) :: TFloat AS WeightMaxGross_Ves
-               
+
               -- Вес нетто по среднему весу ящика (E2/E3) - тоже что и WeightOnBox
             --шт
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) > 0 + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
                     ELSE 0
                END
               ) :: TFloat AS WeightAvgNet_Sh
@@ -599,8 +614,10 @@ BEGIN
 
               -- Вес нетто по мин весу ящика (E2/E3) - тоже что и WeightOnBox
             --шт
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0
+                     AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 - COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
                     ELSE 0
                END
               ) :: TFloat AS WeightMinNet_Sh
@@ -619,8 +636,10 @@ BEGIN
 
               -- Вес нетто по макс весу ящика (E2/E3) - тоже что и WeightOnBox
             --шт
-            , (CASE WHEN tmpGoodsPropertyBox.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
-                         THEN tmpGoodsPropertyBox.CountOnBox * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
+            , (CASE WHEN COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0) > 0
+                     AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0 AND COALESCE (ObjectFloat_Tax_Sh.ValueData,0) > 0
+                         THEN (COALESCE (tmpGoodsPropertyBox.CountOnBox, 0) + COALESCE (tmpGoodsPropertyBox_2.CountOnBox, 0))
+                            * (COALESCE (ObjectFloat_Avg_Sh.ValueData,0) * (1 + COALESCE (ObjectFloat_Tax_Sh.ValueData,0)/100))
                     ELSE 0
                END
               ) :: TFloat AS WeightMaxNet_Sh
@@ -638,11 +657,12 @@ BEGIN
               ) :: TFloat AS WeightMaxNet_Ves
 
 
-              
+
             -- ящик (Гофра)
-            , tmpGoodsPropertyBox_2.BoxId       AS BoxId_2
-            , tmpGoodsPropertyBox_2.BoxCode     AS BoxCode_2
-            , tmpGoodsPropertyBox_2.BoxName     AS BoxName_2
+            , tmpGoodsPropertyBox_2.GoodsPropertyBoxId AS GoodsPropertyBoxId_2
+            , tmpGoodsPropertyBox_2.BoxId              AS BoxId_2
+            , tmpGoodsPropertyBox_2.BoxCode            AS BoxCode_2
+            , tmpGoodsPropertyBox_2.BoxName            AS BoxName_2
 
               -- Кол-во кг. в ящ. (Гофра)
             , CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
@@ -669,7 +689,7 @@ BEGIN
              -- Вес брутто полного ящика "по среднему весу" (Гофра)
             , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
                          THEN tmpGoodsPropertyBox_2.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
-                    ELSE 0
+                    ELSE tmpGoodsPropertyBox_2.WeightOnBox
                END
              + tmpGoodsPropertyBox_2.BoxWeight
               ) :: TFloat AS WeightAvgGross_2
@@ -677,7 +697,7 @@ BEGIN
               -- Вес нетто полного ящика "по среднему весу" (Гофра)
             , (CASE WHEN tmpGoodsPropertyBox_2.CountOnBox > 0 AND COALESCE (ObjectFloat_Avg_Sh.ValueData,0) > 0
                          THEN tmpGoodsPropertyBox_2.CountOnBox * COALESCE (ObjectFloat_Avg_Sh.ValueData,0)
-                    ELSE 0
+                    ELSE tmpGoodsPropertyBox_2.WeightOnBox
                END
               ) :: TFloat AS WeightAvgNet_2
 
@@ -754,7 +774,7 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_Tax_Ves
                                   ON ObjectFloat_Tax_Ves.ObjectId = Object_GoodsByGoodsKind_View.Id
                                  AND ObjectFloat_Tax_Ves.DescId = zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves()
-                                 
+
  --
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Order
                                     ON ObjectBoolean_Order.ObjectId = Object_GoodsByGoodsKind_View.Id
@@ -815,7 +835,7 @@ BEGIN
                                  ON ObjectLink_GoodsByGoodsKind_Goods_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_Goods_Sh.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods_Sh()
             LEFT JOIN Object AS Object_Goods_Sh ON Object_Goods_Sh.Id = ObjectLink_GoodsByGoodsKind_Goods_Sh.ChildObjectId
-            
+
             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind_Sh
                                  ON ObjectLink_GoodsByGoodsKind_GoodsKind_Sh.ObjectId = Object_GoodsByGoodsKind_View.Id
                                 AND ObjectLink_GoodsByGoodsKind_GoodsKind_Sh.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind_Sh()
@@ -946,14 +966,14 @@ having count (*) > 1
 */
 
 
-/* 
-SELECT * 
+/*
+SELECT *
 , case when tt.isGoodsTypeKind_Sh = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Sh(), tt.Id, 3) END
 , case when tt.isGoodsTypeKind_Sh = TRUE AND tt.isGoodsTypeKind_Nom = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom(), tt.Id, 10) END
 , case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Nom(), tt.Id, 3) END
 , case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = TRUE AND tt.isGoodsTypeKind_Ves = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves(), tt.Id, 10) END
 , case when tt.isGoodsTypeKind_Sh = false AND tt.isGoodsTypeKind_Nom = false AND tt.isGoodsTypeKind_Ves = TRUE THEN lpInsertUpdate_ObjectFloat (zc_ObjectFloat_GoodsByGoodsKind_Tax_Ves(), tt.Id, 3) END
-FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,zfCalc_UserAdmin()) as tt 
+FROM gpSelect_Object_GoodsByGoodsKind_VMC (0,0,0,0,0,0,zfCalc_UserAdmin()) as tt
 */
 
 

@@ -131,14 +131,14 @@ BEGIN
                               , tmp.WmsCode
          
                                 --
-                              , tmp.GoodsPropertyBoxId
-                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
-                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.GoodsPropertyBoxId  ELSE tmp.GoodsPropertyBoxId_2 END :: Integer AS GoodsPropertyBoxId
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE tmp.BoxId_2     END :: Integer AS BoxId
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE tmp.BoxWeight_2 END :: TFloat  AS BoxWeight
          
                                 -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
                             --, CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
                                 -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
-                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
+                              , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE tmp.CountOnBox_2 END :: TFloat  AS CountOnBox
          
                                 -- № Ячейки на складе ВМС
                               , tmp.WmsCellNum
@@ -362,14 +362,14 @@ BEGIN
                      , tmp.WmsCode
 
                        --
-                     , tmp.GoodsPropertyBoxId
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE NULL END :: Integer AS BoxId
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE NULL END :: TFloat  AS BoxWeight
+                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.GoodsPropertyBoxId  ELSE tmp.GoodsPropertyBoxId_2 END :: Integer AS GoodsPropertyBoxId
+                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxId       ELSE tmp.BoxId_2     END :: Integer AS BoxId
+                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.BoxWeight   ELSE tmp.BoxWeight_2 END :: TFloat  AS BoxWeight
 
                        -- !!!***Вес нетто в ящ (E2/E3) - по всем категориям
                    --, CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.WeightOnBox ELSE NULL END :: TFloat  AS WeightOnBox
                        -- Кол-во ед. в ящ. (E2/E3) - !!!самый приоритетный!!!
-                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE NULL END :: TFloat  AS CountOnBox
+                     , CASE WHEN tmp.BoxId IN (zc_Box_E2(), zc_Box_E3()) THEN tmp.CountOnBox  ELSE tmp.CountOnBox_2 END :: TFloat  AS CountOnBox
 
                        -- № Ячейки на складе ВМС
                      , tmp.WmsCellNum

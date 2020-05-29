@@ -64,7 +64,7 @@ BEGIN
      -- !!!Замена!!!
      IF zc_Enum_GlobalConst_isTerry() = FALSE
      THEN
-         ioAmount:= 1;
+         IF vbIsInsert = TRUE THEN ioAmount:= 1; END IF;
          --
          IF COALESCE (ioOperPriceListTo, 0) = 0 AND ioOperPriceListTo_start > 0
          THEN
@@ -150,6 +150,7 @@ BEGIN
 
      -- !!!замена!!!
      IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.MovementId = inMovementId AND MI.DescId = zc_MI_Master() AND MI.ObjectId = inGoodsId AND MI.isErased = FALSE)
+     AND 1=0
      THEN
          -- Цена печать ценников (прайс)(кому) --(для магазина получателя)
          ioOperPriceListTo_start:= (SELECT DISTINCT MIF.ValueData
@@ -182,6 +183,7 @@ BEGIN
          -- если нет цены или была такая же цена, т.е. её корректируют
          IF COALESCE (vbOperPriceListTo_find, 0) = 0
             OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo_start())
+            OR 1=1
          THEN
              PERFORM lpInsertUpdate_ObjectHistory_PriceListItem (ioId         := 0
                                                                , inPriceListId:= vbPriceListId_to
@@ -214,6 +216,7 @@ BEGIN
          IF  vbOperPriceListTo_find = 0
           OR vbStartDate_plTo_find  = zc_DateStart()
           OR vbOperPriceListTo_find = (SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_OperPriceListTo())
+          OR 1=1
          THEN
              PERFORM gpInsertUpdate_ObjectHistory_PriceListItemLast (ioId         := 0
                                                                    , inPriceListId:= vbPriceListId_to

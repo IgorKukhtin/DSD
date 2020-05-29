@@ -436,6 +436,16 @@ object UtilPrintForm: TUtilPrintForm
         Value = Null
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementDescId'
+        Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DocumentKindId'
+        Value = Null
+        MultiSelectSeparator = ','
       end>
     Left = 40
     Top = 16
@@ -2380,6 +2390,55 @@ object UtilPrintForm: TUtilPrintForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actPrint_ProductionUnion: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint_ProductionUnion
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint_ProductionUnion
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end>
+      ReportName = 'PrintMovement_ProductionUnion'
+      ReportNameParam.Name = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_ProductionUnion'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
+    object actGet_Movement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spGet_Movement
+      StoredProcList = <
+        item
+          StoredProc = spGet_Movement
+        end>
+      Caption = 'actGet_Movement'
+    end
   end
   object spSelectPrint_ReturnIn: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
@@ -3383,5 +3442,67 @@ object UtilPrintForm: TUtilPrintForm
     PackSize = 1
     Left = 237
     Top = 582
+  end
+  object spSelectPrint_ProductionUnion: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ProductionUnion_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 63
+    Top = 184
+  end
+  object spGet_Movement: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outDocumentKindId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DocumentKindId'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outMovementDescId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementDescId'
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 39
+    Top = 128
   end
 end

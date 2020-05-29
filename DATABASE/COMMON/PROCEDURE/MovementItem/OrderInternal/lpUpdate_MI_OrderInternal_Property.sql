@@ -106,7 +106,7 @@ BEGIN
                                                                   THEN 8338 -- морож.
                                                              ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
                                                         END AS GoodsKindId
-                                                      , SUM (MIContainer.Amount)                       AS Amount
+                                                      , SUM (MIContainer.Amount) AS Amount
                                                  FROM MovementItemContainer AS MIContainer
                                                  WHERE MIContainer.OperDate               = vbOperDate
                                                    AND MIContainer.DescId                 = zc_MIContainer_Count()
@@ -114,6 +114,28 @@ BEGIN
                                                    AND MIContainer.ObjectId_Analyzer      = inGoodsId
                                                    AND MIContainer.WhereObjectId_Analyzer = vbFromId
                                                    -- AND MIContainer.isActive = TRUE
+                                                 GROUP BY CASE -- !!!временно захардкодил!!!
+                                                               WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                                -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                                    THEN 8338 -- морож.
+                                                               ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                                          END
+                                                UNION ALL
+                                                 SELECT CASE -- !!!временно захардкодил!!!
+                                                             WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
+                                                              -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0
+                                                                  THEN 8338 -- морож.
+                                                             ELSE 0 -- COALESCE (MIContainer.ObjectIntId_Analyzer, 0)
+                                                        END AS GoodsKindId
+                                                      , SUM (MIContainer.Amount) AS Amount
+                                                 FROM MovementItemContainer AS MIContainer
+                                                 WHERE MIContainer.OperDate               = vbOperDate
+                                                   AND MIContainer.DescId                 = zc_MIContainer_Count()
+                                                   AND MIContainer.MovementDescId         = zc_Movement_ProductionUnion()
+                                                   AND MIContainer.ObjectId_Analyzer      = inGoodsId
+                                                   AND MIContainer.WhereObjectId_Analyzer = vbFromId
+                                                -- AND MIContainer.isActive = TRUE
+                                                   AND MIContainer.ObjectExtId_Analyzer <> MIContainer.WhereObjectId_Analyzer
                                                  GROUP BY CASE -- !!!временно захардкодил!!!
                                                                WHEN MIContainer.ObjectExtId_Analyzer = 8445 -- Склад МИНУСОВКА
                                                                 -- AND COALESCE (MIContainer.ObjectIntId_Analyzer, 0) = 0

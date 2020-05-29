@@ -100,8 +100,8 @@ BEGIN
                                                 AND MIFloat_TotalCountReturn.DescId         = zc_MIFloat_TotalCountReturn()
 
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
-                                         ON MIFloat_TotalChangePercent.MovementItemId = MI_PartionMI.Id
-                                        AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
+                                                 ON MIFloat_TotalChangePercent.MovementItemId = MI_PartionMI.Id
+                                                AND MIFloat_TotalChangePercent.DescId         = zc_MIFloat_TotalChangePercent()
 
                      LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercentPay
                                                  ON MIFloat_TotalChangePercentPay.MovementItemId = MI_PartionMI.Id
@@ -120,9 +120,10 @@ BEGIN
            , Object_Status.ObjectCode                    AS StatusCode
            , Object_Status.ValueData                     AS StatusName
 
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalSummBalance.ValueData    AS TotalSummBalance
-           , MovementFloat_TotalSummPriceList.ValueData  AS TotalSummPriceList
+           , MovementFloat_TotalCount.ValueData               AS TotalCount
+           , MovementFloat_TotalSummBalance.ValueData         AS TotalSummBalance
+           , MovementFloat_TotalSummPriceList.ValueData       AS TotalSummPriceList
+           , MovementFloat_TotalSummPriceList_curr.ValueData  AS TotalSummPriceList_curr
 
            , MovementFloat_TotalSummChange.ValueData     AS TotalSummChange
            , MovementFloat_TotalSummPay.ValueData        AS TotalSummPay
@@ -160,6 +161,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList
                                     ON MovementFloat_TotalSummPriceList.MovementId = Movement.Id
                                    AND MovementFloat_TotalSummPriceList.DescId = zc_MovementFloat_TotalSummPriceList()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPriceList_curr
+                                    ON MovementFloat_TotalSummPriceList_curr.MovementId = Movement.Id
+                                   AND MovementFloat_TotalSummPriceList_curr.DescId = zc_MovementFloat_TotalSummPriceList_curr()
+                                   
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummChange
                                     ON MovementFloat_TotalSummChange.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummChange.DescId = zc_MovementFloat_TotalSummChange()
@@ -220,10 +225,11 @@ BEGIN
                            , MovementItem.ObjectId AS GoodsId
                            , MovementItem.PartionId
                            , MovementItem.Amount 
-                           , COALESCE (MIFloat_OperPrice.ValueData, 0)       AS OperPrice
-                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)   AS CountForPrice 
-                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)   AS OperPriceList
-                           , COALESCE (MIFloat_ChangePercent.ValueData, 0)   AS ChangePercent
+                           , COALESCE (MIFloat_OperPrice.ValueData, 0)          AS OperPrice
+                           , COALESCE (MIFloat_CountForPrice.ValueData, 1)      AS CountForPrice 
+                           , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                           , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
+                           , COALESCE (MIFloat_ChangePercent.ValueData, 0)      AS ChangePercent
                            , MovementItem.isErased
                        FROM MovementItem 
                             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
@@ -235,6 +241,9 @@ BEGIN
                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                         ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                        ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
                             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                                         ON MIFloat_ChangePercent.MovementItemId = MovementItem.Id
                                                        AND MIFloat_ChangePercent.DescId         = zc_MIFloat_ChangePercent()
@@ -262,12 +271,14 @@ BEGIN
 
            , tmpMI.Amount
            , tmpMI.ChangePercent
-           , tmpMI.OperPrice      ::TFloat
-           , tmpMI.CountForPrice  ::TFloat
-           , tmpMI.OperPriceList  ::TFloat
+           , tmpMI.OperPrice           ::TFloat AS OperPrice
+           , tmpMI.CountForPrice       ::TFloat AS CountForPrice
+           , tmpMI.OperPriceList       ::TFloat AS OperPriceList
+           , tmpMI.OperPriceList_curr  ::TFloat AS OperPriceList_curr
 
            , zfCalc_SummIn (tmpMI.Amount, tmpMI.OperPrice, tmpMI.CountForPrice) AS TotalSumm
            , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList)           AS TotalSummPriceList
+           , zfCalc_SummPriceList (tmpMI.Amount, tmpMI.OperPriceList_curr)      AS TotalSummPriceList_curr
 
            , tmpMI.isErased
 

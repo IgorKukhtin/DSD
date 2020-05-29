@@ -324,7 +324,7 @@ BEGIN
        -- проверка что в свойство €щик2 - выбран €щик2
        IF inBoxId NOT IN (zc_Box_E2(), zc_Box_E3())
        THEN
-           RAISE EXCEPTION 'ќшибка.«начение  <%> не может быть записано в свойство <√офроящик>.', lfGet_Object_ValueData (inBoxId);
+           RAISE EXCEPTION 'ќшибка.«начение  <%> не может быть записано в свойство <ящик ≈2/≈3>.', lfGet_Object_ValueData (inBoxId);
        END IF;
        -- находим если есть GoodsPropertyBox.Id
        vbGoodsPropertyBoxId := (SELECT ObjectLink_GoodsPropertyBox_Goods.ObjectId
@@ -376,7 +376,7 @@ BEGIN
        -- проверка что в свойство €щик2 - выбран €щик2
        IF inBoxId_2 IN (zc_Box_E2(), zc_Box_E3())
        THEN
-           RAISE EXCEPTION 'ќшибка.«начение  <%> не может быть записано в свойство <ѕластиковый ящик>.', lfGet_Object_ValueData (inBoxId_2);
+           RAISE EXCEPTION 'ќшибка.«начение <%> не может быть записано в свойство <√офроящик>.', lfGet_Object_ValueData (inBoxId_2);
        END IF;
        
        -- находим если есть GoodsPropertyBox.Id

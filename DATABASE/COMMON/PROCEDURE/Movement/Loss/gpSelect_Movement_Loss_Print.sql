@@ -172,8 +172,5 @@ ALTER FUNCTION gpSelect_Movement_Loss_Print (Integer,TVarChar) OWNER TO postgres
  19.11.14                                                       *
 */
 
-/*
-BEGIN;
- SELECT * FROM gpSelect_Movement_Loss_Print (inMovementId := 570596, inSession:= '5');
-COMMIT;
-*/
+-- SELECT * FROM gpSelect_Movement_Loss_Print (inMovementId := 570596, inSession:= '5'); -- FETCH ALL "<unnamed portal 1>";
+

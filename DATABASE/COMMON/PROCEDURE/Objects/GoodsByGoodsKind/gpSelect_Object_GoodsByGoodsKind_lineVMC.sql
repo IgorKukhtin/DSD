@@ -71,8 +71,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, Code Integer, GoodsName TVarChar
              , WeightAvgNet TFloat                              -- Вес нетто полного ящика "по среднему весу" (E2/E3)
              , WeightMinNet TFloat                              -- Вес нетто полного ящика "по мин весу" (E2/E3)
              , WeightMaxNet TFloat                              -- Вес нетто полного ящика "по макс весу" (E2/E3)
-             
 
+             , GoodsPropertyBoxId_2 Integer
              , BoxId_2 Integer, BoxCode_2 Integer, BoxName_2 TVarChar
              , WeightOnBox_2 TFloat, CountOnBox_2 TFloat
              , BoxVolume_2 TFloat, BoxWeight_2 TFloat
@@ -126,8 +126,6 @@ BEGIN
                                   , zfCalc_Text_replace (zfCalc_Text_replace (tmp.GoodsName, CHR(39), '`'), '"', '`') AS GoodsName_repl
                              FROM gpSelect_Object_GoodsByGoodsKind_VMC (inRetail1Id, inRetail2Id , inRetail3Id, inRetail4Id, inRetail5Id, inRetail6Id, inSession) AS tmp
                             )
- 
---WmsNameCalc = tmpGoods.name + WmsCodeCalc
      , tmpGoodsByGoodsKind_line AS (-- Штучный
                                   SELECT *
                                        , (tmp.GoodsName_repl || ' ' || tmp.GoodsKindName || ' ' || vbName_Sh) :: TVarChar AS WmsNameCalc
@@ -146,6 +144,7 @@ BEGIN
                                        , tmp.WeightAvgNet_Sh              AS WeightAvgNet
                                        , tmp.WeightMinNet_Sh              AS WeightMinNet
                                        , tmp.WeightMaxNet_Sh              AS WeightMaxNet
+                                       , tmp.WeightOnBox_Sh               AS WeightOnBox_real
             
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Sh  = TRUE
@@ -168,6 +167,7 @@ BEGIN
                                        , tmp.WeightAvgNet_Nom             AS WeightAvgNet
                                        , tmp.WeightMinNet_Nom             AS WeightMinNet
                                        , tmp.WeightMaxNet_Nom             AS WeightMaxNet
+                                       , tmp.WeightOnBox_Nom              AS WeightOnBox_real
                                        
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Nom  = TRUE
@@ -190,6 +190,7 @@ BEGIN
                                        , tmp.WeightAvgNet_Ves             AS WeightAvgNet
                                        , tmp.WeightMinNet_Ves             AS WeightMinNet
                                        , tmp.WeightMaxNet_Ves             AS WeightMaxNet
+                                       , tmp.WeightOnBox_Ves              AS WeightOnBox_real
                                        
                                   FROM tmpGoodsByGoodsKind AS tmp
                                   WHERE tmp.isGoodsTypeKind_Ves  = TRUE
@@ -212,6 +213,7 @@ BEGIN
                                        , 0  :: TFloat   AS WeightAvgNet
                                        , 0  :: TFloat   AS WeightMinNet
                                        , 0  :: TFloat   AS WeightMaxNet
+                                       , 0  :: TFloat   AS WeightOnBox_real
                                   FROM tmpGoodsByGoodsKind
                                   WHERE (tmpGoodsByGoodsKind.isGoodsTypeKind_Sh <> TRUE
                                     AND tmpGoodsByGoodsKind.isGoodsTypeKind_Ves <> TRUE
@@ -320,7 +322,7 @@ BEGIN
             , tmpGoodsByGoodsKind.BoxName
 
               -- Кол-во кг. в ящ. (E2/E3) - тоже что и WeightAvgNet
-            , tmpGoodsByGoodsKind.WeightOnBox
+            , tmpGoodsByGoodsKind.WeightOnBox_real AS WeightOnBox
               -- Кол-во ед. в ящ. (E2/E3)
             , tmpGoodsByGoodsKind.CountOnBox
 
@@ -349,6 +351,7 @@ BEGIN
             , tmpGoodsByGoodsKind.WeightMaxNet
 
             -- ящик (Гофра)
+            , tmpGoodsByGoodsKind.GoodsPropertyBoxId_2
             , tmpGoodsByGoodsKind.BoxId_2
             , tmpGoodsByGoodsKind.BoxCode_2
             , tmpGoodsByGoodsKind.BoxName_2

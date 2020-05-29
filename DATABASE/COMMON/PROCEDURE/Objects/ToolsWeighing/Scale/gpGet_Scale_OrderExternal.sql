@@ -499,6 +499,7 @@ BEGIN
                                                                                                                   THEN (SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = tmp.MovementId AND MLO.DescId = zc_MovementLinkObject_PaidKind())
                                                                                                              ELSE COALESCE (tmpSelect.PaidKindId, 0)
                                                                                                         END
+                                                               AND COALESCE (tmpSelect.GoodsId_ReWork, 0) = 0 
                                  )
            , tmpMLO_PriceList AS (SELECT * FROM MovementLinkObject AS MLO_PriceList
                                   WHERE MLO_PriceList.MovementId IN (SELECT tmpMovement.Id FROM tmpMovement)

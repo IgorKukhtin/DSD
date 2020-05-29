@@ -74,6 +74,8 @@ BEGIN
                                , COALESCE (tmp.WeightMaxGross, 0) AS WeightMaxGross           -- Вес брутто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                                , COALESCE (tmp.WeightMaxNet, 0)   AS WeightMaxNet             -- Вес нетто полного ящика "по МАКСИМАЛЬНОМУ весу" (E2/E3)
                           FROM lpSelect_wms_Object_SKU() AS tmp
+                        --WHERE sku_id in ('34570391', '37500131', '34570381', '34570361', '38391842')
+
                          )
               --
             , tmpData AS (-- unit – единичная упаковка
@@ -123,8 +125,11 @@ BEGIN
                                , 't'                 :: TVarChar AS is_main
                                -- Тип упаковки: коробочная упаковка
                                , wms_Object_Pack.ctn_type        AS ctn_type
+
                                -- Элемент упаковки (идентификатор упаковки из которой состоит данная). Для единичных упаковок равен 0. 
-                               , tmpGoods.sku_id     :: TVarChar AS code_id
+                             --, tmpGoods.sku_id         :: TVarChar AS code_id
+                               , wms_Object_Pack_unit.Id :: TVarChar AS code_id
+
                                -- Количество элементов упаковки, т.е. количество вложенных элементов
                                , CASE WHEN tmpGoods.GoodsTypeKindId = zc_Enum_GoodsTypeKind_Ves()
                                            THEN tmpGoods.WeightMaxNet * 1000
@@ -153,6 +158,10 @@ BEGIN
                                INNER JOIN wms_Object_Pack ON wms_Object_Pack.GoodsPropertyBoxId = tmpGoods.GoodsPropertyBoxId
                                                          AND wms_Object_Pack.GoodsTypeKindId    = tmpGoods.GoodsTypeKindId
                                                          AND wms_Object_Pack.ctn_type           = 'carton' -- Тип упаковки: коробочная упаковка
+                               INNER JOIN wms_Object_Pack AS wms_Object_Pack_unit
+                                                          ON wms_Object_Pack_unit.GoodsPropertyBoxId = tmpGoods.GoodsPropertyBoxId
+                                                         AND wms_Object_Pack_unit.GoodsTypeKindId    = tmpGoods.GoodsTypeKindId
+                                                         AND wms_Object_Pack_unit.ctn_type           = 'unit' -- Тип упаковки: единичная упаковка
                         --WHERE tmpGoods.BoxId > 0
                          ) 
         -- Результат

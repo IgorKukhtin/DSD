@@ -138,6 +138,10 @@ type
     spSelectPrintAkt: TdsdStoredProc;
     spSelectPrintSticker_Ceh: TdsdStoredProc;
     actPrintSticker_Ceh: TdsdPrintAction;
+    actPrint_ProductionUnion: TdsdPrintAction;
+    spSelectPrint_ProductionUnion: TdsdStoredProc;
+    spGet_Movement: TdsdStoredProc;
+    actGet_Movement: TdsdExecStoredProc;
   private
   end;
 
@@ -273,6 +277,13 @@ begin
   UtilPrintForm.actPrint_ProductionSeparate.Execute;
 end;
 //------------------------------------------------------------------------------------------------
+procedure Print_ProductionUnion (MovementId,MovementId_by: Integer);
+begin
+  UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+//  UtilPrintForm.FormParams.ParamByName('MovementId_by').Value := MovementId_by;
+  UtilPrintForm.actPrint_ProductionUnion.Execute;
+end;
+//------------------------------------------------------------------------------------------------
 procedure Print_TaxDocument (MovementId: Integer; myPrintCount:Integer; isPreview:Boolean);
 begin
   if myPrintCount <= 0 then myPrintCount:=1;
@@ -376,6 +387,15 @@ begin
      UtilPrintForm.PrintItemsSverkaCDS.IndexFieldNames:='';
      //
      Result:=false;
+     //
+     // замена
+     if MovementDescId = zc_Movement_Send then
+     begin
+        UtilPrintForm.FormParams.ParamByName('Id').Value := MovementId;
+        UtilPrintForm.actGet_Movement.Execute;
+        MovementDescId:= UtilPrintForm.FormParams.ParamByName('MovementDescId').Value;
+     end;
+     //
           //
           try
              //Print
@@ -397,13 +417,16 @@ begin
                                   then Print_Inventory(MovementId, MovementId_by)
 
                             else if (MovementDescId = zc_Movement_Send)
-                                 or (MovementDescId = zc_Movement_ProductionUnion)
+                               //or (MovementDescId = zc_Movement_ProductionUnion)
                                   then Print_Send(MovementId,MovementId_by)
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)
 
                                   else if MovementDescId = zc_Movement_ProductionSeparate
                                         then Print_ProductionSeparate(MovementId,MovementId_by)
+
+                                  else if MovementDescId = zc_Movement_ProductionUnion
+                                        then Print_ProductionUnion(MovementId,MovementId_by)
 
                                         else begin ShowMessage ('Ошибка.Форма печати <Накладная> не найдена.');exit;end;
           except

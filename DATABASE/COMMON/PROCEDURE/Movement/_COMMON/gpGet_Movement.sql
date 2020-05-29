@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement(
     IN inMovementId        Integer  , -- ключ Документа
    OUT outMovementId       Integer  , -- 
    OUT outDocumentKindId   Integer  , -- 
+   OUT outMovementDescId   Integer  , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS RECORD
@@ -18,11 +19,14 @@ BEGIN
 
        SELECT Movement.Id
             , COALESCE (MovementLinkObject_DocumentKind.ObjectId, 0) AS DocumentKindId
-              INTO outMovementId, outDocumentKindId
-       FROM (SELECT inMovementId AS Id) AS Movement
+            , Movement.DescId
+              INTO outMovementId, outDocumentKindId, outMovementDescId
+       FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
                                          ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind();
+                                        AND MovementLinkObject_DocumentKind.DescId = zc_MovementLinkObject_DocumentKind()
+       WHERE Movement.Id = inMovementId
+      ;
   
 END;
 $BODY$

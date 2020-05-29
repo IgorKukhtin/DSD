@@ -165,21 +165,21 @@ BEGIN
 
      -- сохранили
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.OperPriceList_pl)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.OperPriceList_curr)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList_curr(), _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.OperPriceList_curr, 0))
 
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.SummChangePercent_curr)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent_curr(), _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.SummChangePercent_curr, 0))
 
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalChangePercent_curr)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.TotalChangePercent_curr, 0))
 
            , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay_curr(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.TotalPay_curr)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay_curr(), _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.TotalPay_curr, 0))
 
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency_pl(), _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CurrencyId_pl)
 
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(),      _tmpItem_recalc.MovementItemId, _tmpItem_recalc.CurrencyValue)
-           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),           _tmpItem_recalc.MovementItemId, _tmpItem_recalc.ParValue)
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_CurrencyValue(),      _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.CurrencyValue, 0))
+           , lpInsertUpdate_MovementItemFloat (zc_MIFloat_ParValue(),           _tmpItem_recalc.MovementItemId, COALESCE (_tmpItem_recalc.ParValue, 0))
 
      FROM _tmpItem_recalc
     ;
@@ -188,12 +188,12 @@ BEGIN
 --    , (select sum (_tmpItem_recalc.TotalChangePercent) from _tmpItem_recalc)
 --    , (select sum (_tmpItem_recalc.TotalPay) from _tmpItem_recalc)
 --    ;
-
+/*
     RAISE EXCEPTION 'Ошибка.<%>   %   %', (select _tmpItem_recalc.TotalChangePercent from _tmpItem_recalc)
 , (select _tmpItem_recalc.TotalChangePercent_curr from _tmpItem_recalc)
 , (select _tmpItem_recalc.OperPriceList_pl from _tmpItem_recalc)
 
-;
+;*/
 
      -- сохранили
      PERFORM lpInsertUpdate_MI_Sale_Child (ioId                 := tmp.Id
