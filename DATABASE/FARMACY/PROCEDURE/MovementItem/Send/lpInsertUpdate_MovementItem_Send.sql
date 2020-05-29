@@ -28,6 +28,7 @@ $BODY$
    DECLARE vbUnitId_to   Integer;
    DECLARE vbisReceived  Boolean;
    DECLARE vbLimitSUN    TFloat;
+   DECLARE vbOperDate_pr TDateTime;
 BEGIN
      -- определяется признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -141,32 +142,49 @@ BEGIN
               ) AS tmpPrice;
      END IF;
 
-/* -- пока убрали 
+    -- действует с 01,06,2020
+    SELECT MIN (MovementProtocol.OperDate) AS OperDate_protocol
+   INTO vbOperDate_pr
+    FROM MovementProtocol
+    WHERE MovementProtocol.MovementId = inMovementId;
+                             
+     IF vbOperDate_pr >= '01.06.2020'
+     THEN
+         -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
+         -- для ObjectId
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+          FROM MovementItem
+               INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
+                                     ON ObjectLink_GoodsPairSun.ObjectId = MovementItem.ObjectId
+                                    AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
+                                    AND ObjectLink_GoodsPairSun.ChildObjectId = inGoodsId
+               INNER JOIN ObjectDate AS ObjectDate_PairSun
+                                     ON ObjectDate_PairSun.ObjectId = ObjectLink_GoodsPairSun.ObjectId
+                                    AND ObjectDate_PairSun.DescId = zc_ObjectDate_Goods_PairSun()
+                                    AND ObjectDate_PairSun.ValueData <= vbOperDate_pr
+                                   
+          WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.DescId = zc_MI_Master()
+             AND MovementItem.isErased = FALSE
+             AND MovementItem.Id <> ioId;
+          -- для ChildObjectId
+          PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
+          FROM MovementItem
+               INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
+                                     ON ObjectLink_GoodsPairSun.ChildObjectId = MovementItem.ObjectId
+                                    AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
+                                    AND ObjectLink_GoodsPairSun.ObjectId = inGoodsId
 
-     -- замена inAmountStorage у второго товара по св-ву zc_ObjectLink_Goods_GoodsPairSun - причем  по обеим условиям - ObjectId и ChildObjectId
-     -- для ObjectId
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
-      FROM MovementItem
-           INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
-                                 ON ObjectLink_GoodsPairSun.ObjectId = MovementItem.ObjectId
-                                AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
-                                AND ObjectLink_GoodsPairSun.ChildObjectId = inGoodsId
-      WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Master()
-         AND MovementItem.isErased = FALSE
-         AND MovementItem.Id <> ioId;
-      -- для ChildObjectId
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountStorage(), MovementItem.Id, inAmountStorage)
-      FROM MovementItem
-           INNER JOIN ObjectLink AS ObjectLink_GoodsPairSun 
-                                 ON ObjectLink_GoodsPairSun.ChildObjectId = MovementItem.ObjectId
-                                AND ObjectLink_GoodsPairSun.DescId   = zc_ObjectLink_Goods_GoodsPairSun()
-                                AND ObjectLink_GoodsPairSun.ObjectId = inGoodsId
-      WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Master()
-         AND MovementItem.isErased = FALSE
-         AND MovementItem.Id <> ioId;
-     */
+               INNER JOIN ObjectDate AS ObjectDate_PairSun
+                                     ON ObjectDate_PairSun.ObjectId = ObjectLink_GoodsPairSun.ObjectId
+                                    AND ObjectDate_PairSun.DescId = zc_ObjectDate_Goods_PairSun()
+                                    AND ObjectDate_PairSun.ValueData <= vbOperDate_pr
+
+          WHERE MovementItem.MovementId = inMovementId
+             AND MovementItem.DescId = zc_MI_Master()
+             AND MovementItem.isErased = FALSE
+             AND MovementItem.Id <> ioId;
+     END IF;
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -185,7 +203,7 @@ BEGIN
      
        IF COALESCE(vbLimitSUN, 0) > 0 AND vbSummaNew < COALESCE(vbLimitSUN, 0) AND vbSummaNew < vbSumma
        THEN
-         RAISE EXCEPTION 'Ошибка. Коллеги, уменьшать сумму перемещения по СУН менее % грню запрещено.', COALESCE(vbLimitSUN, 0);
+         RAISE EXCEPTION 'Ошибка. Коллеги, уменьшать сумму перемещения по СУН менее % грн. запрещено.', COALESCE(vbLimitSUN, 0);
        END IF;
      END IF;
      

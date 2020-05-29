@@ -148,6 +148,15 @@ inherited GoodsForm: TGoodsForm
             Options.Editing = False
             Width = 80
           end
+          object PairSunDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1080#1085#1093#1088'. '#1074' '#1087#1077#1088#1077#1084'. '#1076#1083#1103' '#1090#1086#1074' ('#1087#1072#1088#1072' '#1074' '#1057#1059#1053')'
+            DataBinding.FieldName = 'PairSunDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1072#1090#1072' '#1089#1080#1085#1093#1088'. '#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1080' '#1076#1083#1103#1058#1086#1074#1072#1088#1072' ('#1087#1072#1088#1072' '#1074' '#1057#1059#1053')'
+            Options.Editing = False
+            Width = 97
+          end
           object MinimumLot: TcxGridDBColumn
             Caption = #1050#1088#1072#1090#1085#1086#1089#1090#1100
             DataBinding.FieldName = 'MinimumLot'

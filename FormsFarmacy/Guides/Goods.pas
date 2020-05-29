@@ -206,6 +206,7 @@ type
     ExecuteDialogGoodsPairSun: TExecuteDialog;
     macUpdate_GoodsPairSun: TMultiAction;
     bbUpdate_GoodsPairSun: TdxBarButton;
+    PairSunDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -550,6 +550,7 @@ BEGIN
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                       ELSE 0
                  END AS RemainsMCS_to
+                 
                , CASE WHEN ObjectBoolean_Goods_Close.ValueData = TRUE
                            THEN 0
                       WHEN COALESCE (Object_Remains.RemainsStart, 0) < tmpGoods_list.MCSValue AND tmpGoods_list.MCSValue > 0
@@ -558,7 +559,7 @@ BEGIN
                               * COALESCE (tmpOverSettings.MinimumLot, COALESCE (tmpOverSettings_all.MinimumLot, 1))
                               * COALESCE (ObjectHistoryFloat_Price.ValueData, 0)
                       ELSE 0
-                 END AS RemainsMCS_to
+                 END AS SummaRemainsMCS_to
 
                , Object_Send.Amount                          AS AmountSend
                , COALESCE (Object_Remains.Amount_Reserve, 0) AS Amount_Reserve
