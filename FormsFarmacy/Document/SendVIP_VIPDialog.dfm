@@ -76,7 +76,7 @@ object SendVIP_VIPDialogForm: TSendVIP_VIPDialogForm
     Caption = #1058#1077#1083#1077#1092#1086#1085' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103':'
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 262
+    Left = 222
     Top = 17
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -96,9 +96,16 @@ object SendVIP_VIPDialogForm: TSendVIP_VIPDialogForm
     Params = <
       item
         Name = 'ManagerId'
-        Value = 'NULL'
+        Value = '0'
         Component = MemberGuides
         ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerName'
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end
       item
@@ -122,6 +129,7 @@ object SendVIP_VIPDialogForm: TSendVIP_VIPDialogForm
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
+    Key = '0'
     FormNameParam.Value = 'TMemberForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -143,7 +151,7 @@ object SendVIP_VIPDialogForm: TSendVIP_VIPDialogForm
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 184
+    Left = 96
     Top = 24
   end
 end

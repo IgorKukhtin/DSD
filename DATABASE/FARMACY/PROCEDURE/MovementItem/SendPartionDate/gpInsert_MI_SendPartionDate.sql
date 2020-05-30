@@ -134,7 +134,7 @@ BEGIN
                                HAVING (Container.Amount - SUM (COALESCE (MIContainer.Amount,0))) <> 0
                               )
           -- остатки - нашли Срок годности
-        , tmpContainer_term AS (SELECT tmp.ContainerId
+        , tmpContainer_Date AS (SELECT tmp.ContainerId
                                   -- , COALESCE (MI_Income_find.MovementId, MI_Income.MovementId) AS MovementId_Income
                                      , MI_Income.MovementId                                       AS MovementId_Income
                                      , tmp.GoodsId
@@ -162,12 +162,56 @@ BEGIN
                                                                     AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                 -- WHERE COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) <= vbDate180
                                )
+          -- остатки - нашли Срок c перемещений
+        , tmpContainer_In AS (SELECT tmp.ContainerId
+                                     , tmp.MovementId_Income
+                                     , tmp.GoodsId
+                                     , tmp.Amount
+                                     , tmp.ExpirationDate
+                                     , tmp.MovementItemId_Income
+                                     , tmp.MovementItemMovementId_Income
+                                     , MIC_Send.DescId                          AS MIC_DescId
+                                     , MIC_Send.MovementDescId                  AS MIC_MovementDescId
+                                     , MIC_Send.MovementItemId                  AS MIC_MovementItemId
+                                FROM tmpContainer_Date AS tmp
+                                     INNER JOIN MovementItemContainer AS MIC_Send
+                                                                      ON MIC_Send.ContainerId = tmp.ContainerId
+                                                                     AND MIC_Send.Amount > 0
+                               )
+        , tmpContainer_Send AS (SELECT tmp.ContainerId
+                                     , MAX(COALESCE (ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))      AS ExpirationDateIn
+                                FROM tmpContainer_In AS tmp
+                                     INNER JOIN MovementItemContainer AS MIC_Send
+                                                                      ON MIC_Send.MovementItemId = tmp.MIC_MovementItemId
+                                                                     AND MIC_Send.DescId = zc_Container_CountPartionDate()
+                                                                     AND MIC_Send.Amount < 0
+                                     LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MIC_Send.ContainerId
+                                                                  AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+                                     LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                          ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
+                                                         AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+                                WHERE tmp.MIC_DescId = zc_MIContainer_Count()
+                                  AND tmp.MIC_MovementDescId = zc_Movement_Send()
+                                GROUP BY tmp.ContainerId
+                               )
+          -- остатки - нашли Срок c перемещений
+        , tmpContainer_term AS (SELECT tmp.ContainerId
+                                     , tmp.MovementId_Income
+                                     , tmp.GoodsId
+                                     , tmp.Amount
+                                     , tmp.ExpirationDate
+                                     , tmp.MovementItemId_Income
+                                     , tmp.MovementItemMovementId_Income
+                                     , tmpContainer_Send.ExpirationDateIn
+                                FROM tmpContainer_Date AS tmp
+                                     LEFT JOIN tmpContainer_Send ON tmpContainer_Send.ContainerId = tmp.ContainerId
+                               )
           -- остатки - все партии, если есть хоть один <= vbDate180 + отбросили tmpContainer_PartionDate
         , tmpContainer AS (SELECT tmpContainer_term.ContainerId
                                 , tmpContainer_term.MovementId_Income
                                 , tmpContainer_term.GoodsId
                                 , tmpContainer_term.Amount
-                                , tmpContainer_term.ExpirationDate
+                                , COALESCE(tmpContainer_term.ExpirationDateIn, tmpContainer_term.ExpirationDate)  AS ExpirationDate
                                 , ROUND(CASE WHEN MovementBoolean_PriceWithVAT.ValueData THEN MIFloat_Price.ValueData
                                        ELSE (MIFloat_Price.ValueData * (1 + ObjectFloat_NDSKind_NDS.ValueData / 100)) END, 2)::TFloat  AS PriceWithVAT
                            FROM (SELECT DISTINCT tmpContainer_term.GoodsId

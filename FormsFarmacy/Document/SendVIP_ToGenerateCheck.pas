@@ -31,10 +31,9 @@ type
   TSendVIP_ToGenerateCheckForm = class(TAncestorReportForm)
     cxLabel3: TcxLabel;
     ceUnit: TcxButtonEdit;
-    rdUnit: TRefreshDispatcher;
     GuidesUnit: TdsdGuides;
     dxBarButton1: TdxBarButton;
-    spGet_UserUnit: TdsdStoredProc;
+    spInsertCheckVIP: TdsdStoredProc;
     actRefreshStart: TdsdDataSetRefresh;
     ExecuteDialog: TExecuteDialog;
     bbExecuteDialog: TdxBarButton;
@@ -49,6 +48,15 @@ type
     InvNumber: TcxGridDBColumn;
     cxGridDBTableViewColumn2: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    actExecuteVIPDialog: TExecuteDialog;
+    actCreateVIPCheck: TMultiAction;
+    actCreateVIPCheckItem: TMultiAction;
+    dxBarButton2: TdxBarButton;
+    edBayerPhone: TcxTextEdit;
+    edBayerName: TcxTextEdit;
+    actExecInsertCheckVIP: TdsdExecStoredProc;
+    spInsertCheckVIPItem: TdsdStoredProc;
+    actExecInsertCheckItemVIP: TdsdExecStoredProc;
   private
     { Private declarations }
   public

@@ -55,6 +55,9 @@ BEGIN
                    LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v3
                                              ON MovementBoolean_SUN_v3.MovementId = Movement.Id
                                             AND MovementBoolean_SUN_v3.DescId = zc_MovementBoolean_SUN_v3()
+                   LEFT JOIN MovementBoolean AS MovementBoolean_SUN_v4
+                                             ON MovementBoolean_SUN_v4.MovementId = Movement.Id
+                                            AND MovementBoolean_SUN_v4.DescId = zc_MovementBoolean_SUN_v4()
                    LEFT JOIN MovementBoolean AS MovementBoolean_Sent
                                              ON MovementBoolean_Sent.MovementId = Movement.Id
                                             AND MovementBoolean_Sent.DescId = zc_MovementBoolean_Sent()
@@ -70,6 +73,7 @@ BEGIN
                 AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_SUN_v2.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_SUN_v3.ValueData, FALSE) = FALSE
+                AND COALESCE (MovementBoolean_SUN_v4.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_Sent.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_Received.ValueData, FALSE) = FALSE
                 AND COALESCE (MovementBoolean_NotDisplaySUN.ValueData, FALSE) = FALSE

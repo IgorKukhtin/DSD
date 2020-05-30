@@ -340,15 +340,29 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       Text = '<'#1042#1099#1073#1077#1088#1080#1090#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077'>'
       Width = 244
     end
+    object edBayerPhone: TcxTextEdit
+      Left = 287
+      Top = 31
+      TabOrder = 6
+      Visible = False
+      Width = 265
+    end
+    object edBayerName: TcxTextEdit
+      Left = 16
+      Top = 31
+      TabOrder = 7
+      Visible = False
+      Width = 265
+    end
   end
   inherited ActionList: TActionList
     object actRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_UserUnit
+      StoredProc = spInsertCheckVIP
       StoredProcList = <
         item
-          StoredProc = spGet_UserUnit
+          StoredProc = spInsertCheckVIP
         end
         item
           StoredProc = spSelect
@@ -403,6 +417,93 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actCreateVIPCheck: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecuteVIPDialog
+        end
+        item
+          Action = actExecInsertCheckVIP
+        end
+        item
+          Action = actCreateVIPCheckItem
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1057#1086#1079#1076#1072#1090#1100' VIP '#1095#1077#1082' '#1087#1086' '#1087#1086#1079#1080#1095#1080#1103#1084' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      Hint = #1057#1086#1079#1076#1072#1090#1100' VIP '#1095#1077#1082' '#1087#1086' '#1087#1086#1079#1080#1095#1080#1103#1084' '#1087#1086#1076' '#1092#1080#1083#1100#1090#1088#1086#1084
+      ImageIndex = 79
+    end
+    object actExecuteVIPDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteVIPDialog'
+      FormName = 'TSendVIP_VIPDialogForm'
+      FormNameParam.Value = 'TSendVIP_VIPDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'ManagerId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ManagerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'BayerPhone'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BayerPhone'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actCreateVIPCheckItem: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecInsertCheckItemVIP
+        end>
+      View = cxGridDBTableView
+      Caption = #1060#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' VIP '#1095#1077#1082#1072
+    end
+    object actExecInsertCheckVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertCheckVIP
+      StoredProcList = <
+        item
+          StoredProc = spInsertCheckVIP
+        end>
+      Caption = 'actExecInsertCheckVIP'
+    end
+    object actExecInsertCheckItemVIP: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertCheckVIPItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertCheckVIPItem
+        end>
+      Caption = 'actExecInsertCheckVIP'
     end
   end
   inherited MasterDS: TDataSource
@@ -474,6 +575,10 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -510,6 +615,10 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       Visible = ivAlways
       ImageIndex = 56
     end
+    object dxBarButton2: TdxBarButton
+      Action = actCreateVIPCheck
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 208
@@ -527,17 +636,6 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       end>
     Left = 432
     Top = 216
-  end
-  object rdUnit: TRefreshDispatcher
-    IdParam.Value = Null
-    IdParam.MultiSelectSeparator = ','
-    RefreshAction = actRefresh
-    ComponentList = <
-      item
-        Component = GuidesUnit
-      end>
-    Left = 208
-    Top = 240
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
@@ -567,29 +665,56 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
       end>
     Left = 344
   end
-  object spGet_UserUnit: TdsdStoredProc
-    StoredProcName = 'gpGet_UserUnit'
+  object spInsertCheckVIP: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Check_SendVIP'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'UnitId'
-        Value = ''
-        Component = GuidesUnit
-        ComponentItem = 'Key'
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CheckID'
+        ParamType = ptInputOutput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'UnitName'
+        Name = 'inUnitId'
         Value = ''
         Component = GuidesUnit
-        ComponentItem = 'TextValue'
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inManagerId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'ManagerId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBayer'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerName'
         DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBayerPhone'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BayerPhone'
+        DataType = ftString
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 376
-    Top = 208
+    Left = 312
+    Top = 232
   end
   object spUpdate_Price_MCSIsClose: TdsdStoredProc
     StoredProcName = 'gpUpdate_Object_Price_MCSIsClose'
@@ -658,8 +783,81 @@ inherited SendVIP_ToGenerateCheckForm: TSendVIP_ToGenerateCheckForm
         ComponentItem = 'TextValue'
         DataType = ftString
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CheckID'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ManagerId'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerName'
+        Component = edBayerName
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'BayerPhone'
+        Component = edBayerPhone
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     Left = 280
     Top = 160
+  end
+  object spInsertCheckVIPItem: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Check_SendVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'CheckID'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMISendId'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'MovamantItemId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inGoodsId'
+        Value = '0'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inAmount'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPrice'
+        Value = ''
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 312
+    Top = 320
   end
 end
