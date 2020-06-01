@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_UnnamedEnterprises_Goods(
 RETURNS Void AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE text_var1 text;
 BEGIN
 
 
@@ -54,6 +55,16 @@ BEGIN
 
                      WHERE Object_Goods.Id = inId
                     ) AS tmpGoods;
+
+      -- Сохранили в плоскую таблицй
+     BEGIN
+       UPDATE Object_Goods_Main SET NameUkr = inNameUkr
+       WHERE Object_Goods_Main.Id IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+     EXCEPTION
+        WHEN others THEN 
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+          PERFORM lpAddObject_Goods_Temp_Error('lpUpdate_MovementItem_UnnamedEnterprises_Goods', text_var1::TVarChar, vbUserId);
+     END;
    END IF;
 
    -- сохранили свойство <Код УКТЗЭД>
@@ -87,6 +98,16 @@ BEGIN
 
                      WHERE Object_Goods.Id = inId
                     ) AS tmpGoods;
+                    
+      -- Сохранили в плоскую таблицй
+     BEGIN
+       UPDATE Object_Goods_Main SET CodeUKTZED = inCodeUKTZED
+       WHERE Object_Goods_Main.Id IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+     EXCEPTION
+        WHEN others THEN 
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+          PERFORM lpAddObject_Goods_Temp_Error('lpUpdate_MovementItem_UnnamedEnterprises_Goods', text_var1::TVarChar, vbUserId);
+     END;
    END IF;
 
    -- сохранили свойство <Од>
@@ -120,6 +141,16 @@ BEGIN
 
                      WHERE Object_Goods.Id = inId
                     ) AS tmpGoods;
+
+      -- Сохранили в плоскую таблицй
+     BEGIN
+       UPDATE Object_Goods_Main SET ExchangeId = inExchangeId
+       WHERE Object_Goods_Main.Id IN (SELECT Object_Goods_Retail.GoodsMainId FROM Object_Goods_Retail WHERE Object_Goods_Retail.Id = inId);  
+     EXCEPTION
+        WHEN others THEN 
+          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT; 
+          PERFORM lpAddObject_Goods_Temp_Error('lpUpdate_MovementItem_UnnamedEnterprises_Goods', text_var1::TVarChar, vbUserId);
+     END;
    END IF;
 
    -- сохранили протокол

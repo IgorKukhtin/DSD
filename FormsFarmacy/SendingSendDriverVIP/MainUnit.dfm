@@ -24,9 +24,6 @@ object MainForm: TMainForm
     Height = 381
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 360
-    ExplicitWidth = 961
-    ExplicitHeight = 278
     object cxGridDBTableView1: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = dsReport_Upload
@@ -254,7 +251,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 502
       object grChatIdDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ChatIdDS
@@ -321,10 +317,6 @@ object MainForm: TMainForm
       LookAndFeel.Kind = lfStandard
       LookAndFeel.NativeStyle = False
       LookAndFeel.SkinName = ''
-      ExplicitLeft = 1
-      ExplicitTop = 32
-      ExplicitWidth = 576
-      ExplicitHeight = 224
       object cxGridDBTableView2: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = dsDriver

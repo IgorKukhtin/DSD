@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100'  <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1055#1088#1086#1077#1082#1090#1086#1074' ('#1076#1080#1089#1082#1086#1085#1090#1085#1099#1077' '#1082#1072#1088#1090#1099')>'
-  ClientHeight = 363
-  ClientWidth = 388
+  ClientHeight = 406
+  ClientWidth = 375
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,8 +22,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1077#1082#1090#1072
   end
   object cxButton1: TcxButton
-    Left = 90
-    Top = 320
+    Left = 82
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 240
-    Top = 320
+    Left = 232
+    Top = 362
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -116,6 +116,17 @@
     Top = 280
     TabOrder = 13
     Width = 296
+  end
+  object ceToken: TcxTextEdit
+    Left = 40
+    Top = 333
+    TabOrder = 14
+    Width = 296
+  end
+  object cxLabel3: TcxLabel
+    Left = 40
+    Top = 313
+    Caption = 'API '#1090#1086#1082#1077#1085
   end
   object ActionList: TActionList
     Left = 272
@@ -209,6 +220,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inToken'
+        Value = Null
+        Component = ceToken
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -293,6 +312,13 @@
         Value = ''
         Component = ceExternalUnit
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Token'
+        Value = Null
+        Component = ceToken
+        DataType = ftFloat
         MultiSelectSeparator = ','
       end>
     PackSize = 1

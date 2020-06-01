@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , UserName TVarChar
              , Password TVarChar
              , ExternalUnit TVarChar  
+             , Token TVarChar  
               )
 AS
 $BODY$
@@ -32,7 +33,8 @@ BEGIN
                   , CAST ('' AS TVarChar)  AS UnitName
                   , CAST ('' AS TVarChar)  AS UserName
                   , CAST ('' AS TVarChar)  AS Password
-                  , ''::TVarChar           AS ExternalUnit;
+                  , ''::TVarChar           AS ExternalUnit
+                  , ''::TVarChar           AS Token;
       ELSE
            RETURN QUERY
              SELECT Object_DiscountExternalTools.Id         AS Id
@@ -44,6 +46,7 @@ BEGIN
                   , ObjectString_User.ValueData             AS UserName
                   , ObjectString_Password.ValueData         AS Password
                   , ObjectString_ExternalUnit.ValueData     AS ExternalUnit
+                  , ObjectString_Token.ValueData            AS Token
 
              FROM Object AS Object_DiscountExternalTools
                   LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -66,6 +69,10 @@ BEGIN
                                          ON ObjectString_ExternalUnit.ObjectId = Object_DiscountExternalTools.Id 
                                         AND ObjectString_ExternalUnit.DescId = zc_ObjectString_DiscountExternalTools_ExternalUnit()
                 
+                  LEFT JOIN ObjectString AS ObjectString_Token
+                                         ON ObjectString_Token.ObjectId = Object_DiscountExternalTools.Id 
+                                        AND ObjectString_Token.DescId = zc_ObjectString_DiscountExternalTools_Token()
+
              WHERE Object_DiscountExternalTools.Id = inId;
       END IF;
 

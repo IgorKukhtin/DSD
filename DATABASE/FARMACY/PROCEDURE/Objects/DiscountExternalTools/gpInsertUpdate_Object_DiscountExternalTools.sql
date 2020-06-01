@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternalTools (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternalTools (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_DiscountExternalTools (Integer, Integer, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountExternalTools(
  INOUT ioId                            Integer   , -- ключ объекта
@@ -11,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_DiscountExternalTools(
     IN inDiscountExternalId            Integer   , -- 
     IN inUnitId                        Integer   , -- 
     IN inExternalUnit                  TVarChar  , -- Подразделение проекта, идентификатор аптеки, который присваивается со стороны проекта
+    IN inToken                         TVarChar  , -- API токен 
     IN inSession                       TVarChar    -- сессия пользователя
 )
 RETURNS Integer
@@ -41,6 +43,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DiscountExternalTools_Password(), ioId, inPassword);
    -- сохранили свойство <Подразделение проекта>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DiscountExternalTools_ExternalUnit(), ioId, inExternalUnit);
+   -- сохранили свойство <API токен>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_DiscountExternalTools_Token(), ioId, inToken);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

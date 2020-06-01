@@ -67,6 +67,7 @@ type
     ExternalUnit: TcxGridDBColumn;
     actCheckJournalDiscountExternal: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
+    Token: TcxGridDBColumn;
   private
     { Private declarations }
   public

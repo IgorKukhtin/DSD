@@ -190,10 +190,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalToolsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsForm');
-  Exit;
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TDiscountExternalToolsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsEditForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TDiscountExternalTools_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalTools_ObjectForm');

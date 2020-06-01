@@ -3,7 +3,7 @@
         <ProjectGuid>{9EC2C8E1-2EE6-4CB0-948F-F29762EE48D8}</ProjectGuid>
         <ProjectVersion>18.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>SendingSendDriverVIP.dpr</MainSource>
+        <MainSource>ExportGoodsForBayer.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -51,7 +51,7 @@
         <DCC_UsePackage>ibdacfmx160;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;CustomIPTransport;dsnap;IndyCore;IPIndyImpl;bindcompfmx;dbrtl;bindcomp;inetdb;xmlrtl;ibxpress;soaprtl;bindengine;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;IndySystem;DataSnapClient;dacfmx160;DataSnapProviderClient;dac160;DBXOracleDriver;fmxase;inetdbxpress;rtl;DbxClientDriver;ibdac160;IndyProtocols;DBXMySQLDriver;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>SendingSendDriverVIP</SanitizedProjectName>
+        <SanitizedProjectName>ExportGoodsForBayer</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -103,10 +103,10 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\FormsFarmacy\SendingSendDriverVIP\MainUnit.pas">
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportGoodsForBayer\MainUnit.pas">
             <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="..\SOURCE\uTelegram.pas"/>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportGoodsForBayer\uBayer.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -153,13 +153,13 @@
                 </VersionInfoKeys>
                 <Excluded_Packages/>
                 <Source>
-                    <Source Name="MainSource">SendingSendDriverVIP.dpr</Source>
+                    <Source Name="MainSource">ExportGoodsForBayer.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\BIN\SendingSendDriverVIP.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\ExportGoodsForBayer.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>SendingSendDriverVIP.exe</RemoteName>
+                        <RemoteName>ExportGoodsForBayer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -636,6 +636,7 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
+            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

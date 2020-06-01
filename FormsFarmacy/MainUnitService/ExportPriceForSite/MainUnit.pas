@@ -395,20 +395,21 @@ begin
         cxProgressBarUnit.Position := qryUnit.RecNo;
         Application.ProcessMessages;
         Sleep(100);
-//        if (qryUnit.RecNo = 1)  and (HourOf(Now) < 3) then
-//        begin
-//          try
-//            dsReport.DataSet := qryRest_Group;
-//            qryRest_Group.Close;
-//            qryRest_Group.Open;
-//            if ReportExportRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger) then
-//            begin
-//              ReportCompressRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger);
-//            end;
-//          finally
-//            dsReport.DataSet := qryReport;
-//          end;
-//        end;
+        if (qryUnit.RecNo = 1) and (HourOf(Now) < 2) then
+        begin
+          try
+            dsReport.DataSet := qryRest_Group;
+            qryRest_Group.Close;
+            qryRest_Group.Open;
+            if ReportExportRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger) then
+            begin
+              ReportCompressRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger);
+            end;
+          finally
+            dsReport.DataSet := qryReport;
+          end;
+        end;
+
         qryReport.Close;
         qryReport.Params.ParamByName('inUnitId').Value := qryUnit.FieldByName('Id').AsInteger;
         qryReport.Open;
