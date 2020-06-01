@@ -1142,9 +1142,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Goods_ActiveSubstance() RETURNS Integ
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Goods_ActiveSubstance', zc_Object_Goods(), 'Действующее вещество' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Goods_ActiveSubstance');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_DiscountExternalTools_Token() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DiscountExternalTools_Token'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_DiscountExternalTools_Token', zc_Object_DiscountExternalTools(), 'API токен' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_DiscountExternalTools_Token');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Подмогильный В.В.   Шаблий О.В.
+ 01.06.20                                                                                                         * zc_ObjectString_DiscountExternalTools_Token  
  22.05.20         * zc_ObjectString_Unit_SUN_v4_Lock
                     zc_ObjectString_Unit_SUN_v2_Lock
                     zc_ObjectString_Unit_SUN_v1_Lock

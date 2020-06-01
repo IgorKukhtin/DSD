@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   System.RegularExpressions, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IniFiles, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore,
+  cxLookAndFeels, cxLookAndFeelPainters, cxStyles, dxSkinsCore, DateUtils,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxContainer, cxLabel, cxTextEdit,
   cxMaskEdit, cxSpinEdit, Vcl.StdCtrls, Vcl.ExtCtrls, cxGridLevel,
@@ -28,6 +28,7 @@ type
     qryUnit: TZQuery;
     cxProgressBarUnit: TcxProgressBar;
     UnitName: TStaticText;
+    qryRest_Group: TZQuery;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure btnExecuteClick(Sender: TObject);
@@ -37,6 +38,8 @@ type
     function ReportExport(AUnitId: Integer; AUnitName: String) : boolean;
     procedure ReportCompress(AUnitId: Integer; AUnitName: String);
     procedure ReportCompressMyPharmacy(AUnitId: Integer; AUnitName: String);
+    function ReportExportRest_Group(AUnitId: Integer) : boolean;
+    procedure ReportCompressRest_Group(AUnitId: Integer);
   public
     { Public declarations }
     procedure Add_Log(AMessage:String);
@@ -248,6 +251,49 @@ begin
   end;
 end;
 
+procedure TForm1.ReportCompressRest_Group(AUnitId: Integer);
+var
+  UnitFile, RestFile: string;
+  SR: TSearchRec;
+  ZipName: string;
+  ZipFile: TZipFile;
+begin
+  Add_Log('Начало архивирования отчета Rest_Group');
+
+  try
+
+    if not ForceDirectories(FilePath) then
+    begin
+      Add_Log('Не могу создать директорию архивирования');
+      exit;
+    end;
+
+    UnitFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
+    RestFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip';
+
+    if FileExists(FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip') then
+      DeleteFile(FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.zip');
+
+    ZipFile := TZipFile.Create;
+
+    try
+      ZipFile.Open(RestFile, zmWrite);
+      ZipFile.Add(UnitFile);
+      ZipFile.Close;
+
+    finally
+      ZipFile.Free;
+    end;
+  except
+    on E: Exception do
+    begin
+      Add_Log(E.Message);
+      exit;
+    end;
+  end;
+end;
+
+
 function TForm1.ReportExport(AUnitId: Integer; AUnitName: String) : boolean;
 var
   UnitFile: string;
@@ -290,6 +336,48 @@ begin
 
 end;
 
+function TForm1.ReportExportRest_Group(AUnitId: Integer) : boolean;
+var
+  UnitFile: string;
+  sl : TStringList;
+begin
+  Add_Log('Начало выгрузки отчета');
+  Result := False;
+
+  UnitFile := FilePath  + 'rest_group_' + IntToStr(AUnitId) + '.xml';
+
+  if not ForceDirectories(FilePath) then
+  begin
+    Add_Log('Не могу создать директорию выгрузки');
+    exit;
+  end;
+
+  try
+    ExportGridToText(UnitFile, grReport, True, True, '', '', '', 'XML');
+
+    sl := TStringList.Create;
+    try
+      sl.LoadFromFile(UnitFile);
+      if Pos('</Data>', sl.Strings[sl.Count - 1]) = 0 then
+      begin
+        DeleteFile(UnitFile);
+        Add_Log('Ошибка экпорта нет </Data>');
+        Exit
+      end else sl.SaveToFile(UnitFile, TEncoding.UTF8)
+    finally
+      sl.Free;
+    end;
+    Result := True;
+  except
+    on E: Exception do
+    begin
+      Add_Log(E.Message);
+      exit;
+    end;
+  end;
+
+end;
+
 procedure TForm1.Timer1Timer(Sender: TObject);
 begin
   try
@@ -307,6 +395,20 @@ begin
         cxProgressBarUnit.Position := qryUnit.RecNo;
         Application.ProcessMessages;
         Sleep(100);
+//        if (qryUnit.RecNo = 1)  and (HourOf(Now) < 3) then
+//        begin
+//          try
+//            dsReport.DataSet := qryRest_Group;
+//            qryRest_Group.Close;
+//            qryRest_Group.Open;
+//            if ReportExportRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger) then
+//            begin
+//              ReportCompressRest_Group(qryUnit.FieldByName('SerialNumber').AsInteger);
+//            end;
+//          finally
+//            dsReport.DataSet := qryReport;
+//          end;
+//        end;
         qryReport.Close;
         qryReport.Params.ParamByName('inUnitId').Value := qryUnit.FieldByName('Id').AsInteger;
         qryReport.Open;
