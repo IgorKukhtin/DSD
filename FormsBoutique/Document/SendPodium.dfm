@@ -230,6 +230,7 @@ object SendPodiumForm: TSendPodiumForm
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.Footer = True
@@ -340,9 +341,15 @@ object SendPodiumForm: TSendPodiumForm
           object GoodsSizeName: TcxGridDBColumn
             Caption = #1056#1072#1079#1084#1077#1088
             DataBinding.FieldName = 'GoodsSizeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actGoodsSizeChoice
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object MeasureName: TcxGridDBColumn
@@ -1942,8 +1949,37 @@ object SendPodiumForm: TSendPodiumForm
         end>
       isShowModal = False
     end
+    object actGoodsSizeChoice: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = 'TPartionGoodsChoiceForm'
+      FormName = 'TGoodsSizeForm'
+      FormNameParam.Value = 'TGoodsSizeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsSizeName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
       MoveParams = <>
       PostDataSetBeforeExecute = False
       PostDataSetAfterExecute = True
@@ -2558,6 +2594,15 @@ object SendPodiumForm: TSendPodiumForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inGoodsSizeName'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsSizeName'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'ioAmount'
         Value = Null
         Component = MasterCDS
@@ -2671,13 +2716,6 @@ object SendPodiumForm: TSendPodiumForm
         Component = MasterCDS
         ComponentItem = 'ParValue'
         DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionId'
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     PackSize = 1

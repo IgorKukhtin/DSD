@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_MovementItem_SendPodium()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendPodium (Integer, Integer, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SendPodium (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPodium(
  INOUT ioId                            Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId                    Integer   , -- Ключ объекта <Документ>
     IN inGoodsName                     TVarChar  , -- Товары
---    IN inPartionId                     Integer   , -- Партия
+    IN inGoodsSizeName                 TVarChar  , -- Размер
  INOUT ioAmount                        TFloat    , -- Количество
    OUT outOperPrice                    TFloat    , -- Цена
    OUT outCountForPrice                TFloat    , -- Цена за количество
@@ -28,6 +29,7 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbGoodsId Integer;
+   DECLARE vbGoodsSizeId Integer;
    DECLARE vbPartionId Integer;
    DECLARE vbIsInsert Boolean;
    DECLARE vbOperDate TDateTime;
@@ -126,6 +128,19 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не установлено значение <Цена (прайс)>.';
      END IF;
 
+     -- Поиск Размера - ВСЕГДА
+     vbGoodsSizeId:= (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_GoodsSize() AND LOWER (Object.ValueData) = LOWER (inGoodsSizeName));
+     --
+     IF COALESCE (vbGoodsSizeId, 0) = 0
+     THEN
+         -- Создание
+         vbGoodsSizeId := (SELECT tmp.ioId FROM gpInsertUpdate_Object_GoodsSize (ioId     := 0
+                                                                               , ioCode   := 0
+                                                                               , inName   := inGoodsSizeName
+                                                                               , inSession:= vbUserId :: TVarChar
+                                                                                 ) AS tmp);
+     END IF;
+
      -- данные из партии : OperPrice и CountForPrice и CurrencyId
      SELECT COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
           , COALESCE (Object_PartionGoods.OperPrice, 0)                    AS OperPrice
@@ -133,7 +148,8 @@ BEGIN
           , COALESCE (Object_PartionGoods.MovementItemId,0)                AS PartionId
             INTO outCountForPrice, outOperPrice, vbCurrencyId, vbPartionId
      FROM Object_PartionGoods
-     WHERE Object_PartionGoods.GoodsId = vbGoodsId; --Object_PartionGoods.MovementItemId = inPartionId;
+     WHERE Object_PartionGoods.GoodsId = vbGoodsId
+       AND Object_PartionGoods.GoodsSizeId = vbGoodsSizeId; --Object_PartionGoods.MovementItemId = inPartionId;
 
 
      -- Если НЕ Базовая Валюта
