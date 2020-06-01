@@ -166,7 +166,18 @@ BEGIN
                         
                           WHERE Object_Contract.DescId = zc_Object_Contract()
                          )     
-                         
+
+        , tmpMI AS (SELECT *
+                    FROM MovementItemContainer
+                    WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
+                      AND MovementItemContainer.OperDate >= inStartDate
+                    )
+        , tmpMI_Currency AS (SELECT *
+                             FROM MovementItemContainer
+                             WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId_Currency FROM tmpContainer)
+                               AND MovementItemContainer.OperDate >= inStartDate
+                             )
+                             
         -- ƒЋя движение в валюте баланса   
         , tmpContainerBalance AS (SELECT MIContainer.MovementItemId
                                        , MIContainer.ContainerId
@@ -184,9 +195,9 @@ BEGIN
                                        , MIContainer.isActive
                                        , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                                   FROM tmpContainer
-                                         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                                       -- AND MIContainer.OperDate >= inStartDate
-                                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                         LEFT JOIN tmpMI AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                                       -- AND MIContainer.OperDate >= inStartDate
+                                                                       AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                   GROUP BY tmpContainer.ObjectId
                                          , tmpContainer.CashId
                                          , tmpContainer.CurrencyId
@@ -241,9 +252,9 @@ BEGIN
                                         , MIContainer.isActive
                                         , CASE WHEN inIsDate = TRUE THEN MIContainer.OperDate ELSE zc_DateStart() END :: TDatetime AS OperDate
                                    FROM tmpContainer
-                                          LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                                        -- AND MIContainer.OperDate >= inStartDate
-                                                                                        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                          LEFT JOIN tmpMI_Currency AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                                  -- AND MIContainer.OperDate >= inStartDate
+                                                                  AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    WHERE tmpContainer.ContainerId_Currency > 0
                                    GROUP BY MIContainer.MovementItemId
                                           , tmpContainer.ObjectId
@@ -311,8 +322,8 @@ BEGIN
                                    NULL :: Boolean           AS isActive,
                                    zc_DateStart() :: TDatetime AS OperDate
                             FROM tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= inStartDate
+                                 LEFT JOIN tmpMI AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
+                                                               AND MIContainer.OperDate >= inStartDate
                             GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount, tmpContainer.CurrencyId
                  
                             UNION ALL
@@ -339,9 +350,9 @@ BEGIN
                                    NULL :: Boolean           AS isActive,
                                    zc_DateStart() :: TDatetime AS OperDate
                             FROM tmpContainer
-                                 LEFT JOIN MovementItemContainer AS MIContainer 
-                                                                 ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
-                                                                AND MIContainer.OperDate >= inStartDate
+                                 LEFT JOIN tmpMI_Currency AS MIContainer 
+                                                          ON MIContainer.Containerid = tmpContainer.ContainerId_Currency
+                                                         AND MIContainer.OperDate >= inStartDate
                             WHERE tmpContainer.ContainerId_Currency > 0
                             GROUP BY tmpContainer.ContainerId, tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.Amount_Currency, tmpContainer.CurrencyId
                  
@@ -489,6 +500,14 @@ BEGIN
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId,
                    Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, 
                    Operation_all.isActive, Operation_all.OperDate
+          WHERE Operation_all.StartAmount <> 0 
+             OR Operation_all.EndAmount <> 0
+             OR Operation_all.DebetSumm <> 0
+             OR Operation_all.KreditSumm <> 0
+             OR Operation_all.StartAmount_Currency <> 0
+             OR Operation_all.EndAmount_Currency <> 0
+             OR Operation_all.DebetSumm_Currency <> 0
+             OR Operation_all.KreditSumm_Currency <> 0
          ) AS Operation
 
      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.ObjectId
@@ -507,9 +526,7 @@ BEGIN
      LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Cash_Branch.ChildObjectId
 
      LEFT JOIN tmpContract ON tmpContract.ContractId = Operation.ContractId
-
-     WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.DebetSumm <> 0 OR Operation.KreditSumm <> 0
-         OR Operation.StartAmount_Currency <> 0 OR Operation.EndAmount_Currency <> 0 OR Operation.DebetSumm_Currency <> 0 OR Operation.KreditSumm_Currency <> 0);
+     ;
 
 
 END;
