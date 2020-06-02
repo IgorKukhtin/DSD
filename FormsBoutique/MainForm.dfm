@@ -121,12 +121,12 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods_RemainsCurrent_OnDate: TdsdOpenForm [10]
+    object actReport_Goods_RemainsCurrent_onDate: TdsdOpenForm [10]
       Category = #1054#1090#1095#1077#1090#1099
       MoveParams = <>
       Caption = #1054#1089#1090#1072#1090#1082#1080' '#1090#1086#1074#1072#1088#1072' '#1085#1072' '#1076#1072#1090#1091
-      FormName = 'TReport_Goods_RemainsCurrent_OnDateForm'
-      FormNameParam.Value = 'TReport_Goods_RemainsCurrent_OnDateForm'
+      FormName = 'TReport_Goods_RemainsCurrent_onDateForm'
+      FormNameParam.Value = 'TReport_Goods_RemainsCurrent_onDateForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <>
@@ -1250,7 +1250,7 @@ inherited MainForm: TMainForm
         Caption = '-'
       end
       object miReport_Goods_RemainsCurrent_OnDate: TMenuItem
-        Action = actReport_Goods_RemainsCurrent_OnDate
+        Action = actReport_Goods_RemainsCurrent_onDate
       end
     end
     object miReport: TMenuItem [8]
