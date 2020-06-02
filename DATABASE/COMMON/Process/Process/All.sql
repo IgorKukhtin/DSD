@@ -4,6 +4,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_PeriodCloseTax() RETURNS In
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_UserOrder() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_UserOrder' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_UserBranch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_UserBranch' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_UserOrderBasis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_UserOrderBasis' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -102,6 +103,13 @@ BEGIN
                                    , inCode:= 1
                                    , inName:= 'Пользователь заявки (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_UserOrder');
+                                   
+ -- для заявок ограничивается - только сырье
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_UserOrderBasis()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 1
+                                   , inName:= 'Заявки только сырье (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_UserOrderBasis');
                                    
  -- для заявок ограничивается отчет по расчету ЗП
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_UserBranch()
