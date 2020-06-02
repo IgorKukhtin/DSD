@@ -57,17 +57,17 @@ BEGIN
       
 
     -- сохранили
-    PERFORM lpInsertUpdate_MovementItem_WagesAdditionalExpenses (ioId                  := 0                                            -- Ключ объекта <Элемент документа>
-                                                               , inMovementId          := inMovementId                                 -- ключ Документа
-                                                               , inUnitID              := MovementItem.ObjectID                        -- Подразделение
-                                                               , inSummaCleaning       := COALESCE(MIFloat_SummaCleaning.ValueData, 0) -- Уборка
-                                                               , inSummaSP             := 0                                            -- СП
-                                                               , inSummaOther          := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
-                                                               , inValidationResults   := 0                                            -- Результаты проверки
-                                                               , inSummaFullChargeFact := 0                                            -- Полное списание факт
-                                                               , inisIssuedBy          := False                                        -- Выдано
-                                                               , inComment             := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
-                                                               , inUserId              := vbUserId                                     -- пользователь
+    PERFORM lpInsertUpdate_MovementItem_WagesAdditionalExpenses (ioId                      := 0                                            -- Ключ объекта <Элемент документа>
+                                                               , inMovementId              := inMovementId                                 -- ключ Документа
+                                                               , inUnitID                  := MovementItem.ObjectID                        -- Подразделение
+                                                               , inSummaCleaning           := COALESCE(MIFloat_SummaCleaning.ValueData, 0) -- Уборка
+                                                               , inSummaSP                 := 0::TFloat                                    -- СП
+                                                               , inSummaOther              := COALESCE(MIFloat_SummaOther.ValueData, 0)    -- Прочее
+                                                               , inSummaValidationResults  := 0                                            -- Результаты проверки
+                                                               , inSummaFullChargeFact     := 0                                            -- Полное списание факт
+                                                               , inisIssuedBy              := False                                        -- Выдано
+                                                               , inComment                 := COALESCE(MIS_Comment.ValueData, '')          -- Примечание
+                                                               , inUserId                  := vbUserId                                     -- пользователь
                                                                  )
     FROM MovementItem
 

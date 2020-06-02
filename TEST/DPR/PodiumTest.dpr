@@ -327,7 +327,9 @@ uses
   GoodsTag in '..\..\FormsBoutique\Guides\GoodsTag.pas' {GoodsTagForm: TParentForm},
   GoodsTagEdit in '..\..\FormsBoutique\Guides\GoodsTagEdit.pas' {GoodsTagEditForm: TParentForm},
   SendPodium in '..\..\FormsBoutique\Document\SendPodium.pas' {SendPodiumForm: TParentForm},
-  SendPodiumJournal in '..\..\FormsBoutique\Document\SendPodiumJournal.pas' {SendPodiumJournalForm: TParentForm};
+  SendPodiumJournal in '..\..\FormsBoutique\Document\SendPodiumJournal.pas' {SendPodiumJournalForm: TParentForm},
+  Report_Goods_RemainsCurrent_onDate in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas' {Report_Goods_RemainsCurrent_onDateForm: TParentForm},
+  Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -352,6 +354,5 @@ begin
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
-
   DUnitTestRunner.RunRegisteredTests;
 end.

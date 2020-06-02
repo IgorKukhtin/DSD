@@ -321,7 +321,9 @@ uses
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
   LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
   IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
-  SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm};
+  SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm},
+  Report_Goods_RemainsCurrent_onDate in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas' {Report_Goods_RemainsCurrent_onDateForm: TParentForm},
+  Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -346,6 +348,5 @@ begin
   gc_isSetDefault := true;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
-
   DUnitTestRunner.RunRegisteredTests;
 end.

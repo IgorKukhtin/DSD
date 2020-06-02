@@ -1117,6 +1117,14 @@
 				<Form>SaleItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas">
+				<Form>Report_Goods_RemainsCurrent_onDateForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas">
+				<Form>Report_Goods_RemainsCurrent_onDateDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

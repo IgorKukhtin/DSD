@@ -60,6 +60,11 @@ BEGIN
            , Object_To.ValueData                    AS ToName
            , MovementString_Comment.ValueData       AS Comment
 
+           , ObjectString_InvNumber.ValueData      AS InvNumber
+           , ObjectString_SerialNumber.ValueData   AS SerialNumber
+           , ObjectString_PassportNumber.ValueData AS PassportNumber
+
+
        FROM tmpMovement
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id

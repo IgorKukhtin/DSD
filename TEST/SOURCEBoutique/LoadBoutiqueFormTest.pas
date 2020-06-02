@@ -723,6 +723,13 @@ end;
 //
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  //Отчет остаток товара на дату
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrent_onDateForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrent_onDateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_RemainsCurrent_onDateDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_RemainsCurrent_onDateDialogForm');
+  exit;
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Sale_AnalysisAllForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Sale_AnalysisAllForm');
 
