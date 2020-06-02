@@ -12,17 +12,17 @@ inherited SendAssetJournalForm: TSendAssetJournalForm
     Width = 827
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 876
+    ExplicitWidth = 827
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 827
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 876
+      ExplicitWidth = 827
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 827
         Height = 478
-        ExplicitWidth = 876
+        ExplicitWidth = 827
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -195,7 +195,7 @@ inherited SendAssetJournalForm: TSendAssetJournalForm
   end
   inherited Panel: TPanel
     Width = 827
-    ExplicitWidth = 876
+    ExplicitWidth = 827
     inherited deStart: TcxDateEdit
       EditValue = 43831d
     end
@@ -366,8 +366,8 @@ inherited SendAssetJournalForm: TSendAssetJournalForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_SendAsset'
+      ReportNameParam.Value = 'PrintMovement_SendAsset'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
       ReportNameParam.MultiSelectSeparator = ','
@@ -795,12 +795,6 @@ inherited SendAssetJournalForm: TSendAssetJournalForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end

@@ -1527,12 +1527,6 @@ inherited SendAssetForm: TSendAssetForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inMovementId_Weighing'
-        Value = '0'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inisItem'
         Value = 'false'
         DataType = ftBoolean
