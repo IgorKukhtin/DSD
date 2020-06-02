@@ -18,7 +18,7 @@ object SaleItemEditForm: TSaleItemEditForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 108
-    Top = 279
+    Top = 265
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -27,7 +27,7 @@ object SaleItemEditForm: TSaleItemEditForm
   end
   object cxButton2: TcxButton
     Left = 252
-    Top = 279
+    Top = 265
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -66,12 +66,12 @@ object SaleItemEditForm: TSaleItemEditForm
   end
   object cxLabel1: TcxLabel
     Left = 31
-    Top = 195
+    Top = 202
     Caption = #1050' '#1086#1087#1083#1072#1090#1077', '#1075#1088#1085':'
   end
   object ceAmountToPay: TcxCurrencyEdit
     Left = 31
-    Top = 211
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -80,12 +80,12 @@ object SaleItemEditForm: TSaleItemEditForm
   end
   object cxLabel3: TcxLabel
     Left = 173
-    Top = 195
+    Top = 202
     Caption = #1054#1089#1090#1072#1090#1086#1082', '#1075#1088#1085':'
   end
   object ceAmountRemains: TcxCurrencyEdit
     Left = 173
-    Top = 211
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -94,12 +94,12 @@ object SaleItemEditForm: TSaleItemEditForm
   end
   object cxLabel4: TcxLabel
     Left = 316
-    Top = 195
+    Top = 202
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
   object ceAmountDiff: TcxCurrencyEdit
     Left = 316
-    Top = 211
+    Top = 220
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -190,43 +190,6 @@ object SaleItemEditForm: TSaleItemEditForm
     Properties.ReadOnly = False
     TabOrder = 22
     Width = 156
-  end
-  object cxLabel5: TcxLabel
-    Left = 31
-    Top = 234
-    Caption = #1050' '#1086#1087#1083#1072#1090#1077', EUR:'
-  end
-  object ceAmountToPay_curr: TcxCurrencyEdit
-    Left = 31
-    Top = 250
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 24
-    Width = 100
-  end
-  object cxLabel6: TcxLabel
-    Left = 173
-    Top = 234
-    Caption = #1054#1089#1090#1072#1090#1086#1082', EUR:'
-  end
-  object ceAmountRemains_curr: TcxCurrencyEdit
-    Left = 173
-    Top = 250
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 26
-    Width = 100
-  end
-  object ceAmountDiscount_curr: TcxCurrencyEdit
-    Left = 316
-    Top = 170
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 27
-    Width = 100
   end
   object ActionList: TActionList
     Left = 16
@@ -606,31 +569,10 @@ object SaleItemEditForm: TSaleItemEditForm
         Component = cbisDiscount
         DataType = ftBoolean
         MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountToPay_curr'
-        Value = Null
-        Component = ceAmountToPay_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 352
-    Top = 229
+    Left = 216
+    Top = 85
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -709,6 +651,13 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'inAmountToPay_curr'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inAmountGRN'
         Value = 0.000000000000000000
         Component = ceAmountGRN
@@ -749,16 +698,15 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains'
-        Value = 0.000000000000000000
-        Component = ceAmountRemains
-        DataType = ftFloat
+        Name = 'inCurrencyId_Client'
+        Value = 0
+        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
+        Name = 'AmountRemains'
+        Value = 0.000000000000000000
+        Component = ceAmountRemains
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -770,8 +718,8 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 384
-    Top = 253
+    Left = 208
+    Top = 133
   end
   object spGet_isGRN: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Sale_Child_isGRN'
@@ -858,14 +806,7 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -967,14 +908,7 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1076,14 +1010,7 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1185,14 +1112,7 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1294,14 +1214,7 @@ object SaleItemEditForm: TSaleItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1311,13 +1224,6 @@ object SaleItemEditForm: TSaleItemEditForm
         Name = 'AmountDiscount'
         Value = 0.000000000000000000
         Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end>

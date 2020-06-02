@@ -12,7 +12,7 @@ $BODY$
 BEGIN
 
     -- Округление до 0 знаков
-    RETURN CASE WHEN inOperPriceList < 1
+    RETURN CASE WHEN ABS (inOperPriceList) < 1
                 THEN CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)
                            AS NUMERIC (16, 2))
                 ELSE CAST (COALESCE (inAmount, 0) * COALESCE (inOperPriceList, 0)

@@ -646,14 +646,6 @@
 				<Form>BankEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\Sale.pas">
-				<Form>SaleForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\BankAccount.pas">
 				<Form>BankAccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -662,8 +654,8 @@
 				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\SaleItemEdit.pas">
-				<Form>SaleItemEditForm</Form>
+			<DCCReference Include="..\..\FormsBoutique\Document\SalePodiumItemEdit.pas">
+				<Form>SalePodiumItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\InfoMoneyGroup.pas">
@@ -987,10 +979,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Report\Report_MovementReturnOut.pas">
 				<Form>Report_MovementReturnOutForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\SaleTwo.pas">
-				<Form>SaleTwoForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\IncomeKoeffEdit.pas">

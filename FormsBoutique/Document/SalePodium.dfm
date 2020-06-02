@@ -231,8 +231,8 @@ object SalePodiumForm: TSalePodiumForm
       Width = 180
     end
     object edDiscountTaxTwo: TcxCurrencyEdit
-      Left = 958
-      Top = 63
+      Left = 975
+      Top = 108
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
       ParentShowHint = False
       Properties.Alignment.Horz = taCenter
@@ -242,6 +242,7 @@ object SalePodiumForm: TSalePodiumForm
       Properties.ReadOnly = True
       ShowHint = True
       TabOrder = 23
+      Visible = False
       Width = 89
     end
     object cxLabel5: TcxLabel
@@ -287,12 +288,13 @@ object SalePodiumForm: TSalePodiumForm
       Width = 87
     end
     object cxLabel10: TcxLabel
-      Left = 958
-      Top = 45
+      Left = 975
+      Top = 90
       Hint = '% '#1089#1082#1080#1076#1082#1080' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103' '#1074' '#1063#1072#1076#1086' '#1085#1072' '#1043#1088#1091#1087#1087#1091' <'#1054#1073#1091#1074#1100'>'
       Caption = '% '#1089#1082#1080#1076#1082#1080' '#1054#1073#1091#1074#1100
       ParentShowHint = False
       ShowHint = True
+      Visible = False
     end
     object ceComment_Client: TcxTextEdit
       Left = 252
@@ -343,6 +345,24 @@ object SalePodiumForm: TSalePodiumForm
       Left = 252
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '#1055#1086#1082#1091#1087#1072#1090#1077#1083#1103
+    end
+    object edCurrencyClient: TcxButtonEdit
+      Left = 958
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Enabled = False
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 37
+      Width = 89
+    end
+    object cxLabel19: TcxLabel
+      Left = 958
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
     end
   end
   object cxPageControl: TcxPageControl
@@ -961,7 +981,7 @@ object SalePodiumForm: TSalePodiumForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1080#1079' '#1074#1072#1083#1102#1090#1099' '#1087#1072#1088#1090#1080#1080' '#1074' '#1043#1056#1053
+            HeaderHint = #1050#1091#1088#1089' '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' - '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1080#1079' '#1074#1072#1083#1102#1090#1099' '#1087#1072#1088#1090#1080#1080' '#1074' '#1043#1056#1053
             Options.Editing = False
             Width = 91
           end
@@ -975,8 +995,54 @@ object SalePodiumForm: TSalePodiumForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1050#1091#1088#1089' '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1080#1079' '#1074#1072#1083#1102#1090#1099' '#1087#1072#1088#1090#1080#1080' '#1074' '#1043#1056#1053
+            HeaderHint = #1050#1091#1088#1089' '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' - '#1076#1083#1103' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1080#1079' '#1074#1072#1083#1102#1090#1099' '#1087#1072#1088#1090#1080#1080' '#1074' '#1043#1056#1053
             Options.Editing = False
+            Width = 45
+          end
+          object CurrencyValue_usd: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' USD'
+            DataBinding.FieldName = 'CurrencyValue_usd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089' USD - '#1088#1072#1089#1095#1077#1090#1099
+            Width = 45
+          end
+          object ParValue_usd: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' USD'
+            DataBinding.FieldName = 'ParValue_usd'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1080#1085#1072#1083' USD - '#1088#1072#1089#1095#1077#1090#1099
+            Width = 45
+          end
+          object CurrencyValue_eur: TcxGridDBColumn
+            Caption = #1050#1091#1088#1089' EUR'
+            DataBinding.FieldName = 'CurrencyValue_eur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1050#1091#1088#1089' EUR - '#1088#1072#1089#1095#1077#1090#1099
+            Width = 45
+          end
+          object ParValue_eur: TcxGridDBColumn
+            Caption = #1053#1086#1084#1080#1085#1072#1083' EUR'
+            DataBinding.FieldName = 'ParValue_eur'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1053#1086#1084#1080#1085#1072#1083' EUR - '#1088#1072#1089#1095#1077#1090#1099
             Width = 45
           end
           object Comment: TcxGridDBColumn
@@ -2574,8 +2640,8 @@ object SalePodiumForm: TSalePodiumForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actInsertAction1'
-      FormName = 'TSaleItemEditForm'
-      FormNameParam.Value = 'TSaleItemEditForm'
+      FormName = 'TSalePodiumItemEditForm'
+      FormNameParam.Value = 'TSalePodiumItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -2620,8 +2686,8 @@ object SalePodiumForm: TSalePodiumForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'actInsertAction1'
-      FormName = 'TSaleItemEditForm'
-      FormNameParam.Value = 'TSaleItemEditForm'
+      FormName = 'TSalePodiumItemEditForm'
+      FormNameParam.Value = 'TSalePodiumItemEditForm'
       FormNameParam.DataType = ftString
       FormNameParam.MultiSelectSeparator = ','
       GuiParams = <
@@ -3412,6 +3478,21 @@ object SalePodiumForm: TSalePodiumForm
         MultiSelectSeparator = ','
       end
       item
+        Name = 'CurrencyId_Client'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName_Client'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'Comment'
         Value = Null
         Component = ceComment
@@ -3510,8 +3591,8 @@ object SalePodiumForm: TSalePodiumForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 200
-    Top = 240
+    Left = 208
+    Top = 160
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
@@ -3716,6 +3797,21 @@ object SalePodiumForm: TSalePodiumForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyId'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'Key'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyName'
+        Value = Null
+        Component = GuidesCurrencyClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     Left = 144
@@ -4381,5 +4477,35 @@ object SalePodiumForm: TSalePodiumForm
     PackSize = 1
     Left = 536
     Top = 216
+  end
+  object GuidesCurrencyClient: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyClient
+    FormNameParam.Value = 'test'
+    FormNameParam.DataType = ftString
+    FormNameParam.MultiSelectSeparator = ','
+    FormName = 'test'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesCurrencyClient
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesCurrencyClient
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    Left = 992
+    Top = 88
   end
 end

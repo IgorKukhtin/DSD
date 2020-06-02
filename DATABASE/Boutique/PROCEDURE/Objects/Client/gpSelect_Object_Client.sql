@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Address TVarChar, HappyDate TDateTime, PhoneMobile TVarChar, Phone TVarChar
              , Mail TVarChar, Comment TVarChar, CityName TVarChar
              , DiscountKindName TVarChar
-             , CurrencyName TVarChar
+             , CurrencyId Integer, CurrencyName TVarChar
              , LastUserName TVarChar, UnitName_User TVarChar
              , UnitName_insert TVarChar
              , InsertName TVarChar
@@ -89,6 +89,7 @@ BEGIN
            , ObjectString_Comment.ValueData          AS Comment
            , Object_City.ValueData                   AS CityName
            , Object_DiscountKind.ValueData           AS DiscountKindName
+           , Object_Currency.Id                      AS CurrencyId
            , Object_Currency.ValueData               AS CurrencyName
            , Object_LastUser.ValueData               AS LastUserName
            , Object_Unit.ValueData                   AS UnitName_User

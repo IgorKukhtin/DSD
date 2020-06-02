@@ -587,7 +587,11 @@ begin
         else calcOperCount:=ParamByName('RealWeight').AsFloat - GetOldRealWeight;
         //
         if  ((ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
-          and(SettingMain.isCalc_sht = FALSE))
+          and((SettingMain.isCalc_sht = FALSE)
+            // если НЕ Схема - втулки
+            or(ParamByName('isWeight_gd').AsBoolean = FALSE)
+             )
+            )
          or (ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
          or (ParamByName('isEnterCount').AsBoolean = TRUE)
         then ParamByName('OperCount').AsFloat:=calcOperCount
@@ -598,7 +602,12 @@ begin
                                               -ParamByName('CountSkewer2').AsFloat * SettingMain.WeightSkewer2
                                               ;
         //
-        if  ((ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+        if  ((ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+           or((SettingMain.isCalc_sht = TRUE)
+            // если Схема - втулки
+            and(ParamByName('isWeight_gd').AsBoolean = TRUE)
+             )
+            )
         and (ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
         and (ParamByName('isEnterCount').AsBoolean = FALSE)
         then EditEnterCount.Text:='';
@@ -1878,7 +1887,12 @@ begin
      then begin
           PanelGoodsName.Caption:= ParamsMI.ParamByName('GoodsName').asString;
           WriteParamsMovement;
-          if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
+          if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
+               and((SettingMain.isCalc_sht = FALSE)
+                 // если НЕ Схема - втулки
+                 or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
+                  )
+             )
            or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
            or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
           then if HeadCountPanel.Visible then ActiveControl:=EditEnterCount;
@@ -1920,7 +1934,12 @@ begin
      SetParams_OperCount;
      //
      if (ParamsMI.ParamByName('OperCount').AsFloat<=0)
-     and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+     and((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+       or((SettingMain.isCalc_sht = TRUE)
+       // если Схема - втулки
+       and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
+         )
+        )
      and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
      and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
      then begin if SettingMain.isModeSorting = FALSE then ActiveControl:=EditGoodsCode;
@@ -2266,7 +2285,12 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountPropertiesChange(Sender: TObject);
 begin
-     if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)and(SettingMain.isCalc_sht = FALSE))
+     if ((ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
+      and((SettingMain.isCalc_sht = FALSE)
+        // если НЕ Схема - втулки
+        or(ParamsMI.ParamByName('isWeight_gd').AsBoolean = FALSE)
+         )
+        )
       or(ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Sh)
       or(ParamsMI.ParamByName('isEnterCount').AsBoolean = TRUE)
      then
@@ -2279,7 +2303,12 @@ end;
 //---------------------------------------------------------------------------------------------
 procedure TMainCehForm.EditEnterCountEnter(Sender: TObject);
 begin
-     if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)or(SettingMain.isCalc_sht = TRUE))
+     if ((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
+       or((SettingMain.isCalc_sht = TRUE)
+          // если Схема - втулки
+       and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
+         )
+        )
       and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
       and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)
      then ActiveControl:=EditGoodsCode;
@@ -2573,7 +2602,7 @@ begin
   //запустили Таймер
   TimerProtocol_isProcess.Enabled:= TRUE;
   //запустили Таймер
-  Timer_GetWeight.Interval:= 200;
+  Timer_GetWeight.Interval:= 10;
   Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
 
 end;
@@ -3019,7 +3048,10 @@ function TMainCehForm.fGetScale_CurrentWeight:Double;
 begin
      if (((ParamsMI.ParamByName('MeasureId').AsInteger = zc_Measure_Kg)
         or(ParamsMI.ParamByName('MeasureId').AsInteger = 0)
-        or(SettingMain.isCalc_sht = TRUE)
+        or((SettingMain.isCalc_sht = TRUE)
+         // если Схема - втулки
+        and(ParamsMI.ParamByName('isWeight_gd').AsBoolean = TRUE)
+          )
          )
       and(ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
       and(ParamsMI.ParamByName('isEnterCount').AsBoolean = FALSE)

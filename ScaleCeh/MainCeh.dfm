@@ -28,7 +28,6 @@ object MainCehForm: TMainCehForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 625
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
@@ -37,7 +36,6 @@ object MainCehForm: TMainCehForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitWidth = 625
       object bbDeleteItem: TSpeedButton
         Left = 246
         Top = 2
@@ -486,7 +484,6 @@ object MainCehForm: TMainCehForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 625
       object gbWeightTare: TGroupBox
         Left = 240
         Top = 0
@@ -621,7 +618,6 @@ object MainCehForm: TMainCehForm
       Align = alClient
       PopupMenu = PopupMenuGrid
       TabOrder = 2
-      ExplicitWidth = 625
       object cxDBGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = DS
@@ -1364,7 +1360,7 @@ object MainCehForm: TMainCehForm
       Left = 0
       Top = 160
       Width = 130
-      Height = 494
+      Height = 94
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 7
@@ -1675,6 +1671,7 @@ object MainCehForm: TMainCehForm
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitWidth = 57
         end
       end
       object Space1Panel: TPanel
@@ -2053,7 +2050,6 @@ object MainCehForm: TMainCehForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitWidth = 977
     object PanelMovement: TPanel
       Left = 720
       Top = 0
@@ -2063,7 +2059,6 @@ object MainCehForm: TMainCehForm
       BevelOuter = bvNone
       Caption = 'PanelMovement'
       TabOrder = 0
-      ExplicitLeft = 657
     end
     object PanelMovementDesc: TPanel
       Left = 0
@@ -2080,7 +2075,6 @@ object MainCehForm: TMainCehForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitWidth = 657
       object testButton1: TButton
         Left = 5
         Top = 2

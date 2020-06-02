@@ -194,6 +194,13 @@ type
     TotalSummPriceList_curr: TcxGridDBColumn;
     TotalSummToPay_curr: TcxGridDBColumn;
     TotalSummDebt_curr: TcxGridDBColumn;
+    CurrencyValue_usd: TcxGridDBColumn;
+    ParValue_usd: TcxGridDBColumn;
+    CurrencyValue_eur: TcxGridDBColumn;
+    ParValue_eur: TcxGridDBColumn;
+    edCurrencyClient: TcxButtonEdit;
+    cxLabel19: TcxLabel;
+    GuidesCurrencyClient: TdsdGuides;
   private
   public
   end;

@@ -27,7 +27,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
-             , CurrencyClientId Integer, CurrencyClientName TVarChar
+             , CurrencyId_Client Integer, CurrencyName_Client TVarChar
              , Comment TVarChar
              , InsertName TVarChar, InsertDate TDateTime
              , isProtocol Boolean
@@ -113,8 +113,8 @@ BEGIN
            , Object_From.ValueData                       AS FromName
            , Object_To.Id                                AS ToId
            , Object_To.ValueData                         AS ToName
-           , Object_CurrencyClient.Id                    AS CurrencyClientId
-           , Object_CurrencyClient.ValueData             AS CurrencyClientName
+           , Object_CurrencyClient.Id                    AS CurrencyId_Client
+           , Object_CurrencyClient.ValueData             AS CurrencyName_Client
            , MovementString_Comment.ValueData            AS Comment
 
            , Object_Insert.ValueData                     AS InsertName
@@ -203,4 +203,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale ( inUnitId:=0, inStartDate:= '01.01.2015', inEndDate:= '01.02.2015', inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale ( inUnitId:=0, inStartDate:= CURRENT_DATE - INTERVAL '1 MONTH', inEndDate:= CURRENT_DATE, inStartProtocol:= '01.03.2017', inEndProtocol:= '01.03.2017', inIsProtocol:= FALSE, inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())

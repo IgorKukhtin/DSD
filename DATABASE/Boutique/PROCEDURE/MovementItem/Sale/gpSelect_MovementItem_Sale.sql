@@ -36,6 +36,9 @@ RETURNS TABLE (Id Integer, LineNum Integer, PartionId Integer
                --
              , TotalSummPriceList TFloat, TotalSummPriceList_curr TFloat
              , CurrencyValue TFloat, ParValue TFloat
+             , CurrencyValue_usd TFloat, ParValue_usd TFloat
+             , CurrencyValue_eur TFloat, ParValue_eur TFloat
+
              , ChangePercent TFloat, SummChangePercent TFloat
              , TotalChangePercent TFloat, TotalChangePercentPay TFloat
              , TotalSummToPay TFloat, TotalSummToPay_curr TFloat, TotalSummDebt TFloat, TotalSummDebt_curr TFloat
@@ -258,6 +261,10 @@ BEGIN
                            , SUM (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MovementItem.Amount ELSE 0 END) AS Amount_EUR
                            , SUM (CASE WHEN Object.DescId = zc_Object_BankAccount() THEN MovementItem.Amount ELSE 0 END) AS Amount_Bank
                            --, MovementItem.isErased
+                           , MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MIFloat_CurrencyValue.ValueData ELSE 0 END) AS CurrencyValue_usd
+                           , MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_USD() THEN MIFloat_ParValue.ValueData      ELSE 0 END) AS ParValue_usd
+                           , MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MIFloat_CurrencyValue.ValueData ELSE 0 END) AS CurrencyValue_eur
+                           , MAX (CASE WHEN Object.DescId = zc_Object_Cash() AND MILinkObject_Currency.ObjectId = zc_Currency_EUR() THEN MIFloat_ParValue.ValueData      ELSE 0 END) AS ParValue_eur
                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Child()
@@ -348,6 +355,11 @@ BEGIN
 
            , tmpMI.CurrencyValue              :: TFloat AS CurrencyValue
            , tmpMI.ParValue                   :: TFloat AS ParValue
+
+           , tmpMI_Child.CurrencyValue_usd    :: TFloat AS CurrencyValue_usd
+           , tmpMI_Child.ParValue_usd         :: TFloat AS ParValue_usd
+           , CASE WHEN tmpMI_Child.CurrencyValue_eur > 0 THEN tmpMI_Child.CurrencyValue_eur ELSE tmpMI.CurrencyValue END :: TFloat AS CurrencyValue_eur
+           , CASE WHEN tmpMI_Child.CurrencyValue_eur > 0 THEN tmpMI_Child.ParValue_eur      ELSE tmpMI.ParValue      END :: TFloat AS ParValue_eur
 
            , tmpMI.ChangePercent                                  :: TFloat AS ChangePercent         -- % Скидки
            , tmpMI.SummChangePercent                              :: TFloat AS SummChangePercent     -- Итого сумма Скидки: 2)дополнительная

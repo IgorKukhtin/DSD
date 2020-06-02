@@ -194,7 +194,6 @@ uses
   Sale in '..\..\FormsBoutique\Document\Sale.pas' {SaleForm: TParentForm},
   BankAccount in '..\..\FormsBoutique\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
   BankAccountEdit in '..\..\FormsBoutique\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm},
-  SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm},
   InfoMoneyGroup in '..\..\FormsBoutique\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
   InfoMoneyGroup_Object in '..\..\FormsBoutique\Guides\InfoMoneyGroup_Object.pas' {InfoMoneyGroup_ObjectForm: TParentForm},
   InfoMoneyGroupEdit in '..\..\FormsBoutique\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm: TParentForm},
@@ -321,7 +320,8 @@ uses
   dbProcedureBoutiqueTest in '..\SOURCEBoutique\dbProcedureBoutiqueTest.pas',
   LoadBoutiqueFormTest in '..\SOURCEBoutique\LoadBoutiqueFormTest.pas',
   LoadBoutiqueReportTest in '..\SOURCEBoutique\LoadBoutiqueReportTest.pas',
-  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm};
+  IncomeItemEdit in '..\..\FormsBoutique\Document\IncomeItemEdit.pas' {IncomeItemEditForm: TParentForm},
+  SaleItemEdit in '..\..\FormsBoutique\Document\SaleItemEdit.pas' {SaleItemEditForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

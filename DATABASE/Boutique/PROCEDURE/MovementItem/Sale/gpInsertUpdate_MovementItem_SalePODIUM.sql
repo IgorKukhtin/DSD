@@ -13,10 +13,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
     IN inIsPay                          Boolean   , -- добавить с оплатой
  INOUT ioAmount                         TFloat    , -- Количество
  INOUT ioChangePercent                  TFloat    , -- *** - % Скидки
-                                        
+
  INOUT ioSummChangePercent              TFloat    , -- *** - Дополнительная скидка в продаже ГРН
  INOUT ioSummChangePercent_curr         TFloat    , -- *** - Дополнительная скидка в продаже в валюте***
-                                       
+
    OUT outOperPrice                     TFloat    , -- Цена вх. в валюте
    OUT outCountForPrice                 TFloat    , -- Цена вх.за количество
    OUT outTotalSumm                     TFloat    , -- +Сумма вх. в валюте
@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SalePodium(
 
    OUT outTotalSummDebt                 TFloat    , -- +Сумма долга в продаже ГРН
    OUT outTotalSummDebt_curr            TFloat    , -- +Сумма долга в продаже в валюте***
-                                        
+
    OUT outDiscountSaleKindName          TVarChar  , -- *** - Вид скидки при продаже
    OUT outBarCode_partner               TVarChar  , -- Обнуляем Штрих-код поставщика для верхнего грида
     IN inBarCode_partner                TVarChar  , -- Штрих-код поставщика
@@ -77,6 +77,8 @@ $BODY$
    DECLARE vbOperPriceList_pl   TFloat;  -- *Цена из прайса - переводим в ГРН
    DECLARE vbOperPriceList_curr TFloat;  -- *Цена из прайса - если в ГРН, тогда переводим в ту валюту что надо (временно zc_Currency_EUR)
 
+   DECLARE vbCurrencyId_Client Integer;
+
    DECLARE vbIsOperPriceListReal Boolean; -- режим
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -86,7 +88,7 @@ BEGIN
      -- Получили для Пользователя - к какому Подразделению он привязан
      vbUnitId_user:= lpGetUnit_byUser (vbUserId);
 
-     
+
      -- режим
      vbIsOperPriceListReal:= zfCalc_User_PriceListReal (vbUserId);
 
@@ -128,19 +130,24 @@ BEGIN
 
      -- параметры из Документа
      SELECT Movement.OperDate
-          , COALESCE (MovementLinkObject_From.ObjectId, 0)            AS UnitId
-          , COALESCE (MovementLinkObject_To.ObjectId, 0)              AS ClientId
+          , COALESCE (MLO_From.ObjectId, 0) AS UnitId
+          , COALESCE (MLO_To.ObjectId, 0)   AS ClientId
+            -- Валюта Покупателя
+          , COALESCE (MLO_CurrencyClient.ObjectId, CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN zc_Currency_GRN() ELSE zc_Currency_EUR() END) AS ClientId
             -- Прайс для Магазина, если установлен
-          , COALESCE (OL_pl.ChildObjectId, zc_PriceList_Basis())      AS PriceListId
-            INTO vbOperDate, vbUnitId, vbClientId, vbPriceListId
+          , COALESCE (OL_pl.ChildObjectId, zc_PriceList_Basis()) AS PriceListId
+            INTO vbOperDate, vbUnitId, vbClientId, vbCurrencyId_Client, vbPriceListId
      FROM Movement
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN ObjectLink AS OL_pl ON OL_pl.ObjectId = MovementLinkObject_From.ObjectId
+            LEFT JOIN MovementLinkObject AS MLO_From
+                                         ON MLO_From.MovementId = Movement.Id
+                                        AND MLO_From.DescId     = zc_MovementLinkObject_From()
+            LEFT JOIN MovementLinkObject AS MLO_To
+                                         ON MLO_To.MovementId = Movement.Id
+                                        AND MLO_To.DescId     = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MLO_CurrencyClient
+                                         ON MLO_CurrencyClient.MovementId = Movement.Id
+                                        AND MLO_CurrencyClient.DescId     = zc_MovementLinkObject_CurrencyClient()
+            LEFT JOIN ObjectLink AS OL_pl ON OL_pl.ObjectId = MLO_From.ObjectId
                                          AND OL_pl.DescId   = zc_ObjectLink_Unit_PriceList()
      WHERE Movement.Id = inMovementId;
 
@@ -173,7 +180,7 @@ BEGIN
         RAISE EXCEPTION 'Ошибка.Не найдено значение <Валюта (прайс)>.';
      END IF;
 
-     
+
      -- данные из партии : GoodsId и OperPrice и CountForPrice и CurrencyId
      SELECT Object_PartionGoods.GoodsId                                    AS GoodsId
           , COALESCE (Object_PartionGoods.CountForPrice, 1)                AS CountForPrice
@@ -322,7 +329,7 @@ BEGIN
                          LEFT JOIN ObjectLink AS ObjectLink_Partner_Period
                                               ON ObjectLink_Partner_Period.ObjectId      = Object_PartionGoods.PartnerId
                                              AND ObjectLink_Partner_Period.DescId        = zc_ObjectLink_Partner_Period()
-             
+
                          LEFT JOIN ObjectFloat AS ObjectFloat_PeriodYear
                                                ON ObjectFloat_PeriodYear.ObjectId = Object_PartionGoods.PartnerId
                                               AND ObjectFloat_PeriodYear.DescId = zc_ObjectFloat_Partner_PeriodYear()
@@ -330,6 +337,7 @@ BEGIN
                       AND ((ObjectLink_Partner_Period.ChildObjectId = 1074 -- Весна-Лето
                         AND ObjectFloat_PeriodYear.ValueData = 2020
                            )
+                        -- !!! временно ?
                         OR ObjectFloat_PeriodYear.ValueData > 2020
                           )
                    )
@@ -347,7 +355,7 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.zc_Enum_GlobalConst_isT... = TRUE';
 
-     ELSE 
+     ELSE
           -- проверка - свойство должно быть установлено
           IF COALESCE (ioOperPriceList, 0) <= 0 THEN
              RAISE EXCEPTION 'Ошибка.Не введено значение <Цена факт ГРН>.';
@@ -371,7 +379,7 @@ BEGIN
               -- на самом деле возвращается в грид как Цена факт ГРН
               ioOperPriceList := zfCalc_SummChangePercent (1, vbOperPriceList_pl, ioChangePercent);
           END IF;
-     
+
      END IF;
 
 
@@ -392,27 +400,45 @@ BEGIN
                   ioSummChangePercent     := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent()),      0);
                   ioSummChangePercent_curr:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_SummChangePercent_curr()), 0);
              ELSE
-                 -- посчитали если PriceListReal
-                 ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
-                                          - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
-                 --
-                 ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
-                                            -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
-                                          - zfCalc_SummPriceList (ioAmount, zfCalc_CurrencySumm (ioOperPriceList, zc_Currency_Basis(), zc_Currency_EUR(), vbCurrencyValue_pl, vbParValue_pl));
+                 -- посчитали для PriceListReal
+                 IF vbCurrencyId_Client = zc_Currency_GRN()
+                 THEN
+                     -- Сумма скидки по цене в ГРН
+                     ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
+                                              - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
+                     -- переводим из ГРН в Валюту + округление
+                     ioSummChangePercent_curr:= zfCalc_SummPriceList (1, zfCalc_CurrencyTo (ioSummChangePercent, outCurrencyValue, outParValue));
+                 ELSE
+                     -- Сумма скидки по цене в Валюте
+                     ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
+                                                -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
+                                              - zfCalc_SummPriceList (ioAmount, vbOperPriceList_curr);
+                     -- переводим из Валюты в ГРН + округление
+                     ioSummChangePercent     := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (ioSummChangePercent_curr, outCurrencyValue, outParValue));
+                 END IF;
              END IF;
          END IF;
 
      ELSE
          -- !!!режим!!!
          IF vbIsOperPriceListReal = TRUE
-         THEN 
-              -- посчитали если PriceListReal
-              ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
-                                       - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
-              --
-              ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
-                                         -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
-                                       - zfCalc_SummPriceList (ioAmount, zfCalc_CurrencySumm (ioOperPriceList, zc_Currency_Basis(), zc_Currency_EUR(), vbCurrencyValue_pl, vbParValue_pl));
+         THEN
+              -- посчитали для PriceListReal
+              IF vbCurrencyId_Client = zc_Currency_GRN()
+              THEN
+                  -- Сумма скидки по цене в ГРН
+                  ioSummChangePercent     := zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl, ioChangePercent)
+                                           - zfCalc_SummPriceList (ioAmount, ioOperPriceList);
+                  -- переводим из ГРН в Валюту + округление
+                  ioSummChangePercent_curr:= zfCalc_SummPriceList (1, zfCalc_CurrencyTo (ioSummChangePercent, outCurrencyValue, outParValue));
+              ELSE
+                  -- Сумма скидки по цене в Валюте
+                  ioSummChangePercent_curr:= zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent)
+                                             -- !!! ВРЕМЕННО - zc_Currency_EUR !!!
+                                           - zfCalc_SummPriceList (ioAmount, vbOperPriceList_curr);
+                  -- переводим из Валюты в ГРН + округление
+                  ioSummChangePercent     := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (ioSummChangePercent_curr, outCurrencyValue, outParValue));
+              END IF;
          END IF;
      END IF;
 
@@ -425,70 +451,90 @@ BEGIN
      outTotalSumm := zfCalc_SummIn (ioAmount, outOperPrice, outCountForPrice);
      -- вернули сумму вх. в грн по элементу, для грида
      outTotalSummBalance := zfCalc_CurrencyFrom (outTotalSumm, outCurrencyValue, outParValue);
-     -- расчитали Сумма по прайсу по элементу, для грида
-     outTotalSummPriceList := zfCalc_SummPriceList (ioAmount, vbOperPriceList_pl);
-     -- расчитали Сумма по прайсу по элементу, для грида
-     outTotalSummPriceList_curr := zfCalc_SummPriceList (ioAmount, vbOperPriceList_curr);
 
-     -- расчитали Итого скидка в продаже ГРН, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
-     IF vbIsOperPriceListReal = FALSE
+
+     -- Итого Сумма по прайсу
+     IF vbCurrencyId_Client = zc_Currency_GRN()
      THEN
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent,      0);
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
+         -- расчитали
+         outTotalSummPriceList      := zfCalc_SummPriceList (ioAmount, vbOperPriceList_pl);
+         -- переводим из ГРН в Валюту + округление
+         outTotalSummPriceList_curr := zfCalc_SummPriceList (1, zfCalc_CurrencyTo (outTotalSummPriceList, outCurrencyValue, outParValue));
      ELSE
-         -- !!!режим!!!
-         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent, 0);
-         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
+         -- расчитали
+         outTotalSummPriceList_curr := zfCalc_SummPriceList (ioAmount, vbOperPriceList_curr);
+         -- переводим из Валюты в ГРН + округление
+         outTotalSummPriceList      := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (outTotalSummPriceList_curr, outCurrencyValue, outParValue));
      END IF;
 
-     -- вернули Итого оплата в продаже ГРН, для грида
+
+     -- Итого скидка в продаже, для грида - !!!Округлили до НОЛЬ Знаков - только %, ВСЕ округлять - нельзя!!!
+     IF vbCurrencyId_Client = zc_Currency_GRN()
+     THEN
+         -- расчитали
+         outTotalChangePercent      := outTotalSummPriceList      - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_pl,   ioChangePercent) + COALESCE (ioSummChangePercent,      0);
+         -- переводим из ГРН в Валюту + округление
+         outTotalChangePercent_curr := zfCalc_SummPriceList (1, zfCalc_CurrencyTo (outTotalChangePercent, outCurrencyValue, outParValue));
+     ELSE
+         -- расчитали
+         outTotalChangePercent_curr := outTotalSummPriceList_curr - zfCalc_SummChangePercent (ioAmount, vbOperPriceList_curr, ioChangePercent) + COALESCE (ioSummChangePercent_curr, 0);
+         -- переводим из Валюты в ГРН + округление
+         outTotalChangePercent      := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (outTotalChangePercent_curr, outCurrencyValue, outParValue));
+     END IF;
+
+
+     -- Итого оплата в продаже, для грида
      IF inIsPay = TRUE
      THEN
-         outTotalPay      := COALESCE (outTotalSummPriceList, 0)      - COALESCE (outTotalChangePercent,      0) ;
-         outTotalPay_curr := COALESCE (outTotalSummPriceList_curr, 0) - COALESCE (outTotalChangePercent_curr, 0) ;
+         IF vbCurrencyId_Client = zc_Currency_GRN()
+         THEN
+            -- расчитали
+             outTotalPay      := COALESCE (outTotalSummPriceList, 0)      - COALESCE (outTotalChangePercent,      0) ;
+             -- переводим из ГРН в Валюту + округление
+             outTotalPay_curr := zfCalc_SummPriceList (1, zfCalc_CurrencyTo (outTotalPay, outCurrencyValue, outParValue));
+         ELSE
+            -- расчитали
+             outTotalPay_curr := COALESCE (outTotalSummPriceList_curr, 0) - COALESCE (outTotalChangePercent_curr, 0) ;
+             -- переводим из Валюты в ГРН + округление
+             outTotalPay      := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (outTotalPay_curr, outCurrencyValue, outParValue));
+         END IF;
+
      ELSE
+         -- взяли ту что есть
          outTotalPay      := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay()),      0);
          outTotalPay_curr := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPay_curr()), 0);
      END IF;
 
 
      -- вернули Сумма к оплате
-     outTotalSummToPay      := COALESCE (outTotalSummPriceList, 0)      - COALESCE (outTotalChangePercent,      0) ;
-     outTotalSummToPay_curr := COALESCE (outTotalSummPriceList_curr, 0) - COALESCE (outTotalChangePercent_curr, 0) ;
-
-     -- вернули Сумма долга в продаже ГРН
-     outTotalSummDebt      := COALESCE (outTotalSummToPay, 0)      - COALESCE (outTotalPay,      0) ;
-     outTotalSummDebt_curr := COALESCE (outTotalSummToPay_curr, 0) - COALESCE (outTotalPay_curr, 0) ;
-
-
-     -- !!!для SYBASE - потом убрать!!!
-     /*IF vbUserId = zc_User_Sybase() AND ioId > 0 AND inIsPay = FALSE
-     THEN PERFORM gpInsertUpdate_MI_Sale_Child(
-                        inMovementId            := inMovementId
-                      , inParentId              := ioId
-                      , inAmountGRN             := 0
-                      , inAmountUSD             := 0
-                      , inAmountEUR             := 0
-                      , inAmountCard            := 0
-                      , inAmountDiscount        := 0
-                      , inCurrencyValueUSD      := 0
-                      , inParValueUSD           := 0
-                      , inCurrencyValueEUR      := 0
-                      , inParValueEUR           := 0
-                      , inSession               := inSession
-                  );
-         -- в мастер записать - Дополнительная скидка в продаже ГРН - т.к. могли обнулить
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummChangePercent(), ioId, COALESCE (ioSummChangePercent, 0));
-
-         -- в мастер записать - Итого оплата в продаже ГРН
-         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalPay(), ioId, 0);
-
-         -- пересчитали Итоговые суммы по накладной
-         PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     END IF;*/
+     IF vbCurrencyId_Client = zc_Currency_GRN()
+     THEN
+         -- расчитали
+         outTotalSummToPay      := COALESCE (outTotalSummPriceList, 0)      - COALESCE (outTotalChangePercent,      0) ;
+         -- переводим из ГРН в Валюту + округление
+         outTotalSummPriceList_curr := zfCalc_SummPriceList (1, zfCalc_CurrencyTo (outTotalSummPriceList, outCurrencyValue, outParValue));
+     ELSE
+         -- расчитали
+         outTotalSummToPay_curr := COALESCE (outTotalSummPriceList_curr, 0) - COALESCE (outTotalChangePercent_curr, 0) ;
+         -- переводим из Валюты в ГРН + округление
+         outTotalSummPriceList      := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (outTotalSummPriceList_curr, outCurrencyValue, outParValue));
+     END IF;
 
 
+     -- вернули Сумма долга в продаже
+     IF vbCurrencyId_Client = zc_Currency_GRN()
+     THEN
+         -- расчитали
+         outTotalSummDebt      := COALESCE (outTotalSummToPay, 0)      - COALESCE (outTotalPay,      0) ;
+         -- переводим из ГРН в Валюту + округление
+         outTotalSummDebt_curr := zfCalc_SummPriceList (1, zfCalc_CurrencyTo (outTotalSummDebt, outCurrencyValue, outParValue));
+     ELSE
+         -- расчитали
+         outTotalSummDebt_curr := COALESCE (outTotalSummToPay_curr, 0) - COALESCE (outTotalPay_curr, 0) ;
+         -- переводим из Валюты в ГРН + округление
+         outTotalSummDebt      := zfCalc_SummPriceList (1, zfCalc_CurrencyFrom (outTotalSummDebt_curr, outCurrencyValue, outParValue));
+     END IF;
+     
 
      -- сохранили
      ioId:= lpInsertUpdate_MovementItem_Sale   (ioId                    := ioId
@@ -523,15 +569,15 @@ BEGIN
                                                );
 
 
+     -- сохранили -
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), ioId, COALESCE (outTotalChangePercent_curr, 0));
+
      -- сохранили - Цена факт ГРН
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceListReal(), ioId, CASE WHEN ioAmount <> 0 THEN (COALESCE (outTotalSummPriceList, 0) - COALESCE (outTotalChangePercent, 0)) / ioAmount ELSE 0 END);
      -- сохранили - Цена Прайс (в валюте) - !!! ВРЕМЕННО - zc_Currency_EUR!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_OperPriceList_curr(), ioId, vbOperPriceList_curr);
      -- сохранили - Валюта (цена прайса) - в какой валюте была цена прайса, что б обратным счетом не получать ошибку на округлениях
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency_pl(), ioId, vbCurrencyId_pl);
-         
-     -- сохранили - 
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_TotalChangePercent_curr(), ioId, COALESCE (outTotalChangePercent_curr, 0));
 
      -- Добавляем оплату в грн
      IF inIsPay = TRUE
@@ -622,11 +668,11 @@ BEGIN
      PERFORM lpUpdate_MI_Sale_Total (ioId);
 
 
-     -- вернули Дополнительная скидка в расчетах ГРН, для грида
+     -- вернули Дополнительная скидка в расчетах, для грида
      outTotalChangePercentPay     := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay()),      0);
      outTotalChangePercentPay_curr:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalChangePercentPay_curr()), 0);
 
-     -- вернули Итого оплата в расчетах ГРН, для грида
+     -- вернули Итого оплата в расчетах, для грида
      outTotalPayOth     := COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth()),      0);
      outTotalPayOth_curr:= COALESCE ((SELECT MIF.ValueData FROM MovementItemFloat AS MIF WHERE MIF.MovementItemId = ioId AND MIF.DescId = zc_MIFloat_TotalPayOth_curr()), 0);
 

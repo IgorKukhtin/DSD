@@ -1,4 +1,4 @@
-unit SaleItemEdit;
+unit SalePodiumItemEdit;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   dxSkinXmas2008Blue, cxCheckBox;
 
 type
-  TSaleItemEditForm = class(TParentForm)
+  TSalePodiumItemEditForm = class(TParentForm)
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -70,6 +70,14 @@ type
     actRefreshCard: TdsdDataSetRefresh;
     actRefreshEUR: TdsdDataSetRefresh;
     HeaderChanger: THeaderChanger;
+    cxLabel5: TcxLabel;
+    ceAmountToPay_curr: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
+    ceAmountRemains_curr: TcxCurrencyEdit;
+    ceAmountDiscount_curr: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edCurrencyClient: TcxButtonEdit;
+    GuidesCurrencyClient: TdsdGuides;
   private
     { Private declarations }
   public
@@ -81,6 +89,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSaleItemEditForm);
+  RegisterClass(TSalePodiumItemEditForm);
 
 end.

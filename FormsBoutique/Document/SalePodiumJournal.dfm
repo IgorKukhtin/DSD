@@ -300,9 +300,9 @@ object SalePodiumJournalForm: TSalePodiumJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 159
       end
-      object CurrencyClientName: TcxGridDBColumn
+      object CurrencyName_Client: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082'.)'
-        DataBinding.FieldName = 'CurrencyClientName'
+        DataBinding.FieldName = 'CurrencyName_Client'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = #1042#1072#1083#1102#1090#1072' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103')'

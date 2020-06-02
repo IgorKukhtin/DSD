@@ -1027,7 +1027,6 @@ begin
               if (ParamByName('MeasureId').AsInteger <> zc_Measure_Kg)
               and(ParamByName('MeasureId').AsInteger <> zc_Measure_Sh)
               and(ParamByName('Weight_gd').AsFloat   > 0)
-              and(ParamByName('Weight_gd').AsFloat   > 0)
               and((SettingMain.BranchCode = 1)
                 or(SettingMain.BranchCode = 102))
               and(ParamsMovement.ParamByName('MovementDescId').AsInteger= zc_Movement_Inventory)

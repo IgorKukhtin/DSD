@@ -952,18 +952,12 @@ procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSalePodiumJournalForm');
-  exit;
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleTwoForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleTwoForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleItemEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaleItemEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSalePodiumItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSalePodiumItemEditForm');
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin

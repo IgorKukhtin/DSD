@@ -48,13 +48,16 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbIsUserOrder  Boolean;
+   DECLARE vbIsUserOrder_basis Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- определяется уровень доступа
-     vbIsUserOrder:= EXISTS (SELECT Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
+     vbIsUserOrder:= EXISTS (SELECT 1 FROM Object_RoleAccessKeyGuide_View WHERE Object_RoleAccessKeyGuide_View.UserId = vbUserId AND Object_RoleAccessKeyGuide_View.AccessKeyId_UserOrder > 0);
+     --
+     vbIsUserOrder_basis:= EXISTS(SELECT 1 FROM Object_RoleAccessKey_View WHERE Object_RoleAccessKey_View.UserId = vbUserId AND Object_RoleAccessKey_View.AccessKeyId = zc_Enum_Process_AccessKey_UserOrderBasis());
 
 
      -- Результат
@@ -81,6 +84,12 @@ BEGIN
                            FROM lfSelect_Object_Member_findPersonal (inSession) AS lfSelect
                            WHERE lfSelect.Ord = 1
                           )
+           -- Участок мясного сырья
+         , tmpUnit_basis AS (SELECT lfSelect.UnitId
+                             FROM lfSelect_Object_Unit_byGroup (8439) AS lfSelect
+                             WHERE vbIsUserOrder_basis = TRUE
+                            )
+       -- 
        SELECT
              Movement.Id                                    AS Id
            , Movement.InvNumber                             AS InvNumber
@@ -216,6 +225,7 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN tmpUnit_basis ON tmpUnit_basis.UnitId = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
@@ -329,7 +339,9 @@ BEGIN
                                    ON MD_EndSale.MovementId =  Movement_Promo.Id
                                   AND MD_EndSale.DescId = zc_MovementDate_EndSale()
 
-       WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit();
+       WHERE COALESCE (Object_From.DescId, 0) <> zc_Object_Unit()
+         AND (tmpUnit_basis.UnitId > 0  OR vbIsUserOrder_basis = FALSE)
+       ;
 
 END;
 $BODY$
@@ -350,4 +362,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal(instartdate := ('20.04.2017')::TDateTime , inenddate := ('22.04.2017')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');
+-- SELECT * FROM gpSelect_Movement_OrderExternal(instartdate := ('20.04.2020')::TDateTime , inenddate := ('22.04.2020')::TDateTime , inIsErased := 'False' , inJuridicalBasisId := 9399 ,  inSession := '5');

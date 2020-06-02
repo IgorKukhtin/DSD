@@ -652,10 +652,6 @@
 				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsBoutique\Document\SaleItemEdit.pas">
-				<Form>SaleItemEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\FormsBoutique\Guides\InfoMoneyGroup.pas">
 				<Form>InfoMoneyGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1115,6 +1111,10 @@
 			<DCCReference Include="..\SOURCEBoutique\LoadBoutiqueReportTest.pas"/>
 			<DCCReference Include="..\..\FormsBoutique\Document\IncomeItemEdit.pas">
 				<Form>IncomeItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\SaleItemEdit.pas">
+				<Form>SaleItemEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

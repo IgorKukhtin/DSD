@@ -132,3 +132,4 @@ $BODY$
 
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_GoodsMI_byMovementDiff',inSession:= zfCalc_UserAdmin()); -- +
 -- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_BankAccount',inSession:= zfCalc_UserAdmin()); -- +
+-- SELECT * FROM gpInsertUpdate_Object_ReportExternal (ioId:= 0, inName:= 'gpReport_Cash',inSession:= zfCalc_UserAdmin()); -- +

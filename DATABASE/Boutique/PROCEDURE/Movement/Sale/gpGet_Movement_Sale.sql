@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , DiscountTax TFloat, DiscountTaxTwo TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
+             , CurrencyId_Client Integer, CurrencyName_Client TVarChar
              , HappyDate TDateTime
              , PhoneMobile TVarChar, Phone TVarChar
              , Comment TVarChar, Comment_Client TVarChar
@@ -85,6 +86,9 @@ BEGIN
              , COALESCE (Object_Unit.ValueData, '') :: TVarChar AS FromName
              , 0                                AS ToId
              , CAST ('' as TVarChar)            AS ToName
+
+             , 0                                AS CurrencyId_Client
+             , CAST ('' as TVarChar)            AS CurrencyName_Client
 
              , CAST (NULL AS TDateTime)         AS HappyDate
              , CAST ('' as TVarChar)            AS PhoneMobile
@@ -209,6 +213,9 @@ BEGIN
              , Object_To.Id                           AS ToId
              , Object_To.ValueData                    AS ToName
 
+             , Object_CurrencyClient.Id               AS CurrencyId_Client
+             , Object_CurrencyClient.ValueData        AS CurrencyName_Client
+
              , ObjectDate_HappyDate.ValueData         AS HappyDate
              , ObjectString_PhoneMobile.ValueData     AS PhoneMobile
              , ObjectString_Phone.ValueData           AS Phone
@@ -234,6 +241,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyClient
+                                         ON MovementLinkObject_CurrencyClient.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyClient.DescId = zc_MovementLinkObject_CurrencyClient()
+            LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = MovementLinkObject_CurrencyClient.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_Insert
                                    ON MovementDate_Insert.MovementId = Movement.Id

@@ -71,6 +71,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+     -- сохранили связь с <Валюта (покупателя)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyClient(), ioId
+                                              , COALESCE((SELECT OL.ChildObjectId FROM ObjectLink AS OL WHERE OL.ObjectId = inToId AND OL.DescId = zc_ObjectLink_Client_Currency())
+                                                       , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN zc_Currency_GRN() ELSE zc_Currency_EUR() END)
+                                               );
 
      IF vbIsInsert = TRUE
      THEN
