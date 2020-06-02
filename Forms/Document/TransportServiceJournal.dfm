@@ -60,6 +60,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummReestr
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -96,6 +101,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = SummTotal
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = SummReestr
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -172,6 +182,18 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object SummReestr: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+            DataBinding.FieldName = 'SummReestr'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080' '#1087#1086' '#1088#1077#1077#1089#1090#1088#1091
             Options.Editing = False
             Width = 75
           end
@@ -840,8 +862,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Top = 248
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 232
-    Top = 104
+    Left = 216
+    Top = 152
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -854,8 +876,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       item
         Component = JuridicalBasisGuides
       end>
-    Left = 328
-    Top = 104
+    Left = 320
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransportService'
@@ -890,8 +911,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
-    Left = 432
-    Top = 120
+    Left = 408
+    Top = 144
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportService'

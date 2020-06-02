@@ -687,6 +687,8 @@ type
     actSearchRemainsVIP1: TMenuItem;
     actSendMenegerVIPJournal: TdsdOpenForm;
     VIP1: TMenuItem;
+    actReport_RemainsOverGoods_test: TdsdOpenForm;
+    miReport_RemainsOverGoods_test: TMenuItem;
     procedure actSaveDataExecute(Sender: TObject);
 
     procedure miRepriceClick(Sender: TObject);

@@ -190,10 +190,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDiscountExternalToolsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsForm');
-  Exit;
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TDiscountExternalToolsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalToolsEditForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save
     (GetForm('TDiscountExternalTools_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDiscountExternalTools_ObjectForm');
@@ -867,6 +868,10 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_NForm');
+   exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');
    exit;
@@ -2314,13 +2319,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TChoiceSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TChoiceSendForm');
   exit;
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
-
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendCashJournalForm');
 
@@ -2340,8 +2345,16 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TConfirmedDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TConfirmedDialogForm');
+  }
 
-  // диалог изменения цены получателя
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_ToGenerateCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_ToGenerateCheckForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_ToGenerateCheckDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_ToGenerateCheckDialogForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendVIP_VIPDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendVIP_VIPDialogForm');
+
+    // диалог изменения цены получателя
  { TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceBySendDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceBySendDialogForm');
   }

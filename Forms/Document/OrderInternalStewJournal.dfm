@@ -226,7 +226,8 @@ inherited OrderInternalStewJournalForm: TOrderInternalStewJournalForm
     Left = 47
     Top = 250
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TOrderInternalStewForm'
+      FormNameParam.Value = 'TOrderInternalStewForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -262,7 +263,8 @@ inherited OrderInternalStewJournalForm: TOrderInternalStewJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TOrderInternalStewForm'
+      FormNameParam.Value = 'TOrderInternalStewForm'
       GuiParams = <
         item
           Name = 'Id'

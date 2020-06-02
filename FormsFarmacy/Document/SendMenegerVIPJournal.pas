@@ -18,6 +18,8 @@ uses
 type
   TSendMenegerVIPJournalForm = class(TSendJournalForm)
     actPrintNew: TdsdPrintAction;
+    actToGenerateCheck: TdsdOpenForm;
+    dxBarButton7: TdxBarButton;
   private
     { Private declarations }
   public

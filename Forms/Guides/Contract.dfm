@@ -860,6 +860,16 @@
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object clPercentRetBonus: TcxGridDBColumn
+        Caption = '% '#1074#1086#1079#1074'. '#1087#1083#1072#1085
+        DataBinding.FieldName = 'PercentRetBonus'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = '% '#1074#1086#1079#1074#1088#1072#1090#1072' '#1087#1083#1072#1085
+        Width = 62
+      end
       object colStartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1091#1077#1090' c...'
         DataBinding.FieldName = 'StartDate'
@@ -2845,6 +2855,15 @@
         Value = Null
         Component = CDSContractCondition
         ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPercentRetBonus'
+        Value = Null
+        Component = CDSContractCondition
+        ComponentItem = 'PercentRetBonus'
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

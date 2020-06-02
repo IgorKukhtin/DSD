@@ -33,11 +33,13 @@ type
     Fsupports_inline_queries : Boolean;
 
     Fupdate_id : Integer;
+    FError : String;
 
   protected
     procedure InitCDS;
     procedure InitBot;
     function GetUpdates : integer;
+    function GetErrorText : string;
   public
     constructor Create(AToken : String); virtual;
     destructor Destroy; override;
@@ -50,6 +52,7 @@ type
     property ChatIdCDS: TClientDataSet read FChatIdCDS;
     property Id : Integer read FId;
     property FileNameChatId : String read FFileNameChatId write FFileNameChatId;
+    property ErrorText: String read GetErrorText;
   end;
 
 implementation
@@ -99,6 +102,12 @@ begin
   FRESTClient.Free;
 end;
 
+function TTelegramBot.GetErrorText : string;
+begin
+   Result := FError;
+   FError := '';
+end;
+
 procedure TTelegramBot.InitBot;
   var jValue : TJSONValue;
 begin
@@ -117,27 +126,32 @@ begin
   except
   end;
 
-  if FRESTResponse.StatusCode = 200 then
+  if FRESTResponse.ContentType = 'application/json' then
   begin
-    if FRESTResponse.ContentType = 'application/json' then
+    jValue := FRESTResponse.JSONValue;
+
+    if jValue.FindValue('ok') = Nil then
     begin
-      jValue := FRESTResponse.JSONValue;
-
-      if jValue.FindValue('ok') = Nil then Exit;
-      if not jValue.FindValue('ok').ClassNameIs('TJSONTrue') then  Exit;
-
-      jValue := jValue.FindValue('result');
-
-      FID := StrToInt(jValue.FindValue('id').ToString);
-      Fid_bot := jValue.FindValue('is_bot').ClassNameIs('TJSONTrue');
-      Ffirst_name := DelDoubleQuote(jValue.FindValue('first_name'));
-      Fusername := DelDoubleQuote(jValue.FindValue('username'));
-      Fcan_join_groups := jValue.FindValue('can_join_groups').ClassNameIs('TJSONTrue');
-      Fcan_read_all_group_messages := jValue.FindValue('can_read_all_group_messages').ClassNameIs('TJSONTrue');
-      Fsupports_inline_queries := jValue.FindValue('supports_inline_queries').ClassNameIs('TJSONTrue');
-
+      FError := jValue.ToString;
+      Exit;
     end;
-  end;
+    if not jValue.FindValue('ok').ClassNameIs('TJSONTrue') then
+    begin
+      FError := DelDoubleQuote(jValue.FindValue('description'));
+      Exit;
+    end;
+
+    jValue := jValue.FindValue('result');
+
+    FID := StrToInt(jValue.FindValue('id').ToString);
+    Fid_bot := jValue.FindValue('is_bot').ClassNameIs('TJSONTrue');
+    Ffirst_name := DelDoubleQuote(jValue.FindValue('first_name'));
+    Fusername := DelDoubleQuote(jValue.FindValue('username'));
+    Fcan_join_groups := jValue.FindValue('can_join_groups').ClassNameIs('TJSONTrue');
+    Fcan_read_all_group_messages := jValue.FindValue('can_read_all_group_messages').ClassNameIs('TJSONTrue');
+    Fsupports_inline_queries := jValue.FindValue('supports_inline_queries').ClassNameIs('TJSONTrue');
+
+  end else FError := FRESTResponse.StatusText;
 end;
 
 procedure TTelegramBot.InitCDS;
@@ -189,67 +203,72 @@ begin
   except
   end;
 
-  if FRESTResponse.StatusCode = 200 then
+  if FRESTResponse.ContentType = 'application/json' then
   begin
-    if FRESTResponse.ContentType = 'application/json' then
+    jValue := FRESTResponse.JSONValue;
+
+    if jValue.FindValue('ok') = Nil then
     begin
-      jValue := FRESTResponse.JSONValue;
+      FError := jValue.ToString;
+      Exit;
+    end;
+    if not jValue.FindValue('ok').ClassNameIs('TJSONTrue') then
+    begin
+      FError := DelDoubleQuote(jValue.FindValue('description'));
+      Exit;
+    end;
 
-      if jValue.FindValue('ok') = Nil then Exit;
-      if not jValue.FindValue('ok').ClassNameIs('TJSONTrue') then  Exit;
+    JSONA := jValue.GetValue<TJSONArray>('result');
+    Result := JSONA.Count;
+    for I := 0 to JSONA.Count - 1 do
+    begin
+      jValue := JSONA.Items[I];
+      Fupdate_id := StrToInt(jValue.FindValue('update_id').ToString);
+      jValue := jValue.FindValue('message');
+      if jValue = nil then Continue;
+      jValue := jValue.FindValue('chat');
+      if jValue = nil then Continue;
 
-      JSONA := jValue.GetValue<TJSONArray>('result');
-      Result := JSONA.Count;
-      for I := 0 to JSONA.Count - 1 do
+      if FChatIdCDS.Locate('ID', StrToInt(jValue.FindValue('id').ToString), []) then
       begin
-        jValue := JSONA.Items[I];
-        Fupdate_id := StrToInt(jValue.FindValue('update_id').ToString);
-        jValue := jValue.FindValue('message');
-        if jValue = nil then Continue;
-        jValue := jValue.FindValue('chat');
-        if jValue = nil then Continue;
-
-        if FChatIdCDS.Locate('ID', StrToInt(jValue.FindValue('id').ToString), []) then
+        if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
+           (FChatIdCDS.FieldByName('LastName').AsString <> DelDoubleQuote(jValue.FindValue('last_name'))) or
+           (FChatIdCDS.FieldByName('UserName').AsString <> DelDoubleQuote(jValue.FindValue('username'))) then
         begin
-          if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
-             (FChatIdCDS.FieldByName('LastName').AsString <> DelDoubleQuote(jValue.FindValue('last_name'))) or
-             (FChatIdCDS.FieldByName('UserName').AsString <> DelDoubleQuote(jValue.FindValue('username'))) then
-          begin
-            FChatIdCDS.Edit;
-            FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
-            FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
-            FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
-            FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
-            FChatIdCDS.Post;
-          end;
-        end else
-        if (DelDoubleQuote(jValue.FindValue('username')) <> '') and
-           FChatIdCDS.Locate('UserName', DelDoubleQuote(jValue.FindValue('username')), [loCaseInsensitive]) then
-        begin
-          if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
-             (FChatIdCDS.FieldByName('ID').AsInteger <> StrToInt(jValue.FindValue('id').ToString)) then
-          begin
-            FChatIdCDS.Edit;
-            FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
-            FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
-            FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
-            FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
-            FChatIdCDS.Post;
-          end;
-        end else
-        begin
-          FChatIdCDS.Last;
-          FChatIdCDS.Append;
+          FChatIdCDS.Edit;
           FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
           FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
           FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
           FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
           FChatIdCDS.Post;
         end;
+      end else
+      if (DelDoubleQuote(jValue.FindValue('username')) <> '') and
+         FChatIdCDS.Locate('UserName', DelDoubleQuote(jValue.FindValue('username')), [loCaseInsensitive]) then
+      begin
+        if (FChatIdCDS.FieldByName('FirstName').AsString <> DelDoubleQuote(jValue.FindValue('first_name'))) or
+           (FChatIdCDS.FieldByName('ID').AsInteger <> StrToInt(jValue.FindValue('id').ToString)) then
+        begin
+          FChatIdCDS.Edit;
+          FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
+          FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
+          FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
+          FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
+          FChatIdCDS.Post;
+        end;
+      end else
+      begin
+        FChatIdCDS.Last;
+        FChatIdCDS.Append;
+        FChatIdCDS.FieldByName('ID').AsInteger := StrToInt(jValue.FindValue('id').ToString);
+        FChatIdCDS.FieldByName('FirstName').AsString := DelDoubleQuote(jValue.FindValue('first_name'));
+        FChatIdCDS.FieldByName('LastName').AsString := DelDoubleQuote(jValue.FindValue('last_name'));
+        FChatIdCDS.FieldByName('UserName').AsString := DelDoubleQuote(jValue.FindValue('username'));
+        FChatIdCDS.Post;
       end;
-
     end;
-  end;
+
+  end else FError := FRESTResponse.StatusText;;
 end;
 
 procedure TTelegramBot.LoadChatId;
@@ -286,16 +305,20 @@ begin
   except
   end;
 
-  if FRESTResponse.StatusCode = 200 then
+  if FRESTResponse.ContentType = 'application/json' then
   begin
-    if FRESTResponse.ContentType = 'application/json' then
-    begin
-      jValue := FRESTResponse.JSONValue;
+    jValue := FRESTResponse.JSONValue;
 
-      if jValue.FindValue('ok') = Nil then Exit;
-      Result := jValue.FindValue('ok').ClassNameIs('TJSONTrue');
+    if jValue.FindValue('ok') = Nil then
+    begin
+      FError := jValue.ToString;
+      Exit;
     end;
-  end;
+    Result := jValue.FindValue('ok').ClassNameIs('TJSONTrue');
+
+    if not Result then
+      FError := DelDoubleQuote(jValue.FindValue('description'));
+  end else FError := FRESTResponse.StatusText;;
 end;
 
 function TTelegramBot.SendDocument(AChatId : Integer; ADocument : string) : boolean;
@@ -320,16 +343,21 @@ begin
   except
   end;
 
-  if FRESTResponse.StatusCode = 200 then
+  if FRESTResponse.ContentType = 'application/json' then
   begin
-    if FRESTResponse.ContentType = 'application/json' then
-    begin
-      jValue := FRESTResponse.JSONValue;
+    jValue := FRESTResponse.JSONValue;
 
-      if jValue.FindValue('ok') = Nil then Exit;
-      Result := jValue.FindValue('ok').ClassNameIs('TJSONTrue');
+    if jValue.FindValue('ok') = Nil then
+    begin
+      FError := jValue.ToString;
+      Exit;
     end;
-  end;
+    Result := jValue.FindValue('ok').ClassNameIs('TJSONTrue');
+
+    if not Result then
+      FError := DelDoubleQuote(jValue.FindValue('description'));
+  end else FError := FRESTResponse.StatusText;;
+
 end;
 
 end.

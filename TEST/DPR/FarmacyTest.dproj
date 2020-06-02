@@ -3091,6 +3091,22 @@
 				<Form>ConfirmedDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheck.pas">
+				<Form>SendVIP_ToGenerateCheckForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas">
+				<Form>SendVIP_ToGenerateCheckDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\SendVIP_VIPDialog.pas">
+				<Form>SendVIP_VIPDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Report\Report_RemainsOverGoods_N.pas">
+				<Form>Report_RemainsOverGoods_NForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

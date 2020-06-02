@@ -62,6 +62,42 @@ inisMovement:= FALSE;
                                                                     )
                                       )
                                )
+           -- учитываем zc_Object_ContractPartner - т.е. БАЗУ берем только по этим точкам - если они установлены, иначе по всем
+         , tmpContractPartner AS (WITH
+                                      -- сохраненные ContractPartner
+                                      tmp1 AS (SELECT ObjectLink_ContractPartner_Contract.ChildObjectId AS ContractId
+                                                    , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
+                                               FROM ObjectLink AS ObjectLink_ContractPartner_Contract
+                                                    INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+
+                                                    LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
+                                                                         ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
+                                                                        AND ObjectLink_ContractPartner_Partner.DescId = zc_ObjectLink_ContractPartner_Partner()
+                                               WHERE ObjectLink_ContractPartner_Contract.DescId = zc_ObjectLink_ContractPartner_Contract()
+                                               )
+                                      --  Partner для договоров, для которых нет ContractPartner
+                                    , tmp2 AS (SELECT ObjectLink_Contract_Juridical.ObjectId AS ContractId
+                                                    , ObjectLink_Partner_Juridical.ObjectId  AS PartnerId
+                                               FROM tmpContract_full
+                                                    LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                                                         ON ObjectLink_Contract_Juridical.ObjectId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ChildObjectId = ObjectLink_Partner_Juridical.ChildObjectId      --  AS JuridicalId-- ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
+                                                                        AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+                                                    LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                         ON ObjectLink_Partner_Juridical.ChildObjectId = ObjectLink_Contract_Juridical.ChildObjectId
+                                                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                    LEFT JOIN (SELECT DISTINCT tmp1.ContractId FROM tmp1) AS tmpContract ON tmpContract.ContractId = tmpContract_full.ContractId --ObjectLink_Contract_Juridical.ObjectId -- ContractId
+                                                WHERE tmpContract.ContractId IS NULL
+                                                )
+
+                                  SELECT tmp1.ContractId
+                                       , tmp1.PartnerId
+                                  FROM tmp1
+                                UNION
+                                  SELECT tmp2.ContractId
+                                       , tmp2.PartnerId
+                                  FROM tmp2
+                                  )
+
          -- формируется список договоров, у которых есть условие по "Бонусам"
        , tmpContractConditionKind AS (SELECT -- условие договора
                                              ObjectLink_ContractConditionKind.ChildObjectId AS ContractConditionKindId
@@ -96,6 +132,7 @@ inisMovement:= FALSE;
                                              -- вид бонуса
                                            , ObjectLink_ContractCondition_BonusKind.ChildObjectId    AS BonusKindId
                                            , COALESCE (ObjectFloat_Value.ValueData, 0)               AS Value
+                                           , COALESCE (ObjectFloat_PercentRetBonus.ValueData,0)      AS PercentRetBonus
                                            , COALESCE (Object_Comment.ValueData, '')                 AS Comment
 
                                              -- !!!прописано - где брать "базу"!!!
@@ -114,6 +151,10 @@ inisMovement:= FALSE;
                                                                   ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id
                                                                  AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
                                                                  AND ObjectFloat_Value.ValueData <> 0  
+
+                                           LEFT JOIN ObjectFloat AS ObjectFloat_PercentRetBonus
+                                                                 ON ObjectFloat_PercentRetBonus.ObjectId = Object_ContractCondition.Id
+                                                                AND ObjectFloat_PercentRetBonus.DescId = zc_ObjectFloat_ContractCondition_PercentRetBonus()
 
                                            LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractSend
                                                                 ON ObjectLink_ContractCondition_ContractSend.ObjectId = Object_ContractCondition.Id
@@ -221,6 +262,7 @@ inisMovement:= FALSE;
                            , tmpContractConditionKind.ContractConditionKindId
                            , tmpContractConditionKind.BonusKindId
                            , tmpContractConditionKind.Value
+                           , tmpContractConditionKind.PercentRetBonus
                            , tmpContractConditionKind.Comment
                       FROM tmpContractConditionKind
                       WHERE tmpContractConditionKind.InfoMoneyId_master = tmpContractConditionKind.InfoMoneyId_child -- это будут не бонусные договора (но в них есть бонусы)
@@ -242,6 +284,7 @@ inisMovement:= FALSE;
                            , tmpContractConditionKind.ContractConditionKindId
                            , tmpContractConditionKind.BonusKindId
                            , tmpContractConditionKind.Value
+                           , tmpContractConditionKind.PercentRetBonus
                            , tmpContractConditionKind.Comment
                       FROM tmpContractConditionKind
                            INNER JOIN tmpContract_full AS View_Contract_child
@@ -266,7 +309,7 @@ inisMovement:= FALSE;
                           
       -- список ContractId по которым будет расчет "базы"
     , tmpAccount AS (SELECT Object_Account_View.AccountId FROM Object_Account_View WHERE Object_Account_View.AccountGroupId <> zc_Enum_AccountGroup_110000()) -- Транзит
-    , tmpContainer AS (SELECT Container.Id AS ContainerId
+/*    , tmpContainer AS (SELECT Container.Id AS ContainerId
                             , tmpContractGroup.JuridicalId
                             , tmpContractGroup.ContractId_child
                             , tmpContractGroup.InfoMoneyId_child
@@ -275,6 +318,7 @@ inisMovement:= FALSE;
                        FROM tmpAccount
                             JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                           AND Container.DescId = zc_Container_Summ()
+
                             JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = Container.Id
                                                                              AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
                             JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = Container.Id
@@ -282,7 +326,14 @@ inisMovement:= FALSE;
                             JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = Container.Id
                                                                              AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()                               
                             JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
-                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()                               
+                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
+
+                            JOIN ContainerLinkObject AS CLO_Partner
+                                                     ON CLO_Partner.ContainerId = Container.Id
+                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                            -- ограничиваем контрагентами --
+                            INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
+                                                                                                         
                             -- ограничение по 4-м ключам
                             JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId
                                                  AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
@@ -291,12 +342,88 @@ inisMovement:= FALSE;
 
                             LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
                                                           ON ContainerLO_Branch.ContainerId = Container.Id
-                                                         AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_Branch()
+                                                         AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
                        WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
-
                        -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        )
+                       */
+ , tmpContainerSUM AS (SELECT DISTINCT
+                              Container.Id 
+                            , ContainerLO_Juridical.ObjectId AS JuridicalId
+                            , ContainerLO_Contract.ObjectId AS ContractId
+                            , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
+                            , ContainerLO_PaidKind.ObjectId AS PaidKindId
+                            , COALESCE (ContainerLO_Branch.ObjectId,0) AS BranchId
+                       FROM tmpAccount
+                            JOIN Container ON Container.ObjectId = tmpAccount.AccountId
+                                          AND Container.DescId = zc_Container_Summ()
+
+                            JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = Container.Id
+                                                                             AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+                            JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = Container.Id
+                                                                            AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract() 
+                            JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = Container.Id
+                                                                             AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()                               
+                            JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
+                                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
+
+                            JOIN ContainerLinkObject AS CLO_Partner
+                                                     ON CLO_Partner.ContainerId = Container.Id
+                                                    AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
+                            -- ограничиваем контрагентами --
+                            INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
+                                                                                                     
+                            -- ограничение по 4-м ключам
+                            LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
+                                                          ON ContainerLO_Branch.ContainerId = Container.Id
+                                                         AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
+                       WHERE COALESCE (ContainerLO_Branch.ObjectId,0) = inBranchId OR inBranchId = 0
+                       -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
+                       --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
+                       )
+ , tmpContainer AS (SELECT Container.Id AS ContainerId
+                            , tmpContractGroup.JuridicalId
+                            , tmpContractGroup.ContractId_child
+                            , tmpContractGroup.InfoMoneyId_child
+                            , tmpContractGroup.PaidKindId_byBase
+                            , COALESCE (Container.BranchId,0) AS BranchId
+                       FROM tmpContainerSUM AS Container
+                            -- ограничение по 4-м ключам
+                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = Container.JuridicalId
+                                                 AND tmpContractGroup.ContractId_child  = Container.ContractId
+                                                 AND tmpContractGroup.InfoMoneyId_child = Container.InfoMoneyId
+                                                 AND tmpContractGroup.PaidKindId_byBase = Container.PaidKindId
+                       )
+      , tmpMovementCont AS (SELECT tmpContainer.JuridicalId
+                                 , tmpContainer.ContractId_child
+                                 , tmpContainer.InfoMoneyId_child
+                                 , tmpContainer.PaidKindId_byBase
+                                 , tmpContainer.BranchId
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS Sum_Sale -- Только продажи
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MIContainer.Amount ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
+                                 , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
+                                                  THEN -1 * MIContainer.Amount
+                                             ELSE 0
+                                        END) AS Sum_Account -- оплаты
+                                 
+                                 , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_ReturnIn() THEN MIContainer.Amount ELSE 0 END) AS Sum_Return  -- возврат
+                                 , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
+                                 , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
+
+                            FROM MovementItemContainer AS MIContainer
+                                 JOIN tmpContainer ON tmpContainer.ContainerId = MIContainer.ContainerId
+                            WHERE MIContainer.DescId = zc_MIContainer_Summ()
+                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                              AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
+                            GROUP BY tmpContainer.JuridicalId
+                                   , tmpContainer.ContractId_child
+                                   , tmpContainer.InfoMoneyId_child
+                                   , tmpContainer.PaidKindId_byBase
+                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END
+                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
+                                   , tmpContainer.BranchId
+                            )
 
       , tmpMovement AS (SELECT tmpGroup.JuridicalId
                              , tmpGroup.ContractId_child 
@@ -305,44 +432,32 @@ inisMovement:= FALSE;
                              , tmpGroup.BranchId
                              , tmpGroup.MovementId
                              , tmpGroup.MovementDescId
-                             , SUM (tmpGroup.Sum_Sale) AS Sum_Sale
-                             , SUM (tmpGroup.Sum_SaleReturnIn) AS Sum_SaleReturnIn
-                             , SUM (tmpGroup.Sum_Account) AS Sum_Account
-                        FROM (SELECT tmpContainer.JuridicalId
-                                   , tmpContainer.ContractId_child
-                                   , tmpContainer.InfoMoneyId_child
-                                   , tmpContainer.PaidKindId_byBase
-                                   , tmpContainer.BranchId
-                                   , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS Sum_Sale -- Только продажи
-                                   , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MIContainer.Amount ELSE 0 END) AS Sum_SaleReturnIn -- продажи - возвраты
-                                   , SUM (CASE WHEN MIContainer.MovementDescId IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_SendDebt())
-                                                    THEN -1 * MIContainer.Amount
-                                               ELSE 0
-                                          END) AS Sum_Account -- оплаты
-                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END  AS MovementDescId
-                                   , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END      AS MovementId
-
-                              FROM tmpContainer
-                                   JOIN MovementItemContainer AS MIContainer
-                                                              ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                             AND MIContainer.DescId = zc_MIContainer_Summ()
-                                                             AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                             AND MIContainer.MovementDescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt())
-                              GROUP BY tmpContainer.JuridicalId
-                                     , tmpContainer.ContractId_child
-                                     , tmpContainer.InfoMoneyId_child
-                                     , tmpContainer.PaidKindId_byBase
-                                     , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementDescId ELSE 0 END
-                                     , CASE WHEN inisMovement = TRUE THEN MIContainer.MovementId ELSE 0 END
-                                     , tmpContainer.BranchId
+                             , tmpGroup.Sum_Sale
+                             , tmpGroup.Sum_SaleReturnIn
+                             , tmpGroup.Sum_Account
+                             --расчитывем % возврата факт = факт возврата / факт отгрузки * 100
+                             , CASE WHEN COALESCE (tmpGroup.Sum_Sale,0) <> 0 THEN tmpGroup.Sum_Return / tmpGroup.Sum_Sale * 100 ELSE 0 END AS PercentRetBonus_fact
+                        FROM 
+                            (SELECT tmpGroup.JuridicalId
+                                  , tmpGroup.ContractId_child 
+                                  , tmpGroup.InfoMoneyId_child
+                                  , tmpGroup.PaidKindId_byBase
+                                  , tmpGroup.BranchId
+                                  , tmpGroup.MovementId
+                                  , tmpGroup.MovementDescId
+                                  , SUM (tmpGroup.Sum_Sale)    AS Sum_Sale
+                                  , SUM (tmpGroup.Sum_SaleReturnIn) AS Sum_SaleReturnIn
+                                  , SUM (tmpGroup.Sum_Account) AS Sum_Account
+                                  , SUM (tmpGroup.Sum_Return)  AS Sum_Return
+                             FROM tmpMovementCont AS tmpGroup
+                             GROUP BY tmpGroup.JuridicalId
+                                    , tmpGroup.ContractId_child
+                                    , tmpGroup.InfoMoneyId_child
+                                    , tmpGroup.PaidKindId_byBase
+                                    , tmpGroup.MovementId
+                                    , tmpGroup.MovementDescId
+                                    , tmpGroup.BranchId
                              ) AS tmpGroup
-                        GROUP BY tmpGroup.JuridicalId
-                               , tmpGroup.ContractId_child
-                               , tmpGroup.InfoMoneyId_child
-                               , tmpGroup.PaidKindId_byBase
-                               , tmpGroup.MovementId
-                               , tmpGroup.MovementDescId
-                               , tmpGroup.BranchId
                        )
 
            , tmpAll as(SELECT tmpContract.InvNumber_master
@@ -384,10 +499,15 @@ inisMovement:= FALSE;
                                          WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN tmpMovement.Sum_SaleReturnIn
                                          WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Account
                                     ELSE 0 END  AS TFloat) AS Sum_CheckBonus
-                            , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN (tmpMovement.Sum_Sale/100 * tmpContract.Value)
-                                         WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
-                                         WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
-                                    ELSE 0 END AS NUMERIC (16, 2)) AS Sum_Bonus
+
+                            --когда % возврата факт превышает % возврата план, бонус не начисляется 
+                            , CAST (CASE WHEN (COALESCE (tmpContract.PercentRetBonus,0) <> 0 AND tmpMovement.PercentRetBonus_fact > tmpContract.PercentRetBonus) THEN 0 
+                                         ELSE 
+                                            CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSale() THEN (tmpMovement.Sum_Sale/100 * tmpContract.Value)
+                                                 WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
+                                                 WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                                            ELSE 0 END
+                                    END  AS NUMERIC (16, 2)) AS Sum_Bonus
                             , 0 :: TFloat                  AS Sum_BonusFact
                             , 0 :: TFloat                  AS Sum_CheckBonusFact
                             , 0 :: TFloat                  AS Sum_SaleFact
@@ -637,3 +757,4 @@ $BODY$
 */
 -- тест
 -- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--

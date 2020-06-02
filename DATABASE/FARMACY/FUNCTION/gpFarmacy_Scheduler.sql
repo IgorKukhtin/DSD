@@ -13,8 +13,8 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     vbUserId := inSession;
-    
-    IF COALESCE((SELECT count(*) as CountProc  
+
+    IF COALESCE((SELECT count(*) as CountProc
                  FROM pg_stat_activity
                  WHERE state = 'active'
                    AND query ilike '%gpFarmacy_Scheduler%'), 0) > 1
@@ -58,10 +58,10 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run UPDATE Object_Goods_Juridical', True, text_var1::TVarChar, vbUserId);
     END;
-    
+
     -- Заполнение кошелька
-/*    BEGIN
-      IF date_part('DAY',  CURRENT_DATE)::Integer IN (1,2,5,10,25) AND date_part('HOUR',  CURRENT_TIME)::Integer = 6
+    BEGIN
+      IF date_part('DAY',  CURRENT_DATE)::Integer IN (1, 2) AND date_part('HOUR',  CURRENT_TIME)::Integer = 6
       THEN
          PERFORM gpSelect_Calculation_MoneyBoxSun (inUnitID := 0, inSession := zfCalc_UserAdmin());
       END IF;
@@ -70,7 +70,7 @@ BEGIN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_MoneyBoxSun', True, text_var1::TVarChar, vbUserId);
     END;
-*/    
+
     -- Заполнение фонда
     BEGIN
       IF date_part('HOUR',  CURRENT_TIME)::Integer = '6' AND date_part('MINUTE',  CURRENT_TIME)::Integer <= 30
@@ -81,6 +81,26 @@ BEGIN
        WHEN others THEN
          GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run gpSelect_Calculation_Unit_Fund', True, text_var1::TVarChar, vbUserId);
+    END;
+
+    -- Создание полгого списания
+    BEGIN
+      IF CURRENT_DATE = date_trunc('month', CURRENT_DATE) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' AND date_part('HOUR',  CURRENT_TIME)::Integer = 21
+         AND NOT EXISTS(SELECT 1 FROM Movement
+                              LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                           ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                                          AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()    
+                        WHERE Movement.OperDate  = CURRENT_DATE
+                          AND Movement.DescId = zc_Movement_Loss()
+                          AND Movement.StatusId = zc_Enum_Status_Complete()
+                          AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113)
+      THEN
+         PERFORM grInsert_Movement_LossOverdue (inSession := zfCalc_UserAdmin());
+      END IF;
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run grInsert_Movement_LossOverdue', True, text_var1::TVarChar, vbUserId);
     END;
 
 END;
@@ -95,7 +115,6 @@ $BODY$
  15.02.20                                                       *
 */
 
--- SELECT * FROM Log_Run_Schedule_Function
+-- SELECT * FROM Log_Run_Schedule_Function order by Log_Run_Schedule_Function.DateInsert desc
 -- SELECT * FROM gpFarmacy_Scheduler (inSession := zfCalc_UserAdmin())
-
 

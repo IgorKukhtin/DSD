@@ -40,6 +40,8 @@ type
     GuidesDiscountExternal: TdsdGuides;
     cxLabel2: TcxLabel;
     ceExternalUnit: TcxTextEdit;
+    ceToken: TcxTextEdit;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

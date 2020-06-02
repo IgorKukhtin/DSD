@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 656
+  ExplicitHeight = 655
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1048,6 +1048,18 @@ inherited SendForm: TSendForm
       Caption = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       Hint = #1054#1090#1083#1086#1078#1077#1085' - '#1053#1077#1090
       ImageIndex = 52
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint

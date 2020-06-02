@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractCondition(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , Value TFloat
+             , Value TFloat, PercentRetBonus TFloat
              , ContractId Integer, ContractName TVarChar                
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar    
@@ -34,6 +34,7 @@ BEGIN
      SELECT 
            Object_ContractCondition.Id          AS Id
          , ObjectFloat_Value.ValueData          AS Value  
+         , COALESCE (ObjectFloat_PercentRetBonus.ValueData,0) :: TFloat AS PercentRetBonus
 
          , Object_Contract.Id                   AS ContractId
          , Object_Contract.ValueData            AS ContractName
@@ -129,7 +130,11 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
-          
+
+          LEFT JOIN ObjectFloat AS ObjectFloat_PercentRetBonus 
+                                ON ObjectFloat_PercentRetBonus.ObjectId = Object_ContractCondition.Id 
+                               AND ObjectFloat_PercentRetBonus.DescId = zc_ObjectFloat_ContractCondition_PercentRetBonus()
+
           LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
                                ON ObjectDate_Protocol_Insert.ObjectId = Object_ContractCondition.Id
                               AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
@@ -167,6 +172,7 @@ ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.05.20         *
  24.03.20         *
  16.04.14                                        * add isErased = FALSE
  14.03.14         * add InfoMoney

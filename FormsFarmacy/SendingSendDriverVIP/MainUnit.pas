@@ -236,7 +236,11 @@ begin
   Add_Log('Начало отправки сообщения: ' + qryDriver.FieldByName('Name').AsString);
 
   try
-    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsInteger, FMessage.Text) then FError := True;
+    if not TelegramBot.SendMessage(qryDriver.FieldByName('ChatIDSendVIP').AsInteger, FMessage.Text) then
+    begin
+      FError := True;
+      Add_Log(TelegramBot.ErrorText);
+    end;
   except
     on E: Exception do
     begin
@@ -305,7 +309,7 @@ begin
   begin
     TelegramBot.LoadChatId;
     ChatIdDS.DataSet := TelegramBot.ChatIdCDS;
-  end;
+  end else Add_Log(TelegramBot.ErrorText);
 
   if ZConnection1.Connected then
   begin

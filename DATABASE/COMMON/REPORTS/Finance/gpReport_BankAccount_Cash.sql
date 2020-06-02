@@ -41,17 +41,19 @@ BEGIN
      WITH tmpReport_BankAccount AS (SELECT * FROM gpReport_BankAccount (inStartDate       := inStartDate
                                                                        , inEndDate        := inEndDate
                                                                        , inAccountId      := inAccountId
+                                                                       , inJuridicalBasisId := 0
                                                                        , inBankAccountId  := inBankAccountId
                                                                        , inCurrencyId     := inCurrencyId
                                                                        , inIsDetail       := inIsDetail
-                                                                       , inSession        := ''
+                                                                       , inSession        := inSession
                                                                                           ) AS gpReport)
         , tmpReport_Cash AS (SELECT * FROM gpReport_Cash (inStartDate    := inStartDate
                                                         , inEndDate      := inEndDate
                                                         , inAccountId    := inAccountId
                                                         , inCashId       := inCashId
                                                         , inCurrencyId   := 0
-                                                        , inSession      := ''
+                                                        , inisDate       := False
+                                                        , inSession      := inSession
                                                                          ) AS gpReport)
         , tmpResult AS (SELECT tmpReport_BankAccount.ContainerId 
                              , tmpReport_BankAccount.BankName , tmpReport_BankAccount.BankAccountName

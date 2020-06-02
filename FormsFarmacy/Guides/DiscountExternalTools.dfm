@@ -122,6 +122,13 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
         Options.Editing = False
         Width = 100
       end
+      object Token: TcxGridDBColumn
+        Caption = 'API '#1090#1086#1082#1077#1085
+        DataBinding.FieldName = 'Token'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 117
+      end
       object Id: TcxGridDBColumn
         DataBinding.FieldName = 'Id'
         Visible = False
@@ -462,7 +469,6 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -606,6 +612,7 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 368
     Top = 128
   end

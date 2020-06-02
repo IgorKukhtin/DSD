@@ -874,12 +874,12 @@ BEGIN
                                   , Operation.Summ_Currency_pl
                                   , Operation.StartAmount
                                   , Operation.EndAmount
-                                  , CASE WHEN (Operation.NomStr=1 OR Operation.NomStr=3) and (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate) OR Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)+ interval '1 Month' - interval '1 Day') 
+                                  , CASE WHEN (Operation.NomStr=1) AND (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)) 
                                          THEN Operation.StartAmount 
                                          ELSE 0 
                                     END AS StartAmount_Month
 
-                                  , CASE WHEN (Operation.NomStr=3) and (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate) OR Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)+ interval '1 Month' - interval '1 Day') 
+                                  , CASE WHEN (Operation.NomStr=3) AND (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)+ interval '1 Month' - interval '1 Day') 
                                          THEN Operation.EndAmount 
                                          ELSE 0 
                                     END AS EndAmount_Month
@@ -900,11 +900,11 @@ BEGIN
                                   , Operation.Summ_Currency_pl
                                   , Operation.StartAmount
                                   , Operation.EndAmount
-                                  , CASE WHEN (Operation.NomStr=1) and (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate) OR Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)+ interval '1 Month' - interval '1 Day') 
+                                  , CASE WHEN (Operation.NomStr=1) AND (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)) 
                                          THEN Operation.StartAmount 
                                          ELSE 0 
                                     END AS StartAmount_Month
-                                  , CASE WHEN (Operation.NomStr=3) and (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate) OR Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate)+ interval '1 Month' - interval '1 Day') 
+                                  , CASE WHEN (Operation.NomStr=3) AND (Operation.OperDate = DATE_TRUNC ('MONTH', Operation.OperDate) + interval '1 Month' - interval '1 Day') 
                                          THEN Operation.EndAmount 
                                          ELSE 0 
                                     END AS EndAmount_Month

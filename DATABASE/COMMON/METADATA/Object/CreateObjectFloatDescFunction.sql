@@ -63,6 +63,11 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_ContractCondition_Value() RETURNS Inte
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_ContractCondition_Value', zc_Object_ContractCondition(), 'Условия договора Значение' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ContractCondition_Value');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_ContractCondition_PercentRetBonus() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ContractCondition_PercentRetBonus'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_ContractCondition_PercentRetBonus', zc_Object_ContractCondition(), 'Условия договора % возврата план' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ContractCondition_PercentRetBonus');
+
+
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_Contract_DocumentCount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_DocumentCount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_Contract_DocumentCount', zc_Object_Contract(), 'Количество докуметов по договору' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Contract_DocumentCount');
@@ -1777,6 +1782,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
  27.05.20                                                                                      * zc_ObjectFloat_CashSettings_SummaFormSendVIP
+ 28.05.20         * zc_ObjectFloat_ContractCondition_PercentRetBonus
  26.05.20                                                                                      * zc_ObjectFloat_DriverSun_ChatIDSendVIP
  19.05.20         * zc_ObjectFloat_Unit_LimitSUN_N
  16.05.20         * zc_ObjectFloat_Goods_LimitSUN_T1

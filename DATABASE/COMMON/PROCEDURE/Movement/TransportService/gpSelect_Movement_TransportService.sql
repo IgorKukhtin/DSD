@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, StartRun TDateTime
-             , Amount TFloat, SummAdd TFloat, SummTotal TFloat, WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
+             , Amount TFloat, SummAdd TFloat, SummTotal TFloat, SummReestr TFloat
+             , WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , ContractValue TFloat, ContractValueAdd TFloat
              , Comment TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
@@ -97,6 +98,7 @@ BEGIN
                                                                      , zc_MIFloat_SummAdd()
                                                                      , zc_MIFloat_ContractValue()
                                                                      , zc_MIFloat_ContractValueAdd()
+                                                                     , zc_MIFloat_SummReestr()
                                                                      )
                                    )
 
@@ -139,6 +141,7 @@ BEGIN
            , MovementItem.Amount
            , MIFloat_SummAdd.ValueData             AS SummAdd
            , (MovementItem.Amount + COALESCE (MIFloat_SummAdd.ValueData, 0)) :: TFloat AS AmountSummTotal
+           , MIFloat_SummReestr.ValueData ::TFloat AS SummReestr
            , MIFloat_WeightTransport.ValueData     AS WeightTransport
            , MIFloat_Distance.ValueData            AS Distance
            , MIFloat_Price.ValueData               AS Price
@@ -236,6 +239,9 @@ BEGIN
             LEFT JOIN tmpMovementItemFloat AS MIFloat_ContractValueAdd
                                            ON MIFloat_ContractValueAdd.MovementItemId = MovementItem.Id
                                           AND MIFloat_ContractValueAdd.DescId = zc_MIFloat_ContractValueAdd()
+            LEFT JOIN tmpMovementItemFloat AS MIFloat_SummReestr
+                                           ON MIFloat_SummReestr.MovementItemId = MovementItem.Id
+                                          AND MIFloat_SummReestr.DescId = zc_MIFloat_SummReestr()
 
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id 
@@ -291,6 +297,7 @@ $BODY$
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ. 
+ 28.05.20         *
  07.10.16         * add inJuridicalBasisId
  03.07.16         *
  16.12.15         * add WeightTransport

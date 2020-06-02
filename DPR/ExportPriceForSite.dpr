@@ -2,7 +2,7 @@ program ExportPriceForSite;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\ExportPriceForSite\MainUnit.pas' {Form1};
+  MainUnit in '..\FormsFarmacy\MainUnitService\ExportPriceForSite\MainUnit.pas' {Form1};
 
 {$R *.res}
 

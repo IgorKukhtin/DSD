@@ -182,7 +182,23 @@ BEGIN
                                     AND ObjectBoolean_Top.DescId = zc_ObjectBoolean_Price_Top()
         WHERE ObjectBoolean_Top.ValueData = TRUE
        )
+  , tmpLoadPriceListItem as (SELECT
+                                     LoadPriceList.JuridicalId
+                                   , LoadPriceList.ContractId
+                                   , LoadPriceList.AreaId
 
+                                   , LoadPriceListItem.ID
+                                   , LoadPriceListItem.GoodsId
+                                   , LoadPriceListItem.Price
+                                   , LoadPriceListItem.ExpirationDate
+                                   , ROW_NUMBER() OVER (PARTITION BY LoadPriceList.Id , LoadPriceListItem.GoodsId ORDER BY LoadPriceListItem.Price Desc)  AS Ord
+
+
+                              FROM LoadPriceList
+                                   INNER JOIN LoadPriceListItem ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+                                                               AND COALESCE (LoadPriceListItem.GoodsId, 0) <> 0)
+
+              -- товары в прайс-листе (поставщика)
   , tmpMinPrice_RemainsPrice as (SELECT
             _tmpMinPrice_RemainsList.ObjectId                 AS GoodsId
           , _tmpMinPrice_RemainsList.ObjectId_retail          AS GoodsId_retail
@@ -209,26 +225,25 @@ BEGIN
           , Object_JuridicalGoods.GoodsCode    AS Partner_GoodsCode
           , Object_JuridicalGoods.GoodsName    AS Partner_GoodsName
           , Object_JuridicalGoods.MakerName    AS MakerName
-          , LoadPriceList.ContractId           AS ContractId
+          , LoadPriceListItem.ContractId       AS ContractId
           , Juridical.Id                       AS JuridicalId
           , Juridical.ValueData                AS JuridicalName
           , JuridicalSettings.isPriceClose     AS JuridicalIsPriceClose
           , COALESCE (ObjectFloat_Deferment.ValueData, 0) :: Integer AS Deferment
           , COALESCE (NULLIF (GoodsPrice.isTOP, FALSE), COALESCE (ObjectBoolean_Goods_TOP.ValueData, FALSE) /*Goods.isTOP*/) AS isTOP
 
-          , LoadPriceList.AreaId               AS AreaId
+          , LoadPriceListItem.AreaId           AS AreaId
 
         FROM -- Остатки + коды ...
              _tmpMinPrice_RemainsList
 
               -- товары в прайс-листе (поставщика)
-             INNER JOIN LoadPriceListItem ON LoadPriceListItem.GoodsId = _tmpMinPrice_RemainsList.GoodsMainId
-              -- Прайс-лист (поставщика) - MovementItem
-             INNER JOIN LoadPriceList ON LoadPriceList.Id = LoadPriceListItem.LoadPriceListId
+             INNER JOIN tmpLoadPriceListItem AS LoadPriceListItem ON LoadPriceListItem.GoodsId = _tmpMinPrice_RemainsList.GoodsMainId
+                                                                 AND LoadPriceListItem.Ord = 1
 
              -- Установки для юр. лиц (для поставщика определяется договор и т.п)
-             INNER JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LoadPriceList.JuridicalId
-                                         AND JuridicalSettings.ContractId      = LoadPriceList.ContractId
+             INNER JOIN JuridicalSettings ON JuridicalSettings.JuridicalId     = LoadPriceListItem.JuridicalId
+                                         AND JuridicalSettings.ContractId      = LoadPriceListItem.ContractId
              LEFT JOIN tmpJuridicalSettingsItem ON tmpJuridicalSettingsItem.JuridicalSettingsId = JuridicalSettings.JuridicalSettingsId
                                                AND LoadPriceListItem.Price >= tmpJuridicalSettingsItem.PriceLimit_min
                                                AND LoadPriceListItem.Price <= tmpJuridicalSettingsItem.PriceLimit
@@ -244,16 +259,16 @@ BEGIN
              LEFT JOIN GoodsPrice ON GoodsPrice.GoodsId = _tmpMinPrice_RemainsList.ObjectId
 
              -- Поставщик
-             INNER JOIN Object AS Juridical ON Juridical.Id = LoadPriceList.JuridicalId
+             INNER JOIN Object AS Juridical ON Juridical.Id = LoadPriceListItem.JuridicalId
 
              -- Дней отсрочки по договору
              LEFT JOIN ObjectFloat AS ObjectFloat_Deferment
-                                   ON ObjectFloat_Deferment.ObjectId = LoadPriceList.ContractId
+                                   ON ObjectFloat_Deferment.ObjectId = LoadPriceListItem.ContractId
                                   AND ObjectFloat_Deferment.DescId = zc_ObjectFloat_Contract_Deferment()
 
              -- % бонуса из Маркетинговый контракт
              LEFT JOIN GoodsPromo ON GoodsPromo.GoodsId     = _tmpMinPrice_RemainsList.ObjectId
-                                 AND GoodsPromo.JuridicalId = LoadPriceList.JuridicalId
+                                 AND GoodsPromo.JuridicalId = LoadPriceListItem.JuridicalId
         WHERE (COALESCE (Object_JuridicalGoods.MinimumLot, 0) = 0
             OR Object_JuridicalGoods.IsPromo                  = FALSE
               )
@@ -378,5 +393,4 @@ ALTER FUNCTION lpFillingMinPrice_ForSite () OWNER TO postgres;
 
 -- тест
 --SELECT * FROM lpFillingMinPrice_ForSite ()
--- SELECT Count(*) FROM MinPrice_ForSite
-
+-- SELECT Count(*) FROM MinPrice_ForSite    - 22572

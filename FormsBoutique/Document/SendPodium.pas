@@ -186,6 +186,7 @@ type
     TotalSummPriceListTo_start: TcxGridDBColumn;
     OperPriceListTo_start: TcxGridDBColumn;
     NPP: TcxGridDBColumn;
+    actGoodsSizeChoice: TOpenChoiceForm;
   private
   public
   end;

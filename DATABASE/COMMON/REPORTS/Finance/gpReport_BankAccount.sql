@@ -1,3 +1,4 @@
+
 -- Function: gpReport_BankAccount
 
 --DROP FUNCTION IF EXISTS gpReport_BankAccount (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
@@ -214,6 +215,259 @@ BEGIN
                           WHERE Object_Contract.DescId = zc_Object_Contract()
                          )
 
+        , tmpMI AS (SELECT *
+                    FROM MovementItemContainer
+                    WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId FROM tmpContainer)
+                      AND MovementItemContainer.OperDate >= inStartDate
+                    )
+        , tmpMI_Currency AS (SELECT *
+                             FROM MovementItemContainer
+                             WHERE MovementItemContainer.ContainerId IN (SELECT DISTINCT tmpContainer.ContainerId_Currency FROM tmpContainer)
+                               AND MovementItemContainer.OperDate >= inStartDate
+                             )
+
+        , tmpOperation_all AS   -- 1.1. остаток в валюте баланса
+                               (SELECT tmpContainer.ContainerId
+                                     , tmpContainer.AccountId
+                                     , tmpContainer.BankAccountId
+                                     , tmpContainer.CurrencyId
+                                     , 0                         AS InfoMoneyId
+                                     , 0                         AS MoneyPlaceId
+                                     , 0                         AS ContractId
+                                     , 0                         AS UnitId
+                                     , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartAmount
+                                     , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
+                                     , 0                         AS DebetSumm
+                                     , 0                         AS KreditSumm
+                                     , 0                         AS StartAmount_Currency
+                                     , 0                         AS EndAmount_Currency
+                                     , 0                         AS DebetSumm_Currency
+                                     , 0                         AS KreditSumm_Currency
+                                     , 0                         AS Summ_Currency
+                                     , 0                         AS Summ_pl
+                                     , 0                         AS MovementId
+                                     , ''                        AS Comment
+                                FROM tmpContainer
+                                     LEFT JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                   AND MIContainer.OperDate >= inStartDate
+                                GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount
+                               UNION ALL
+                                -- 1.2. остаток в валюте операции
+                                SELECT tmpContainer.ContainerId
+                                     , tmpContainer.AccountId
+                                     , tmpContainer.BankAccountId
+                                     , tmpContainer.CurrencyId
+                                     , 0                         AS InfoMoneyId
+                                     , 0                         AS MoneyPlaceId
+                                     , 0                         AS ContractId
+                                     , 0                         AS UnitId
+                                     , 0                         AS StartAmount
+                                     , 0                         AS EndAmount
+                                     , 0                         AS DebetSumm
+                                     , 0                         AS KreditSumm
+                                     , tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartAmount_Currency
+                                     , tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount_Currency
+                                     , 0                         AS DebetSumm_Currency
+                                     , 0                         AS KreditSumm_Currency
+                                     , 0                         AS Summ_Currency
+                                     , 0                         AS Summ_pl
+                                     , 0                         AS MovementId
+                                     , ''                        AS Comment
+                                FROM tmpContainer
+                                     LEFT JOIN tmpMI_Currency AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
+                                                                            AND MIContainer.OperDate >= inStartDate
+                                WHERE tmpContainer.ContainerId_Currency > 0
+                                GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount_Currency, tmpContainer.ContainerId_Currency
+                               UNION ALL
+                                -- 2.1. движение в валюте баланса
+                                SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
+                                     , tmpContainer.AccountId
+                                     , tmpContainer.BankAccountId
+                                     , tmpContainer.CurrencyId
+                                     , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
+                                     , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() AND inIsDetail = TRUE THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
+                                     , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                                     , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
+                                     , 0                         AS StartAmount
+                                     , 0                         AS EndAmount
+                                       -- нужен OR ... т.к. для ОПиУ надо проводки разделить, и там будет другой знак
+                                     , SUM (CASE WHEN (MIContainer.Amount > 0 OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
+                                       -- нужен AND ... т.к. для ОПиУ надо проводки разделить, и там будет другой знак
+                                     , SUM (CASE WHEN (MIContainer.Amount < 0 OR (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
+                                     , 0                         AS StartAmount_Currency
+                                     , 0                         AS EndAmount_Currency
+                                     , 0                         AS DebetSumm_Currency
+                                     , 0                         AS KreditSumm_Currency
+                                     , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
+                                     , 0                         AS Summ_pl
+                                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
+                                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
+                                FROM tmpContainer
+                                     INNER JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                     LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
+                                                                      ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Contract
+                                                                      ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Contract.DescId = zc_MILinkObject_Contract()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                                      ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
+                                                                      ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemString AS MIString_Comment
+                                                                  ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                                 AND inIsDetail = TRUE
+                     
+                                GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
+                                       , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
+                                       , MIContainer.MovementDescId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
+                                       , COALESCE (MIString_Comment.ValueData, '')
+                               UNION ALL
+                                -- 2.2. движение в валюте операции
+                                SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
+                                     , tmpContainer.AccountId
+                                     , tmpContainer.BankAccountId
+                                     , tmpContainer.CurrencyId
+                                     , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
+                                     , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
+                                     , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                                     , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
+                                     , 0                         AS StartAmount
+                                     , 0                         AS EndAmount
+                                     , 0                         AS DebetSumm
+                                     , 0                         AS KreditSumm
+                                     , 0                         AS StartAmount_Currency
+                                     , 0                         AS EndAmount_Currency
+                                     , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
+                                     , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
+                                     , 0                         AS Summ_Currency
+                                     , 0                         AS Summ_pl
+                                     , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
+                                     , COALESCE (MIString_Comment.ValueData, '') AS Comment
+                                FROM tmpContainer
+                                     INNER JOIN tmpMI_Currency AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
+                                                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                     LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
+                                                                      ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Contract
+                                                                      ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Contract.DescId = zc_MILinkObject_Contract()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                                      ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
+                                                                      ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemString AS MIString_Comment
+                                                                  ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                                 AND inIsDetail = TRUE
+                     
+                                WHERE tmpContainer.ContainerId_Currency > 0
+                                GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
+                                       , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
+                                       , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
+                                       , COALESCE (MIString_Comment.ValueData, '')
+                               UNION ALL
+                                -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
+                                SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
+                                     , tmpContainer.AccountId
+                                     , tmpContainer.BankAccountId
+                                     , tmpContainer.CurrencyId
+                                     , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
+                                     , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
+                                     , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
+                                     , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
+                                     , 0                         AS StartAmount
+                                     , 0                         AS EndAmount
+                                     , 0                         AS DebetSumm
+                                     , 0                         AS KreditSumm
+                                     , 0                         AS StartAmount_Currency
+                                     , 0                         AS EndAmount_Currency
+                                     , 0                         AS DebetSumm_Currency
+                                     , 0                         AS KreditSumm_Currency
+                                     -- , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
+                                     , 0                         AS Summ_Currency
+                                     , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_pl
+                                     , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId /*MIReport.MovementId*/ ELSE 0 END AS MovementId
+                                     , COALESCE (MIString_Comment.ValueData, '') :: TVarChar AS Comment
+                                FROM tmpContainer
+                                                                              
+                                     INNER JOIN tmpMI AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
+                                                                    AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                                    AND MIContainer.MovementDescId <> zc_Movement_Currency()
+                                                                    AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относится к ОПиУ, кроме проводок с товарами
+                                     LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
+                                                                      ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Contract
+                                                                      ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Contract.DescId = zc_MILinkObject_Contract()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_Unit
+                                                                      ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_Unit.DescId = zc_MILinkObject_Unit()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
+                                                                      ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
+                                                                     AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                     AND inIsDetail = TRUE
+                                     LEFT JOIN MovementItemString AS MIString_Comment
+                                                                  ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
+                                                                 AND MIString_Comment.DescId = zc_MIString_Comment()
+                                                                 AND inIsDetail = TRUE
+                     
+                                GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
+                                       , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
+                                       , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
+                                       , COALESCE (MIString_Comment.ValueData, '')
+                               )
+     , tmpOperation AS (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
+                             , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
+                             , Operation_all.MovementId
+                             , Operation_all.Comment
+                             , SUM (Operation_all.StartAmount) AS StartAmount
+                             , SUM (Operation_all.DebetSumm)   AS DebetSumm
+                             , SUM (Operation_all.KreditSumm)  AS KreditSumm
+                             , SUM (Operation_all.EndAmount)   AS EndAmount
+                             , SUM (Operation_all.StartAmount_Currency) AS StartAmount_Currency
+                             , SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency
+                             , SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency
+                             , SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency
+                             , SUM (Operation_all.Summ_Currency)        AS Summ_Currency
+                             , SUM (Operation_all.Summ_pl)              AS Summ_pl
+                        FROM tmpOperation_all AS Operation_all
+                        GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
+                               , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
+                               , Operation_all.MovementId , Operation_all.Comment
+                        HAVING SUM (Operation_all.StartAmount) <> 0 
+                             OR SUM (Operation_all.EndAmount) <> 0 
+                             OR SUM (Operation_all.DebetSumm) <> 0
+                             OR SUM (Operation_all.KreditSumm) <> 0
+                             OR SUM (Operation_all.StartAmount_Currency) <> 0
+                             OR SUM (Operation_all.EndAmount_Currency) <> 0
+                             OR SUM (Operation_all.DebetSumm_Currency) <> 0
+                             OR SUM (Operation_all.KreditSumm_Currency) <> 0
+                             OR SUM (Operation_all.Summ_Currency) <> 0
+                             OR SUM (Operation_all.Summ_pl) <> 0
+                       )
+
+
      --
      SELECT
         Operation.ContainerId,
@@ -267,249 +521,7 @@ BEGIN
         CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
         Operation.Comment :: TVarChar                                                               AS Comment
  
-     FROM
-         (SELECT Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
-               , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
-               , Operation_all.MovementId
-               , Operation_all.Comment
-               , SUM (Operation_all.StartAmount) AS StartAmount
-               , SUM (Operation_all.DebetSumm)   AS DebetSumm
-               , SUM (Operation_all.KreditSumm)  AS KreditSumm
-               , SUM (Operation_all.EndAmount)   AS EndAmount
-               , SUM (Operation_all.StartAmount_Currency) AS StartAmount_Currency
-               , SUM (Operation_all.DebetSumm_Currency)   AS DebetSumm_Currency
-               , SUM (Operation_all.KreditSumm_Currency)  AS KreditSumm_Currency
-               , SUM (Operation_all.EndAmount_Currency)   AS EndAmount_Currency
-               , SUM (Operation_all.Summ_Currency)        AS Summ_Currency
-               , SUM (Operation_all.Summ_pl)              AS Summ_pl
-          FROM
-           -- 1.1. остаток в валюте баланса
-          (SELECT tmpContainer.ContainerId
-                , tmpContainer.AccountId
-                , tmpContainer.BankAccountId
-                , tmpContainer.CurrencyId
-                , 0                         AS InfoMoneyId
-                , 0                         AS MoneyPlaceId
-                , 0                         AS ContractId
-                , 0                         AS UnitId
-                , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartAmount
-                , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
-                , 0                         AS DebetSumm
-                , 0                         AS KreditSumm
-                , 0                         AS StartAmount_Currency
-                , 0                         AS EndAmount_Currency
-                , 0                         AS DebetSumm_Currency
-                , 0                         AS KreditSumm_Currency
-                , 0                         AS Summ_Currency
-                , 0                         AS Summ_pl
-                , 0                         AS MovementId
-                , ''                        AS Comment
-           FROM tmpContainer
-                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                              AND MIContainer.OperDate >= inStartDate
-           GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount
-          UNION ALL
-           -- 1.2. остаток в валюте операции
-           SELECT tmpContainer.ContainerId
-                , tmpContainer.AccountId
-                , tmpContainer.BankAccountId
-                , tmpContainer.CurrencyId
-                , 0                         AS InfoMoneyId
-                , 0                         AS MoneyPlaceId
-                , 0                         AS ContractId
-                , 0                         AS UnitId
-                , 0                         AS StartAmount
-                , 0                         AS EndAmount
-                , 0                         AS DebetSumm
-                , 0                         AS KreditSumm
-                , tmpContainer.Amount_Currency - COALESCE (SUM (MIContainer.Amount), 0)                                                            AS StartAmount_Currency
-                , tmpContainer.Amount_Currency - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount_Currency
-                , 0                         AS DebetSumm_Currency
-                , 0                         AS KreditSumm_Currency
-                , 0                         AS Summ_Currency
-                , 0                         AS Summ_pl
-                , 0                         AS MovementId
-                , ''                        AS Comment
-           FROM tmpContainer
-                LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
-                                                              AND MIContainer.OperDate >= inStartDate
-           WHERE tmpContainer.ContainerId_Currency > 0
-           GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId, tmpContainer.Amount_Currency, tmpContainer.ContainerId_Currency
-          UNION ALL
-           -- 2.1. движение в валюте баланса
-           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
-                , tmpContainer.AccountId
-                , tmpContainer.BankAccountId
-                , tmpContainer.CurrencyId
-                , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
-                , COALESCE (MILO_MoneyPlace.ObjectId, CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() AND inIsDetail = TRUE THEN zc_Enum_ProfitLoss_80103() ELSE 0 END)  AS MoneyPlaceId
-                , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
-                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
-                , 0                         AS StartAmount
-                , 0                         AS EndAmount
-                  -- нужен OR ... т.к. для ОПиУ надо проводки разделить, и там будет другой знак
-                , SUM (CASE WHEN (MIContainer.Amount > 0 OR (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm
-                  -- нужен AND ... т.к. для ОПиУ надо проводки разделить, и там будет другой знак
-                , SUM (CASE WHEN (MIContainer.Amount < 0 OR (MIContainer.isActive = FALSE AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss())) AND NOT (MIContainer.isActive = TRUE  AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss()) THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm
-                , 0                         AS StartAmount_Currency
-                , 0                         AS EndAmount_Currency
-                , 0                         AS DebetSumm_Currency
-                , 0                         AS KreditSumm_Currency
-                , SUM (CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() THEN MIContainer.Amount ELSE 0 END) AS Summ_Currency
-                , 0                         AS Summ_pl
-                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
-                , COALESCE (MIString_Comment.ValueData, '') AS Comment
-           FROM tmpContainer
-                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                 ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                 ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Contract.DescId = zc_MILinkObject_Contract()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                 ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemString AS MIString_Comment
-                                             ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
-                                            AND MIString_Comment.DescId = zc_MIString_Comment()
-                                            AND inIsDetail = TRUE
-
-           GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , MIContainer.MovementDescId
-                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
-                  , COALESCE (MIString_Comment.ValueData, '')
-          UNION ALL
-           -- 2.2. движение в валюте операции
-           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
-                , tmpContainer.AccountId
-                , tmpContainer.BankAccountId
-                , tmpContainer.CurrencyId
-                , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
-                , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
-                , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
-                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
-                , 0                         AS StartAmount
-                , 0                         AS EndAmount
-                , 0                         AS DebetSumm
-                , 0                         AS KreditSumm
-                , 0                         AS StartAmount_Currency
-                , 0                         AS EndAmount_Currency
-                , SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END)      AS DebetSumm_Currency
-                , SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END) AS KreditSumm_Currency
-                , 0                         AS Summ_Currency
-                , 0                         AS Summ_pl
-                , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END AS MovementId
-                , COALESCE (MIString_Comment.ValueData, '') AS Comment
-           FROM tmpContainer
-                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId_Currency
-                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                 ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                 ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Contract.DescId = zc_MILinkObject_Contract()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                 ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemString AS MIString_Comment
-                                             ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
-                                            AND MIString_Comment.DescId = zc_MIString_Comment()
-                                            AND inIsDetail = TRUE
-
-           WHERE tmpContainer.ContainerId_Currency > 0
-           GROUP BY tmpContainer.ContainerId , tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , CASE WHEN MIContainer.MovementDescId = zc_Movement_Currency() /*OR 1=1*/ AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
-                  , COALESCE (MIString_Comment.ValueData, '')
-          UNION ALL
-           -- 2.2. курсовая разница (!!!только не для ввода курса!!!)
-           SELECT CASE WHEN inIsDetail = TRUE THEN 0 ELSE tmpContainer.ContainerId END AS ContainerId
-                , tmpContainer.AccountId
-                , tmpContainer.BankAccountId
-                , tmpContainer.CurrencyId
-                , COALESCE (MILO_InfoMoney.ObjectId, 0)   AS InfoMoneyId
-                , COALESCE (MILO_MoneyPlace.ObjectId, 0)  AS MoneyPlaceId
-                , COALESCE (MILO_Contract.ObjectId, 0)    AS ContractId
-                , COALESCE (MILO_Unit.ObjectId, 0)        AS UnitId
-                , 0                         AS StartAmount
-                , 0                         AS EndAmount
-                , 0                         AS DebetSumm
-                , 0                         AS KreditSumm
-                , 0                         AS StartAmount_Currency
-                , 0                         AS EndAmount_Currency
-                , 0                         AS DebetSumm_Currency
-                , 0                         AS KreditSumm_Currency
-                -- , SUM (CASE WHEN MIReport.ActiveContainerId = tmpContainer.ContainerId THEN 1 ELSE -1 END * MIReport.Amount ) AS Summ_Currency
-                , 0                         AS Summ_Currency
-                , SUM (CASE WHEN MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() THEN MIContainer.Amount ELSE 0 END) AS Summ_pl
-                , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId /*MIReport.MovementId*/ ELSE 0 END AS MovementId
-                , COALESCE (MIString_Comment.ValueData, '') AS Comment
-           FROM (SELECT tmpContainer.*
-                      -- , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN zc_Enum_AccountKind_Passive() ELSE zc_Enum_AccountKind_Active() END AccountKindId_find
-                      -- , ReportContainerLink.ReportContainerId
-                 FROM tmpContainer
-                      -- INNER JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpContainer.ContainerId
-                ) AS tmpContainer
-                /*INNER JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = tmpContainer.ReportContainerId
-                                              AND ReportContainerLink.AccountKindId = tmpContainer.AccountKindId_find
-                                              AND ReportContainerLink.AccountId = zc_Enum_Account_100301()
-                INNER JOIN MovementItem Report AS MIReport ON MIReport.ReportContainerId = tmpContainer.ReportContainerId
-                                                         AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                                                         AND MIReport.MovementDescId <> zc_Movement_Currency()*/
-                                                         
-                INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer.ContainerId
-                                                               AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-                                                               AND MIContainer.MovementDescId <> zc_Movement_Currency()
-                                                               AND MIContainer.AnalyzerId = zc_Enum_AnalyzerId_ProfitLoss() -- то что относится к ОПиУ, кроме проводок с товарами
-                LEFT JOIN MovementItemLinkObject AS MILO_MoneyPlace
-                                                 ON MILO_MoneyPlace.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Contract
-                                                 ON MILO_Contract.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Contract.DescId = zc_MILinkObject_Contract()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_Unit
-                                                 ON MILO_Unit.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_Unit.DescId = zc_MILinkObject_Unit()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemLinkObject AS MILO_InfoMoney
-                                                 ON MILO_InfoMoney.MovementItemId = MIContainer.MovementItemId
-                                                AND MILO_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND inIsDetail = TRUE
-                LEFT JOIN MovementItemString AS MIString_Comment
-                                             ON MIString_Comment.MovementItemId = MIContainer.MovementItemId
-                                            AND MIString_Comment.DescId = zc_MIString_Comment()
-                                            AND inIsDetail = TRUE
-
-           GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.BankAccountId, tmpContainer.CurrencyId
-                  , MILO_InfoMoney.ObjectId, MILO_MoneyPlace.ObjectId, MILO_Contract.ObjectId, MILO_Unit.ObjectId
-                  , CASE WHEN 1 = 1 AND inIsDetail = TRUE THEN MIContainer.MovementId ELSE 0 END
-                  , COALESCE (MIString_Comment.ValueData, '')
-          ) AS Operation_all
-
-          GROUP BY Operation_all.ContainerId, Operation_all.AccountId, Operation_all.BankAccountId, Operation_all.CurrencyId
-                 , Operation_all.InfoMoneyId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.UnitId
-                 , Operation_all.MovementId , Operation_all.Comment
-         ) AS Operation
+     FROM tmpOperation AS Operation
 
      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.AccountId
      LEFT JOIN tmpBankAccount ON tmpBankAccount.Id = Operation.BankAccountId
@@ -543,6 +555,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.06.20         * 
  15.11.14                                        * add ..._Currency
  14.11.14         * add inCurrencyId
  27.09.14                                        *
@@ -552,3 +565,16 @@ $BODY$
 -- тест
 -- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');
 -- select * from gpReport_BankAccount(inStartDate := ('01.09.2019')::TDateTime , inEndDate := ('30.09.2019')::TDateTime , inJuridicalBasisId := zc_Juridical_Basis(), inAccountId := 0 , inBankAccountId := 0 , inCurrencyId := 76965 , inIsDetail := 'True' ,  inSession := '5');
+/*
+
+SELECT * FROM gpReport_BankAccount (inStartDate       := ('01.02.2020')::TDateTime
+                                                                       , inEndDate        := ('29.02.2020')::TDateTime 
+                                                                       , inAccountId      := 0
+                                                                       , inJuridicalBasisId :=0
+                                                                       , inBankAccountId  := 0
+                                                                       , inCurrencyId     := 0
+                                                                       , inIsDetail       := True
+                                                                       , inSession        := '973007'
+                                                                                          ) AS gpReport
+                                                                                          
+                                                                                          */

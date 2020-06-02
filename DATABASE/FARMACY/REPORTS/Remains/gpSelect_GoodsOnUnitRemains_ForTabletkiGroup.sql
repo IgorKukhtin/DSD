@@ -3,8 +3,8 @@
 DROP FUNCTION IF EXISTS gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletkiGroup(
-    IN inUnitId  Integer = 183292, -- Подразделение
-    IN inSession TVarChar = '' -- сессия пользователя
+    IN inUnitId  Integer,   -- Подразделение
+    IN inSession TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (RowData  TBlob)
 AS
@@ -21,17 +21,28 @@ BEGIN
        tmpContainer AS (SELECT DISTINCT Container.ObjectId
                         FROM
                             Container
+                            INNER JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                                  ON ObjectLink_Unit_Juridical.ObjectId = Container.WhereObjectId
+                                                 AND ObjectLink_Unit_Juridical.DescId   = zc_ObjectLink_Unit_Juridical()
+                            INNER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                 ON ObjectLink_Juridical_Retail.ObjectId      = ObjectLink_Unit_Juridical.ChildObjectId
+                                                AND ObjectLink_Juridical_Retail.DescId        = zc_ObjectLink_Juridical_Retail()
+                                                AND ObjectLink_Juridical_Retail.ChildObjectId = 4
                         WHERE Container.DescId        = zc_Container_Count()
-                          AND Container.WhereObjectId = inUnitId
+                          AND (Container.WhereObjectId = inUnitId OR COALESCE(inUnitId, 0) = 0)
                           AND Container.Amount        <> 0
                        )
-       , tmpMakerName AS (SELECT Object_Goods_Juridical.GoodsMainId
-                               , Object_Goods_Juridical.MakerName
-                               , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.JuridicalId) as ORD
-                        FROM
-                            Object_Goods_Juridical
-                        WHERE COALESCE(Object_Goods_Juridical.MakerName, '') <> ''
-                       )
+       , tmpMakerNameAll AS (SELECT  Object_Goods_Juridical.GoodsMainId
+                                   , replace(replace(replace(COALESCE(Object_Goods_Juridical.MakerName, ''),'"',''),'&','&amp;'),'''','') AS MakerName
+                                   , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.JuridicalId) as ORD
+                            FROM
+                                Object_Goods_Juridical
+                            WHERE COALESCE(Object_Goods_Juridical.MakerName, '') <> ''
+                           )
+       , tmpMakerName AS (SELECT tmpMakerNameAll.GoodsMainId
+                               , tmpMakerNameAll.MakerName
+                          FROM tmpMakerNameAll
+                          WHERE tmpMakerNameAll.ORD = 1)
        , tmpObjectHistory AS (SELECT *
                               FROM ObjectHistory
                               WHERE ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
@@ -103,57 +114,94 @@ BEGIN
                                              ON ObjectHistoryDate_JuridicalDetails_Decision.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                             AND ObjectHistoryDate_JuridicalDetails_Decision.DescId = zc_ObjectHistoryDate_JuridicalDetails_Decision()
                                  )
-       , tmpJuridical AS (SELECT Object_Goods_Juridical.GoodsMainId
-                               , Object_Goods_Juridical.JuridicalID
-                               , Object_Goods_Juridical.Code
-                               , CASE tmpJuridicalDetails.OKPO WHEN '21642228' THEN 2
-                                                               WHEN '21643699' THEN 3
-                                                               WHEN '25184975' THEN 6
-                                                               WHEN '31816235' THEN 7
-                                                               WHEN '21194014' THEN 8
-                                                               WHEN '21947206' THEN 9
-                                                               WHEN '13808034' THEN 10
-                                                               WHEN '35431349' THEN 11 END AS JuridicalCode
-                               , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId
-                                                             , Object_Goods_Juridical.JuridicalID ORDER BY tmpJuridicalDetails.OKPO) as ORD
-                        FROM
-                            Object_Goods_Juridical
+       , tmpJuridicalAll AS (SELECT Object_Goods_Juridical.GoodsMainId
+                                  , Object_Goods_Juridical.JuridicalID
+                                  , replace(replace(replace(COALESCE(Object_Goods_Juridical.Code, ''), '"', ''),'&','&amp;'),'''','')  AS Code
+                                  , CASE tmpJuridicalDetails.OKPO WHEN '21642228' THEN 2
+                                                                  WHEN '21643699' THEN 3
+                                                                  WHEN '25184975' THEN 6
+                                                                  WHEN '31816235' THEN 7
+                                                                  WHEN '21194014' THEN 8
+                                                                  WHEN '21947206' THEN 9
+                                                                  WHEN '13808034' THEN 10
+                                                                  WHEN '35431349' THEN 11 END AS JuridicalCode
+                                  , ROW_NUMBER()OVER(PARTITION BY Object_Goods_Juridical.GoodsMainId ORDER BY Object_Goods_Juridical.JuridicalID) as ORD
+                             FROM
+                                 Object_Goods_Juridical
+                                 INNER JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalID = Object_Goods_Juridical.JuridicalID
+                             WHERE COALESCE( Object_Goods_Juridical.Code, '') <> ''
+                             )
+       , tmpJuridical AS (SELECT tmpJuridicalAll.GoodsMainId
+                               , tmpJuridicalAll.Code
+                               , tmpJuridicalAll.JuridicalCode
+                          FROM tmpJuridicalAll
+                          WHERE tmpJuridicalAll.ORD = 1)
+       , tmpJuridicalGroup AS (SELECT tmpJuridical.GoodsMainId
+                                    , COALESCE(Juridical2.Code, '') AS Code2
+                                    , COALESCE(Juridical3.Code, '') AS Code3
+                                    , COALESCE(Juridical6.Code, '') AS Code6
+                                    , COALESCE(Juridical7.Code, '') AS Code7
+                                    , COALESCE(Juridical8.Code, '') AS Code8
+                                    , COALESCE(Juridical9.Code, '') AS Code9
+                                    , COALESCE(Juridical10.Code, '') AS Code10
+                                    , COALESCE(Juridical11.Code, '') AS Code11
+                             FROM (SELECT  DISTINCT tmpJuridical.GoodsMainId FROM tmpJuridical) AS tmpJuridical
 
-                            INNER JOIN tmpJuridicalDetails ON tmpJuridicalDetails.JuridicalID = Object_Goods_Juridical.JuridicalID
-
-                        WHERE COALESCE( Object_Goods_Juridical.Code, '') <> ''
-                       )
+                                  LEFT JOIN tmpJuridical AS Juridical2
+                                                         ON Juridical2.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical2.JuridicalCode = 2
+                                  LEFT JOIN tmpJuridical AS Juridical3
+                                                         ON Juridical3.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical3.JuridicalCode = 3
+                                  LEFT JOIN tmpJuridical AS Juridical6
+                                                         ON Juridical6.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical6.JuridicalCode = 6
+                                  LEFT JOIN tmpJuridical AS Juridical7
+                                                         ON Juridical7.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical7.JuridicalCode = 7
+                                  LEFT JOIN tmpJuridical AS Juridical8
+                                                         ON Juridical8.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical8.JuridicalCode = 8
+                                  LEFT JOIN tmpJuridical AS Juridical9
+                                                         ON Juridical9.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical9.JuridicalCode = 9
+                                  LEFT JOIN tmpJuridical AS Juridical10
+                                                         ON Juridical10.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical10.JuridicalCode = 10
+                                  LEFT JOIN tmpJuridical AS Juridical11
+                                                         ON Juridical11.GoodsMainId = tmpJuridical.GoodsMainId
+                                                        AND Juridical11.JuridicalCode = 11
+                             )
  -- Штрих-коды производителя
        , tmpGoodsBarCode AS (SELECT Object_Goods_BarCode.GoodsMainId
-                                  , string_agg(Object_Goods_BarCode.BarCode, ',' ORDER BY Object_Goods_BarCode.GoodsMainId, Object_Goods_BarCode.Id desc) AS BarCode
+                                  , string_agg(replace(replace(replace(COALESCE(Object_Goods_BarCode.BarCode, ''), '"', ''),'&','&amp;'),'''',''), ',' ORDER BY Object_Goods_BarCode.GoodsMainId, Object_Goods_BarCode.Id desc) AS BarCode
                              FROM Object_Goods_BarCode
                              GROUP BY Object_Goods_BarCode.GoodsMainId
                              )
 
-       , tmpResult AS (
                       --Шапка
-                      SELECT '<?xml version="1.0" encoding="utf-8"?>'::TVarChar AS RowData
+                      SELECT '<?xml version="1.0" encoding="utf-8"?>'::TBlob AS RowData
                       UNION ALL
-                      SELECT '<Data>'::TVarChar
+                      SELECT '<Data>'::TBlob
                       UNION ALL
-                      SELECT '  <Offers>'::TVarChar
+                      SELECT '  <Offers>'::TBlob
                       UNION ALL
                       --Тело
                         SELECT
-                            '    <Offer Code="'||CAST(Object_Goods_Main.ObjectCode AS TVarChar)
+                            ('    <Offer Code="'||CAST(Object_Goods_Main.ObjectCode AS TVarChar)
                                ||'" Name="'||replace(replace(replace(Object_Goods_Main.Name, '"', ''),'&','&amp;'),'''','')
-                               ||'" Producer="'||replace(replace(replace(COALESCE(tmpMakerName.MakerName, ''),'"',''),'&','&amp;'),'''','')
-                               ||'" Barcode ="'||replace(replace(replace(COALESCE(tmpGoodsBarCode.BarCode, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code1="'||replace(replace(replace(COALESCE(Object_Goods_Main.MorionCode::TVarChar, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code2="'||replace(replace(replace(COALESCE(Juridical2.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code3="'||replace(replace(replace(COALESCE(Juridical3.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code6="'||replace(replace(replace(COALESCE(Juridical6.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code7="'||replace(replace(replace(COALESCE(Juridical7.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code8="'||replace(replace(replace(COALESCE(Juridical8.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code9="'||replace(replace(replace(COALESCE(Juridical9.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code10="'||replace(replace(replace(COALESCE(Juridical10.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" Code11="'||replace(replace(replace(COALESCE(Juridical11.Code, ''), '"', ''),'&','&amp;'),'''','')
-                               ||'" />'
+                               ||'" Producer="'||COALESCE(tmpMakerName.MakerName, '')
+                               ||'" Barcode ="'||COALESCE(tmpGoodsBarCode.BarCode, '')
+                               ||'" Code1="'||COALESCE(Object_Goods_Main.MorionCode::TVarChar, '')
+                               ||'" Code2="'||COALESCE(Juridical.Code2, '')
+                               ||'" Code3="'||COALESCE(Juridical.Code3, '')
+                               ||'" Code6="'||COALESCE(Juridical.Code6, '')
+                               ||'" Code7="'||COALESCE(Juridical.Code7, '')
+                               ||'" Code8="'||COALESCE(Juridical.Code8, '')
+                               ||'" Code9="'||COALESCE(Juridical.Code9, '')
+                               ||'" Code10="'||COALESCE(Juridical.Code10, '')
+                               ||'" Code11="'||COALESCE(Juridical.Code11, '')
+                               ||'" />')::TBlob
 
                         FROM tmpContainer
 
@@ -163,50 +211,17 @@ BEGIN
                              LEFT JOIN tmpGoodsBarCode ON tmpGoodsBarCode.GoodsMainId = Object_Goods_Main.Id
 
                              LEFT JOIN tmpMakerName ON tmpMakerName.GoodsMainId = Object_Goods_Main.Id
-                                                   AND tmpMakerName.ORD = 1
 
-                             LEFT JOIN tmpJuridical AS Juridical2
-                                                    ON Juridical2.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical2.JuridicalCode = 2
-                                                   AND Juridical2.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical3
-                                                    ON Juridical3.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical3.JuridicalCode = 3
-                                                   AND Juridical3.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical6
-                                                    ON Juridical6.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical6.JuridicalCode = 6
-                                                   AND Juridical6.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical7
-                                                    ON Juridical7.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical7.JuridicalCode = 7
-                                                   AND Juridical7.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical8
-                                                    ON Juridical8.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical8.JuridicalCode = 8
-                                                   AND Juridical8.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical9
-                                                    ON Juridical9.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical9.JuridicalCode = 9
-                                                   AND Juridical9.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical10
-                                                    ON Juridical10.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical10.JuridicalCode = 10
-                                                   AND Juridical10.ORD = 1
-                             LEFT JOIN tmpJuridical AS Juridical11
-                                                    ON Juridical11.GoodsMainId = Object_Goods_Main.Id
-                                                   AND Juridical11.JuridicalCode = 11
-                                                   AND Juridical11.ORD = 1
+                             LEFT JOIN tmpJuridicalGroup AS Juridical
+                                                         ON Juridical.GoodsMainId = Object_Goods_Main.Id
 
                         WHERE COALESCE (Object_Goods_Main.isNotUploadSites, FALSE) = FALSE
 
                       UNION ALL
                       -- подва
-                      SELECT '  </Offers>'
+                      SELECT '  </Offers>'::TBlob
                       UNION ALL
-                      SELECT '</Data>')
-
-       SELECT tmpResult.RowData::TBlob FROM tmpResult;
+                      SELECT '</Data>'::TBlob;
 
 END;
 $BODY$
@@ -220,5 +235,7 @@ ALTER FUNCTION gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (Integer, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (inUnitId := 183292, inSession:= '-3')
+--
+
+SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (inUnitId := 183292, inSession:= '-3')
 

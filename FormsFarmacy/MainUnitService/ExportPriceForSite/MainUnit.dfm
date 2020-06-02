@@ -131,4 +131,14 @@ object Form1: TForm1
     Left = 144
     Top = 416
   end
+  object qryRest_Group: TZQuery
+    Connection = ZConnection1
+    SQL.Strings = (
+      
+        'SELECT * FROM gpSelect_GoodsOnUnitRemains_ForTabletkiGroup (0, '#39 +
+        '3'#39')')
+    Params = <>
+    Left = 200
+    Top = 360
+  end
 end

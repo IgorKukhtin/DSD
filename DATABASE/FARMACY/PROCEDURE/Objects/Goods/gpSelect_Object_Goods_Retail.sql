@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods_Retail(
 )
 RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar, Name TVarChar
              , GoodsPairSunId Integer, GoodsPairSunCode Integer, GoodsPairSunName TVarChar
+             , PairSunDate TDateTime
              , isErased Boolean
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureId Integer, MeasureName TVarChar
@@ -245,6 +246,7 @@ BEGIN
            , Object_GoodsPairSun.Id                                                   AS GoodsPairSunId
            , Object_GoodsPairSun.ObjectCode                                           AS GoodsPairSunCode
            , Object_GoodsPairSun.ValueData                                            AS GoodsPairSunName
+           , Object_Goods_Retail.PairSunDate             :: TDateTime                 AS PairSunDate
            , Object_Goods_Retail.isErased
            , Object_Goods_Main.GoodsGroupId
            , Object_GoodsGroup.ValueData                                              AS GoodsGroupName
