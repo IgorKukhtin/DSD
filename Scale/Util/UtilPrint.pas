@@ -416,8 +416,13 @@ begin
                             else if (MovementDescId = zc_Movement_Inventory)
                                   then Print_Inventory(MovementId, MovementId_by)
 
+                            else if (MovementDescId = zc_Movement_ProductionUnion)
+                                and (SettingMain.isGoodsComplete = FALSE)
+                                and (SettingMain.isModeSorting   = FALSE)
+                                 then Print_ProductionUnion(MovementId,MovementId_by)
+
                             else if (MovementDescId = zc_Movement_Send)
-                               //or (MovementDescId = zc_Movement_ProductionUnion)
+                                 or (MovementDescId = zc_Movement_ProductionUnion)
                                   then Print_Send(MovementId,MovementId_by)
                             else if MovementDescId = zc_Movement_Loss
                                   then Print_Loss(MovementId)

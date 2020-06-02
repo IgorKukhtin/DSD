@@ -4,7 +4,6 @@ inherited Report_SaleForm: TReport_SaleForm
   ClientWidth = 1176
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -403
   ExplicitWidth = 1192
   ExplicitHeight = 460
   PixelsPerInch = 96
@@ -1560,7 +1559,6 @@ inherited Report_SaleForm: TReport_SaleForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1651,7 +1649,6 @@ inherited Report_SaleForm: TReport_SaleForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <

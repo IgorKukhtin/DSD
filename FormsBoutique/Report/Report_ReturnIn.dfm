@@ -4,9 +4,8 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
   ClientWidth = 1168
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -75
   ExplicitWidth = 1184
-  ExplicitHeight = 463
+  ExplicitHeight = 460
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel: TPanel [0]
@@ -1251,7 +1250,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <
@@ -1342,7 +1340,6 @@ inherited Report_ReturnInForm: TReport_ReturnInForm
       DataSets = <
         item
           UserName = 'frxDBDItems'
-          IndexFieldNames = 'GoodsGroupNameFull;LabelName;GoodsName;GoodsSizeName'
           GridView = cxGridDBTableView
         end>
       Params = <
