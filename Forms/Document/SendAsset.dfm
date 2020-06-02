@@ -404,8 +404,8 @@ inherited SendAssetForm: TSendAssetForm
           ComponentItem = 'Id'
           MultiSelectSeparator = ','
         end>
-      ReportName = 'PrintMovement_Send'
-      ReportNameParam.Value = 'PrintMovement_Send'
+      ReportName = 'PrintMovement_SendAsset'
+      ReportNameParam.Value = 'PrintMovement_SendAsset'
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
