@@ -236,6 +236,9 @@ type
     miPriceListItem_Currency: TMenuItem;
     actGoodsTag: TdsdOpenForm;
     miGoodsTag: TMenuItem;
+    actReport_Goods_RemainsCurrent_onDate: TdsdOpenForm;
+    miReport_Goods_RemainsCurrent_onDate: TMenuItem;
+    N3: TMenuItem;
   private
     { Private declarations }
   public

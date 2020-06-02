@@ -231,6 +231,9 @@ type
     miImportType: TMenuItem;
     miImportSettings: TMenuItem;
     N10: TMenuItem;
+    actReport_Goods_RemainsCurrent_OnDate: TdsdOpenForm;
+    miReport_Goods_RemainsCurrent_OnDate: TMenuItem;
+    N3: TMenuItem;
   private
     { Private declarations }
   public
