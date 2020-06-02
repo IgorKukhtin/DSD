@@ -2,6 +2,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 477
   ClientWidth = 1434
+  PopupMenu = PopupMenu
   ExplicitWidth = 1450
   ExplicitHeight = 515
   PixelsPerInch = 96
@@ -19,8 +20,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       inherited cxGrid: TcxGrid
         Width = 1434
         Height = 451
-        ExplicitLeft = 328
-        ExplicitTop = -296
         ExplicitWidth = 1434
         ExplicitHeight = 451
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1781,6 +1780,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         end>
       Caption = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
       Hint = #1040#1074#1090#1086#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1044#1072'/'#1053#1077#1090
+      ImageIndex = 72
     end
     object actUpdateGoodsCategory_No: TdsdExecStoredProc
       Category = 'GoodsCategory'
@@ -2900,7 +2900,6 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     object bbUpdateisOver: TdxBarButton
       Action = actUpdateisOver
       Category = 0
-      ImageIndex = 72
     end
     object bbUpdateisOverList: TdxBarButton
       Action = macUpdateisOverYes
@@ -3355,6 +3354,53 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 136
     Top = 184
+  end
+  inherited PopupMenu: TPopupMenu
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N3: TMenuItem
+      Action = actUpdateisOver
+    end
+    object N4: TMenuItem
+      Action = macUpdateisOverYes
+    end
+    object N5: TMenuItem
+      Action = macUpdateisOverNo
+    end
+    object N6: TMenuItem
+      Caption = '-'
+    end
+    object N7: TMenuItem
+      Action = actUpdateisUploadBadm
+    end
+    object N8: TMenuItem
+      Action = actUpdateisMarginCategory
+    end
+    object N9: TMenuItem
+      Caption = '-'
+    end
+    object N10: TMenuItem
+      Action = macUpdateisGoodsCategoryYes
+    end
+    object N11: TMenuItem
+      Action = macUpdateisGoodsCategoryNo
+    end
+    object N12: TMenuItem
+      Caption = '-'
+    end
+    object N13: TMenuItem
+      Action = actUpdateisReport
+    end
+    object N14: TMenuItem
+      Action = actUpdate_Unit_TechnicalRediscount
+    end
+    object N15: TMenuItem
+      Action = actUpdate_Unit_AlertRecounting
+    end
+    object N16: TMenuItem
+      Action = actUpdateisTopNo
+    end
   end
   object spUpdate_Unit_isOver: TdsdStoredProc
     StoredProcName = 'gpUpdate_Unit_isOver'

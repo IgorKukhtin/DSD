@@ -277,6 +277,21 @@ type
     bbUpdate_Unit_isSUN_v4_out_yes: TdxBarButton;
     bbUpdate_Unit_isSUN_v4_in_no: TdxBarButton;
     dxBarSubItem4: TdxBarSubItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
+    N16: TMenuItem;
   private
     { Private declarations }
   public
