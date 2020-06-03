@@ -8,23 +8,24 @@ CREATE OR REPLACE FUNCTION gpReport_StockTiming_Remainder(
     IN inMakerId      Integer,    -- Производитель
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( UnitCode        Integer      --Код подразделение откуда
-              , UnitName        TVarChar     --Наименование подразделение откуда
-              , GoodsCode       Integer      --Код товара
-              , GoodsName       TVarChar     --Наименование товара
-              , MakerCode       Integer      --Производитель
-              , MakerName       TVarChar     --Наименование производителя
-              , Price           TFloat
-              , AmountDeferred  TFloat
-              , SummaDeferred   TFloat
-              , AmountComplete  TFloat
-              , SummaComplete   TFloat
-              , AmountLoss      TFloat
-              , Amount          TFloat
-              , Summa           TFloat
-              , MakerId         Integer
-              , ExpirationDate  TDateTime    --Срок годности
-              , Remains         TFloat
+RETURNS TABLE ( UnitCode         Integer      --Код подразделение откуда
+              , UnitName         TVarChar     --Наименование подразделение откуда
+              , GoodsCode        Integer      --Код товара
+              , GoodsName        TVarChar     --Наименование товара
+              , MakerCode        Integer      --Производитель
+              , MakerName        TVarChar     --Наименование производителя
+              , Price            TFloat
+              , AmountDischarged TFloat
+              , AmountDeferred   TFloat
+              , SummaDeferred    TFloat
+              , AmountComplete   TFloat
+              , SummaComplete    TFloat
+              , AmountLoss       TFloat
+              , Amount           TFloat
+              , Summa            TFloat
+              , MakerId          Integer
+              , ExpirationDate   TDateTime    --Срок годности
+              , Remains          TFloat
               )
 
 AS
@@ -177,8 +178,10 @@ BEGIN
                                      MovementItem.ObjectId                       AS GoodsID,
                                      MovementItemContainer.ContainerId           AS ContainerId,
 
+                                     SUM(CASE WHEN Movement.statusid <> zc_Enum_Status_Complete() AND
+                                                   COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE THEN movementitem_Child.Amount  END)::TFloat AS AmountDischarged,
                                      SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE THEN - MovementItemContainer.Amount  END)::TFloat AS AmountDeferred,
-                                     SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE THEN - MovementItemContainer.Amount  END)::TFloat AS AmountComplete,
+                                     SUM(CASE WHEN Movement.statusid = zc_Enum_Status_Complete() THEN - MovementItemContainer.Amount  END)::TFloat AS AmountComplete,
                                      SUM(- MovementItemContainer.Amount)::TFloat AS Amount,
                                      Null::TFloat                                                          AS AmountLoss,
                                      tmpListGodsMarket.MakerId,
@@ -241,7 +244,8 @@ BEGIN
 
                                WHERE Movement.operdate < inOperDate
                                  AND Movement.DescId = zc_Movement_Send()
-                                 AND (Movement.statusid = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE)
+                                 AND Movement.statusid <> zc_Enum_Status_Erased() 
+                                 --AND (Movement.statusid = zc_Enum_Status_Complete() OR COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE)
                                  AND MovementLinkObject_Unit_To.ObjectId = 11299914
                                  AND COALESCE(MovementLinkObject_PartionDateKind.ObjectId, 0) = zc_Enum_PartionDateKind_0()
                                  AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0)
@@ -251,6 +255,7 @@ BEGIN
                                SELECT tmpMovementItemLoss.UnitID                   AS UnitID,
                                       tmpMovementItemLoss.GoodsID                  AS GoodsID,
                                       tmpMovementItemLoss.ContainerId              AS ContainerId,
+                                      Null::TFloat                                 AS AmountDischarged,
                                       Null::TFloat                                 AS AmountDeferred,
                                       Null::TFloat                                 AS AmountComplete,
                                       Null::TFloat                                 AS Amount,
@@ -280,6 +285,7 @@ BEGIN
 
                                        (SUM(AnalysisContainer.Price * Movement.Amount) / SUM(Movement.Amount))::TFloat  AS Price,
 
+                                       SUM(Movement.AmountDischarged)::TFloat                                AS AmountDischarged,
                                        SUM(Movement.AmountDeferred)::TFloat                                  AS AmountDeferred,
                                        SUM(Movement.AmountComplete)::TFloat                                  AS AmountComplete,
                                        SUM(Movement.AmountLoss)::TFloat                                      AS AmountLoss,
@@ -319,6 +325,7 @@ BEGIN
 
            Round(Movement.Price, 2)::TFloat ,
 
+           Movement.AmountDischarged,
            Movement.AmountDeferred,
            ROUND(Movement.AmountDeferred * Round(Movement.Price, 2), 2)::TFloat ,
            Movement.AmountComplete,

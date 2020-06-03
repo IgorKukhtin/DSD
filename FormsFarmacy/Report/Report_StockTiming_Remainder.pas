@@ -63,6 +63,7 @@ type
     ExpirationDate: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
     AmountLoss: TcxGridDBColumn;
+    AmountDischarged: TcxGridDBColumn;
   private
     { Private declarations }
   public
