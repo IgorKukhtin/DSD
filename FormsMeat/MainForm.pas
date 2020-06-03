@@ -1112,6 +1112,8 @@ type
     actProfitLossService1: TMenuItem;
     actReport_BankAccount_Cash_Olap: TdsdOpenForm;
     miReport_BankAccount_Cash_Olap: TMenuItem;
+    actReport_CheckBonusTest: TdsdOpenForm;
+    miReport_CheckBonusTest: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

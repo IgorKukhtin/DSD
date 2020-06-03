@@ -62,6 +62,7 @@ type
     MakerName: TcxGridDBColumn;
     ExpirationDate: TcxGridDBColumn;
     Remains: TcxGridDBColumn;
+    AmountLoss: TcxGridDBColumn;
   private
     { Private declarations }
   public

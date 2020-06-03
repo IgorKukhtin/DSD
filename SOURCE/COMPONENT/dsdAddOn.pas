@@ -894,6 +894,28 @@ type
     property CheckBoxList: TOwnedCollection read FCheckBoxList write FCheckBoxList;
   end;
 
+  // Óñòàíîâêà ïğîïåğòè íà åäèò
+  TdsdPropertiesÑhange = class(TComponent)
+  private
+    FComponent: TComponent;
+    FEditRepository: TcxEditRepository;
+    FIndexProperties : Integer;
+    procedure SetComponent(const Value: TComponent);
+    procedure SetIndexProperties(const Value: Integer);
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Assign(Source: TPersistent); override;
+
+    // Óñòàíîâèòü Properties
+    property IndexProperties : Integer read FIndexProperties write SetIndexProperties;
+  published
+    // Êàêóş ÿ÷åéêó ğàñêğàøèâàòü. Åñëè ColorColumn íå óêàçàí, òî áóäåò ìåíÿòüñÿ öâåò ó âñåé ñòğîêè
+    property Component: TComponent read FComponent write SetComponent;
+    // Êîëëåêöèÿ Properties
+    property EditRepository: TcxEditRepository read FEditRepository write FEditRepository;
+  end;
+
 
   procedure Register;
 
@@ -927,7 +949,8 @@ begin
     TdsdWebBrowser,
     TdsdEnterManager,
     TdsdFileToBase64,
-    TdsdFieldFilter
+    TdsdFieldFilter,
+    TdsdPropertiesÑhange
   ]);
 
   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
@@ -4526,7 +4549,7 @@ end;
 
 procedure TPropertiesCell.SetColumn(const Value: TcxGridColumn);
 begin
-  if not Assigned(Value) or (Value is TcxGridDBBandedColumn) or (Value is TcxGridDBColumn) then
+  if not Assigned(Value) then
   begin
     if Assigned(FColumn) then
     begin
@@ -4553,5 +4576,54 @@ begin
     AProperties := FEditRepository.Items[I - 1].Properties
 end;
 
+{ TPropertiesCell }
+
+procedure TdsdPropertiesÑhange.Assign(Source: TPersistent);
+begin
+  if Source is TdsdPropertiesÑhange then
+    with TdsdPropertiesÑhange(Source) do
+    begin
+      Self.Component := Component;
+      Self.EditRepository := EditRepository;
+    end
+  else
+    inherited Assign(Source);
+end;
+
+constructor TdsdPropertiesÑhange.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  FIndexProperties := 1;
+end;
+
+destructor TdsdPropertiesÑhange.Destroy;
+begin
+  inherited;
+end;
+
+procedure TdsdPropertiesÑhange.SetComponent(const Value: TComponent);
+begin
+  if not Assigned(Value) or (Value is TcxCurrencyEdit) or (Value is TcxTextEdit) then
+  begin
+    FComponent := Value;
+  end else raise Exception.Create(Value.ClassName + ' íå ïîääåğæèâàåòüñÿ');
+end;
+
+procedure TdsdPropertiesÑhange.SetIndexProperties(const Value: Integer);
+begin
+  if not Assigned(FEditRepository) then Exit;
+  if (Value < 1) or (Value > FEditRepository.Count) then Exit;
+  FIndexProperties := Value;
+
+  if (FComponent is TcxCurrencyEdit) then
+  begin
+    if FEditRepository.Items[FIndexProperties - 1].Properties is TcxCurrencyEditProperties  then
+      (FComponent as TcxCurrencyEdit).Properties.Assign(FEditRepository.Items[FIndexProperties - 1].Properties);
+  end else if (FComponent is TcxTextEdit) then
+  begin
+    if FEditRepository.Items[FIndexProperties - 1].Properties is TcxTextEditProperties  then
+      (FComponent as TcxTextEdit).Properties.Assign(FEditRepository.Items[FIndexProperties - 1].Properties);
+  end;
+end;
 
 end.

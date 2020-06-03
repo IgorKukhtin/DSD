@@ -408,7 +408,7 @@ BEGIN
                                  );
 
      -- !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
-     vbTmp:= (WITH tmpMIContainer_find AS
+     vbTmp:= (WITH tmpMIContainer AS
                      (SELECT MIContainer.MovementItemId
                            , Container.ObjectId AS GoodsId
                       FROM MovementItemContainer AS MIContainer
@@ -420,21 +420,6 @@ BEGIN
                            INNER JOIN Container ON Container.Id = MIContainer.ContainerId
                       WHERE MIContainer.MovementId = inMovementId
                         AND MIContainer.DescId = zc_MIContainer_Count()
-                     )
-                 , tmpMIContainer AS
-                     (SELECT tmpMIContainer_find.MovementItemId
-                           , ObjectLink_Child_NB.ChildObjectId AS GoodsId
-                      FROM tmpMIContainer_find
-                                    -- !!!временно захардкодил, будет всегда товар ВСЕХ сетей!!!!
-                                    INNER JOIN ObjectLink AS ObjectLink_Child
-                                                          ON ObjectLink_Child.ChildObjectId = tmpMIContainer_find.GoodsID
-                                                         AND ObjectLink_Child.DescId        = zc_ObjectLink_LinkGoods_Goods()
-                                    INNER JOIN  ObjectLink AS ObjectLink_Main ON ObjectLink_Main.ObjectId = ObjectLink_Child.ObjectId
-                                                                             AND ObjectLink_Main.DescId   = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Main_NB ON ObjectLink_Main_NB.ChildObjectId = ObjectLink_Main.ChildObjectId
-                                                                               AND ObjectLink_Main_NB.DescId        = zc_ObjectLink_LinkGoods_GoodsMain()
-                                    INNER JOIN ObjectLink AS ObjectLink_Child_NB ON ObjectLink_Child_NB.ObjectId = ObjectLink_Main_NB.ObjectId
-                                                                                AND ObjectLink_Child_NB.DescId   = zc_ObjectLink_LinkGoods_Goods()
                      )
                  , tmpIncome AS
                      (SELECT *
@@ -475,7 +460,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.  Воробкало А.А.  Шаблий О.В.
+ 03.06.20                                                                                  * Поиск прихода только по сети
  12.06.17         * ушли от Object_Price_View
  14.03.16                                        * !!!5.3. формируется свойство <MovementItemId - для созданных партий этой инвентаризацией - ближайший документ прихода, из которого для ВСЕХ отчетов будем считать с/с> !!!
  03.08.15                                                                  *Добавить в переучет строки, которые есть на остатке, но нет в переучете

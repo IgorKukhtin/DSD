@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CashSettings()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CashSettings(TVarChar, TVarChar, Boolean, TDateTime, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inShareFromPriceName      TVarChar  ,     -- Перечень фраз в названиях товаров которые можно делить с любой ценой
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inisGetHardwareData       Boolean   ,     -- Получить данные аппаратной части
     IN inDateBanSUN              TDateTime ,     -- Запрет работы по СУН
     IN inSummaFormSendVIP        TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
+    IN inSummaUrgentlySendVIP    TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
     IN inSession                 TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -43,6 +44,8 @@ BEGIN
 
    -- сохранили Сумма от которой показан товар при формировании перемещений VIP
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaFormSendVIP(), vbID, inSummaFormSendVIP);
+      -- сохранили Сумма перемещения от которой разрешен признак срочно
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP(), vbID, inSummaUrgentlySendVIP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

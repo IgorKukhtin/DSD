@@ -1,11 +1,8 @@
--- FunctiON: gpReport_CheckBonus ()
+-- FunctiON: gpReport_CheckBonusTest ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonusTest (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
+CREATE OR REPLACE FUNCTION gpReport_CheckBonusTest (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     IN inPaidKindID          Integer   ,
@@ -369,11 +366,13 @@ inisMovement:= FALSE;
                             JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = Container.Id
                                                                             AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind() 
 
-                            JOIN ContainerLinkObject AS CLO_Partner
+                            LEFT JOIN ContainerLinkObject AS CLO_Partner
                                                      ON CLO_Partner.ContainerId = Container.Id
                                                     AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                             -- ограничиваем контрагентами --
-                            INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
+                            -- ограничиваем контрагентами --
+                            INNER JOIN tmpContractPartner ON (tmpContractPartner.PartnerId = CLO_Partner.ObjectId
+                                                             ) OR ContainerLO_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
 
                             -- ограничение по 4-м ключам
                             JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId 
@@ -712,11 +711,11 @@ inisMovement:= FALSE;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
---ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.20         *
  20.05.20         * add inBranchId
  14.06.17         *
  20.05.14                                        * add View_Contract_find_tag
@@ -726,29 +725,7 @@ $BODY$
  17.04.14                                        * all
  10.04.14         *
 */
-/*
-     -- создаются временные таблицы - для формирование данных для проводок
-     PERFORM lpComplete_Movement_Finance_CreateTemp();
 
-     select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
-                                                     , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
-                                                     , inOperDate        :='31.10.2014'
-                                                     , inAmountIn        := 0
-                                                     , inAmountOut       := Sum_Bonus
-                                                     , inComment         := ''
-                                                     , inContractId      := ContractId_find
-                                                     , inInfoMoneyId     := InfoMoneyId_find
-                                                     , inJuridicalId     := JuridicalId
-                                                     , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
-                                                     , inUnitId          := 0
-                                                     , inContractConditionKindId   := ConditionKindId
-                                                     , inBonusKindId     := BonusKindId
-                                                     , inisLoad          := TRUE
-                                                     , inUserId          := zfCalc_UserAdmin() :: Integer
-                                                      )
-    from gpReport_CheckBonus (inStartDate:= '01.10.2014', inEndDate:= '31.10.2014', inSession:= '5') as a
-    where Sum_Bonus <> 0 -- and Sum_Bonus =30
-*/
 -- тест
--- select * from gpReport_CheckBonus (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
--- select * from gpReport_CheckBonus(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--
+-- select * from gpReport_CheckBonusTest (inStartDate:= '15.03.2016', inEndDate:= '15.03.2016', inPaidKindID:= zc_Enum_PaidKind_FirstForm(), inJuridicalId:= 0, inBranchId:= 0, inSession:= zfCalc_UserAdmin());
+-- select * from gpReport_CheckBonusTest(inStartDate := ('28.05.2020')::TDateTime , inEndDate := ('28.05.2020')::TDateTime , inPaidKindId := 4 , inJuridicalId := 344240 , inBranchId := 0 ,  inSession := '5');--

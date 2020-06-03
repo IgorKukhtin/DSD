@@ -88,6 +88,9 @@ type
     gpInsertUpdate_SendVIP: TdsdStoredProc;
     gpInsertUpdate_MI_SendVIP: TdsdStoredProc;
     colPriceSaleUnit: TcxGridDBColumn;
+    spGet: TdsdStoredProc;
+    UnitCDSSumma: TCurrencyField;
+    SelectedCDSPrice: TCurrencyField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure edSearchKeyDown(Sender: TObject; var Key: Word;
@@ -133,6 +136,47 @@ begin
 
   SelectedCDS.DisableControls;
   try
+
+    // Проверяем для срочных сумму
+    if Urgently and (spGet.ParamByName('SummaUrgentlySendVIP').AsFloat > 0) then
+    begin
+      // Считаем суммы по подразделениям
+      SelectedCDS.First;
+      while not SelectedCDS.EOF do
+      begin
+        if not UnitCDS.Locate('UnitId', SelectedCDS.FieldByName('UnitId').AsInteger, []) then
+        begin
+          UnitCDS.Append;
+          UnitCDS.FieldByName('UnitId').AsInteger := SelectedCDS.FieldByName('UnitId').AsInteger;
+          UnitCDS.FieldByName('Summa').AsCurrency := RoundTo(SelectedCDS.FieldByName('Amount').AsCurrency * SelectedCDS.FieldByName('Price').AsCurrency, - 2);
+          UnitCDS.FieldByName('MovementId').AsVariant := Null;
+          UnitCDS.Post;
+        end else
+        begin
+          UnitCDS.Edit;
+          UnitCDS.FieldByName('Summa').AsCurrency := UnitCDS.FieldByName('Summa').AsCurrency +
+            RoundTo(SelectedCDS.FieldByName('Amount').AsCurrency * SelectedCDS.FieldByName('Price').AsCurrency, - 2);
+          UnitCDS.Post;
+        end;
+        SelectedCDS.Next;
+      end;
+
+      UnitCDS.First;
+      while not UnitCDS.EOF do
+      begin
+        if UnitCDS.FieldByName('Summa').AsCurrency < spGet.ParamByName('SummaUrgentlySendVIP').AsFloat then
+        begin
+          SelectedCDS.Locate('UnitId', UnitCDS.FieldByName('UnitId').AsInteger, []);
+          ShowMessage('Сумма перемещения по подразделению:'#13#10 + SelectedCDS.FieldByName('UnitName').AsString + #13#10 +
+            FormatFloat(',0.00', UnitCDS.FieldByName('Summa').AsCurrency) + ' меньше лимита для срочных перемещений ' +
+            FormatFloat(',0.00', spGet.ParamByName('SummaUrgentlySendVIP').AsFloat));
+          Exit;
+        end;
+        UnitCDS.Next;
+      end;
+    end;
+
+    UnitCDS.EmptyDataSet;
     SelectedCDS.First;
     while not SelectedCDS.EOF do
     begin
@@ -220,6 +264,7 @@ begin
       SelectedCDS.FieldByName('UnitId').AsInteger    := ClientDataSet.FieldByName('UnitId').AsInteger;
       SelectedCDS.FieldByName('UnitName').AsString   := ClientDataSet.FieldByName('UnitName').AsString;
       SelectedCDS.FieldByName('Amount').AsCurrency   := Min(1, ClientDataSet.FieldByName('Amount').AsCurrency);
+      SelectedCDS.FieldByName('Price').AsCurrency    := ClientDataSet.FieldByName('PriceSale').AsCurrency;
       SelectedCDS.Post;
     end;
   End;
