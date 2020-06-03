@@ -33,6 +33,9 @@ $BODY$
     DECLARE vbOperSumm_PVAT TFloat;
 
     DECLARE vbStoreKeeperName TVarChar;
+
+    DECLARE vbPersonalId   Integer;
+    DECLARE vbPersonalName TVarChar;
 BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
@@ -99,6 +102,24 @@ BEGIN
     END IF;
 
 
+     -- определение Ёкспедитора по дню недели
+     vbPersonalId:= COALESCE ((SELECT ObjectLink_Partner_MemberTake.ChildObjectId
+                               FROM ObjectLink AS ObjectLink_Partner_MemberTake
+                               WHERE ObjectLink_Partner_MemberTake.ObjectId = vbToId
+                                 AND ObjectLink_Partner_MemberTake.DescId = CASE EXTRACT (DOW FROM vbOperDate)
+                                                                                WHEN 1 THEN zc_ObjectLink_Partner_MemberTake1()
+                                                                                WHEN 2 THEN zc_ObjectLink_Partner_MemberTake2()
+                                                                                WHEN 3 THEN zc_ObjectLink_Partner_MemberTake3()
+                                                                                WHEN 4 THEN zc_ObjectLink_Partner_MemberTake4()
+                                                                                WHEN 5 THEN zc_ObjectLink_Partner_MemberTake5()
+                                                                                WHEN 6 THEN zc_ObjectLink_Partner_MemberTake6()
+                                                                                WHEN 0 THEN zc_ObjectLink_Partner_MemberTake7()
+                                                                            END
+                              ), 0);
+     -- название всегда по vbPersonalId
+     vbPersonalName:= (SELECT Object.ValueData FROM Object WHERE Object.Id = vbPersonalId);
+
+
      --
      OPEN Cursor1 FOR
        SELECT CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
@@ -112,6 +133,7 @@ BEGIN
        WHERE Movement.Id = inMovementId
          AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
+      
     RETURN NEXT Cursor1;
 
 
@@ -301,10 +323,38 @@ BEGIN
                          , MILinkObject_GoodsKind.ObjectId
                          , MIFloat_Price.ValueData
                          , CASE WHEN MIFloat_CountForPrice.ValueData <> 0 THEN MIFloat_CountForPrice.ValueData ELSE 1 END
-                 )                                     
+                 )
+                 
+      , tmpMovementFloat AS (SELECT *
+                             FROM MovementFloat
+                             WHERE MovementFloat.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                               AND MovementFloat.DescId IN (zc_MovementFloat_TotalCount()
+                                                          , zc_MovementFloat_TotalCountKg()
+                                                          , zc_MovementFloat_TotalCountSh()
+                                                          , zc_MovementFloat_TotalSummMVAT()
+                                                          , zc_MovementFloat_TotalSummPVAT()
+                                                          , zc_MovementFloat_TotalSumm()
+                                                          )
+                             )
+
+      , tmpMovementString AS (SELECT *
+                             FROM MovementString
+                             WHERE MovementString.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                               AND MovementString.DescId IN (zc_MovementString_InvNumberPartner()
+                                                           , zc_MovementString_InvNumberMark()
+                                                           , zc_MovementString_Comment()
+                                                          )
+                             )
+      , tmpMovementDate AS (SELECT *
+                             FROM MovementDate
+                             WHERE MovementDate.MovementId IN (SELECT DISTINCT tmpMovement.MovementId FROM tmpMovement)
+                               AND MovementDate.DescId = zc_MovementDate_OperDatePartner()
+                             )
+
      -- –езультат
      SELECT
              tmpMovement.MovementId                     AS Id
+           , zfFormat_BarCode (zc_BarCodePref_Movement(), tmpMovement.MovementId) AS IdBarCode
            , tmpMovement.InvNumber                      AS InvNumber
            , COALESCE (MovementDate_OperDatePartner.ValueData, tmpMovement.OperDate) AS OperDate
            , tmpMovement.StatusCode
@@ -357,6 +407,9 @@ BEGIN
            , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
 
+           , COALESCE (Object_Member_Driver.ValueData, vbPersonalName)  AS MemberName_Driver
+           , MovementString_Comment.ValueData           AS Comment
+ 
            , CASE WHEN ObjectLink_Contract_JuridicalDocument.ChildObjectId > 0 THEN TRUE ELSE FALSE END AS isJuridicalDocument
 
            , (SELECT MS_InvNumberPartner.ValueData
@@ -430,33 +483,37 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+            LEFT JOIN tmpMovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  tmpMovement.MovementId
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  tmpMovement.MovementId
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-            LEFT JOIN MovementString AS MovementString_InvNumberMark
+            LEFT JOIN tmpMovementString AS MovementString_InvNumberMark
                                      ON MovementString_InvNumberMark.MovementId =  tmpMovement.MovementId
                                     AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+            LEFT JOIN tmpMovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId = tmpMovement.MovementId
+                                    AND MovementString_Comment.DescId     = zc_MovementString_Comment()
+
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  tmpMovement.MovementId
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  tmpMovement.MovementId
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  tmpMovement.MovementId
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId = tmpMovement.MovementId
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId = tmpMovement.MovementId
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+            LEFT JOIN tmpMovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId = tmpMovement.MovementId
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
@@ -474,6 +531,11 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = tmpMovement.MovementId
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member_Driver
+                                         ON MovementLinkObject_Member_Driver.MovementId = tmpMovement.MovementId
+                                        AND MovementLinkObject_Member_Driver.DescId = zc_MovementLinkObject_Member()
+            LEFT JOIN Object AS Object_Member_Driver ON Object_Member_Driver.Id = MovementLinkObject_Member_Driver.ObjectId
 
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = vbPaidKindId -- MovementLinkObject_PaidKind.ObjectId
 
