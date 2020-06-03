@@ -1,9 +1,9 @@
-object SalePodiumItemEditForm: TSalePodiumItemEditForm
+object ReturnInPodiumItemEditForm: TReturnInPodiumItemEditForm
   Left = 0
   Top = 0
-  Caption = #1054#1087#1083#1072#1090#1072' '#1074' '#1055#1088#1086#1076#1072#1078#1077
-  ClientHeight = 320
-  ClientWidth = 439
+  Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1087#1083#1072#1090#1099
+  ClientHeight = 328
+  ClientWidth = 438
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 108
-    Top = 279
+    Left = 124
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -26,8 +26,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 252
-    Top = 279
+    Left = 268
+    Top = 294
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -46,7 +46,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 3
-    Width = 100
+    Width = 89
   end
   object ceAmountGRN: TcxCurrencyEdit
     Left = 173
@@ -59,19 +59,19 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
   object cbisPayTotal: TcxCheckBox
     Left = 316
     Top = 8
-    Caption = #1054#1087#1083#1072#1090#1072' '#1048#1058#1054#1043#1054
+    Caption = #1042#1086#1079#1074#1088#1072#1090' '#1048#1058#1054#1043#1054
     Properties.ReadOnly = True
     TabOrder = 5
     Width = 104
   end
   object cxLabel1: TcxLabel
     Left = 31
-    Top = 195
-    Caption = #1050' '#1086#1087#1083#1072#1090#1077', '#1075#1088#1085':'
+    Top = 181
+    Caption = #1050' '#1074#1086#1079#1074#1088#1072#1090#1091', '#1075#1088#1085':'
   end
   object ceAmountToPay: TcxCurrencyEdit
     Left = 31
-    Top = 211
+    Top = 201
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -80,12 +80,12 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
   end
   object cxLabel3: TcxLabel
     Left = 173
-    Top = 195
+    Top = 181
     Caption = #1054#1089#1090#1072#1090#1086#1082', '#1075#1088#1085':'
   end
   object ceAmountRemains: TcxCurrencyEdit
     Left = 173
-    Top = 211
+    Top = 201
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -94,12 +94,12 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
   end
   object cxLabel4: TcxLabel
     Left = 316
-    Top = 195
+    Top = 181
     Caption = #1057#1076#1072#1095#1072', '#1075#1088#1085':'
   end
   object ceAmountDiff: TcxCurrencyEdit
     Left = 316
-    Top = 211
+    Top = 201
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
@@ -130,14 +130,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     TabOrder = 14
     Width = 120
   end
-  object ceAmountDiscount: TcxCurrencyEdit
-    Left = 173
-    Top = 170
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    TabOrder = 15
-    Width = 120
-  end
   object cxLabel2: TcxLabel
     Left = 316
     Top = 74
@@ -148,53 +140,45 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Top = 90
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
-    TabOrder = 17
-    Width = 100
+    TabOrder = 16
+    Width = 89
   end
   object cbisGRN: TcxCheckBox
-    Left = 17
-    Top = 8
+    Left = 27
+    Top = 10
     Action = actRefreshGRN
+    Properties.ReadOnly = False
+    TabOrder = 17
+    Width = 104
+  end
+  object cbisUSD: TcxCheckBox
+    Left = 27
+    Top = 50
+    Action = actRefreshUSD
     Properties.ReadOnly = False
     TabOrder = 18
     Width = 104
   end
-  object cbisUSD: TcxCheckBox
-    Left = 17
-    Top = 50
-    Action = actRefreshUSD
+  object cbisEUR: TcxCheckBox
+    Left = 25
+    Top = 90
+    Action = actRefreshEUR
     Properties.ReadOnly = False
     TabOrder = 19
     Width = 104
   end
-  object cbisEUR: TcxCheckBox
-    Left = 17
-    Top = 90
-    Action = actRefreshEUR
-    Properties.ReadOnly = False
-    TabOrder = 20
-    Width = 104
-  end
   object cbisCARD: TcxCheckBox
-    Left = 17
+    Left = 25
     Top = 130
     Action = actRefreshCard
     Properties.ReadOnly = False
-    TabOrder = 21
+    TabOrder = 20
     Width = 147
-  end
-  object cbisDiscount: TcxCheckBox
-    Left = 17
-    Top = 170
-    Action = actRefreshDiscount
-    Properties.ReadOnly = False
-    TabOrder = 22
-    Width = 156
   end
   object cxLabel5: TcxLabel
     Left = 31
     Top = 234
-    Caption = #1050' '#1086#1087#1083#1072#1090#1077', EUR:'
+    Caption = #1050' '#1074#1086#1079#1074#1088#1072#1090#1091', EUR:'
   end
   object ceAmountToPay_curr: TcxCurrencyEdit
     Left = 31
@@ -202,7 +186,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 24
+    TabOrder = 22
     Width = 100
   end
   object cxLabel6: TcxLabel
@@ -216,16 +200,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     Properties.ReadOnly = True
-    TabOrder = 26
-    Width = 100
-  end
-  object ceAmountDiscount_curr: TcxCurrencyEdit
-    Left = 316
-    Top = 170
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
-    TabOrder = 27
+    TabOrder = 24
     Width = 100
   end
   object cxLabel19: TcxLabel
@@ -243,12 +218,12 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 29
+    TabOrder = 26
     Width = 100
   end
   object ActionList: TActionList
     Left = 16
-    Top = 125
+    Top = 291
     object dsdDataSetRefreshStart: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -275,18 +250,36 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actRefreshDiscount: TdsdDataSetRefresh
+    object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGet_isDiscount
+      StoredProc = spInsertUpdate
       StoredProcList = <
         item
-          StoredProc = spGet_isDiscount
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spGet
         end>
-      Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
-      Hint = #1057#1087#1080#1089#1072#1085#1080#1077' '#1087#1088#1080' '#1086#1082#1088#1091#1075#1083#1077#1085#1080#1080
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'Ok'
+    end
+    object dsdFormClose: TdsdFormClose
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
     end
     object actRefreshCard: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -340,40 +333,9 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object dsdDataSetRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end
-        item
-          StoredProc = spGet
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose: TdsdFormClose
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-    end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_Sale_Child'
+    StoredProcName = 'gpInsertUpdate_MI_ReturnIn_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -426,14 +388,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiscount'
-        Value = '2'
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inCurrencyValueUSD'
         Value = Null
         Component = ceCurrencyValue_USD
@@ -464,8 +418,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 316
-    Top = 32
+    Left = 348
+    Top = 168
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -493,7 +447,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Top = 40
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Sale_Child'
+    StoredProcName = 'gpGet_MI_ReturnIn_Child'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -556,13 +510,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountDiscount'
-        Value = Null
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'AmountToPay'
         Value = Null
         Component = ceAmountToPay
@@ -619,20 +566,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'isDiscount'
-        Value = Null
-        Component = cbisDiscount
-        DataType = ftBoolean
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'AmountToPay_curr'
         Value = Null
         Component = ceAmountToPay_curr
@@ -662,8 +595,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 224
-    Top = 61
+    Left = 216
+    Top = 75
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -677,12 +610,12 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 264
-    Top = 24
+    Left = 312
+    Top = 80
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 120
-    Top = 117
+    Left = 80
+    Top = 291
   end
   object RefreshDispatcher: TRefreshDispatcher
     IdParam.Value = Null
@@ -701,22 +634,35 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Component = ceAmountCARD
       end
       item
-        Component = ceAmountDiscount
+        Component = ceCurrencyValue_EUR
       end
       item
         Component = ceCurrencyValue_USD
-      end
-      item
-        Component = ceCurrencyValue_EUR
       end>
-    Left = 376
-    Top = 64
+    Left = 392
+    Top = 120
   end
   object spGet_Total: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Sale_Child_Total'
+    StoredProcName = 'gpGet_MI_ReturnIn_Child_Total'
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'inId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
       item
         Name = 'inCurrencyValueUSD'
         Value = 0.000000000000000000
@@ -734,19 +680,10 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountToPay'
-        Value = Null
+        Name = 'inAmount'
+        Value = 0.000000000000000000
         Component = ceAmountToPay
         DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountToPay_curr'
-        Value = Null
-        Component = ceAmountToPay_curr
-        DataType = ftFloat
-        ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
@@ -782,46 +719,9 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inAmountDiscount'
-        Value = 0.000000000000000000
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId_Client'
-        Value = Null
-        Component = GuidesCurrencyClient
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountToPay'
-        Value = Null
-        Component = ceAmountToPay
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountToPay_curr'
-        Value = Null
-        Component = ceAmountToPay_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'AmountRemains'
         Value = 0.000000000000000000
         Component = ceAmountRemains
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
         DataType = ftFloat
         MultiSelectSeparator = ','
       end
@@ -833,8 +733,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 152
-    Top = 29
+    Left = 224
+    Top = 123
   end
   object spGet_isGRN: TdsdStoredProc
     StoredProcName = 'gpGet_MI_Sale_Child_isGRN'
@@ -843,7 +743,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Params = <
       item
         Name = 'inisGRN'
-        Value = 0.000000000000000000
+        Value = 'False'
         Component = cbisGRN
         DataType = ftBoolean
         ParamType = ptInput
@@ -867,7 +767,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
@@ -908,7 +808,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -921,14 +820,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -936,7 +828,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'AmountGRN'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountGRN
         DataType = ftFloat
         MultiSelectSeparator = ','
@@ -976,7 +868,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
@@ -1017,7 +909,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1030,14 +921,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1085,7 +969,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
@@ -1126,7 +1010,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1139,14 +1022,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1194,7 +1070,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Value = 0.000000000000000000
         Component = ceAmountToPay
         DataType = ftFloat
         ParamType = ptInput
@@ -1235,7 +1111,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       item
         Name = 'inAmountDiscount'
         Value = 0.000000000000000000
-        Component = ceAmountDiscount
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1248,14 +1123,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
+        Name = 'AmountChange'
         Value = 0.000000000000000000
         Component = ceAmountDiff
         DataType = ftFloat
@@ -1269,140 +1137,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 64
-    Top = 124
-  end
-  object spGet_isDiscount: TdsdStoredProc
-    StoredProcName = 'gpGet_MI_Sale_Child_isDiscount'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inisDiscount'
-        Value = 'False'
-        Component = cbisDiscount
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyValueUSD'
-        Value = 0.000000000000000000
-        Component = ceCurrencyValue_USD
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyValueEUR'
-        Value = 0.000000000000000000
-        Component = ceCurrencyValue_EUR
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountToPay'
-        Value = Null
-        Component = ceAmountToPay
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountToPay_curr'
-        Value = Null
-        Component = ceAmountToPay_curr
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountGRN'
-        Value = 0.000000000000000000
-        Component = ceAmountGRN
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountUSD'
-        Value = 0.000000000000000000
-        Component = ceAmountUSD
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountEUR'
-        Value = 0.000000000000000000
-        Component = ceAmountEUR
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountCard'
-        Value = 0.000000000000000000
-        Component = ceAmountCARD
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAmountDiscount'
-        Value = Null
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inCurrencyId_Client'
-        Value = Null
-        Component = GuidesCurrencyClient
-        ComponentItem = 'Key'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountRemains'
-        Value = 0.000000000000000000
-        Component = ceAmountRemains
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountRemains_curr'
-        Value = Null
-        Component = ceAmountRemains_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiff'
-        Value = 0.000000000000000000
-        Component = ceAmountDiff
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount'
-        Value = 0.000000000000000000
-        Component = ceAmountDiscount
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'AmountDiscount_curr'
-        Value = Null
-        Component = ceAmountDiscount_curr
-        DataType = ftFloat
-        MultiSelectSeparator = ','
-      end>
-    PackSize = 1
-    Left = 96
-    Top = 176
+    Left = 88
+    Top = 116
   end
   object HeaderChanger: THeaderChanger
     IdParam.Value = Null
@@ -1421,7 +1157,6 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Control = ceAmountCARD
       end
       item
-        Control = ceAmountDiscount
       end
       item
         Control = ceCurrencyValue_USD
@@ -1430,8 +1165,8 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Control = ceCurrencyValue_EUR
       end>
     Action = actRefreshTotal
-    Left = 280
-    Top = 93
+    Left = 256
+    Top = 200
   end
   object GuidesCurrencyClient: TdsdGuides
     KeyField = 'Id'
@@ -1460,7 +1195,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 248
+    Left = 363
+    Top = 240
   end
 end

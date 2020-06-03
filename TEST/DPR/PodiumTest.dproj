@@ -1149,6 +1149,30 @@
 				<Form>Report_Goods_RemainsCurrent_onDateDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountPodium.pas">
+				<Form>GoodsAccountPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountPodiumJournal.pas">
+				<Form>GoodsAccountPodiumJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\GoodsAccountPodiumItemEdit.pas">
+				<Form>GoodsAccountPodiumItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\ReturnInPodiumItemEdit.pas">
+				<Form>ReturnInPodiumItemEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\ReturnInPodiumJournal.pas">
+				<Form>ReturnInPodiumJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsBoutique\Document\ReturnInPodium.pas">
+				<Form>ReturnInPodiumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

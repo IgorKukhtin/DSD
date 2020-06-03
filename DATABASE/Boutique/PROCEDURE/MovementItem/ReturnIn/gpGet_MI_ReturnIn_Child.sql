@@ -16,21 +16,25 @@ RETURNS TABLE (Id Integer
              , AmountCard     TFloat
              -- , AmountDiscount TFloat
              , AmountToPay    TFloat
+             , AmountToPay_curr    TFloat
              , AmountRemains  TFloat
+             , AmountRemains_curr  TFloat
              , AmountDiff     TFloat
+
              , isPayTotal     Boolean
              , isGRN          Boolean
              , isUSD          Boolean
              , isEUR          Boolean
              , isCard         Boolean
              -- , isDiscount     Boolean
+             , CurrencyId_Client Integer, CurrencyName_Client TVarChar
               )
 AS
 $BODY$
    DECLARE vbUserId            Integer;
    DECLARE vbOperDate          TDateTime;
    DECLARE vbSummToPay         TFloat;
-
+   DECLARE vbCurrencyId_Client Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpGetUserBySession (inSession);
@@ -38,7 +42,10 @@ BEGIN
      
      -- данные из документа
      vbOperDate:= (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-
+     -- данные из документа
+     vbCurrencyId_Client:= COALESCE((SELECT MLO.ObjectId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_CurrencyClient())
+                                  , CASE WHEN zc_Enum_GlobalConst_isTerry() = TRUE THEN zc_Currency_GRN() ELSE zc_Currency_EUR() END
+                                   );
 
      -- Сумма к оплате
      vbSummToPay:= (WITH tmpMI AS (SELECT DISTINCT Object_PartionMI.ObjectCode AS MovementItemId_sale
@@ -158,7 +165,20 @@ BEGIN
 
            , vbSummToPay         :: TFloat  AS AmountToPay    -- сумма к оплате, грн
 
-           , CASE WHEN tmpMI.AmountDiff > 0 THEN      tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountRemains -- Остаток, грн
+           , zfCalc_SummPriceList (1, zfCalc_CurrencyTo (vbSummToPay
+                                                       , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END
+                                                       , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END
+                                                        )) :: TFloat  AS AmountToPay_curr
+
+           , CASE WHEN tmpMI.AmountDiff > 0 THEN tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountRemains -- Остаток, грн
+
+           , CASE WHEN tmpMI.AmountDiff > 0 THEN zfCalc_SummPriceList (1, zfCalc_CurrencyTo (tmpMI.AmountDiff
+                                                                                           , CASE WHEN tmpMI.CurrencyValue_EUR > 0 THEN tmpMI.CurrencyValue_EUR ELSE tmp_EUR.Amount   END
+                                                                                           , CASE WHEN tmpMI.ParValue_EUR      > 0 THEN tmpMI.ParValue_EUR      ELSE tmp_EUR.ParValue END
+                                                                                            ))
+                                            ELSE 0
+             END :: TFloat  AS AmountRemains_curr
+
            , CASE WHEN tmpMI.AmountDiff < 0 THEN -1 * tmpMI.AmountDiff ELSE 0 END :: TFloat  AS AmountDiff    -- Сдача, грн
 
            , TRUE AS isPayTotal
@@ -168,9 +188,12 @@ BEGIN
            , CASE WHEN tmpMI.AmountEUR     <> 0 THEN TRUE ELSE FALSE END AS isEUR
            , CASE WHEN tmpMI.AmountCard    <> 0 THEN TRUE ELSE FALSE END AS isCard
 
+           , Object_CurrencyClient.Id               AS CurrencyId_Client
+           , Object_CurrencyClient.ValueData        AS CurrencyName_Client
        FROM tmpMI
             CROSS JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_USD()) AS tmp_USD
             CROSS JOIN lfSelect_Movement_Currency_byDate (inOperDate:= vbOperDate, inCurrencyFromId:= zc_Currency_Basis(), inCurrencyToId:= zc_Currency_EUR()) AS tmp_EUR
+            LEFT JOIN Object AS Object_CurrencyClient ON Object_CurrencyClient.Id = vbCurrencyId_Client
             ;
 
 
