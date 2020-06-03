@@ -5,7 +5,7 @@ inherited LossJournalForm: TLossJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   ExplicitWidth = 935
-  ExplicitHeight = 457
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,12 +34,32 @@ inherited LossJournalForm: TLossJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = TotalCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalCountKg
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -99,6 +119,26 @@ inherited LossJournalForm: TLossJournalForm
           object TotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'TotalCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object TotalCountSh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
+            DataBinding.FieldName = 'TotalCountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object TotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
+            DataBinding.FieldName = 'TotalCountKg'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'

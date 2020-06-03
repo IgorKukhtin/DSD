@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Loss(
     IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat
+             , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , FromId Integer, FromName TVarChar, ItemName_from TVarChar
              , ToId Integer, ToName TVarChar, ItemName_to TVarChar
              , ArticleLossId Integer, ArticleLossName TVarChar
@@ -41,30 +41,32 @@ BEGIN
                               )
 
        SELECT
-             Movement.Id                        AS Id
-           , Movement.InvNumber                 AS InvNumber
-           , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
-           , MovementFloat_TotalCount.ValueData AS TotalCount
-           , Object_From.Id                     AS FromId
-           , Object_From.ValueData              AS FromName
-           , ObjectDesc_from.ItemName           AS ItemName_from
-           , Object_To.Id                       AS ToId
+             Movement.Id                             AS Id
+           , Movement.InvNumber                      AS InvNumber
+           , Movement.OperDate                       AS OperDate
+           , Object_Status.ObjectCode                AS StatusCode
+           , Object_Status.ValueData                 AS StatusName
+           , MovementFloat_TotalCount.ValueData      AS TotalCount
+           , MovementFloat_TotalCountSh.ValueData    AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData    AS TotalCountKg
+           , Object_From.Id                          AS FromId
+           , Object_From.ValueData                   AS FromName
+           , ObjectDesc_from.ItemName                AS ItemName_from
+           , Object_To.Id                            AS ToId
            , (Object_To.ValueData || CASE WHEN Object_Unit_CarTo.ValueData <> '' THEN ' (' || Object_Unit_CarTo.ValueData ||')' ELSE '' END) :: TVarChar AS ToName
-           , ObjectDesc_to.ItemName             AS ItemName_to
-           , Object_ArticleLoss.Id              AS ArticleLossId
-           , Object_ArticleLoss.ValueData       AS ArticleLossName
+           , ObjectDesc_to.ItemName                  AS ItemName_to
+           , Object_ArticleLoss.Id                   AS ArticleLossId
+           , Object_ArticleLoss.ValueData            AS ArticleLossName
 
-           , MovementString_Comment.ValueData   AS Comment
-           
-           , Object_Checked.ValueData           AS CheckedName
-           , MovementDate_Checked.ValueData     AS CheckedDate
+           , MovementString_Comment.ValueData        AS Comment
+
+           , Object_Checked.ValueData                AS CheckedName
+           , MovementDate_Checked.ValueData          AS CheckedDate
 
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
-           
-           , COALESCE(Movement_Income.Id, -1)                         AS MovementId_Income
-           , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar      AS InvNumber_IncomeFull
+
+           , COALESCE (Movement_Income.Id, -1)       AS MovementId_Income
+           , zfCalc_PartionMovementName (Movement_Income.DescId, MovementDesc_Income.ItemName, Movement_Income.InvNumber, Movement_Income.OperDate) :: TVarChar AS InvNumber_IncomeFull
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -79,16 +81,22 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementDate AS MovementDate_Checked 
+            LEFT JOIN MovementDate AS MovementDate_Checked
                                    ON MovementDate_Checked.MovementId = Movement.Id
                                   AND MovementDate_Checked.DescId = zc_MovementDate_Checked()
 
@@ -124,32 +132,34 @@ BEGIN
                                           AND MovementLinkMovement_Income.DescId     = zc_MovementLinkMovement_Income()
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
-            
+
        -- огр. просмотра
-       WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна 
+       WHERE vbUserId <> 300550 -- Рибалко Вікторія Віталіївна
          AND vbUserId <> 929721 -- Решетова И.А.
 
       UNION ALL
        SELECT
-             Movement.Id                        AS Id
-           , Movement.InvNumber                 AS InvNumber
-           , Movement.OperDate                  AS OperDate
-           , Object_Status.ObjectCode           AS StatusCode
-           , Object_Status.ValueData            AS StatusName
-           , MovementFloat_TotalCount.ValueData AS TotalCount
-           , Object_From.Id                     AS FromId
-           , Object_From.ValueData              AS FromName
-           , ObjectDesc_from.ItemName           AS ItemName_from
-           , Object_To.Id                       AS ToId
+             Movement.Id                             AS Id
+           , Movement.InvNumber                      AS InvNumber
+           , Movement.OperDate                       AS OperDate
+           , Object_Status.ObjectCode                AS StatusCode
+           , Object_Status.ValueData                 AS StatusName
+           , MovementFloat_TotalCount.ValueData      AS TotalCount
+           , MovementFloat_TotalCountSh.ValueData    AS TotalCountSh
+           , MovementFloat_TotalCountKg.ValueData    AS TotalCountKg
+           , Object_From.Id                          AS FromId
+           , Object_From.ValueData                   AS FromName
+           , ObjectDesc_from.ItemName                AS ItemName_from
+           , Object_To.Id                            AS ToId
            , (Object_To.ValueData || CASE WHEN Object_Unit_CarTo.ValueData <> '' THEN ' (' || Object_Unit_CarTo.ValueData ||')' ELSE '' END) :: TVarChar AS ToName
-           , ObjectDesc_to.ItemName             AS ItemName_to
-           , Object_ArticleLoss.Id              AS ArticleLossId
-           , Object_ArticleLoss.ValueData       AS ArticleLossName
-
-           , MovementString_Comment.ValueData   AS Comment
-
-           , Object_Checked.ValueData           AS CheckedName
-           , MovementDate_Checked.ValueData     AS CheckedDate
+           , ObjectDesc_to.ItemName                  AS ItemName_to
+           , Object_ArticleLoss.Id                   AS ArticleLossId
+           , Object_ArticleLoss.ValueData            AS ArticleLossName
+                                                     
+           , MovementString_Comment.ValueData        AS Comment
+                                                     
+           , Object_Checked.ValueData                AS CheckedName
+           , MovementDate_Checked.ValueData          AS CheckedDate
 
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE) AS Checked
 
@@ -169,16 +179,22 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId = Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
 
-            LEFT JOIN MovementString AS MovementString_Comment 
+            LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId = Movement.Id
                                     AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
-            LEFT JOIN MovementDate AS MovementDate_Checked 
+            LEFT JOIN MovementDate AS MovementDate_Checked
                                    ON MovementDate_Checked.MovementId = Movement.Id
                                   AND MovementDate_Checked.DescId = zc_MovementDate_Checked()
 
@@ -215,7 +231,7 @@ BEGIN
             LEFT JOIN Movement AS Movement_Income ON Movement_Income.Id = MovementLinkMovement_Income.MovementChildId
             LEFT JOIN MovementDesc AS MovementDesc_Income ON MovementDesc_Income.Id = Movement_Income.DescId
 
-       -- огр. просмотра - Рибалко Вікторія Віталіївна 
+       -- огр. просмотра - Рибалко Вікторія Віталіївна
        WHERE (vbUserId = 300550
           AND Object_From.Id IN (8447   -- цех колбасный
                                , 8448   -- ЦЕХ деликатесов
@@ -236,7 +252,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  11.10.18         *
- 27.03.17         * 
+ 27.03.17         *
  05.10.16         * add inJuridicalBasisId
  02.09.14                                                        *
  26.05.14                                                        *

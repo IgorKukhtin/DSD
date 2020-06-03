@@ -20,7 +20,7 @@ BEGIN
    JOIN ObjectBLOB AS ObjectBLOB_FormData 
      ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
     AND ObjectBLOB_FormData.ObjectId = Object.Id
-   WHERE Object.ValueData = inFormName AND Object.DescId = zc_Object_Form();
+   WHERE Object.ValueData ILIKE inFormName AND Object.DescId = zc_Object_Form();
     
    RETURN DATA; 
   
