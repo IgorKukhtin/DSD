@@ -66,7 +66,7 @@ BEGIN
                      (SELECT MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId_Complete
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
                       FROM ObjectDate AS ObjectDate_PartionGoods_Value
                            INNER JOIN ContainerLinkObject AS CLO_PartionGoods
                                                           ON CLO_PartionGoods.ObjectId = ObjectDate_PartionGoods_Value.ObjectId
@@ -132,7 +132,7 @@ BEGIN
        , tmpMI_GP_in AS
                      (SELECT tmpMI_WorkProgress_out.GoodsId
                            , tmpMI_WorkProgress_out.PartionGoodsId
-                           , COALESCE (MIContainer.ObjectIntId_Analyzer, 0) AS GoodsKindId_Complete
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer, zc_GoodsKind_Basis()) AS GoodsKindId_Complete
                            , SUM (MIContainer.Amount)             AS Amount
                            , SUM (CASE WHEN ObjectFloat_Value_master.ValueData <> 0 THEN COALESCE (ObjectFloat_Value_child.ValueData, 0) * MIContainer.Amount / ObjectFloat_Value_master.ValueData ELSE 0 END) AS AmountReceipt
                       FROM tmpMI_WorkProgress_out
@@ -200,7 +200,7 @@ BEGIN
                      (-- Производство п/ф ГП
                       SELECT tmpMI_WorkProgress_in.GoodsId
                            , tmpMI_WorkProgress_in.PartionGoodsId
-                           , COALESCE (MILO_GoodsKindComplete.ObjectId, 0)      AS GoodsKindId_Complete
+                           , COALESCE (MILO_GoodsKindComplete.ObjectId, zc_GoodsKind_Basis())      AS GoodsKindId_Complete
                            , SUM (tmpMI_WorkProgress_in.Amount)                 AS Amount_WorkProgress_in
                            , SUM (COALESCE (MIFloat_CuterCount.ValueData, 0))   AS CuterCount
                            , SUM (COALESCE (MIFloat_RealWeight.ValueData, 0))   AS RealWeight
@@ -366,4 +366,4 @@ ALTER FUNCTION gpReport_GoodsMI_ProductionUnion_TaxExit (TDateTime, TDateTime, I
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxExit (inStartDate:= '01.06.2015', inEndDate:= '01.06.2015', inFromId:= 8447, inToId:= 0, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
+-- SELECT * FROM gpReport_GoodsMI_ProductionUnion_TaxExit (inStartDate:= '01.06.2020', inEndDate:= '01.06.2020', inFromId:= 8447, inToId:= 0, inIsDetail:= FALSE, inSession:= zfCalc_UserAdmin()) ORDER BY 2;
