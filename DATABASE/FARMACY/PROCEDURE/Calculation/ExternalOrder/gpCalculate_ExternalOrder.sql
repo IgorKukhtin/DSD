@@ -369,8 +369,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
- 02.06.20                                                                     *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  31.08.18         * add Reserved
  22.12.16         * add zc_MIFloat_AmountDeferred
  19.09.14                         *
@@ -378,4 +377,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 2333613, inSession:= '3');
--- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 1730977, inSession:= '3');
+-- SELECT * FROM gpCalculate_ExternalOrder (inInternalOrder:= 19059714 , inSession:= '3');

@@ -660,6 +660,7 @@ initialization
   RegisterClass (TdsdDuplicateSearchAction);
   RegisterClass (TdsdDOCReportFormAction);
   RegisterClass (TdsdOpenStaticForm);
+  RegisterClass (TdsdProperties—hange);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TFileDialogAction);

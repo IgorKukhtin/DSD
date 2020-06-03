@@ -457,7 +457,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     Params = <
       item
         Name = 'inCodeSearch'
-        Value = 42370d
+        Value = ''
         Component = edCodeSearch
         DataType = ftString
         ParamType = ptInput
@@ -465,7 +465,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
       end
       item
         Name = 'inGoodsSearch'
-        Value = 42370d
+        Value = ''
         Component = edGoodsSearch
         DataType = ftString
         ParamType = ptInput
@@ -473,7 +473,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
       end
       item
         Name = 'inUnitId'
-        Value = Null
+        Value = ''
         Component = GuidesUnit
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -675,6 +675,9 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -702,6 +705,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     object actOpenChoiceUnitTree: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
+      PostDataSetBeforeExecute = False
       Caption = 'actOpenChoiceUnitTree'
       FormName = 'TUnitTreeForm'
       FormNameParam.Value = 'TUnitTreeForm'
@@ -764,6 +768,10 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
       item
         Name = 'Amount'
         DataType = ftCurrency
+      end
+      item
+        Name = 'Price'
+        DataType = ftCurrency
       end>
     IndexDefs = <>
     IndexFieldNames = 'Id;UnitId'
@@ -773,12 +781,13 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     Left = 32
     Top = 344
     Data = {
-      A40000009619E0BD010000001800000006000000000003000000A40002496404
+      C60000009619E0BD010000001800000007000000000003000000C60002496404
       0001000000000009476F6F6473436F6465040001000000000009476F6F64734E
       616D65010049000000010005574944544802000200140006556E697449640400
       01000000000008556E69744E616D650100490000000100055749445448020002
       00140006416D6F756E7408000400000001000753554254595045020049000600
-      4D6F6E6579000000}
+      4D6F6E6579000550726963650800040000000100075355425459504502004900
+      06004D6F6E6579000000}
     object SelectedCDSId: TIntegerField
       FieldName = 'Id'
     end
@@ -796,6 +805,9 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     end
     object SelectedCDSAmount: TCurrencyField
       FieldName = 'Amount'
+    end
+    object SelectedCDSPrice: TCurrencyField
+      FieldName = 'Price'
     end
   end
   object GuidesUnit: TdsdGuides
@@ -866,6 +878,10 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
         DataType = ftInteger
       end
       item
+        Name = 'Summa'
+        DataType = ftCurrency
+      end
+      item
         Name = 'MovementId'
         DataType = ftInteger
       end>
@@ -876,10 +892,15 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     Left = 248
     Top = 344
     Data = {
-      3C0000009619E0BD0100000018000000020000000000030000003C0006556E69
-      74496404000100000000000A4D6F76656D656E74496404000100000000000000}
+      5E0000009619E0BD0100000018000000030000000000030000005E0006556E69
+      74496404000100000000000553756D6D61080004000000010007535542545950
+      450200490006004D6F6E6579000A4D6F76656D656E7449640400010000000000
+      0000}
     object UnitCDSUnitId: TIntegerField
       FieldName = 'UnitId'
+    end
+    object UnitCDSSumma: TCurrencyField
+      FieldName = 'Summa'
     end
     object UnitCDSMovementId: TIntegerField
       FieldName = 'MovementId'
@@ -952,5 +973,20 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
     PackSize = 1
     Left = 400
     Top = 376
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_GoodsSearchRemainsVIP'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'SummaUrgentlySendVIP'
+        Value = Null
+        DataType = ftFloat
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 264
+    Top = 208
   end
 end

@@ -23,6 +23,12 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
+  // Редактор компонент позволяет отображать только используемые
+  TdsdPropertiesСhangeComponentProperty = class(TComponentProperty)
+  public
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
+
   // Редактор ствойства компонент позволяет отображать
   // возможные значения свойств у компонент TDataSet, TdsdFormParams, TdsdGuides
 
@@ -49,14 +55,16 @@ uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxMemo, cxCurrencyEdit, cxCheckB
 procedure Register;
 begin
    RegisterCustomModule(TParentForm, TCustomModule);
-   RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
-   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,    'Grid',          TExcelGridProperty);
-   RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,          'Component',     TdsdParamComponentProperty);
-   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component',     TdsdParamComponentProperty);
-   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam,          'DataType',      TDataTypeProperty);
-   RegisterPropertyEditor(TypeInfo(String),     TdsdParam,          'ComponentItem', TComponentItemTextProperty);
+   RegisterPropertyEditor(TypeInfo(boolean),    TExecuteDialog,       'isShowModal',   nil);
+   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,      'Grid',          TExcelGridProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,            'Component',     TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem,   'Component',     TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam,            'DataType',      TDataTypeProperty);
+   RegisterPropertyEditor(TypeInfo(String),     TdsdParam,            'ComponentItem', TComponentItemTextProperty);
 
-   RegisterPropertyEditor(TypeInfo(TShortCut), TShortCutActionItem, 'ShortCut', TShortCutProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TdsdPropertiesСhange, 'Component',     TdsdPropertiesСhangeComponentProperty);
+
+   RegisterPropertyEditor(TypeInfo(TShortCut),  TShortCutActionItem,  'ShortCut',      TShortCutProperty);
 end;
 
 
@@ -85,6 +93,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TADOQueryAction)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TMedocAction)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TExportGrid)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdPropertiesСhange)), Proc);
   // и даже такой. Приходится использовать для кросса
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
   // и примерно такой же для Pivot
@@ -206,5 +215,15 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGrid)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCustomPivotGrid)), Proc);
 end;
+
+{ TdsdGuidesComponentProperty }
+
+procedure TdsdPropertiesСhangeComponentProperty.GetValues(Proc: TGetStrProc);
+begin
+  // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
+end;
+
 
 end.

@@ -899,6 +899,8 @@ begin
        end;
        Result := IDs;
      End;
+     if Component is TdsdProperties—hange then
+        result := (Component as TdsdProperties—hange).IndexProperties;
   end
   else
   Begin
@@ -1103,6 +1105,8 @@ begin
              (Component as TCustomGuides).Key := FValue;
           end;
 
+     if Component is TdsdProperties—hange then
+        (Component as TdsdProperties—hange).IndexProperties := FValue;
   end;
   if Assigned(FonChange) then
      FonChange(Self);
