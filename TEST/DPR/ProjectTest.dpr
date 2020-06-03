@@ -1157,7 +1157,8 @@ uses
   OrderType_Edit in '..\..\Forms\Guides\OrderType_Edit.pas' {OrderType_EditForm: TParentForm},
   Report_BankAccount_Cash_Olap in '..\..\Forms\Report\Report_BankAccount_Cash_Olap.pas' {Report_BankAccount_Cash_OlapForm: TParentForm},
   Report_BankAccount_Cash_OlapDialog in '..\..\Forms\Report\Report_BankAccount_Cash_OlapDialog.pas' {Report_BankAccount_Cash_OlapDialogForm: TParentForm},
-  OrderInternalStew in '..\..\Forms\Document\OrderInternalStew.pas' {OrderInternalStewForm: TParentForm};
+  OrderInternalStew in '..\..\Forms\Document\OrderInternalStew.pas' {OrderInternalStewForm: TParentForm},
+  Report_CheckBonusTest in '..\..\Forms\Report\Report_CheckBonusTest.pas' {Report_CheckBonusTestForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}
