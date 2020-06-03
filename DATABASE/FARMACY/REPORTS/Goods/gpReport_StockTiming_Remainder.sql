@@ -19,11 +19,12 @@ RETURNS TABLE ( UnitCode        Integer      --Код подразделение откуда
               , SummaDeferred   TFloat
               , AmountComplete  TFloat
               , SummaComplete   TFloat
+              , AmountLoss      TFloat
               , Amount          TFloat
               , Summa           TFloat
               , MakerId         Integer
               , ExpirationDate  TDateTime    --Срок годности
-              , Remains         TFloat  
+              , Remains         TFloat
               )
 
 AS
@@ -101,7 +102,77 @@ BEGIN
                                 FROM tmpGoods_All
                                 WHERE tmpGoods_All.StartDate_Promo <= inOperDate
                                   AND tmpGoods_All.EndDate_Promo >= '01.01.2019'
-                                ) 
+                                )
+      , tmpMovementLoss AS (SELECT Movement.ID
+                                 , Movement.OperDate
+                                 , MovementLinkObject_Unit.ObjectId            AS UnitID
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_ArticleLoss
+                                                              ON MovementLinkObject_ArticleLoss.MovementId = Movement.Id
+                                                             AND MovementLinkObject_ArticleLoss.DescId = zc_MovementLinkObject_ArticleLoss()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                              ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                             AND MovementLinkObject_UNit.DescId = zc_MovementLinkObject_Unit()
+                            WHERE Movement.operdate < inOperDate
+                              AND Movement.DescId = zc_Movement_Loss()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                              AND COALESCE(MovementLinkObject_ArticleLoss.ObjectId, 0) = 13892113
+                              AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0))
+      , tmpMovementItemLoss AS (SELECT Movement.UnitID                          AS UnitID,
+                                       MovementItem.ObjectId                    AS GoodsID,
+                                       MovementItemContainer.ContainerId        AS ContainerId,
+                                       SUM(MovementItem.Amount)                 AS AmountLoss,
+                                       tmpListGodsMarket.MakerId,
+                                       COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
+
+                                 FROM tmpMovementLoss AS Movement
+
+                                      INNER JOIN MovementItem ON MovementItem.movementid = Movement.Id
+                                                             AND MovementItem.Amount > 0
+                                                             AND MovementItem.DescId = zc_MI_Master()
+                                                             AND MovementItem.iserased = False
+
+                                      LEFT JOIN MovementItemContainer ON MovementItemContainer.movementitemid = MovementItem.id
+                                                                     AND MovementItemContainer.descid = zc_Container_Count()
+                                                                     AND MovementItemContainer.Amount < 0
+
+                                      LEFT JOIN tmpListGodsMarket ON tmpListGodsMarket.GoodsId = MovementItem.ObjectId
+                                                                 AND tmpListGodsMarket.StartDate_Promo <= Movement.OperDate
+                                                                 AND tmpListGodsMarket.EndDate_Promo >= Movement.OperDate
+
+                                      LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                                                ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                                               AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                                                   ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_From()
+
+                                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit_To
+                                                                   ON MovementLinkObject_Unit_To.MovementId = Movement.Id
+                                                                  AND MovementLinkObject_Unit_To.DescId = zc_MovementLinkObject_To()
+
+                                      LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                    ON ContainerLinkObject_MovementItem.Containerid = MovementItemContainer.Containerid
+                                                                   AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                      LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                      -- элемент прихода
+                                      LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                      -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                      LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                                  ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                                 AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                      -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                      LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                           -- AND 1=0
+                                      LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                                                        ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                                       AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                 GROUP BY Movement.UnitID
+                                        , MovementItem.ObjectId
+                                        , MovementItemContainer.ContainerId
+                                        , tmpListGodsMarket.MakerId
+                                        , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))
       ,   tmpMovementItem AS (SELECT MovementLinkObject_Unit.ObjectId            AS UnitID,
                                      MovementItem.ObjectId                       AS GoodsID,
                                      MovementItemContainer.ContainerId           AS ContainerId,
@@ -109,6 +180,7 @@ BEGIN
                                      SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = TRUE THEN - MovementItemContainer.Amount  END)::TFloat AS AmountDeferred,
                                      SUM(CASE WHEN COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE THEN - MovementItemContainer.Amount  END)::TFloat AS AmountComplete,
                                      SUM(- MovementItemContainer.Amount)::TFloat AS Amount,
+                                     Null::TFloat                                                          AS AmountLoss,
                                      tmpListGodsMarket.MakerId,
                                      COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()) AS ExpirationDate
 
@@ -128,7 +200,7 @@ BEGIN
                                                           AND movementitem_Child.parentid = movementitem.id
                                                           AND movementitem_Child.amount > 0
                                                           AND movementitem_Child.DescId = zc_MI_Child()
-                                                          AND movementitem_Child.iserased = False
+                                                        AND movementitem_Child.iserased = False
 
                                     LEFT JOIN MovementItemContainer ON MovementItemContainer.movementitemid =  COALESCE(movementitem_Child.ID, movementitem.id)
                                                                    AND MovementItemContainer.descid = zc_Container_Count()
@@ -174,20 +246,33 @@ BEGIN
                                  AND COALESCE(MovementLinkObject_PartionDateKind.ObjectId, 0) = zc_Enum_PartionDateKind_0()
                                  AND (MovementLinkObject_Unit.ObjectId = inUnitID OR inUnitID = 0)
                                GROUP BY MovementLinkObject_Unit.ObjectId, MovementItem.ObjectId, MovementItemContainer.ContainerId,
-                                        tmpListGodsMarket.MakerId, COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd()))
+                                        tmpListGodsMarket.MakerId, COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())
+                               UNION ALL
+                               SELECT tmpMovementItemLoss.UnitID                   AS UnitID,
+                                      tmpMovementItemLoss.GoodsID                  AS GoodsID,
+                                      tmpMovementItemLoss.ContainerId              AS ContainerId,
+                                      Null::TFloat                                 AS AmountDeferred,
+                                      Null::TFloat                                 AS AmountComplete,
+                                      Null::TFloat                                 AS Amount,
+                                      tmpMovementItemLoss.AmountLoss::TFloat       AS AmountLoss,
+                                      tmpMovementItemLoss.MakerId,
+                                      tmpMovementItemLoss.ExpirationDate           AS ExpirationDate
+                               FROM tmpMovementItemLoss)
+
       ,   tmpContainerPD AS (SELECT tmpContainerId.ContainerId,
-                                    Min(COALESCE(ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate                                     
+                                    Min(COALESCE(ObjectDate_ExpirationDate.ValueData, zc_DateEnd()))  AS ExpirationDate
                              FROM (SELECT DISTINCT ContainerId FROM tmpMovementItem) AS tmpContainerId
+
                                   INNER JOIN Container ON Container.ParentId = tmpContainerId.ContainerId
                                                       AND Container.DescId  = zc_Container_CountPartionDate()
 
                                   LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                                                                AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
-                                                                  
+
                                   LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
-                                                       ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId 
+                                                       ON ObjectDate_ExpirationDate.ObjectId = ContainerLinkObject.ObjectId
                                                       AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
-                                                                   
+
                             GROUP BY tmpContainerId.ContainerId
                             )
       ,   tmpMovementItemSum AS (SELECT Movement.UnitId,
@@ -197,7 +282,9 @@ BEGIN
 
                                        SUM(Movement.AmountDeferred)::TFloat                                  AS AmountDeferred,
                                        SUM(Movement.AmountComplete)::TFloat                                  AS AmountComplete,
-                                       SUM(Movement.Amount)::TFloat                                          AS Amount,
+                                       SUM(Movement.AmountLoss)::TFloat                                      AS AmountLoss,
+                                       SUM(COALESCE(Movement.Amount, 0) +
+                                           COALESCE(Movement.AmountLoss, 0))::TFloat                         AS Amount,
                                        Movement.MakerId,
                                        COALESCE(tmpContainerPD.ExpirationDate, Movement.ExpirationDate)      AS ExpirationDate
 
@@ -206,13 +293,13 @@ BEGIN
                                       LEFT JOIN AnalysisContainer ON AnalysisContainer.Id = Movement.ContainerId
 
                                       LEFT JOIN tmpContainerPD ON tmpContainerPD.ContainerId = Movement.ContainerId
-                                      
+
                                  GROUP BY Movement.UnitId, Movement.GoodsId, Movement.MakerId, COALESCE(tmpContainerPD.ExpirationDate, Movement.ExpirationDate))
 
       ,   tmpContainer AS (SELECT tmpContainerId.UnitID
                                 , tmpContainerId.GoodsId
-                                , SUM(Container.Amount)::TFloat  AS Remains                                     
-                           FROM (SELECT DISTINCT tmpMovementItem.UnitID, tmpMovementItem.GoodsId FROM tmpMovementItem) AS tmpContainerId
+                                , SUM(Container.Amount)::TFloat  AS Remains
+                           FROM (SELECT DISTINCT tmpMovementItemSum.UnitID, tmpMovementItemSum.GoodsId FROM tmpMovementItemSum) AS tmpContainerId
                                 INNER JOIN Container ON Container.WhereObjectId = tmpContainerId.UnitID
                                                     AND Container.ObjectId = tmpContainerId.GoodsId
                                                     AND Container.DescId  = zc_Container_Count()
@@ -220,6 +307,7 @@ BEGIN
                           GROUP BY tmpContainerId.UnitID
                                  , tmpContainerId.GoodsId
                           )
+
      SELECT
 
            Object_Unit.ObjectCode,
@@ -235,6 +323,7 @@ BEGIN
            ROUND(Movement.AmountDeferred * Round(Movement.Price, 2), 2)::TFloat ,
            Movement.AmountComplete,
            ROUND(Movement.AmountComplete * Round(Movement.Price, 2), 2)::TFloat ,
+           Movement.AmountLoss,
            Movement.Amount,
            ROUND(Movement.Amount * Round(Movement.Price, 2), 2)::TFloat,
 
@@ -247,7 +336,7 @@ BEGIN
           LEFT JOIN tmpContainer ON tmpContainer.UnitId = Movement.UnitId
                                 AND tmpContainer.GoodsId = Movement.GoodsId
 
-          
+
           LEFT JOIN Object AS Object_Unit
                            ON Object_Unit.ID = Movement.UnitId
 
@@ -256,7 +345,7 @@ BEGIN
 
           LEFT JOIN Object AS Object_Maker
                            ON Object_Maker.ID = Movement.MakerId
-          
+
      WHERE Movement.MakerId = inMakerId OR inMakerId = 0;
 
 

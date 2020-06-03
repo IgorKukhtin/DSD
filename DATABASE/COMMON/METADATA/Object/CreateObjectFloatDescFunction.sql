@@ -1777,10 +1777,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_SummaFormSendVIP() RETURN
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_SummaFormSendVIP', 'Сумма от которой показан товар при формировании перемещений VIP' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SummaFormSendVIP');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP', 'Сумма перемещения от которой разрешен признак срочно' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 02.06.20                                                                                      * zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP
  27.05.20                                                                                      * zc_ObjectFloat_CashSettings_SummaFormSendVIP
  28.05.20         * zc_ObjectFloat_ContractCondition_PercentRetBonus
  26.05.20                                                                                      * zc_ObjectFloat_DriverSun_ChatIDSendVIP

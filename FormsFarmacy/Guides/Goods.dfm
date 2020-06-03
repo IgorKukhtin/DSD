@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 1166
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 1182
-  ExplicitHeight = 481
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1029,6 +1029,9 @@ inherited GoodsForm: TGoodsForm
           StoredProc = spUpdate_isNot_v2_No
         end>
       Caption = 'actUpdateNot_No'
+    end
+    inherited dsdSetErased: TdsdUpdateErased
+      QuestionBeforeExecute = #1059#1076#1072#1083#1080#1090#1100' '#1090#1086#1074#1072#1088'?'
     end
     inherited dsdChoiceGuides: TdsdChoiceGuides
       Params = <

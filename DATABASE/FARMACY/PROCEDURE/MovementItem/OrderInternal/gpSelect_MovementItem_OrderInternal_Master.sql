@@ -187,6 +187,11 @@ BEGIN
     vbAVGDateEnd   := vbOperDate;
 
     -- таблица Регион поставщика
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('tmpJuridicalArea'))
+    THEN
+      DROP TABLE IF EXISTS tmpJuridicalArea;
+    END IF;  
+
     CREATE TEMP TABLE tmpJuridicalArea (UnitId Integer, JuridicalId Integer, AreaId Integer, AreaName TVarChar, isDefault Boolean) ON COMMIT DROP;
       INSERT INTO tmpJuridicalArea (UnitId, JuridicalId, AreaId, AreaName, isDefault)
                   SELECT DISTINCT
@@ -983,6 +988,11 @@ BEGIN
 
 
      -- ДАННЫЕ
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
+     THEN
+       DROP TABLE IF EXISTS _tmpMI;
+     END IF;  
+
      CREATE TEMP TABLE _tmpMI (Id integer
                              , MovementItemId Integer
                              , PriceListMovementItemId Integer
@@ -2492,6 +2502,11 @@ BEGIN
 
 
      -- ДАННЫЕ
+     IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME = LOWER ('_tmpMI'))
+     THEN
+       DROP TABLE IF EXISTS _tmpMI;
+     END IF;  
+
      CREATE TEMP TABLE _tmpMI (Id integer
                              , MovementItemId Integer
                              , PriceListMovementItemId Integer

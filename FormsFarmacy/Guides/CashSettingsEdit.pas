@@ -35,6 +35,8 @@ type
     cxLabel11: TcxLabel;
     edSummaFormSendVIP: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
+    edSummaUrgentlySendVIP: TcxCurrencyEdit;
+    cxLabel4: TcxLabel;
   private
     { Private declarations }
   public
