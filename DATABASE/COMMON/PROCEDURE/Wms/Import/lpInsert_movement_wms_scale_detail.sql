@@ -99,9 +99,7 @@ BEGIN
 							 , insession              := inSession
 							 );
 							 
-	UPDATE	wms_to_host_message 
-	SET     done = TRUE
-	WHERE   movement_id = inOrderId; 	
+
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;

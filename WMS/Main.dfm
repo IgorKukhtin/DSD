@@ -241,10 +241,6 @@ object MainForm: TMainForm
     object tsSettings: TTabSheet
       Caption = 'Settings'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         1199
         562)

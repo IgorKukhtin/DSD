@@ -113,11 +113,11 @@ object dmData: TdmData
     SQL.Strings = (
       
         'insert into wms_to_host_message(type, header_id, detail_id, move' +
-        'ment_id, sku_id, name, qty, weight, weight_biz, production_date)' +
-        ' '
+        'ment_id, sku_id, name, qty, weight, weight_biz, operdate, produc' +
+        'tion_date) '
       
         'values(:type, :header_id, :detail_id, :movement_id, :sku_id, :na' +
-        'me, :qty, :weight, :weight_biz, :production_date);')
+        'me, :qty, :weight, :weight_biz, :operdate, :production_date);')
     Left = 512
     Top = 352
     ParamData = <
@@ -176,16 +176,17 @@ object dmData: TdmData
         Value = Null
       end
       item
+        Name = 'OPERDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
         Name = 'PRODUCTION_DATE'
         DataType = ftDateTime
         ParamType = ptInput
         Value = Null
       end>
-  end
-  object FDT_alan: TFDTransaction
-    Connection = FDC_alan
-    Left = 64
-    Top = 88
   end
   object FDT_wms: TFDTransaction
     Connection = FDC_wms
@@ -234,5 +235,15 @@ object dmData: TdmData
     FetchOptions.Cache = [fiBlobs, fiDetails]
     Left = 840
     Top = 80
+  end
+  object select_wms_to_host_message: TFDQuery
+    Connection = FDC_alan
+    Left = 752
+    Top = 352
+  end
+  object alan_exec_qry: TFDQuery
+    Connection = FDC_alan
+    Left = 911
+    Top = 352
   end
 end
