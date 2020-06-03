@@ -1,7 +1,7 @@
 -- Function: gpReport_Cash
 
 DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Cash (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
 
 
@@ -500,14 +500,14 @@ BEGIN
           GROUP BY Operation_all.ContainerId, Operation_all.ObjectId, Operation_all.CashId, Operation_all.CurrencyId,
                    Operation_all.InfoMoneyId, Operation_all.UnitId, Operation_all.MoneyPlaceId, Operation_all.ContractId, Operation_all.Comment, 
                    Operation_all.isActive, Operation_all.OperDate
-          WHERE Operation_all.StartAmount <> 0 
-             OR Operation_all.EndAmount <> 0
-             OR Operation_all.DebetSumm <> 0
-             OR Operation_all.KreditSumm <> 0
-             OR Operation_all.StartAmount_Currency <> 0
-             OR Operation_all.EndAmount_Currency <> 0
-             OR Operation_all.DebetSumm_Currency <> 0
-             OR Operation_all.KreditSumm_Currency <> 0
+          HAVING SUM (Operation_all.StartAmount) <> 0 
+             OR SUM (Operation_all.EndAmount) <> 0
+             OR SUM (Operation_all.DebetSumm) <> 0
+             OR SUM (Operation_all.KreditSumm) <> 0
+             OR SUM (Operation_all.StartAmount_Currency) <> 0
+             OR SUM (Operation_all.EndAmount_Currency) <> 0
+             OR SUM (Operation_all.DebetSumm_Currency) <> 0
+             OR SUM (Operation_all.KreditSumm_Currency) <> 0
          ) AS Operation
 
      LEFT JOIN tmpAccount ON tmpAccount.AccountId = Operation.ObjectId

@@ -26,7 +26,7 @@ RETURNS TABLE (OperDate_Movement TDateTime, InvNumber_Movement TVarChar, DescNam
              , BranchId Integer, BranchName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
-             , Sum_CheckBonusFact TFloat
+             , Sum_CheckBonusFact TFloat 
              , Sum_Bonus TFloat
              , Sum_BonusFact TFloat
              , Sum_SaleFact TFloat
@@ -69,6 +69,7 @@ inisMovement:= FALSE;
                                                     , ObjectLink_ContractPartner_Partner.ChildObjectId  AS PartnerId
                                                FROM ObjectLink AS ObjectLink_ContractPartner_Contract
                                                     INNER JOIN tmpContract_full ON tmpContract_full.ContractId = ObjectLink_ContractPartner_Contract.ChildObjectId
+                                                                               AND tmpContract_full.PaidKindId <> zc_Enum_PaidKind_FirstForm()
 
                                                     LEFT JOIN ObjectLink AS ObjectLink_ContractPartner_Partner
                                                                          ON ObjectLink_ContractPartner_Partner.ObjectId = ObjectLink_ContractPartner_Contract.ObjectId
@@ -348,12 +349,12 @@ inisMovement:= FALSE;
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        )
                        */
- , tmpContainerSUM AS (SELECT DISTINCT
-                              Container.Id 
-                            , ContainerLO_Juridical.ObjectId AS JuridicalId
-                            , ContainerLO_Contract.ObjectId AS ContractId
-                            , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
-                            , ContainerLO_PaidKind.ObjectId AS PaidKindId
+    , tmpContainer AS (SELECT DISTINCT
+                              Container.Id  AS ContainerId
+                            , tmpContractGroup.JuridicalId
+                            , tmpContractGroup.ContractId_child
+                            , tmpContractGroup.InfoMoneyId_child
+                            , tmpContractGroup.PaidKindId_byBase
                             , COALESCE (ContainerLO_Branch.ObjectId,0) AS BranchId
                        FROM tmpAccount
                             JOIN Container ON Container.ObjectId = tmpAccount.AccountId
@@ -373,8 +374,13 @@ inisMovement:= FALSE;
                                                     AND CLO_Partner.DescId = zc_ContainerLinkObject_Partner()
                             -- ограничиваем контрагентами --
                             INNER JOIN tmpContractPartner ON tmpContractPartner.PartnerId = CLO_Partner.ObjectId
-                                                                                                     
+
                             -- ограничение по 4-м ключам
+                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = ContainerLO_Juridical.ObjectId 
+                                                 AND tmpContractGroup.ContractId_child  = ContainerLO_Contract.ObjectId
+                                                 AND tmpContractGroup.InfoMoneyId_child = ContainerLO_InfoMoney.ObjectId
+                                                 AND tmpContractGroup.PaidKindId_byBase = ContainerLO_PaidKind.ObjectId
+                                                 
                             LEFT JOIN ContainerLinkObject AS ContainerLO_Branch
                                                           ON ContainerLO_Branch.ContainerId = Container.Id
                                                          AND ContainerLO_Branch.DescId = zc_ContainerLinkObject_Branch()
@@ -382,19 +388,7 @@ inisMovement:= FALSE;
                        -- WHERE Container.ObjectId <> zc_Enum_Account_50401() -- "Маркетинг"
                        --   AND Container.ObjectId <> zc_Enum_AccountDirection_70300() нужно убрать проводки по оплате маркетинга
                        )
- , tmpContainer AS (SELECT Container.Id AS ContainerId
-                            , tmpContractGroup.JuridicalId
-                            , tmpContractGroup.ContractId_child
-                            , tmpContractGroup.InfoMoneyId_child
-                            , tmpContractGroup.PaidKindId_byBase
-                            , COALESCE (Container.BranchId,0) AS BranchId
-                       FROM tmpContainerSUM AS Container
-                            -- ограничение по 4-м ключам
-                            JOIN tmpContractGroup ON tmpContractGroup.JuridicalId       = Container.JuridicalId
-                                                 AND tmpContractGroup.ContractId_child  = Container.ContractId
-                                                 AND tmpContractGroup.InfoMoneyId_child = Container.InfoMoneyId
-                                                 AND tmpContractGroup.PaidKindId_byBase = Container.PaidKindId
-                       )
+ 
       , tmpMovementCont AS (SELECT tmpContainer.JuridicalId
                                  , tmpContainer.ContractId_child
                                  , tmpContainer.InfoMoneyId_child

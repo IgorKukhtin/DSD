@@ -25,6 +25,11 @@ RETURNS TABLE (ContainerId Integer, BankName TVarChar, BankAccountName TVarChar
              , DebetSumm TFloat, KreditSumm TFloat
              , EndAmount TFloat, EndAmountD TFloat, EndAmountK TFloat
 
+             , StartAmount_Currency TFloat, StartAmountD_Currency TFloat, StartAmountK_Currency TFloat
+             , DebetSumm_Currency TFloat, KreditSumm_Currency TFloat
+             , EndAmount_Currency TFloat, EndAmountD_Currency TFloat, EndAmountK_Currency TFloat
+             , Summ_Currency TFloat, Summ_Currency_pl TFloat
+             
              , GroupId Integer, GroupName TVarChar
              , CashName TVarChar
              , Comment TVarChar
@@ -73,6 +78,12 @@ BEGIN
                              , tmpReport_BankAccount.GroupId , tmpReport_BankAccount.GroupName 
                              , tmpReport_BankAccount.CashName
                              , tmpReport_BankAccount.Comment 
+
+             , tmpReport_BankAccount.StartAmount_Currency, tmpReport_BankAccount.StartAmountD_Currency, tmpReport_BankAccount.StartAmountK_Currency
+             , tmpReport_BankAccount.DebetSumm_Currency, tmpReport_BankAccount.KreditSumm_Currency
+             , tmpReport_BankAccount.EndAmount_Currency, tmpReport_BankAccount.EndAmountD_Currency, tmpReport_BankAccount.EndAmountK_Currency
+             , tmpReport_BankAccount.Summ_Currency, tmpReport_BankAccount.Summ_pl AS Summ_Currency_pl
+             
                         FROM tmpReport_BankAccount 
                        UNION ALL
                         SELECT tmpReport_Cash.ContainerId 
@@ -92,6 +103,10 @@ BEGIN
                             , tmpReport_Cash.GroupId , tmpReport_Cash.GroupName 
                              , tmpReport_Cash.CashName
                             , tmpReport_Cash.Comment 
+             , tmpReport_Cash.StartAmount_Currency, tmpReport_Cash.StartAmountD_Currency, tmpReport_Cash.StartAmountK_Currency
+             , tmpReport_Cash.DebetSumm_Currency, tmpReport_Cash.KreditSumm_Currency
+             , tmpReport_Cash.EndAmount_Currency, tmpReport_Cash.EndAmountD_Currency, tmpReport_Cash.EndAmountK_Currency
+             , tmpReport_Cash.Summ_Currency, tmpReport_Cash.Summ_Currency_pl
                         FROM tmpReport_Cash
          )
                         SELECT tmpResult.ContainerId 
@@ -124,6 +139,12 @@ BEGIN
                              , tmpResult.EndAmount
                              , tmpResult.EndAmountD 
                              , tmpResult.EndAmountK 
+
+             , tmpResult.StartAmount_Currency, tmpResult.StartAmountD_Currency, tmpResult.StartAmountK_Currency
+             , tmpResult.DebetSumm_Currency, tmpResult.KreditSumm_Currency
+             , tmpResult.EndAmount_Currency, tmpResult.EndAmountD_Currency, tmpResult.EndAmountK_Currency
+             , tmpResult.Summ_Currency, tmpResult.Summ_Currency_pl
+             
                              , tmpResult.GroupId
                              , tmpResult.GroupName 
                              , tmpResult.CashName

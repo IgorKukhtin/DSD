@@ -5,9 +5,8 @@ inherited CashJournalForm: TCashJournalForm
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitTop = -129
   ExplicitWidth = 991
-  ExplicitHeight = 586
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1771,9 +1770,16 @@ inherited CashJournalForm: TCashJournalForm
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisDate'
+        Value = 'false'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 655
-    Top = 320
+    Left = 599
+    Top = 312
   end
 end

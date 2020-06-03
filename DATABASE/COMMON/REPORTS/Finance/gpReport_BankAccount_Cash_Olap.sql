@@ -1,4 +1,4 @@
--- Function: gpReport_Cash
+-- Function: gpReport_BankAccount_Cash_Olap
 
 DROP FUNCTION IF EXISTS gpReport_BankAccount_Cash_Olap (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
