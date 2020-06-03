@@ -66,7 +66,7 @@ BEGIN
     -- !!!название состоит из: <Юридическое лицо> + <Условное обозначение> + <Адрес точки доставки>!!!
     outPartnerName:= COALESCE ((SELECT ValueData FROM Object WHERE Id = inJuridicalId), '')
                    || CASE WHEN inShortName <> ''
-                                THEN ' буд.' || inShortName
+                                THEN ' ' || inShortName
                            ELSE ''
                       END
                    || CASE WHEN TRIM (outAddress) <> ''

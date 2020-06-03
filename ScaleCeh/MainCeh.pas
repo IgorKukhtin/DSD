@@ -137,7 +137,7 @@ type
     LabelGoodsKind: TLabel;
     PanelGoodsKindCode: TPanel;
     EditGoodsKindCode: TcxCurrencyEdit;
-    Panel3: TPanel;
+    infoPanelGoodsCode: TPanel;
     PanelGoodsCode: TPanel;
     LabelGoodsCode: TLabel;
     EditGoodsCode: TcxCurrencyEdit;
@@ -513,9 +513,9 @@ begin
           if i2>22 then PanelGoodsKind.Height:=205
           else if i2>15 then PanelGoodsKind.Height:=185 else PanelGoodsKind.Height:=155;
           if SettingMain.isModeSorting = TRUE
-          then begin PanelGoodsKind.Height:= 275;
-                     PanelGoodsKind.Font.Size:= 10;
-                     rgGoodsKind.Font.Size:= 10;
+          then begin PanelGoodsKind.Height:= 375;
+                     PanelGoodsKind.Font.Size:= 14;
+                     rgGoodsKind.Font.Size:= 14;
           end;
           //
           ItemIndex:=0;
@@ -1013,7 +1013,7 @@ begin
 
             oldGoodsId:=ParamsMI.ParamByName('GoodsId').AsInteger;
             if SettingMain.isModeSorting = TRUE
-            then begin ActiveControl:=EditGoodsCode; oldGoodsId:=0; end
+            then begin oldGoodsId:=0; ActiveControl:=EditGoodsCode; end
             else
             begin
                  Initialize_afterSave_MI;
@@ -1026,6 +1026,8 @@ begin
        end;
     finally
       //Timer_GetWeight.Enabled:= SettingMain.isModeSorting = TRUE;
+      if SettingMain.isModeSorting = TRUE
+      then begin oldGoodsId:=0; ActiveControl:=EditGoodsCode; end
    end;
 end;
 //------------------------------------------------------------------------------------------------
@@ -2488,7 +2490,26 @@ begin
   //rename Columns
   if SettingMain.isModeSorting = TRUE then
   begin
-    PanelSaveItem.Width:= 180;
+    PanelInfo.Width:= 422;
+    PanelInfo.Font.Size:= 14;
+
+    infoPanelGoodsCode.Height:=2 * infoPanelGoodsCode.Height;
+    PanelGoods.Height:=2 * PanelGoods.Height;
+    PanelGoodsName.Font.Size:=14;
+    PanelGoodsWeight.Font.Size:=14;
+
+    LabelGoods.ParentFont:= true;
+    LabelGoodsCode.ParentFont:= true;
+    LabelGoodsWeight.ParentFont:= true;
+
+    EditGoodsCode.Top:= EditGoodsCode.Top + 15;
+
+    PanelGoodsKindCode.Height:=2 * PanelGoodsKindCode.Height;
+    LabelGoodsKind.Font.Size:= 14;
+    EditGoodsKindCode.Style.Font.Size:= 14;
+    EditGoodsKindCode.Top:= EditGoodsKindCode.Top + 15;
+
+    PanelSaveItem.Width:= 270;
     //
     bbChoice_UnComlete.Visible:= false;
     bbView_all.Visible:= false;

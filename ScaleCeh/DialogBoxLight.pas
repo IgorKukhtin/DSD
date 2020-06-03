@@ -18,7 +18,6 @@ type
     infoMsgPanel: TPanel;
     MsgBlinkLabel: TcxLabel;
     Box3Label: TcxLabel;
-    MsgMainLabel: TcxLabel;
     Box1Panel: TPanel;
     Box1Label: TcxLabel;
     Box2Panel: TPanel;
@@ -33,6 +32,10 @@ type
     Box3Edit: TcxTextEdit;
     Box2Edit: TcxTextEdit;
     Box1Edit: TcxTextEdit;
+    MsgMainPanel: TPanel;
+    MsgMain1Label: TcxLabel;
+    MsgMain3Label: TcxLabel;
+    MsgMain2Label: TcxLabel;
     procedure Box1EditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Box2EditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Box3EditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -187,19 +190,24 @@ begin
      end;
      //
      if ParamByName('Count_box').AsInteger > 0
-     then
-       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                             +' вид = ' + ParamByName('BoxName_1').asString
-                             +' (' + FormatFloat(fmtFloat_3, (ParamByName('WeightOnBox_1').asFloat
-                                                            + ParamByName('WeightOnBox_2').asFloat / 3
-                                                            + ParamByName('WeightOnBox_3').asFloat
-                                                             ) / ParamByName('Count_box').AsInteger
-                                                ) + ' кг.)'
-     else
-       MsgMainLabel.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
-                             +' вид = ' + ParamByName('BoxName_1').asString
-                             +' (' + FormatFloat(fmtFloat_3, 0.0) + ' кг.)'
-                            ;
+     then begin
+       MsgMain1Label.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                              +' вид = ';
+       MsgMain2Label.Caption:= ParamByName('BoxName_1').asString;
+       MsgMain3Label.Caption:= ' (' + FormatFloat(fmtFloat_3, (ParamByName('WeightOnBox_1').asFloat
+                                                             + ParamByName('WeightOnBox_2').asFloat / 3
+                                                             + ParamByName('WeightOnBox_3').asFloat
+                                                              ) / ParamByName('Count_box').AsInteger
+                                                 ) + ' кг.)'
+                             ;
+     end
+     else begin
+       MsgMain1Label.Caption:= 'нужно ящиков = (' + IntToStr(ParamByName('Count_box').AsInteger)+' шт.)'
+                              +' вид = ';
+       MsgMain2Label.Caption:= ParamByName('BoxName_1').asString;
+       MsgMain3Label.Caption:= ' (' + FormatFloat(fmtFloat_3, 0.0) + ' кг.)'
+                             ;
+     end;
    end;
    //
    fStartWrite:= false;

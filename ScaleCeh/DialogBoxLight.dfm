@@ -1,19 +1,19 @@
 inherited DialogBoxLightForm: TDialogBoxLightForm
   Caption = #1042#1074#1086#1076' '#1064'/'#1050' '#1080#1083#1080' '#1082#1086#1076' '#1103#1097#1080#1082#1072
-  ClientHeight = 216
-  ClientWidth = 374
+  ClientHeight = 291
+  ClientWidth = 478
   OldCreateOrder = True
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 390
-  ExplicitHeight = 251
+  ExplicitWidth = 494
+  ExplicitHeight = 326
   PixelsPerInch = 96
   TextHeight = 14
   inherited bbPanel: TPanel
-    Top = 175
-    Width = 374
+    Top = 250
+    Width = 478
     ExplicitTop = 175
     ExplicitWidth = 374
     inherited bbOk: TBitBtn
@@ -33,62 +33,91 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
   object PanelValue: TPanel
     Left = 0
     Top = 0
-    Width = 374
-    Height = 175
+    Width = 478
+    Height = 250
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 374
+    ExplicitHeight = 175
     object Box3Panel: TPanel
       Left = 0
-      Top = 41
-      Width = 374
-      Height = 41
+      Top = 70
+      Width = 478
+      Height = 58
       Align = alTop
       TabOrder = 0
       object Box3Label: TcxLabel
         Left = 38
-        Top = 11
+        Top = 14
         Caption = #1051#1080#1085#1080#1103' 3 :'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -19
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
       end
       object BoxCode3Label: TcxLabel
-        Left = 108
-        Top = 11
+        Left = 125
+        Top = 17
         Caption = '(123)'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -16
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         Properties.Alignment.Horz = taRightJustify
-        AnchorX = 138
+        AnchorX = 166
       end
       object Light_3Memo: TMemo
-        Left = 278
-        Top = 10
+        Left = 370
+        Top = 12
         Width = 33
-        Height = 22
+        Height = 32
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         ReadOnly = True
         TabOrder = 2
         OnEnter = Light_1MemoEnter
       end
       object Box3Edit: TcxTextEdit
-        Left = 144
-        Top = 10
+        Left = 175
+        Top = 12
+        ParentFont = False
         Properties.MaxLength = 128
         Properties.OnChange = Box3EditChange
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -21
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         TabOrder = 3
         OnEnter = Box3EditEnter
         OnExit = Box3EditExit
         OnKeyDown = Box3EditKeyDown
         OnKeyPress = Box3EditKeyPress
-        Width = 117
+        Width = 180
       end
     end
     object infoMsgPanel: TPanel
       Left = 0
       Top = 0
-      Width = 374
-      Height = 41
+      Width = 478
+      Height = 70
       Align = alTop
       TabOrder = 1
       object MsgBlinkLabel: TcxLabel
         Left = 1
-        Top = 19
+        Top = 33
         Align = alClient
         Caption = #1055#1088#1086#1089#1082#1072#1085#1080#1088#1091#1081#1090#1077' '#1085#1072' '#1082#1072#1082#1086#1081' '#1083#1080#1085#1080#1080' '#1073#1091#1076#1091#1090' '#1064#1058'.'
         ParentColor = False
@@ -98,113 +127,230 @@ inherited DialogBoxLightForm: TDialogBoxLightForm
         Style.Color = clBtnFace
         Style.Font.Charset = RUSSIAN_CHARSET
         Style.Font.Color = clWindowText
-        Style.Font.Height = -11
+        Style.Font.Height = -19
         Style.Font.Name = 'Arial Narrow'
         Style.Font.Style = [fsBold]
         Style.IsFontAssigned = True
         Properties.Alignment.Horz = taCenter
         Properties.Alignment.Vert = taVCenter
-        AnchorX = 187
-        AnchorY = 30
+        ExplicitTop = 19
+        ExplicitWidth = 372
+        ExplicitHeight = 21
+        AnchorX = 239
+        AnchorY = 51
       end
-      object MsgMainLabel: TcxLabel
+      object MsgMainPanel: TPanel
         Left = 1
         Top = 1
+        Width = 476
+        Height = 32
         Align = alTop
-        Caption = #1042#1072#1084' '#1087#1086#1085#1072#1076#1086#1073#1080#1090#1089#1103' 3 '#1103#1097#1080#1082#1072' '#1045'2 (12 '#1082#1075'.) '#1076#1083#1103' '#1089#1086#1088#1090#1080#1088#1086#1074#1082#1080
-        ParentFont = False
-        Style.Font.Charset = RUSSIAN_CHARSET
-        Style.Font.Color = clWindowText
-        Style.Font.Height = -11
-        Style.Font.Name = 'Arial'
-        Style.Font.Style = [fsBold]
-        Style.HotTrack = False
-        Style.Shadow = False
-        Style.IsFontAssigned = True
-        Properties.Alignment.Horz = taCenter
-        AnchorX = 187
+        BevelOuter = bvNone
+        TabOrder = 1
+        object MsgMain1Label: TcxLabel
+          Left = 0
+          Top = 0
+          Align = alLeft
+          AutoSize = False
+          Caption = #1085#1091#1078#1085#1086' '#1103#1097#1080#1082#1086#1074' = (3 '#1096#1090'.) '#1074#1080#1076' = '
+          ParentFont = False
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -19
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.HotTrack = False
+          Style.Shadow = False
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taRightJustify
+          Properties.Alignment.Vert = taVCenter
+          Height = 32
+          Width = 337
+          AnchorX = 337
+          AnchorY = 16
+        end
+        object MsgMain3Label: TcxLabel
+          Left = 368
+          Top = 0
+          Align = alRight
+          AutoSize = False
+          Caption = ' (9 '#1082#1075'.)'
+          ParentFont = False
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clWindowText
+          Style.Font.Height = -19
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.HotTrack = False
+          Style.Shadow = False
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taLeftJustify
+          Properties.Alignment.Vert = taVCenter
+          ExplicitLeft = 369
+          Height = 32
+          Width = 108
+          AnchorY = 16
+        end
+        object MsgMain2Label: TcxLabel
+          Left = 337
+          Top = 0
+          Align = alClient
+          AutoSize = False
+          Caption = #1045'2'
+          ParentFont = False
+          Style.Font.Charset = RUSSIAN_CHARSET
+          Style.Font.Color = clBlue
+          Style.Font.Height = -21
+          Style.Font.Name = 'Arial'
+          Style.Font.Style = [fsBold]
+          Style.HotTrack = False
+          Style.Shadow = False
+          Style.IsFontAssigned = True
+          Properties.Alignment.Horz = taCenter
+          Properties.Alignment.Vert = taVCenter
+          ExplicitLeft = 331
+          ExplicitTop = -6
+          Height = 32
+          Width = 31
+          AnchorX = 353
+          AnchorY = 16
+        end
       end
     end
     object Box1Panel: TPanel
       Left = 0
-      Top = 123
-      Width = 374
-      Height = 41
+      Top = 186
+      Width = 478
+      Height = 58
       Align = alTop
       TabOrder = 2
       object Box1Label: TcxLabel
         Left = 38
-        Top = 11
+        Top = 14
         Caption = #1051#1080#1085#1080#1103' 1 :'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -19
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
       end
       object BoxCode1Label: TcxLabel
-        Left = 108
-        Top = 11
+        Left = 125
+        Top = 17
         Caption = '(123)'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -16
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         Properties.Alignment.Horz = taRightJustify
-        AnchorX = 138
+        AnchorX = 166
       end
       object Light_1Memo: TMemo
-        Left = 278
-        Top = 10
+        Left = 370
+        Top = 12
         Width = 33
-        Height = 22
+        Height = 32
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         ReadOnly = True
         TabOrder = 2
         OnEnter = Light_1MemoEnter
       end
       object Box1Edit: TcxTextEdit
-        Left = 144
-        Top = 10
+        Left = 175
+        Top = 12
+        ParentFont = False
         Properties.MaxLength = 128
         Properties.OnChange = Box1EditChange
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -21
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         TabOrder = 3
         OnEnter = Box1EditEnter
         OnExit = Box1EditExit
         OnKeyDown = Box1EditKeyDown
         OnKeyPress = Box1EditKeyPress
-        Width = 117
+        Width = 180
       end
     end
     object Box2Panel: TPanel
       Left = 0
-      Top = 82
-      Width = 374
-      Height = 41
+      Top = 128
+      Width = 478
+      Height = 58
       Align = alTop
       TabOrder = 3
       object Box2Label: TcxLabel
         Left = 38
-        Top = 11
+        Top = 14
         Caption = #1051#1080#1085#1080#1103' 2 :'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -19
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
       end
       object BoxCode2Label: TcxLabel
-        Left = 108
-        Top = 11
+        Left = 125
+        Top = 17
         Caption = '(123)'
+        ParentFont = False
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -16
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         Properties.Alignment.Horz = taRightJustify
-        AnchorX = 138
+        AnchorX = 166
       end
       object Light_2Memo: TMemo
-        Left = 278
-        Top = 10
+        Left = 370
+        Top = 12
         Width = 33
-        Height = 22
+        Height = 32
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -19
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
         ReadOnly = True
         TabOrder = 2
         OnEnter = Light_1MemoEnter
       end
       object Box2Edit: TcxTextEdit
-        Left = 144
-        Top = 10
+        Left = 175
+        Top = 12
+        ParentFont = False
         Properties.MaxLength = 128
         Properties.OnChange = Box2EditChange
+        Style.Font.Charset = DEFAULT_CHARSET
+        Style.Font.Color = clWindowText
+        Style.Font.Height = -21
+        Style.Font.Name = 'Arial'
+        Style.Font.Style = []
+        Style.IsFontAssigned = True
         TabOrder = 3
         OnEnter = Box2EditEnter
         OnExit = Box2EditExit
         OnKeyDown = Box2EditKeyDown
         OnKeyPress = Box2EditKeyPress
-        Width = 117
+        Width = 180
       end
     end
   end

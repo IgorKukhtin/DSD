@@ -1661,17 +1661,17 @@ object MainCehForm: TMainCehForm
           Left = 0
           Top = 0
           Width = 130
-          Height = 13
+          Height = 25
           Align = alTop
           Alignment = taCenter
           Caption = '= 0 '#1096#1090'. E2'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlue
-          Font.Height = -11
+          Font.Height = -21
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 57
+          ExplicitWidth = 111
         end
       end
       object Space1Panel: TPanel
@@ -2145,7 +2145,7 @@ object MainCehForm: TMainCehForm
         ParentFont = False
         ExplicitWidth = 61
       end
-      object Panel3: TPanel
+      object infoPanelGoodsCode: TPanel
         Left = 0
         Top = 14
         Width = 222

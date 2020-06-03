@@ -285,6 +285,7 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trip(),      inDescId:= zc_Object_WorkTimeKind(), inCode:= 15, inName:= 'Командировка' , inEnumName:= 'zc_Enum_WorkTimeKind_Trip');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 13, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkD');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 14, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_WorkN');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 17, inDescId:= zc_Object_WorkTimeKind(), inEnumName:= 'zc_Enum_WorkTimeKind_Audit');
 
 
      -- !!! Типы формирования налогового документа
