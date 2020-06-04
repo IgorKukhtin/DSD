@@ -2118,6 +2118,14 @@ inherited Report_RemainsOverGoods_NForm: TReport_RemainsOverGoods_NForm
           DataType = ftFloat
           ParamType = ptInput
           MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isSendAll'
+          Value = Null
+          Component = cbSendAll
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
         end>
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher

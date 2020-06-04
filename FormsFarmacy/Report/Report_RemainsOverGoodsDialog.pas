@@ -59,6 +59,7 @@ type
     edDayIncome: TcxCurrencyEdit;
     cbSummSend: TcxCheckBox;
     edSummSend: TcxCurrencyEdit;
+    cbSendAll: TcxCheckBox;
   private
     { Private declarations }
   public

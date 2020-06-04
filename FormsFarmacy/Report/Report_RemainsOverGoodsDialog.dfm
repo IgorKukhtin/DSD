@@ -3,7 +3,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072' < '#1056#1072#1089#1087#1088#1077#1076#1077#1083#1077#1085#1080#1081' '#1080#1079#1083#1080#1096#1082#1086#1074' '#1087#1086' '#1072#1087#1090#1077#1082#1072#1084'>'
-  ClientHeight = 452
+  ClientHeight = 470
   ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   TextHeight = 13
   object cxButton1: TcxButton
     Left = 43
-    Top = 415
+    Top = 438
     Width = 75
     Height = 25
     Caption = 'Ok'
@@ -29,7 +29,7 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
   end
   object cxButton2: TcxButton
     Left = 217
-    Top = 415
+    Top = 438
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -216,6 +216,17 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
     TabOrder = 24
     Width = 30
   end
+  object cbSendAll: TcxCheckBox
+    Left = 8
+    Top = 401
+    Hint = #1076#1083#1103' '#1072#1087#1090#1077#1082'-'#1087#1086#1083#1091#1095#1072#1090#1077#1083#1077#1081' '#1080#1079#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1053#1058#1047' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+    Caption = #1087#1077#1088#1077#1084#1077#1097#1072#1090#1100' '#1074#1089#1077
+    Style.BorderColor = clGray
+    Style.Shadow = False
+    Style.TextColor = clRed
+    TabOrder = 25
+    Width = 152
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     Left = 153
@@ -373,6 +384,14 @@ object Report_RemainsOverGoodsDialogForm: TReport_RemainsOverGoodsDialogForm
         Name = 'isSummSend'
         Value = Null
         Component = cbSummSend
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isSendAll'
+        Value = Null
+        Component = cbSendAll
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

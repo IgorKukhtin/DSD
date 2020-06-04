@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, PersonalId Integer, PersonalCode Integer, PersonalNam
              , SummCompensation TFloat, SummCompensationRecalc TFloat
              , DayCompensation TFloat, PriceCompensation TFloat
              , DayVacation TFloat, DayHoliday TFloat, DayWork TFloat
+             , DayAudit TFloat
              , Comment TVarChar
              , isErased Boolean
              , isAuto Boolean
@@ -266,6 +267,7 @@ BEGIN
             , MIFloat_DayVacation.ValueData             ::TFloat AS DayVacation
             , MIFloat_DayHoliday.ValueData              ::TFloat AS DayHoliday
             , MIFloat_DayWork.ValueData                 ::TFloat AS DayWork
+            , MIFloat_DayAudit.ValueData                ::TFloat AS DayAudit
 
             , MIString_Comment.ValueData       AS Comment
             , tmpAll.isErased
@@ -423,6 +425,10 @@ BEGIN
                                         ON MIFloat_DayWork.MovementItemId = tmpAll.MovementItemId
                                        AND MIFloat_DayWork.DescId = zc_MIFloat_DayWork()
 
+            LEFT JOIN MovementItemFloat AS MIFloat_DayAudit
+                                        ON MIFloat_DayAudit.MovementItemId = tmpAll.MovementItemId
+                                       AND MIFloat_DayAudit.DescId = zc_MIFloat_DayAudit()
+
             LEFT JOIN MovementItemBoolean AS MIBoolean_Main
                                           ON MIBoolean_Main.MovementItemId = tmpAll.MovementItemId
                                          AND MIBoolean_Main.DescId = zc_MIBoolean_Main()
@@ -478,6 +484,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalService (Integer, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.20         * DayAudit
  25.03.20         * add SummAuditAdd
  05.02.20         *
  27.01.19         *

@@ -219,6 +219,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAuditAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDayAudit
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -410,6 +415,11 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = TotalSummAuditAdd
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = TotalDayAudit
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -842,6 +852,19 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1072#1091#1076#1080#1090
+            Width = 80
+          end
+          object TotalDayAudit: TcxGridDBColumn
+            Caption = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102', '#1076#1085#1077#1081
+            DataBinding.FieldName = 'TotalDayAudit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1044#1085#1077#1081' '#1076#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
+            Options.Editing = False
             Width = 80
           end
           object isAuto: TcxGridDBColumn
