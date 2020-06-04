@@ -3145,6 +3145,9 @@ end;
 
 procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindSummDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindSummDialogForm');
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindEditForm'));

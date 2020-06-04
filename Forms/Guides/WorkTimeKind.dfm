@@ -3,7 +3,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
   Top = 0
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
-  ClientWidth = 686
+  ClientWidth = 624
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,15 +14,17 @@ object WorkTimeKindForm: TWorkTimeKindForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 686
+    Width = 624
     Height = 350
     Align = alClient
     TabOrder = 0
+    ExplicitWidth = 686
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -49,7 +51,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 36
+        Width = 33
       end
       object Name: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -58,14 +60,14 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 204
+        Width = 190
       end
       object ShortName: TcxGridDBColumn
         Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'ShortName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 129
+        Width = 120
       end
       object Tax: TcxGridDBColumn
         Caption = '% '#1080#1079#1084'. '#1088'.'#1095'.'
@@ -73,7 +75,18 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderHint = '% '#1080#1079#1084#1077#1085#1077#1085#1080#1103' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
-        Width = 57
+        Width = 53
+      end
+      object Summ: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+        DataBinding.FieldName = 'Summ'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderHint = #1057#1091#1084#1084#1072' '#1074' '#1075#1088#1085' '#1079#1072' '#1101#1090#1086#1090' '#1088#1072#1073#1086#1095#1080#1081' '#1076#1077#1085#1100
+        Options.Editing = False
+        Width = 100
       end
       object Value: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
@@ -81,7 +94,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 95
+        Width = 69
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -98,7 +111,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 145
+        Width = 107
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -201,6 +214,14 @@ object WorkTimeKindForm: TWorkTimeKindForm
           ItemName = 'bbChoiceGuide'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_Summ'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -268,6 +289,10 @@ object WorkTimeKindForm: TWorkTimeKindForm
     end
     object bbProtocolOpenForm: TdxBarButton
       Action = actProtocol
+      Category = 0
+    end
+    object bbUpdate_Summ: TdxBarButton
+      Action = macUpdate_Summ
       Category = 0
     end
   end
@@ -450,6 +475,61 @@ object WorkTimeKindForm: TWorkTimeKindForm
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
+    object ExecuteDialogSumm: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+      Hint = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+      ImageIndex = 50
+      FormName = 'TWorkTimeKindSummDialogForm'
+      FormNameParam.Value = 'TWorkTimeKindSummDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inSumm'
+          Value = 'NULL'
+          Component = FormParams
+          ComponentItem = 'inSumm'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_Summ: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_Summ
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_Summ
+        end>
+      Caption = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      Hint = 'C'#1093#1077#1084#1072' '#1088#1072#1089#1095#1077#1090#1072' '#1094#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1087#1086#1089#1090#1088#1086#1095#1085#1086')'
+      ImageIndex = 50
+    end
+    object macUpdate_Summ: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogSumm
+        end
+        item
+          Action = actUpdate_Summ
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+      ImageIndex = 50
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_WorkTimeKind'
@@ -491,6 +571,7 @@ object WorkTimeKindForm: TWorkTimeKindForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 296
     Top = 168
   end
@@ -549,5 +630,36 @@ object WorkTimeKindForm: TWorkTimeKindForm
     PackSize = 1
     Left = 400
     Top = 232
+  end
+  object spUpdate_Summ: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_WorkTimeKind_Summ'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSumm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSumm'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 440
+    Top = 176
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 479
+    Top = 95
   end
 end

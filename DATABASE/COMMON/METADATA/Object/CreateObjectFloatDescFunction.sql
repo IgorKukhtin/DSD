@@ -1033,6 +1033,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_WorkTimeKind_Tax() RETURNS Integer AS 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_WorkTimeKind_Tax', zc_Object_WorkTimeKind(), '% изменения рабочих часов' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_WorkTimeKind_Tax');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_WorkTimeKind_Summ() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_WorkTimeKind_Summ'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectFloat_WorkTimeKind_Summ', zc_Object_WorkTimeKind(), 'Сумма в грн за этот рабочий день' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_WorkTimeKind_Summ');
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_ReportCollation_StartRemainsRep() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_ReportCollation_StartRemainsRep'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
@@ -1785,6 +1788,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 04.06.20         * zc_ObjectFloat_WorkTimeKind_Summ
  02.06.20                                                                                      * zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP
  27.05.20                                                                                      * zc_ObjectFloat_CashSettings_SummaFormSendVIP
  28.05.20         * zc_ObjectFloat_ContractCondition_PercentRetBonus

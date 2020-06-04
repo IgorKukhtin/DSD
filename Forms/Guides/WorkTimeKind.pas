@@ -20,7 +20,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCurrencyEdit;
 
 type
   TWorkTimeKindForm = class(TParentForm)
@@ -63,6 +64,12 @@ type
     Value: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     EnumName: TcxGridDBColumn;
+    spUpdate_Summ: TdsdStoredProc;
+    ExecuteDialogSumm: TExecuteDialog;
+    actUpdate_Summ: TdsdExecStoredProc;
+    macUpdate_Summ: TMultiAction;
+    FormParams: TdsdFormParams;
+    bbUpdate_Summ: TdxBarButton;
   private
     { Private declarations }
   public
