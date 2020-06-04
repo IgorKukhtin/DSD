@@ -870,12 +870,11 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOverGoods_NForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOverGoods_NForm');
-  { exit;
+  {exit;
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ImplementationPeriodForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ImplementationPeriodForm');
    exit;
-
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_WillNotOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_WillNotOrderForm');
