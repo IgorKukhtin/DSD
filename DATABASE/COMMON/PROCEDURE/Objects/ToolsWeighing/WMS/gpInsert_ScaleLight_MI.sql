@@ -115,14 +115,14 @@ BEGIN
      THEN
        --RAISE EXCEPTION 'Ошибка.Вес = <%> не должен быть больше 9.999 кг.', inRealWeight;
          vbResultText:= 'Ошибка.Вес = <' || zfConvert_FloatToString (inRealWeight) || '> не должен быть больше 9.999 кг.';
-         IF inIsErrSave = FALSE THEN RETURN; END IF;
+         -- IF inIsErrSave = FALSE THEN RETURN; END IF;
      END IF;
      -- проверка - вес больше 0.010 кг.
      IF inRealWeight <= 0.050
      THEN
        --RAISE EXCEPTION 'Ошибка.Вес = <%> должен быть меньше 0.050 кг.', inRealWeight;
          vbResultText:= 'Ошибка.Вес = <' || zfConvert_FloatToString (inRealWeight) || '> не должен быть меньше 0.050 кг.';
-         IF inIsErrSave = FALSE THEN RETURN; END IF;
+         -- IF inIsErrSave = FALSE THEN RETURN; END IF;
      END IF;
 
 
@@ -191,7 +191,7 @@ BEGIN
              ELSE
                --RAISE EXCEPTION 'Ошибка. Не определено <ШТ.> или <НОМ.> или <ВЕС>';
                  vbResultText:= 'Ошибка.Не определена линия для <ШТ.> или <НОМ.> или <ВЕС>';
-                 IF inIsErrSave = FALSE THEN RETURN; END IF;
+                 -- IF inIsErrSave = FALSE THEN RETURN; END IF;
              END IF;
 
 
@@ -238,7 +238,7 @@ BEGIN
              ELSE
                --RAISE EXCEPTION 'Ошибка. Не определено <ШТ.> или <НОМ.> или <ВЕС>';
                  vbResultText:= 'Ошибка.Не определена линия для <ШТ.> или <НОМ.> или <ВЕС>';
-                 IF inIsErrSave = FALSE THEN RETURN; END IF;
+                 -- IF inIsErrSave = FALSE THEN RETURN; END IF;
              END IF;
 
 
@@ -280,7 +280,7 @@ BEGIN
              ELSE
                --RAISE EXCEPTION 'Ошибка. Не определено <ШТ.> или <НОМ.> или <ВЕС>';
                  vbResultText:= 'Ошибка.Не определена линия для <ШТ.> или <НОМ.> или <ВЕС>';
-                 IF inIsErrSave = FALSE THEN RETURN; END IF;
+                 -- IF inIsErrSave = FALSE THEN RETURN; END IF;
              END IF;
 
 

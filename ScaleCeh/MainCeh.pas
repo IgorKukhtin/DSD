@@ -2942,6 +2942,7 @@ end;
 function TMainCehForm.fGetScale_TimerWeight:Boolean;
 var tmpCurrentWeight : Double;
     WeightMin_test, WeightMax_test : Double;
+    tmpWeight_test_zero : Double;
 begin
      Result:= false;
      // если вообще не надо
@@ -3028,7 +3029,18 @@ begin
                                       //tmpWeight_test:= WeightMax_test + 0.001;
                                       tmpWeight_test:= 0;
                                  //
-                                 //tmpWeight_test:= 0.495;
+                                 //*****
+                                 tmpWeight_test_zero:= 0;
+                                 if (System.Pos('ves=',ParamStr(1))>0)and(tmpWeight_test_zero=0)
+                                 then tmpWeight_test_zero:=myStrToFloat(Copy(ParamStr(1), 5, LengTh(ParamStr(1))-4));
+                                 if (System.Pos('ves=',ParamStr(2))>0)and(tmpWeight_test_zero=0)
+                                 then tmpWeight_test_zero:=myStrToFloat(Copy(ParamStr(2), 5, LengTh(ParamStr(2))-4));
+                                 if (System.Pos('ves=',ParamStr(3))>0)and(tmpWeight_test_zero=0)
+                                 then tmpWeight_test_zero:=myStrToFloat(Copy(ParamStr(3), 5, LengTh(ParamStr(3))-4));
+                                 if tmpWeight_test_zero < 0.020 then tmpWeight_test:= tmpWeight_test_zero;
+                                 //*****
+                                 //
+                                 //tmpWeight_test:= 0.250;
                                  //
                                  ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
                                  SetParams_OperCount;
