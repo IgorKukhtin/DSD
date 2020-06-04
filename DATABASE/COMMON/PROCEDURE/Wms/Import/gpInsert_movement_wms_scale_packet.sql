@@ -13,9 +13,10 @@ $BODY$
    DEClARE vbMovementId Integer;
 BEGIN
      -- создали Документ
-     vbMovementId := lpInsert_movement_wms_scale_header (inOrderId    := inOrderId
-                                                       , inSession    := inSession
-                                                        );
+     vbMovementId := lpInsert_wms_order_status_changed_Movement (inMovementId := 0
+                                                               , inOrderId    := inOrderId
+                                                               , inSession    := inSession
+                                                                );
      -- создали Строчную часть
      PERFORM lpInsert_movement_wms_scale_detail (inOrderId    := inOrderId
                                                , inMovementId := vbMovementId

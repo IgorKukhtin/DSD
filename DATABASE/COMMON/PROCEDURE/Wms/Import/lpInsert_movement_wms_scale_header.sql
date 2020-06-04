@@ -1,47 +1,62 @@
-CREATE OR REPLACE FUNCTION lpInsert_movement_wms_scale_header (
-	IN inMovementId		Integer,  -- Ключ объекта <Документ>
-	IN inSession    	TVarChar  -- сессия пользователя
+-- Function: lpInsert_wms_order_status_changed_Movement()
+
+DROP FUNCTION IF EXISTS lpInsert_movement_wms_scale_header (Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsert_wms_order_status_changed_Movement (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION lpInsert_wms_order_status_changed_Movement (
+ INOUT inMovementId    Integer,  -- Ключ Документа
+    IN inOrderId       Integer,  -- Ключ заявки
+    IN inSession       TVarChar  -- сессия пользователя
 )
-RETURNS TABLE (Id Integer)
+RETURNS Integer
 AS			  
 $BODY$
-   DECLARE vbPaidkindid Integer;
-   DECLARE vbContractid Integer;
-   DECLARE vbFromid Integer;
-   DECLARE vbToid Integer;
+   DECLARE vbFromId     Integer;
+   DECLARE vbToId       Integer;
+   DECLARE vbPaidKindId Integer;
+   DECLARE vbContractId Integer;
 BEGIN 
 
-	SELECT 
-		  fromid
-		, toid
-		, paidkindid
-		, contractid 
-	INTO
-		  vbFromid
-		, vbToid
-		, vbPaidkindid
-		, vbContractid  
-	FROM  gpGet_Movement_OrderExternal (inMovementId := inMovementId
-									  , inOperDate   := CURRENT_TIMESTAMP
-									  , inSession    := inSession
-									  );
-	RETURN QUERY
-		SELECT tmp.Id 
-		FROM   gpinsertupdate_scale_movement (inid                 := 0
-		                                    , inOperDate           := CURRENT_TIMESTAMP
-										    , inmovementdescid     := 0
-										    , inmovementdescnumber := 0
-										    , infromid             := vbFromid
-										    , intoid               := vbToid
-										    , incontractid         := vbContractid
-										    , inpaidkindid         := vbPaidkindid
-										    , inpricelistid        := 0
-										    , inmovementid_order   := inMovementId
-										    , inchangepercent      := 0
-										    , inbranchcode         := 0
-										    , inSession            := inSession
-										    ) AS tmp;
+     -- Эти поля взяли из Заявки
+     SELECT gpGet.FromId
+          , gpGet.ToId
+          , gpGet.PaidKindId
+          , gpGet.ContractId 
+            INTO vbFromid
+               , vbToid
+               , vbPaidKindId
+               , ContractId  
+	FROM gpGet_Movement_OrderExternal (inMovementId := inMovementId
+                                         , inOperDate   := CURRENT_TIMESTAMP
+                                         , inSession    := inSession
+                                          ) AS gpGet;
+
+     -- создали Документ
+     inMovementId:= gpInsertUpdate_Scale_Movement (inid                 := inMovementId
+                                                 , inOperDate           := CURRENT_TIMESTAMP
+                                                 , inMovementDescId     := 0
+                                                 , inMovementDescNumber := 0
+                                                 , inFromId             := vbFromId
+                                                 , inToId               := vbToId
+                                                 , inContractId         := vbContractId
+                                                 , inPaidkindId         := vbPaidkindId
+                                                 , inPricelistId        := 0
+                                                 , inMovementId_order   := inMovementId
+                                                 , inChangePercent      := 0
+                                                 , inBranchCode         := 0
+                                                 , inSession            := inSession
+                                                  ) AS tmp;
 
 END; 
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;
+ 
+ /*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
+ 04.06.20                                        *
+ 03.06.20                                                          *
+*/
+
+-- тест
+-- SELECT * FROM lpInsert_wms_order_status_changed_Movement (inMovementId:= inOrderId:= 1, inSession:= zfCalc_UserAdmin())
