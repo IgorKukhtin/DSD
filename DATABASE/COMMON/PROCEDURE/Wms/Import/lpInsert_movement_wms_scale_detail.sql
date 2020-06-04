@@ -1,57 +1,62 @@
-CREATE OR REPLACE FUNCTION lpInsert_movement_wms_scale_detail (
-	IN inOrderId	    Integer,  -- код заявки
-	IN inNewMovementId	Integer,  -- код нового документа, созданного на основе заявки
+-- Function: lpInsert_wms_order_status_changed_MI()
+
+DROP FUNCTION IF EXISTS lpInsert_movement_wms_scale_detail (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpInsert_wms_order_status_changed_MI (Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION lpInsert_wms_order_status_changed_MI (
+	IN inMovementId     Integer,  -- Ключ Документа
+	IN inOrderId	    Integer,  -- Ключ заявки
 	IN inSession	    TVarChar  -- сессия пользователя
 )
 RETURNS void
 AS
 $BODY$
-	DECLARE vbGoodsid Integer;
-	DECLARE vbGoodskindid Integer;
-	DECLARE	vbChangepercentamount TFloat;
-	DECLARE vbPrice TFloat;
-	DECLARE	vbPrice_return TFloat;
-	DECLARE vbCountforprice TFloat;
-	DECLARE vbCountforprice_return TFloat;
-	DECLARE vbMovementid_promo Integer;
-	DECLARE vbWeight TFloat;
+   DECLARE vbGoodsId Integer;
+   DECLARE vbGoodsKindId Integer;
+   DECLARE vbChangePercentAmount TFloat;
+   DECLARE vbPrice TFloat;
+   DECLARE vbPrice_return TFloat;
+   DECLARE vbCountForPrice TFloat;
+   DECLARE vbCountForPrice_return TFloat;
+   DECLARE vbMovementId_promo Integer;
+   DECLARE vbWeight TFloat;
 BEGIN
 	
-	SELECT
-		  tmp.goodsid
-		, tmp.goodskindid
-		, tmp.changepercentamount
-		, tmp.price
-		, tmp.price_return
-		, tmp.countforprice
-		, tmp.countforprice_return
-		, tmp.movementid_promo
-		, tmp2.weight
+     -- Эти поля взяли из Заявки
+     SELECT tmp.GoodsId
+          , tmp.GoodsKindId
+          , tmp.ChangePercentAmount
+          , tmp.Price
+          , tmp.Price_return
+          , tmp.CountForPrice
+          , tmp.CountForPrice_return
+          , tmp.MovementId_promo
+          , tmp2.weight
 	INTO  
-	      vbGoodsid
-	    , vbGoodskindid
-		, vbChangepercentamount
-		, vbPrice
-		, vbPrice_return
-		, vbCountforprice
-		, vbCountforprice_return
-		, vbMovementid_promo
-		, vbWeight
-    FROM 
-		  gpselect_scale_goods (inisgoodscomplete      := TRUE
-		                      , inoperdate             := CURRENT_DATE
-							  , inmovementid           := 0
+	      vbGoodsId
+	    , vbGoodsKindId
+	    , vbChangePercentAmount
+	    , vbPrice
+	    , vbPrice_return
+	    , vbCountForPrice
+	    , vbCountForPrice_return
+	    , vbMovementId_promo
+	    , vbWeight
+
+     FROM gpSelect_Scale_goods (inisgoodscomplete      := TRUE
+ 		                      , inoperdate             := CURRENT_DATE
+ 							  , inmovementid           := 0
 							  , inorderexternalid      := inOrderId
-							  , inpricelistid          := 0
+							  , inPricelistid          := 0
 							  , ingoodscode            := 0
 							  , inGoodsName            := ''
-							  , indayprior_pricereturn := 0
+							  , indayprior_Pricereturn := 0
 							  , inbranchcode           := 1
 							  , insession              := inSession
 							  ) AS tmp 
 		  INNER JOIN  
 					(SELECT 
-							lpGetGoodsId_for_sku_id (wms.sku_id) AS goodsid
+							lpGetGoodsId_for_sku_id (wms.sku_id) AS GoodsId
 						  , wms.weight 
 					FROM 
 							wms_to_host_message wms 
@@ -59,15 +64,15 @@ BEGIN
 							(wms.type = 'order_status_changed') 
 							AND wms.done = FALSE
 					) AS tmp2 
-		  ON tmp.goodsid = tmp2.goodsid;	
+		  ON tmp.GoodsId = tmp2.GoodsId;	
 	
 
     PERFORM gpinsert_scale_mi (inid                   := 0
 	                         , inmovementid           := inNewMovementId
-							 , ingoodsid              := COALESCE (vbGoodsid, 0)
-							 , ingoodskindid          := COALESCE (vbGoodskindid, 0)
+							 , inGoodsId              := COALESCE (vbGoodsId, 0)
+							 , inGoodsKindId          := COALESCE (vbGoodsKindId, 0)
 							 , inrealweight           := COALESCE (vbWeight, 0)
-							 , inchangepercentamount  := COALESCE (vbChangepercentamount, 0)
+							 , inChangePercentAmount  := COALESCE (vbChangePercentAmount, 0)
 							 , incounttare            := 0
 							 , inweighttare           := 0
 							 , incounttare1           := 0
@@ -82,19 +87,19 @@ BEGIN
 							 , inweighttare5          := 0
 							 , incounttare6           := 0
 							 , inweighttare6          := 0
-							 , inprice                := COALESCE (vbPrice, 0)
-							 , inprice_return         := COALESCE (vbPrice_return, 0)
-							 , incountforprice        := COALESCE (vbCountforprice, 0)
-							 , incountforprice_return := COALESCE (vbCountforprice_return, 0)
-							 , indayprior_pricereturn := 0
+							 , inPrice                := COALESCE (vbPrice, 0)
+							 , inPrice_return         := COALESCE (vbPrice_return, 0)
+							 , inCountForPrice        := COALESCE (vbCountForPrice, 0)
+							 , inCountForPrice_return := COALESCE (vbCountForPrice_return, 0)
+							 , indayprior_Pricereturn := 0
 							 , incount                := 0
 							 , inheadcount            := 0
 							 , inboxcount             := 0
 							 , inboxcode              := 0
 							 , inpartiongoods         := ''
-							 , inpricelistid          := 0
+							 , inPricelistid          := 0
 							 , inbranchcode           := 1
-							 , inmovementid_promo     := COALESCE (vbMovementid_promo, 0)
+							 , inMovementId_promo     := COALESCE (vbMovementId_promo, 0)
 							 , inisbarcode            := FALSE
 							 , insession              := inSession
 							 );
@@ -103,3 +108,13 @@ BEGIN
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;
+ 
+ /*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
+ 04.06.20                                        *
+ 03.06.20                                                          *
+*/
+
+-- тест
+-- SELECT * FROM lpInsert_wms_order_status_changed_MI (inMovementId:= 0, inOrderId:= 1, inSession:= zfCalc_UserAdmin())

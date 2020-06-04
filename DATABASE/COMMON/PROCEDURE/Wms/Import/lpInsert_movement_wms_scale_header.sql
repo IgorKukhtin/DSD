@@ -32,15 +32,15 @@ BEGIN
                                           ) AS gpGet;
 
      -- создали Документ
-     inMovementId:= gpInsertUpdate_Scale_Movement (inid                 := inMovementId
+     inMovementId:= gpInsertUpdate_Scale_Movement (inId                 := inMovementId
                                                  , inOperDate           := CURRENT_TIMESTAMP
                                                  , inMovementDescId     := 0
                                                  , inMovementDescNumber := 0
                                                  , inFromId             := vbFromId
                                                  , inToId               := vbToId
                                                  , inContractId         := vbContractId
-                                                 , inPaidkindId         := vbPaidkindId
-                                                 , inPricelistId        := 0
+                                                 , inPaidKindId         := vbPaidkindId
+                                                 , inPriceListId        := 0
                                                  , inMovementId_order   := inMovementId
                                                  , inChangePercent      := 0
                                                  , inBranchCode         := 0
@@ -59,4 +59,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsert_wms_order_status_changed_Movement (inMovementId:= inOrderId:= 1, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpInsert_wms_order_status_changed_Movement (inMovementId:= 0, inOrderId:= 1, inSession:= zfCalc_UserAdmin())

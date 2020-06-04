@@ -18,10 +18,10 @@ BEGIN
                                                                , inSession    := inSession
                                                                 );
      -- создали Строчную часть
-     PERFORM lpInsert_movement_wms_scale_detail (inOrderId    := inOrderId
-                                               , inMovementId := vbMovementId
-                                               , inSession    := inSession
-                                                );
+     PERFORM lpInsert_wms_order_status_changed_MI (inMovementId := vbMovementId
+                                                 , inOrderId    := inOrderId
+                                                 , inSession    := inSession
+                                                  );
      -- сохранили что данные перенесены
      UPDATE wms_to_host_message SET Done = TRUE WHERE MovementId = inOrderId;
 
