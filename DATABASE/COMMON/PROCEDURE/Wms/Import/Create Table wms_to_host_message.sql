@@ -27,7 +27,14 @@ CREATE TABLE wms_to_host_message
     Done             Boolean   DEFAULT FALSE
 );
 
-/*
+/*-------------------------------------------------------------------------------*/
+
+--                                  Индексы
+CREATE INDEX idx_wms_to_host_message_MovementId ON wms_to_host_message (MovementId);
+CREATE INDEX idx_wms_to_host_message_Type       ON wms_to_host_message (Type);
+CREATE INDEX idx_wms_to_host_message_Done       ON wms_to_host_message (Done);
+
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
  04.06.20                                        *

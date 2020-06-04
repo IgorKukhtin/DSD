@@ -8,107 +8,96 @@ CREATE OR REPLACE FUNCTION lpInsert_wms_order_status_changed_MI (
 	IN inOrderId	    Integer,  -- Ключ заявки
 	IN inSession	    TVarChar  -- сессия пользователя
 )
-RETURNS void
+RETURNS VOID
 AS
 $BODY$
-   DECLARE vbGoodsId Integer;
-   DECLARE vbGoodsKindId Integer;
-   DECLARE vbChangePercentAmount TFloat;
-   DECLARE vbPrice TFloat;
-   DECLARE vbPrice_return TFloat;
-   DECLARE vbCountForPrice TFloat;
-   DECLARE vbCountForPrice_return TFloat;
-   DECLARE vbMovementId_promo Integer;
-   DECLARE vbWeight TFloat;
 BEGIN
-	
-     -- Эти поля взяли из Заявки
-     SELECT tmp.GoodsId
-          , tmp.GoodsKindId
-          , tmp.ChangePercentAmount
-          , tmp.Price
-          , tmp.Price_return
-          , tmp.CountForPrice
-          , tmp.CountForPrice_return
-          , tmp.MovementId_promo
-          , tmp2.weight
-	INTO  
-	      vbGoodsId
-	    , vbGoodsKindId
-	    , vbChangePercentAmount
-	    , vbPrice
-	    , vbPrice_return
-	    , vbCountForPrice
-	    , vbCountForPrice_return
-	    , vbMovementId_promo
-	    , vbWeight
 
-     FROM gpSelect_Scale_goods (inisgoodscomplete      := TRUE
- 		                      , inoperdate             := CURRENT_DATE
- 							  , inmovementid           := 0
-							  , inorderexternalid      := inOrderId
-							  , inPricelistid          := 0
-							  , ingoodscode            := 0
-							  , inGoodsName            := ''
-							  , indayprior_Pricereturn := 0
-							  , inbranchcode           := 1
-							  , insession              := inSession
-							  ) AS tmp 
-		  INNER JOIN  
-					(SELECT 
-							lpGetGoodsId_for_sku_id (wms.sku_id) AS GoodsId
-						  , wms.weight 
-					FROM 
-							wms_to_host_message wms 
-					WHERE
-							(wms.type = 'order_status_changed') 
-							AND wms.done = FALSE
-					) AS tmp2 
-		  ON tmp.GoodsId = tmp2.GoodsId;	
-	
+    -- одним запросом - сохранили всю строчную часть
+    PERFORM gpInsert_Scale_MI (inid                   := 0
+                             , inmovementid           := inMovementId
+                             , inGoodsId              := tmpData.GoodsId
+                             , inGoodsKindId          := tmpData.GoodsKindId
+                             , inrealweight           := tmpData.Weight
+                             , inChangePercentAmount  := tmpData.ChangePercentAmount
+                             , incounttare            := 0
+                             , inweighttare           := 0
+                             , incounttare1           := 0
+                             , inweighttare1          := 0
+                             , incounttare2           := 0
+                             , inweighttare2          := 0
+                             , incounttare3           := 0
+                             , inweighttare3          := 0
+                             , incounttare4           := 0
+                             , inweighttare4          := 0
+                             , incounttare5           := 0
+                             , inweighttare5          := 0
+                             , incounttare6           := 0
+                             , inweighttare6          := 0
+                             , inPrice                := tmpData.Price
+                             , inPrice_return         := tmpData.Price_return
+                             , inCountForPrice        := tmpData.CountForPrice
+                             , inCountForPrice_return := tmpData.CountForPrice_return
+                             , indayprior_Pricereturn := 0
+                             , incount                := 0
+                             , inheadcount            := 0
+                             , inboxcount             := 0
+                             , inboxcode              := 0
+                             , inpartiongoods         := ''
+                             , inPricelistid          := 0
+                             , inbranchcode           := 1
+                             , inMovementId_promo     := tmpData.MovementId_promo
+                             , inisbarcode            := FALSE
+                             , inSession              := inSession
+                              )
+    FROM (WITH -- подзапроc - сразу все товары по заявке
+               tmpGoods AS (SELECT gpSelect.GoodsId
+                                 , gpSelect.GoodsKindId
+                                 , gpSelect.ChangePercentAmount
+                                 , gpSelect.Price
+                                 , gpSelect.Price_return
+                                 , gpSelect.CountForPrice
+                                 , gpSelect.CountForPrice_return
+                                 , gpSelect.MovementId_promo
+                            FROM gpSelect_Scale_goods (inIsGoodsComplete      := TRUE
+                                                     , inOperDate             := CURRENT_DATE
+                                                     , inMovementId           := 0
+                                                     , inOrderExternalId      := inOrderId
+                                                     , inPriceListId          := 0
+                                                     , inGoodsCode            := 0
+                                                     , inGoodsName            := ''
+                                                     , inDayPrior_PriceReturn := 0
+                                                     , inBranchcode           := 1
+                                                     , inSession              := inSession
+                                                      ) AS gpSelect
+                           )
+               -- подзапроc - сразу все товары для связи с sku_id
+             , tmpSKU AS (SELECT lpSelect.GoodsId, lpSelect.GoodsKindId, lpSelect.sku_id FROM lpSelect_wms_Object_SKU() AS lpSelect)
 
-    PERFORM gpinsert_scale_mi (inid                   := 0
-	                         , inmovementid           := inNewMovementId
-							 , inGoodsId              := COALESCE (vbGoodsId, 0)
-							 , inGoodsKindId          := COALESCE (vbGoodsKindId, 0)
-							 , inrealweight           := COALESCE (vbWeight, 0)
-							 , inChangePercentAmount  := COALESCE (vbChangePercentAmount, 0)
-							 , incounttare            := 0
-							 , inweighttare           := 0
-							 , incounttare1           := 0
-							 , inweighttare1          := 0
-							 , incounttare2           := 0
-							 , inweighttare2          := 0
-							 , incounttare3           := 0
-							 , inweighttare3          := 0
-							 , incounttare4           := 0
-							 , inweighttare4          := 0
-							 , incounttare5           := 0
-							 , inweighttare5          := 0
-							 , incounttare6           := 0
-							 , inweighttare6          := 0
-							 , inPrice                := COALESCE (vbPrice, 0)
-							 , inPrice_return         := COALESCE (vbPrice_return, 0)
-							 , inCountForPrice        := COALESCE (vbCountForPrice, 0)
-							 , inCountForPrice_return := COALESCE (vbCountForPrice_return, 0)
-							 , indayprior_Pricereturn := 0
-							 , incount                := 0
-							 , inheadcount            := 0
-							 , inboxcount             := 0
-							 , inboxcode              := 0
-							 , inpartiongoods         := ''
-							 , inPricelistid          := 0
-							 , inbranchcode           := 1
-							 , inMovementId_promo     := COALESCE (vbMovementId_promo, 0)
-							 , inisbarcode            := FALSE
-							 , insession              := inSession
-							 );
-							 
+          -- Результат - все строки для inOrderId
+          SELECT tmpGoods.GoodsId
+               , tmpGoods.GoodsKindId
+               , tmpGoods.ChangePercentAmount
+               , tmpGoods.Price
+               , tmpGoods.Price_return
+               , tmpGoods.CountForPrice
+               , tmpGoods.CountForPrice_return
+               , tmpGoods.MovementId_promo
+               , wms_data.Weight
+          FROM wms_to_host_message AS wms_data
+               LEFT JOIN tmpSKU   ON tmpSKU.sku_id = wms_data.sku_id
+               LEFT JOIN tmpGoods ON tmpGoods.GoodsId     = tmpSKU.GoodsId
+                                 AND tmpGoods.GoodsKindId = tmpSKU.GoodsKindId
+          WHERE wms_data.MovementId = inOrderId
+            AND wms_data.Type       ILIKE 'order_status_changed'
+            AND wms_data.Done       = FALSE
+         ) AS tmpData;
+
 
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;
- 
+
  /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.

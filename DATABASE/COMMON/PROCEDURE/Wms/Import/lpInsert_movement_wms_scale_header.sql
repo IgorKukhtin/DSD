@@ -25,7 +25,7 @@ BEGIN
             INTO vbFromid
                , vbToid
                , vbPaidKindId
-               , ContractId  
+               , vbContractId  
 	FROM gpGet_Movement_OrderExternal (inMovementId := inMovementId
                                          , inOperDate   := CURRENT_TIMESTAMP
                                          , inSession    := inSession
