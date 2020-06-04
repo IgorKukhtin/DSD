@@ -968,6 +968,16 @@ begin
 end;
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInPodiumItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnInPodiumItemEditForm');
+
+  //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
@@ -1237,6 +1247,13 @@ end;
 
 procedure TLoadFormTest.LoadGoodsAccountFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountPodiumForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountPodiumForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountPodiumJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountPodiumJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountPodiumItemEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountPodiumItemEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsAccountJournalForm'));

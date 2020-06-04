@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbisDeferred Boolean;
    DECLARE vbisSUN Boolean;
+   DECLARE vbisVIP Boolean;
    DECLARE vbisDefSUN Boolean;
    DECLARE vbSumma TFloat;
    DECLARE vbLimitSUN TFloat;
@@ -50,7 +51,8 @@ BEGIN
         COALESCE (ObjectFloat_OccupancySUN.ValueData, 0),
         MovementLinkObject_PartionDateKind.ObjectId,
         COALESCE (MovementBoolean_Received.ValueData, FALSE),
-        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData)
+        DATE_TRUNC ('DAY', MovementDate_Insert.ValueData),
+        COALESCE (MovementBoolean_VIP.ValueData, FALSE)
     INTO
         vbStatusId,
         vbisDeferred,
@@ -64,7 +66,8 @@ BEGIN
         vbOccupancySUN,
         vbPartionDateKindId,
         vbisReceived,
-        vbInsertDate
+        vbInsertDate,
+        vbisVIP
     FROM Movement
         LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
                                   ON MovementBoolean_Deferred.MovementId = Movement.Id
@@ -113,6 +116,9 @@ BEGIN
         LEFT JOIN MovementDate AS MovementDate_Insert
                                ON MovementDate_Insert.MovementId = Movement.Id
                               AND MovementDate_Insert.DescId = zc_MovementDate_Insert()
+        LEFT JOIN MovementBoolean AS MovementBoolean_VIP
+                                  ON MovementBoolean_VIP.MovementId = Movement.Id
+                                 AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
     WHERE Movement.Id = inMovementId;
    
     IF vbisDefSUN = TRUE AND inisDeferred = TRUE
@@ -159,7 +165,7 @@ BEGIN
              RAISE EXCEPTION 'Œ¯Ë·Í‡.ƒÓÍÛÏÂÌÚ ÛÊÂ ÓÚÎÓÊÂÌ!';
            END IF;
            
-           IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE
+           IF COALESCE(vbComment, '') = '' AND vbisAuto = FALSE AND vbisVIP = FALSE
               AND COALESCE(vbPartionDateKindId, 0) <> zc_Enum_PartionDateKind_0()
            THEN
              RAISE EXCEPTION '¬Õ≈—»“≈ ¬ ﬂ◊≈… ”  ŒÃÃ≈Õ“¿–»… - œ–»◊»Õ” œ≈–≈ƒ¿◊»!!!';

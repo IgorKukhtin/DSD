@@ -22,10 +22,11 @@ type
     from_wms_PacketsHeader_query: TFDQuery;
     from_wms_PacketsDetail_query: TFDQuery;
     insert_wms_to_host_message: TFDQuery;
-    FDT_alan: TFDTransaction;
     FDT_wms: TFDTransaction;
     update_wms_to_host_header_message_error: TFDQuery;
     update_wms_to_host_header_message_done: TFDQuery;
+    select_wms_to_host_message: TFDQuery;
+    alan_exec_qry: TFDQuery;
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
     function gpInsert_wms_Message(spName, GUID: string): Integer;
@@ -33,57 +34,57 @@ type
     function p_alan_insert_packets_to_wms: Integer;
     //
     function fInsert_to_wms_SKU(const ADebug: Boolean;
-      AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+      AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_CLIENT(const ADebug: Boolean;
-      AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+      AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_SKU_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_SKU_CODE_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_SKU_GROUP_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_CLIENT_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_PACK_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     function fInsert_to_wms_USER_all(const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc): Integer;
+      AMsgProc: TNotifyMsgProc): Integer;
     procedure pInsert_to_wms_Movement_INCOMING_all(var lRecCount, lpack_id: Integer;
       const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc);
+      AMsgProc: TNotifyMsgProc);
     procedure pInsert_to_wms_Movement_ASN_LOAD_all(var lRecCount, lpack_id: Integer;
       const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc);
+      AMsgProc: TNotifyMsgProc);
     procedure pInsert_to_wms_Movement_ORDER_all(var lRecCount, lpack_id: Integer;
       const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-      AErrProc: TNotifyMsgProc);
+      AMsgProc: TNotifyMsgProc);
 
     // Только Postresql.CLOCK_TIMESTAMP
     function fGet_GUID_pg: string;
     // Только формируются данные в табл. Postresql.wms_Message
-    function fInsert_wms_Message_pg(pgProcName, GUID: string; AErrProc: TNotifyMsgProc): Integer;
+    function fInsert_wms_Message_pg(pgProcName, GUID: string; AMsgProc: TNotifyMsgProc): Integer;
     // открываются данные из табл. Postresql.wms_Message для GUID и переносятся в oracle
     function fInsert_wms_Message_to_wms(pgProcName, GUID: string; const ACheckRecCount, ADebug: Boolean;
-      const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+      const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
     // открываются данные из табл. Postresql.Movement и переносятся в oracle
     function fInsert_Movement_to_wms(const pgProcName, GUID: string; const ACheckRecCount, ADebug: Boolean;
-      const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
-    function ImportWMS(AErrProc: TNotifyMsgProc): Boolean;
+      const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
+    function ImportWMS(AMsgProc: TNotifyMsgProc): Boolean;
   public
-    function ConnectWMS(const ADatabase: string; AErrProc: TNotifyMsgProc): Boolean;
-    function ConnectAlan(const AServer: string; AErrProc: TNotifyMsgProc): Boolean;
-    function IsConnectedWMS(AErrProc: TNotifyMsgProc): Boolean;
-    function IsConnectedAlan(AErrProc: TNotifyMsgProc): Boolean;
-    function IsConnectedBoth(AErrProc: TNotifyMsgProc): Boolean;
+    function ConnectWMS(const ADatabase: string; AMsgProc: TNotifyMsgProc): Boolean;
+    function ConnectAlan(const AServer: string; AMsgProc: TNotifyMsgProc): Boolean;
+    function IsConnectedWMS(AMsgProc: TNotifyMsgProc): Boolean;
+    function IsConnectedAlan(AMsgProc: TNotifyMsgProc): Boolean;
+    function IsConnectedBoth(AMsgProc: TNotifyMsgProc): Boolean;
   end;
 
   EData = class(Exception);
@@ -106,7 +107,7 @@ uses
 
 { TdmData }
 
-function TdmData.ConnectAlan(const AServer: string; AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.ConnectAlan(const AServer: string; AMsgProc: TNotifyMsgProc): Boolean;
 begin
   with FDC_alan do
   begin
@@ -122,15 +123,15 @@ begin
         on E: Exception do
         begin
           Result := False;
-          if Assigned(AErrProc) then
-            AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+          if Assigned(AMsgProc) then
+            AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         end;
       end;
     end;
   end;
 end;
 
-function TdmData.ConnectWMS(const ADatabase: string; AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.ConnectWMS(const ADatabase: string; AMsgProc: TNotifyMsgProc): Boolean;
 begin
   with FDC_wms do
   begin
@@ -145,8 +146,8 @@ begin
       on E: Exception do
       begin
         Result := False;
-        if Assigned(AErrProc) then
-          AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(AMsgProc) then
+          AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
     end;
   end;
@@ -168,7 +169,7 @@ end;
 
 function TdmData.fInsert_Movement_to_wms(const pgProcName, GUID: string;
   const ACheckRecCount, ADebug: Boolean; const AThresholdRecCount: Integer;
-  AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+  AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 var
   ii: Integer;
 begin
@@ -184,7 +185,7 @@ begin
     Open;
        //
     if not (Active) then
-      if Assigned(AErrProc) then AErrProc('Err = Open = Postgresql = wms_Message = ' + pgProcName);
+      if Assigned(AMsgProc) then AMsgProc('Err = Open = Postgresql = wms_Message = ' + pgProcName);
        //
        //
     if ACheckRecCount and (AThresholdRecCount = 0) then Exit(-1);
@@ -234,7 +235,7 @@ begin
           except
             on E: Exception do
             begin
-              if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+              if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
               if Assigned(AMyLogSql) then AMyLogSql;
               if Assigned(AMyShowSql) then AMyShowSql;
               Exit;
@@ -295,7 +296,7 @@ begin
     except
       on E: Exception do
       begin
-        if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         if Assigned(AMyLogSql) then AMyLogSql;
         if Assigned(AMyShowSql) then AMyShowSql;
         Exit;
@@ -307,7 +308,7 @@ begin
 end;
 
 function TdmData.fInsert_to_wms_CLIENT(const ADebug: Boolean;
-  AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+  AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
@@ -316,7 +317,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -324,7 +325,7 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      //
@@ -337,7 +338,7 @@ begin
       Open;
        //
       if not (Active) then
-        if Assigned(AErrProc) then AErrProc('Err = Open = alan = wms_Message = ' + spName);
+        if Assigned(AMsgProc) then AMsgProc('Err = Open = alan = wms_Message = ' + spName);
        //
        // !!! insert pack_id
       vb_pack_id := p_alan_insert_packets_to_wms;
@@ -364,7 +365,7 @@ begin
           except
             on E: Exception do
             begin
-              if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+              if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
               if Assigned(AMyLogSql) then AMyLogSql;
               if Assigned(AMyShowSql) then AMyShowSql;
             end;
@@ -398,7 +399,7 @@ begin
     except
       on E: Exception do
       begin
-        if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         if Assigned(AMyLogSql) then AMyLogSql;
         if Assigned(AMyShowSql) then AMyShowSql;
       end;
@@ -414,14 +415,14 @@ end;
 
 function TdmData.fInsert_to_wms_CLIENT_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -429,12 +430,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -444,14 +445,14 @@ end;
 
 function TdmData.fInsert_to_wms_PACK_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -459,12 +460,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -473,7 +474,7 @@ begin
 end;
 
 function TdmData.fInsert_to_wms_SKU(const ADebug: Boolean;
-  AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+  AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 {
 create or replace PROCEDURE alan_insert_packets_to_wms
     (in_process_start IN  DATE,
@@ -496,7 +497,7 @@ var
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -504,7 +505,7 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      //
@@ -517,7 +518,7 @@ begin
       Open;
        //
       if not (Active) then
-        if Assigned(AErrProc) then AErrProc('Err = Open = alan = wms_Message = ' + spName);
+        if Assigned(AMsgProc) then AMsgProc('Err = Open = alan = wms_Message = ' + spName);
        //
        // !!! insert pack_id
       vb_pack_id := p_alan_insert_packets_to_wms;
@@ -544,7 +545,7 @@ begin
           except
             on E: Exception do
             begin
-              if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+              if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
               if Assigned(AMyLogSql) then AMyLogSql;
               if Assigned(AMyShowSql) then AMyShowSql;
             end;
@@ -578,7 +579,7 @@ begin
     except
       on E: Exception do
       begin
-        if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
         if Assigned(AMyLogSql) then AMyLogSql;
         if Assigned(AMyShowSql) then AMyShowSql;
       end;
@@ -594,14 +595,14 @@ end;
 
 function TdmData.fInsert_to_wms_SKU_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -609,12 +610,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -624,14 +625,14 @@ end;
 
 function TdmData.fInsert_to_wms_SKU_CODE_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU
@@ -639,12 +640,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -654,14 +655,14 @@ end;
 
 function TdmData.fInsert_to_wms_SKU_GROUP_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -669,12 +670,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -684,14 +685,14 @@ end;
 
 function TdmData.fInsert_to_wms_USER_all(const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc): Integer;
+  AMsgProc: TNotifyMsgProc): Integer;
 var
   spName: string;
   lGUID: string;
 begin
   Result := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - SKU_GROUP + SKU_DEPENDS
@@ -699,12 +700,12 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    if fInsert_wms_Message_pg(spName, lGUID, AErrProc) < 0 then
+    if fInsert_wms_Message_pg(spName, lGUID, AMsgProc) < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     Result := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -713,7 +714,7 @@ begin
 end;
 
 // Только формируются данные в табл. Postresql.wms_Message
-function TdmData.fInsert_wms_Message_pg(pgProcName, GUID: string; AErrProc: TNotifyMsgProc): Integer;
+function TdmData.fInsert_wms_Message_pg(pgProcName, GUID: string; AMsgProc: TNotifyMsgProc): Integer;
 begin
   try
     Result := gpInsert_wms_Message(pgProcName, GUID);
@@ -721,16 +722,16 @@ begin
     on E: Exception do
     begin
       Result := -1;
-      if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
      //
   if Result < 0 then
-    if Assigned(AErrProc) then AErrProc('ERR on pg = ' + pgProcName);
+    if Assigned(AMsgProc) then AMsgProc('ERR on pg = ' + pgProcName);
 end;
 
 function TdmData.fInsert_wms_Message_to_wms(pgProcName, GUID: string; const ACheckRecCount, ADebug: Boolean;
-  const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc): Integer;
+  const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
 var
   ii, ii_num: Integer;
 begin
@@ -746,7 +747,7 @@ begin
     Open;
        //
     if not (Active) then
-      if Assigned(AErrProc) then AErrProc('Err = Open = Postgresql = wms_Message = ' + pgProcName + ' GUID = ' + GUID);
+      if Assigned(AMsgProc) then AMsgProc('Err = Open = Postgresql = wms_Message = ' + pgProcName + ' GUID = ' + GUID);
        //
        //
        //
@@ -785,7 +786,7 @@ begin
         except
           on E: Exception do
           begin
-            if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+            if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
             if Assigned(AMyLogSql) then AMyLogSql;
             if Assigned(AMyShowSql) then AMyShowSql;
             exit;
@@ -833,7 +834,7 @@ begin
   except
     on E: Exception do
     begin
-      if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       if Assigned(AMyLogSql) then AMyLogSql;
       if Assigned(AMyShowSql) then AMyShowSql;
       exit;
@@ -869,7 +870,7 @@ begin
   end;
 end;
 
-function TdmData.ImportWMS(AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.ImportWMS(AMsgProc: TNotifyMsgProc): Boolean;
 var
   wmsImport: TImportWMS;
   bOrderStatusChanged, bReceivingResult: Boolean;
@@ -883,45 +884,34 @@ begin
     insert_wms_to_host_message,
     update_wms_to_host_header_message_error,
     update_wms_to_host_header_message_done,
-    FDT_alan, FDT_wms
+    select_wms_to_host_message,
+    alan_exec_qry,
+    FDT_wms
   );
   try
     try
-      // <order_status_changed>
-      if Assigned(AErrProc) then
-        AErrProc(Format(cStartImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
+      // пакет <order_status_changed>
+      if Assigned(AMsgProc) then
+        AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
 
-      with sp_alan_insert_packets_from_wms do
-      begin
-        StoredProcName := 'gpInsert_movement_wms_scale_all';
-        FetchOptions.Items := FetchOptions.Items - [fiMeta];// см. http://docwiki.embarcadero.com/RADStudio/Rio/en/Executing_Stored_Procedures_(FireDAC)
-        Params.Clear;
-        Params.Add('inSession', ftString, ptInput);
-        ParamByName('inSession').AsString := '5';
-        Prepare;
-      end;
+      bOrderStatusChanged := wmsImport.ImportPacket(pknOrderStatusChanged, AMsgProc);
+      if bOrderStatusChanged and Assigned(AMsgProc) then
+        AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
 
-      bOrderStatusChanged := wmsImport.ImportPacket(pknOrderStatusChanged, AErrProc, sp_alan_insert_packets_from_wms);
-      if bOrderStatusChanged and Assigned(AErrProc) then
-        AErrProc(Format(cSuccessImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
+      // пакет <receiving_result>
+      if Assigned(AMsgProc) then
+        AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknReceivingResult)]));
 
-      // <receiving_result>
-      if Assigned(AErrProc) then
-        AErrProc(Format(cStartImport, [GetImpTypeCaption(pknReceivingResult)]));
-
-      sp_alan_insert_packets_from_wms.StoredProcName := '';
-      sp_alan_insert_packets_from_wms.Params.Clear;
-
-      bReceivingResult := wmsImport.ImportPacket(pknReceivingResult, AErrProc, nil);
-      if bReceivingResult and Assigned(AErrProc) then
-        AErrProc(Format(cSuccessImport, [GetImpTypeCaption(pknReceivingResult)]));
+      bReceivingResult := wmsImport.ImportPacket(pknReceivingResult, AMsgProc);
+      if bReceivingResult and Assigned(AMsgProc) then
+        AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknReceivingResult)]));
 
       Result := bOrderStatusChanged and bReceivingResult;
     except
       on E: Exception do
       begin
         Result := False;
-        if Assigned(AErrProc) then AErrProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
     end;
   finally
@@ -929,36 +919,36 @@ begin
   end;
 end;
 
-function TdmData.IsConnectedAlan(AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.IsConnectedAlan(AMsgProc: TNotifyMsgProc): Boolean;
 begin
   Result := FDC_alan.Connected;
   if not Result then
-    Result := ConnectAlan(TSettings.AlanServer, AErrProc);
+    Result := ConnectAlan(TSettings.AlanServer, AMsgProc);
 end;
 
-function TdmData.IsConnectedBoth(AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.IsConnectedBoth(AMsgProc: TNotifyMsgProc): Boolean;
 begin
-  Result := IsConnectedWMS(AErrProc) and IsConnectedAlan(AErrProc);
+  Result := IsConnectedWMS(AMsgProc) and IsConnectedAlan(AMsgProc);
 end;
 
-function TdmData.IsConnectedWMS(AErrProc: TNotifyMsgProc): Boolean;
+function TdmData.IsConnectedWMS(AMsgProc: TNotifyMsgProc): Boolean;
 begin
   Result := FDC_wms.Connected;
   if not Result then
-    Result := ConnectWMS(TSettings.WMSDatabase, AErrProc);
+    Result := ConnectWMS(TSettings.WMSDatabase, AMsgProc);
 end;
 
 procedure TdmData.pInsert_to_wms_Movement_ASN_LOAD_all(var lRecCount, lpack_id: Integer;
   const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc);
+  AMsgProc: TNotifyMsgProc);
 var
   spName: string;
   lGUID: string;
 begin
   lpack_id := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - Movement_INCOMING
@@ -966,13 +956,13 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AErrProc);
+    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
     if lRecCount < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     lpack_id := fInsert_wms_Message_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -982,14 +972,14 @@ end;
 
 procedure TdmData.pInsert_to_wms_Movement_INCOMING_all(var lRecCount, lpack_id: Integer;
   const ACheckRecCount, ADebug: Boolean;
-  const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AErrProc: TNotifyMsgProc);
+  const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc);
 var
   spName: string;
   lGUID: string;
 begin
   lpack_id := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - Movement_INCOMING
@@ -997,14 +987,14 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AErrProc);
+    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
     if lRecCount < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
      //Result:= fInsert_wms_Message_to_wms (spName, lGUID);
     lpack_id := fInsert_Movement_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;
@@ -1015,14 +1005,14 @@ end;
 procedure TdmData.pInsert_to_wms_Movement_ORDER_all(var lRecCount, lpack_id: Integer;
   const ACheckRecCount, ADebug: Boolean;
   const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc;
-  AErrProc: TNotifyMsgProc);
+  AMsgProc: TNotifyMsgProc);
 var
   spName: string;
   lGUID: string;
 begin
   lpack_id := 0;
   try
-    if not dmData.IsConnectedBoth(AErrProc) then Exit;
+    if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
      // формируем и передаем данные - Movement_INCOMING
@@ -1030,13 +1020,13 @@ begin
     lGUID := fGet_GUID_pg;
      //
      // Только формируются данные в табл. Postresql.wms_Message
-    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AErrProc);
+    lRecCount := fInsert_wms_Message_pg(spName, lGUID, AMsgProc);
     if lRecCount < 0 then
       exit;
      //
      // открываются данные из табл. Postresql.wms_Message и переносятся в oracle
     lpack_id := fInsert_Movement_to_wms(
-      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AErrProc);
+      spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
   finally
     FDC_wms.Connected := false;

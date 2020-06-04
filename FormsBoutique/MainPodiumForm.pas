@@ -239,6 +239,8 @@ type
     actReport_Goods_RemainsCurrent_onDate: TdsdOpenForm;
     miReport_Goods_RemainsCurrent_onDate: TMenuItem;
     N3: TMenuItem;
+    actReturnInPodium: TdsdOpenForm;
+    actGoodsAccountPodium: TdsdOpenForm;
   private
     { Private declarations }
   public

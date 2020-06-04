@@ -28,7 +28,7 @@ const
   // Import error description
   cImpErrDescr_NotInteger = '"%s" contain not Integer value; ';
   cImpErrDescr_NotNumeric = '"%s" contain not Numeric value; ';
-  cImpErrDescr_InvalidDate = '"%s" contain invalid DateTime string. Expected date string in format "dd-mm-yyyy hh:mi"; ';
+  cImpErrDescr_InvalidDate = '"%s" contain invalid DateTime string. Expected date string in format "dd-mm-yyyy hh:mm"; ';
   cImpErrDecr_AttrNotExists = 'Attribute "%s" not exist in message';
 
 implementation

@@ -97,6 +97,7 @@
   object ceOperDate: TcxDateEdit [11]
     Left = 152
     Top = 33
+    EditValue = 43986d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 3
@@ -432,6 +433,14 @@
         Name = 'InBonusKindId'
         Value = ''
         Component = BonusKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inBranchId'
+        Value = Null
+        Component = GuidesBranch
         ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','

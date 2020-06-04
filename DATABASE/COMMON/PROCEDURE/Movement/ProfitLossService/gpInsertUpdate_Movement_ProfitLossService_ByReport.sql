@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService_ByReport (TDat
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService_ByReport (
     IN inStartDate                TDateTime ,  
     IN inEndDate                  TDateTime ,
-    IN inPaidKindID               Integer   ,
+    IN inPaidKindId               Integer   ,
     IN inJuridicalId              Integer   ,
     IN inBranchId                 Integer   ,
     IN inSession                  TVarChar        -- сессия пользователя

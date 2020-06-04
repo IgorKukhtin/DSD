@@ -103,6 +103,17 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountLoss
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Position = spFooter
+              Column = AmountDischarged
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountDischarged
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -144,6 +155,11 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
               Format = ',0.####;-,0.####; ;'
               Kind = skSum
               Column = AmountLoss
+            end
+            item
+              Format = ',0.####;-,0.####; ;'
+              Kind = skSum
+              Column = AmountDischarged
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
@@ -183,6 +199,17 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 51
+          end
+          object AmountDischarged: TcxGridDBColumn
+            Caption = #1057#1085#1103#1090#1072' '#1086#1090#1083#1086#1078#1077#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'AmountDischarged'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 89
           end
           object AmountDeferred: TcxGridDBColumn
             Caption = #1054#1090#1083#1086#1078#1077#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086

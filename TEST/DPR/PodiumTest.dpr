@@ -329,7 +329,13 @@ uses
   SendPodium in '..\..\FormsBoutique\Document\SendPodium.pas' {SendPodiumForm: TParentForm},
   SendPodiumJournal in '..\..\FormsBoutique\Document\SendPodiumJournal.pas' {SendPodiumJournalForm: TParentForm},
   Report_Goods_RemainsCurrent_onDate in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDate.pas' {Report_Goods_RemainsCurrent_onDateForm: TParentForm},
-  Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm};
+  Report_Goods_RemainsCurrent_onDateDialog in '..\..\FormsBoutique\Report\Report_Goods_RemainsCurrent_onDateDialog.pas' {Report_Goods_RemainsCurrent_onDateDialogForm: TParentForm},
+  GoodsAccountPodium in '..\..\FormsBoutique\Document\GoodsAccountPodium.pas' {GoodsAccountPodiumForm: TParentForm},
+  GoodsAccountPodiumJournal in '..\..\FormsBoutique\Document\GoodsAccountPodiumJournal.pas' {GoodsAccountPodiumJournalForm: TParentForm},
+  GoodsAccountPodiumItemEdit in '..\..\FormsBoutique\Document\GoodsAccountPodiumItemEdit.pas' {GoodsAccountPodiumItemEditForm: TParentForm},
+  ReturnInPodiumItemEdit in '..\..\FormsBoutique\Document\ReturnInPodiumItemEdit.pas' {ReturnInPodiumItemEditForm: TParentForm},
+  ReturnInPodiumJournal in '..\..\FormsBoutique\Document\ReturnInPodiumJournal.pas' {ReturnInPodiumJournalForm: TParentForm},
+  ReturnInPodium in '..\..\FormsBoutique\Document\ReturnInPodium.pas' {ReturnInPodiumForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
