@@ -1,26 +1,39 @@
-CREATE OR REPLACE FUNCTION gpInsert_movement_wms_scale_packet (
-	IN inOrderId	    Integer,  -- код заявки
-	IN inSession	    TVarChar  -- сессия пользователя
+-- Function: gpInsert_wms_order_status_changed()
+
+DROP FUNCTION IF EXISTS gpInsert_movement_wms_scale_packet (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsert_wms_order_status_changed (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpInsert_wms_order_status_changed (
+    IN inOrderId    Integer,  -- Ключ заявки
+    IN inSession    TVarChar  -- сессия пользователя
 )
-RETURNS void
+RETURNS VOID
 AS
 $BODY$
-	DEClARE vbNewMovementId Integer; -- id нового документа
+   DEClARE vbMovementId Integer;
 BEGIN
-	
-		vbNewMovementId := (SELECT lpInsert_movement_wms_scale_header (inMovementId := inOrderId
-																	 , inSession    := inSession
-																	  )
-							);
-							
-		PERFORM lpInsert_movement_wms_scale_detail (inOrderId       := inOrderId
-												  , inNewMovementId := vbNewMovementId 
-												  , inSession       := inSession  
-												  ); 
-		UPDATE	wms_to_host_message 
-		SET     done = TRUE
-		WHERE   movement_id = inOrderId; 
-		
+     -- создали Документ
+     vbMovementId := lpInsert_movement_wms_scale_header (inOrderId    := inOrderId
+                                                       , inSession    := inSession
+                                                        );
+     -- создали Строчную часть
+     PERFORM lpInsert_movement_wms_scale_detail (inOrderId    := inOrderId
+                                               , inMovementId := vbMovementId
+                                               , inSession    := inSession
+                                                );
+     -- сохранили что данные перенесены
+     UPDATE wms_to_host_message SET Done = TRUE WHERE MovementId = inOrderId;
+
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
+ 04.06.20                                        *
+ 03.06.20                                                          *
+*/
+
+-- тест
+-- SELECT * FROM gpInsert_wms_order_status_changed (inOrderId:= 1, inSession:= zfCalc_UserAdmin())
