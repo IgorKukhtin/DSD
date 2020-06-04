@@ -88,6 +88,7 @@ BEGIN
                                                                                                               ,inUserId     := vbUserId)
                                                 ,inValueData       := tmp.ValueData
                                                 )
+                                                
         FROM ( WITH    tmpPrice AS (SELECT ObjectLink_Price_Unit.ChildObjectId     AS UnitId
                                          , Price_Goods.ChildObjectId               AS GoodsId
                                          , ROUND(Price_Value.ValueData,2)::TFloat  AS Price
@@ -453,17 +454,17 @@ BEGIN
         ƒл€ этого нужно получить сроки годности
        */
 
-       -- получим "текущие" данные, ћјстера
+       -- получим "текущие" данные, ћјстера со сроком годности менее года
        CREATE TEMP TABLE _tmpMI_OrderInternal_Master (MovementItemId Integer, GoodsId Integer, Amount TFloat, Price TFloat, PartionGoodsDate TDateTime) ON COMMIT DROP;
        INSERT INTO _tmpMI_OrderInternal_Master (MovementItemId, GoodsId, Amount, Price, PartionGoodsDate)
        SELECT tmp.Id, tmp.GoodsId, tmp.Amount, tmp.Price, tmp.PartionGoodsDate
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
        WHERE tmp.PartionGoodsDate < vbDate180;
        
-       -- обнул€ем AmountManual дл€ товаров со сроком годности менее года
+       -- обнул€ем AmountManual, AmountSecond дл€ товаров со сроком годности менее года
        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), tmp.MovementItemId, 0 :: TFloat)
        FROM _tmpMI_OrderInternal_Master AS tmp;
-
 
     --
     IF EXISTS(  SELECT Movement.Id
