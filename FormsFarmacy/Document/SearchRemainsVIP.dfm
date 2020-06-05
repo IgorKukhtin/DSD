@@ -11,7 +11,6 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -813,6 +812,7 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    isShowModal = True
     FormNameParam.Value = 'TUnitTreeForm'
     FormNameParam.DataType = ftString
     FormNameParam.MultiSelectSeparator = ','
@@ -983,6 +983,12 @@ object SearchRemainsVIPForm: TSearchRemainsVIPForm
         Name = 'SummaUrgentlySendVIP'
         Value = Null
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isBlockVIP'
+        Value = Null
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

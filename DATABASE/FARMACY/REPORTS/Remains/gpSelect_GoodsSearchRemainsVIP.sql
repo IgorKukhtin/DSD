@@ -48,7 +48,16 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Не выбрано подразделение.';
     END IF;
     
-    RAISE EXCEPTION 'На данный момент проект приостановлен, по причине загруженности транспортного отдела...но мы обязательно вернёмся!.';
+    IF COALESCE((SELECT COALESCE(ObjectBoolean_CashSettings_BlockVIP.ValueData, FALSE)
+                 FROM Object AS Object_CashSettings
+                      LEFT JOIN ObjectBoolean AS ObjectBoolean_CashSettings_BlockVIP
+                                              ON ObjectBoolean_CashSettings_BlockVIP.ObjectId = Object_CashSettings.Id 
+                                             AND ObjectBoolean_CashSettings_BlockVIP.DescId = zc_ObjectBoolean_CashSettings_BlockVIP()
+                 WHERE Object_CashSettings.DescId = zc_Object_CashSettings()
+                 LIMIT 1), FALSE) = TRUE
+    THEN
+      RAISE EXCEPTION 'На данный момент проект приостановлен, по причине загруженности транспортного отдела...но мы обязательно вернёмся!.';
+    END IF;
 
     SELECT COALESCE(ObjectFloat_CashSettings_SummaFormSendVIP.ValueData, 0)
     INTO vbSummaFormSendVIP

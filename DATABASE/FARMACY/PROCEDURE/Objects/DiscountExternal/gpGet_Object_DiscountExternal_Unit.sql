@@ -42,9 +42,9 @@ BEGIN
            , ObjectString_Service.ValueData   AS Service
            , ObjectString_Port.ValueData      AS Port
 
-           , ObjectString_User.ValueData             AS UserName
-           , ObjectString_Password.ValueData         AS Password
-           , ObjectString_ExternalUnit.ValueData     AS ExternalUnit
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_User.ValueData END::TVarChar  AS UserName
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_Password.ValueData END::TVarChar         AS Password
+           , CASE WHEN COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) = TRUE THEN '' ELSE ObjectString_ExternalUnit.ValueData END::TVarChar     AS ExternalUnit
 
        FROM Object AS Object_DiscountExternal
             LEFT JOIN ObjectString AS ObjectString_URL
@@ -73,6 +73,9 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_ExternalUnit
                                    ON ObjectString_ExternalUnit.ObjectId = ObjectLink_DiscountExternal.ObjectId
                                   AND ObjectString_ExternalUnit.DescId = zc_ObjectString_DiscountExternalTools_ExternalUnit()
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_NotUseAPI
+                                    ON ObjectBoolean_NotUseAPI.ObjectId = ObjectLink_DiscountExternal.ObjectId
+                                   AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
 
        WHERE Object_DiscountExternal.Id = inId;
 

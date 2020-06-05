@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CashSettings(
     IN inDateBanSUN              TDateTime ,     -- Запрет работы по СУН
     IN inSummaFormSendVIP        TFloat    ,     -- Сумма от которой показан товар при формировании перемещений VIP
     IN inSummaUrgentlySendVIP    TFloat    ,     -- Сумма перемещения от которой разрешен признак срочно
+    IN inisBlockVIP              Boolean   ,     -- Блокировать формирование перемещений VIP
     IN inSession                 TVarChar        -- сессия пользователя
 )
   RETURNS VOID AS
@@ -46,6 +47,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaFormSendVIP(), vbID, inSummaFormSendVIP);
       -- сохранили Сумма перемещения от которой разрешен признак срочно
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP(), vbID, inSummaUrgentlySendVIP);
+
+   -- сохранили Получить данные аппаратной части
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_CashSettings_BlockVIP(), vbID, inisBlockVIP);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (vbID, vbUserId);

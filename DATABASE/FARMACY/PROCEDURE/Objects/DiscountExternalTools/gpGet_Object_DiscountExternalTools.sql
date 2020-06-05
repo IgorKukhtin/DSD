@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , Password TVarChar
              , ExternalUnit TVarChar  
              , Token TVarChar  
+             , isNotUseAPI Boolean
               )
 AS
 $BODY$
@@ -34,7 +35,8 @@ BEGIN
                   , CAST ('' AS TVarChar)  AS UserName
                   , CAST ('' AS TVarChar)  AS Password
                   , ''::TVarChar           AS ExternalUnit
-                  , ''::TVarChar           AS Token;
+                  , ''::TVarChar           AS Token
+                  , FALSE                  AS isNotUseAPI;
       ELSE
            RETURN QUERY
              SELECT Object_DiscountExternalTools.Id         AS Id
@@ -47,6 +49,7 @@ BEGIN
                   , ObjectString_Password.ValueData         AS Password
                   , ObjectString_ExternalUnit.ValueData     AS ExternalUnit
                   , ObjectString_Token.ValueData            AS Token
+                  , COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) AS isNotUseAPI
 
              FROM Object AS Object_DiscountExternalTools
                   LEFT JOIN ObjectLink AS ObjectLink_DiscountExternal
@@ -72,6 +75,10 @@ BEGIN
                   LEFT JOIN ObjectString AS ObjectString_Token
                                          ON ObjectString_Token.ObjectId = Object_DiscountExternalTools.Id 
                                         AND ObjectString_Token.DescId = zc_ObjectString_DiscountExternalTools_Token()
+
+                  LEFT JOIN ObjectBoolean AS ObjectBoolean_NotUseAPI
+                                          ON ObjectBoolean_NotUseAPI.ObjectId = Object_DiscountExternalTools.Id 
+                                         AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
 
              WHERE Object_DiscountExternalTools.Id = inId;
       END IF;

@@ -721,10 +721,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectBoolean_Goods_InvisibleSUN() RETURNS Integer
 INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
   SELECT zc_Object_Goods(), 'zc_ObjectBoolean_Goods_InvisibleSUN', 'Невидимка для ограничений по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_Goods_InvisibleSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_CashSettings_BlockVIP() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_BlockVIP'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_CashSettings(), 'zc_ObjectBoolean_CashSettings_BlockVIP', 'Блокировать формирование перемещений VIP' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_CashSettings_BlockVIP');
+
+CREATE OR REPLACE FUNCTION zc_ObjectBoolean_DiscountExternalTools_NotUseAPI() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiscountExternalTools_NotUseAPI'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
+  SELECT zc_Object_DiscountExternalTools(), 'zc_ObjectBoolean_DiscountExternalTools_NotUseAPI', 'Не использовать АПИ' WHERE NOT EXISTS (SELECT * FROM ObjectBooleanDesc WHERE Code = 'zc_ObjectBoolean_DiscountExternalTools_NotUseAPI');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Подмогильный В.В.   Шаблий О.В.
+ 05.06.20                                                                                                          * zc_ObjectBoolean_CashSettings_BlockVIP, zc_ObjectBoolean_DiscountExternalTools_NotUseAPI
  25.05.20         * zc_Object_PersonalServiceList
  21.05.20         * zc_ObjectBoolean_Unit_SUN_v2_LockSale
                     zc_ObjectBoolean_Contract_isWMS
