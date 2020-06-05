@@ -15,10 +15,9 @@ $BODY$
    DECLARE vbUnitId Integer;
    DECLARE vbUnitKey TVarChar;
    DECLARE vbRetailId Integer;
-   DECLARE vbMovementID Integer;
-   DECLARE vbEmployeeShow Boolean;
    DECLARE vbPositionID Integer;
-   DECLARE vbText  Text;
+   DECLARE vbText Text;
+   DECLARE vbDatePUSH TDateTime;
 BEGIN
 
     -- проверка прав пользователя на вызов процедуры
@@ -56,7 +55,13 @@ BEGIN
 
     WHERE ObjectLink_User_Member.ObjectId = vbUserId
       AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member();
+      
+   vbDatePUSH := (SELECT ObjectDate.ValueData FROM ObjectDate  
+                  WHERE ObjectDate.ObjectId = vbUserId
+                    AND ObjectDate.DescId = zc_ObjectDate_User_PUSH()); 
 
+   -- сохранили дату
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_User_PUSH(), vbUserId, CURRENT_TIMESTAMP);
 
    -- Перемещения по СУН открытие "Реестр перемещений СУН"
    IF COALESCE(vbPositionID, 0) = 1690028 AND
@@ -286,7 +291,7 @@ BEGIN
                    , count(*)                                   AS CountCheck
               FROM tmpCheckAll AS Movement
                    INNER JOIN ObjectLink AS ObjectLink_User_Member
-                                         ON ObjectLink_User_Member.ObjectId = Movement.UserID 
+                                         ON ObjectLink_User_Member.ObjectId = Movement.UserID
                                         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
                    INNER JOIN ObjectLink AS ObjectLink_Member_Position
                                          ON ObjectLink_Member_Position.ObjectId = ObjectLink_User_Member.ChildObjectId
@@ -306,6 +311,69 @@ BEGIN
          INSERT INTO _PUSH (Id, Text) VALUES (9, 'Сотрудники по которым за вчера чеков менее 20:'||CHR(13)||CHR(13)||vbText);
        END IF;
 
+   END IF;
+
+   
+   SELECT string_agg(Movement.InvNumber||' от '||TO_CHAR(Movement.OperDate, 'DD.MM.YYYY'), CHR(13))
+   INTO vbText
+   FROM Movement
+        INNER JOIN MovementBoolean AS MovementBoolean_VIP
+                                   ON MovementBoolean_VIP.MovementId = Movement.Id
+                                  AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+
+        INNER JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                   ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                  AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
+        INNER JOIN MovementDate  AS MovementDate_UserConfirmedKind
+                                 ON MovementDate_UserConfirmedKind.MovementId = Movement.Id
+                                AND MovementDate_UserConfirmedKind.DescId = zc_MovementDate_UserConfirmedKind()
+
+        INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                      ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                     AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+
+   WHERE Movement.DescId = zc_Movement_Send()
+     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+     AND (MovementDate_UserConfirmedKind.ValueData >= vbDatePUSH OR vbDatePUSH IS NULL)
+     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE   
+     AND COALESCE (MovementBoolean_Confirmed.ValueData, FALSE) = TRUE
+     AND MovementLinkObject_Insert.ObjectId = vbUserId;   
+
+   IF COALESCE (vbText, '') <> ''
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (10, 'Перемещения VIP по которым установлен признак подтвержден:'||CHR(13)||CHR(13)||vbText);
+   END IF;
+
+   SELECT string_agg(Movement.InvNumber||' от '||TO_CHAR(Movement.OperDate, 'DD.MM.YYYY'), CHR(13))
+   INTO vbText
+   FROM Movement
+        INNER JOIN MovementBoolean AS MovementBoolean_VIP
+                                   ON MovementBoolean_VIP.MovementId = Movement.Id
+                                  AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+
+        INNER JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                   ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                  AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
+        INNER JOIN MovementDate  AS MovementDate_UserConfirmedKind
+                                 ON MovementDate_UserConfirmedKind.MovementId = Movement.Id
+                                AND MovementDate_UserConfirmedKind.DescId = zc_MovementDate_UserConfirmedKind()
+
+        INNER JOIN MovementLinkObject AS MovementLinkObject_Insert
+                                      ON MovementLinkObject_Insert.MovementId = Movement.Id
+                                     AND MovementLinkObject_Insert.DescId = zc_MovementLinkObject_Insert()
+
+   WHERE Movement.DescId = zc_Movement_Send()
+     AND Movement.StatusId = zc_Enum_Status_UnComplete()
+     AND (MovementDate_UserConfirmedKind.ValueData >= vbDatePUSH OR vbDatePUSH IS NULL)
+     AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE   
+     AND COALESCE (MovementBoolean_Confirmed.ValueData, FALSE) = FALSE
+     AND MovementLinkObject_Insert.ObjectId = vbUserId;   
+
+   IF COALESCE (vbText, '') <> ''
+   THEN
+     INSERT INTO _PUSH (Id, Text) VALUES (10, 'Перемещения VIP по которым установлен признак не подтвержден:'||CHR(13)||CHR(13)||vbText);
    END IF;
 
    RETURN QUERY

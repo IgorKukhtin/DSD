@@ -298,7 +298,7 @@ begin
     on E:Exception do
     begin
       Add_Log(E.Message);
-      Close;
+      Timer1.Enabled := true;
       Exit;
     end;
   end;
@@ -320,7 +320,7 @@ begin
       on E: Exception do
       begin
         Add_Log(E.Message);
-        Close;
+        Timer1.Enabled := true;
         Exit;
       end;
     end;
@@ -348,7 +348,7 @@ procedure TMainForm.Timer1Timer(Sender: TObject);
 begin
   try
     timer1.Enabled := False;
-    btnAllClick(nil);
+    if qryDriver.Active then btnAllClick(nil);
   finally
     Close;
   end;

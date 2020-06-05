@@ -103,6 +103,33 @@ BEGIN
        PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run grInsert_Movement_LossOverdue', True, text_var1::TVarChar, vbUserId);
     END;
 
+    -- Уладение старых отказанных VIP перемещений
+    BEGIN
+       PERFORM gpSetErased_Movement_Send(Movement.id, zfCalc_UserAdmin())
+       FROM Movement
+            INNER JOIN MovementBoolean AS MovementBoolean_VIP
+                                       ON MovementBoolean_VIP.MovementId = Movement.Id
+                                      AND MovementBoolean_VIP.DescId = zc_MovementBoolean_VIP()
+
+            INNER JOIN MovementBoolean AS MovementBoolean_Confirmed
+                                       ON MovementBoolean_Confirmed.MovementId = Movement.Id
+                                      AND MovementBoolean_Confirmed.DescId = zc_MovementBoolean_Confirmed()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_Deferred
+                                      ON MovementBoolean_Deferred.MovementId = Movement.Id
+                                     AND MovementBoolean_Deferred.DescId = zc_MovementBoolean_Deferred()
+       WHERE Movement.DescId = zc_Movement_Send()
+         AND Movement.StatusId = zc_Enum_Status_UnComplete()
+         AND Movement.OperDate < CURRENT_DATE
+         AND COALESCE (MovementBoolean_VIP.ValueData, FALSE) = TRUE
+         AND COALESCE (MovementBoolean_Confirmed.ValueData, FALSE) = FALSE      
+         AND COALESCE (MovementBoolean_Deferred.ValueData, FALSE) = FALSE; 
+    EXCEPTION
+       WHEN others THEN
+         GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
+       PERFORM lpLog_Run_Schedule_Function('gpFarmacy_Scheduler Run SetErased_Movement_Send_VIP', True, text_var1::TVarChar, vbUserId);
+    END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

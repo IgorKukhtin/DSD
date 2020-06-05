@@ -2,7 +2,7 @@ program ExportForLiki24;
 
 uses
   Vcl.Forms,
-  MainUnit in '..\FormsFarmacy\ExportForLiki24\MainUnit.pas' {MainForm};
+  MainUnit in '..\FormsFarmacy\MainUnitService\ExportForLiki24\MainUnit.pas' {MainForm};
 
 {$R *.res}
 
