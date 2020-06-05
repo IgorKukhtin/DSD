@@ -18,7 +18,7 @@ type
     message_type: string;
     header_id: Integer;
     detail_id: Integer;
-    movement_id: Integer;
+    movementid: Integer;
     sku_id: Integer;
     name: string;
     qty: Double;
@@ -216,13 +216,13 @@ end;
 
 procedure TImportWMS.ExecuteOrderStatusChanged(AMsgProc: TNotifyMsgProc);
 const
-  cProcName = 'gpInsert_movement_wms_scale_packet';
+  cProcName = 'gpInsert_wms_order_status_changed';
 
-  cSelect   = 'SELECT DISTINCT id, movement_id FROM wms_to_host_message WHERE (done = FALSE) AND (type = %s) ORDER BY id';
+  cSelect   = 'SELECT DISTINCT Id, MovementId FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
 
-  cRunProc  = 'SELECT * FROM %s(inSession := %s, inOrderId := %d);';
+  cRunProc  = 'SELECT * FROM %s(inSession:= %s, inOrderId:= %d);';
 var
-  sSelect: string;
+  sSelect, sExec: string;
 begin
   sSelect := Format(cSelect, [QuotedStr(cmtOrderStatusChanged)]);
 
@@ -239,9 +239,13 @@ begin
     while not FSelectQry.Eof do
     begin
       try
+        sExec := Format(cRunProc, [cProcName, QuotedStr('5'), FSelectQry.FieldByName('MovementId').AsInteger]);
+        {$IFDEF DEBUG}
+        if Assigned(AMsgProc) then AMsgProc(sExec);
+        {$ENDIF}
         FExecQry.Close;
         FExecQry.SQL.Clear;
-        FExecQry.SQL.Add(Format(cRunProc, [cProcName, QuotedStr('5'), FSelectQry.FieldByName('movement_id').AsInteger]));
+        FExecQry.SQL.Add(sExec);
         FExecQry.Open;
       except
         on E: Exception do
@@ -260,14 +264,54 @@ end;
 
 procedure TImportWMS.ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
 const
-  cProcName = 'gpProcess_ReceivingResult';
-  cRunProc = 'SELECT * FROM %s();';
+  cProcName = 'gpUpdate_wms_receiving_result';
+
+  cSelect   = 'SELECT DISTINCT Id, MovementId, Name, Qty FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
+
+  cRunProc  = 'SELECT * FROM %s(inId:= %d, inIncomingId:= %d, inName:= %s, inQty:= %f);';
+var
+  sSelect, sExec: string;
+  tmpSettings: TFormatSettings;
 begin
+  sSelect := Format(cSelect, [QuotedStr(cmtReceivingResult)]);
+  tmpSettings.DecimalSeparator := '.';
+
   try
-    FExecQry.Close;
-    FExecQry.SQL.Clear;
-    FExecQry.SQL.Add(Format(cRunProc, [cProcName]));
-    FExecQry.Open;
+    with FSelectQry do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add(sSelect);
+      Open;
+      First;
+    end;
+
+    while not FSelectQry.Eof do
+    begin
+      try
+        sExec := Format(cRunProc, [
+          cProcName,
+          FSelectQry.FieldByName('Id').AsInteger,
+          FSelectQry.FieldByName('MovementId').AsInteger,
+          QuotedStr(FSelectQry.FieldByName('Name').AsString),
+          FSelectQry.FieldByName('Qty').AsFloat
+        ], tmpSettings);
+        {$IFDEF DEBUG}
+        if Assigned(AMsgProc) then AMsgProc(sExec);
+        {$ENDIF}
+        FExecQry.Close;
+        FExecQry.SQL.Clear;
+        FExecQry.SQL.Add(sExec);
+        FExecQry.Open;
+      except
+        on E: Exception do
+          if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+      end;
+
+      FSelectQry.Next;
+    end;
+
+    FSelectQry.Close;
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
@@ -390,8 +434,8 @@ begin
         FValues[Last].header_id := getInt(headerNode.Attributes['syncid'], -1);
         CheckError('syncid', FValues[Last].header_id, AMsgProc);
 
-        FValues[Last].movement_id := getInt(headerNode.Attributes['order_id'], -1);
-        CheckError('order_id', FValues[Last].movement_id, AMsgProc);
+        FValues[Last].movementid := getInt(headerNode.Attributes['order_id'], -1);
+        CheckError('order_id', FValues[Last].movementid, AMsgProc);
 
         FValues[Last].operdate := MyStrToDateTime(headerNode.Attributes['operdate']);
         CheckDateTimeError('operdate', FValues[Last].operdate, AMsgProc);
@@ -407,7 +451,7 @@ begin
                 IncArray;
                 FValues[Last].message_type := FValues[Last - 1].message_type;
                 FValues[Last].header_id    := FValues[Last - 1].header_id;
-                FValues[Last].movement_id  := FValues[Last - 1].movement_id;
+                FValues[Last].movementid  := FValues[Last - 1].movementid;
                 FValues[Last].err_code     := FValues[Last - 1].err_code;
                 FValues[Last].err_descr    := FValues[Last - 1].err_descr;
               end;
@@ -463,8 +507,8 @@ begin
         FValues[Last].header_id := getInt(headerNode.Attributes['syncid'], -1);
         CheckError('syncid', FValues[Last].header_id, AMsgProc);
 
-        FValues[Last].movement_id := getInt(headerNode.Attributes['inc_id'], -1);
-        CheckError('inc_id', FValues[Last].movement_id, AMsgProc);
+        FValues[Last].movementid := getInt(headerNode.Attributes['inc_id'], -1);
+        CheckError('inc_id', FValues[Last].movementid, AMsgProc);
 
         FValues[Last].operdate := MyStrToDateTime(headerNode.Attributes['operdate']);
         CheckDateTimeError('operdate', FValues[Last].operdate, AMsgProc);
@@ -480,7 +524,7 @@ begin
                 IncArray;
                 FValues[Last].message_type := FValues[Last - 1].message_type;
                 FValues[Last].header_id    := FValues[Last - 1].header_id;
-                FValues[Last].movement_id  := FValues[Last - 1].movement_id;
+                FValues[Last].movementid  := FValues[Last - 1].movementid;
                 FValues[Last].err_code     := FValues[Last - 1].err_code;
                 FValues[Last].err_descr    := FValues[Last - 1].err_descr;
               end;
@@ -634,7 +678,7 @@ begin
         FInsertQry.ParamByName('type').AsString := FValues[J].message_type;
         FInsertQry.ParamByName('header_id').AsInteger := FValues[J].header_id;
         FInsertQry.ParamByName('detail_id').AsInteger := FValues[J].detail_id;
-        FInsertQry.ParamByName('movement_id').AsInteger := FValues[J].movement_id;
+        FInsertQry.ParamByName('movementid').AsInteger := FValues[J].movementid;
         FInsertQry.ParamByName('sku_id').AsInteger := FValues[J].sku_id;
         FInsertQry.ParamByName('name').AsString := FValues[J].name;
         FInsertQry.ParamByName('qty').AsFloat := FValues[J].qty;

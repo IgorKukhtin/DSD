@@ -113,11 +113,11 @@ object dmData: TdmData
     SQL.Strings = (
       
         'insert into wms_to_host_message(type, header_id, detail_id, move' +
-        'ment_id, sku_id, name, qty, weight, weight_biz, operdate, produc' +
-        'tion_date) '
+        'mentid, sku_id, name, qty, weight, weight_biz, operdate, product' +
+        'ion_date) '
       
-        'values(:type, :header_id, :detail_id, :movement_id, :sku_id, :na' +
-        'me, :qty, :weight, :weight_biz, :operdate, :production_date);')
+        'values(:type, :header_id, :detail_id, :movementid, :sku_id, :nam' +
+        'e, :qty, :weight, :weight_biz, :operdate, :production_date);')
     Left = 512
     Top = 352
     ParamData = <
@@ -140,7 +140,7 @@ object dmData: TdmData
         Value = Null
       end
       item
-        Name = 'MOVEMENT_ID'
+        Name = 'MOVEMENTID'
         DataType = ftInteger
         ParamType = ptInput
         Value = Null

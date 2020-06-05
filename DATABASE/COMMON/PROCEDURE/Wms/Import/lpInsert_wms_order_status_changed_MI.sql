@@ -4,9 +4,9 @@ DROP FUNCTION IF EXISTS lpInsert_movement_wms_scale_detail (Integer, Integer, TV
 DROP FUNCTION IF EXISTS lpInsert_wms_order_status_changed_MI (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsert_wms_order_status_changed_MI (
-	IN inMovementId     Integer,  -- Ключ Документа
-	IN inOrderId	    Integer,  -- Ключ заявки
-	IN inSession	    TVarChar  -- сессия пользователя
+    IN inMovementId     Integer,  -- Ключ Документа
+    IN inOrderId        Integer,  -- Ключ заявки
+    IN inSession        TVarChar  -- сессия пользователя
 )
 RETURNS VOID
 AS
@@ -14,40 +14,40 @@ $BODY$
 BEGIN
 
     -- одним запросом - сохранили всю строчную часть
-    PERFORM gpInsert_Scale_MI (inid                   := 0
-                             , inmovementid           := inMovementId
+    PERFORM gpInsert_Scale_MI (inId                   := 0
+                             , inMovementId           := inMovementId
                              , inGoodsId              := tmpData.GoodsId
                              , inGoodsKindId          := tmpData.GoodsKindId
-                             , inrealweight           := tmpData.Weight
+                             , inRealWeight           := tmpData.Weight
                              , inChangePercentAmount  := tmpData.ChangePercentAmount
-                             , incounttare            := 0
-                             , inweighttare           := 0
-                             , incounttare1           := 0
-                             , inweighttare1          := 0
-                             , incounttare2           := 0
-                             , inweighttare2          := 0
-                             , incounttare3           := 0
-                             , inweighttare3          := 0
-                             , incounttare4           := 0
-                             , inweighttare4          := 0
-                             , incounttare5           := 0
-                             , inweighttare5          := 0
-                             , incounttare6           := 0
-                             , inweighttare6          := 0
+                             , inCountTare            := 0
+                             , inWeightTare           := 0
+                             , inCountTare1           := 0
+                             , inWeightTare1          := 0
+                             , inCountTare2           := 0
+                             , inWeightTare2          := 0
+                             , inCountTare3           := 0
+                             , inWeightTare3          := 0
+                             , inCountTare4           := 0
+                             , inWeightTare4          := 0
+                             , inCountTare5           := 0
+                             , inWeightTare5          := 0
+                             , inCountTare6           := 0
+                             , inWeightTare6          := 0
                              , inPrice                := tmpData.Price
                              , inPrice_return         := tmpData.Price_return
                              , inCountForPrice        := tmpData.CountForPrice
                              , inCountForPrice_return := tmpData.CountForPrice_return
-                             , indayprior_Pricereturn := 0
-                             , incount                := 0
-                             , inheadcount            := 0
-                             , inboxcount             := 0
-                             , inboxcode              := 0
-                             , inpartiongoods         := ''
-                             , inPricelistid          := 0
-                             , inbranchcode           := 1
+                             , inDayPrior_PriceReturn := 0
+                             , inCount                := 0
+                             , inHeadCount            := 0
+                             , inBoxCount             := 0
+                             , inBoxCode              := 0
+                             , inPartionGoods         := ''
+                             , inPriceListId          := 0
+                             , inBranchcode           := 1
                              , inMovementId_promo     := tmpData.MovementId_promo
-                             , inisbarcode            := FALSE
+                             , inIsBarcode            := FALSE
                              , inSession              := inSession
                               )
     FROM (WITH -- подзапроc - сразу все товары по заявке
@@ -85,7 +85,7 @@ BEGIN
                , tmpGoods.MovementId_promo
                , wms_data.Weight
           FROM wms_to_host_message AS wms_data
-               LEFT JOIN tmpSKU   ON tmpSKU.sku_id = wms_data.sku_id
+               LEFT JOIN tmpSKU   ON tmpSKU.sku_id        = wms_data.sku_id
                LEFT JOIN tmpGoods ON tmpGoods.GoodsId     = tmpSKU.GoodsId
                                  AND tmpGoods.GoodsKindId = tmpSKU.GoodsKindId
           WHERE wms_data.MovementId = inOrderId
