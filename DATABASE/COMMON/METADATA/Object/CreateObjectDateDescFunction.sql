@@ -433,9 +433,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_CashSettings_DateBanSUN() RETURNS Integ
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_CashSettings(), 'zc_ObjectDate_CashSettings_DateBanSUN', 'Дата запрета работы по СУН' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_CashSettings_DateBanSUN');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_User_PUSH() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_PUSH'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_User(), 'zc_ObjectDate_User_PUSH', 'Дата последнего получения PUSH в Фармаси' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_User_PUSH');
+
 
 /*-------------------------------------------------------------------------------
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.  Воробкало А.А.   Шаблий О.В.
+ 04.06.20                                                                                     * zc_ObjectDate_User_PUSH
  07.05.20                                                                                     * zc_ObjectDate_Buyer_DateBirth
  06.05.20         * zc_ObjectDate_Juridical_VatPrice
  24.03.20         * zc_ObjectDate_ContractCondition_StartDate

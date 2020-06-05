@@ -94,6 +94,9 @@ BEGIN
    -- сохранили признак
    PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Confirmed(), inMovementId, inisConfirmed);
 
+   -- сохранили дату
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_UserConfirmedKind(), inMovementId, CURRENT_TIMESTAMP);
+
    -- сохранили протокол
    PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
 
@@ -113,4 +116,3 @@ LANGUAGE plpgsql VOLATILE;
  06.08.19                                                                      *
 */
 
--- 

@@ -48,6 +48,8 @@ BEGIN
         RAISE EXCEPTION 'Ошибка. Не выбрано подразделение.';
     END IF;
     
+    RAISE EXCEPTION 'На данный момент проект приостановлен, по причине загруженности транспортного отдела...но мы обязательно вернёмся!.';
+
     SELECT COALESCE(ObjectFloat_CashSettings_SummaFormSendVIP.ValueData, 0)
     INTO vbSummaFormSendVIP
     FROM Object AS Object_CashSettings
