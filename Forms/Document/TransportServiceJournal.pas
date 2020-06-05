@@ -62,6 +62,12 @@ type
     Cost_Info: TcxGridDBColumn;
     MemberExternalName: TcxGridDBColumn;
     DriverCertificate: TcxGridDBColumn;
+    spUpdate_SummReestr: TdsdStoredProc;
+    ExecuteDialogSummReestr: TExecuteDialog;
+    actUpdate_SummReestr: TdsdExecStoredProc;
+    macUpdate_SummReestr: TMultiAction;
+    isSummReestr: TcxGridDBColumn;
+    bbUpdate_SummReestr: TdxBarButton;
   private
     { Private declarations }
   public

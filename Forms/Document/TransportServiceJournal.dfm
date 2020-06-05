@@ -197,6 +197,15 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Options.Editing = False
             Width = 75
           end
+          object isSummReestr: TcxGridDBColumn
+            Caption = #1056#1072#1089#1095#1077#1090' '#1057#1091#1084#1084#1099' '#1086#1090#1075#1088#1091#1079#1082#1080' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isSummReestr'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderHint = #1056#1072#1089#1095#1077#1090' '#1057#1091#1084#1084#1099' '#1086#1090#1075#1088#1091#1079#1082#1080
+            Options.Editing = False
+            Width = 100
+          end
           object WeightTransport: TcxGridDBColumn
             Caption = #1042#1099#1074#1086#1079' '#1092#1072#1082#1090', '#1082#1075
             DataBinding.FieldName = 'WeightTransport'
@@ -801,6 +810,61 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object ExecuteDialogSummReestr: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      Hint = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      ImageIndex = 50
+      FormName = 'TTransportServiceSummReestrDialogForm'
+      FormNameParam.Value = 'TTransportServiceSummReestrDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inSummReestr'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'inSummReestr'
+          DataType = ftFloat
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdate_SummReestr: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_SummReestr
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_SummReestr
+        end>
+      Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      Hint = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      ImageIndex = 50
+    end
+    object macUpdate_SummReestr: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = ExecuteDialogSummReestr
+        end
+        item
+          Action = actUpdate_SummReestr
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
+      ImageIndex = 50
+    end
   end
   inherited MasterDS: TDataSource
     Left = 80
@@ -856,6 +920,87 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdate_SummReestr'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbUpdate_SummReestr: TdxBarButton
+      Action = macUpdate_SummReestr
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
@@ -1145,5 +1290,39 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     PackSize = 1
     Left = 824
     Top = 48
+  end
+  object spUpdate_SummReestr: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Movement_TransportService_SummReestr'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMIId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MIId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inSummReestr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inSummReestr'
+        DataType = ftFloat
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 784
+    Top = 160
   end
 end

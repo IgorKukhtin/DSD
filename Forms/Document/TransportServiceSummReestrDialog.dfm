@@ -1,4 +1,4 @@
-object WorkTimeKindSummDialogForm: TWorkTimeKindSummDialogForm
+object TransportServiceSummReestrDialogForm: TTransportServiceSummReestrDialogForm
   Left = 0
   Top = 0
   BorderStyle = bsDialog
@@ -40,9 +40,9 @@ object WorkTimeKindSummDialogForm: TWorkTimeKindSummDialogForm
   object cxLabel16: TcxLabel
     Left = 42
     Top = 23
-    Caption = #1057#1091#1084#1084#1072' '#1079#1072' '#1088#1072#1073'. '#1076#1077#1085#1100', '#1075#1088#1085
+    Caption = #1057#1091#1084#1084#1072' '#1086#1090#1075#1088#1091#1079#1082#1080', '#1075#1088#1085
   end
-  object edSumm: TcxCurrencyEdit
+  object edSummReestr: TcxCurrencyEdit
     Left = 42
     Top = 46
     Properties.Alignment.Horz = taRightJustify
@@ -73,9 +73,9 @@ object WorkTimeKindSummDialogForm: TWorkTimeKindSummDialogForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'inSumm'
+        Name = 'inSummReestr'
         Value = 'NULL'
-        Component = edSumm
+        Component = edSummReestr
         DataType = ftFloat
         ParamType = ptInput
         MultiSelectSeparator = ','

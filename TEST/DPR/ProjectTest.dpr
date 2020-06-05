@@ -1159,7 +1159,8 @@ uses
   Report_BankAccount_Cash_OlapDialog in '..\..\Forms\Report\Report_BankAccount_Cash_OlapDialog.pas' {Report_BankAccount_Cash_OlapDialogForm: TParentForm},
   OrderInternalStew in '..\..\Forms\Document\OrderInternalStew.pas' {OrderInternalStewForm: TParentForm},
   Report_CheckBonusTest in '..\..\Forms\Report\Report_CheckBonusTest.pas' {Report_CheckBonusTestForm: TParentForm},
-  WorkTimeKindSummDialog in '..\..\Forms\Guides\WorkTimeKindSummDialog.pas' {WorkTimeKindSummDialogForm: TParentForm};
+  WorkTimeKindSummDialog in '..\..\Forms\Guides\WorkTimeKindSummDialog.pas' {WorkTimeKindSummDialogForm: TParentForm},
+  TransportServiceSummReestrDialog in '..\..\Forms\Document\TransportServiceSummReestrDialog.pas' {TransportServiceSummReestrDialogForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

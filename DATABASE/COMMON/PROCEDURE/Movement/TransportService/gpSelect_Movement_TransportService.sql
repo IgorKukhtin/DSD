@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , Amount TFloat, SummAdd TFloat, SummTotal TFloat, SummReestr TFloat
              , WeightTransport TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , ContractValue TFloat, ContractValueAdd TFloat
+             , isSummReestr Boolean
              , Comment TVarChar
              , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -102,6 +103,12 @@ BEGIN
                                                                      )
                                    )
 
+        , tmpMovementItemBoolean AS (SELECT MovementItemBoolean.*
+                                     FROM MovementItemBoolean
+                                     WHERE MovementItemBoolean.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
+                                       AND MovementItemBoolean.DescId = zc_MIBoolean_SummReestr()
+                                   )
+
         , tmpMovementItemString AS (SELECT MovementItemString.*
                                     FROM MovementItemString
                                     WHERE MovementItemString.MovementItemId IN (SELECT DISTINCT tmpMI.Id FROM tmpMI)
@@ -149,6 +156,8 @@ BEGIN
            , MIFloat_TrevelTime.ValueData          AS TrevelTime
            , MIFloat_ContractValue.ValueData       AS ContractValue
            , MIFloat_ContractValueAdd.ValueData    AS ContractValueAdd
+
+           , COALESCE (MIBoolean_SummReestr.ValueData, TRUE) :: Boolean AS isSummReestr
 
            , MIString_Comment.ValueData  AS Comment
 
@@ -246,6 +255,10 @@ BEGIN
             LEFT JOIN tmpMovementItemString AS MIString_Comment
                                             ON MIString_Comment.MovementItemId = MovementItem.Id 
                                            AND MIString_Comment.DescId = zc_MIString_Comment()
+
+            LEFT JOIN tmpMovementItemBoolean AS MIBoolean_SummReestr
+                                             ON MIBoolean_SummReestr.MovementItemId = MovementItem.Id 
+                                            AND MIBoolean_SummReestr.DescId = zc_MIBoolean_SummReestr()            
 
             LEFT JOIN tmpMovementItemLinkObject AS MILinkObject_Contract
                                                 ON MILinkObject_Contract.MovementItemId = MovementItem.Id 
