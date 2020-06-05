@@ -35,6 +35,19 @@ BEGIN
                                         , SummChildRecalc TFloat, SummMinusExtRecalc TFloat, SummAddOthRecalc TFloat, SummFineOthRecalc TFloat, SummHospOthRecalc TFloat, SummCompensationRecalc TFloat, isMovementComplete Boolean) ON COMMIT DROP;
      END IF;
 
+     -- Нашли
+     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
+     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
+     -- Нашли
+     vbPersonalServiceListId:= (SELECT MLO.ObjectId AS PersonalServiceListId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
+
+
+     -- !!!СНАЧАЛА - Ведомость охрана!!!
+     IF inUserId > 0 AND vbPersonalServiceListId = 301885 -- Ведомость охрана
+     THEN
+         PERFORM lpUpdate_MI_PersonalService_SummAuditAdd (inMovementId, inUserId);
+     END IF;
+
 
      -- !!!СНАЧАЛА - пересчитали сумму затраты!!!
      PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, MovementItem.ObjectId, MovementItem.MovementId
@@ -68,12 +81,6 @@ BEGIN
        AND MovementItem.DescId     = zc_MI_Master()
        AND MovementItem.isErased   = FALSE;
 
-
-     -- Нашли
-     vbServiceDate:= (SELECT MovementDate.ValueData FROM MovementDate WHERE MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MIDate_ServiceDate());
-     vbServiceDateId:= lpInsertFind_Object_ServiceDate (inOperDate:= vbServiceDate);
-     -- Нашли
-     vbPersonalServiceListId:= (SELECT MLO.ObjectId AS PersonalServiceListId FROM MovementLinkObject AS MLO WHERE MLO.MovementId = inMovementId AND MLO.DescId = zc_MovementLinkObject_PersonalServiceList());
 
      -- Проверка - других быть не должно
      vbMovementId_check:= (SELECT MovementDate_ServiceDate.MovementId

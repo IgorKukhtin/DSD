@@ -688,7 +688,7 @@ BEGIN
       ;
 
      -- !!!временно - ПРОТОКОЛ - ЗАХАРДКОДИЛ!!!
-     /*INSERT INTO ResourseProtocol (UserId
+     INSERT INTO ResourseProtocol (UserId
                                  , OperDate
                                  , Value1
                                  , Value2
@@ -729,7 +729,7 @@ BEGIN
     || ', ' || inBranchCode :: TVarChar
     || ', ' || inBarCode
     || ', ' || inSession
-              ;*/
+              ;
 
 END;
 $BODY$

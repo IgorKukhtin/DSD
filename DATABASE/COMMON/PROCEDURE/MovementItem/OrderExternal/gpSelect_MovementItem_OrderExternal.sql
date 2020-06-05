@@ -297,8 +297,8 @@ BEGIN
 
             -- Остатки
           , tmpRemains AS (SELECT Container.ObjectId                          AS GoodsId
-                                , Container.Amount                            AS Amount
                                 , COALESCE (CLO_GoodsKind.ObjectId, 0)        AS GoodsKindId
+                                , SUM (Container.Amount)            :: TFloat AS Amount
                            FROM ContainerLinkObject AS CLO_Unit
                                 INNER JOIN Container ON Container.Id = CLO_Unit.ContainerId AND Container.DescId = zc_Container_Count() AND Container.Amount <> 0
                                 LEFT JOIN ContainerLinkObject AS CLO_GoodsKind
@@ -311,6 +311,8 @@ BEGIN
                              AND CLO_Unit.DescId = zc_ContainerLinkObject_Unit()
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                              AND vbIsOrderDnepr = FALSE
+                           GROUP BY Container.ObjectId
+                                  , COALESCE (CLO_GoodsKind.ObjectId, 0)
                           )
             -- LEFT JOIN Товаров из заявки - Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
@@ -852,7 +854,7 @@ BEGIN
                          )
             -- Остатки
           , tmpRemains AS (SELECT tmpMI_Goods.MovementItemId
-                                , Container.Amount AS Amount
+                                , SUM (Container.Amount) :: TFloat AS Amount
                            FROM tmpMI_Goods
                                 INNER JOIN Container ON Container.ObjectId = tmpMI_Goods.GoodsId
                                                     AND Container.DescId = zc_Container_Count()
@@ -882,6 +884,7 @@ BEGIN
                                                            END
                              AND CLO_Account.ContainerId IS NULL -- !!!т.е. без счета Транзит!!!
                              AND vbIsOrderDnepr = FALSE
+                           GROUP BY tmpMI_Goods.MovementItemId
                           )
             -- LEFT JOIN Товаров из заявки + Акции + Остатки
           , tmpMI AS (SELECT COALESCE (tmpMI_Goods.MovementItemId, 0)                   AS MovementItemId
