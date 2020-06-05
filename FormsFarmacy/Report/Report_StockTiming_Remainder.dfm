@@ -250,7 +250,7 @@ inherited Report_StockTiming_RemainderForm: TReport_StockTiming_RemainderForm
             Width = 82
           end
           object AmountLoss: TcxGridDBColumn
-            Caption = #1057#1087#1080#1089#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1057#1087#1080#1089#1072#1085#1086' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1055#1057')'
             DataBinding.FieldName = 'AmountLoss'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4

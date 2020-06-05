@@ -37,6 +37,7 @@ type
     cxLabel3: TcxLabel;
     edSummaUrgentlySendVIP: TcxCurrencyEdit;
     cxLabel4: TcxLabel;
+    cbBlockVIP: TcxCheckBox;
   private
     { Private declarations }
   public

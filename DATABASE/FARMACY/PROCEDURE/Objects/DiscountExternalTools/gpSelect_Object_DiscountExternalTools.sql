@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , Password TVarChar
              , ExternalUnit TVarChar  
              , Token TVarChar  
+             , isNotUseAPI Boolean
              , isErased Boolean
               ) AS
 $BODY$
@@ -37,6 +38,7 @@ BEGIN
 
              , ObjectString_ExternalUnit.ValueData AS ExternalUnit
              , ObjectString_Token.ValueData        AS Token
+             , COALESCE (ObjectBoolean_NotUseAPI.ValueData, False) AS isNotUseAPI
 
              , Object_DiscountExternalTools.isErased
 
@@ -69,6 +71,10 @@ BEGIN
              LEFT JOIN ObjectString AS ObjectString_Token
                                     ON ObjectString_Token.ObjectId = Object_DiscountExternalTools.Id 
                                    AND ObjectString_Token.DescId = zc_ObjectString_DiscountExternalTools_Token()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_NotUseAPI
+                                     ON ObjectBoolean_NotUseAPI.ObjectId = Object_DiscountExternalTools.Id 
+                                    AND ObjectBoolean_NotUseAPI.DescId = zc_ObjectBoolean_DiscountExternalTools_NotUseAPI()
 
         WHERE Object_DiscountExternalTools.DescId = zc_Object_DiscountExternalTools();
   

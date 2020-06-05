@@ -100,7 +100,6 @@ type
     procedure cxGridDBTableViewDblClick(Sender: TObject);
     procedure actCreteSendExecute(Sender: TObject);
     procedure SelectedCDSBeforePost(DataSet: TDataSet);
-    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     function CreteSend : boolean;
@@ -287,11 +286,6 @@ begin
   End;
 end;
 
-procedure TSearchRemainsVIPForm.FormActivate(Sender: TObject);
-begin
-  if (GuidesUnit.Key = '0') OR (GuidesUnit.Key = '') then edUnit.OnDblClick(Sender);
-end;
-
 procedure TSearchRemainsVIPForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -314,6 +308,20 @@ end;
 procedure TSearchRemainsVIPForm.FormCreate(Sender: TObject);
 begin
   UserSettingsStorageAddOn.LoadUserSettings;
+  spGet.Execute;
+  if spGet.ParamByName('isBlockVIP').Value then
+  begin
+     ShowMessage('На данный момент проект приостановлен, по причине загруженности транспортного отдела...но мы обязательно вернёмся!.');
+     Close;
+  end else
+  begin
+    edUnit.OnDblClick(Sender);
+    if (GuidesUnit.Key = '0') OR (GuidesUnit.Key = '') then
+    begin
+      ShowMessage('Не выбрано подразделение!.');
+      Close;
+    end;
+  end;
 end;
 
 procedure TSearchRemainsVIPForm.SelectedCDSBeforePost(DataSet: TDataSet);

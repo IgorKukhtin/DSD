@@ -18,9 +18,8 @@ BEGIN
 
    -- месяц начисления
    vbServiceDate := (SELECT MovementDate_ServiceDate.ValueData
-                     FROM MovementDate 
+                     FROM MovementDate AS MovementDate_ServiceDate
                      WHERE MovementDate_ServiceDate.MovementId = inMovementId
-                       --AND MovementDate_ServiceDate.ValueData BETWEEN DATE_TRUNC ('MONTH', inStartDate) AND (DATE_TRUNC ('MONTH', inEndDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY')
                        AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate());
    -- даты для выбот=рки данных из табеля
    vbStartDate := (DATE_TRUNC ('MONTH', vbServiceDate));
@@ -101,4 +100,4 @@ $BODY$
 */
 
 -- тест
---
+-- select * from lpUpdate_MI_PersonalService_SummAuditAdd(0, 5)
