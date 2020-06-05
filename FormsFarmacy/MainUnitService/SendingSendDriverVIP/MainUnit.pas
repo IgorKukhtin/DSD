@@ -17,7 +17,7 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
-  cxImageComboBox, cxNavigator, uTelegram,
+  cxImageComboBox, cxNavigator, UtilTelegram,
   cxDataControllerConditionalFormattingRulesManagerDialog;
 
 type

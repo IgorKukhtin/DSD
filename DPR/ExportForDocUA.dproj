@@ -106,9 +106,9 @@
         <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForDocUA\MainUnit.pas">
             <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForDocUA\uMySFTPClient.pas"/>
-        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForDocUA\libssh2.pas"/>
-        <DCCReference Include="..\FormsFarmacy\MainUnitService\ExportForDocUA\libssh2_sftp.pas"/>
+        <DCCReference Include="..\SOURCE\SFTP\libssh2.pas"/>
+        <DCCReference Include="..\SOURCE\SFTP\libssh2_sftp.pas"/>
+        <DCCReference Include="..\SOURCE\SFTP\SSHSFTPClient.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

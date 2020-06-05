@@ -18,7 +18,7 @@ uses
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, cxCheckBox, Vcl.Menus, DateUtils, cxButtonEdit, ZLibExGZ,
   cxNavigator, cxDataControllerConditionalFormattingRulesManagerDialog, System.Zip,
-  System.JSON;
+  System.JSON, SSHSFTPClient, libssh2_sftp;
 
 type
   TMainForm = class(TForm)
@@ -131,7 +131,7 @@ begin
 
     btnExecuteClick(btnExecute);
     btnExportClick(btnExport);
-    btnSendFTPClick(btnSendFTP);
+    btnSendSFTPClick(btnSendSFTP);
 
   except
     on E: Exception do
@@ -145,7 +145,7 @@ begin
   try
       // Ёкспорт аптек
       Application.ProcessMessages;
-      btnSendFTPClick(Nil);
+      btnSendSFTPClick(Nil);
       Application.ProcessMessages;
 
       // Ёкспорт медикаментов с остатками
@@ -153,7 +153,7 @@ begin
       Application.ProcessMessages;
       btnExportClick(Nil);
       Application.ProcessMessages;
-      btnSendFTPClick(Nil);
+      btnSendSFTPClick(Nil);
       Application.ProcessMessages;
   except
     on E: Exception do
@@ -270,6 +270,10 @@ end;
 
 procedure TMainForm.btnSendSFTPClick(Sender: TObject);
   VAR ZipFile: TZipFile;
+      SFTP: TSFTPClient;
+      A: LIBSSH2_SFTP_ATTRIBUTES;
+      W: WideString;
+      FS: TFileStream;
 begin
 
   if not FileExists(FileName) then Exit;
@@ -295,6 +299,43 @@ begin
 //      exit;
 //    end;
 //  end;
+
+
+//    glFTPPath,
+
+  SFTP := TSFTPClient.Create(Self);
+  FS := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
+  try
+    SFTP.UserName := glFTPUser;
+    SFTP.Password := glFTPPassword;
+    SFTP.Host := glFTPHost;
+    SFTP.Port := glFTPPort;
+    SFTP.KeepAlive := True;
+    SFTP.IPVersion := IPv4;
+    SFTP.AuthModes := [amTryAll];
+
+    try
+      SFTP.Connect;
+      if not SFTP.Connected then Exit;
+      if glFTPPath <> '' then
+      begin
+        W := SFTP.ResolveSymLink(SFTP.CurrentDirectory + '/' + glFTPPath, A, True);
+        if W = '' then W := '/';
+        SFTP.List(W);
+      end;
+      SFTP.Put(FS, SFTP.CurrentDirectory + '/' + ExtractFileName(FileName));
+      SFTP.List;
+    except
+      on E: Exception do
+      begin
+        Add_Log(E.Message);
+      end;
+    end;
+  finally
+    FS.Free;
+    SFTP.Free;
+  end;
+
 
 end;
 
@@ -379,7 +420,7 @@ begin
       btnAllUnit.Enabled := false;
       btnExecute.Enabled := false;
       btnExport.Enabled := false;
-      btnSendFTP.Enabled := false;
+      btnSendSFTP.Enabled := false;
       Timer1.Enabled := true;
     end;
   end;

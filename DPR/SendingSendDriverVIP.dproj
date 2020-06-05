@@ -103,7 +103,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\FormsFarmacy\SendingSendDriverVIP\MainUnit.pas">
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\SendingSendDriverVIP\MainUnit.pas">
             <Form>MainForm</Form>
         </DCCReference>
         <DCCReference Include="..\SOURCE\uTelegram.pas"/>
