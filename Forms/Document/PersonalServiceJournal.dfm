@@ -843,7 +843,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Width = 80
           end
           object TotalSummAuditAdd: TcxGridDBColumn
-            Caption = #1040#1091#1076#1080#1090
+            Caption = #1044#1086#1087#1083'. '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             DataBinding.FieldName = 'TotalSummAuditAdd'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -851,7 +851,7 @@ inherited PersonalServiceJournalForm: TPersonalServiceJournalForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1072#1091#1076#1080#1090
+            HeaderHint = #1044#1086#1087#1083#1072#1090#1072' '#1079#1072' '#1088#1077#1074#1080#1079#1080#1102
             Width = 80
           end
           object TotalDayAudit: TcxGridDBColumn
