@@ -1,8 +1,9 @@
--- Function: lpUpdate_wms_MI_WeighingProd_StatusId_Wms()
+-- Function: lpUpdate_wms_receiving_result_MI()
 
 DROP FUNCTION IF EXISTS lpUpdate_wms_MI_WeighingProd_StatusId_Wms (Integer, TVarChar);
+DROP FUNCTION IF EXISTS lpUpdate_wms_receiving_result_MI (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION lpUpdate_wms_MI_WeighingProd_StatusId_Wms (
+CREATE OR REPLACE FUNCTION lpUpdate_wms_receiving_result_MI (
     IN inIncomingId    Integer, -- номер задания на упаковку
     IN inName          TVarChar -- имя груза
 )
@@ -40,9 +41,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
+ 09.06.20                                                          *              
  08.06.20                                                          *
  05.06.20                                                          *
 */
 
 -- тест
--- SELECT * FROM lpUpdate_wms_MI_WeighingProd_StatusId_Wms (inIncomingId:= 1, inName:= 'AHC-00506') 
+-- SELECT * FROM lpUpdate_wms_receiving_result_MI (inIncomingId:= 1, inName:= 'AHC-00506') 
