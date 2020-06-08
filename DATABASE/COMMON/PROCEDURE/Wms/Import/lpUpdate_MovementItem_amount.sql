@@ -73,7 +73,7 @@ BEGIN
     FROM (-- данные из receiving_result
           SELECT DISTINCT
                  MI_WP.ParentId       AS MovementId
-               , wms_message.StarDate AS OperDate
+               , wms_message.OperDate AS OperDate
           FROM wms_MI_Incoming AS MI_Incoming
                INNER JOIN wms_to_host_message AS wms_message ON wms_message.MovementId = MI_Incoming.Id
                INNER JOIN wms_Movement_WeighingProduction AS Movement_WP
