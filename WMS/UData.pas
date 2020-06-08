@@ -872,22 +872,26 @@ end;
 
 function TdmData.ImportWMS(AMsgProc: TNotifyMsgProc): Boolean;
 var
+  dataObjects: TDataObjects;
   wmsImport: TImportWMS;
   bOrderStatusChanged, bReceivingResult: Boolean;
 const
-  cStartImport = 'Start import "%s" from WMS';
-  cSuccessImport = 'Data "%s" successfull imported from WMS';
+  cStartImport = 'Start import "%s" from WMS'  + #13#10;
+  cSuccessImport = 'Data "%s" successfull imported from WMS' + #13#10;
 begin
-  wmsImport := TImportWMS.Create(
-    from_wms_PacketsHeader_query,
-    from_wms_PacketsDetail_query,
-    insert_wms_to_host_message,
-    update_wms_to_host_header_message_error,
-    update_wms_to_host_header_message_done,
-    select_wms_to_host_message,
-    alan_exec_qry,
-    FDT_wms
-  );
+  with dataObjects do
+  begin
+    HeaderQry := from_wms_PacketsHeader_query;
+    DetailQry := from_wms_PacketsDetail_query;
+    InsertQry := insert_wms_to_host_message;
+    ErrorQry  := update_wms_to_host_header_message_error;
+    DoneQry   := update_wms_to_host_header_message_done;
+    SelectQry := select_wms_to_host_message;
+    ExecQry   := alan_exec_qry;
+    WMSTrans  := FDT_wms;
+  end;
+
+  wmsImport := TImportWMS.Create(dataObjects);
   try
     try
       // пакет <order_status_changed>

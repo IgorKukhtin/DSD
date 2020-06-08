@@ -1,5 +1,9 @@
-CREATE OR REPLACE FUNCTION lpUpdate_wms_MI_WeighingProd_StatusId_Wms(
-    IN inIncomingId    Integer,  -- номер задания на упаковку
+-- Function: lpUpdate_wms_MI_WeighingProd_StatusId_Wms()
+
+DROP FUNCTION IF EXISTS lpUpdate_wms_MI_WeighingProd_StatusId_Wms (Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION lpUpdate_wms_MI_WeighingProd_StatusId_Wms (
+    IN inIncomingId    Integer, -- номер задания на упаковку
     IN inName          TVarChar -- имя груза
 )
 RETURNS Void
@@ -32,3 +36,13 @@ BEGIN
 END;
 $BODY$
  LANGUAGE PLPGSQL VOLATILE; 
+ 
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
+ 08.06.20                                                          *
+ 05.06.20                                                          *
+*/
+
+-- тест
+-- SELECT * FROM lpUpdate_wms_MI_WeighingProd_StatusId_Wms (inIncomingId:= 1, inName:= 'AHC-00506') 

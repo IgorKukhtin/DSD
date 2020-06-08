@@ -15,40 +15,38 @@ type
   TPacketKind = (pknOrderStatusChanged, pknReceivingResult);
 
   TPacketValues = record
-    message_type: string;
-    header_id: Integer;
-    detail_id: Integer;
-    movementid: Integer;
-    sku_id: Integer;
-    name: string;
-    qty: Double;
-    weight: Double;
-    weight_biz: Double;
-    operdate: TDateTime;
-    production_date: TDateTime;
-    err_code: Integer;
+    Message_Type: string;
+    Header_Id: Integer;
+    Detail_Id: Integer;
+    MovementId: Integer;
+    SKU_Id: Integer;
+    Name: string;
+    Qty: Double;
+    Weight: Double;
+    Weight_Biz: Double;
+    OperDate: TDateTime;
+    Production_Date: TDateTime;
+    Err_Code: Integer;
   private
     Ferr_descr: string;
     procedure SetErrDescr(AValue: string);
     function GetErrDescr: string;
   public
-    property err_descr: string read GetErrDescr write SetErrDescr;
+    property Err_Descr: string read GetErrDescr write SetErrDescr;
   end;
 
   TPacketValuesArray = array of TPacketValues;
 
+  TDataObjects = record
+    HeaderQry, DetailQry, InsertQry, ErrorQry, DoneQry, SelectQry, ExecQry: TFDQuery;
+    WMSTrans: TFDTransaction;
+  end;
+
   TImportWMS = class
   strict private
-    FHeader: TFDQuery;
-    FDetail: TFDQuery;
-    FInsertQry: TFDQuery;
-    FErrorQry: TFDQuery;
-    FDoneQry: TFDQuery;
-    FSelectQry: TFDQuery;
-    FExecQry: TFDQuery;
-    FWMSTrans: TFDTransaction;
     FStream: TMemoryStream;
     FValues: TPacketValuesArray;
+    FData: TDataObjects;
   strict private
     procedure IncArray; // Inc size of array FValues
     function Last: Integer; // Return High(FValues)
@@ -67,7 +65,7 @@ type
     procedure ExecuteOrderStatusChanged(AMsgProc: TNotifyMsgProc);
     procedure ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
   public
-    constructor Create(AHeaderQry, ADetailQry, AInsertQry, AErrorQry, ADoneQry, ASelectQry, AExecQry: TFDQuery; AWMSTrans: TFDTransaction);
+    constructor Create(AData: TDataObjects);
     destructor Destroy; override;
     function ImportPacket(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc): Boolean;
   end;
@@ -103,7 +101,7 @@ end;
 function MyStrToDateTime(const AValue: string): TDateTime; // пример входных данных: "11-09-2019 15:43" -> нужно конвертировать в TDateTime
 const
   cDateLen = 10;
-  cTotLen = 16;
+  cTotLen  = 16;
 var
   sDay, sMo, sYe, sH, sM: string;
 begin
@@ -135,15 +133,15 @@ procedure TImportWMS.CheckDateTimeError(const Attr: string; const AttrValue: TDa
 begin
   if AttrValue = cZeroDateTime then
   begin
-    FValues[Last].err_code := cImpErrInvalidDateTime;
-    FValues[Last].err_descr := Format(cImpErrDescr_InvalidDate, [Attr]);
+    FValues[Last].Err_Code := cImpErrInvalidDateTime;
+    FValues[Last].Err_Descr := Format(cImpErrDescr_InvalidDate, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDescr_InvalidDate, [Attr]));
   end;
 
   if AttrValue = cErrXmlAttributeNotExists then
   begin
-    FValues[Last].err_code := cImpErrAttrNotExists;
-    FValues[Last].err_descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
+    FValues[Last].Err_Code  := cImpErrAttrNotExists;
+    FValues[Last].Err_Descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDecr_AttrNotExists, [Attr]));
   end;
 end;
@@ -152,8 +150,8 @@ procedure TImportWMS.CheckError(const Attr, AttrValue: string; AMsgProc: TNotify
 begin
   if AttrValue = cErrStrXmlAttributeNotExists then
   begin
-    FValues[Last].err_code := cImpErrAttrNotExists;
-    FValues[Last].err_descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
+    FValues[Last].Err_Code  := cImpErrAttrNotExists;
+    FValues[Last].Err_Descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDecr_AttrNotExists, [Attr]));
   end;
 end;
@@ -162,15 +160,15 @@ procedure TImportWMS.CheckError(const Attr: string; const AttrValue: Integer; AM
 begin
   if AttrValue = -1 then
   begin
-    FValues[Last].err_code := cImpErrWrongType;
-    FValues[Last].err_descr := Format(cImpErrDescr_NotInteger, [Attr]);
+    FValues[Last].Err_Code  := cImpErrWrongType;
+    FValues[Last].Err_Descr := Format(cImpErrDescr_NotInteger, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDescr_NotInteger, [Attr]));
   end;
 
   if AttrValue = cErrXmlAttributeNotExists then
   begin
-    FValues[Last].err_code := cImpErrAttrNotExists;
-    FValues[Last].err_descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
+    FValues[Last].Err_Code  := cImpErrAttrNotExists;
+    FValues[Last].Err_Descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDecr_AttrNotExists, [Attr]));
   end;
 end;
@@ -179,32 +177,23 @@ procedure TImportWMS.CheckError(const Attr: string; const AttrValue: Extended; A
 begin
   if AttrValue = -1 then
   begin
-    FValues[Last].err_code := cImpErrWrongType;
-    FValues[Last].err_descr := Format(cImpErrDescr_NotNumeric, [Attr]);
+    FValues[Last].Err_Code  := cImpErrWrongType;
+    FValues[Last].Err_Descr := Format(cImpErrDescr_NotNumeric, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDescr_NotNumeric, [Attr]));
   end;
 
   if AttrValue = cErrXmlAttributeNotExists then
   begin
-    FValues[Last].err_code := cImpErrAttrNotExists;
-    FValues[Last].err_descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
+    FValues[Last].Err_Code  := cImpErrAttrNotExists;
+    FValues[Last].Err_Descr := Format(cImpErrDecr_AttrNotExists, [Attr]);
     if Assigned(AMsgProc) then AMsgProc(Format(cImpErrDecr_AttrNotExists, [Attr]));
   end;
 end;
 
-constructor TImportWMS.Create(AHeaderQry, ADetailQry, AInsertQry, AErrorQry, ADoneQry, ASelectQry, AExecQry: TFDQuery;
-  AWMSTrans: TFDTransaction);
+constructor TImportWMS.Create(AData: TDataObjects);
 begin
   inherited Create;
-  FHeader    := AHeaderQry;
-  FDetail    := ADetailQry;
-  FInsertQry := AInsertQry;
-  FErrorQry  := AErrorQry;
-  FDoneQry   := ADoneQry;
-  FSelectQry := ASelectQry;
-  FExecQry   := AExecQry;
-  FWMSTrans  := AWMSTrans;
-
+  FData := AData;
   FStream := TMemoryStream.Create;
 end;
 
@@ -227,7 +216,7 @@ begin
   sSelect := Format(cSelect, [QuotedStr(cmtOrderStatusChanged)]);
 
   try
-    with FSelectQry do
+    with FData.SelectQry do
     begin
       Close;
       SQL.Clear;
@@ -236,26 +225,29 @@ begin
       First;
     end;
 
-    while not FSelectQry.Eof do
+    while not FData.SelectQry.Eof do
     begin
       try
-        sExec := Format(cRunProc, [cProcName, QuotedStr('5'), FSelectQry.FieldByName('MovementId').AsInteger]);
+        sExec := Format(cRunProc, [cProcName, QuotedStr('5'), FData.SelectQry.FieldByName('MovementId').AsInteger]);
         {$IFDEF DEBUG}
         if Assigned(AMsgProc) then AMsgProc(sExec);
         {$ENDIF}
-        FExecQry.Close;
-        FExecQry.SQL.Clear;
-        FExecQry.SQL.Add(sExec);
-        FExecQry.Open;
+        with FData.ExecQry do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(sExec);
+          Open;
+        end;
       except
         on E: Exception do
           if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
 
-      FSelectQry.Next;
+      FData.SelectQry.Next;
     end;
 
-    FSelectQry.Close;
+    FData.SelectQry.Close;
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
@@ -268,16 +260,14 @@ const
 
   cSelect   = 'SELECT DISTINCT Id, MovementId, Name, Qty FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
 
-  cRunProc  = 'SELECT * FROM %s(inId:= %d, inIncomingId:= %d, inName:= %s, inQty:= %f);';
+  cRunProc  = 'SELECT * FROM %s(inId:= %d, inIncomingId:= %d, inName:= %s);';
 var
   sSelect, sExec: string;
-  tmpSettings: TFormatSettings;
 begin
   sSelect := Format(cSelect, [QuotedStr(cmtReceivingResult)]);
-  tmpSettings.DecimalSeparator := '.';
 
   try
-    with FSelectQry do
+    with FData.SelectQry do
     begin
       Close;
       SQL.Clear;
@@ -286,32 +276,34 @@ begin
       First;
     end;
 
-    while not FSelectQry.Eof do
+    while not FData.SelectQry.Eof do
     begin
       try
         sExec := Format(cRunProc, [
           cProcName,
-          FSelectQry.FieldByName('Id').AsInteger,
-          FSelectQry.FieldByName('MovementId').AsInteger,
-          QuotedStr(FSelectQry.FieldByName('Name').AsString),
-          FSelectQry.FieldByName('Qty').AsFloat
-        ], tmpSettings);
+          FData.SelectQry.FieldByName('Id').AsInteger,
+          FData.SelectQry.FieldByName('MovementId').AsInteger,
+          QuotedStr(FData.SelectQry.FieldByName('Name').AsString)
+        ]);
         {$IFDEF DEBUG}
         if Assigned(AMsgProc) then AMsgProc(sExec);
         {$ENDIF}
-        FExecQry.Close;
-        FExecQry.SQL.Clear;
-        FExecQry.SQL.Add(sExec);
-        FExecQry.Open;
+        with FData.ExecQry do
+        begin
+          Close;
+          SQL.Clear;
+          SQL.Add(sExec);
+          Open;
+        end;
       except
         on E: Exception do
           if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
 
-      FSelectQry.Next;
+      FData.SelectQry.Next;
     end;
 
-    FSelectQry.Close;
+    FData.SelectQry.Close;
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
@@ -328,8 +320,8 @@ const
   cOperdate = ' operdate="%s"';
 begin
   Result := nil;
-  FHeader.Close;
-  FDetail.Close;
+  FData.HeaderQry.Close;
+  FData.DetailQry.Close;
   FStream.Size := 0;
 
   case APacket of
@@ -337,33 +329,36 @@ begin
     pknReceivingResult:    sPacketType := cmtReceivingResult;
   end;
 
-  FHeader.ParamByName('type').AsString := sPacketType;
-  FHeader.ParamByName('status').AsString := cStatusReady;
-  FHeader.ParamByName('err_code').AsInteger := cImpErrZero;
+  with FData.HeaderQry do
+  begin
+    ParamByName('Type').AsString      := sPacketType;
+    ParamByName('Status').AsString    := cStatusReady;
+    ParamByName('Err_Code').AsInteger := cImpErrZero;
+  end;
 
   try
-    FHeader.Open;
-    if FHeader.RecordCount = 0 then Exit;
+    FData.HeaderQry.Open;
+    if FData.HeaderQry.RecordCount = 0 then Exit;
 
     sXmlHeader := '<?xml version="1.0"?>' + #13 + '<root>' + #13;
     FStream.Write(sXmlHeader[1], ByteLength(sXmlHeader));
 
-    if not FHeader.FieldByName('type').IsNull then
+    if not FData.HeaderQry.FieldByName('type').IsNull then
     begin
-      sLine := Format(cWmsMessageType, [FHeader.FieldByName('type').AsString]) + #13;
+      sLine := Format(cWmsMessageType, [FData.HeaderQry.FieldByName('type').AsString]) + #13;
       FStream.Write(sLine[1], ByteLength(sLine));
     end;
 
-    FHeader.First;
-    while not FHeader.Eof do
+    FData.HeaderQry.First;
+    while not FData.HeaderQry.Eof do
     begin
-      if not FHeader.FieldByName('message').IsNull then
-        sLine := FHeader.FieldByName('message').AsString;
+      if not FData.HeaderQry.FieldByName('message').IsNull then
+        sLine := FData.HeaderQry.FieldByName('message').AsString;
 
       // запись атрибута 'operdate' в конце строки:   <...action="update">   =>  <...action="update" operdate="11-09-2019 15:43">
-      if not FHeader.FieldByName('start_date').IsNull then
+      if not FData.HeaderQry.FieldByName('start_date').IsNull then
       begin
-        sOperDate := Format(cOperdate, [FormatDateTime('dd-mm-yyyy hh:mm', FHeader.FieldByName('start_date').AsDateTime)]);
+        sOperDate := Format(cOperdate, [FormatDateTime('dd-mm-yyyy hh:mm', FData.HeaderQry.FieldByName('start_date').AsDateTime)]);
         if Pos('/>', sLine) > 0 then
           sLine := Copy(sLine, 1, Length(sLine) - 2) + sOperDate + '/>'
         else
@@ -375,30 +370,30 @@ begin
         sLine := sLine + #13;
         FStream.Write(sLine[1], ByteLength(sLine));
 
-        FDetail.Close;
-        FDetail.ParamByName('header_id').AsInteger := FHeader.FieldByName('id').AsInteger;
+        FData.DetailQry.Close;
+        FData.DetailQry.ParamByName('Header_Id').AsInteger := FData.HeaderQry.FieldByName('id').AsInteger;
         try
-          FDetail.Open;
+          FData.DetailQry.Open;
         except
           on E: Exception do
-           raise EOpenDetail.CreateFmt(cExceptionMsg, [E.ClassName, E.Message + ' ' + FDetail.SQL.Text]);
+           raise EOpenDetail.CreateFmt(cExceptionMsg, [E.ClassName, E.Message + ' ' + FData.DetailQry.SQL.Text]);
         end;
 
-        while not FDetail.Eof do
+        while not FData.DetailQry.Eof do
         begin
-          if not FDetail.FieldByName('message').IsNull then
+          if not FData.DetailQry.FieldByName('message').IsNull then
           begin
-            sLine := FDetail.FieldByName('message').AsString;
+            sLine := FData.DetailQry.FieldByName('message').AsString;
             if Length(sLine) > 0 then
             begin
               sLine := sLine + #13;
               FStream.Write(sLine[1], ByteLength(sLine));
             end;
           end;
-          FDetail.Next;
+          FData.DetailQry.Next;
         end;
       end;
-      FHeader.Next;
+      FData.HeaderQry.Next;
     end;
 
     sXmlFooter := '</root>';
@@ -406,7 +401,7 @@ begin
     Result := FStream;
   except
     on E: Exception do
-      raise EOpenHeader.CreateFmt(cExceptionMsg, [E.ClassName, E.Message + ' ' + FHeader.SQL.Text]);
+      raise EOpenHeader.CreateFmt(cExceptionMsg, [E.ClassName, E.Message + ' ' + FData.HeaderQry.SQL.Text]);
   end;
 end;
 
@@ -428,17 +423,17 @@ begin
       begin
         IncArray;
 
-        FValues[Last].message_type := sMessageType;
-        CheckError('type', FValues[Last].message_type, AMsgProc);
+        FValues[Last].Message_Type := sMessageType;
+        CheckError('type', FValues[Last].Message_Type, AMsgProc);
 
-        FValues[Last].header_id := getInt(headerNode.Attributes['syncid'], -1);
-        CheckError('syncid', FValues[Last].header_id, AMsgProc);
+        FValues[Last].Header_Id := getInt(headerNode.Attributes['syncid'], -1);
+        CheckError('syncid', FValues[Last].Header_Id, AMsgProc);
 
-        FValues[Last].movementid := getInt(headerNode.Attributes['order_id'], -1);
-        CheckError('order_id', FValues[Last].movementid, AMsgProc);
+        FValues[Last].MovementId := getInt(headerNode.Attributes['order_id'], -1);
+        CheckError('order_id', FValues[Last].MovementId, AMsgProc);
 
-        FValues[Last].operdate := MyStrToDateTime(headerNode.Attributes['operdate']);
-        CheckDateTimeError('operdate', FValues[Last].operdate, AMsgProc);
+        FValues[Last].OperDate := MyStrToDateTime(headerNode.Attributes['operdate']);
+        CheckDateTimeError('operdate', FValues[Last].OperDate, AMsgProc);
 
         if headerNode.HasChildNodes then
           for J := 0 to Pred(headerNode.ChildNodes.Count) do
@@ -449,30 +444,30 @@ begin
               if J > 0 then // нужно продублировать parent-значения для detailNode, если это не первая detailNode
               begin
                 IncArray;
-                FValues[Last].message_type := FValues[Last - 1].message_type;
-                FValues[Last].header_id    := FValues[Last - 1].header_id;
-                FValues[Last].movementid  := FValues[Last - 1].movementid;
-                FValues[Last].err_code     := FValues[Last - 1].err_code;
-                FValues[Last].err_descr    := FValues[Last - 1].err_descr;
+                FValues[Last].Message_Type := FValues[Last - 1].Message_Type;
+                FValues[Last].Header_Id    := FValues[Last - 1].Header_Id;
+                FValues[Last].MovementId   := FValues[Last - 1].MovementId;
+                FValues[Last].Err_Code     := FValues[Last - 1].Err_Code;
+                FValues[Last].Err_Descr    := FValues[Last - 1].Err_Descr;
               end;
 
-              FValues[Last].detail_id := getInt(detailNode.Attributes['syncid'], -1);
-              CheckError('syncid', FValues[Last].detail_id, AMsgProc);
+              FValues[Last].Detail_Id := getInt(detailNode.Attributes['syncid'], -1);
+              CheckError('syncid', FValues[Last].Detail_Id, AMsgProc);
 
-              FValues[Last].sku_id := getInt(detailNode.Attributes['sku_id'], -1);
-              CheckError('sku_id', FValues[Last].sku_id, AMsgProc);
+              FValues[Last].SKU_Id := getInt(detailNode.Attributes['sku_id'], -1);
+              CheckError('sku_id', FValues[Last].SKU_Id, AMsgProc);
 
-              FValues[Last].qty := getFloat(detailNode.Attributes['qty'], -1);
-              CheckError('qty', FValues[Last].qty, AMsgProc);
+              FValues[Last].Qty := getFloat(detailNode.Attributes['qty'], -1);
+              CheckError('qty', FValues[Last].Qty, AMsgProc);
 
-              FValues[Last].weight := getFloat(detailNode.Attributes['real_weight'], -1);
-              CheckError('real_weight', FValues[Last].weight, AMsgProc);
+              FValues[Last].Weight := getFloat(detailNode.Attributes['real_weight'], -1);
+              CheckError('real_weight', FValues[Last].Weight, AMsgProc);
 
-              FValues[Last].weight_biz := getFloat(detailNode.Attributes['weight_biz'], -1);
-              CheckError('weight_biz', FValues[Last].weight_biz, AMsgProc);
+              FValues[Last].Weight_Biz := getFloat(detailNode.Attributes['weight_biz'], -1);
+              CheckError('weight_biz', FValues[Last].Weight_Biz, AMsgProc);
 
-              FValues[Last].production_date := MyStrToDateTime(detailNode.Attributes['production_date']);
-              CheckDateTimeError('production_date', FValues[Last].production_date, AMsgProc);
+              FValues[Last].Production_Date := MyStrToDateTime(detailNode.Attributes['production_date']);
+              CheckDateTimeError('production_date', FValues[Last].Production_Date, AMsgProc);
             end;
           end;
       end;
@@ -501,17 +496,17 @@ begin
       begin
         IncArray;
 
-        FValues[Last].message_type := sMessageType;
-        CheckError('type', FValues[Last].message_type, AMsgProc);
+        FValues[Last].Message_Type := sMessageType;
+        CheckError('type', FValues[Last].Message_Type, AMsgProc);
 
-        FValues[Last].header_id := getInt(headerNode.Attributes['syncid'], -1);
-        CheckError('syncid', FValues[Last].header_id, AMsgProc);
+        FValues[Last].Header_Id := getInt(headerNode.Attributes['syncid'], -1);
+        CheckError('syncid', FValues[Last].Header_Id, AMsgProc);
 
-        FValues[Last].movementid := getInt(headerNode.Attributes['inc_id'], -1);
-        CheckError('inc_id', FValues[Last].movementid, AMsgProc);
+        FValues[Last].MovementId := getInt(headerNode.Attributes['inc_id'], -1);
+        CheckError('inc_id', FValues[Last].MovementId, AMsgProc);
 
-        FValues[Last].operdate := MyStrToDateTime(headerNode.Attributes['operdate']);
-        CheckDateTimeError('operdate', FValues[Last].operdate, AMsgProc);
+        FValues[Last].OperDate := MyStrToDateTime(headerNode.Attributes['operdate']);
+        CheckDateTimeError('operdate', FValues[Last].OperDate, AMsgProc);
 
         if headerNode.HasChildNodes then
           for J := 0 to Pred(headerNode.ChildNodes.Count) do
@@ -522,30 +517,30 @@ begin
               if J > 0 then // нужно продублировать parent-значения для detailNode, если это не первая detailNode
               begin
                 IncArray;
-                FValues[Last].message_type := FValues[Last - 1].message_type;
-                FValues[Last].header_id    := FValues[Last - 1].header_id;
-                FValues[Last].movementid  := FValues[Last - 1].movementid;
-                FValues[Last].err_code     := FValues[Last - 1].err_code;
-                FValues[Last].err_descr    := FValues[Last - 1].err_descr;
+                FValues[Last].Message_Type := FValues[Last - 1].Message_Type;
+                FValues[Last].Header_Id    := FValues[Last - 1].Header_Id;
+                FValues[Last].MovementId   := FValues[Last - 1].MovementId;
+                FValues[Last].Err_Code     := FValues[Last - 1].Err_Code;
+                FValues[Last].Err_Descr    := FValues[Last - 1].Err_Descr;
               end;
 
-              FValues[Last].detail_id := getInt(detailNode.Attributes['syncid'], -1);
-              CheckError('syncid', FValues[Last].detail_id, AMsgProc);
+              FValues[Last].Detail_Id := getInt(detailNode.Attributes['syncid'], -1);
+              CheckError('syncid', FValues[Last].Detail_Id, AMsgProc);
 
-              FValues[Last].sku_id := getInt(detailNode.Attributes['sku_id'], -1);
-              CheckError('sku_id', FValues[Last].sku_id, AMsgProc);
+              FValues[Last].SKU_Id := getInt(detailNode.Attributes['sku_id'], -1);
+              CheckError('sku_id', FValues[Last].SKU_Id, AMsgProc);
 
-              FValues[Last].qty := getFloat(detailNode.Attributes['qty'], -1);
-              CheckError('qty', FValues[Last].qty, AMsgProc);
+              FValues[Last].Qty := getFloat(detailNode.Attributes['qty'], -1);
+              CheckError('qty', FValues[Last].Qty, AMsgProc);
 
-              FValues[Last].weight := getFloat(detailNode.Attributes['weight'], -1);
-              CheckError('weight', FValues[Last].weight, AMsgProc);
+              FValues[Last].Weight := getFloat(detailNode.Attributes['weight'], -1);
+              CheckError('weight', FValues[Last].Weight, AMsgProc);
 
-              FValues[Last].name := getStr(detailNode.Attributes['name']);
-              CheckError('name', FValues[Last].name, AMsgProc);
+              FValues[Last].Name := getStr(detailNode.Attributes['name']);
+              CheckError('name', FValues[Last].Name, AMsgProc);
 
-              FValues[Last].production_date := MyStrToDateTime(detailNode.Attributes['production_date']);
-              CheckDateTimeError('production_date', FValues[Last].production_date, AMsgProc);
+              FValues[Last].Production_Date := MyStrToDateTime(detailNode.Attributes['production_date']);
+              CheckDateTimeError('production_date', FValues[Last].Production_Date, AMsgProc);
             end;
           end;
       end;
@@ -629,21 +624,24 @@ begin
 
   if Length(FValues) > 0 then
   begin
-    FWMSTrans.StartTransaction;
+    FData.WMSTrans.StartTransaction;
     try
       for I := Low(FValues) to High(FValues) do
       begin
-        if FValues[I].err_code = 0 then
+        if FValues[I].Err_Code = 0 then
         begin
-          sHeader_id_done := sHeader_id_done + IntToStr(FValues[I].header_id) + ',';
+          sHeader_id_done := sHeader_id_done + IntToStr(FValues[I].Header_Id) + ',';
           Continue;
         end;
 
-        FErrorQry.ParamByName('err_code').AsInteger := FValues[I].err_code;
-        FErrorQry.ParamByName('err_descr').AsString := FValues[I].err_descr;
-        FErrorQry.ParamByName('header_id').AsInteger := FValues[I].header_id;
-        // коды ошибок
-        FErrorQry.ExecSQL;
+        with FData.ErrorQry do
+        begin
+          ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
+          ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
+          ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
+          // коды ошибок
+          ExecSQL;
+        end;
       end;
 
       if Length(sHeader_id_done) > 0 then
@@ -651,17 +649,20 @@ begin
         sHeader_id_done := Copy(sHeader_id_done, 1, Length(sHeader_id_done) - 1);
         // статус 'done'
         sUpdateDone := 'update to_host_header_message set status=' + QuotedStr('done') + ' where id in(' + sHeader_id_done + ')';
-        FDoneQry.SQL.Clear;
-        FDoneQry.SQL.Add(sUpdateDone);
-        FDoneQry.ExecSQL;
+        with FData.DoneQry do
+        begin
+          SQL.Clear;
+          SQL.Add(sUpdateDone);
+          ExecSQL;
+        end;
       end;
 
-      FWMSTrans.Commit;
+      FData.WMSTrans.Commit;
       Result := True;
     except
       on E: Exception do
       begin
-        if FWMSTrans.Active then FWMSTrans.Rollback;
+        if FData.WMSTrans.Active then FData.WMSTrans.Rollback;
         if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
       end;
     end;
@@ -673,21 +674,23 @@ begin
       // записываем данные в таб. alan.wms_to_host_message
       for J := Low(FValues) to High(FValues) do
       begin
-        if FValues[J].err_code <> 0 then Continue;
+        if FValues[J].Err_Code <> 0 then Continue;
 
-        FInsertQry.ParamByName('type').AsString := FValues[J].message_type;
-        FInsertQry.ParamByName('header_id').AsInteger := FValues[J].header_id;
-        FInsertQry.ParamByName('detail_id').AsInteger := FValues[J].detail_id;
-        FInsertQry.ParamByName('movementid').AsInteger := FValues[J].movementid;
-        FInsertQry.ParamByName('sku_id').AsInteger := FValues[J].sku_id;
-        FInsertQry.ParamByName('name').AsString := FValues[J].name;
-        FInsertQry.ParamByName('qty').AsFloat := FValues[J].qty;
-        FInsertQry.ParamByName('weight').AsFloat := FValues[J].weight;
-        FInsertQry.ParamByName('weight_biz').AsFloat := FValues[J].weight_biz;
-        FInsertQry.ParamByName('operdate').AsDateTime := FValues[J].operdate;
-        FInsertQry.ParamByName('production_date').AsDateTime := FValues[J].production_date;
-
-        FInsertQry.ExecSQL;
+        with FData.InsertQry do
+        begin
+          ParamByName('type').AsString := FValues[J].Message_Type;
+          ParamByName('Header_Id').AsInteger := FValues[J].Header_Id;
+          ParamByName('Detail_Id').AsInteger := FValues[J].Detail_Id;
+          ParamByName('MovementId').AsInteger := FValues[J].MovementId;
+          ParamByName('SKU_Id').AsInteger := FValues[J].SKU_Id;
+          ParamByName('Name').AsString := FValues[J].Name;
+          ParamByName('Qty').AsFloat := FValues[J].Qty;
+          ParamByName('Weight').AsFloat := FValues[J].Weight;
+          ParamByName('Weight_Biz').AsFloat := FValues[J].Weight_Biz;
+          ParamByName('OperDate').AsDateTime := FValues[J].OperDate;
+          ParamByName('Production_Date').AsDateTime := FValues[J].Production_Date;
+          ExecSQL;
+        end;
       end;
 
       // вызов храним.процедур, которые использует данные таб. alan.wms_to_host_message
