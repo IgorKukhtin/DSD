@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Label(
     IN inSession     TVarChar            -- сессия пользователя
    
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Name_RUS TVarChar
+             , isErased boolean)
 AS
 $BODY$
 BEGIN
@@ -19,8 +21,12 @@ BEGIN
       SELECT Object.Id                          AS Id
            , Object.ObjectCode                  AS Code
            , Object.ValueData                   AS Name
+           , COALESCE (ObjectString_RUS.ValueData, NULL) :: TVarChar AS Name_RUS
            , Object.isErased                    AS isErased
        FROM Object
+           LEFT JOIN ObjectString AS ObjectString_RUS
+                                  ON ObjectString_RUS.ObjectId = Object.Id
+                                 AND ObjectString_RUS.DescId = zc_ObjectString_Label_RUS()
        WHERE Object.DescId = zc_Object_Label()
          AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
        ;
@@ -33,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+09.06.20          *
 03.03.17                                                         *
 */
 

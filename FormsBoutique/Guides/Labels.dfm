@@ -60,6 +60,15 @@ object LabelForm: TLabelForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
+      object Name_RUS: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089#1089'.)'
+        DataBinding.FieldName = 'Name_RUS'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
+        Width = 243
+      end
       object Erased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -497,6 +506,7 @@ object LabelForm: TLabelForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 104
     Top = 248
   end

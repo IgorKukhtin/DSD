@@ -133,9 +133,14 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_ImportTypeItems_UserParamName() RETUR
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_ImportTypeItems_UserParamName', zc_Object_ImportTypeItems(), 'Пользовательское название параметра процедуры' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_ImportTypeItems_UserParamName');
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Label_RUS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Label_RUS'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Label_RUS', zc_Object_Label(), 'Название(русс.)' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Label_RUS');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+09.06.20          * zc_ObjectString_Label_RUS
 29.03.19          * zc_ObjectString_ImportType_ProcedureName
                     zc_ObjectString_ImportType_JSONParamName
 30.04.18          * zc_ObjectString_User_Printer
