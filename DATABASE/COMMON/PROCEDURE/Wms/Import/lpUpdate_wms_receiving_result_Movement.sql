@@ -1,10 +1,11 @@
--- Function: lpUpdate_MovementItem_amount()
+-- Function: lpUpdate_wms_receiving_result_Movement()
 
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_amount (Integer, TVarChar, TFloat);
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_amount (Integer, TVarChar);
 DROP FUNCTION IF EXISTS lpUpdate_MovementItem_amount (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS lpUpdate_wms_receiving_result_Movement (Integer, TVarChar, TVarChar);
 
-CREATE OR REPLACE FUNCTION lpUpdate_MovementItem_amount (
+CREATE OR REPLACE FUNCTION lpUpdate_wms_receiving_result_Movement (
     IN inIncomingId    Integer,   -- номер задания на упаковку
     IN inName          TVarChar,  -- имя груза
     IN inSession       TVarChar   -- сессия пользователя
@@ -35,7 +36,7 @@ BEGIN
                         INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id        = MI_WP.BarCodeBoxId
                                                               AND Object_BarCodeBox.ValueData = inName
                         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                             ON ObjectLink_Goods_Measure.ObjectId = MI_WP.GoodsId
+                                             ON ObjectLink_Goods_Measure.ObjectId = Movement_WP.GoodsId
                                             AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
                         INNER JOIN Movement ON Movement.Id = MI_WP.ParentId
                         INNER JOIN MovementItem AS MI
@@ -45,7 +46,7 @@ BEGIN
                                                AND MI.Amount <> CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN wms_message.Qty ELSE wms_message.Weight END
                    WHERE MI_Incoming.Id = inIncomingId
                   )
-    -- обновляем MovementItem.amount значениями из таб. CheckAmount
+
     UPDATE MovementItem SET Amount = tmpMI.Amount
     FROM tmpMI
     WHERE MovementItem.Id = tmpMI.Id;
@@ -86,7 +87,7 @@ BEGIN
                INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id        = MI_WP.BarCodeBoxId
                                                      AND Object_BarCodeBox.ValueData = inName
                LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                                    ON ObjectLink_Goods_Measure.ObjectId = MI_WP.GoodsId
+                                    ON ObjectLink_Goods_Measure.ObjectId = Movement_WP.GoodsId
                                    AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
           WHERE MI_Incoming.Id = inIncomingId
          ) AS tmpMI
@@ -111,9 +112,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
+ 09.06.20                                         *       
  08.06.20                                                          *
  05.06.20                                                          *
 */
 
 -- тест
--- SELECT * FROM lpUpdate_MovementItem_amount (inIncomingId:= 1, inName:= 'AHC-00506', inSession:= '5')
+-- SELECT * FROM lpUpdate_wms_receiving_result_Movement (inIncomingId:= 1, inName:= 'AHC-00506', inSession:= '5')
