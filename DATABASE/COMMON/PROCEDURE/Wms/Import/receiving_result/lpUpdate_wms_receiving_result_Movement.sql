@@ -51,8 +51,8 @@ BEGIN
     PERFORM gpInsertUpdate_Movement_WeighingProduction (ioId                  := vbMovementId
                                                       , inOperDate            := (SELECT wms_message.OperDate FROM wms_to_host_message AS wms_message WHERE wms_message.Id = inId)
                                                       , inMovementDescId      := MovementDesc.Id
-                                                      , inMovementDescNumber  := MovementFloat_MovementDescNumber.ValueData
-                                                      , inWeighingNumber      := MovementFloat_WeighingNumber.ValueData
+                                                      , inMovementDescNumber  := MovementFloat_MovementDescNumber.ValueData :: Integer
+                                                      , inWeighingNumber      := MovementFloat_WeighingNumber.ValueData :: Integer
                                                       , inFromId              := MovementLinkObject_From.ObjectId
                                                       , inToId                := MovementLinkObject_To.ObjectId
                                                       , inDocumentKindId      := MovementLinkObject_DocumentKind.ObjectId
@@ -62,10 +62,10 @@ BEGIN
                                                        )
     FROM Movement
          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = tmpMI.MovementId
+                                      ON MovementLinkObject_From.MovementId = Movement.Id
                                      AND MovementLinkObject_From.DescId     = zc_MovementLinkObject_From()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                      ON MovementLinkObject_To.MovementId = tmpMI.MovementId
+                                      ON MovementLinkObject_To.MovementId = Movement.Id
                                      AND MovementLinkObject_To.DescId     = zc_MovementLinkObject_To()
          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentKind
                                       ON MovementLinkObject_DocumentKind.MovementId = Movement.Id
@@ -118,7 +118,7 @@ BEGIN
          LEFT JOIN wms_to_host_message AS wms_message ON wms_message.Id = inId
          LEFT JOIN MovementItemLinkObject AS MILO_GoodsKind
                                           ON MILO_GoodsKind.MovementItemId = MovementItem.Id
-                                         AND MILO_GoodsKind.DescId         = zc_MovementLinkObject_GoodsKind()
+                                         AND MILO_GoodsKind.DescId         = zc_MILinkObject_GoodsKind()
          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                               ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
                              AND ObjectLink_Goods_Measure.DescId   = zc_ObjectLink_Goods_Measure()
@@ -145,4 +145,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpUpdate_wms_receiving_result_Movement (inIncomingId:= 1, inName:= 'AHC-00506', inSession:= '5')
+-- SELECT * FROM lpUpdate_wms_receiving_result_Movement (inId:= 1, inSession:= zfCalc_UserAdmin())
