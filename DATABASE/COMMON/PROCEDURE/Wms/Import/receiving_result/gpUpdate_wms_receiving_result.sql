@@ -34,10 +34,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
- 09.06.20                                                          *               
+ 09.06.20                                        *               
  08.06.20                                                          *
  05.06.20                                                          *
 */
 
 -- тест
--- SELECT * FROM gpUpdate_wms_receiving_result (inId:= 1, inIncomingId:= 1, inName:= 'AHC-00506', inSession:= '5')
+-- SELECT * FROM gpUpdate_wms_receiving_result (inId:= 1, inSession:= zfCalc_UserAdmin())

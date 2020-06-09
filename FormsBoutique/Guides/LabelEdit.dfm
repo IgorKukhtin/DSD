@@ -2,7 +2,7 @@ object LabelEditForm: TLabelEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1094#1077#1085#1085#1080#1082#1072'>'
-  ClientHeight = 177
+  ClientHeight = 195
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@ object LabelEditForm: TLabelEditForm
   end
   object cxButton1: TcxButton
     Left = 40
-    Top = 127
+    Top = 158
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,7 +38,7 @@ object LabelEditForm: TLabelEditForm
   end
   object cxButton2: TcxButton
     Left = 184
-    Top = 127
+    Top = 158
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,6 +59,17 @@ object LabelEditForm: TLabelEditForm
     Properties.DisplayFormat = '0'
     Properties.ReadOnly = True
     TabOrder = 5
+    Width = 273
+  end
+  object cxLabel3: TcxLabel
+    Left = 10
+    Top = 99
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089#1089'.)'
+  end
+  object edName_RUS: TcxTextEdit
+    Left = 10
+    Top = 117
+    TabOrder = 7
     Width = 273
   end
   object ActionList: TActionList
@@ -120,6 +131,14 @@ object LabelEditForm: TLabelEditForm
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inName_RUS'
+        Value = Null
+        Component = edName_RUS
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 96
@@ -162,6 +181,13 @@ object LabelEditForm: TLabelEditForm
         Component = edCode
         DataType = ftUnknown
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'Name_RUS'
+        Value = Null
+        Component = edName_RUS
+        DataType = ftString
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 184
@@ -180,10 +206,10 @@ object LabelEditForm: TLabelEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 160
-    Top = 104
+    Top = 128
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
-    Top = 104
+    Top = 128
   end
 end

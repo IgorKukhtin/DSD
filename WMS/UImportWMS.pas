@@ -209,7 +209,7 @@ const
 
   cSelect   = 'SELECT DISTINCT Id, MovementId FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
 
-  cRunProc  = 'SELECT * FROM %s(inSession:= %s, inOrderId:= %d);';
+  cRunProc  = 'SELECT * FROM %s(inOrderId:= %d, inSession:= %s)';
 var
   sSelect, sExec: string;
 begin
@@ -228,7 +228,7 @@ begin
     while not FData.SelectQry.Eof do
     begin
       try
-        sExec := Format(cRunProc, [cProcName, QuotedStr('5'), FData.SelectQry.FieldByName('MovementId').AsInteger]);
+        sExec := Format(cRunProc, [cProcName, FData.SelectQry.FieldByName('MovementId').AsInteger, QuotedStr('5')]);
         {$IFDEF DEBUG}
         if Assigned(AMsgProc) then AMsgProc(sExec);
         {$ENDIF}
@@ -258,9 +258,9 @@ procedure TImportWMS.ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
 const
   cProcName = 'gpUpdate_wms_receiving_result';
 
-  cSelect   = 'SELECT DISTINCT Id, MovementId, Name, Qty FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
+  cSelect   = 'SELECT DISTINCT Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
 
-  cRunProc  = 'SELECT * FROM %s(inId:= %d, inIncomingId:= %d, inName:= %s);';
+  cRunProc  = 'SELECT * FROM %s(inId:= %d, inSession:= %s)';
 var
   sSelect, sExec: string;
 begin
@@ -282,8 +282,7 @@ begin
         sExec := Format(cRunProc, [
           cProcName,
           FData.SelectQry.FieldByName('Id').AsInteger,
-          FData.SelectQry.FieldByName('MovementId').AsInteger,
-          QuotedStr(FData.SelectQry.FieldByName('Name').AsString)
+          QuotedStr('5')
         ]);
         {$IFDEF DEBUG}
         if Assigned(AMsgProc) then AMsgProc(sExec);

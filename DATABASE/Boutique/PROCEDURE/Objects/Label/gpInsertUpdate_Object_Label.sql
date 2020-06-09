@@ -1,11 +1,13 @@
 -- Название для ценника
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Label (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Label (Integer, Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Label(
  INOUT ioId           Integer,       -- Ключ объекта <Название для ценника>    
  INOUT ioCode         Integer,       -- Код объекта <Название для ценника>     
     IN inName         TVarChar,      -- Название объекта <Название для ценника>
+    IN inName_RUS     TVarChar,      -- Название объекта <Название для ценника> русс
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -34,6 +36,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Label(), ioCode, inName);
 
+   -- сохранили свойство
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Label_RUS(), ioId, inName_RUS);
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -46,6 +51,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Полятыкин А.А.
+09.06.20          *
 13.05.17                                                          *
 08.05.17                                                          *
 03.03.17                                                          *
