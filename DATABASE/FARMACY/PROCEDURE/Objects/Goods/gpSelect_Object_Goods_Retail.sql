@@ -42,6 +42,7 @@ RETURNS TABLE (Id Integer, GoodsMainId Integer, Code Integer, IdBarCode TVarChar
              , isResolution_224  boolean
              , DateUpdateClose TDateTime
              , isInvisibleSUN boolean
+             , isSupplementSUN1 boolean
               ) AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -320,6 +321,7 @@ BEGIN
            , Object_Goods_Main.isResolution_224                                  AS isResolution_224
            , Object_Goods_Main.DateUpdateClose                                   AS DateUpdateClose
            , Object_Goods_Main.isInvisibleSUN                                    AS isInvisibleSUN
+           , Object_Goods_Main.isSupplementSUN1                                  AS isSupplementSUN1
       FROM Object_Goods_Retail
 
            LEFT JOIN Object_Goods_Main ON Object_Goods_Main.Id = Object_Goods_Retail.GoodsMainId

@@ -17,7 +17,8 @@ uses
   IdExplicitTLSClientServerBase, IdMessageClient, IdSMTPBase, IdSMTP,
   Vcl.ActnList, IdText, IdSSLOpenSSL, IdGlobal, strUtils, IdAttachmentFile,
   IdFTP, cxCurrencyEdit, Vcl.Menus, IdHTTP, IdIOHandler, IdIOHandlerSocket,
-  IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf, cxButtonEdit;
+  IdIOHandlerStack, IdSSL, Xml.XMLDoc, XMLIntf, cxButtonEdit, cxNavigator,
+  dxBarBuiltInMenu;
 
 type
   TExportSalesForSuppForm = class(TForm)
