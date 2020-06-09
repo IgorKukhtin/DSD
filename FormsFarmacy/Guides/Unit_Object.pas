@@ -292,6 +292,20 @@ type
     N14: TMenuItem;
     N15: TMenuItem;
     N16: TMenuItem;
+    DeySupplSun1: TcxGridDBColumn;
+    MonthSupplSun1: TcxGridDBColumn;
+    actDeySupplSun1: TMultiAction;
+    actExecSPDeySupplSun1: TdsdExecStoredProc;
+    actEDDeySupplSun1: TExecuteDialog;
+    spUpdate_DeySupplSun1: TdsdStoredProc;
+    spUpdate_MonthSupplSun1: TdsdStoredProc;
+    actMonthSupplSun1: TMultiAction;
+    actExecSPMonthSupplSun1: TdsdExecStoredProc;
+    actEDMonthSupplSun1: TExecuteDialog;
+    dxBarButton6: TdxBarButton;
+    dxBarSeparator7: TdxBarSeparator;
+    dxBarButton7: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
   private
     { Private declarations }
   public

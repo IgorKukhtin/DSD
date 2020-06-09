@@ -4,7 +4,7 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
   ClientWidth = 1434
   PopupMenu = PopupMenu
   ExplicitWidth = 1450
-  ExplicitHeight = 515
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -463,6 +463,28 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
             HeaderHint = #1054#1089#1090#1072#1090#1086#1082' ('#1088#1072#1073#1086#1090#1072#1077#1090' '#1057#1059#1053'-1, '#1057#1059#1053'-2, '#1057#1059#1053'-2-'#1055#1048'  '#1076#1083#1103' '#1058'1)'
             Options.Editing = False
             Width = 70
+          end
+          object DeySupplSun1: TcxGridDBColumn
+            Caption = #1044#1085#1080' '#1087#1088#1086#1076#1072#1078' '#1074' '#1044#1086#1087#1086#1083#1085'. '#1057#1059#1053'1'
+            DataBinding.FieldName = 'DeySupplSun1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 74
+          end
+          object MonthSupplSun1: TcxGridDBColumn
+            Caption = ' '#1050#1086#1083'-'#1074#1086' '#1084#1077#1089'. '#1085#1072#1079#1072#1076' '#1074' '#1044#1086#1087#1086#1083#1085'. '#1057#1059#1053'1 '
+            DataBinding.FieldName = 'MonthSupplSun1'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = ',0;-,0; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 83
           end
           object isRepriceAuto: TcxGridDBColumn
             Caption = #1040#1074#1090#1086' '#1087#1077#1088#1077#1086#1094#1077#1085#1082#1072
@@ -2708,6 +2730,106 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
       Caption = #1056#1072#1073#1086#1090#1072#1102#1090' '#1087#1086' '#1057#1059#1053'2-'#1055#1048' - '#1090#1086#1083#1100#1082#1086' '#1087#1088#1080#1077#1084' - '#1053#1077#1090
       ImageIndex = 73
     end
+    object actDeySupplSun1: TMultiAction
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actEDDeySupplSun1
+      ActionList = <
+        item
+          Action = actExecSPDeySupplSun1
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1087#1088#1086#1076#1072#1078' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1076#1085#1080' '#1087#1088#1086#1076#1072#1078' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+      ImageIndex = 43
+    end
+    object actExecSPDeySupplSun1: TdsdExecStoredProc
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_DeySupplSun1
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_DeySupplSun1
+        end>
+      Caption = 'actExecSPDeySupplSun1'
+    end
+    object actEDDeySupplSun1: TExecuteDialog
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      Caption = 'actEDDeySupplSun1'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = ''
+          Component = FormParams
+          ComponentItem = 'ValuesInt'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1044#1085#1080' '#1087#1088#1086#1076#1072#1078' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actMonthSupplSun1: TMultiAction
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actEDMonthSupplSun1
+      ActionList = <
+        item
+          Action = actExecSPMonthSupplSun1
+        end>
+      View = cxGridDBTableView
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1084#1077#1089#1103#1094#1077#1074' '#1085#1072#1079#1072#1076' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1082#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1084#1077#1089#1103#1094#1077#1074' '#1085#1072#1079#1072#1076' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+      ImageIndex = 43
+    end
+    object actExecSPMonthSupplSun1: TdsdExecStoredProc
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_MonthSupplSun1
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_MonthSupplSun1
+        end>
+      Caption = 'actExecSPMonthSupplSun1'
+    end
+    object actEDMonthSupplSun1: TExecuteDialog
+      Category = 'ListDaySUN'
+      MoveParams = <>
+      Caption = 'actEDMonthSupplSun1'
+      FormName = 'TIntegerDialogForm'
+      FormNameParam.Value = 'TIntegerDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Values'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ValuesInt'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Label'
+          Value = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1084#1077#1089#1103#1094#1077#1074' '#1085#1072#1079#1072#1076' '#1074' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -3348,7 +3470,37 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         item
           Visible = True
           ItemName = 'bbUpdate_SUN_Lock'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton6'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton7'
         end>
+    end
+    object dxBarButton6: TdxBarButton
+      Action = actDeySupplSun1
+      Category = 0
+    end
+    object dxBarSeparator7: TdxBarSeparator
+      Caption = 'New Separator'
+      Category = 0
+      Hint = 'New Separator'
+      Visible = ivAlways
+    end
+    object dxBarButton7: TdxBarButton
+      Action = actMonthSupplSun1
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Category = 0
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4349,6 +4501,11 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'ValuesInt'
+        Value = '0'
         MultiSelectSeparator = ','
       end>
     Left = 29
@@ -5409,5 +5566,55 @@ inherited Unit_ObjectForm: TUnit_ObjectForm
     PackSize = 1
     Left = 1152
     Top = 299
+  end
+  object spUpdate_DeySupplSun1: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_DeySupplSun1'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDeySupplSun1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ValuesInt'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 944
+    Top = 363
+  end
+  object spUpdate_MonthSupplSun1: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Unit_MonthSupplSun1'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inMonthSupplSun1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ValuesInt'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 1032
+    Top = 403
   end
 end

@@ -263,7 +263,7 @@ BEGIN
      WHEN others THEN
        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
      text_var1 = text_var1||' '||vbUnitID::Text;
-     PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, vbUserId);
+     PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, inSession::Integer);
   END;
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
