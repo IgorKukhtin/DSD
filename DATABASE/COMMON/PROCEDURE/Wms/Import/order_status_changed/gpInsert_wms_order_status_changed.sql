@@ -1,5 +1,6 @@
 -- Function: gpInsert_wms_order_status_changed()
 
+DROP FUNCTION IF EXISTS lpGetGoodsId_for_sku_id (Integer);
 DROP FUNCTION IF EXISTS gpInsert_movement_wms_scale_packet (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_wms_order_status_changed (Integer, TVarChar);
 
