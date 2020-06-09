@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , PeriodName   TVarChar
              , PeriodYear   Integer
              , Amount TFloat, Amount_Sale TFloat, Remains TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat, OperPriceList_curr TFloat
                -- Итого сумма вх. + прайс (в прод.)
              , TotalSumm TFloat, TotalSummBalance TFloat, TotalSummPriceList TFloat
                -- Итого сумма вх. + прайс (текущий возврат)
@@ -74,6 +74,7 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , isErased     Boolean
              , isChecked    Boolean
              , ContainerId  Integer
+             , CurrencyName_pl TVarChar
               )
 AS
 $BODY$
@@ -106,8 +107,10 @@ BEGIN
                              , MovementItem.PartionId                             AS PartionId
                              , MovementItem.ObjectId                              AS GoodsId
                              , MovementItem.Amount                                AS Amount
+                               -- Цена по прайсу, без скидки - в ГРН
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
-
+                               -- Цена по прайсу, без скидки - в валюте
+                             , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
                                -- Итого сумма оплаты - для "текущего" документа Продажи
                              , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
                                -- Итого сумма оплаты - все "Расчеты покупателей"
@@ -123,14 +126,16 @@ BEGIN
                                -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки + 2)дополнительная
                              , COALESCE (MIFloat_TotalChangePercent.ValueData, 0) AS TotalChangePercent
                                -- Итого сумма Скидки - все "Расчеты покупателей"
-                             , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0) AS TotalChangePercentPay
+                             , COALESCE (MIFloat_TotalChangePercentPay.ValueData, 0)   AS TotalChangePercentPay
 
                              , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0) AS TotalChangePercent_curr
                              , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)           AS TotalPay_curr
                              , COALESCE (MIFloat_TotalPayOth_curr.ValueData, 0)        AS TotalPayOth_curr
 
-                             , COALESCE (MIBoolean_Checked.ValueData, FALSE)         AS isChecked
+                             , COALESCE (MIBoolean_Checked.ValueData, FALSE)           AS isChecked
 
+                              -- валюта оригинальной цены, без скидки (из продажи)
+                             , Object_Currency_pl.ValueData                            AS CurrencyName_pl
                         FROM Movement
                              INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                                            ON MovementLinkObject_To.MovementId = Movement.Id
@@ -151,6 +156,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                         ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                          ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
@@ -190,6 +199,12 @@ BEGIN
                              LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                                            ON MIBoolean_Checked.MovementItemId = MovementItem.Id
                                                          AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency_pl
+                                                              ON MILinkObject_Currency_pl.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_Currency_pl.DescId         = zc_MILinkObject_Currency_pl()
+                             LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = COALESCE (MILinkObject_Currency_pl.ObjectId, zc_Currency_Basis())
+           
                         WHERE Movement.DescId   = zc_Movement_Sale()
                           -- !!!ВРЕМЕННО - потом оставить только ПРОВЕДЕННЫЕ!!!
                           -- AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
@@ -221,6 +236,7 @@ BEGIN
                              , Object_PartionMI.ObjectCode                        AS SaleMI_ID
                              , MovementItem.Amount                                AS Amount_Sale
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                             , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
 
                                -- Итого сумма оплаты - для "текущего" документа Продажи
                              , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
@@ -242,7 +258,7 @@ BEGIN
                              , COALESCE (MIFloat_TotalChangePercent_curr.ValueData, 0)    AS TotalChangePercent_curr
                              , COALESCE (MIFloat_TotalPay_curr.ValueData, 0)              AS TotalPay_curr
                              , COALESCE (MIFloat_TotalPayOth_curr.ValueData, 0)           AS TotalPayOth_curr
-
+                        
                         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                              JOIN MovementItem AS MI_Master
                                                ON MI_Master.MovementId = inMovementId
@@ -256,6 +272,9 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MI_Master.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+                             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                         ON MIFloat_OperPriceList_curr.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_master
                                                          ON MIFloat_TotalChangePercent_master.MovementItemId = MI_Master.Id
@@ -266,6 +285,16 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_master
                                                          ON MIFloat_TotalPayOth_master.MovementItemId = MI_Master.Id
                                                         AND MIFloat_TotalPayOth_master.DescId         = zc_MIFloat_TotalPayOth()
+
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
+                                                         ON MIFloat_TotalChangePercent_curr.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
+                                                         ON MIFloat_TotalPay_curr.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
+                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_curr
+                                                         ON MIFloat_TotalPayOth_curr.MovementItemId = MI_Master.Id
+                                                        AND MIFloat_TotalPayOth_curr.DescId         = zc_MIFloat_TotalPayOth_curr()
 
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_PartionMI
                                                               ON MILinkObject_PartionMI.MovementItemId = MI_Master.Id
@@ -307,15 +336,6 @@ BEGIN
                                                          ON MIFloat_TotalPayReturn.MovementItemId = MovementItem.Id
                                                         AND MIFloat_TotalPayReturn.DescId         = zc_MIFloat_TotalPayReturn()
 
-                             LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent_curr
-                                                         ON MIFloat_TotalChangePercent_curr.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_TotalChangePercent_curr.DescId         = zc_MIFloat_TotalChangePercent_curr()
-                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPay_curr
-                                                         ON MIFloat_TotalPay_curr.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_TotalPay_curr.DescId         = zc_MIFloat_TotalPay_curr()
-                             LEFT JOIN MovementItemFloat AS MIFloat_TotalPayOth_curr
-                                                         ON MIFloat_TotalPayOth_curr.MovementItemId = MovementItem.Id
-                                                        AND MIFloat_TotalPayOth_curr.DescId         = zc_MIFloat_TotalPayOth_curr()
                        )
 
             , tmpMI AS (SELECT COALESCE (tmpMI_Master.MovementItemId, 0)               AS Id
@@ -339,6 +359,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.SaleMI_ID, tmpMI_Sale.SaleMI_ID)           AS SaleMI_Id
                              , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount, 0)         AS Amount_Sale
                              , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList
+                             , COALESCE (tmpMI_Master.OperPriceList_curr, tmpMI_Sale.OperPriceList_curr) AS OperPriceList_curr
 
                              , COALESCE (tmpMI_Master.TotalPay, tmpMI_Sale.TotalPay)             AS TotalPay_Sale
                              , COALESCE (tmpMI_Master.TotalPayOth, tmpMI_Sale.TotalPayOth)       AS TotalPayOth_Sale
@@ -355,6 +376,8 @@ BEGIN
                              , COALESCE (tmpMI_Master.TotalChangePercent_curr, tmpMI_Sale.TotalChangePercent_curr) AS TotalChangePercent_curr
                              , COALESCE (tmpMI_Master.TotalPay_curr, tmpMI_Sale.TotalPay_curr)                     AS TotalPay_curr
                              , COALESCE (tmpMI_Master.TotalPayOth_curr, tmpMI_Sale.TotalPayOth_curr)               AS TotalPayOth_curr
+                           
+                             , COALESCE (tmpMI_Sale.CurrencyName_pl, Null) :: TVarChar                             AS CurrencyName_pl
 
                   FROM tmpMI_Master
                        FULL JOIN tmpMI_Sale ON tmpMI_Sale.SaleMI_Id = tmpMI_Master.SaleMI_Id  -- ТОЛЬКО по партии
@@ -438,6 +461,7 @@ BEGIN
            , 0                                 :: TFloat AS OperPrice
            , 0                                 :: TFloat AS CountForPrice
            , tmpMI.OperPriceList               :: TFloat AS OperPriceList
+           , tmpMI.OperPriceList_curr          :: TFloat AS OperPriceList_curr
 
              -- Итого сумма (в прод.)
            , 0                                 :: TFloat AS TotalSumm
@@ -545,6 +569,7 @@ BEGIN
            
            , Container.Id                                   AS ContainerId
 
+           , tmpMI.CurrencyName_pl             :: TVarChar
        FROM tmpMI
             -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
@@ -711,6 +736,7 @@ BEGIN
            , 0                                                  :: TFloat  AS OperPrice
            , 0                                                  :: TFloat  AS CountForPrice
            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat  AS OperPriceList
+           , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) :: TFloat  AS OperPriceList_curr
 
              -- Итого сумма (в прод.)
            , 0                                                  :: TFloat  AS TotalSumm
@@ -756,6 +782,7 @@ BEGIN
            , COALESCE (MIFloat_ChangePercent.ValueData, 0)      :: TFloat AS ChangePercent
              -- Итого сумма Скидки - для "текущего" документа Продажи: 2)дополнительная
            , COALESCE (MIFloat_SummChangePercent.ValueData, 0)  :: TFloat AS SummChangePercent_sale
+           
              -- Итого сумма Скидки - для "текущего" документа Продажи: 1)по %скидки
            , (COALESCE (MIFloat_TotalChangePercent.ValueData, 0) - COALESCE (MIFloat_SummChangePercent.ValueData, 0)) :: TFloat AS TotalChangePercent_sale
              -- Итого сумма Скидки - все "Расчеты покупателей"
@@ -817,6 +844,8 @@ BEGIN
 
            , Container.Id                                                 AS ContainerId
 
+            -- валюта оригинальной цены, без скидки (из продажи)
+           , Object_Currency_pl.ValueData        AS CurrencyName_pl
        FROM tmpMI_Master AS tmpMI
             -- суммы оплаты
             LEFT JOIN tmpMI_Child ON tmpMI_Child.ParentId = tmpMI.Id
@@ -830,6 +859,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                         ON MIFloat_OperPriceList.MovementItemId = tmpMI.Id
                                        AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                        ON MIFloat_OperPriceList_curr.MovementItemId = tmpMI.Id
+                                       AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN Object_PartionGoods    ON Object_PartionGoods.MovementItemId = tmpMI.PartionId
@@ -891,6 +924,12 @@ BEGIN
            LEFT JOIN MovementItemBoolean AS MIBoolean_Checked
                                          ON MIBoolean_Checked.MovementItemId = MI_Sale.Id
                                         AND MIBoolean_Checked.DescId         = zc_MIBoolean_Checked()
+
+           LEFT JOIN MovementItemLinkObject AS MILinkObject_Currency_pl
+                                            ON MILinkObject_Currency_pl.MovementItemId = MI_Sale.Id
+                                           AND MILinkObject_Currency_pl.DescId         = zc_MILinkObject_Currency_pl()
+           LEFT JOIN Object AS Object_Currency_pl ON Object_Currency_pl.Id = COALESCE (MILinkObject_Currency_pl.ObjectId, zc_Currency_Basis())
+
        ;
 
        END IF;
