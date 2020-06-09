@@ -1,4 +1,4 @@
-object SalePodiumItemEditForm: TSalePodiumItemEditForm
+﻿object SalePodiumItemEditForm: TSalePodiumItemEditForm
   Left = 0
   Top = 0
   Caption = #1054#1087#1083#1072#1090#1072' '#1074' '#1055#1088#1086#1076#1072#1078#1077
@@ -134,7 +134,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Left = 173
     Top = 170
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.DisplayFormat = ',0.#### '#1043#1056#1053
     TabOrder = 15
     Width = 120
   end
@@ -223,8 +223,7 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
     Left = 316
     Top = 170
     Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
-    Properties.ReadOnly = True
+    Properties.DisplayFormat = ',0.#### EUR'
     TabOrder = 27
     Width = 100
   end
@@ -488,6 +487,18 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         DataType = ftBoolean
         ParamType = ptInputOutput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay'
+        Value = 1
+        Component = dsdPropertiesСhange_AmountDiscount
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay_curr'
+        Value = 2
+        Component = dsdPropertiesСhange_AmountDiscount_curr
+        MultiSelectSeparator = ','
       end>
     Left = 128
     Top = 40
@@ -659,6 +670,20 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
         Component = GuidesCurrencyClient
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CurrencyNum_ToPay'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CurrencyNum_ToPay_curr'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'CurrencyNum_ToPay_curr'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1462,5 +1487,29 @@ object SalePodiumItemEditForm: TSalePodiumItemEditForm
       end>
     Left = 344
     Top = 248
+  end
+  object dsdPropertiesСhange_AmountDiscount: TdsdPropertiesСhange
+    Component = ceAmountDiscount
+    EditRepository = cxEditRepository_AmountDiscount
+    Left = 352
+    Top = 120
+  end
+  object cxEditRepository_AmountDiscount: TcxEditRepository
+    Left = 392
+    Top = 120
+    object cxEditRepositoryCurrency_1GRN: TcxEditRepositoryCurrencyItem
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.#### '#1043#1056#1053
+    end
+    object cxEditRepositoryCurrency_2EUR: TcxEditRepositoryCurrencyItem
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.#### EUR'
+    end
+  end
+  object dsdPropertiesСhange_AmountDiscount_curr: TdsdPropertiesСhange
+    Component = ceAmountDiscount_curr
+    EditRepository = cxEditRepository_AmountDiscount
+    Left = 368
+    Top = 168
   end
 end

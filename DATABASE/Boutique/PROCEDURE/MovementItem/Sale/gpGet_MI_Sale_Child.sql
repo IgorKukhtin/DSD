@@ -36,6 +36,8 @@ RETURNS TABLE (Id Integer
              , isDiscount          Boolean
 
              , CurrencyId_Client Integer, CurrencyName_Client TVarChar
+
+             , CurrencyNum_ToPay Integer, CurrencyNum_ToPay_curr Integer
               )
 AS
 $BODY$
@@ -257,6 +259,9 @@ BEGIN
 
                , Object_CurrencyClient.Id               AS CurrencyId_Client
                , Object_CurrencyClient.ValueData        AS CurrencyName_Client
+               
+               , 1 :: Integer AS CurrencyNum_ToPay
+               , 2 :: Integer AS CurrencyNum_ToPay_curr
 
            FROM tmpMI
                 -- если в первый раз, взять курс из истории
@@ -414,6 +419,9 @@ BEGIN
 
                , Object_CurrencyClient.Id               AS CurrencyId_Client
                , Object_CurrencyClient.ValueData        AS CurrencyName_Client
+
+               , 2 :: Integer AS CurrencyNum_ToPay
+               , 1 :: Integer AS CurrencyNum_ToPay_curr
 
            FROM tmpMI
                 -- если в первый раз, взять курс из истории

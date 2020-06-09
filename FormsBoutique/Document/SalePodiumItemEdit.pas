@@ -19,7 +19,7 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxCheckBox;
+  dxSkinXmas2008Blue, cxCheckBox, DataModul, cxEditRepositoryItems;
 
 type
   TSalePodiumItemEditForm = class(TParentForm)
@@ -78,6 +78,11 @@ type
     cxLabel19: TcxLabel;
     edCurrencyClient: TcxButtonEdit;
     GuidesCurrencyClient: TdsdGuides;
+    dsdProperties—hange_AmountDiscount: TdsdProperties—hange;
+    cxEditRepository_AmountDiscount: TcxEditRepository;
+    cxEditRepositoryCurrency_1GRN: TcxEditRepositoryCurrencyItem;
+    cxEditRepositoryCurrency_2EUR: TcxEditRepositoryCurrencyItem;
+    dsdProperties—hange_AmountDiscount_curr: TdsdProperties—hange;
   private
     { Private declarations }
   public

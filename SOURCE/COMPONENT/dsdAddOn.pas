@@ -4606,7 +4606,7 @@ begin
   if not Assigned(Value) or (Value is TcxCurrencyEdit) or (Value is TcxTextEdit) then
   begin
     FComponent := Value;
-  end else raise Exception.Create(Value.ClassName + ' не поддерживаеться');
+  end else raise Exception.Create(Value.ClassName + ' не поддерживается');
 end;
 
 procedure TdsdPropertiesСhange.SetIndexProperties(const Value: Integer);
