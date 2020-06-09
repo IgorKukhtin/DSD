@@ -22,7 +22,7 @@ BEGIN
        WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
      SELECT Object_Goods.Id
           , Object_Goods.ObjectCode AS Code
-          , Object_Goods.ValueData AS Name
+          , zfCalc_Text_replace (Object_Goods.ValueData, CHR (39), '`' ) :: TVarChar AS Name
           , Object_GoodsGroup.ValueData AS GoodsGroupName
           , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
           , Object_Measure.ValueData     AS MeasureName
