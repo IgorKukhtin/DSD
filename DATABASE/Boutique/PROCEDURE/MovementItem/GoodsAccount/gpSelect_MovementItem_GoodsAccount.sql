@@ -25,9 +25,10 @@ RETURNS TABLE (Id Integer, LineNum Integer, isLine TVarChar, PartionId Integer
              , PeriodYear   Integer
              
              , Amount TFloat, Amount_Sale TFloat
-             , OperPrice TFloat, CountForPrice TFloat, OperPriceList TFloat
+             , OperPrice TFloat, CountForPrice TFloat
+             , OperPriceList TFloat, OperPriceList_curr TFloat
                -- Итого сумма вх. + прайс (в прод.)
-             , TotalSumm TFloat, TotalSummPriceList TFloat
+             , TotalSumm TFloat, TotalSummPriceList TFloat, TotalSummPriceList_curr TFloat
 
                -- Курс для перевода из валюты партии в ГРН
              , CurrencyValue TFloat, ParValue TFloat
@@ -99,7 +100,10 @@ BEGIN
                              , MovementItem.PartionId                             AS PartionId
                              , MovementItem.ObjectId                              AS GoodsId
                              , MovementItem.Amount                                AS Amount
+                               -- Цена по прайсу, без скидки - в ГРН
                              , COALESCE (MIFloat_OperPriceList.ValueData, 0)      AS OperPriceList
+                               -- Цена по прайсу, без скидки - в валюте
+                             , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) AS OperPriceList_curr
 
                                -- Итого сумма оплаты - для "текущего" документа Продажи
                              , COALESCE (MIFloat_TotalPay.ValueData, 0)           AS TotalPay
@@ -138,6 +142,10 @@ BEGIN
                              LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                                          ON MIFloat_OperPriceList.MovementItemId = MovementItem.Id
                                                         AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+                            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                                        ON MIFloat_OperPriceList_curr.MovementItemId = MovementItem.Id
+                                                       AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
                              LEFT JOIN MovementItemFloat AS MIFloat_TotalChangePercent
                                                          ON MIFloat_TotalChangePercent.MovementItemId = MovementItem.Id
@@ -305,6 +313,7 @@ BEGIN
                              , COALESCE (tmpMI_Master.SaleMI_Id, tmpMI_Sale.SaleMI_Id)           AS SaleMI_Id
                              , COALESCE (tmpMI_Master.Amount_Sale, tmpMI_Sale.Amount)            AS Amount_Sale
                              , COALESCE (tmpMI_Master.OperPriceList, tmpMI_Sale.OperPriceList)   AS OperPriceList_Sale
+                             , COALESCE (tmpMI_Sale.OperPriceList_curr, 0)                       AS OperPriceList_curr_Sale
 
                              , COALESCE (tmpMI_Master.TotalPay, tmpMI_Sale.TotalPay)             AS TotalPay_Sale
                              , COALESCE (tmpMI_Master.TotalPayOth, tmpMI_Sale.TotalPayOth)       AS TotalPayOth_Sale
@@ -385,10 +394,12 @@ BEGIN
            , 0                                 :: TFloat AS OperPrice
            , 0                                 :: TFloat AS CountForPrice
            , tmpMI.OperPriceList_Sale          :: TFloat AS OperPriceList
+           , tmpMI.OperPriceList_curr_Sale     :: TFloat AS OperPriceList_curr
 
              -- Итого сумма (в прод.)
            , 0                                 :: TFloat AS TotalSumm
-           , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale) AS TotalSummPriceList
+           , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_Sale)     :: TFloat AS TotalSummPriceList
+           , zfCalc_SummPriceList (tmpMI.Amount_Sale, tmpMI.OperPriceList_curr_Sale):: TFloat AS TotalSummPriceList_curr
 
              -- Курс для перевода из валюты партии в ГРН - элемент продажи
            , 0 :: TFloat AS CurrencyValue
@@ -615,11 +626,15 @@ BEGIN
            , MI_Sale.Amount                                     :: TFloat  AS Amount_Sale
            , 0                                                  :: TFloat  AS OperPrice
            , 0                                                  :: TFloat  AS CountForPrice
+           -- Цена по прайсу, без скидки - в ГРН
            , COALESCE (MIFloat_OperPriceList.ValueData, 0)      :: TFloat  AS OperPriceList
+           -- Цена по прайсу, без скидки - в валюте
+           , COALESCE (MIFloat_OperPriceList_curr.ValueData, 0) :: TFloat  AS OperPriceList_curr
 
              -- Итого сумма (в прод.)
            , 0                                                  :: TFloat  AS TotalSumm
-           , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData) AS TotalSummPriceList
+           , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList.ValueData)      :: TFloat AS TotalSummPriceList
+           , zfCalc_SummPriceList (MI_Sale.Amount, MIFloat_OperPriceList_curr.ValueData) :: TFloat AS TotalSummPriceList_curr
 
              -- Курс для перевода из валюты партии в ГРН - элемент продажи
            , 0                                                  :: TFloat  AS CurrencyValue
@@ -735,6 +750,10 @@ BEGIN
            LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList
                                        ON MIFloat_OperPriceList.MovementItemId = MI_Sale.Id
                                       AND MIFloat_OperPriceList.DescId         = zc_MIFloat_OperPriceList()
+
+           LEFT JOIN MovementItemFloat AS MIFloat_OperPriceList_curr
+                                       ON MIFloat_OperPriceList_curr.MovementItemId = MI_Sale.Id
+                                      AND MIFloat_OperPriceList_curr.DescId         = zc_MIFloat_OperPriceList_curr()
 
            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercent
                                        ON MIFloat_ChangePercent.MovementItemId = MI_Sale.Id
