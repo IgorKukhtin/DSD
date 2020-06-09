@@ -4,47 +4,46 @@ DROP FUNCTION IF EXISTS lpUpdate_wms_MI_WeighingProd_StatusId_Wms (Integer, TVar
 DROP FUNCTION IF EXISTS lpUpdate_wms_receiving_result_MI (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION lpUpdate_wms_receiving_result_MI (
-    IN inIncomingId    Integer, -- номер задания на упаковку
-    IN inName          TVarChar -- имя груза
+    IN inId            Integer,  -- Наш Id сообщения -> wms_to_host_message.Id   
+    IN inSession       TVarChar  -- сессия пользователя
 )
-RETURNS Void
+RETURNS VOID
 AS
-$BODY$ 
+$BODY$
 BEGIN
 
-  UPDATE wms_MI_WeighingProduction 
-  SET    StatusId_Wms = zc_Enum_Status_Complete() 
-  WHERE  Id IN (
-  
-        SELECT MI.Id 
+  -- обновили StatusId_Wms - отметили что наш Груз был принят
+  UPDATE wms_MI_WeighingProduction SET StatusId_Wms = zc_Enum_Status_Complete()
 
-        FROM  wms_MI_Incoming AS Incoming  
-            
-            INNER JOIN wms_Movement_WeighingProduction AS Movement 
-                                                       ON Movement.OperDate    = Incoming.OperDate
-                                                      AND Movement.GoodsId     = Incoming.GoodsId   
-                                                      AND Movement.GoodsKindId = Incoming.GoodsKindId 
-                                                       
-            INNER JOIN wms_MI_WeighingProduction AS MI 
-                                                 ON MI.MovementId      = Movement.Id  
-                                                AND MI.GoodsTypeKindId = Incoming.GoodsTypeKindId 
-                                                
-            INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id = MI.BarCodeBoxId 
-                             
-        WHERE   Incoming.Id                 = inIncomingId  
-            AND Object_BarCodeBox.ValueData = inName     
-        ); 
+  WHERE wms_MI_WeighingProduction.Id IN (SELECT MI_WP.Id
+                                         FROM wms_to_host_message AS wms_message
+                                              -- Наш Id задания на упаковку
+                                              INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId
+                    
+                                              INNER JOIN wms_Movement_WeighingProduction AS Movement_WP
+                                                                                         ON Movement_WP.OperDate    = MI_Incoming.OperDate
+                                                                                        AND Movement_WP.GoodsId     = MI_Incoming.GoodsId
+                                                                                        AND Movement_WP.GoodsKindId = MI_Incoming.GoodsKindId
+                                              INNER JOIN wms_MI_WeighingProduction AS MI_WP
+                                                                                   ON MI_WP.MovementId      = Movement_WP.Id
+                                                                                  AND MI_WP.GoodsTypeKindId = MI_Incoming.GoodsTypeKindId
+                    
+                                              INNER JOIN Object AS Object_BarCodeBox ON Object_BarCodeBox.Id        = MI_WP.BarCodeBoxId
+                                                                                    -- имя груза - Ш/К ящика
+                                                                                    AND Object_BarCodeBox.ValueData = wms_message.Name
+                                         WHERE wms_message.Id = inId
+                                        );
 END;
 $BODY$
- LANGUAGE PLPGSQL VOLATILE; 
- 
+ LANGUAGE PLPGSQL VOLATILE;
+
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
- 09.06.20                                                          *              
+ 09.06.20                                                          *
  08.06.20                                                          *
  05.06.20                                                          *
 */
 
 -- тест
--- SELECT * FROM lpUpdate_wms_receiving_result_MI (inIncomingId:= 1, inName:= 'AHC-00506') 
+-- SELECT * FROM lpUpdate_wms_receiving_result_MI (inIncomingId:= 1, inName:= 'AHC-00506')

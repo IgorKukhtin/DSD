@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsert_movement_wms_scale_packet (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsert_wms_order_status_changed (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsert_wms_order_status_changed (
-    IN inOrderId    Integer,  -- Ключ заявки
+    IN inOrderId    Integer,  -- Наш Id заявки -> Movement.Id
     IN inSession    TVarChar  -- сессия пользователя
 )
 RETURNS VOID
@@ -23,7 +23,7 @@ BEGIN
                                                  , inOrderId    := inOrderId
                                                  , inSession    := inSession
                                                   );
-     -- сохранили что данные перенесены
+     -- отметили что сообщения обработаны
      UPDATE wms_to_host_message SET Done = TRUE WHERE MovementId = inOrderId;
 
 END;

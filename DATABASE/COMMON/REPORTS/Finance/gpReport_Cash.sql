@@ -358,7 +358,7 @@ BEGIN
                  
                             UNION ALL
                             -- движение в валюте баланса
-                            SELECT tmpContainer.ContainerId                  AS ContainerId,
+                            SELECT 0                                         AS ContainerId,
                                    tmpContainer.ObjectId                     AS ObjectId,
                                    tmpContainer.CashId                       AS CashId,
                                    tmpContainer.CurrencyId                   AS CurrencyId,
@@ -385,8 +385,7 @@ BEGIN
                                    LEFT JOIN tmpContract_Balance   AS MILO_Contract    ON MILO_Contract.MovementItemId    = tmpContainer.MovementItemId
                                    LEFT JOIN tmpUnit_Balance       AS MILO_Unit        ON MILO_Unit.MovementItemId        = tmpContainer.MovementItemId
                                    LEFT JOIN tmpInfoMoney_Balance  AS MILO_InfoMoney   ON MILO_InfoMoney.MovementItemId   = tmpContainer.MovementItemId
-                            GROUP BY tmpContainer.ContainerId,
-                                     tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
+                            GROUP BY tmpContainer.ObjectId, tmpContainer.CashId, tmpContainer.CurrencyId, tmpContainer.isActive,
                                      MILO_InfoMoney.ObjectId, 
                                      MILO_Unit.ObjectId,
                                      MILO_MoneyPlace.ObjectId, 
@@ -437,8 +436,16 @@ BEGIN
         Object_Cash.ObjectCode                                                                      AS CashCode,
         Object_Cash.ValueData                                                                       AS CashName,
         Object_Currency.ValueData                                                                   AS CurrencyName,
-        CASE WHEN Operation.ContainerId > 0 THEN 1          WHEN Operation.DebetSumm > 0 THEN 2               WHEN Operation.KreditSumm > 0 THEN 3           ELSE -1 END :: Integer AS GroupId,
-        CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо' WHEN Operation.DebetSumm > 0 THEN '2.Поступления' WHEN Operation.KreditSumm > 0 THEN '3.Платежи' ELSE '' END :: TVarChar AS GroupName,
+        CASE WHEN Operation.ContainerId > 0 THEN 1
+             WHEN Operation.DebetSumm  > 0 OR Operation.DebetSumm_Currency  > 0 THEN 2
+             WHEN Operation.KreditSumm > 0 OR Operation.KreditSumm_Currency > 0 THEN 3
+             ELSE -1
+        END :: Integer AS GroupId,
+        CASE WHEN Operation.ContainerId > 0 THEN '1.Сальдо'
+             WHEN Operation.DebetSumm  > 0 OR Operation.DebetSumm_Currency  > 0 THEN '2.Поступления'
+             WHEN Operation.KreditSumm > 0 OR Operation.KreditSumm_Currency > 0 THEN '3.Платежи'
+             ELSE ''
+        END :: TVarChar AS GroupName,
         Object_Branch.ValueData                                                                     AS BranchName,
         tmpInfoMoney.InfoMoneyGroupName                                                             AS InfoMoneyGroupName,
         tmpInfoMoney.InfoMoneyDestinationName                                                       AS InfoMoneyDestinationName,
@@ -543,4 +550,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpReport_Cash(inStartDate := ('01.12.2019')::TDateTime , inEndDate := ('31.12.2019')::TDateTime , inAccountId := 0 , inCashId := 296540 , inCurrencyId := 0 ,  inisDate:= true, inSession := '5');
+-- SELECT * FROM gpReport_Cash(inStartDate := ('01.12.2020')::TDateTime , inEndDate := ('01.12.2020')::TDateTime , inAccountId := 0 , inCashId := 296540 , inCurrencyId := 0 ,  inisDate:= true, inSession := zfCalc_UserAdmin());

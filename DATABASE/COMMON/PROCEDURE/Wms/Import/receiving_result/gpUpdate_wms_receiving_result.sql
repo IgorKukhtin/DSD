@@ -3,11 +3,10 @@
 DROP FUNCTION IF EXISTS gpUpdate_wms_receiving_result (Integer, Integer, TVarChar, TFloat);
 DROP FUNCTION IF EXISTS gpUpdate_wms_receiving_result (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpUpdate_wms_receiving_result (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_wms_receiving_result (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUpdate_wms_receiving_result (
-    IN inId            Integer,  -- wms_to_host_message.Id   
-    IN inIncomingId    Integer,  -- номер задания на упаковку
-    IN inName          TVarChar, -- имя груза 
+    IN inId            Integer,  -- Наш Id сообщения -> wms_to_host_message.Id   
     IN inSession       TVarChar  -- сессия пользователя
 )
 RETURNS VOID    
@@ -15,18 +14,18 @@ AS
 $BODY$         
 BEGIN
 
-  PERFORM lpUpdate_wms_receiving_result_MI (inIncomingId := inIncomingId
-                                          , inName       := inName   
-                                           );
-  
-  PERFORM lpUpdate_wms_receiving_result_Movement (inIncomingId := inIncomingId
-                                                , inName       := inName 
-                                                , inSession    := inSession
-                                                 );
-  
-  UPDATE wms_to_host_message
-  SET    Done = TRUE
-  WHERE  Id   = inId;
+     -- обновили StatusId_Wms - отметили что наш Груз был принят
+     PERFORM lpUpdate_wms_receiving_result_MI (inId      := inId
+                                             , inSession := inSession
+                                              );
+     
+     -- обновили наши данные - zc_Movement_WeighingProduction
+     PERFORM lpUpdate_wms_receiving_result_Movement (inId      := inId
+                                                   , inSession := inSession
+                                                    );
+     
+     -- отметили что сообщение обработано
+     UPDATE wms_to_host_message SET Done = TRUE WHERE Id = inId;
 
 END;
 $BODY$
