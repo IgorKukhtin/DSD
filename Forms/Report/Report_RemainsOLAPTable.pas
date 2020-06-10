@@ -70,6 +70,8 @@ type
     actRefreshDay: TdsdDataSetRefresh;
     cfAmountStart_Weight_avg: TdsdPivotGridCalcFields;
     cfAmountEnd_Weight_avg: TdsdPivotGridCalcFields;
+    actReport_Insert_RemainsOLAPTable: TdsdOpenForm;
+    bb: TdxBarButton;
   private
   public
   end;

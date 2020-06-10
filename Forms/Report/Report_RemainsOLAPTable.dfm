@@ -385,6 +385,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
@@ -397,6 +398,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
@@ -1045,6 +1047,14 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -1072,6 +1082,10 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     end
     object bbExecuteDialog: TdxBarButton
       Action = ExecuteDialog
+      Category = 0
+    end
+    object bb: TdxBarButton
+      Action = actReport_Insert_RemainsOLAPTable
       Category = 0
     end
   end
@@ -1205,6 +1219,19 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       isShowModal = True
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
+    end
+    object actReport_Insert_RemainsOLAPTable: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091' '#1086#1089#1090#1072#1090#1082#1086#1074
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091' '#1086#1089#1090#1072#1090#1082#1086#1074
+      ImageIndex = 74
+      FormName = 'TReport_Insert_RemainsOLAPTableForm'
+      FormNameParam.Value = 'TReport_Insert_RemainsOLAPTableForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object spReport: TdsdStoredProc

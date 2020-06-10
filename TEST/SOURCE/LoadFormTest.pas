@@ -1922,13 +1922,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderDialogForm');
   //exit;
-
+   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableDialogForm');
-  exit;
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Insert_RemainsOLAPTableForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Insert_RemainsOLAPTableForm');
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   exit;
