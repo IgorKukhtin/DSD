@@ -472,14 +472,14 @@
   end
   object cePercent: TcxCurrencyEdit [10]
     Left = 8
-    Top = 182
+    Top = 180
     Properties.DisplayFormat = ',0.##'
     TabOrder = 12
     Width = 270
   end
   object cxLabel2: TcxLabel [11]
     Left = 8
-    Top = 161
+    Top = 159
     Caption = '% '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1085#1072#1094#1077#1085#1082#1080
   end
   object cxLabel3: TcxLabel [12]
@@ -521,7 +521,20 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 21
-    Width = 270
+    Width = 120
+  end
+  object ceCodeMedicard: TcxCurrencyEdit [18]
+    Left = 158
+    Top = 267
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 22
+    Width = 120
+  end
+  object cxLabel26: TcxLabel [19]
+    Left = 158
+    Top = 250
+    Caption = '"Medicard":'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 467
@@ -891,6 +904,13 @@
         Component = ceCodeRazom
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inCodeMedicard'
+        Value = Null
+        Component = ceCodeMedicard
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 240
@@ -1031,6 +1051,12 @@
         Name = 'CodeRazom'
         Value = Null
         Component = ceCodeRazom
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'CodeMedicard'
+        Value = Null
+        Component = ceCodeMedicard
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -1198,6 +1224,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 184
     Top = 48
   end
@@ -1211,6 +1238,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 240
     Top = 192
   end

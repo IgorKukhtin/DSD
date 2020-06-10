@@ -138,6 +138,14 @@ object DiscountExternalToolsForm: TDiscountExternalToolsForm
         VisibleForCustomization = False
         Width = 55
       end
+      object isNotUseAPI: TcxGridDBColumn
+        Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079'. '#1040#1055#1048
+        DataBinding.FieldName = 'isNotUseAPI'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 90
+      end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

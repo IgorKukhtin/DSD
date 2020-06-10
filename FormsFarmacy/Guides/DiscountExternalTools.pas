@@ -68,6 +68,7 @@ type
     actCheckJournalDiscountExternal: TdsdOpenForm;
     dxBarButton1: TdxBarButton;
     Token: TcxGridDBColumn;
+    isNotUseAPI: TcxGridDBColumn;
   private
     { Private declarations }
   public

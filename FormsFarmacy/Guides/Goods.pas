@@ -207,6 +207,12 @@ type
     macUpdate_GoodsPairSun: TMultiAction;
     bbUpdate_GoodsPairSun: TdxBarButton;
     PairSunDate: TcxGridDBColumn;
+    isSupplementSUN1: TcxGridDBColumn;
+    actUpdateisSupplementSUN1: TMultiAction;
+    execUpdate_SupplementSUN1: TdsdExecStoredProc;
+    spUpdate_isSupplementSUN1_Revert: TdsdStoredProc;
+    dxBarSubItem1: TdxBarSubItem;
+    dxBarButton1: TdxBarButton;
   private
     { Private declarations }
   public

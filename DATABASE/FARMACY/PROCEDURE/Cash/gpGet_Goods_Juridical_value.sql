@@ -1,14 +1,23 @@
+/*select * from gpGet_Object_DiscountExternal_Unit(inId := 13216391 ,  inSession := '3');
+
+select * from gpGet_Object_BarCode_value(inObjectId := 13216391 , inGoodsId := 5371 ,  inSession := '3');
+*/
+
 -- Function: gpGet_Goods_Juridical_value()
 
 --DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar);
+--DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Goods_Juridical_value (Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Goods_Juridical_value(
-    IN inGoodsId       Integer    , --
-    IN inAmount        TFloat    , --
-   OUT outJuridicalID  Integer   , --
-   OUT outCodeRazom    Integer   , --
-    IN inSession       TVarChar    --
+    IN inDiscountExternal Integer    , --
+    IN inGoodsId          Integer    , --
+    IN inAmount           TFloat     , --
+   OUT outJuridicalID     Integer    , --
+   OUT outCodeRazom       Integer    , --
+   OUT outInvoiceNumber   TVarChar   , --
+   OUT outContainerID     Integer    , --
+    IN inSession          TVarChar     --
 )
 AS
 $BODY$
@@ -25,62 +34,112 @@ BEGIN
     END IF;
     vbUnitId := vbUnitKey::Integer;
 
-    WITH
-        tmpContainerAll AS (SELECT Container.Id
-                                 , Container.Amount
-                                 , Object_Goods.ValueData ILIKE '%аббот%' AS NotReplace
-                               FROM Container
-                                    LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
-                               WHERE Container.DescId = zc_Container_Count()
-                                 AND Container.Amount > 0
-                                 AND Container.WhereObjectId = vbUnitId
-                                 AND Container.ObjectId = inGoodsId
-                              )
-       , tmpContainer AS (SELECT Container.id
-                               , inAmount                                               AS SaleAmount
-                               , Container.Amount                                       AS ContainerAmount
-                               , MovementLinkObject_From.ObjectId                       AS JuridicalID
-                               , COALESCE(ObjectFloat_CodeRazom.ValueData, CASE WHEN Container.NotReplace THEN NULL ELSE 1 END)::Integer  AS CodeRazom
-                               , SUM (Container.Amount) OVER (ORDER BY Movement.OperDate, Container.Id) AS ContainerAmountSUM
-                               , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC, Container.Id DESC) AS DOrd
-                           FROM tmpContainerAll AS Container
-                                LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
-                                                              ON ContainerLinkObject_MovementItem.Containerid = Container.Id
-                                                             AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
-                                LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
-                                -- элемент прихода
-                                LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
-                                INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
-                                -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
-                                LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
-                                                            ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
-                                                           AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
-                                -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
-                                LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
-                                                                     -- AND 1=0
+    IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) = 3
+    THEN
+      WITH
+          tmpContainerAll AS (SELECT Container.Id
+                                   , Container.Amount
+                                 FROM Container
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount >= inAmount
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.ObjectId = inGoodsId
+                                )
+         , tmpContainer AS (SELECT Container.id
+                                 , Container.Amount                                          AS Amount
+                                 , MovementLinkObject_From.ObjectId                          AS JuridicalID
+                                 , COALESCE(ObjectFloat_CodeMedicard.ValueData, 0)::Integer  AS CodeRazom
+                                 , Movement_Income.InvNumber                                 AS InvoiceNumber
+                            FROM tmpContainerAll AS Container
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
 
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                             ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
-                                                            AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                                LEFT JOIN ObjectFloat AS ObjectFloat_CodeRazom
-                                                      ON ObjectFloat_CodeRazom.ObjectId = MovementLinkObject_From.ObjectId
-                                                     AND ObjectFloat_CodeRazom.DescId = zc_ObjectFloat_Juridical_CodeRazom()
-                          ORDER BY Movement.OperDate, Container.Id
-                                 )
-       , tmpContainerUsed AS (SELECT Container.JuridicalID
-                                   , Container.CodeRazom
-                                   , CASE WHEN Container.SaleAmount - Container.ContainerAmountSUM > 0 AND Container.DOrd <> 1
-                                               THEN Container.ContainerAmount
-                                          ELSE Container.SaleAmount - Container.ContainerAmountSUM + Container.ContainerAmount
-                                     END AS Amount
-                              FROM tmpContainer AS Container
-                              WHERE Container.SaleAmount - (Container.ContainerAmountSUM - Container.ContainerAmount) > 0)
+                                  INNER JOIN Movement AS Movement_Income ON Movement_Income.Id = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
+                                                        ON ObjectFloat_CodeMedicard.ObjectId = MovementLinkObject_From.ObjectId
+                                                       AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
 
-       SELECT Container.JuridicalID, Container.CodeRazom
-       INTO outJuridicalID, outCodeRazom
-       FROM tmpContainerUsed AS Container
-       WHERE NOT EXISTS(SELECT 1 FROM tmpContainerUsed WHERE COALESCE(tmpContainerUsed.CodeRazom, 0) = 0)
-       LIMIT 1;
+                            WHERE COALESCE(ObjectFloat_CodeMedicard.ValueData, 0) > 0
+                            ORDER BY Movement.OperDate, Container.Id
+                                   )
+
+         SELECT Container.JuridicalID, Container.CodeRazom, Container.InvoiceNumber, Container.Id
+         INTO outJuridicalID, outCodeRazom, outInvoiceNumber, outContainerID
+         FROM tmpContainer AS Container
+         LIMIT 1;
+    ELSE
+      WITH
+          tmpContainerAll AS (SELECT Container.Id
+                                   , Container.Amount
+                                   , Object_Goods.ValueData ILIKE '%аббот%' AS NotReplace
+                                 FROM Container
+                                      LEFT JOIN Object AS Object_Goods ON Object_Goods.ID = Container.ObjectId
+                                 WHERE Container.DescId = zc_Container_Count()
+                                   AND Container.Amount > 0
+                                   AND Container.WhereObjectId = vbUnitId
+                                   AND Container.ObjectId = inGoodsId
+                                )
+         , tmpContainer AS (SELECT Container.id
+                                 , inAmount                                               AS SaleAmount
+                                 , Container.Amount                                       AS ContainerAmount
+                                 , MovementLinkObject_From.ObjectId                       AS JuridicalID
+                                 , COALESCE(ObjectFloat_CodeRazom.ValueData, CASE WHEN Container.NotReplace THEN NULL ELSE 1 END)::Integer  AS CodeRazom
+                                 , SUM (Container.Amount) OVER (ORDER BY Movement.OperDate, Container.Id) AS ContainerAmountSUM
+                                 , ROW_NUMBER() OVER (ORDER BY Movement.OperDate DESC, Container.Id DESC) AS DOrd
+                             FROM tmpContainerAll AS Container
+                                  LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
+                                                                ON ContainerLinkObject_MovementItem.Containerid = Container.Id
+                                                               AND ContainerLinkObject_MovementItem.DescId = zc_ContainerLinkObject_PartionMovementItem()
+                                  LEFT OUTER JOIN Object AS Object_PartionMovementItem ON Object_PartionMovementItem.Id = ContainerLinkObject_MovementItem.ObjectId
+                                  -- элемент прихода
+                                  LEFT JOIN MovementItem AS MI_Income ON MI_Income.Id = Object_PartionMovementItem.ObjectCode
+                                  INNER JOIN Movement ON Movement.Id = MI_Income.MovementId
+                                  -- если это партия, которая была создана инвентаризацией - в этом свойстве будет "найденный" ближайший приход от поставщика
+                                  LEFT JOIN MovementItemFloat AS MIFloat_MovementItem
+                                                              ON MIFloat_MovementItem.MovementItemId = MI_Income.Id
+                                                             AND MIFloat_MovementItem.DescId = zc_MIFloat_MovementItemId()
+                                  -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
+                                  LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id  = (MIFloat_MovementItem.ValueData :: Integer)
+                                                                       -- AND 1=0
+
+                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                               ON MovementLinkObject_From.MovementId = COALESCE (MI_Income_find.MovementId ,MI_Income.MovementId)
+                                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  LEFT JOIN ObjectFloat AS ObjectFloat_CodeRazom
+                                                        ON ObjectFloat_CodeRazom.ObjectId = MovementLinkObject_From.ObjectId
+                                                       AND ObjectFloat_CodeRazom.DescId = zc_ObjectFloat_Juridical_CodeRazom()
+                            ORDER BY Movement.OperDate, Container.Id
+                                   )
+         , tmpContainerUsed AS (SELECT Container.JuridicalID
+                                     , Container.CodeRazom
+                                     , CASE WHEN Container.SaleAmount - Container.ContainerAmountSUM > 0 AND Container.DOrd <> 1
+                                                 THEN Container.ContainerAmount
+                                            ELSE Container.SaleAmount - Container.ContainerAmountSUM + Container.ContainerAmount
+                                       END AS Amount
+                                FROM tmpContainer AS Container
+                                WHERE Container.SaleAmount - (Container.ContainerAmountSUM - Container.ContainerAmount) > 0)
+
+         SELECT Container.JuridicalID, Container.CodeRazom
+         INTO outJuridicalID, outCodeRazom
+         FROM tmpContainerUsed AS Container
+         WHERE NOT EXISTS(SELECT 1 FROM tmpContainerUsed WHERE COALESCE(tmpContainerUsed.CodeRazom, 0) = 0)
+         LIMIT 1;
+    END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -94,5 +153,4 @@ ALTER FUNCTION gpGet_Goods_Juridical_value (Integer, TFloat, TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * from gpGet_Goods_Juridical_value (inGoodsId:= 5925280, inAmount := 1, inSession:= zfCalc_UserAdmin())
-
+-- SELECT * from gpGet_Goods_Juridical_value (inDiscountExternal := 13216391, inGoodsId := 5371 , inAmount := 1 ,  inSession := zfCalc_UserAdmin());

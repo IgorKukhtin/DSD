@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isLoadBarcode Boolean,
                isDeferred Boolean,
                CBName TVarChar, CBMFO TVarChar, CBAccount TVarChar, CBAccountOld TVarChar, CBPurposePayment TVarChar,
-               CodeRazom Integer,
+               CodeRazom Integer, CodeMedicard Integer,
                isErased boolean) AS
 $BODY$
 BEGIN 
@@ -45,6 +45,7 @@ BEGIN
            , CAST ('' as TVarChar)   AS CBAccountOld
            , CAST ('' as TVarChar)   AS CBPurposePayment
            , NULL::Integer           AS CodeRazom
+           , NULL::Integer           AS CodeMedicard
 
            , CAST (NULL AS Boolean)  AS isErased;
    
@@ -71,6 +72,7 @@ BEGIN
            , ObjectString_CBAccountOld.ValueData       AS CBAccountOld
            , ObjectString_CBPurposePayment.ValueData   AS CBPurposePayment
            , ObjectFloat_CodeRazom.ValueData::Integer  AS CodeRazom
+           , ObjectFloat_CodeMedicard.ValueData::Integer  AS CodeMedicard
            
            , Object_Juridical.isErased                 AS isErased
            
@@ -87,6 +89,9 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_CodeRazom
                                  ON ObjectFloat_CodeRazom.ObjectId = Object_Juridical.Id
                                 AND ObjectFloat_CodeRazom.DescId = zc_ObjectFloat_Juridical_CodeRazom()
+           LEFT JOIN ObjectFloat AS ObjectFloat_CodeMedicard
+                                 ON ObjectFloat_CodeMedicard.ObjectId = Object_Juridical.Id
+                                AND ObjectFloat_CodeMedicard.DescId = zc_ObjectFloat_Juridical_CodeMedicard()
 
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
                                 ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
@@ -137,6 +142,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 10.06.20                                                                                     * 
  06.09.19                                                                                     * 
  22.02.18         * dell OrderSumm, OrderSummComment, OrderTime
  17.08.17         * add isDeferred

@@ -3960,6 +3960,10 @@
 				<Form>TransportServiceSummReestrDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Insert_RemainsOLAPTable.pas">
+				<Form>Report_Insert_RemainsOLAPTableForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

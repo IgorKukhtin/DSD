@@ -128,6 +128,16 @@
     Top = 313
     Caption = 'API '#1090#1086#1082#1077#1085
   end
+  object cbNotUseAPI: TcxCheckBox
+    Left = 96
+    Top = 152
+    Hint = #1055#1086#1083#1091#1095#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1072#1087#1087#1072#1088#1072#1090#1085#1086#1081' '#1095#1072#1089#1090#1080
+    Caption = #1053#1077' '#1080#1089#1087#1086#1083#1100#1079#1086#1074#1072#1090#1100' '#1040#1055#1048
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 16
+    Width = 165
+  end
   object ActionList: TActionList
     Left = 272
     Top = 20
@@ -228,6 +238,14 @@
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisNotUseAPI'
+        Value = Null
+        Component = cbNotUseAPI
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 328
@@ -319,6 +337,13 @@
         Value = Null
         Component = ceToken
         DataType = ftFloat
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isNotUseAPI'
+        Value = Null
+        Component = cbNotUseAPI
+        DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
     PackSize = 1

@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , SunIncome TFloat, Sun_v2Income TFloat, Sun_v4Income TFloat
              , HT_SUN_v1 TFloat, HT_SUN_v2 TFloat, HT_SUN_v4 TFloat
              , LimitSUN_N TFloat
+             , DeySupplSun1 TFloat, MonthSupplSun1 TFloat
              , StartServiceNigth TDateTime, EndServiceNigth TDateTime
              , CreateDate TDateTime, CloseDate TDateTime
              , TaxUnitStartDate TDateTime, TaxUnitEndDate TDateTime
@@ -156,6 +157,9 @@ BEGIN
       , COALESCE (ObjectFloat_HT_SUN_v4.ValueData,0) ::TFloat AS HT_SUN_v4
       
       , COALESCE (ObjectFloat_LimitSUN_N.ValueData,0) ::TFloat AS LimitSUN_N
+
+      , COALESCE (ObjectFloat_DeySupplSun1.ValueData,0) ::TFloat AS DeySupplSun1
+      , COALESCE (ObjectFloat_MonthSupplSun1.ValueData,0) ::TFloat AS MonthSupplSun1
 
       , ObjectDate_StartServiceNigth.ValueData               AS StartServiceNigth
       , ObjectDate_EndServiceNigth.ValueData                 AS EndServiceNigth
@@ -463,6 +467,13 @@ BEGIN
                               ON ObjectFloat_LimitSUN_N.ObjectId = Object_Unit.Id
                              AND ObjectFloat_LimitSUN_N.DescId = zc_ObjectFloat_Unit_LimitSUN_N()
 
+        LEFT JOIN ObjectFloat AS ObjectFloat_DeySupplSun1
+                              ON ObjectFloat_DeySupplSun1.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_DeySupplSun1.DescId = zc_ObjectFloat_Unit_DeySupplSun1()
+        LEFT JOIN ObjectFloat AS ObjectFloat_MonthSupplSun1
+                              ON ObjectFloat_MonthSupplSun1.ObjectId = Object_Unit.Id
+                             AND ObjectFloat_MonthSupplSun1.DescId = zc_ObjectFloat_Unit_MonthSupplSun1()
+
         LEFT JOIN ObjectBoolean AS ObjectBoolean_RepriceAuto
                                 ON ObjectBoolean_RepriceAuto.ObjectId = Object_Unit.Id
                                AND ObjectBoolean_RepriceAuto.DescId = zc_ObjectBoolean_Unit_RepriceAuto()
@@ -555,6 +566,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   ÿ‡·ÎËÈ Œ.¬.
+ 09.06.20                                                       *
  22.05.20         * SUN_v1_Lock...
  21.05.20         * isSUN_v2_LockSale
  12.05.20         *

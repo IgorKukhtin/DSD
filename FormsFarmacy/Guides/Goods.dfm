@@ -574,6 +574,14 @@ inherited GoodsForm: TGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
+          object isSupplementSUN1: TcxGridDBColumn
+            Caption = #1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1'
+            DataBinding.FieldName = 'isSupplementSUN1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 79
+          end
         end
       end
     end
@@ -1814,6 +1822,32 @@ inherited GoodsForm: TGoodsForm
         end>
       Caption = 'ExecUpdate_isInvisibleSUN'
     end
+    object actUpdateisSupplementSUN1: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      ActionList = <
+        item
+          Action = execUpdate_SupplementSUN1
+        end>
+      View = cxGridDBTableView
+      QuestionBeforeExecute = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"? '
+      InfoAfterExecute = #1042#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1088#1080#1079#1085#1072#1082' "'#1044#1086#1087#1086#1083#1085#1077#1085#1080#1077' '#1057#1059#1053'1"'
+      ImageIndex = 79
+    end
+    object execUpdate_SupplementSUN1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdate_isSupplementSUN1_Revert
+      StoredProcList = <
+        item
+          StoredProc = spUpdate_isSupplementSUN1_Revert
+        end>
+      Caption = 'execUpdate_isSupplementSUN1'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -1999,6 +2033,10 @@ inherited GoodsForm: TGoodsForm
         end
         item
           Visible = True
+          ItemName = 'dxBarButton1'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2159,6 +2197,16 @@ inherited GoodsForm: TGoodsForm
     end
     object bbUpdate_GoodsPairSun: TdxBarButton
       Action = macUpdate_GoodsPairSun
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actUpdateisSupplementSUN1
       Category = 0
     end
   end
@@ -3597,5 +3645,31 @@ inherited GoodsForm: TGoodsForm
     PackSize = 1
     Left = 408
     Top = 344
+  end
+  object spUpdate_isSupplementSUN1_Revert: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Goods_inSupplementSUN1_Revert'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inGoodsMainId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'GoodsMainId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisInvisibleSUN'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'isSupplementSUN1'
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 664
+    Top = 368
   end
 end

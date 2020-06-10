@@ -9,6 +9,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarC
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, TFloat, TFloat, TFloat, TVarChar, TVarChar, Boolean, Boolean, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -26,6 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inCBAccountOld            TVarChar  ,    -- Расчетный счет стврый для клиент банка
     IN inCBPurposePayment        TVarChar  ,    -- Назначение платежа для клиент банка
     IN inCodeRazom               Integer   ,    -- Код в системе "РАЗОМ"
+    IN inCodeMedicard            Integer   ,    -- Код в системе "Medicard"
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -63,6 +65,8 @@ BEGIN
 
    -- сохранили свойство <Код в системе "РАЗОМ">
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_CodeRazom(), ioId, inCodeRazom);
+   -- сохранили свойство <Код в системе "Medicard">
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Juridical_CodeMedicard(), ioId, inCodeMedicard);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_LoadBarcode(), ioId, inisLoadBarcode);
@@ -91,6 +95,7 @@ LANGUAGE plpgsql VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 10.06.20                                                                                      * 
  06.09.19                                                                                      * 
  22.02.18         * dell inOrderSumm, inOrderSummComment, inOrderTime
  17.08.17         *              

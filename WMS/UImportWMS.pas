@@ -38,7 +38,7 @@ type
   TPacketValuesArray = array of TPacketValues;
 
   TDataObjects = record
-    HeaderQry, DetailQry, InsertQry, ErrorQry, DoneQry, SelectQry, ExecQry: TFDQuery;
+    HeaderQry, DetailQry, InsertQry, ErrorQry, SelectQry, DoneQry, ExecQry: TFDQuery;
     WMSTrans: TFDTransaction;
   end;
 
@@ -50,7 +50,8 @@ type
   strict private
     procedure IncArray; // Inc size of array FValues
     function Last: Integer; // Return High(FValues)
-    function getStr(const AttrValue: OleVariant): string;
+    function getStr(const AttrValue: OleVariant): string; overload;
+    function getStr(const AttrValue: OleVariant; const ADefValue: string): string; overload;
     function getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
     function getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
     procedure CheckError(const Attr: string; const AttrValue: Integer; AMsgProc: TNotifyMsgProc); overload;
@@ -61,9 +62,12 @@ type
     procedure FillArrOrderStatusChanged(const ARoot: IXMLNode; AMsgProc: TNotifyMsgProc);
     procedure FillArrReceivingResult(const ARoot: IXMLNode; AMsgProc: TNotifyMsgProc);
   strict private
-    function FetchPacket(APacket: TPacketKind): TMemoryStream;
     procedure ExecuteOrderStatusChanged(AMsgProc: TNotifyMsgProc);
     procedure ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
+  strict private
+    function FetchPacket(APacket: TPacketKind): TMemoryStream;
+    procedure ProcessImportError(const AHeaderId: Integer; const AErrMsg: string; AMsgProc: TNotifyMsgProc);
+    procedure UpdateWMSStatus(const AHeaderId: Integer; const AStatus, AErrMsg: string);
   public
     constructor Create(AData: TDataObjects);
     destructor Destroy; override;
@@ -256,11 +260,11 @@ end;
 
 procedure TImportWMS.ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
 const
-  cProcName = 'gpUpdate_wms_receiving_result';
+  cProcName  = 'gpUpdate_wms_receiving_result';
 
-  cSelect   = 'SELECT DISTINCT Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
+  cSelect    = 'SELECT DISTINCT Id, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
 
-  cRunProc  = 'SELECT * FROM %s(inId:= %d, inSession:= %s)';
+  cRunProc   = 'SELECT * FROM %s(inId:= %d, inSession:= %s)';
 var
   sSelect, sExec: string;
 begin
@@ -279,6 +283,7 @@ begin
     while not FData.SelectQry.Eof do
     begin
       try
+        // текст запроса дл€ выполнени€ хр.процедуры
         sExec := Format(cRunProc, [
           cProcName,
           FData.SelectQry.FieldByName('Id').AsInteger,
@@ -287,6 +292,8 @@ begin
         {$IFDEF DEBUG}
         if Assigned(AMsgProc) then AMsgProc(sExec);
         {$ENDIF}
+
+        // выполнение хр.процедуры в ALAN
         with FData.ExecQry do
         begin
           Close;
@@ -294,9 +301,17 @@ begin
           SQL.Add(sExec);
           Open;
         end;
+
+        // обновление пол€ to_host_header_message.Status = "Done" в WMS
+        UpdateWMSStatus(FData.SelectQry.FieldByName('Header_Id').AsInteger, 'done', '');
       except
         on E: Exception do
-          if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        begin
+          if Assigned(AMsgProc) then
+            AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
+          ProcessImportError(FData.SelectQry.FieldByName('Header_Id').AsInteger, E.Message, AMsgProc);
+        end;
       end;
 
       FData.SelectQry.Next;
@@ -578,6 +593,14 @@ begin
   Result := StrToIntDef(AttrValue, ADefValue);
 end;
 
+function TImportWMS.getStr(const AttrValue: OleVariant; const ADefValue: string): string;
+begin
+  if not VarIsNull(AttrValue) then
+    Result := AttrValue
+  else
+    Result := ADefValue;
+end;
+
 function TImportWMS.getStr(const AttrValue: OleVariant): string;
 begin
   if not VarIsNull(AttrValue) then
@@ -592,7 +615,7 @@ var
   xmlDocument: IXMLDocument;
   rootNode, headerNode, detailNode: IXMLNode;
   tmpStream: TMemoryStream;
-  sMessageType, sHeader_id_done, sUpdateDone: string;
+  sMessageType, sUpdateDone: string;
 const
   cNoData = 'No data <%s> to import from WMS';
 begin
@@ -610,7 +633,7 @@ begin
   xmlDocument := TXMLDocument.Create(nil);
   xmlDocument.LoadFromStream(tmpStream);
   xmlDocument.Active := True;
-  xmlDocument.SaveToFile(GetImpTypeCaption(APacket) + '.xml');
+//  xmlDocument.SaveToFile(GetImpTypeCaption(APacket) + '.xml');
   rootNode := xmlDocument.DocumentElement;
 
   case APacket of
@@ -619,7 +642,6 @@ begin
   end;
 
   // записываем статус и коды ошибок в wms.to_host_header_message
-  sHeader_id_done := '';
 
   if Length(FValues) > 0 then
   begin
@@ -627,31 +649,12 @@ begin
     try
       for I := Low(FValues) to High(FValues) do
       begin
-        if FValues[I].Err_Code = 0 then
-        begin
-          sHeader_id_done := sHeader_id_done + IntToStr(FValues[I].Header_Id) + ',';
-          Continue;
-        end;
-
         with FData.ErrorQry do
         begin
           ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
           ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
           ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
           // коды ошибок
-          ExecSQL;
-        end;
-      end;
-
-      if Length(sHeader_id_done) > 0 then
-      begin
-        sHeader_id_done := Copy(sHeader_id_done, 1, Length(sHeader_id_done) - 1);
-        // статус 'done'
-        sUpdateDone := 'update to_host_header_message set status=' + QuotedStr('done') + ' where id in(' + sHeader_id_done + ')';
-        with FData.DoneQry do
-        begin
-          SQL.Clear;
-          SQL.Add(sUpdateDone);
           ExecSQL;
         end;
       end;
@@ -714,6 +717,86 @@ end;
 function TImportWMS.Last: Integer;
 begin
   Result := High(FValues);
+end;
+
+procedure TImportWMS.ProcessImportError(const AHeaderId: Integer; const AErrMsg: string; AMsgProc: TNotifyMsgProc); // AHeaderId - wms_to_host_message.Header_Id
+var
+  iPos: Integer;
+  xmlDocument: IXMLDocument;
+  rootNode, dataNode: IXMLNode;
+  sXml, sSite, sProcName, sDescr, sInsert: string;
+const
+  cInsert = 'INSERT INTO wms_to_host_error(Site, ProcName, Description) VALUES(%s, %s, %s)';
+begin
+  try
+    sSite     := 'A'; // если €вно не определено, что ошибка относитс€ к WMS, тогда считаем ее своей ошибкой
+    sProcName := '';
+    sDescr    := '';
+    { если это ошибка, возбужденна€ в хр.процедуре при проверке входных данных, тогда
+      текст ошибки должен иметь вид    Site="A" ProcName="proc_name" Descr="текст ошибки"
+      и можно распарсить его как XML  }
+    iPos := Pos('site=', LowerCase(AErrMsg));
+
+    if iPos > 0 then
+    begin
+      sXml := Copy(AErrMsg, iPos, Length(AErrMsg) - iPos + 1);
+      sXml := StringReplace(sXml, '<', '(', [rfReplaceAll]);
+      sXml := StringReplace(sXml, '>', ')', [rfReplaceAll]);
+      sXml := '<?xml version="1.0"?><root><data ' + sXml + '/></root>';
+    //  sXml := LowerCase(sXml);
+      FStream.Size := 0;
+      FStream.Write(sXml[1], ByteLength(sXml));
+      FStream.Position := 0;
+
+      xmlDocument := TXMLDocument.Create(nil);
+      xmlDocument.LoadFromStream(FStream);
+      xmlDocument.Active := True;
+      rootNode := xmlDocument.DocumentElement;
+      dataNode := rootNode.ChildNodes[0];
+
+      sSite     := getStr(dataNode.Attributes['Site'], '');
+      sProcName := getStr(dataNode.Attributes['Procname'], '');
+      sDescr    := getStr(dataNode.Attributes['Descr'], '');
+    end
+    else
+      sDescr := AErrMsg;
+
+    // записываем данные в таб. wms_to_host_error
+    sInsert := Format(cInsert, [QuotedStr(sSite), QuotedStr(sProcName), QuotedStr(sDescr)]);
+    with FData.ExecQry do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add(sInsert);
+      ExecSQL;
+    end;
+
+    // обновление полей to_host_header_message.Status и Err_Descr в WMS
+    if sSite = 'W' then
+      UpdateWMSStatus(AHeaderId, 'error', sDescr)
+    else
+      UpdateWMSStatus(AHeaderId, 'done', '');
+  except
+    on E: Exception do
+      if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
+procedure TImportWMS.UpdateWMSStatus(const AHeaderId: Integer; const AStatus, AErrMsg: string); // AHeaderId - wms_to_host_message.Header_Id
+const
+  cWMSUpdate = 'UPDATE to_host_header_message SET Status = %s, Err_Descr = %s  WHERE Id = %d';
+var
+  sWMSUpdate: string;
+begin
+  // обновление полей to_host_header_message.Status и Err_Descr в WMS
+  sWMSUpdate := Format(cWMSUpdate, [QuotedStr(AStatus), QuotedStr(AErrMsg), AHeaderId]);
+  with FData.DoneQry do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add(sWMSUpdate);
+    ExecSQL;
+  end;
 end;
 
 { TPacketValues }

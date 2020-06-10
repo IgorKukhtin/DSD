@@ -2453,6 +2453,10 @@ end;
 
 procedure TLoadFormTest.LoadSystemFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIntegerDialogForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIntegerDialogForm');
+  Exit;
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSummaDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSummaDialogForm');
   Exit;

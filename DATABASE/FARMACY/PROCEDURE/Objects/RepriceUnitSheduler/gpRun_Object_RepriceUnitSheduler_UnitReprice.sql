@@ -67,7 +67,8 @@ BEGIN
         istop_goods boolean,
         ispromo boolean,
         isResolution_224 Boolean,
-        reprice boolean
+        reprice boolean,
+        isSP boolean
       ) ON COMMIT DROP;
     END IF;
 
@@ -124,6 +125,28 @@ BEGIN
   --  raise notice 'Unit: %', vbUnitID;
 
     DELETE FROM tmpAllGoodsPrice;
+
+    WITH -- Товары соц-проект
+           tmpGoodsSP AS (SELECT DISTINCT Object_Goods_Retail.Id         AS GoodsId
+                          FROM Movement
+                               INNER JOIN MovementDate AS MovementDate_OperDateStart
+                                                       ON MovementDate_OperDateStart.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateStart.DescId     = zc_MovementDate_OperDateStart()
+                                                      AND MovementDate_OperDateStart.ValueData  <= CURRENT_DATE
+
+                               INNER JOIN MovementDate AS MovementDate_OperDateEnd
+                                                       ON MovementDate_OperDateEnd.MovementId = Movement.Id
+                                                      AND MovementDate_OperDateEnd.DescId     = zc_MovementDate_OperDateEnd()
+                                                      AND MovementDate_OperDateEnd.ValueData  >= CURRENT_DATE
+                               LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                     AND MovementItem.DescId     = zc_MI_Master()
+                                                     AND MovementItem.isErased   = FALSE
+
+                               LEFT JOIN Object_Goods_Retail ON Object_Goods_Retail.GoodsMainId = MovementItem.ObjectId
+
+                          WHERE Movement.DescId = zc_Movement_GoodsSP()
+                            AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
+                         )
     INSERT INTO tmpAllGoodsPrice (id,
                                   id_retail,
                                   code,
@@ -164,7 +187,8 @@ BEGIN
                                   istop_goods,
                                   ispromo,
                                   isResolution_224,
-                                  reprice
+                                  reprice,
+                                  isSP
                                  )
     SELECT id,
            id_retail,
@@ -206,9 +230,11 @@ BEGIN
            istop_goods,
            ispromo,
            isResolution_224,
-           reprice 
+           reprice,
+           COALESCE (tmpGoodsSP.GoodsId, 0) <> 0
     FROM gpSelect_AllGoodsPrice(inUnitId := vbUnitID, inUnitId_to := 0, inMinPercent := vbPercentDifference,
-      inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession);
+      inVAT20 := vbVAT20, inTaxTo := 0, inPriceMaxTo := 0,  inSession := inSession)
+         LEFT JOIN tmpGoodsSP ON tmpGoodsSP.GoodsId = gpSelect_AllGoodsPrice.ID;
 
     -- сохранили свойство <Дата начала переоценки>
     PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_RepriceUnitSheduler_DataStartLast(), inID, clock_timestamp());
@@ -233,8 +259,11 @@ BEGIN
       inSession := inSession)
     FROM tmpAllGoodsPrice
     WHERE Reprice = True
-      AND PriceDiff <= vbPercentRepriceMax
-      AND PriceDiff >= - vbPercentRepriceMin;
+      AND (PriceDiff <= vbPercentRepriceMax
+      AND PriceDiff >= - vbPercentRepriceMin
+       OR IsTop_Goods = TRUE
+      AND isSP = FALSE
+      AND isResolution_224 = FALSE);
 
     PERFORM gpInsertUpdate_MovementItem_Reprice_Clipped(
       ioID := 0 ,
@@ -258,13 +287,14 @@ BEGIN
     WHERE Reprice = True
       AND (PriceDiff > vbPercentRepriceMax
        OR PriceDiff < - vbPercentRepriceMin)
-      OR Reprice = False AND isResolution_224 = True;
+      AND NOT (IsTop_Goods = TRUE AND isSP = FALSE AND isResolution_224 = FALSE)
+       OR Reprice = False AND isResolution_224 = True;
 
   EXCEPTION
      WHEN others THEN
        GET STACKED DIAGNOSTICS text_var1 = MESSAGE_TEXT;
      text_var1 = text_var1||' '||vbUnitID::Text;
-     PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, vbUserId);
+     PERFORM lpLog_Run_Schedule_Function('gpRun_Object_RepriceUnitSheduler_UnitReprice ', True, text_var1::TVarChar, inSession::Integer);
   END;
 
 --  raise notice 'All: %', (select Count(*) from tmpAllGoodsPrice);
@@ -286,4 +316,6 @@ ALTER FUNCTION gpRun_Object_RepriceUnitSheduler_UnitReprice(Integer, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (8563866, '3')
+-- SELECT * FROM Log_Run_Schedule_Function
+-- select * from gpSelect_Object_RepriceUnitSheduler( inSession := '3');
+-- SELECT * FROM gpRun_Object_RepriceUnitSheduler_UnitReprice (9079633 , '3')

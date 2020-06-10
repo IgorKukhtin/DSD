@@ -113,6 +113,13 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       TabOrder = 10
       Width = 123
     end
+    object cbisMonth: TcxCheckBox
+      Left = 327
+      Top = 29
+      Action = actRefreshMonth
+      TabOrder = 11
+      Width = 130
+    end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
@@ -385,6 +392,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
@@ -397,6 +405,7 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       PropertiesClassName = 'TcxCurrencyEditProperties'
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0.##;-,0.##; ;'
+      Visible = True
       Width = 70
       UniqueName = #1055#1088#1080#1093'. '#1073#1077#1079' '#1091#1095'. '#1073#1088#1072#1082' '#1074' '#1074#1072#1083'.'
     end
@@ -1045,6 +1054,14 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         end
         item
           Visible = True
+          ItemName = 'bb'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbToExcel'
         end
         item
@@ -1074,11 +1091,29 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       Action = ExecuteDialog
       Category = 0
     end
+    object bb: TdxBarButton
+      Action = actReport_Insert_RemainsOLAPTable
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 40
     Top = 200
+    object actRefreshMonth: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084' '#1044#1072' / '#1053#1077#1090
+      Hint = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084' '#1044#1072' / '#1053#1077#1090
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshDay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1206,6 +1241,19 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object actReport_Insert_RemainsOLAPTable: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091' '#1086#1089#1090#1072#1090#1082#1086#1074
+      Hint = #1047#1072#1087#1086#1083#1085#1080#1090#1100' '#1090#1072#1073#1083#1080#1094#1091' '#1086#1089#1090#1072#1090#1082#1086#1074
+      ImageIndex = 74
+      FormName = 'TReport_Insert_RemainsOLAPTableForm'
+      FormNameParam.Value = 'TReport_Insert_RemainsOLAPTableForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_RemainsOLAPTable'
@@ -1259,6 +1307,14 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         Name = 'inIsDay'
         Value = Null
         Component = cbIsDay
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMonth'
+        Value = 'False'
+        Component = cbisMonth
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -1347,7 +1403,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
+    Left = 376
+    Top = 64
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'

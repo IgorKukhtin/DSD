@@ -31,11 +31,11 @@ BEGIN
      --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      vbUserId := inSession;
     
-     IF COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0
+/*     IF COALESCE (ioId, 0) <> 0 AND (COALESCE (inFromId, 0) = 0 OR COALESCE (inToId, 0) = 0)
      THEN 
        RAISE EXCEPTION 'Ошибка. Не заполнено подразделение..';             
      END IF;     
-
+*/
      IF EXISTS(SELECT * FROM gpSelect_Object_RoleUser (inSession) AS Object_RoleUser
                WHERE Object_RoleUser.ID = vbUserId AND Object_RoleUser.RoleId = 308121) -- Для роли "Кассир аптеки"
      THEN
