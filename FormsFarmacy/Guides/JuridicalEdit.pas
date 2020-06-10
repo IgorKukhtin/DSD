@@ -124,6 +124,8 @@ type
     cxLabel24: TcxLabel;
     cxLabel25: TcxLabel;
     ceCodeRazom: TcxCurrencyEdit;
+    ceCodeMedicard: TcxCurrencyEdit;
+    cxLabel26: TcxLabel;
   private
     { Private declarations }
   public

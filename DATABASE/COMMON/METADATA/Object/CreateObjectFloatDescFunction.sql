@@ -1794,10 +1794,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_Unit_MonthSupplSun1() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_Unit(), 'zc_ObjectFloat_Unit_MonthSupplSun1', 'Количество месяцев назад в Дополнение СУН1' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Unit_MonthSupplSun1');
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_Juridical_CodeMedicard() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeMedicard'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Juridical(), 'zc_ObjectFloat_Juridical_CodeMedicard', 'Код в системе "Medicard"' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Juridical_CodeMedicard');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.   Шаблий О.В.
+ 10.06.20                                                                                      * zc_ObjectFloat_Juridical_CodeMedicard
  09.06.20                                                                                      * zc_ObjectFloat_Unit_DeySupplSun1, zc_ObjectFloat_Unit_MonthSupplSun1
  04.06.20         * zc_ObjectFloat_WorkTimeKind_Summ
  02.06.20                                                                                      * zc_ObjectFloat_CashSettings_SummaUrgentlySendVIP
