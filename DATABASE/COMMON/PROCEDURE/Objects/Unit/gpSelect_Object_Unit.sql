@@ -132,7 +132,7 @@ BEGIN
 
            , Object_Unit_View.isLeaf
            , ObjectBoolean_PartionDate.ValueData   AS isPartionDate
-           , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, TRUE) :: Boolean AS isPartionGoodsKind
+           , COALESCE (ObjectBoolean_PartionGoodsKind.ValueData, FALSE) :: Boolean AS isPartionGoodsKind
 
            , Object_Unit_View.isErased
 

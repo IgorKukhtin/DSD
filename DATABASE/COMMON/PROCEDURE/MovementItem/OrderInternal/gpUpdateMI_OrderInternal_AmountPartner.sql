@@ -85,7 +85,7 @@ BEGIN
                                             LEFT JOIN MovementItemFloat AS MIFloat_AmountSecond
                                                                         ON MIFloat_AmountSecond.MovementItemId = MovementItem.Id
                                                                        AND MIFloat_AmountSecond.DescId = zc_MIFloat_AmountSecond()
-                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '3 DAY') AND inOperDate + INTERVAL '0 DAY'
+                                       WHERE Movement.OperDate BETWEEN (inOperDate - INTERVAL '7 DAY') AND inOperDate + INTERVAL '0 DAY'
                                          AND MovementDate_OperDatePartner.ValueData >= inOperDate
                                          AND Movement.DescId   = zc_Movement_OrderExternal()
                                          AND Movement.StatusId = zc_Enum_Status_Complete()
