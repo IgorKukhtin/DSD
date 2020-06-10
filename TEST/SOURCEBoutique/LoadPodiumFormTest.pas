@@ -841,12 +841,14 @@ end;
 
 procedure TLoadFormTest.LoadReportOLAPFormTest;
 begin
+{
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionOLAPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionOLAPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionOLAPDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionOLAPDialogForm');
   exit;
   //
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAPForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_SaleOLAPForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleOLAPDialogForm'));
