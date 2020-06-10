@@ -15,9 +15,16 @@ BEGIN
     -- Округление до 0 знаков
     vbSumm:= zfCalc_SummPriceList (inAmount, inOperPriceList);
 
-    -- еще раз округлили до 0 знаков
-    RETURN vbSumm
-         - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
+    IF zc_Enum_GlobalConst_isTerry() = TRUE
+    THEN
+        -- еще раз округлили до 0 знаков
+        RETURN vbSumm
+             - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
+    ELSE
+        -- еще раз округлили до 0 знаков
+        RETURN vbSumm
+             - CAST (vbSumm * COALESCE (inChangePercent, 0) / 100 AS NUMERIC (16, 0));
+    END IF;
                 
 END;
 $BODY$
