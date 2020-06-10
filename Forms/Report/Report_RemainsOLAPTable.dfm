@@ -113,6 +113,13 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
       TabOrder = 10
       Width = 123
     end
+    object cbisMonth: TcxCheckBox
+      Left = 327
+      Top = 29
+      Action = actRefreshMonth
+      TabOrder = 11
+      Width = 130
+    end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
@@ -1093,6 +1100,20 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
     Images = dmMain.ImageList
     Left = 40
     Top = 200
+    object actRefreshMonth: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084' '#1044#1072' / '#1053#1077#1090
+      Hint = #1055#1086' '#1084#1077#1089#1103#1094#1072#1084' '#1044#1072' / '#1053#1077#1090
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object actRefreshDay: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1289,6 +1310,14 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisMonth'
+        Value = 'False'
+        Component = cbisMonth
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     PackSize = 1
     Left = 208
@@ -1374,7 +1403,8 @@ object Report_RemainsOLAPTableForm: TReport_RemainsOLAPTableForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 352
+    Left = 376
+    Top = 64
   end
   object GuidesGoodsGroup: TdsdGuides
     KeyField = 'Id'

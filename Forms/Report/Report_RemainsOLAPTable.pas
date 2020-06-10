@@ -72,6 +72,8 @@ type
     cfAmountEnd_Weight_avg: TdsdPivotGridCalcFields;
     actReport_Insert_RemainsOLAPTable: TdsdOpenForm;
     bb: TdxBarButton;
+    cbisMonth: TcxCheckBox;
+    actRefreshMonth: TdsdDataSetRefresh;
   private
   public
   end;

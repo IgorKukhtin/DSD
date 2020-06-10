@@ -1,6 +1,7 @@
 -- Function: gpReport_RemainsOLAPTable ()
 
-DROP FUNCTION IF EXISTS gpReport_RemainsOLAPTable (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_RemainsOLAPTable (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_RemainsOLAPTable (TDateTime, TDateTime, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_RemainsOLAPTable (
     IN inStartDate          TDateTime ,  
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpReport_RemainsOLAPTable (
     IN inUnitId             Integer   ,    -- от кого, может быть группа
     IN inGoodsGroupId       Integer   ,
     IN inGoodsId            Integer   ,
-    IN inIsDay              Boolean   ,
+    IN inIsDay              Boolean   ,   -- по дн€м
+    IN inIsMonth            Boolean   ,   -- по мес€цам
     IN inSession            TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (OperDate                   TDateTime
@@ -139,12 +141,23 @@ BEGIN
                         )
 
           -- группируем полученные данные по услови€м отчета
-         , tmpData AS (SELECT CASE WHEN inIsDay = TRUE THEN tmp.OperDate ELSE inStartDate END AS OperDate
+         , tmpData AS (SELECT CASE WHEN inIsDay = TRUE THEN tmp.OperDate 
+                                   WHEN inIsMonth = TRUE THEN DATE_TRUNC ('Month', tmp.OperDate )
+                                   ELSE inStartDate
+                              END AS OperDate
                             , tmp.UnitId
                             , tmp.GoodsId
                             , tmp.GoodsKindId
-                            ,  (CASE WHEN inIsDay = TRUE THEN tmp.AmountStart ELSE CASE WHEN tmp.OperDate = inStartDate THEN tmp.AmountStart ELSE 0 END END) AS AmountStart
-                            ,  (CASE WHEN inIsDay = TRUE THEN tmp.AmountEnd ELSE CASE WHEN tmp.OperDate = inEndDate THEN tmp.AmountEnd ELSE 0 END END) AS AmountEnd
+                            ,  (CASE WHEN inIsDay = TRUE THEN tmp.AmountStart 
+                                     WHEN inIsMonth = TRUE AND tmp.OperDate = DATE_TRUNC ('Month', tmp.OperDate) THEN tmp.AmountStart
+                                     WHEN inIsDay = FALSE AND inIsDay = FALSE AND tmp.OperDate = inStartDate THEN tmp.AmountStart
+                                     ELSE 0
+                                END) AS AmountStart
+                            ,  (CASE WHEN inIsDay = TRUE THEN tmp.AmountEnd 
+                                     WHEN inIsMonth = TRUE AND tmp.OperDate = DATE_TRUNC ('Month', tmp.OperDate) + INTERVAL '1 Month' - INTERVAL '1 Day' THEN tmp.AmountEnd
+                                     WHEN inIsDay = FALSE AND inIsDay = FALSE AND tmp.OperDate = inEndDate THEN tmp.AmountEnd 
+                                     ELSE 0
+                                END) AS AmountEnd
                             --,  (CASE WHEN tmp.OperDate = inStartDate THEN tmp.AmountStart ELSE 0 END)  AS AmountStart   -- остаток на начало периода
                             --,  (CASE WHEN tmp.OperDate = inEndDate THEN tmp.AmountEnd ELSE 0 END)      AS AmountEnd     -- остаток на конец периода
                             , (tmp.AmountStart)                AS AmountStart_inf
@@ -244,9 +257,9 @@ BEGIN
 
 
       -- –езультат 
-      SELECT tmpData.OperDate
+      SELECT tmpData.OperDate ::TDateTime
            , tmpWeekDay.DayOfWeekName_Full ::TVarChar  AS DayOfWeekName
-           , zfCalc_MonthName (DATE_TRUNC ('Month', tmpData.OperDate)) ::TVarChar AS MonthName
+           , (EXTRACT ( Month from tmpData.OperDate) ||'.'||zfCalc_MonthName (tmpData.OperDate)) ::TVarChar AS MonthName
            , DATE_TRUNC ('YEAR', tmpData.OperDate) ::TVarChar AS Year
 
            , Object_Unit.ObjectCode          AS UnitCode
