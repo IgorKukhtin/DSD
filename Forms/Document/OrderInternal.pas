@@ -155,6 +155,10 @@ type
     Color_production_next: TcxGridDBColumn;
     actPrintScan: TdsdPrintAction;
     AmountRemains_sh: TcxGridDBColumn;
+    spUpdateAmountPartner_dif: TdsdStoredProc;
+    actUpdateAmountPartner_dif: TdsdExecStoredProc;
+    actUpdateAmountAll_diff: TMultiAction;
+    bbUpdateAmountAll_diff: TdxBarButton;
   private
     { Private declarations }
   public

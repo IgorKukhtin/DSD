@@ -461,8 +461,9 @@ BEGIN
        FROM gpSelect_MovementItem_OrderInternal_Master (vbMovementId, FALSE, FALSE, FALSE, inSession) AS tmp
        WHERE tmp.PartionGoodsDate < vbDate180;
        
-       -- обнуляем AmountManual, AmountSecond для товаров со сроком годности менее года
-       PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
+       -- обнуляем Amount, AmountManual, AmountSecond для товаров со сроком годности менее года
+       PERFORM lpInsertUpdate_MovementItem (tmp.MovementItemId, zc_MI_Master(), tmp.GoodsId, vbMovementId, 0 :: TFloat, NULL)
+             , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountManual(), tmp.MovementItemId, 0 :: TFloat)
              , lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSecond(), tmp.MovementItemId, 0 :: TFloat)
        FROM _tmpMI_OrderInternal_Master AS tmp;
 

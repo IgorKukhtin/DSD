@@ -21,6 +21,8 @@ inherited OrderInternalForm: TOrderInternalForm
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 365
+        ExplicitLeft = -3
+        ExplicitTop = 256
         ExplicitWidth = 1020
         ExplicitHeight = 365
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1941,6 +1943,19 @@ inherited OrderInternalForm: TOrderInternalForm
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1054#1089#1090#1072#1090#1086#1082'>'
       ImageIndex = 47
     end
+    object actUpdateAmountPartner_dif: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateAmountPartner_dif
+      StoredProcList = <
+        item
+          StoredProc = spUpdateAmountPartner_dif
+        end>
+      Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079' ('#1079#1072#1082#1072#1079' - '#1087#1088#1086#1076#1072#1078#1072')'
+      Hint = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100' '#1082#1086#1083'-'#1074#1086' '#1079#1072#1082#1072#1079' ('#1079#1072#1082#1072#1079' - '#1087#1088#1086#1076#1072#1078#1072')'
+      ImageIndex = 68
+    end
     object actUpdateAmountPartner: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2004,6 +2019,31 @@ inherited OrderInternalForm: TOrderInternalForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' <'#1055#1088#1086#1075#1085#1086#1079'>'
       ImageIndex = 49
+    end
+    object actUpdateAmountAll_diff: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actInsertUpdateMovement
+        end
+        item
+          Action = actUpdateAmountRemains
+        end
+        item
+          Action = actUpdateAmountPartner_dif
+        end
+        item
+          Action = actUpdateAmountForecast
+        end
+        item
+          Action = actRefreshPrice
+        end>
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077'?'
+      InfoAfterExecute = #1059#1089#1087#1077#1096#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' '
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' ('#1079#1072#1082#1072#1079' - '#1087#1088#1086#1076#1072#1078#1072')'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' <'#1042#1089#1077'> '#1088#1072#1089#1095#1077#1090#1085#1099#1077' '#1076#1072#1085#1085#1099#1077' ('#1079#1072#1082#1072#1079' - '#1087#1088#1086#1076#1072#1078#1072')'
+      ImageIndex = 50
     end
     object actUpdateAmountAll: TMultiAction
       Category = 'DSDLib'
@@ -2150,6 +2190,14 @@ inherited OrderInternalForm: TOrderInternalForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateAmountAll_diff'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -2219,6 +2267,10 @@ inherited OrderInternalForm: TOrderInternalForm
     end
     object bbUpdateAmountAll: TdxBarButton
       Action = actUpdateAmountAll
+      Category = 0
+    end
+    object bbUpdateAmountAll_diff: TdxBarButton
+      Action = actUpdateAmountAll_diff
       Category = 0
     end
   end
@@ -3063,7 +3115,7 @@ inherited OrderInternalForm: TOrderInternalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 864
+    Left = 896
     Top = 280
   end
   object ChildCDS: TClientDataSet
@@ -3095,5 +3147,38 @@ inherited OrderInternalForm: TOrderInternalForm
     PropertiesCellList = <>
     Left = 662
     Top = 569
+  end
+  object spUpdateAmountPartner_dif: TdsdStoredProc
+    StoredProcName = 'gpUpdateMI_OrderInternal_AmountPartner_dif'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inOperDate'
+        Value = 42132d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 320
   end
 end
