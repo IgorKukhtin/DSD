@@ -38,6 +38,10 @@ BEGIN
      END IF;
 
 
+     -- !!!Залили ВСЕ данные - в Object_GoodsByGoodsKind - линейная табл.!!!
+     PERFORM gpInsertUpdate_wms_Object_GoodsByGoodsKind (inSession);
+
+
      -- Результат
      -- RETURN QUERY
      -- Результат - сформировали новые данные - Элементы XML

@@ -38,6 +38,9 @@ BEGIN
      END IF;
 
 
+     -- !!!Залили ВСЕ данные - в Object_GoodsByGoodsKind - линейная табл.!!!
+     PERFORM gpInsertUpdate_wms_Object_GoodsByGoodsKind (inSession);
+
      -- сформировали новые данные - если надо - wms_Object_Pack
      PERFORM lpInsertUpdate_wms_Object_Pack();
 
