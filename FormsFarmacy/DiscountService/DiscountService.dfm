@@ -12,6 +12,7 @@ object DiscountServiceForm: TDiscountServiceForm
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 16
   object HTTPRIO: THTTPRIO
@@ -191,6 +192,12 @@ object DiscountServiceForm: TDiscountServiceForm
     OutputType = otResult
     Params = <
       item
+        Name = 'inDiscountExternal'
+        Value = Null
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
         Name = 'inGoodsId'
         Value = Null
         ParamType = ptInput
@@ -211,6 +218,12 @@ object DiscountServiceForm: TDiscountServiceForm
       item
         Name = 'outCodeRazom'
         Value = Null
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outInvoiceNumber'
+        Value = Null
+        DataType = ftString
         MultiSelectSeparator = ','
       end>
     PackSize = 1

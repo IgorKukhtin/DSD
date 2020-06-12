@@ -3,8 +3,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   Top = 0
   AutoSize = True
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074
-  ClientHeight = 201
-  ClientWidth = 304
+  ClientHeight = 543
+  ClientWidth = 909
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 304
-    Height = 201
+    Width = 909
+    Height = 543
     ActivePage = tsMDMPfizer
     Align = alClient
     TabOrder = 0
@@ -29,7 +29,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 0
@@ -107,12 +107,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grUnit: TcxGrid
         Left = 0
         Top = 31
-        Width = 296
-        Height = 8
+        Width = 901
+        Height = 350
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 901
-        ExplicitHeight = 350
         object grtvUnit: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsUnit
@@ -154,13 +152,11 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       end
       object grOptima: TcxGrid
         Left = 0
-        Top = 39
-        Width = 296
+        Top = 381
+        Width = 901
         Height = 134
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 381
-        ExplicitWidth = 901
         object grtvOptima: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload_Optima
@@ -195,31 +191,23 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
     object tsBaDM: TTabSheet
       Caption = #1041#1072#1044#1052
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl: TcxPageControl
         Left = 0
         Top = 31
-        Width = 296
-        Height = 142
+        Width = 901
+        Height = 484
         Align = alClient
         Focusable = False
         TabOrder = 0
         Properties.ActivePage = tsMain
         Properties.CustomButtons.Buttons = <>
-        ExplicitWidth = 901
-        ExplicitHeight = 484
-        ClientRectBottom = 142
-        ClientRectRight = 296
+        ClientRectBottom = 484
+        ClientRectRight = 901
         ClientRectTop = 0
         object tsMain: TcxTabSheet
           Caption = 'tsMain'
           ImageIndex = 0
           TabVisible = False
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object grBaDM: TcxGrid
             Left = 0
             Top = 0
@@ -373,6 +361,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 Caption = #1053#1072#1079#1074#1072#1085#1080#1077
                 DataBinding.FieldName = 'GoodsName'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 155
               end
@@ -380,6 +369,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 Caption = #1050#1086#1076
                 DataBinding.FieldName = 'GoodsCode'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 53
               end
@@ -389,6 +379,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -398,6 +389,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -407,6 +399,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -416,6 +409,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -425,6 +419,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -434,6 +429,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -443,6 +439,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -452,6 +449,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -461,6 +459,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -470,6 +469,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -479,6 +479,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -488,6 +489,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -497,6 +499,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -506,6 +509,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -515,6 +519,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -524,6 +529,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -533,6 +539,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -542,6 +549,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -551,6 +559,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -560,6 +569,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -569,6 +579,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -578,6 +589,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -587,6 +599,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -596,6 +609,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -605,6 +619,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -614,6 +629,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -623,6 +639,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -632,6 +649,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -641,6 +659,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -650,6 +669,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -659,6 +679,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -668,6 +689,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -677,6 +699,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -686,6 +709,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -695,6 +719,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -704,6 +729,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -713,6 +739,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -722,6 +749,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -731,6 +759,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -740,6 +769,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -749,6 +779,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -758,6 +789,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -767,6 +799,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -776,6 +809,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -785,6 +819,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -794,6 +829,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -803,6 +839,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -812,6 +849,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -821,6 +859,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -830,6 +869,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -839,6 +879,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -848,6 +889,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -857,6 +899,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -866,6 +909,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -875,6 +919,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -884,6 +929,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -893,6 +939,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -902,6 +949,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -911,6 +959,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 77
               end
@@ -920,6 +969,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
                 PropertiesClassName = 'TcxCurrencyEditProperties'
                 Properties.DisplayFormat = ',0.00;-,0.00; ;'
                 HeaderAlignmentHorz = taCenter
+                HeaderAlignmentVert = vaCenter
                 Options.Editing = False
                 Width = 85
               end
@@ -933,7 +983,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 1
@@ -998,7 +1048,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 0
@@ -1076,12 +1126,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grTeva: TcxGrid
         Left = 0
         Top = 31
-        Width = 296
-        Height = 142
+        Width = 901
+        Height = 484
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 901
-        ExplicitHeight = 484
         object grtvTeva: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload_Teva
@@ -1137,7 +1185,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel3: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 0
@@ -1185,12 +1233,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grAVD: TcxGrid
         Left = 0
         Top = 31
-        Width = 296
-        Height = 142
+        Width = 901
+        Height = 484
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 901
-        ExplicitHeight = 484
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload_ADV
@@ -1281,11 +1327,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grYuriFarm: TcxGrid
         Left = 0
         Top = 249
-        Width = 296
+        Width = 901
         Height = 266
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 901
         object grYuriFarmDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload_YuriFarm
@@ -1300,7 +1345,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel4: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 1
@@ -1357,11 +1402,10 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grYuriFarmUnit: TcxGrid
         Left = 0
         Top = 31
-        Width = 296
+        Width = 901
         Height = 218
         Align = alTop
         TabOrder = 2
-        ExplicitWidth = 901
         object grYuriFarmUnitDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = dsReport_Upload_YuriFarm_Unit
@@ -1376,34 +1420,40 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
           object grYuriFarmUnit_ID: TcxGridDBColumn
             DataBinding.FieldName = 'ID'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 41
           end
           object grYuriFarmUnit_UnitName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 251
           end
           object grYuriFarmUnit_OKPO: TcxGridDBColumn
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 57
           end
           object grYuriFarmUnit_UnitAddress: TcxGridDBColumn
             Caption = #1040#1076#1088#1077#1089
             DataBinding.FieldName = 'UnitAddress'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 229
           end
           object grYuriFarmUnit_MorionCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1084#1086#1088#1080#1086#1085#1072
             DataBinding.FieldName = 'MorionCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 72
           end
           object grYuriFarmUnit_AccessKeyYF: TcxGridDBColumn
             DataBinding.FieldName = 'AccessKeyYF'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 201
           end
         end
@@ -1418,7 +1468,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object Panel5: TPanel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 901
         Height = 31
         Align = alTop
         TabOrder = 0
@@ -1475,8 +1525,8 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
       object grMDMPfizer: TcxGrid
         Left = 0
         Top = 31
-        Width = 296
-        Height = 142
+        Width = 901
+        Height = 484
         Align = alClient
         TabOrder = 1
         object grMDMPfizerDBTableView: TcxGridDBTableView
@@ -1569,6 +1619,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 39
           end
@@ -1576,6 +1627,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 224
           end
@@ -1585,6 +1637,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
           end
@@ -1594,6 +1647,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 68
           end
@@ -1603,6 +1657,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 84
           end
@@ -1612,6 +1667,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 88
           end
@@ -1619,6 +1675,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1055#1088#1086#1094#1077#1085#1090' '#1089#1082#1080#1076#1082#1080
             DataBinding.FieldName = 'ChangePercent'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
           end
           object SummChangePercent: TcxGridDBColumn
@@ -1627,6 +1684,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 79
           end
@@ -1634,12 +1692,14 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1055#1088#1086#1077#1082#1090#1072
             DataBinding.FieldName = 'DiscountExternalName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 85
           end
           object DiscountCardName: TcxGridDBColumn
             Caption = #1044#1080#1089#1082#1086#1085#1090#1085#1072#1103' '#1082#1072#1088#1090#1072
             DataBinding.FieldName = 'DiscountCardName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 82
           end
@@ -1648,6 +1708,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             DataBinding.FieldName = 'InvNumber'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 94
           end
@@ -1655,6 +1716,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
@@ -1662,6 +1724,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 114
           end
@@ -1669,6 +1732,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'MainJuridicalName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
@@ -1676,6 +1740,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 113
           end
@@ -1683,6 +1748,7 @@ object ExportSalesForSuppForm: TExportSalesForSuppForm
             Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 136
           end

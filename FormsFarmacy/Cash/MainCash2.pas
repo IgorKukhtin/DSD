@@ -1305,6 +1305,7 @@ begin
   CheckGridDBTableView.DataController.Filter.Clear;
   ExpirationDateView.DataController.Filter.Clear;
   DiscountServiceForm.gCode := 0;
+  DiscountServiceForm.isBeforeSale := False;
 
   // Ночные скидки
   SetTaxUnitNight;
@@ -2532,6 +2533,12 @@ begin
   begin
     ShowMessage
       ('Уважаемые коллеги, вы не поставили отметку времени прихода и ухода в график (Ctrl+T), исходя из персонального графика работы (время вводится с шагом 30 мин)');
+    exit;
+  end;
+
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode = 3) then
+  begin
+    ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
     exit;
   end;
 
@@ -4278,6 +4285,18 @@ begin
   if pnlPromoCode.Visible or pnlPromoCodeLoyalty.Visible then
   begin
     ShowMessage('В текущем чеке применен промокод. Сначала очистите чек!');
+    exit;
+  end;
+
+  if CheckCDS.RecordCount > 1 then
+  begin
+    ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
+    exit;
+  end;
+
+  if DiscountServiceForm.isBeforeSale then
+  begin
+    ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
   end;
 
@@ -7014,6 +7033,7 @@ begin
   pnlSiteDiscount.Visible := false;
   edSiteDiscount.Value := 0;
   DiscountServiceForm.gCode := 0;
+  DiscountServiceForm.isBeforeSale := False;
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';
   edLoyaltySMSummaRemainder.Value := 0;
@@ -9429,6 +9449,12 @@ begin
     ActiveControl := edAmount;
     ShowMessage
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
+  end;
+
+  if DiscountServiceForm.isBeforeSale then
+  begin
+    ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
+    exit;
   end;
 
   if Pos('/', edAmount.Text) > 0 then
