@@ -498,7 +498,7 @@ uses
   Report_GoodsRemainsLight in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLight.pas' {Report_RetailRemainsForm: TParentForm},
   Report_GoodsRemainsLightDialog in '..\..\FormsFarmacy\Report\Report_GoodsRemainsLightDialog.pas' {Report_GoodsRemainsLightDialogForm: TParentForm},
   ReportMovementCheckGrowthAndFallingDialog in '..\..\FormsFarmacy\Report\ReportMovementCheckGrowthAndFallingDialog.pas' {ReportMovementCheckGrowthAndFallingDialogForm: TParentForm},
-  ExportSalesForSupp in '..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
+  ExportSalesForSupp in '..\..\FormsFarmacy\MainUnitService\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm},
   ProvinceCityEdit in '..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas' {ProvinceCityEditForm: TParentForm},
   ProvinceCity in '..\..\FormsFarmacy\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
   IFIN_J1201209 in '..\..\SOURCE\MeDOC\IFIN_J1201209.pas',

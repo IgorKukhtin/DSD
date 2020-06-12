@@ -18,7 +18,7 @@ BEGIN
                              , inMovementId           := inMovementId
                              , inGoodsId              := tmpData.GoodsId
                              , inGoodsKindId          := tmpData.GoodsKindId
-                             , inRealWeight           := tmpData.Weight
+                             , inRealWeight           := tmpData.Weight :: TFloat
                              , inChangePercentAmount  := tmpData.ChangePercentAmount
                              , inCountTare            := 0
                              , inWeightTare           := 0
@@ -85,10 +85,10 @@ BEGIN
                , tmpGoods.MovementId_promo
                , wms_data.Weight
           FROM wms_to_host_message AS wms_data
-               LEFT JOIN tmpSKU   ON tmpSKU.sku_id        = wms_data.sku_id
+               LEFT JOIN tmpSKU   ON tmpSKU.sku_id        = wms_data.sku_id :: Integer
                LEFT JOIN tmpGoods ON tmpGoods.GoodsId     = tmpSKU.GoodsId
                                  AND tmpGoods.GoodsKindId = tmpSKU.GoodsKindId
-          WHERE wms_data.MovementId = inOrderId
+          WHERE wms_data.MovementId = inOrderId :: TVarChar
             AND wms_data.Type       ILIKE 'order_status_changed'
             AND wms_data.Done       = FALSE
          ) AS tmpData;
@@ -100,7 +100,7 @@ $BODY$
 
  /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
  04.06.20                                        *
  03.06.20                                                          *
 */

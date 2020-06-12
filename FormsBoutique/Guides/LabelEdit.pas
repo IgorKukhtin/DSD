@@ -38,7 +38,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel3: TcxLabel;
-    edName_RUS: TcxTextEdit;
+    edName_UKR: TcxTextEdit;
   private
     { Private declarations }
   public

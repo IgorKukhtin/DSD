@@ -24,7 +24,7 @@ BEGIN
                                                  , inSession    := inSession
                                                   );
      -- отметили что сообщения обработаны
-     UPDATE wms_to_host_message SET Done = TRUE WHERE MovementId = inOrderId;
+     UPDATE wms_to_host_message SET Done = TRUE, UpdateDate = CLOCK_TIMESTAMP() WHERE MovementId = inOrderId :: TVarChar;
 
 END;
 $BODY$
@@ -32,7 +32,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Скородумов С.Г.
  04.06.20                                        *
  03.06.20                                                          *
 */

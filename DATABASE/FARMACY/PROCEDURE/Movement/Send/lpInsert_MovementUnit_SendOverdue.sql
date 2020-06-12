@@ -18,6 +18,8 @@
     -- проверка прав пользователя на вызов процедуры
     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
     vbUserId:= lpGetUserBySession (inSession);
+    
+--    raise notice 'Обработка: % %', inUnitID, (SELECT Object.ValueData FROM Object WHERE Object.ID = inUnitID);
 
     vbOperDate := CURRENT_DATE  - ('' ||CASE WHEN date_part('isodow', CURRENT_DATE) = 1 THEN 6
                                              WHEN date_part('isodow', CURRENT_DATE) = 2 THEN 0
@@ -320,7 +322,7 @@
               FROM MovementItem
               WHERE MovementItem.MovementId = vbMovementID
                 AND MovementItem.DescId = zc_MI_Master()
-                AND MovementItem.isErased = FALSE)
+                AND MovementItem.isErased = FALSE) 
     THEN
       -- сохранили признак отложен с проведением
       PERFORM gpUpdate_Movement_Send_Deferred (vbMovementID, TRUE, inSession);

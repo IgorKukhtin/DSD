@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Label(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-              , Name_RUS TVarChar
+              , Name_UKR TVarChar
  ) 
   AS
 $BODY$
@@ -23,7 +23,7 @@ BEGIN
              0 :: Integer                              AS Id
            , lfGet_ObjectCode(0, zc_Object_Label())    AS Code
            , '' :: TVarChar                            AS Name
-           , '' :: TVarChar                            AS Name_RUS
+           , '' :: TVarChar                            AS Name_UKR
        ;
    ELSE
        RETURN QUERY
@@ -31,11 +31,11 @@ BEGIN
              Object.Id         AS Id
            , Object.ObjectCode AS Code
            , Object.ValueData  AS Name
-           , COALESCE (ObjectString_RUS.ValueData, NULL) :: TVarChar AS Name_RUS
+           , COALESCE (ObjectString_UKR.ValueData, NULL) :: TVarChar AS Name_UKR
        FROM Object
-           LEFT JOIN ObjectString AS ObjectString_RUS
-                                  ON ObjectString_RUS.ObjectId = Object.Id
-                                 AND ObjectString_RUS.DescId = zc_ObjectString_Label_RUS()
+           LEFT JOIN ObjectString AS ObjectString_UKR
+                                  ON ObjectString_UKR.ObjectId = Object.Id
+                                 AND ObjectString_UKR.DescId = zc_ObjectString_Label_UKR()
        WHERE Object.Id = inId;
    END IF;
 

@@ -22,9 +22,10 @@ object MainForm: TMainForm
     Top = 0
     Width = 1207
     Height = 590
-    ActivePage = tsLog
+    ActivePage = tsErrors
     Align = alClient
     TabOrder = 0
+    OnChange = pgcMainChange
     object tsLog: TTabSheet
       Caption = 'Log'
       ImageIndex = 1
@@ -236,6 +237,121 @@ object MainForm: TMainForm
         TabOrder = 19
         Value = 10
         OnChange = seFontSizeChange
+      end
+    end
+    object tsErrors: TTabSheet
+      Caption = 'Errors'
+      ImageIndex = 2
+      object splHorz: TSplitter
+        Left = 0
+        Top = 265
+        Width = 1199
+        Height = 5
+        Cursor = crVSplit
+        Align = alTop
+      end
+      object pnlWMS: TPanel
+        Left = 0
+        Top = 0
+        Width = 1199
+        Height = 265
+        Align = alTop
+        TabOrder = 0
+        object pnlWmsTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1197
+          Height = 24
+          Align = alTop
+          BevelOuter = bvLowered
+          Caption = #1054#1096#1080#1073#1082#1080' WMS'
+          TabOrder = 0
+          ExplicitTop = -5
+          DesignSize = (
+            1197
+            24)
+          object btnUpdateWMS: TButton
+            Left = 1056
+            Top = 2
+            Width = 75
+            Height = 20
+            Anchors = [akTop, akRight]
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateWMSClick
+          end
+        end
+        object grdWMS: TDBGrid
+          Left = 1
+          Top = 25
+          Width = 1197
+          Height = 239
+          Align = alClient
+          DataSource = dmData.dsWMS
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
+      end
+      object pnlAlan: TPanel
+        Left = 0
+        Top = 270
+        Width = 1199
+        Height = 292
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 152
+        ExplicitTop = 344
+        ExplicitWidth = 185
+        ExplicitHeight = 41
+        object pnlAlanTop: TPanel
+          Left = 1
+          Top = 1
+          Width = 1197
+          Height = 24
+          Align = alTop
+          BevelOuter = bvLowered
+          Caption = #1054#1096#1080#1073#1082#1080' Alan'
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 9
+          DesignSize = (
+            1197
+            24)
+          object btnUpdateAlan: TButton
+            Left = 1055
+            Top = 2
+            Width = 75
+            Height = 20
+            Anchors = [akTop, akRight]
+            Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+            TabOrder = 0
+            TabStop = False
+            OnClick = btnUpdateAlanClick
+          end
+        end
+        object grdAlan: TDBGrid
+          Left = 1
+          Top = 25
+          Width = 1197
+          Height = 266
+          Align = alClient
+          DataSource = dmData.dsAlan
+          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+          ReadOnly = True
+          TabOrder = 1
+          TitleFont.Charset = DEFAULT_CHARSET
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+          TitleFont.Style = []
+        end
       end
     end
     object tsSettings: TTabSheet

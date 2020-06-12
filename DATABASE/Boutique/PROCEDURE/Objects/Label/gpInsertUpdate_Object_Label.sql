@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Label(
  INOUT ioId           Integer,       -- Ключ объекта <Название для ценника>    
  INOUT ioCode         Integer,       -- Код объекта <Название для ценника>     
     IN inName         TVarChar,      -- Название объекта <Название для ценника>
-    IN inName_RUS     TVarChar,      -- Название объекта <Название для ценника> русс
+    IN inName_UKR     TVarChar,      -- Название объекта <Название для ценника> укр
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS RECORD
@@ -37,7 +37,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Label(), ioCode, inName);
 
    -- сохранили свойство
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Label_RUS(), ioId, inName_RUS);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Label_UKR(), ioId, inName_UKR);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

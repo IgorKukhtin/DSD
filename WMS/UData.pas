@@ -27,6 +27,11 @@ type
     update_wms_to_host_header_message_done: TFDQuery;
     select_wms_to_host_message: TFDQuery;
     alan_exec_qry: TFDQuery;
+    dsWMS: TDataSource;
+    dsAlan: TDataSource;
+    qryWMSGrid: TFDQuery;
+    qryAlanGrid: TFDQuery;
+    mtbTemp: TFDMemTable;
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
     function gpInsert_wms_Message(spName, GUID: string): Integer;

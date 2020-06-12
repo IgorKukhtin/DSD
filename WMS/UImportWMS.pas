@@ -18,14 +18,14 @@ type
     Message_Type: string;
     Header_Id: Integer;
     Detail_Id: Integer;
-    MovementId: Integer;
-    SKU_Id: Integer;
+    MovementId: string;
+    SKU_Id: string;
     Name: string;
-    Qty: Double;
-    Weight: Double;
-    Weight_Biz: Double;
+    Qty: string;
+    Weight: string;
+    Weight_Biz: string;
     OperDate: TDateTime;
-    Production_Date: TDateTime;
+    Production_Date: string;
     Err_Code: Integer;
   private
     Ferr_descr: string;
@@ -57,17 +57,20 @@ type
     procedure CheckError(const Attr: string; const AttrValue: Integer; AMsgProc: TNotifyMsgProc); overload;
     procedure CheckError(const Attr: string; const AttrValue: Extended; AMsgProc: TNotifyMsgProc); overload;
     procedure CheckError(const Attr, AttrValue: string; AMsgProc: TNotifyMsgProc); overload;
+    procedure CheckErrorAsInt(const Attr, AttrValue: string; AMsgProc: TNotifyMsgProc); overload;
     procedure CheckDateTimeError(const Attr: string; const AttrValue: TDateTime; AMsgProc: TNotifyMsgProc); overload;
   strict private
     procedure FillArrOrderStatusChanged(const ARoot: IXMLNode; AMsgProc: TNotifyMsgProc);
     procedure FillArrReceivingResult(const ARoot: IXMLNode; AMsgProc: TNotifyMsgProc);
   strict private
-    procedure ExecuteOrderStatusChanged(AMsgProc: TNotifyMsgProc);
-    procedure ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
+    procedure ProcessOrderStatusChanged(AMsgProc: TNotifyMsgProc);
+    procedure ProcessReceivingResult(AMsgProc: TNotifyMsgProc);
   strict private
     function FetchPacket(APacket: TPacketKind): TMemoryStream;
-    procedure ProcessImportError(const AHeaderId: Integer; const AErrMsg: string; AMsgProc: TNotifyMsgProc);
-    procedure UpdateWMSStatus(const AHeaderId: Integer; const AStatus, AErrMsg: string);
+    procedure ExecuteAlanProc(const ASQL: string);
+    procedure ProcessPacket(const AHeaderId: Integer; const APacketName, ASQL: string; AMsgProc: TNotifyMsgProc);
+    procedure ProcessImportError(const AHeaderId: Integer; const APacketName, AErrMsg: string; AMsgProc: TNotifyMsgProc);
+    procedure UpdateWMSStatus(const AHeaderId, AErrCode: Integer; const AStatus, AErrMsg: string);
   public
     constructor Create(AData: TDataObjects);
     destructor Destroy; override;
@@ -91,14 +94,14 @@ uses
 const
   cWmsMessageType = '<message_type type="%s"/>';
   // Packet name
-  cmtOrderStatusChanged = 'order_status_changed';
-  cmtReceivingResult = 'receiving_result';
+  cpnOrderStatusChanged = 'order_status_changed';
+  cpnReceivingResult = 'receiving_result';
 
 function GetImpTypeCaption(APacket: TPacketKind): string;
 begin
   case APacket of
-    pknOrderStatusChanged: Result := cmtOrderStatusChanged;
-    pknReceivingResult:    Result := cmtReceivingResult;
+    pknOrderStatusChanged: Result := cpnOrderStatusChanged;
+    pknReceivingResult:    Result := cpnReceivingResult;
   end;
 end;
 
@@ -160,6 +163,19 @@ begin
   end;
 end;
 
+procedure TImportWMS.CheckErrorAsInt(const Attr, AttrValue: string; AMsgProc: TNotifyMsgProc);
+var
+  iValue: Integer;
+begin
+  if AttrValue = cErrStrXmlAttributeNotExists then
+    CheckError(Attr, AttrValue, AMsgProc)
+  else
+  begin
+    iValue := getInt(AttrValue, -1);
+    CheckError(Attr, iValue, AMsgProc);
+  end;
+end;
+
 procedure TImportWMS.CheckError(const Attr: string; const AttrValue: Integer; AMsgProc: TNotifyMsgProc);
 begin
   if AttrValue = -1 then
@@ -207,17 +223,28 @@ begin
   inherited;
 end;
 
-procedure TImportWMS.ExecuteOrderStatusChanged(AMsgProc: TNotifyMsgProc);
+procedure TImportWMS.ExecuteAlanProc(const ASQL: string);
+begin
+  // выполнение хр.процедуры в ALAN
+  with FData.ExecQry do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add(ASQL);
+    Open;
+  end;
+end;
+
+procedure TImportWMS.ProcessOrderStatusChanged(AMsgProc: TNotifyMsgProc);
 const
   cProcName = 'gpInsert_wms_order_status_changed';
-
-  cSelect   = 'SELECT DISTINCT Id, MovementId FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
-
+  cSelect   = 'SELECT DISTINCT Id, MovementId, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Error = FALSE) AND (Type = %s) ORDER BY Id';
   cRunProc  = 'SELECT * FROM %s(inOrderId:= %d, inSession:= %s)';
 var
-  sSelect, sExec: string;
+  sSelect, sSQL: string;
+  inOrderId, iHeader_Id: Integer;
 begin
-  sSelect := Format(cSelect, [QuotedStr(cmtOrderStatusChanged)]);
+  sSelect := Format(cSelect, [QuotedStr(cpnOrderStatusChanged)]);
 
   try
     with FData.SelectQry do
@@ -231,22 +258,16 @@ begin
 
     while not FData.SelectQry.Eof do
     begin
-      try
-        sExec := Format(cRunProc, [cProcName, FData.SelectQry.FieldByName('MovementId').AsInteger, QuotedStr('5')]);
-        {$IFDEF DEBUG}
-        if Assigned(AMsgProc) then AMsgProc(sExec);
-        {$ENDIF}
-        with FData.ExecQry do
-        begin
-          Close;
-          SQL.Clear;
-          SQL.Add(sExec);
-          Open;
-        end;
-      except
-        on E: Exception do
-          if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
-      end;
+      inOrderId  := FData.SelectQry.FieldByName('MovementId').AsInteger;
+      iHeader_Id := FData.SelectQry.FieldByName('Header_Id').AsInteger;
+
+      sSQL := Format(cRunProc, [cProcName, inOrderId, QuotedStr('5')]);
+      {$IFDEF DEBUG}
+      if Assigned(AMsgProc) then AMsgProc(sSQL);
+      {$ENDIF}
+
+      // обработка пакета
+      ProcessPacket(iHeader_Id, cpnOrderStatusChanged, sSQL, AMsgProc);
 
       FData.SelectQry.Next;
     end;
@@ -258,17 +279,35 @@ begin
   end;
 end;
 
-procedure TImportWMS.ExecuteReceivingResult(AMsgProc: TNotifyMsgProc);
+procedure TImportWMS.ProcessPacket(const AHeaderId: Integer; const APacketName, ASQL: string; AMsgProc: TNotifyMsgProc);
+begin
+  try
+    // выполнение хр.процедуры в ALAN
+    ExecuteAlanProc(ASQL);
+
+    // обновление пол€ to_host_header_message.Status = "Done" в WMS
+    UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, '');
+  except
+    on E: Exception do
+    begin
+      if Assigned(AMsgProc) then
+        AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+
+      ProcessImportError(AHeaderId, APacketName, E.Message, AMsgProc);
+    end;
+  end;
+end;
+
+procedure TImportWMS.ProcessReceivingResult(AMsgProc: TNotifyMsgProc);
 const
   cProcName  = 'gpUpdate_wms_receiving_result';
-
-  cSelect    = 'SELECT DISTINCT Id, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Type = %s) ORDER BY Id';
-
+  cSelect    = 'SELECT DISTINCT Id, Header_Id FROM wms_to_host_message WHERE (Done = FALSE) AND (Error = FALSE) AND (Type = %s) ORDER BY Id';
   cRunProc   = 'SELECT * FROM %s(inId:= %d, inSession:= %s)';
 var
-  sSelect, sExec: string;
+  sSelect, sSQL: string;
+  inId, iHeader_Id: Integer;
 begin
-  sSelect := Format(cSelect, [QuotedStr(cmtReceivingResult)]);
+  sSelect := Format(cSelect, [QuotedStr(cpnReceivingResult)]);
 
   try
     with FData.SelectQry do
@@ -282,37 +321,17 @@ begin
 
     while not FData.SelectQry.Eof do
     begin
-      try
-        // текст запроса дл€ выполнени€ хр.процедуры
-        sExec := Format(cRunProc, [
-          cProcName,
-          FData.SelectQry.FieldByName('Id').AsInteger,
-          QuotedStr('5')
-        ]);
-        {$IFDEF DEBUG}
-        if Assigned(AMsgProc) then AMsgProc(sExec);
-        {$ENDIF}
+      inId       := FData.SelectQry.FieldByName('Id').AsInteger;
+      iHeader_Id := FData.SelectQry.FieldByName('Header_Id').AsInteger;
 
-        // выполнение хр.процедуры в ALAN
-        with FData.ExecQry do
-        begin
-          Close;
-          SQL.Clear;
-          SQL.Add(sExec);
-          Open;
-        end;
+      // текст запроса дл€ выполнени€ хр.процедуры
+      sSQL := Format(cRunProc, [cProcName, inId, QuotedStr('5')]);
+      {$IFDEF DEBUG}
+      if Assigned(AMsgProc) then AMsgProc(sSQL);
+      {$ENDIF}
 
-        // обновление пол€ to_host_header_message.Status = "Done" в WMS
-        UpdateWMSStatus(FData.SelectQry.FieldByName('Header_Id').AsInteger, 'done', '');
-      except
-        on E: Exception do
-        begin
-          if Assigned(AMsgProc) then
-            AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
-
-          ProcessImportError(FData.SelectQry.FieldByName('Header_Id').AsInteger, E.Message, AMsgProc);
-        end;
-      end;
+      // обработка пакета
+      ProcessPacket(iHeader_Id, cpnReceivingResult, sSQL, AMsgProc);
 
       FData.SelectQry.Next;
     end;
@@ -339,8 +358,8 @@ begin
   FStream.Size := 0;
 
   case APacket of
-    pknOrderStatusChanged: sPacketType := cmtOrderStatusChanged;
-    pknReceivingResult:    sPacketType := cmtReceivingResult;
+    pknOrderStatusChanged: sPacketType := cpnOrderStatusChanged;
+    pknReceivingResult:    sPacketType := cpnReceivingResult;
   end;
 
   with FData.HeaderQry do
@@ -443,8 +462,8 @@ begin
         FValues[Last].Header_Id := getInt(headerNode.Attributes['syncid'], -1);
         CheckError('syncid', FValues[Last].Header_Id, AMsgProc);
 
-        FValues[Last].MovementId := getInt(headerNode.Attributes['order_id'], -1);
-        CheckError('order_id', FValues[Last].MovementId, AMsgProc);
+        FValues[Last].MovementId := getStr(headerNode.Attributes['order_id']);
+        CheckErrorAsInt('order_id', FValues[Last].MovementId, AMsgProc); // проверить, что string-значение может быть конвертировано в Integer
 
         FValues[Last].OperDate := MyStrToDateTime(headerNode.Attributes['operdate']);
         CheckDateTimeError('operdate', FValues[Last].OperDate, AMsgProc);
@@ -463,25 +482,26 @@ begin
                 FValues[Last].MovementId   := FValues[Last - 1].MovementId;
                 FValues[Last].Err_Code     := FValues[Last - 1].Err_Code;
                 FValues[Last].Err_Descr    := FValues[Last - 1].Err_Descr;
+                FValues[Last].OperDate     := FValues[Last - 1].OperDate;
               end;
 
               FValues[Last].Detail_Id := getInt(detailNode.Attributes['syncid'], -1);
               CheckError('syncid', FValues[Last].Detail_Id, AMsgProc);
 
-              FValues[Last].SKU_Id := getInt(detailNode.Attributes['sku_id'], -1);
+              FValues[Last].SKU_Id := getStr(detailNode.Attributes['sku_id']);
               CheckError('sku_id', FValues[Last].SKU_Id, AMsgProc);
 
-              FValues[Last].Qty := getFloat(detailNode.Attributes['qty'], -1);
+              FValues[Last].Qty := getStr(detailNode.Attributes['qty']);
               CheckError('qty', FValues[Last].Qty, AMsgProc);
 
-              FValues[Last].Weight := getFloat(detailNode.Attributes['real_weight'], -1);
+              FValues[Last].Weight := getStr(detailNode.Attributes['real_weight']);
               CheckError('real_weight', FValues[Last].Weight, AMsgProc);
 
-              FValues[Last].Weight_Biz := getFloat(detailNode.Attributes['weight_biz'], -1);
+              FValues[Last].Weight_Biz := getStr(detailNode.Attributes['weight_biz']);
               CheckError('weight_biz', FValues[Last].Weight_Biz, AMsgProc);
 
-              FValues[Last].Production_Date := MyStrToDateTime(detailNode.Attributes['production_date']);
-              CheckDateTimeError('production_date', FValues[Last].Production_Date, AMsgProc);
+              FValues[Last].Production_Date := getStr(detailNode.Attributes['production_date']);
+              CheckError('production_date', FValues[Last].Production_Date, AMsgProc);
             end;
           end;
       end;
@@ -516,8 +536,8 @@ begin
         FValues[Last].Header_Id := getInt(headerNode.Attributes['syncid'], -1);
         CheckError('syncid', FValues[Last].Header_Id, AMsgProc);
 
-        FValues[Last].MovementId := getInt(headerNode.Attributes['inc_id'], -1);
-        CheckError('inc_id', FValues[Last].MovementId, AMsgProc);
+        FValues[Last].MovementId := getStr(headerNode.Attributes['inc_id']);
+        CheckErrorAsInt('inc_id', FValues[Last].MovementId, AMsgProc); // проверить, что string-значение может быть конвертировано в Integer
 
         FValues[Last].OperDate := MyStrToDateTime(headerNode.Attributes['operdate']);
         CheckDateTimeError('operdate', FValues[Last].OperDate, AMsgProc);
@@ -536,25 +556,26 @@ begin
                 FValues[Last].MovementId   := FValues[Last - 1].MovementId;
                 FValues[Last].Err_Code     := FValues[Last - 1].Err_Code;
                 FValues[Last].Err_Descr    := FValues[Last - 1].Err_Descr;
+                FValues[Last].OperDate     := FValues[Last - 1].OperDate;
               end;
 
               FValues[Last].Detail_Id := getInt(detailNode.Attributes['syncid'], -1);
               CheckError('syncid', FValues[Last].Detail_Id, AMsgProc);
 
-              FValues[Last].SKU_Id := getInt(detailNode.Attributes['sku_id'], -1);
+              FValues[Last].SKU_Id := getStr(detailNode.Attributes['sku_id']);
               CheckError('sku_id', FValues[Last].SKU_Id, AMsgProc);
 
-              FValues[Last].Qty := getFloat(detailNode.Attributes['qty'], -1);
+              FValues[Last].Qty := getStr(detailNode.Attributes['qty']);
               CheckError('qty', FValues[Last].Qty, AMsgProc);
 
-              FValues[Last].Weight := getFloat(detailNode.Attributes['weight'], -1);
+              FValues[Last].Weight := getStr(detailNode.Attributes['weight']);
               CheckError('weight', FValues[Last].Weight, AMsgProc);
 
               FValues[Last].Name := getStr(detailNode.Attributes['name']);
               CheckError('name', FValues[Last].Name, AMsgProc);
 
-              FValues[Last].Production_Date := MyStrToDateTime(detailNode.Attributes['production_date']);
-              CheckDateTimeError('production_date', FValues[Last].Production_Date, AMsgProc);
+              FValues[Last].Production_Date := getStr(detailNode.Attributes['production_date']);
+              CheckError('production_date', FValues[Last].Production_Date, AMsgProc);
             end;
           end;
       end;
@@ -641,23 +662,20 @@ begin
     pknReceivingResult:    FillArrReceivingResult(rootNode, AMsgProc);
   end;
 
-  // записываем статус и коды ошибок в wms.to_host_header_message
-
+  // записываем статус 'error' и коды ошибок в WMS to_host_header_message
   if Length(FValues) > 0 then
   begin
     FData.WMSTrans.StartTransaction;
     try
       for I := Low(FValues) to High(FValues) do
-      begin
-        with FData.ErrorQry do
-        begin
-          ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
-          ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
-          ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
-          // коды ошибок
-          ExecSQL;
-        end;
-      end;
+        if FValues[I].Err_Code <> 0 then
+          with FData.ErrorQry do
+          begin
+            ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
+            ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
+            ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
+            ExecSQL;
+          end;
 
       FData.WMSTrans.Commit;
       Result := True;
@@ -683,22 +701,22 @@ begin
           ParamByName('type').AsString := FValues[J].Message_Type;
           ParamByName('Header_Id').AsInteger := FValues[J].Header_Id;
           ParamByName('Detail_Id').AsInteger := FValues[J].Detail_Id;
-          ParamByName('MovementId').AsInteger := FValues[J].MovementId;
-          ParamByName('SKU_Id').AsInteger := FValues[J].SKU_Id;
+          ParamByName('MovementId').AsString := FValues[J].MovementId;
+          ParamByName('SKU_Id').AsString := FValues[J].SKU_Id;
           ParamByName('Name').AsString := FValues[J].Name;
-          ParamByName('Qty').AsFloat := FValues[J].Qty;
-          ParamByName('Weight').AsFloat := FValues[J].Weight;
-          ParamByName('Weight_Biz').AsFloat := FValues[J].Weight_Biz;
+          ParamByName('Qty').AsString := FValues[J].Qty;
+          ParamByName('Weight').AsString := FValues[J].Weight;
+          ParamByName('Weight_Biz').AsString := FValues[J].Weight_Biz;
           ParamByName('OperDate').AsDateTime := FValues[J].OperDate;
-          ParamByName('Production_Date').AsDateTime := FValues[J].Production_Date;
+          ParamByName('Production_Date').AsString := FValues[J].Production_Date;
           ExecSQL;
         end;
       end;
 
-      // вызов храним.процедур, которые использует данные таб. alan.wms_to_host_message
+      // обработка пакетов
       case APacket of
-        pknOrderStatusChanged: ExecuteOrderStatusChanged(AMsgProc);
-        pknReceivingResult:    ExecuteReceivingResult(AMsgProc);
+        pknOrderStatusChanged: ProcessOrderStatusChanged(AMsgProc);
+        pknReceivingResult:    ProcessReceivingResult(AMsgProc);
       end;
 
       Result := True;
@@ -719,22 +737,22 @@ begin
   Result := High(FValues);
 end;
 
-procedure TImportWMS.ProcessImportError(const AHeaderId: Integer; const AErrMsg: string; AMsgProc: TNotifyMsgProc); // AHeaderId - wms_to_host_message.Header_Id
+procedure TImportWMS.ProcessImportError(const AHeaderId: Integer; // AHeaderId - wms_to_host_message.Header_Id
+  const APacketName, AErrMsg: string; AMsgProc: TNotifyMsgProc);
 var
   iPos: Integer;
   xmlDocument: IXMLDocument;
   rootNode, dataNode: IXMLNode;
-  sXml, sSite, sProcName, sDescr, sInsert: string;
+  sXml, sSite, sDescr, sInsert, sUpdateErr: string;
 const
-  cInsert = 'INSERT INTO wms_to_host_error(Site, ProcName, Description) VALUES(%s, %s, %s)';
+  cInsert    = 'INSERT INTO wms_to_host_error(Header_Id, Site, Type, Description) VALUES(%d, %s, %s, %s)';
+  cUpdateErr = 'UPDATE wms_to_host_message SET Error = TRUE WHERE Header_Id = %d';
 begin
   try
     sSite     := 'A'; // если €вно не определено, что ошибка относитс€ к WMS, тогда считаем ее своей ошибкой
-    sProcName := '';
     sDescr    := '';
     { если это ошибка, возбужденна€ в хр.процедуре при проверке входных данных, тогда
-      текст ошибки должен иметь вид    Site="A" ProcName="proc_name" Descr="текст ошибки"
-      и можно распарсить его как XML  }
+      текст ошибки должен иметь вид    Site="A" Descr="текст ошибки" и можно распарсить его как XML }
     iPos := Pos('site=', LowerCase(AErrMsg));
 
     if iPos > 0 then
@@ -755,14 +773,13 @@ begin
       dataNode := rootNode.ChildNodes[0];
 
       sSite     := getStr(dataNode.Attributes['Site'], '');
-      sProcName := getStr(dataNode.Attributes['Procname'], '');
       sDescr    := getStr(dataNode.Attributes['Descr'], '');
     end
     else
       sDescr := AErrMsg;
 
     // записываем данные в таб. wms_to_host_error
-    sInsert := Format(cInsert, [QuotedStr(sSite), QuotedStr(sProcName), QuotedStr(sDescr)]);
+    sInsert := Format(cInsert, [AHeaderId, QuotedStr(sSite), QuotedStr(APacketName), QuotedStr(sDescr)]);
     with FData.ExecQry do
     begin
       Close;
@@ -771,25 +788,35 @@ begin
       ExecSQL;
     end;
 
+    // обновл€ем поле Error = TRUE в wms_to_host_message
+    sUpdateErr := Format(cUpdateErr, [AHeaderId]);
+    with FData.ExecQry do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add(sUpdateErr);
+      ExecSQL;
+    end;
+
     // обновление полей to_host_header_message.Status и Err_Descr в WMS
     if sSite = 'W' then
-      UpdateWMSStatus(AHeaderId, 'error', sDescr)
+      UpdateWMSStatus(AHeaderId, cImpErrWrongPacketData, cStatusError, sDescr)
     else
-      UpdateWMSStatus(AHeaderId, 'done', '');
+      UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, ''); // если ошибка на нашей стороне, тогда пишем 'done' в WMS
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
-procedure TImportWMS.UpdateWMSStatus(const AHeaderId: Integer; const AStatus, AErrMsg: string); // AHeaderId - wms_to_host_message.Header_Id
+procedure TImportWMS.UpdateWMSStatus(const AHeaderId, AErrCode: Integer; const AStatus, AErrMsg: string); // AHeaderId - wms_to_host_message.Header_Id
 const
-  cWMSUpdate = 'UPDATE to_host_header_message SET Status = %s, Err_Descr = %s  WHERE Id = %d';
+  cWMSUpdate = 'UPDATE to_host_header_message SET Status= %s, Err_Code= %d, Err_Descr= %s  WHERE Id = %d';
 var
   sWMSUpdate: string;
 begin
   // обновление полей to_host_header_message.Status и Err_Descr в WMS
-  sWMSUpdate := Format(cWMSUpdate, [QuotedStr(AStatus), QuotedStr(AErrMsg), AHeaderId]);
+  sWMSUpdate := Format(cWMSUpdate, [QuotedStr(AStatus), AErrCode, QuotedStr(AErrMsg), AHeaderId]);
   with FData.DoneQry do
   begin
     Close;
@@ -808,7 +835,7 @@ end;
 
 procedure TPacketValues.SetErrDescr(AValue: string);
 begin
-  Ferr_descr := Ferr_descr + AValue;
+  Ferr_descr := Ferr_descr + AValue + ' ';
 end;
 
 end.

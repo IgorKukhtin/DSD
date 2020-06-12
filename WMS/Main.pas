@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
-  Vcl.StdCtrls, Vcl.ExtCtrls, ULog, Vcl.ComCtrls, Vcl.Samples.Spin;
+  Vcl.StdCtrls, Vcl.ExtCtrls, ULog, Vcl.ComCtrls, Vcl.Samples.Spin, Data.DB, Vcl.Grids, Vcl.DBGrids;
 
 type
   TMainForm = class(TForm)
@@ -41,6 +41,16 @@ type
     btnApplyDefSettings: TButton;
     lbFontSize: TLabel;
     seFontSize: TSpinEdit;
+    tsErrors: TTabSheet;
+    pnlWMS: TPanel;
+    splHorz: TSplitter;
+    pnlAlan: TPanel;
+    pnlWmsTop: TPanel;
+    pnlAlanTop: TPanel;
+    grdWMS: TDBGrid;
+    grdAlan: TDBGrid;
+    btnUpdateWMS: TButton;
+    btnUpdateAlan: TButton;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -62,6 +72,9 @@ type
     procedure seFontSizeChange(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnAll_from_wmsClick(Sender: TObject);
+    procedure pgcMainChange(Sender: TObject);
+    procedure btnUpdateWMSClick(Sender: TObject);
+    procedure btnUpdateAlanClick(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
@@ -71,6 +84,7 @@ type
     procedure myLogSql;
     procedure myShowMsg(const AMsg: string);
     procedure MyDelay(mySec: Integer);
+    procedure AdjustColumnWidth(AGrid: TDBGrid);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -84,7 +98,7 @@ implementation
 {$R *.dfm}
 
 uses
-  UData, USettings;
+  System.Math, System.Variants, FireDAC.Comp.DataSet, Winapi.Windows, UData, USettings;
 
 procedure TMainForm.MyDelay(mySec: Integer);
 var
@@ -145,6 +159,81 @@ begin
       str_test := str_test + SQL[i] + #13;
         //
     myShowMsg('Sql.Length = ' + IntToStr(Length(str_test)) + #13 + 'Sql.Count = ' + IntToStr(SQL.Count) + #13 + 'Sql=' + #13 + str_test);
+  end;
+end;
+
+function Coalesce(AValue1, AValue2: Variant): Variant;
+begin
+  Result := AValue1;
+
+  if VarIsNull(AValue1) then Result := AValue2;
+end;
+
+procedure TMainForm.AdjustColumnWidth(AGrid: TDBGrid);
+type
+  TIntArray = array of Integer;
+var
+  I, iCount, iLetterW: Integer;
+  tmpDS: TDataSet;
+  colWidths: TIntArray;
+  sValue: string;
+const
+  cTestCount = 20;
+begin
+  Assert(AGrid.DataSource.DataSet <> nil, 'Expected DataSet <> nil');
+
+  dmData.mtbTemp.CloneCursor(AGrid.DataSource.DataSet as TFDDataSet);
+  tmpDS := dmData.mtbTemp;
+
+  if tmpDS.RecordCount > 0 then
+    tmpDS.First
+  else
+    Exit;
+
+  iCount  := 0;
+  SetLength(colWidths, tmpDS.FieldCount);
+
+  while not tmpDS.Eof and (iCount < cTestCount)  do
+  begin
+    for I := 0 to Pred(tmpDS.FieldCount) do
+    begin
+      sValue := VarToStr(Coalesce(tmpDS.Fields[I].Value, 0));
+      colWidths[I] := Max(colWidths[I], Length(sValue));
+      colWidths[I] := Max(colWidths[I], Length(tmpDS.Fields[I].FieldName));
+    end;
+    Inc(iCount);
+    tmpDS.Next;
+  end;
+  dmData.mtbTemp.Close;// обязательно разорвать связь с датасетом-источником
+
+  iLetterW := Canvas.TextWidth('m');
+
+  AGrid.Columns.BeginUpdate;
+  try
+    for I := 0 to Pred(AGrid.Columns.Count) do
+      AGrid.Columns[I].Width := colWidths[I] * iLetterW;
+  finally
+    AGrid.Columns.EndUpdate;
+  end;
+end;
+
+procedure TMainForm.pgcMainChange(Sender: TObject);
+begin
+  if not dmData.IsConnectedBoth(nil) then Exit;
+
+  if pgcMain.ActivePage = tsErrors then
+  begin
+    if not dmData.qryWMSGrid.Active then
+      dmData.qryWMSGrid.Open;
+
+    grdWMS.Columns.RebuildColumns;
+    AdjustColumnWidth(grdWMS);
+
+    if not dmData.qryAlanGrid.Active then
+      dmData.qryAlanGrid.Open;
+
+    grdAlan.Columns.RebuildColumns;
+    AdjustColumnWidth(grdAlan);
   end;
 end;
 
@@ -326,6 +415,24 @@ begin
   Timer.Enabled := true;
 end;
 
+procedure TMainForm.btnUpdateAlanClick(Sender: TObject);
+begin
+  with dmData.qryAlanGrid do
+  begin
+    Close;
+    Open;
+  end;
+end;
+
+procedure TMainForm.btnUpdateWMSClick(Sender: TObject);
+begin
+  with dmData.qryWMSGrid do
+  begin
+    Close;
+    Open;
+  end;
+end;
+
 constructor TMainForm.Create(AOwner: TComponent);
 begin
   inherited;
@@ -361,6 +468,18 @@ begin
   begin
     if dmData.ImportWMS(myShowMsg) then
       myShowMsg('Success import data from WMS');
+
+    with dmData.qryWMSGrid do
+    begin
+      Close;
+      Open;
+    end;
+
+    with dmData.qryAlanGrid do
+    begin
+      Close;
+      Open;
+    end;
   end;
 end;
 
@@ -442,9 +561,13 @@ end;
 
 procedure TMainForm.FormResize(Sender: TObject);
 begin
+  // позиционирование Log memo
   LogMemo.Width := ((ClientWidth - LogMemo.Left) div 2) - 10;
   mmoMessage.Left := LogMemo.Left + LogMemo.Width + 10;
   mmoMessage.Width := ClientWidth - mmoMessage.Left - 20;
+
+  // позиционирование гридов
+  pnlWMS.Height := (tsErrors.Height - splHorz.Height) div 2;
 end;
 
 end.

@@ -36,6 +36,7 @@ BEGIN
 
     IF (SELECT Object.ObjectCode FROM Object WHERE Object.ID = inDiscountExternal) = 3
     THEN
+      inAmount := 1;
       WITH
           tmpContainerAll AS (SELECT Container.Id
                                    , Container.Amount

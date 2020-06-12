@@ -2,7 +2,7 @@ program ExportSalesForSuppliers;
 
 uses
   Vcl.Forms,
-  ExportSalesForSupp in '..\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
+  ExportSalesForSupp in '..\FormsFarmacy\MainUnitService\ExportSalesForSuppliers\ExportSalesForSupp.pas' {ExportSalesForSuppForm};
 
 {$R *.res}
 

@@ -1616,7 +1616,7 @@
 				<Form>ReportMovementCheckGrowthAndFallingDialogForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+			<DCCReference Include="..\..\FormsFarmacy\MainUnitService\ExportSalesForSuppliers\ExportSalesForSupp.pas">
 				<Form>ExportSalesForSuppForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\ProvinceCityEdit.pas">

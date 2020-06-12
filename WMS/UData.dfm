@@ -141,13 +141,13 @@ object dmData: TdmData
       end
       item
         Name = 'MOVEMENTID'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end
       item
         Name = 'SKU_ID'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end
@@ -159,19 +159,19 @@ object dmData: TdmData
       end
       item
         Name = 'QTY'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end
       item
         Name = 'WEIGHT'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end
       item
         Name = 'WEIGHT_BIZ'
-        DataType = ftFloat
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end
@@ -183,7 +183,7 @@ object dmData: TdmData
       end
       item
         Name = 'PRODUCTION_DATE'
-        DataType = ftDateTime
+        DataType = ftString
         ParamType = ptInput
         Value = Null
       end>
@@ -245,5 +245,58 @@ object dmData: TdmData
     Connection = FDC_alan
     Left = 911
     Top = 352
+  end
+  object dsWMS: TDataSource
+    DataSet = qryWMSGrid
+    Left = 64
+    Top = 128
+  end
+  object dsAlan: TDataSource
+    DataSet = qryAlanGrid
+    Left = 136
+    Top = 128
+  end
+  object qryWMSGrid: TFDQuery
+    Connection = FDC_wms
+    SQL.Strings = (
+      
+        'select id, type, status, start_date, err_code, err_descr, messag' +
+        'e '
+      'from to_host_header_message '
+      
+        'where ((type='#39'order_status_changed'#39') or (type='#39'receiving_result'#39 +
+        ')) '
+      '  and (status= '#39'error'#39')   '
+      'order by id desc')
+    Left = 56
+    Top = 184
+  end
+  object qryAlanGrid: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select err.header_id, err.site, err.type, msg.name, msg.qty, msg' +
+        '.weight, msg.operdate, msg.done, msg.error, err.description'
+      'from wms_to_host_error err '
+      
+        '  inner join wms_to_host_message msg on err.header_id = msg.head' +
+        'er_id '
+      'where (msg.done = false) '
+      '  and (msg.error = true) '
+      '  and (site= '#39'A'#39') '
+      'order by err.header_id desc')
+    Left = 136
+    Top = 184
+  end
+  object mtbTemp: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 208
+    Top = 184
   end
 end

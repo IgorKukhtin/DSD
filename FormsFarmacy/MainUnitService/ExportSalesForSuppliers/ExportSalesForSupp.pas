@@ -1654,7 +1654,7 @@ begin
 
     btnYuriFarmAllClick(Nil);
 
-    btnMDMPfizerAllClick(Nil);
+//    btnMDMPfizerAllClick(Nil);
   finally
     Close;
   end;

@@ -304,7 +304,7 @@ begin
   end;
 
   TelegramBot := TTelegramBot.Create(Token);
-  TelegramBot.FileNameChatId := 'SendingSendDriverVIP_ChatId.xml';
+  TelegramBot.FileNameChatId := ExtractFilePath(Application.ExeName) + 'SendingSendDriverVIP_ChatId.xml';
   if TelegramBot.Id <> 0 then
   begin
     TelegramBot.LoadChatId;

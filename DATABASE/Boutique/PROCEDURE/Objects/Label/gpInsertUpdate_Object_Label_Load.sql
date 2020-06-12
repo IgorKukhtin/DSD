@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Label_Load (TVarChar, TVarChar, TV
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Label_Load(
     IN inName         TVarChar,      -- Название объекта <Название для ценника>
-    IN inName_RUS     TVarChar,      -- Название объекта <Название для ценника> русс
+    IN inName_UKR     TVarChar,      -- Название объекта <Название для ценника> укр
     IN inSession      TVarChar       -- сессия пользователя
 )
 RETURNS VOID
@@ -19,13 +19,13 @@ BEGIN
    vbUserId:= lpGetUserBySession (inSession);
 
 
-   --  сначала ищем в ObjectString_RUS.ValueData
-   vbId := (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Label_RUS() AND UPPER (TRIM (ObjectString.ValueData) ) = UPPER (TRIM (inName_RUS)) );
+   --  сначала ищем в ObjectString_UKR.ValueData
+   vbId := (SELECT ObjectString.ObjectId FROM ObjectString WHERE ObjectString.DescId = zc_ObjectString_Label_UKR() AND UPPER (TRIM (ObjectString.ValueData) ) = UPPER (TRIM (inName_UKR)) );
    
    -- если не нашли в русс пробуем найти в Object.ValueData (актуально для первой загрузки, когда еще все русс. назв. пустые)
    IF COALESCE (vbId,0) = 0
    THEN
-       vbId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND Object.isErased = FALSE AND UPPER (TRIM (Object.ValueData) ) = UPPER (TRIM (inName_RUS) ) );
+       vbId := (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Label() AND Object.isErased = FALSE AND UPPER (TRIM (Object.ValueData) ) = UPPER (TRIM (inName_UKR) ) );
    END IF;
 
    -- если нашли записываем свойства
@@ -34,7 +34,7 @@ BEGIN
         PERFORM gpInsertUpdate_Object_Label(ioId       := vbId
                                           , ioCode     := 0
                                           , inName     := TRIM (inName)     :: TVarChar
-                                          , inName_RUS := TRIM (inName_RUS) :: TVarChar
+                                          , inName_UKR := TRIM (inName_UKR) :: TVarChar
                                           , inSession  := inSession
                                           );
    END IF;   

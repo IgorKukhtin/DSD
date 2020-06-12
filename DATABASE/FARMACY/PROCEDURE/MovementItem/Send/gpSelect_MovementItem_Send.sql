@@ -487,6 +487,7 @@ BEGIN
             WHERE Object_Goods.isErased = FALSE 
                or MovementItem_Send.id is not null;
     ELSE
+
         -- Результат другой
         RETURN QUERY
         WITH 
@@ -565,11 +566,8 @@ BEGIN
                                    
                                 INNER JOIN Container ON Container.ObjectId = MovementItem_Send.ObjectId
                                                     AND Container.DescId = zc_Container_Count()
+                                                    AND Container.WhereObjectId = vbUnitFromId
                                                     AND Container.Amount <> 0
-                                INNER JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                                               ON Container.Id = ContainerLinkObject_Unit.ContainerId 
-                                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit() 
-                                                              AND ContainerLinkObject_Unit.ObjectId = vbUnitFromId
  
                                 INNER JOIN ContainerLinkObject AS CLI_MI 
                                                                ON CLI_MI.ContainerId = Container.Id
@@ -935,5 +933,3 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
 -- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
--- 
-select * from gpSelect_MovementItem_Send(inMovementId := 15183090 , inShowAll := 'False' , inIsErased := 'False' ,  inSession := '3');

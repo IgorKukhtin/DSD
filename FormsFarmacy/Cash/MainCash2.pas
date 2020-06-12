@@ -1305,6 +1305,7 @@ begin
   CheckGridDBTableView.DataController.Filter.Clear;
   ExpirationDateView.DataController.Filter.Clear;
   DiscountServiceForm.gCode := 0;
+  DiscountServiceForm.isBeforeSale := False;
 
   // Ночные скидки
   SetTaxUnitNight;
@@ -2535,6 +2536,12 @@ begin
     exit;
   end;
 
+  if not DiscountServiceForm.isBeforeSale and (DiscountServiceForm.gCode = 3) then
+  begin
+    ShowMessage('По дисконтрой программе не запрошена возможность продажи!');
+    exit;
+  end;
+
   if (FormParams.ParamByName('HelsiID').Value <> '') then
   begin
     if CheckCDS.RecordCount <> 1 then
@@ -3452,7 +3459,82 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
+      if (DiscountServiceForm.gCode > 0) and
+        (CheckCDS.FieldByName('PriceSale').asCurrency <> RemainsCDS.FieldByName('Price').asCurrency) then
+      begin
+
+      end
+      else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+        (FormParams.ParamByName('Price1303').Value <> 0) then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          FormParams.ParamByName('Price1303').Value;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(FormParams.ParamByName('Price1303').Value *
+          (1 - Self.FormParams.ParamByName('SPTax').Value / 100), 0);
+        // и УСТАНОВИМ скидку - с процентом SPTax
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          Self.FormParams.ParamByName('SPTax').Value;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+      end
+      else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('Price').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(IfZero(RemainsCDS.FieldByName('PricePartionDate')
+          .asCurrency, RemainsCDS.FieldByName('Price').asCurrency) *
+          (1 - Self.FormParams.ParamByName('SPTax').Value / 100), 0);
+        // и УСТАНОВИМ скидку - с процентом SPTax
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          Self.FormParams.ParamByName('SPTax').Value;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+      end
+      else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('PriceSaleSP').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          RemainsCDS.FieldByName('PriceSP').asCurrency;
+        // и УСТАНОВИМ скидку
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          CheckCDS.FieldByName('Amount').asCurrency *
+          (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
+          RemainsCDS.FieldByName('PriceSP').asCurrency);
+      end
+      else if (DiscountServiceForm.gCode in [2, 4]) and edPrice.Visible and
+        (abs(edPrice.Value) > 0.0001) then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('Price').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency := edPrice.Value;
+        // и УСТАНОВИМ скидку
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          CheckCDS.FieldByName('Amount').asCurrency *
+          (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+      end
+      else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
         CheckCDS.FieldByName('GoodsId').AsInteger) then
@@ -4278,6 +4360,18 @@ begin
   if pnlPromoCode.Visible or pnlPromoCodeLoyalty.Visible then
   begin
     ShowMessage('В текущем чеке применен промокод. Сначала очистите чек!');
+    exit;
+  end;
+
+  if CheckCDS.RecordCount > 1 then
+  begin
+    ShowMessage('Ошибка.В чеке для Соц.проекта должен быть один товар.');
+    exit;
+  end;
+
+  if DiscountServiceForm.isBeforeSale then
+  begin
+    ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
     exit;
   end;
 
@@ -7014,6 +7108,7 @@ begin
   pnlSiteDiscount.Visible := false;
   edSiteDiscount.Value := 0;
   DiscountServiceForm.gCode := 0;
+  DiscountServiceForm.isBeforeSale := False;
   pnlLoyaltySaveMoney.Visible := false;
   lblLoyaltySMBuyer.Caption := '';
   edLoyaltySMSummaRemainder.Value := 0;
@@ -9429,6 +9524,12 @@ begin
     ActiveControl := edAmount;
     ShowMessage
       ('Ошибка. Не заполнено количество.'#13#10'Должно быть или дробь:'#13#10'Количество продажи / Количество в упаковке');
+  end;
+
+  if DiscountServiceForm.isBeforeSale then
+  begin
+    ShowMessage('В текущем чеке запрошена возможность продажи. Произведите продажу или очистите чек!');
+    exit;
   end;
 
   if Pos('/', edAmount.Text) > 0 then

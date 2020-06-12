@@ -20,7 +20,7 @@ BEGIN
      vbMovementId:= (SELECT DISTINCT MI_WP.ParentId AS MovementId
                      FROM wms_to_host_message AS wms_message
                           -- Наш Id задания на упаковку
-                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId
+                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId :: Integer
 
                           INNER JOIN wms_Movement_WeighingProduction AS Movement_WP
                                                                      ON Movement_WP.OperDate    = MI_Incoming.OperDate
@@ -92,16 +92,16 @@ BEGIN
                                                           , inMovementId          := vbMovementId
                                                           , inGoodsId             := MovementItem.ObjectId
                                                           , inAmount              := CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                                                                          THEN wms_message.Qty
-                                                                                          ELSE wms_message.Weight
+                                                                                          THEN wms_message.Qty    :: TFloat
+                                                                                          ELSE wms_message.Weight :: TFloat
                                                                                      END
                                                           , inIsStartWeighing     := FALSE
-                                                          , inRealWeight          := wms_message.Weight
+                                                          , inRealWeight          := wms_message.Weight :: TFloat
                                                           , inWeightTare          := 0
                                                           , inLiveWeight          := 0
                                                           , inHeadCount           := 0
                                                           , inCount               := 0
-                                                          , inCountPack           := wms_message.Qty
+                                                          , inCountPack           := wms_message.Qty :: TFloat
                                                           , inCountSkewer1        := 0
                                                           , inWeightSkewer1       := 0
                                                           , inCountSkewer2        := 0
@@ -126,8 +126,8 @@ BEGIN
       AND MovementItem.DescId     = zc_MI_Master()
       -- только если изменилось кол-во
       AND MovementItem.Amount <> CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
-                                      THEN wms_message.Qty
-                                      ELSE wms_message.Weight
+                                      THEN wms_message.Qty    :: TFloat
+                                      ELSE wms_message.Weight :: TFloat
                                  END
     ;
 

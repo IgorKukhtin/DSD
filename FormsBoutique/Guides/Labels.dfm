@@ -26,7 +26,6 @@ object LabelForm: TLabelForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitWidth = 403
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -61,9 +60,9 @@ object LabelForm: TLabelForm
         HeaderGlyphAlignmentHorz = taCenter
         Width = 243
       end
-      object Name_RUS: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089#1089'.)'
-        DataBinding.FieldName = 'Name_RUS'
+      object Name_UKR: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1091#1082#1088'.)'
+        DataBinding.FieldName = 'Name_UKR'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter

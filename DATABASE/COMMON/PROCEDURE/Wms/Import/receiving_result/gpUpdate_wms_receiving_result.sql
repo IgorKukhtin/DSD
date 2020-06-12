@@ -18,7 +18,7 @@ BEGIN
      vbIncomingId:= (SELECT DISTINCT MI_Incoming.Id
                      FROM wms_to_host_message AS wms_message
                           -- наш Id задания на упаковку 
-                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId
+                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId :: Integer
 
                      WHERE wms_message.Id = inId
                     );     
@@ -26,7 +26,7 @@ BEGIN
      -- если наш Id задания на упаковку не найден, прекращаем дальнейшую обрабоку пакета
      IF COALESCE (vbIncomingId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Site="W" Procname="gpUpdate_wms_receiving_result()" Descr="В пакете <receiving_result> WMS вернул inc_id = <%>, который не найден в таблице wms_MI_Incoming"'
+         RAISE EXCEPTION 'Site="W" Descr="не найдено значение inc_id = <%>"'
                         , (SELECT wms_message.MovementId FROM wms_to_host_message AS wms_message WHERE wms_message.Id = inId)
                          ;
      END IF;     
@@ -36,7 +36,7 @@ BEGIN
      vbIncomingId:= (SELECT DISTINCT MI_Incoming.Id
                      FROM wms_to_host_message AS wms_message
                           -- наш Id задания на упаковку
-                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId
+                          INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId :: Integer
 
                           INNER JOIN wms_Movement_WeighingProduction AS Movement_WP
                                                                      ON Movement_WP.OperDate    = MI_Incoming.OperDate
@@ -55,9 +55,9 @@ BEGIN
      -- если наш Id задания на упаковку не найден, прекращаем дальнейшую обрабоку пакета
      IF COALESCE (vbIncomingId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Site="W" Procname="gpUpdate_wms_receiving_result()" Descr="В пакете <receiving_result> WMS вернул Id задания на упаковку = <%>, имя груза = <%>, которые не согласуются с данными в нашей базе данных"'
+         RAISE EXCEPTION 'Site="W" Descr="не найдено значение inc_id = <%> для груза <%> "'
                         , (SELECT wms_message.MovementId FROM wms_to_host_message AS wms_message WHERE wms_message.Id = inId)
-                        , (SELECT wms_message.Name       FROM wms_to_host_message AS wms_message WHERE wms_message.Id = inId)
+                        , (SELECT wms_message.Name       FROM wms_to_host_message AS wms_message WHERE wms_message.Id = inId)                        
                          ;
      END IF;                    
      
@@ -73,7 +73,7 @@ BEGIN
                                                     );
      
      -- отметили что сообщение обработано
-     UPDATE wms_to_host_message SET Done = TRUE WHERE Id = inId;
+     UPDATE wms_to_host_message SET Done = TRUE, UpdateDate = CLOCK_TIMESTAMP() WHERE Id = inId;
 
 END;
 $BODY$

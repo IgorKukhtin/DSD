@@ -223,7 +223,7 @@
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MEDOC_TLB.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDocCOM.pas"/>
-			<DCCReference Include="..\ExportSalesForSuppliers\ExportSalesForSupp.pas">
+			<DCCReference Include="..\FormsFarmacy\MainUnitService\ExportSalesForSuppliers\ExportSalesForSupp.pas">
 				<Form>ExportSalesForSuppForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
