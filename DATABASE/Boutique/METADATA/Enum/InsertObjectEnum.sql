@@ -970,7 +970,7 @@ END $$;
 
 
 
---Загрузка из экселя Название ценника русс
+--Загрузка из экселя Название ценника укр
 DO $$
 DECLARE vbImportTypeId Integer;
 DECLARE vbImportTypeCode Integer;
@@ -1035,12 +1035,12 @@ BEGIN
 
 
      vbImportTypeItemId := 0;
-    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inName_Rus';
+    Select id INTO vbImportTypeItemId FROM Object_ImportTypeItems_View WHERE ImportTypeId = vbImportTypeId AND Name = 'inName_Ukr';
     vbImportTypeItemId := gpInsertUpdate_Object_ImportTypeItems(ioId            := COALESCE(vbImportTypeItemId,0),
                                                                 inParamNumber   := 2,
-                                                                inName          := 'inName_Rus',
+                                                                inName          := 'inName_Ukr',
                                                                 inParamType     := 'ftString',
-                                                                inUserParamName := 'Название ценника русс.',
+                                                                inUserParamName := 'Название ценника укр.',
                                                                 inImportTypeId  := vbImportTypeId,
                                                                 inSession       := vbUserId::TVarChar);
     vbImportSettingsItem := 0;

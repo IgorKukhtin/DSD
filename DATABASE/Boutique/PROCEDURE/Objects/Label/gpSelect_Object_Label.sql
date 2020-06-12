@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Label(
    
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Name_RUS TVarChar
+             , Name_UKR TVarChar
              , isErased boolean)
 AS
 $BODY$
@@ -21,12 +21,12 @@ BEGIN
       SELECT Object.Id                          AS Id
            , Object.ObjectCode                  AS Code
            , Object.ValueData                   AS Name
-           , COALESCE (ObjectString_RUS.ValueData, NULL) :: TVarChar AS Name_RUS
+           , COALESCE (ObjectString_UKR.ValueData, NULL) :: TVarChar AS Name_UKR
            , Object.isErased                    AS isErased
        FROM Object
-           LEFT JOIN ObjectString AS ObjectString_RUS
-                                  ON ObjectString_RUS.ObjectId = Object.Id
-                                 AND ObjectString_RUS.DescId = zc_ObjectString_Label_RUS()
+           LEFT JOIN ObjectString AS ObjectString_UKR
+                                  ON ObjectString_UKR.ObjectId = Object.Id
+                                 AND ObjectString_UKR.DescId = zc_ObjectString_Label_UKR()
        WHERE Object.DescId = zc_Object_Label()
          AND (Object.isErased = FALSE OR inIsShowAll = TRUE)
        ;

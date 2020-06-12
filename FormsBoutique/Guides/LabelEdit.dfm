@@ -64,9 +64,9 @@ object LabelEditForm: TLabelEditForm
   object cxLabel3: TcxLabel
     Left = 10
     Top = 99
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089#1089'.)'
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1091#1082#1088'.)'
   end
-  object edName_RUS: TcxTextEdit
+  object edName_UKR: TcxTextEdit
     Left = 10
     Top = 117
     TabOrder = 7
@@ -133,9 +133,9 @@ object LabelEditForm: TLabelEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inName_RUS'
+        Name = 'inName_UKR'
         Value = Null
-        Component = edName_RUS
+        Component = edName_UKR
         DataType = ftString
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -183,9 +183,9 @@ object LabelEditForm: TLabelEditForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'Name_RUS'
+        Name = 'Name_UKR'
         Value = Null
-        Component = edName_RUS
+        Component = edName_UKR
         DataType = ftString
         MultiSelectSeparator = ','
       end>
