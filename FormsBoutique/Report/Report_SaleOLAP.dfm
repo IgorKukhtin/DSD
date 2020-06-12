@@ -287,16 +287,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'LabelName'
       MinWidth = 40
-      Width = 200
-      UniqueName = #1040'-'#1055
-    end
-    object pvLabelName_rus: TcxDBPivotGridField
-      Area = faRow
-      AreaIndex = 2
-      IsCaptionAssigned = True
-      Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089'.)'
-      DataBinding.FieldName = 'LabelName_rus'
-      MinWidth = 40
       Visible = True
       Width = 200
       UniqueName = #1040'-'#1055
@@ -457,7 +447,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvDiscountSaleKindName: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 4
+      AreaIndex = 3
       IsCaptionAssigned = True
       Caption = #1042#1080#1076' '#1089#1082#1080#1076#1082#1080
       DataBinding.FieldName = 'DiscountSaleKindName'
@@ -466,7 +456,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvChangePercent: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 5
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = '% '#1089#1082'.'
       DataBinding.FieldName = 'ChangePercent'
@@ -492,7 +482,7 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     end
     object pvOperPrice: TcxDBPivotGridField
       Area = faRow
-      AreaIndex = 3
+      AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1062#1077#1085#1072' '#1074#1093'.'
       DataBinding.FieldName = 'OperPrice'
@@ -2014,8 +2004,6 @@ object Report_SaleOLAPForm: TReport_SaleOLAPForm
     PivotGrid = cxDBPivotGrid
     OnDblClickActionList = <>
     ActionItemList = <>
-    ColorRuleList = <>
-    SummaryList = <>
     Left = 392
     Top = 272
   end

@@ -32,7 +32,6 @@ RETURNS TABLE (BrandName             VarChar (100)
              -- , GoodsGroupName_all TVarChar
              , GoodsGroupName        TVarChar
              , LabelName             VarChar (100)
-             , LabelName_Rus         VarChar (100)
              -- , CompositionGroupName  TVarChar
              , CompositionName       VarChar (50) -- TVarChar -- +
 
@@ -1580,12 +1579,6 @@ BEGIN
                                  CROSS JOIN zfCalc_DayOfWeekName_cross (tmp.OperDate) AS zfCalc
                            )
 
-         , tmpLabelRuss AS (SELECT ObjectString.* 
-                            FROM ObjectString
-                            WHERE ObjectString.ObjectId IN (SELECT DISTINCT tmpData.LabelId FROM tmpData)
-                              AND ObjectString.DescId =  zc_ObjectString_Label_RUS()
-                            )
-
         -- Результат
         SELECT Object_Brand.ValueData        :: VarChar (100) AS BrandName
              , Object_Period.ValueData       :: VarChar (25)  AS PeriodName
@@ -1596,7 +1589,6 @@ BEGIN
              -- , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupName_all
              , Object_GoodsGroup.ValueData                    AS GoodsGroupName
              , Object_Label.ValueData        :: VarChar (100) AS LabelName
-             , COALESCE (tmpLabelRuss.ValueData, Object_Label.ValueData) :: VarChar (100) AS LabelName_Rus
              -- , Object_CompositionGroup.ValueData  AS CompositionGroupName
              , Object_Composition.ValueData  :: VarChar (50)  AS CompositionName
 
@@ -1895,7 +1887,6 @@ BEGIN
             LEFT JOIN Object AS Object_Goods            ON Object_Goods.Id            = tmpData.GoodsId
             LEFT JOIN Object AS Object_GoodsGroup       ON Object_GoodsGroup.Id       = tmpData.GoodsGroupId
             LEFT JOIN Object AS Object_Label            ON Object_Label.Id            = tmpData.LabelId
-            LEFT JOIN tmpLabelRuss ON tmpLabelRuss.ObjectId = tmpData.LabelId
             LEFT JOIN Object AS Object_Composition      ON Object_Composition.Id      = tmpData.CompositionId
             -- LEFT JOIN Object AS Object_CompositionGroup ON Object_CompositionGroup.Id = tmpData.CompositionGroupId
             LEFT JOIN Object AS Object_GoodsInfo        ON Object_GoodsInfo.Id        = tmpData.GoodsInfoId
@@ -1913,8 +1904,6 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsGroup6 ON Object_GoodsGroup6.Id = tmpData.GroupId6
             LEFT JOIN Object AS Object_GoodsGroup7 ON Object_GoodsGroup7.Id = tmpData.GroupId7
             LEFT JOIN Object AS Object_GoodsGroup8 ON Object_GoodsGroup8.Id = tmpData.GroupId8
-            
-            
            ;
 
  END;

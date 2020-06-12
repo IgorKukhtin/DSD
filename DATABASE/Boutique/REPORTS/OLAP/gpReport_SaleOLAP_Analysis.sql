@@ -28,7 +28,6 @@ RETURNS SETOF refcursor
 
              , GoodsGroupName        TVarChar
              , LabelName             VarChar (100)
-             , LabelName_rus         VarChar (100)
              , CompositionName       VarChar (50) -- TVarChar -- +
 
              , GoodsId               Integer
@@ -66,7 +65,6 @@ BEGIN
     CREATE TEMP TABLE _tmpOLAP (BrandName TVarChar
                               , GoodsGroupName TVarChar
                               , LabelName TVarChar
-                              , LabelName_Rus TVarChar
                               , LineFabricaName TVarChar
                               , CompositionName TVarChar
                               , GoodsId Integer
@@ -92,7 +90,6 @@ BEGIN
     INSERT INTO _tmpOLAP (BrandName
                         , GoodsGroupName
                         , LabelName
-                        , LabelName_Rus
                         , LineFabricaName
                         , CompositionName
                         , GoodsId 
@@ -123,7 +120,6 @@ BEGIN
              SELECT tmpOlap.BrandName
                   , tmpOlap.GoodsGroupName
                   , tmpOlap.LabelName
-                  , tmpOlap.LabelName_Rus
                   , tmpOlap.LineFabricaName
                   , tmpOlap.CompositionName
                   , tmpOlap.GoodsId
@@ -161,7 +157,6 @@ BEGIN
              GROUP BY tmpOlap.BrandName
                     , tmpOlap.GoodsGroupName
                     , tmpOlap.LabelName
-                    , tmpOlap.LabelName_Rus
                     , tmpOlap.LineFabricaName
                     , tmpOlap.CompositionName
                     , tmpOlap.GoodsId
@@ -209,7 +204,6 @@ BEGIN
          tmpData AS (SELECT tmpOlap.BrandName
                           , tmpOlap.GoodsGroupName
                           , tmpOlap.LabelName
-                          , tmpOlap.LabelName_Rus
                           , tmpOlap.LineFabricaName
                           , tmpOlap.CompositionName
                           , tmpOlap.GoodsId
@@ -524,7 +518,6 @@ BEGIN
          SELECT tmpData.BrandName
                           , tmpData.GoodsGroupName
                           , tmpData.LabelName
-                          , tmpData.LabelName_Rus
                           , tmpData.LineFabricaName
                           , tmpData.CompositionName
                           , tmpData.GoodsId
@@ -835,14 +828,13 @@ BEGIN
 
                           , 15395562          :: Integer  AS Color_Grey            --нежно серый -- 
 --                          , zc_Color_White()  :: Integer  AS Color_White 
-                          , ROW_NUMBER() OVER (ORDER BY tmpData.LabelName_Rus, tmpData.GoodsCode, tmpData.GoodsName)                                               :: integer AS Ord1 
-                          , ROW_NUMBER() OVER (ORDER BY tmpData.GroupsName3, tmpData.LabelName_Rus, tmpData.GoodsCode, tmpData.GoodsName)                          :: integer AS Ord2 
-                          , ROW_NUMBER() OVER (ORDER BY tmpData.LineFabricaName, tmpData.GroupsName3, tmpData.LabelName_Rus, tmpData.GoodsCode, tmpData.GoodsName) :: integer AS Ord3 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName)                                               :: integer AS Ord1 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.GroupsName3, tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName)                          :: integer AS Ord2 
+                          , ROW_NUMBER() OVER (ORDER BY tmpData.LineFabricaName, tmpData.GroupsName3, tmpData.LabelName, tmpData.GoodsCode, tmpData.GoodsName) :: integer AS Ord3 
                      FROM tmpData
                      GROUP BY tmpData.BrandName
                             , tmpData.GoodsGroupName
                             , tmpData.LabelName
-                            , tmpData.LabelName_Rus
                             , tmpData.LineFabricaName
                             , tmpData.CompositionName
                             , tmpData.GoodsId

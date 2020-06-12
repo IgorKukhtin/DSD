@@ -15,19 +15,19 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
     Height = 392
     TabOrder = 3
     ExplicitTop = 81
-    ExplicitWidth = 1150
+    ExplicitWidth = 1050
     ExplicitHeight = 392
     ClientRectBottom = 392
     ClientRectRight = 1150
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1150
+      ExplicitWidth = 1050
       ExplicitHeight = 392
       inherited cxGrid: TcxGrid
         Top = 83
         Width = 1150
         Height = 309
         ExplicitTop = 83
-        ExplicitWidth = 1150
+        ExplicitWidth = 1050
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -2467,19 +2467,9 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
             DataBinding.FieldName = 'LabelName'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 78
-          end
-          object LabelName_Rus: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' ('#1088#1091#1089'.)'
-            DataBinding.FieldName = 'LabelName_Rus'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 103
           end
           object GoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
@@ -5206,6 +5196,7 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         Align = alTop
         PopupMenu = PopupMenu
         TabOrder = 2
+        ExplicitWidth = 1050
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -5799,13 +5790,14 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
         HotZoneClassName = 'TcxMediaPlayer9Style'
         AlignSplitter = salTop
         Control = cxGrid1
+        ExplicitWidth = 1050
       end
     end
   end
   inherited Panel: TPanel
     Width = 1150
     Height = 55
-    ExplicitWidth = 1150
+    ExplicitWidth = 1050
     ExplicitHeight = 55
     inherited deStart: TcxDateEdit
       Left = 79
@@ -7699,7 +7691,6 @@ inherited Report_SaleOLAP_AnalysisForm: TReport_SaleOLAP_AnalysisForm
       item
       end>
     SummaryItemList = <>
-    PropertiesCellList = <>
     Left = 792
     Top = 96
   end
