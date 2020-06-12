@@ -3459,7 +3459,82 @@ begin
     while not CheckCDS.Eof do
     begin
 
-      if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
+      if (DiscountServiceForm.gCode > 0) and
+        (CheckCDS.FieldByName('PriceSale').asCurrency <> RemainsCDS.FieldByName('Price').asCurrency) then
+      begin
+
+      end
+      else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') and
+        (FormParams.ParamByName('Price1303').Value <> 0) then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          FormParams.ParamByName('Price1303').Value;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(FormParams.ParamByName('Price1303').Value *
+          (1 - Self.FormParams.ParamByName('SPTax').Value / 100), 0);
+        // и УСТАНОВИМ скидку - с процентом SPTax
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          Self.FormParams.ParamByName('SPTax').Value;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+      end
+      else if (Self.FormParams.ParamByName('SPTax').Value <> 0) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('Price').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          GetPrice(IfZero(RemainsCDS.FieldByName('PricePartionDate')
+          .asCurrency, RemainsCDS.FieldByName('Price').asCurrency) *
+          (1 - Self.FormParams.ParamByName('SPTax').Value / 100), 0);
+        // и УСТАНОВИМ скидку - с процентом SPTax
+        CheckCDS.FieldByName('ChangePercent').asCurrency :=
+          Self.FormParams.ParamByName('SPTax').Value;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('PriceSale').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value) -
+          GetSumm(CheckCDS.FieldByName('Amount').asCurrency,
+          CheckCDS.FieldByName('Price').asCurrency,
+          FormParams.ParamByName('RoundingDown').Value);
+      end
+      else if (RemainsCDS.FieldByName('isSP').AsBoolean = True) and
+        (Self.FormParams.ParamByName('InvNumberSP').Value <> '') then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('PriceSaleSP').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency :=
+          RemainsCDS.FieldByName('PriceSP').asCurrency;
+        // и УСТАНОВИМ скидку
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          CheckCDS.FieldByName('Amount').asCurrency *
+          (RemainsCDS.FieldByName('PriceSaleSP').asCurrency -
+          RemainsCDS.FieldByName('PriceSP').asCurrency);
+      end
+      else if (DiscountServiceForm.gCode in [2, 4]) and edPrice.Visible and
+        (abs(edPrice.Value) > 0.0001) then
+      begin
+        // на всяк случай - УСТАНОВИМ скидку еще разок
+        CheckCDS.FieldByName('PriceSale').asCurrency :=
+          RemainsCDS.FieldByName('Price').asCurrency;
+        CheckCDS.FieldByName('Price').asCurrency := edPrice.Value;
+        // и УСТАНОВИМ скидку
+        CheckCDS.FieldByName('ChangePercent').asCurrency := 0;
+        CheckCDS.FieldByName('SummChangePercent').asCurrency :=
+          CheckCDS.FieldByName('Amount').asCurrency *
+          (RemainsCDS.FieldByName('Price').asCurrency - edPrice.Value);
+      end
+      else if (FormParams.ParamByName('LoyaltyChangeSumma').Value = 0) and
         (Self.FormParams.ParamByName('PromoCodeID').Value > 0) and
         CheckIfGoodsIdInPromo(Self.FormParams.ParamByName('PromoCodeID').Value,
         CheckCDS.FieldByName('GoodsId').AsInteger) then
