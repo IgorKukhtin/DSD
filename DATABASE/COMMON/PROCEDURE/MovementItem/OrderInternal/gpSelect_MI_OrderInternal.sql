@@ -412,13 +412,14 @@ BEGIN
            -- Произв. далее ШТ
            , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountProduction_next AS NUMERIC (16, 1)) ELSE 0 END :: TFloat AS AmountProduction_next_sh   -- 
              -- *Прогн. ост. на срок
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST ((tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
                                                                                                                               + tmpMI.AmountProduction_old   * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
                                                                                                                               + tmpMI.AmountProduction_next  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
-                                                                                                                          AS NUMERIC (16, 1))  ELSE 0 END  :: TFloat AS AmountRemainsTerm_calc_sh
+                                                                                                                               ) / ObjectFloat_Weight.ValueData AS NUMERIC (16, 1))  ELSE 0 END  :: TFloat AS AmountRemainsTerm_calc_sh
              -- Прогн. ост.
-           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST (tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
+           , CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() AND ObjectFloat_Weight.ValueData > 0 THEN CAST ((tmpMI.AmountRemains - tmpMI.AmountPartnerPrior - tmpMI.AmountPartner
                                                                                                                               + tmpMI.AmountProduction_old  * CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh() THEN COALESCE (ObjectFloat_Weight.ValueData, 0) ELSE 1 END
+                                                                                                                              )  / ObjectFloat_Weight.ValueData
                                                                                                                           AS NUMERIC (16, 1))  ELSE 0 END  :: TFloat AS AmountRemains_calc_sh
              
               -- Ост. начальн.
@@ -682,5 +683,5 @@ ALTER FUNCTION gpSelect_MI_OrderInternal (Integer, Boolean, Boolean, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818'); -- FETCH ALL "<unnamed portal 1>";
--- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 1828419, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 16907320, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818'); -- FETCH ALL "<unnamed portal 1>";
+-- SELECT * FROM gpSelect_MI_OrderInternal (inMovementId:= 16907320, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2'); -- FETCH ALL "<unnamed portal 1>";

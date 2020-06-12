@@ -34,6 +34,8 @@ BEGIN
                                                         , CASE WHEN Object_InfoMoney_View.InfoMoneyId IN (zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                         , zc_Enum_InfoMoney_30101() -- Готовая продукция
                                                                                                         , zc_Enum_InfoMoney_30201() -- Мясное сырье
+
+                                                                                                        , zc_Enum_InfoMoney_30102() -- Доходы + Продукция + Тушенка
                                                                                                          )
                                                                     THEN TRUE
                                                                ELSE FALSE
@@ -109,9 +111,13 @@ BEGIN
                                        )
                      , tmpMI AS (SELECT MovementItem.Id                               AS MovementItemId
                                       , MovementItem.ObjectId                         AS GoodsId
-                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                                      , CASE WHEN tmpGoods.isGoodsKind = TRUE AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = 0 THEN zc_GoodsKind_Basis()
+                                             WHEN tmpGoods.isGoodsKind = TRUE THEN COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                             ELSE COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                        END AS GoodsKindId
                                       , MovementItem.Amount
                                  FROM MovementItem 
+                                      LEFT JOIN tmpGoods ON tmpGoods.GoodsId = MovementItem.ObjectId
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()

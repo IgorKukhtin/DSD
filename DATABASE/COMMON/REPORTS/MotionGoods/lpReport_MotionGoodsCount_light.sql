@@ -54,13 +54,19 @@ $BODY$
    DECLARE vbIsCLO_Member Boolean;
 BEGIN
 
+   IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpLocation'))
+   THEN
+        DELETE FROM _tmpLocation;
+   ELSE 
         CREATE TEMP TABLE _tmpLocation (LocationId Integer, DescId Integer, ContainerDescId Integer) ON COMMIT DROP;
-        INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
-           SELECT inLocationId AS LocationId -- Склад реализации  8459
-                , zc_ContainerLinkObject_Unit()  AS DescId
-                , zc_Container_Count()           AS ContainerDescId
-           ;
-  
+   END IF;
+
+   INSERT INTO _tmpLocation (LocationId, DescId, ContainerDescId)
+      SELECT inLocationId AS LocationId -- Склад реализации  8459
+           , zc_ContainerLinkObject_Unit()  AS DescId
+           , zc_Container_Count()           AS ContainerDescId
+      ;
+ 
 
   
 
@@ -71,9 +77,21 @@ BEGIN
 */
 
 
-      -- таблица -
-    CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
-    CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    -- таблица -
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpListContainer'))
+    THEN
+         DELETE FROM _tmpListContainer;
+    ELSE 
+         CREATE TEMP TABLE _tmpListContainer (LocationId Integer, ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, GoodsId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    END IF;
+
+    -- таблица -
+    IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.tables WHERE TABLE_NAME ILIKE ('_tmpContainer'))
+    THEN
+         DELETE FROM _tmpContainer;
+    ELSE 
+         CREATE TEMP TABLE _tmpContainer (ContainerDescId Integer, ContainerId_count Integer, ContainerId_begin Integer, LocationId Integer, CarId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoodsId Integer, AssetToId Integer, AccountId Integer, AccountGroupId Integer, Amount TFloat) ON COMMIT DROP;
+    END IF;
 
 
     -- все товары из проводок

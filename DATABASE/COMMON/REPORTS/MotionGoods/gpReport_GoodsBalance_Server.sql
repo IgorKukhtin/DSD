@@ -84,7 +84,7 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , CountEnd_sh_calc TFloat
              , CountEnd_Weight_calc TFloat
 
-            , CountLoss_sh     TFloat
+             , CountLoss_sh     TFloat
              , CountLoss_Weight TFloat
              , SummLoss         TFloat
              , PriceLoss        TFloat
@@ -130,6 +130,8 @@ RETURNS TABLE (AccountGroupName TVarChar, AccountDirectionName TVarChar
              , isPartionClose_calc Boolean
 
              , ColorB_GreenL Integer, ColorB_Yelow Integer, ColorB_Cyan Integer
+
+             , ContainerId_count Integer, ContainerId_begin Integer
               )
 AS
 $BODY$
@@ -544,7 +546,9 @@ BEGIN
                          )
 
      , tmpMIContainer_all AS (-- Остатки + Движение товара, т.е. собираются в 1 строку zc_Container_Count and zc_Container_Summ
-                              SELECT  tmpMIContainer.LocationId
+                              SELECT  tmpMIContainer.ContainerId_count
+                                    , tmpMIContainer.ContainerId_begin
+                                    , tmpMIContainer.LocationId
                                     , tmpMIContainer.GoodsId
                                     , tmpMIContainer.GoodsKindId
                                     , tmpMIContainer.PartionGoodsId
@@ -573,7 +577,9 @@ BEGIN
                                     , SUM (CASE WHEN tmpMIContainer.ContainerDescId = zc_Container_Summ()  THEN tmpMIContainer.RemainsEnd   ELSE 0 END) AS SummEnd
 
                                FROM tmpMIContainer
-                               GROUP BY tmpMIContainer.LocationId
+                               GROUP BY tmpMIContainer.ContainerId_count
+                                      , tmpMIContainer.ContainerId_begin
+                                      , tmpMIContainer.LocationId
                                       , tmpMIContainer.GoodsId
                                       , tmpMIContainer.GoodsKindId
                                       , tmpMIContainer.PartionGoodsId
@@ -807,7 +813,9 @@ BEGIN
                           GROUP BY tmp.GoodsId, tmp.GoodsKindId
                          )
          , tmpResult AS (-- ВСЕ данные, т.е. собираются в 1 строку
-                         SELECT tmpAll.LocationId
+                         SELECT tmpAll.ContainerId_count
+                              , tmpAll.ContainerId_begin
+                              , tmpAll.LocationId
                               , tmpAll.GoodsId
                               , tmpAll.GoodsKindId
                               , tmpAll.GoodsKindId_complete
@@ -858,7 +866,9 @@ BEGIN
 --                              , MIN (tmpAll.PartionGoodsDate) AS 
 
                          FROM (-- Не проведенное движение по zc_Movement_ProductionSeparate
-                               SELECT tmpMovement_all.LocationId
+                               SELECT 0 AS ContainerId_count
+                                    , 0 AS ContainerId_begin
+                                    , tmpMovement_all.LocationId
                                     , tmpMovement_all.GoodsId
                                     , tmpMovement_all.GoodsKindId
                                     , 0 AS GoodsKindId_complete
@@ -909,7 +919,9 @@ BEGIN
                                                            AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
                               UNION ALL
                                -- данные для кол-во в приходе (за весь период) + расход ПФ(ГП) за период + кол-ва батонов (за весь период)
-                               SELECT tmpMIContainer_Count.LocationId
+                               SELECT 0 AS ContainerId_count
+                                    , 0 AS ContainerId_begin
+                                    , tmpMIContainer_Count.LocationId
                                     , tmpMIContainer_Count.GoodsId
                                     , tmpMIContainer_Count.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
@@ -964,7 +976,9 @@ BEGIN
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                               UNION ALL
                                -- Остатки + Движение товара
-                               SELECT tmpMIContainer_all.LocationId
+                               SELECT tmpMIContainer_all.ContainerId_count
+                                    , tmpMIContainer_all.ContainerId_begin
+                                    , tmpMIContainer_all.LocationId
                                     , tmpMIContainer_all.GoodsId
                                     , tmpMIContainer_all.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
@@ -1051,7 +1065,9 @@ BEGIN
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                               UNION ALL
                                -- Приход с производства ГП
-                               SELECT tmpMIContainer_GP.LocationId
+                               SELECT 0 AS ContainerId_count
+                                    , 0 AS ContainerId_begin
+                                    , tmpMIContainer_GP.LocationId
                                     , tmpMIContainer_GP.GoodsId
                                     , tmpMIContainer_GP.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
@@ -1120,7 +1136,9 @@ BEGIN
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                               UNION ALL
                                -- остатки и движение батонов
-                               SELECT tmpContainer_CountCount.LocationId
+                               SELECT 0 AS ContainerId_count
+                                    , 0 AS ContainerId_begin
+                                    , tmpContainer_CountCount.LocationId
                                     , tmpContainer_CountCount.GoodsId
                                     , tmpContainer_CountCount.GoodsKindId
                                     , COALESCE (ObjectLink_GoodsKindComplete.ChildObjectId, 0)           AS GoodsKindId_complete
@@ -1174,7 +1192,9 @@ BEGIN
                                                         AND ObjectLink_GoodsKindComplete.DescId = zc_ObjectLink_PartionGoods_GoodsKindComplete()
                               ) AS tmpAll
 
-                        GROUP BY tmpAll.LocationId
+                        GROUP BY tmpAll.ContainerId_count
+                               , tmpAll.ContainerId_begin
+                               , tmpAll.LocationId
                                , tmpAll.GoodsId
                                , tmpAll.GoodsKindId
                                , tmpAll.GoodsKindId_complete
@@ -1475,6 +1495,9 @@ BEGIN
           , zc_Color_GreenL() :: Integer AS ColorB_GreenL
           , zc_Color_Yelow()  :: Integer AS ColorB_Yelow
           , zc_Color_Cyan()   :: Integer AS ColorB_Cyan
+          
+          , tmpResult.ContainerId_count :: Integer
+          , tmpResult.ContainerId_begin :: Integer
 
       FROM tmpResult
         LEFT JOIN tmpGoods_Term ON tmpGoods_Term.GoodsId     = tmpResult.GoodsId
@@ -1590,6 +1613,12 @@ BEGIN
          OR tmpResult.CountOut_calc <> 0
 
          OR tmpResult.CountIn_Weight_gp <> 0
+
+         /*OR tmpResult.Count_onCount_in <> 0
+         OR tmpResult.Count_onCount_out <> 0
+         OR tmpResult.CountStart_byCount <> 0
+         OR tmpResult.CountEnd_byCount <> 0
+         OR tmpResult.CountInventory_byCount <> 0*/
       ;
 
 END;
@@ -1610,4 +1639,4 @@ $BODY$
 -- тест
 -- SELECT * FROM gpReport_GoodsBalance_Server (inStartDate:= '01.09.2018', inEndDate:= '01.09.2018', inAccountGroupId:= 0, inUnitGroupId := 8459 , inLocationId := 0 , inGoodsGroupId := 1860 , inGoodsId := 0 , inIsInfoMoney:= TRUE, inIsAllMO:= TRUE, inIsAllAuto:= TRUE, inSession := '5');
 -- SELECT * FROM gpReport_GoodsBalance_Server(inStartDate := ('20.09.2018')::TDateTime , inEndDate := ('20.09.2018')::TDateTime , inAccountGroupId := 9015 , inUnitGroupId := 0 , inLocationId := 0 , inGoodsGroupId := 0 , inGoodsId := 0 , inIsInfoMoney := 'False' , inIsAllMO := 'True' , inIsAllAuto := 'True' ,  inSession := '5');
---select * from gpReport_GoodsBalance_Server(inStartDate := ('09.02.2020')::TDateTime , inEndDate := ('29.02.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 867706 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');
+-- select * from gpReport_GoodsBalance_Server(inStartDate := ('09.02.2020')::TDateTime , inEndDate := ('29.02.2020')::TDateTime , inAccountGroupId := 0 , inUnitGroupId := 0 , inLocationId := 8448 , inGoodsGroupId := 0 , inGoodsId := 867706 , inIsInfoMoney := 'False' , inIsAllMO := 'False' , inIsAllAuto := 'False' ,  inSession := '5');

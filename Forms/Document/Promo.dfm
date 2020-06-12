@@ -3,8 +3,9 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
+  ExplicitLeft = -593
   ExplicitWidth = 1382
-  ExplicitHeight = 722
+  ExplicitHeight = 719
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -692,9 +693,6 @@
           object tsPromoPartnerList: TcxTabSheet
             Caption = '2.2. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1076#1077#1090#1072#1083#1100#1085#1086')'
             ImageIndex = 1
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object grPartnerList: TcxGrid
               Left = 0
               Top = 0
@@ -1711,9 +1709,6 @@
     object cxTabSheetSign: TcxTabSheet
       Caption = #1069#1083#1077#1082#1090#1088#1086#1085#1085#1072#1103' '#1087#1086#1076#1087#1080#1089#1100
       ImageIndex = 4
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridSign: TcxGrid
         Left = 0
         Top = 0
@@ -1807,9 +1802,6 @@
     object cxTabSheetPlan: TcxTabSheet
       Caption = #1055#1083#1072#1085' '#1086#1090#1075#1088#1091#1079#1082#1080
       ImageIndex = 5
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridPlan: TcxGrid
         Left = 0
         Top = 0
@@ -2054,9 +2046,6 @@
     object cxTabSheetPromoStateKind: TcxTabSheet
       Caption = #1057#1086#1086#1073#1097#1077#1085#1080#1103
       ImageIndex = 6
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
@@ -2951,12 +2940,14 @@
     end
     object actPrint_Calc: TdsdPrintAction [19]
       Category = 'DSDLib'
-      TabSheet = cxTabSheetCalc
       MoveParams = <>
-      Enabled = False
-      StoredProcList = <>
+      StoredProc = spSelectCalc
+      StoredProcList = <
+        item
+          StoredProc = spSelectCalc
+        end>
       Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - '#1089#1082#1080#1076#1082#1072
       ImageIndex = 15
       DataSets = <
         item
@@ -3010,12 +3001,14 @@
     end
     object actPrint_Calc2: TdsdPrintAction [20]
       Category = 'DSDLib'
-      TabSheet = cxTabSheetCalc2
       MoveParams = <>
-      Enabled = False
-      StoredProcList = <>
+      StoredProc = spSelectCalc2
+      StoredProcList = <
+        item
+          StoredProc = spSelectCalc2
+        end>
       Caption = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
-      Hint = #1055#1083#1072#1085#1080#1088#1091#1077#1084#1099#1077' '#1088#1077#1079#1091#1083#1100#1090#1072#1090#1099' '#1072#1082#1094#1080#1080
+      Hint = #1050#1072#1083#1100#1082#1091#1083#1103#1090#1086#1088' - % '#1082#1086#1084#1087#1077#1085#1089#1072#1094#1080#1080
       ImageIndex = 15
       DataSets = <
         item
@@ -4310,6 +4303,10 @@
         item
           Visible = True
           ItemName = 'bbPrint_Calc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -5612,6 +5609,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 134
     Top = 385
   end
@@ -5773,6 +5771,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 254
     Top = 377
   end
@@ -6060,6 +6059,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 446
     Top = 553
   end
@@ -6178,6 +6178,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1272
     Top = 295
   end
@@ -6282,6 +6283,7 @@
       item
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1208
     Top = 359
   end
@@ -6318,7 +6320,7 @@
       end>
     PackSize = 1
     Left = 1012
-    Top = 376
+    Top = 360
   end
   object spInsertUpdate_Calc: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PromoGoods_Calc'
@@ -6566,6 +6568,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 16
     Top = 423
   end
@@ -6750,6 +6753,7 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 272
     Top = 591
   end
@@ -6898,6 +6902,7 @@
       item
       end>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 1176
     Top = 407
   end
