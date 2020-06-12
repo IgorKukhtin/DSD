@@ -18,7 +18,7 @@ BEGIN
   WHERE wms_MI_WeighingProduction.Id IN (SELECT MI_WP.Id
                                          FROM wms_to_host_message AS wms_message
                                               -- Наш Id задания на упаковку
-                                              INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId
+                                              INNER JOIN wms_MI_Incoming AS MI_Incoming ON MI_Incoming.Id = wms_message.MovementId :: Integer
                     
                                               INNER JOIN wms_Movement_WeighingProduction AS Movement_WP
                                                                                          ON Movement_WP.OperDate    = MI_Incoming.OperDate
