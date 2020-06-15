@@ -156,7 +156,8 @@ BEGIN
         FROM Movement_Promo_View AS Movement_Promo
              LEFT JOIN lpSelect_MI_Sign (inMovementId:= Movement_Promo.Id ) AS tmpSign ON tmpSign.Id = Movement_Promo.Id   -- эл.подписи  --
              LEFT JOIN Object AS Object_SignInternal ON Object_SignInternal.Id = tmpSign.SignInternalId
-        WHERE Movement_Promo.Id =  inMovementId;
+        WHERE Movement_Promo.Id =  inMovementId
+        LIMIT 1;
 
     END IF;
 

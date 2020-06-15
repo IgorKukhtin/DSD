@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Message_PromoStateKind (Integer, Integ
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Message_PromoStateKind(
  INOUT ioId                  Integer   , --
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inPromoStateKindId    Integer   ,
-    IN inIsQuickly           Boolean   ,
+    IN inPromoStateKindId    Integer   , -- Состояние
+    IN inIsQuickly           Boolean   , -- Приоритет - срочно
     IN inComment             TVarChar  ,
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -96,7 +96,7 @@ BEGIN
 
      END IF;
 
-         -- нашли последний - и сохранили в шапку
+     -- нашли последний - и сохранили в шапку
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PromoStateKind(), inMovementId, tmp.ObjectId)
            , lpInsertUpdate_MovementFloat (zc_MovementFloat_PromoStateKind(), inMovementId, tmp.Amount)
               -- сохранили свойство <Дата согласования>

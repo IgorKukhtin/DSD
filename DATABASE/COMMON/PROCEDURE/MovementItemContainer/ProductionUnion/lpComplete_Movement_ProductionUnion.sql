@@ -289,7 +289,7 @@ BEGIN
 
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
-                   , Movement.OperDate AS PartionGoodsDate
+                   , CASE WHEN vbIsPeresort = TRUE THEN COALESCE (MIDate_PartionGoods.ValueData, Movement.OperDate) ELSE Movement.OperDate END AS PartionGoodsDate
 
                    , MovementItem.Amount AS OperCount
                    , COALESCE (MIFloat_Count.ValueData, 0) AS OperCountCount
@@ -326,6 +326,9 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_PartionGoods
                                                 ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                                AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
                    LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
                                            ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId

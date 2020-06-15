@@ -10,8 +10,9 @@ CREATE OR REPLACE FUNCTION gpMovementItem_Promo_SetErased(
 RETURNS Boolean
 AS
 $BODY$
-   DECLARE vbUserId     Integer;
-   DECLARE vbMovementId Integer;
+   DECLARE vbUserId          Integer;
+   DECLARE vbMovementId      Integer;
+   DECLARE vbSignInternalId  Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_Promo());
@@ -60,7 +61,7 @@ BEGIN
 
 
          -- если надо убрать подпись
-         IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inMovementItemId AND MI.ObjectId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete()))
+         IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inMovementItemId AND MI.ObjectId IN (zc_Enum_PromoStateKind_Complete()))
          THEN
              -- убрали подпись
              PERFORM gpInsertUpdate_MI_Sign (vbMovementId, FALSE, vbUserId :: TVarChar);
@@ -77,6 +78,7 @@ BEGIN
                , lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), vbMovementId
                                                , CASE WHEN tmp.ObjectId = zc_Enum_PromoStateKind_Complete() THEN TRUE ELSE FALSE END
                                                 )
+                                                
          FROM (SELECT MI.ObjectId, MI.Amount
                FROM MovementItem AS MI
                     JOIN Object ON Object.Id = MI.ObjectId AND Object.DescId = zc_Object_PromoStateKind()
@@ -87,6 +89,33 @@ BEGIN
                LIMIT 1
               ) AS tmp;
 
+         -- Меняется модель (ЕСЛИ НАДО)
+         IF EXISTS (SELECT 1 FROM MovementItem AS MI WHERE MI.Id = inMovementItemId AND MI.ObjectId IN (zc_Enum_PromoStateKind_Main()))
+         THEN
+             -- нашли модель - "другую" - с isMain = FALSE, там по идее только один подписант ....
+             vbSignInternalId:= (SELECT gpSelect.Id
+                                 FROM gpSelect_Object_SignInternal (FALSE, vbUserId :: TVarChar) AS gpSelect
+                                 WHERE gpSelect.MovementDescId = zc_Movement_Promo()
+                                   AND gpSelect.isMain         = FALSE
+                                );
+             -- проверка
+             IF COALESCE (vbSignInternalId, 0) = 0
+             THEN
+                  RAISE EXCEPTION 'Ошибка.Не найдена информация для формирования только ОДНОЙ электронной подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = vbMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = vbMovementId));
+             END IF;
+   
+             -- надо поменять Модель
+             PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), vbMovementId, vbSignInternalId);
+   
+             -- если подписан - меняем Модель у самой подписи
+             PERFORM lpInsertUpdate_MovementItem (MI.Id, MI.DescId, vbSignInternalId, MI.MovementId, MI.Amount, NULL)
+             FROM MovementItem AS MI
+             WHERE MI.MovementId = vbMovementId
+               AND MI.DescId     = zc_MI_Sign()
+               AND MI.isErased   = FALSE
+              ;
+
+         END IF;
 
      ELSE
          -- удаление

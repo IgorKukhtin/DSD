@@ -124,7 +124,7 @@ begin
      TUpdater.AutomaticUpdateProgram;
      TUpdater.AutomaticCheckConnect;
      Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TMainForm, MainFormInstance);
+     Application.CreateForm(TMainForm, MainFormInstance);
   end
   else
     with TLoginForm.Create(Application) do

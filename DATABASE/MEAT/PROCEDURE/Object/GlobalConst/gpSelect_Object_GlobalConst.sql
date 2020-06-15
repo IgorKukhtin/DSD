@@ -36,12 +36,12 @@ BEGIN
                ) AS tmp;
      END IF;
 
--- !!!!!!!!!!!!!!!!!!!!!!!!!!
-PERFORM  pg_terminate_backend(a.pid)
-       , pg_cancel_backend(a.pId)
-FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_Movement_Sale%'     AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '3 MIN')
-                                                      OR (a.query ILIKE 'select * from gpExecSql(%' AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '5 MIN'))
-;
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!
+     PERFORM  pg_terminate_backend(a.pid)
+            , pg_cancel_backend(a.pId)
+     FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_Movement_Sale%'     AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '3 MIN')
+                                                           OR (a.query ILIKE 'select * from gpExecSql(%' AND a.query_start < CURRENT_TIMESTAMP - INTERVAL '5 MIN'))
+     ;
 
 -- !!!!!!!!!!!!!!!!!!!!!!!!!!
 -- perform pg_terminate_backend(a.pid)
@@ -58,7 +58,7 @@ FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_
 
 
      -- только Админ делает Update
-     IF vbUserId = 9457 -- Климентьев К.И.
+     /*IF vbUserId = 9457 -- Климентьев К.И.
      THEN
          CREATE TEMP TABLE _tmpMovement (MovementId Integer, DescId Integer, InvNumber TVarChar, OperDate TDateTime) ON COMMIT DROP;
          INSERT INTO _tmpMovement (MovementId, DescId, InvNumber, OperDate)
@@ -98,8 +98,10 @@ FROM pg_stat_activity AS a WHERE a.state = 'active' AND ((a.query ILIKE '%gpGet_
          UPDATE ObjectDate SET ValueData = COALESCE (vbOperDate_new, CURRENT_TIMESTAMP)
          WHERE ObjectDate.ObjectId = 418996 -- актуальность данных Integer
            AND ObjectDate.DescId = zc_ObjectDate_GlobalConst_ActualBankStatement();
-     END IF;
+     END IF;*/
 
+
+     -- Результат
      RETURN QUERY
        WITH tmpProcess AS (SELECT * FROM pg_stat_activity WHERE state = 'active' /*and UseName = 'postgres'*/)
           , tmpProcess_All AS (SELECT COUNT (*) :: TVarChar AS Res FROM tmpProcess)

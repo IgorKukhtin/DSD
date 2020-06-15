@@ -273,6 +273,7 @@ type
     bbSale_Order_diff: TSpeedButton;
     bbSale_Order_diffTax: TSpeedButton;
     bbPrint: TSpeedButton;
+    bbScaleLight_Goods_auto: TSpeedButton;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure PanelWeight_ScaleDblClick(Sender: TObject);
@@ -356,6 +357,7 @@ type
     procedure bbSale_Order_diffClick(Sender: TObject);
     procedure bbSale_Order_diffTaxClick(Sender: TObject);
     procedure bbPrintClick(Sender: TObject);
+    procedure bbScaleLight_Goods_autoClick(Sender: TObject);
   private
     oldGoodsId, oldGoodsCode : Integer;
     lTimerWeight_1, lTimerWeight_2, lTimerWeight_3 : Double;
@@ -2593,6 +2595,8 @@ begin
   bbChangeCount.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
   bbChangeCountPack.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
   bbChangePartionGoodsDate.Visible:=(not PanelPartionGoods.Visible) and (SettingMain.isModeSorting = FALSE);
+
+  bbScaleLight_Goods_auto.Visible:= SettingMain.isModeSorting = TRUE;
   //local enabled
   gbStartWeighing.Enabled:=(SettingMain.isGoodsComplete = TRUE)and (SettingMain.isModeSorting = FALSE);
   //
@@ -3330,6 +3334,70 @@ end;
 procedure TMainCehForm.bbSale_Order_diffTaxClick(Sender: TObject);
 begin
      with ParamsMovement do Print_Sale_Order(ParamByName('OrderExternalId').AsInteger,ParamByName('MovementId').AsInteger,FALSE,TRUE);
+end;
+{------------------------------------------------------------------------}
+procedure TMainCehForm.bbScaleLight_Goods_autoClick(Sender: TObject);
+var i : Integer;
+begin
+     with ParamsLight do
+     begin
+         if ParamsMI.ParamByName('MeasureId').AsInteger <> zc_Measure_sh then
+         begin
+           ShowMessage('Ошибка. Для товара с ед. изм. = <'+ParamByName('MeasureName').AsString+'> нельзя формировать данные в ручном режиме.');
+           exit;
+         end;
+         //
+         if ((ParamsLight.ParamByName('GoodsTypeKindId_Sh').AsInteger  = 0)
+          and(ParamsLight.ParamByName('GoodsTypeKindId_Nom').AsInteger = 0)
+          and(ParamsLight.ParamByName('GoodsTypeKindId_Ves').AsInteger = 0))
+         then begin
+           ShowMessage('Ошибка. Не определен Ш/К ящика.');
+           exit;
+         end;
+         //
+         if (ParamByName('WeightMin').AsFloat <> ParamByName('WeightMax').AsFloat)
+          or(ParamByName('WeightMin').AsFloat = 0)
+         then begin
+           ShowMessage('Ошибка. Мин. вес =  <'+FloatToStr(ParamByName('WeightMin').AsFloat)+'> Макс. вес = <'+FloatToStr(ParamByName('WeightMax').AsFloat)+'>, нельзя формировать данные в ручном режиме.');
+           exit;
+         end;
+         //
+         if (ParamByName('WeightMin_Sh').AsFloat <> ParamByName('WeightMax_Sh').AsFloat)
+          or(ParamByName('WeightMin_Sh').AsFloat = 0)
+         then begin
+           ShowMessage('Ошибка. Для категории "штучный" Мин. вес =  <'+FloatToStr(ParamsMI.ParamByName('WeightMin_Sh').AsFloat)+'> Макс. вес = <'+FloatToStr(ParamsMI.ParamByName('WeightMax_Sh').AsFloat)+'>, нельзя формировать данные в ручном режиме.');
+           exit;
+         end;
+     end;
+     //
+     //
+     with DialogNumberValueForm do
+     begin
+          LabelNumberValue.Caption:='Количество батонов с весом = '+FloatToStr(ParamsLight.ParamByName('WeightMin_Sh').AsFloat)+' кг.';
+          ActiveControl:=NumberValueEdit;
+          NumberValueEdit.Text:= FloatToStr(ParamsLight.ParamByName('CountOnBox_1').AsFloat);
+          if not Execute then exit;
+          //
+          //
+          if StrToInt(NumberValueEdit.Text) > ParamsLight.ParamByName('CountOnBox_1').AsFloat then
+          begin
+           ShowMessage('Ошибка. Кол-во не может превышать значение =  <'+FloatToStr(ParamsLight.ParamByName('CountOnBox_1').AsFloat)+'>.');
+           exit;
+          end;
+          //
+          for i:= 1 to StrToInt(NumberValueEdit.Text)
+          do begin
+               ParamsMI.ParamByName('RealWeight').AsFloat:= ParamsLight.ParamByName('WeightMin_Sh').AsFloat;
+               SetParams_OperCount;
+               // попробуем сохранить
+               Save_MI;
+               //
+               MyDelay(100);
+          end;
+
+
+          //
+     end;
 end;
 {------------------------------------------------------------------------}
 procedure TMainCehForm.actExitExecute(Sender: TObject);

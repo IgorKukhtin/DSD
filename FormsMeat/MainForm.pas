@@ -539,7 +539,7 @@ type
     actGlobalConst: TdsdOpenForm;
     N31: TMenuItem;
     N40: TMenuItem;
-    spRefresh: TdsdExecStoredProc;
+    actRefresh: TdsdExecStoredProc;
     spGetInfo: TdsdStoredProc;
     actPersonalBankAccount: TdsdOpenForm;
     miPersonalBankAccount: TMenuItem;
@@ -1114,9 +1114,27 @@ type
     miReport_BankAccount_Cash_Olap: TMenuItem;
     actReport_CheckBonusTest: TdsdOpenForm;
     miReport_CheckBonusTest: TMenuItem;
+    CDSGetMsg: TClientDataSet;
+    DSGetMsg: TDataSource;
+    cxGridGetMsg: TcxGrid;
+    cxGridGetMsgDBTableView: TcxGridDBTableView;
+    MsgText: TcxGridDBColumn;
+    cxGridGetMsgLevel: TcxGridLevel;
+    spGetMsg: TdsdStoredProc;
+    actRefreshMsg: TdsdExecStoredProc;
+    actRefreshMsg_after: TAction;
+    DBViewAddOn: TdsdDBViewAddOn;
+    Color_Text: TcxGridDBColumn;
+    MsgAddr: TcxGridDBColumn;
+    Color_Addr: TcxGridDBColumn;
+    ColorText_Addr: TcxGridDBColumn;
+    ColorText_Text: TcxGridDBColumn;
+    actUpdate: TdsdInsertUpdateAction;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure actRefreshMsg_afterExecute(Sender: TObject);
+    procedure actUpdateProgramExecute(Sender: TObject);
   private
     procedure ChangeKeyboard(var Message: TMessage); message WM_ChangeKeyboard;
   public
@@ -1130,6 +1148,23 @@ implementation
 {$R *.dfm}
 uses IdIPWatch;
 
+procedure TMainForm.actRefreshMsg_afterExecute(Sender: TObject);
+begin
+  inherited;
+  if CDSGetMsg.RecordCount = 0 then
+  begin
+      actRefreshMsg.EnabledTimer:= false;
+      cxGridGetMsg.Visible:= false;
+      cxGrid.Align:= alClient;
+  end
+  else if cxGridGetMsg.Visible = false then
+  begin
+      cxGridGetMsg.Visible:= true;
+      cxGrid.Align:= alBottom;
+  end;
+
+end;
+
 procedure TMainForm.actReport_OLAPSoldExecute(Sender: TObject);
 begin
   inherited;
@@ -1139,6 +1174,14 @@ begin
   finally
     Free;
   end;
+end;
+
+procedure TMainForm.actUpdateProgramExecute(Sender: TObject);
+begin
+  actRefresh.Execute;
+  actRefreshMsg.Execute;
+  //
+  inherited;
 end;
 
 procedure TMainForm.ChangeKeyboard(var Message: TMessage);

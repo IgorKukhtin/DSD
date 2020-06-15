@@ -43,7 +43,7 @@ BEGIN
 
 
       -- проверка - если все подписано
-      IF vbStrIdSign <> '' AND vbIndex = 0 AND vbIndexNo = 0
+      IF vbStrIdSign <> '' AND vbIndex = 0 AND vbIndexNo = 0 AND inPromoStateKindId <> zc_Enum_PromoStateKind_Main()
       THEN
           RAISE EXCEPTION 'Ошибка.Документ № <%> от <%> уже <Подписан>.Измененния невозможны.<%><%>'
                         , (SELECT InvNumber FROM Movement WHERE Id = inMovementId)
@@ -64,17 +64,17 @@ BEGIN
       END IF;*/
 
 
-      -- Меняется модель + подписали для: 1)В работе Исполнительный Директор ИЛИ 2)Согласован
-      IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
+      -- Меняется модель (ЕСЛИ НАДО) + подписали для: Согласован
+      IF inPromoStateKindId IN (zc_Enum_PromoStateKind_Complete())
       THEN
-          -- если еще не подписывали И №п/п=1 кто должен подписать И состояние = 2)Согласован
-          IF ((vbStrIdSign ='' AND vbIndexNo = 1) OR vbIndex = 1) AND inPromoStateKindId = zc_Enum_PromoStateKind_Complete()
+          -- если еще не подписывали И №п/п=1 кто должен подписать ИЛИ он уже подписал
+          IF (vbStrIdSign ='' AND vbIndexNo = 1) OR vbIndex = 1
           THEN
-              -- нашли модель - "другую"
+              -- нашли модель - "другую" - с isMain = FALSE, там по идее только один подписант = inUserId
               vbSignInternalId:= (SELECT gpSelect.Id
-                                   FROM gpSelect_Object_SignInternal (FALSE, inUserId :: TVarChar) AS gpSelect
-                                   WHERE gpSelect.MovementDescId = zc_Movement_Promo()
-                                     AND gpSelect.isMain         = FALSE
+                                  FROM gpSelect_Object_SignInternal (FALSE, inUserId :: TVarChar) AS gpSelect
+                                  WHERE gpSelect.MovementDescId = zc_Movement_Promo()
+                                    AND gpSelect.isMain         = FALSE
                                  );
               -- проверка
               IF COALESCE (vbSignInternalId, 0) = 0
@@ -82,47 +82,12 @@ BEGIN
                    RAISE EXCEPTION 'Ошибка.Не найдена информация для формирования только ОДНОЙ электронной подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
               END IF;
 
-              -- надо поменять Модель - находим с isMain = FALSE, там по идее только один подписант = inUserId
+              -- надо поменять Модель
               PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, vbSignInternalId);
 
-              -- если подписан - меняем Модель у подписи
+              -- если подписан - меняем Модель у самой подписи
               IF vbIndex = 1
               THEN
-                  -- так определили Id строки
-                  vbId:= CASE WHEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) <> '' THEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) :: Integer END;
-                  -- проверка
-                  IF COALESCE (vbId, 0) = 0
-                  THEN
-                       RAISE EXCEPTION 'Ошибка.Не найдена строка ОДНОЙ электронной подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
-                  END IF;
-                  -- поменяли
-                  PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, vbSignInternalId, MovementItem.MovementId, MovementItem.Amount, NULL)
-                  FROM MovementItem
-                  WHERE MovementItem.Id = vbId;
-
-              END IF;
-
-          -- если 1)В работе Исполнительный Директор
-          ELSEIF inPromoStateKindId = zc_Enum_PromoStateKind_Main()
-          THEN
-              -- надо удалить Модель
-              PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, NULL);
-
-              -- если подписан - меняем Модель у подписи
-              IF vbIndex = 1
-              THEN
-                  -- нашли модель
-                  vbSignInternalId:= (SELECT gpSelect.Id
-                                       FROM gpSelect_Object_SignInternal (FALSE, inUserId :: TVarChar) AS gpSelect
-                                       WHERE gpSelect.MovementDescId = zc_Movement_Promo()
-                                         AND gpSelect.isMain         = TRUE
-                                     );
-                  -- проверка
-                  IF COALESCE (vbSignInternalId, 0) = 0
-                  THEN
-                       RAISE EXCEPTION 'Ошибка.Не найдена информация для формирования больше ОДНОЙ электронной подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
-                  END IF;
-
                   -- так определили Id строки
                   vbId:= CASE WHEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) <> '' THEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) :: Integer END;
                   -- проверка
@@ -137,20 +102,62 @@ BEGIN
 
               END IF;
           END IF;
-
-          -- если НЕТ среди тех кто подписал
-          IF vbIndex = 0
+              
+          -- если inUserId еще не подписывал
+          IF vbIndex <> 1
           THEN
-              -- подписали
+              -- подписал
               PERFORM gpInsertUpdate_MI_Sign (inMovementId, TRUE, inUserId :: TVarChar);
+          END IF;
+
+
+      -- если 1)В работе Исполнительный Директор
+      ELSEIF inPromoStateKindId = zc_Enum_PromoStateKind_Main()
+      THEN
+          -- надо удалить Модель
+          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_SignInternal(), inMovementId, NULL);
+
+          -- если подписан - меняем Модель у существующей подписи
+          IF vbIndex = 1 OR (vbStrIdSign <> '' AND vbStrIdSignNo = '')
+          THEN
+              -- нашли модель
+              vbSignInternalId:= (SELECT gpSelect.Id
+                                   FROM gpSelect_Object_SignInternal (FALSE, inUserId :: TVarChar) AS gpSelect
+                                   WHERE gpSelect.MovementDescId = zc_Movement_Promo()
+                                     AND gpSelect.isMain         = TRUE
+                                 );
+              -- проверка
+              IF COALESCE (vbSignInternalId, 0) = 0
+              THEN
+                   RAISE EXCEPTION 'Ошибка.Не найдена информация для формирования больше ОДНОЙ электронной подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+              END IF;
+
+              -- так определили Id существующей подписи
+              IF vbIndex = 0 AND vbIndexNo = 0
+              THEN
+                  -- берем первую
+                  vbId:= CASE WHEN zfCalc_Word_Split (vbStrMIIdSign, ',', 1) <> '' THEN zfCalc_Word_Split (vbStrMIIdSign, ',', 1) :: Integer END;
+              ELSE
+                  -- берем для этого inUserId
+                  vbId:= CASE WHEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) <> '' THEN zfCalc_Word_Split (vbStrMIIdSign, ',', vbIndex) :: Integer END;
+              END IF;
+              -- проверка
+              IF COALESCE (vbId, 0) = 0
+              THEN
+                   RAISE EXCEPTION 'Ошибка.Не найдена строка ОДНОЙ существующей подписи в документе № <%> от <%>.', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), zfConvert_DateToString ((SELECT OperDate FROM Movement WHERE Id = inMovementId));
+              END IF;
+              -- поменяли
+              PERFORM lpInsertUpdate_MovementItem (MovementItem.Id, MovementItem.DescId, vbSignInternalId, MovementItem.MovementId, MovementItem.Amount, NULL)
+              FROM MovementItem
+              WHERE MovementItem.Id = vbId;
+
           END IF;
 
       END IF;
 
 
       -- если надо убрать подпись
-      IF inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Main(), zc_Enum_PromoStateKind_Complete())
-         AND vbIndexNo = 0 AND vbIndex = 1
+      IF inPromoStateKindId NOT IN (zc_Enum_PromoStateKind_Complete(), zc_Enum_PromoStateKind_Main()) AND vbPromoStateKindId_old = zc_Enum_PromoStateKind_Complete()
       THEN
           -- убрали подпись
           PERFORM gpInsertUpdate_MI_Sign (inMovementId, FALSE, inUserId :: TVarChar);

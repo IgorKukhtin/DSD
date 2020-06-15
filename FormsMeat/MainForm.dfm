@@ -1,11 +1,11 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 196
+  ClientHeight = 210
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 254
+  ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -38,6 +38,8 @@
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.FocusRect = False
+      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.GridLines = glNone
       OptionsView.GroupByBox = False
@@ -62,6 +64,88 @@
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object cxGridGetMsg: TcxGrid [1]
+    Left = 0
+    Top = 81
+    Width = 1360
+    Height = 129
+    Align = alClient
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = cxcbsNone
+    TabOrder = 1
+    Visible = False
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = True
+    object cxGridGetMsgDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DSGetMsg
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.ColumnHeaderHints = False
+      OptionsCustomize.ColumnFiltering = False
+      OptionsCustomize.ColumnGrouping = False
+      OptionsCustomize.ColumnHidingOnGrouping = False
+      OptionsCustomize.ColumnMoving = False
+      OptionsCustomize.ColumnSorting = False
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.FocusRect = False
+      OptionsView.ScrollBars = ssNone
+      OptionsView.CellAutoHeight = True
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GridLines = glNone
+      OptionsView.GroupByBox = False
+      OptionsView.Header = False
+      Styles.Background = cxStyle1
+      Styles.Content = cxStyle1
+      Styles.Inactive = cxStyle1
+      Styles.Selection = cxStyle1
+      object MsgAddr: TcxGridDBColumn
+        DataBinding.FieldName = 'MsgAddr'
+        Width = 20
+      end
+      object MsgText: TcxGridDBColumn
+        DataBinding.FieldName = 'MsgText'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Options.Editing = False
+        Width = 100
+      end
+      object ColorText_Addr: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorText_Addr'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object Color_Addr: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Addr'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object ColorText_Text: TcxGridDBColumn
+        DataBinding.FieldName = 'ColorText_Text'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+      object Color_Text: TcxGridDBColumn
+        DataBinding.FieldName = 'Color_Text'
+        Visible = False
+        VisibleForCustomization = False
+        Width = 55
+      end
+    end
+    object cxGridGetMsgLevel: TcxGridLevel
+      GridView = cxGridGetMsgDBTableView
     end
   end
   inherited ActionList: TActionList
@@ -339,10 +423,10 @@
       isShowModal = False
     end
     object actPriceListItem_Separate: TdsdOpenForm [20]
-      Category = #1048#1089#1090#1086#1088#1080#1080
+      Category = #1055#1088#1072#1081#1089#1099
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074' ('#1075#1088#1072#1092#1080#1082')'
-      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074' ('#1075#1088#1072#1092#1080#1082')'
+      Hint = #1048#1089#1090#1086#1088#1080#1103' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItem_SeparateForm'
       FormNameParam.Value = 'TPriceListItem_SeparateForm'
       FormNameParam.DataType = ftString
@@ -5117,10 +5201,10 @@
       isShowModal = False
     end
     object actPriceListItem: TdsdOpenForm
-      Category = #1048#1089#1090#1086#1088#1080#1080
+      Category = #1055#1088#1072#1081#1089#1099
       MoveParams = <>
-      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
-      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Caption = #1055#1088#1072#1081#1089' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1055#1088#1072#1081#1089' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItemForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -6431,18 +6515,18 @@
       GuiParams = <>
       isShowModal = False
     end
-    object spRefresh: TdsdExecStoredProc
+    object actRefresh: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
       EnabledTimer = True
-      Timer = spRefresh.Timer
+      Timer = actRefresh.Timer
       StoredProc = spGetInfo
       StoredProcList = <
         item
           StoredProc = spGetInfo
         end>
-      Caption = 'spRefresh'
+      Caption = 'actRefresh'
     end
     object actPersonalCashKiev: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
@@ -7152,6 +7236,62 @@
         end>
       isShowModal = False
     end
+    object actRefreshMsg: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefreshMsg_after
+      PostDataSetBeforeExecute = False
+      EnabledTimer = True
+      Timer = actRefreshMsg.Timer
+      StoredProc = spGetMsg
+      StoredProcList = <
+        item
+          StoredProc = spGetMsg
+        end>
+      Caption = 'actRefreshMsg'
+    end
+    object actRefreshMsg_after: TAction
+      Category = 'DSDLib'
+      Caption = 'actRefreshMsg_after'
+      OnExecute = actRefreshMsg_afterExecute
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TPromoForm'
+      FormNameParam.Value = 'TPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = CDSGetMsg
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Active = False
@@ -7177,8 +7317,8 @@
       end>
   end
   inherited MainMenu: TMainMenu
-    Left = 456
-    Top = 64
+    Left = 304
+    Top = 8
     object miGoodsDocuments: TMenuItem [0]
       Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       object miIncome: TMenuItem
@@ -7786,7 +7926,7 @@
       end
     end
     object miHistory: TMenuItem [7]
-      Caption = #1048#1089#1090#1086#1088#1080#1080
+      Caption = #1055#1088#1072#1081#1089#1099
       object miPriceListItem: TMenuItem
         Action = actPriceListItem
       end
@@ -9023,7 +9163,7 @@
     Top = 128
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 5
+    Left = 37
     Top = 5
     PixelsPerInch = 96
     object cxStyle1: TcxStyle
@@ -9058,8 +9198,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 944
-    Top = 128
+    Left = 632
+    Top = 80
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -9075,8 +9215,8 @@
         DataType = ftString
         MultiSelectSeparator = ','
       end>
-    Left = 874
-    Top = 112
+    Left = 578
+    Top = 104
   end
   object spProtocol_isExit: TdsdStoredProc
     StoredProcName = 'gpInsert_LoginProtocol'
@@ -9116,5 +9256,79 @@
     PackSize = 1
     Left = 216
     Top = 152
+  end
+  object CDSGetMsg: TClientDataSet
+    Aggregates = <>
+    Filtered = True
+    Params = <>
+    Left = 536
+    Top = 24
+  end
+  object DSGetMsg: TDataSource
+    DataSet = CDSGetMsg
+    Left = 608
+    Top = 24
+  end
+  object spGetMsg: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_GlobalMsg'
+    DataSet = CDSGetMsg
+    DataSets = <
+      item
+        DataSet = CDSGetMsg
+      end>
+    Params = <
+      item
+        Name = 'inIP'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IP_str'
+        DataType = ftString
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 688
+    Top = 24
+  end
+  object DBViewAddOn: TdsdDBViewAddOn
+    View = cxGridGetMsgDBTableView
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <
+      item
+        ColorColumn = MsgAddr
+        ValueColumn = ColorText_Addr
+        ColorInValueColumn = False
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MsgText
+        ValueColumn = ColorText_Text
+        ColorInValueColumn = False
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MsgAddr
+        BackGroundValueColumn = Color_Addr
+        ColorInValueColumn = False
+        ColorValueList = <>
+      end
+      item
+        ColorColumn = MsgText
+        BackGroundValueColumn = Color_Text
+        ColorInValueColumn = False
+        ColorValueList = <>
+      end>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    KeepSelectColor = True
+    PropertiesCellList = <>
+    Left = 432
+    Top = 8
   end
 end

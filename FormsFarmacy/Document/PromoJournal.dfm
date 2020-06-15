@@ -9,8 +9,10 @@ inherited PromoJournalForm: TPromoJournalForm
   AddOnFormData.AddOnFormRefresh.KeyField = 'Id'
   AddOnFormData.AddOnFormRefresh.KeyParam = 'inMovementId'
   AddOnFormData.AddOnFormRefresh.GetStoredProc = spGet_Movement_Promo
+  ExplicitLeft = 4
+  ExplicitTop = -69
   ExplicitWidth = 785
-  ExplicitHeight = 529
+  ExplicitHeight = 526
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,6 +29,7 @@ inherited PromoJournalForm: TPromoJournalForm
       inherited cxGrid: TcxGrid
         Width = 769
         Height = 434
+        ExplicitLeft = -3
         ExplicitWidth = 769
         ExplicitHeight = 434
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -471,8 +474,8 @@ inherited PromoJournalForm: TPromoJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 488
-    Top = 416
+    Left = 256
+    Top = 168
   end
   inherited PopupMenu: TPopupMenu
     Left = 8
@@ -499,8 +502,8 @@ inherited PromoJournalForm: TPromoJournalForm
     Top = 216
   end
   inherited FormParams: TdsdFormParams
-    Left = 32
-    Top = 400
+    Left = 56
+    Top = 288
   end
   inherited spMovementReComplete: TdsdStoredProc
     StoredProcName = 'gpReComplete_Movement_Promo'
