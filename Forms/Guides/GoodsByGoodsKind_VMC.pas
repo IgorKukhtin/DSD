@@ -122,6 +122,10 @@ type
     WmsCellNum: TcxGridDBColumn;
     actGoods_shOpenChoice: TOpenChoiceForm;
     actGoodsKind_shOpenForm: TOpenChoiceForm;
+    ProtocolGoodsPropertyBoxId_2: TdsdOpenForm;
+    ProtocolGoodsPropertyBoxId: TdsdOpenForm;
+    bbProtocolGoodsPropertyBoxId: TdxBarButton;
+    bbProtocolGoodsPropertyBoxId_2: TdxBarButton;
   private
     { Private declarations }
   public
