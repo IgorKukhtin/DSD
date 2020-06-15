@@ -266,10 +266,24 @@ object dmData: TdmData
       
         'where ((type='#39'order_status_changed'#39') or (type='#39'receiving_result'#39 +
         ')) '
-      '  and (status= '#39'error'#39')   '
+      '  and (status= '#39'error'#39')'
+      '  and (start_date between :startdate and :enddate)   '
       'order by id desc')
     Left = 56
     Top = 184
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
   end
   object qryAlanGrid: TFDQuery
     Connection = FDC_alan
@@ -284,19 +298,18 @@ object dmData: TdmData
       'where (msg.done = false) '
       '  and (msg.error = true) '
       '  and (site= '#39'A'#39') '
+      '  and (operdate between :startDate and :endDate)'
       'order by err.header_id desc')
     Left = 136
     Top = 184
-  end
-  object mtbTemp: TFDMemTable
-    FetchOptions.AssignedValues = [evMode]
-    FetchOptions.Mode = fmAll
-    ResourceOptions.AssignedValues = [rvSilentMode]
-    ResourceOptions.SilentMode = True
-    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.AutoCommitUpdates = True
-    Left = 208
-    Top = 184
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ENDDATE'
+        ParamType = ptInput
+      end>
   end
 end

@@ -5,7 +5,12 @@ interface
 const
   cINIFolder = 'SendDataWMS';
 
-  cExceptionMsg = '[%s] %s';
+  // время
+  c1Sec = 1000;
+
+  // шаблоны сообщений
+  cExceptionMsg       = '[%s] %s';
+  cThreadExceptionMsg = '[%s] in thread %s - %s';
 
   // Error Xml Attribute not exists
   cErrXmlAttributeNotExists = Low(Integer);

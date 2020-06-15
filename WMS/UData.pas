@@ -31,7 +31,6 @@ type
     dsAlan: TDataSource;
     qryWMSGrid: TFDQuery;
     qryAlanGrid: TFDQuery;
-    mtbTemp: TFDMemTable;
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
     function gpInsert_wms_Message(spName, GUID: string): Integer;
@@ -893,17 +892,16 @@ begin
     DoneQry   := update_wms_to_host_header_message_done;
     SelectQry := select_wms_to_host_message;
     ExecQry   := alan_exec_qry;
-    WMSTrans  := FDT_wms;
   end;
 
-  wmsImport := TImportWMS.Create(dataObjects);
+  wmsImport := TImportWMS.Create(dataObjects, AMsgProc);
   try
     try
       // пакет <order_status_changed>
       if Assigned(AMsgProc) then
         AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
 
-      bOrderStatusChanged := wmsImport.ImportPacket(pknOrderStatusChanged, AMsgProc);
+      bOrderStatusChanged := wmsImport.ImportPacket(pknOrderStatusChanged);
       if bOrderStatusChanged and Assigned(AMsgProc) then
         AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
 
@@ -911,7 +909,7 @@ begin
       if Assigned(AMsgProc) then
         AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknReceivingResult)]));
 
-      bReceivingResult := wmsImport.ImportPacket(pknReceivingResult, AMsgProc);
+      bReceivingResult := wmsImport.ImportPacket(pknReceivingResult);
       if bReceivingResult and Assigned(AMsgProc) then
         AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknReceivingResult)]));
 

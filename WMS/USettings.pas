@@ -59,7 +59,7 @@ const
 
   // Default values
   cTimerIntervalDef = 10000;
-  cAlanServerDef = 'project-vds.vds.colocall.com';
+  cAlanServerDef = 'integer-srv.alan.dp.ua';
   cWMSDatabaseDef = '(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=wms-db-1.alan.dp.ua)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=wmsdb)))';
 
 function IsService: Boolean;

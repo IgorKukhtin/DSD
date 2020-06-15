@@ -1,6 +1,11 @@
 program SendData_WMS;
 
 uses
+  madExcept,
+  madLinkDisAsm,
+  madListHardware,
+  madListProcesses,
+  madListModules,
   Vcl.Forms,
   Main in 'Main.pas' {MainForm},
   UData in 'UData.pas' {dmData: TDataModule},
@@ -8,7 +13,9 @@ uses
   UConstants in 'UConstants.pas',
   ULog in 'ULog.pas',
   UImportWMS in 'UImportWMS.pas',
-  UDefinitions in 'UDefinitions.pas';
+  UDefinitions in 'UDefinitions.pas',
+  UQryThread in 'UQryThread.pas',
+  UCommon in 'UCommon.pas';
 
 {$R *.res}
 
