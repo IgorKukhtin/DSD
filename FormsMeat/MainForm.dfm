@@ -1,11 +1,9 @@
 ﻿inherited MainForm: TMainForm
-  ClientHeight = 210
   ClientWidth = 1360
   KeyPreview = True
   Position = poDesigned
   OnClose = FormClose
   ExplicitWidth = 1376
-  ExplicitHeight = 265
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid [0]
@@ -70,7 +68,7 @@
     Left = 0
     Top = 81
     Width = 1360
-    Height = 129
+    Height = 144
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -7294,7 +7292,6 @@
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Active = False
     Left = 48
     Top = 64
   end
@@ -9291,6 +9288,7 @@
     Top = 24
   end
   object DBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridGetMsgDBTableView
     OnDblClickActionList = <
       item
