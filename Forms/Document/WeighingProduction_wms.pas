@@ -159,6 +159,8 @@ type
     spSelectPrintNoGroup: TdsdStoredProc;
     actPrintNoGroup: TdsdPrintAction;
     bbPrintNoGroup: TdxBarButton;
+    actOpenWeighingProductionForm: TdsdOpenForm;
+    bbOpenWeighingProductionForm: TdxBarButton;
   private
   public
   end;

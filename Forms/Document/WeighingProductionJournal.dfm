@@ -1134,6 +1134,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

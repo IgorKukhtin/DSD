@@ -3500,11 +3500,10 @@ end;
 
   procedure TLoadFormTest.LoadWeighingProduction_wmsFormTest;
  begin
- {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsForm');
   //
-  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProduction_wmsJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProduction_wmsJournalForm');
   exit;
