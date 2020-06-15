@@ -450,6 +450,14 @@ inherited CheckJournalForm: TCheckJournalForm
             Options.Editing = False
             Width = 66
           end
+          object CheckSourceKindName: TcxGridDBColumn
+            Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'CheckSourceKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 96
+          end
         end
       end
     end
@@ -1083,7 +1091,7 @@ inherited CheckJournalForm: TCheckJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','

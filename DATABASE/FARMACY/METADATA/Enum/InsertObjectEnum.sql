@@ -4252,10 +4252,30 @@ BEGIN
 END $$;
 
 
+--Проверка и погашение рецептов по доступным лекарствам
+DO $$
+BEGIN
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_Id() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_Id' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_be() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_be' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_ClientId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_ClientId' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_ClientSecret() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_ClientSecret' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_IntegrationClient() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_IntegrationClient' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+  CREATE OR REPLACE FUNCTION zc_Enum_Helsi_UserName() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Helsi_UserName' AND DescId = zc_ObjectString_HelsiEnum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+END $$;
+
+DO $$
+BEGIN
+     --- !!! Источник чека
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_CheckSourceKind_Liki24(), inDescId:= zc_Object_CheckSourceKind(), inCode:= 1, inName:= 'Загружено с сайта Ликы24',             inEnumName:= 'zc_Enum_CheckSourceKind_Liki24');
+     
+END $$;
+
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.    Воробкало А.А.  Ярошенко Р.Ф.  Шаблий О.В.
+ 15.06.20                                                                                                   * zc_Enum_CheckSourceKind_Liki24
  24.04.19                                                                                                   * Проверка и погашение рецептов по доступным лекарствам
  02.04.19         * Загрузка Цен в справочник товаров сети
  07.01.19                                                                                                   * zc_Enum_GlobalConst_ConnectReportParam

@@ -69,8 +69,8 @@ BEGIN
 
               SELECT MovementLinkObject_From.ObjectId                                           AS UnitID
                    , CASE WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate1 THEN 200
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN 400
-                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN 750 END::TFloat AS SummaSUN1
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate2 THEN 200
+                          WHEN date_trunc('day', MovementDate_Insert.ValueData) = vbOparDate3 THEN 350 END::TFloat AS SummaSUN1
               FROM tmpMovement AS Movement
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = Movement.Id
