@@ -1198,17 +1198,26 @@ begin
              //
 
              if Assigned(ValueColumn) and (AViewInfo.GridRecord.ValueCount > ValueColumn.Index) then
-                if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then begin
-                   ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+                if not VarIsNull(AViewInfo.GridRecord.Values[ValueColumn.Index]) then
+                begin
+                   // иначе надо оставить цвет без изменения
+                   if AViewInfo.GridRecord.Values[ValueColumn.Index] >= 0
+                   then ACanvas.Font.Color := AViewInfo.GridRecord.Values[ValueColumn.Index];
+
                    bManual := True;
                 end;
              if Assigned(BackGroundValueColumn) and (AViewInfo.GridRecord.ValueCount > BackGroundValueColumn.Index) then
-                if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then begin
+                if not VarIsNull(AViewInfo.GridRecord.Values[BackGroundValueColumn.Index]) then
                 begin
-                  j := BackGroundValueColumn.Index;
-                  ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
-                  bManual := True;
-                end;
+                  begin
+                    j := BackGroundValueColumn.Index;
+
+                    // иначе надо оставить цвет без изменения
+                    if AViewInfo.GridRecord.Values[BackGroundValueColumn.Index] >= 0
+                    then ACanvas.Brush.Color := AViewInfo.GridRecord.Values[BackGroundValueColumn.Index];
+
+                    bManual := True;
+                  end;
                 end;
              end;
           end
@@ -1322,15 +1331,27 @@ begin
               if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
                  FStyle.TextColor := ARecord.Values[ValueColumn.Index];
                  // if isBold_calc = true then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
-                 AStyle := FStyle
+
+                 //
+                 if Assigned(AStyle) then FStyle.Color:= AStyle.Color;
+                 // иначе надо оставить стиль без изменения
+                 if ARecord.Values[ValueColumn.Index] >= 0
+                 then AStyle := FStyle;
+
               end;
            if Assigned(BackGroundValueColumn) and (ARecord.ValueCount > BackGroundValueColumn.Index) then
-              if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then begin
+              if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then
               begin
-                j := BackGroundValueColumn.Index;
-                FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
-              end;
-                 AStyle := FStyle
+                begin
+                  j := BackGroundValueColumn.Index;
+                  FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
+                end;
+                //
+                if Assigned(AStyle) then FStyle.TextColor:= AStyle.TextColor;
+                // иначе надо оставить стиль без изменения
+                if ARecord.Values[BackGroundValueColumn.Index] >= 0
+                then AStyle := FStyle;
+
               end;
            end;
         end
@@ -1345,12 +1366,19 @@ begin
               if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
                  FStyle.TextColor := ARecord.Values[ValueColumn.Index];
                  // if (isBold_calc = true)and Assigned(FStyle.Font) then FStyle.Font.Style:= [fsBold] else if Assigned(FStyle.Font) then FStyle.Font.Style:= [];
-                 AStyle := FStyle
+
+                 // иначе надо оставить стиль без изменения
+                 if ARecord.Values[ValueColumn.Index] >= 0
+                 then AStyle := FStyle;
+
               end;
            if Assigned(BackGroundValueColumn) then
               if not VarIsNull(ARecord.Values[BackGroundValueColumn.Index]) then begin
                  FStyle.Color := ARecord.Values[BackGroundValueColumn.Index];
-                 AStyle := FStyle
+                 // иначе надо оставить стиль без изменения
+                 if ARecord.Values[BackGroundValueColumn.Index] >= 0
+                 then AStyle := FStyle;
+
               end;
         end;
       end;
@@ -3023,6 +3051,7 @@ var Column: TcxGridColumn;
     i, j: integer;
     isBold_calc:Boolean;
 begin
+
   if Assigned(FOnGetContentStyleEvent) then
      FOnGetContentStyleEvent(Sender, ACell, AStyle);
 
