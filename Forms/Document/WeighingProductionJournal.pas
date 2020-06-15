@@ -125,6 +125,11 @@ type
     actPrintSaleOrder: TdsdPrintAction;
     spSelectPrint_SaleOrder: TdsdStoredProc;
     bbPrintSaleOrder: TdxBarButton;
+    actGetForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    macOpenDocument: TMultiAction;
+    getMovementForm: TdsdStoredProc;
+    bbOpenDocument: TdxBarButton;
   private
   public
   end;
