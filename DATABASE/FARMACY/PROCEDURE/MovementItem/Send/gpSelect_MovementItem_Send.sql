@@ -638,6 +638,12 @@ BEGIN
                                     AND MIContainer_Count.isActive = NOT vbisDeferred
                                   )   
 
+         , tmpMIDate_PartionGoods AS (SELECT MIDate_PartionGoods.*
+                                      FROM MovementItemDate AS MIDate_PartionGoods
+                                      WHERE MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                        AND MIDate_PartionGoods.MovementItemId IN (SELECT DISTINCT tmpMIContainerSend.MIIncomeID FROM tmpMIContainerSend)
+                             )
+                             
          , tmpMIContainerAll AS (SELECT MIContainer_Count.MovementItemId           AS MovementItemId
                                       , MIContainer_Count.Amount                   AS Amount
                                       , MIFloat_Price.ValueData                    AS Price
@@ -659,7 +665,7 @@ BEGIN
                                                   ON MIFloat_PriceWithVAT.MovementItemId = MIContainer_Count.MIIncomeID
                                                  AND MIFloat_PriceWithVAT.DescId = zc_MIFloat_PriceWithVAT()
                                     
-                                      LEFT JOIN MovementItemDate  AS MIDate_ExpirationDate
+                                      LEFT JOIN tmpMIDate_PartionGoods  AS MIDate_ExpirationDate
                                              ON MIDate_ExpirationDate.MovementItemId = MIContainer_Count.MIIncomeID 
                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
                                  )
