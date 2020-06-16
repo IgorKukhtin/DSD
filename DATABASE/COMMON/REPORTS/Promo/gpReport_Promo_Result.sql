@@ -171,8 +171,8 @@ BEGIN
                    , MI_PromoGoods.PriceWithVAT
                    , MI_PromoGoods.PriceSale
                    , MI_PromoGoods.GoodsWeight
-                   , CASE WHEN inisGoodsKind = TRUE THEN MI_PromoGoods.GoodsKindName ELSE '' END
-                   , CASE WHEN inisGoodsKind = TRUE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
+                   , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindName ELSE '' END
+                   , CASE WHEN inisGoodsKind = FALSE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
                    , MIFloat_PriceIn1.ValueData
                    , ObjectString_Goods_GoodsGroupFull.ValueData
               )
@@ -299,7 +299,7 @@ BEGIN
           , (MI_PromoGoods.Price_Diff * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))    :: TFloat AS Profit_Virt
           , (MI_PromoGoods.Price * COALESCE (MI_PromoGoods.AmountRealWeight, 0))         :: TFloat AS SummReal
           , (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0) ) :: TFloat AS SummPromo
-          , 0                                                                            :: TFloat    AS ContractCondition      -- Бонус сети, %
+          , 0                                                                            :: TFloat AS ContractCondition      -- Бонус сети, %
           
           , CASE WHEN COALESCE (MI_PromoGoods.PriceIn1, 0) <> 0 AND COALESCE (MI_PromoGoods.AmountSaleWeight, 0) <> 0
                  THEN (MI_PromoGoods.PriceWithVAT * COALESCE (MI_PromoGoods.AmountSaleWeight, 0))

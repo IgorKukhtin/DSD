@@ -118,6 +118,11 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
               Format = ',0.####'
               Kind = skSum
               Column = Profit
+            end
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = GoodsName
             end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
