@@ -3,7 +3,7 @@ inherited SendForm: TSendForm
   ClientHeight = 617
   ClientWidth = 1001
   ExplicitWidth = 1017
-  ExplicitHeight = 655
+  ExplicitHeight = 656
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1583,7 +1583,6 @@ inherited SendForm: TSendForm
     object actOpenLossForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
-      BeforeAction = actOpenConfirmedDialog
       Caption = 'actOpenLossForm'
       FormName = 'TLossForm'
       FormNameParam.Value = 'TLossForm'
@@ -1989,7 +1988,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'isConfirmed'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end>
@@ -2171,7 +2170,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'isReceived'
-        Value = 'False'
+        Value = False
         Component = cbReceived
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -2309,7 +2308,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inChecked'
-        Value = 'False'
+        Value = False
         Component = ceChecked
         DataType = ftBoolean
         ParamType = ptInput
@@ -2317,7 +2316,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisComplete'
-        Value = 0.000000000000000000
+        Value = False
         Component = edisComplete
         DataType = ftBoolean
         ParamType = ptInput
@@ -2412,11 +2411,43 @@ inherited SendForm: TSendForm
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 638
     Top = 448
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'outIsErased'
+        Value = False
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        MultiSelectSeparator = ','
+      end>
     Left = 558
     Top = 416
   end
@@ -3113,7 +3144,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inIsCurrentData'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -3204,14 +3235,14 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'True'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3235,14 +3266,14 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisDeferred'
-        Value = 'FALSE'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end
       item
         Name = 'outisDeferred'
-        Value = 'False'
+        Value = False
         Component = cbisDeferred
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3525,7 +3556,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisNotDisplaySUN'
-        Value = 'False'
+        Value = False
         Component = cbNotDisplaySUN
         DataType = ftBoolean
         ParamType = ptInput
@@ -3533,7 +3564,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'outisNotDisplaySUN'
-        Value = 'False'
+        Value = False
         Component = cbNotDisplaySUN
         DataType = ftBoolean
         MultiSelectSeparator = ','
@@ -3590,7 +3621,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inisConfirmed'
-        Value = 'False'
+        Value = False
         Component = FormParams
         ComponentItem = 'isConfirmed'
         DataType = ftBoolean
@@ -3599,7 +3630,7 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'outisConfirmed'
-        Value = 'False'
+        Value = False
         Component = cbConfirmed
         DataType = ftBoolean
         MultiSelectSeparator = ','

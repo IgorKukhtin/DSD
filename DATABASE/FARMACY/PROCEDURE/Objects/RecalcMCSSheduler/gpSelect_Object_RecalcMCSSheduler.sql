@@ -12,10 +12,29 @@ RETURNS TABLE (Ord Integer, ID Integer, Code Integer, Name TVarChar
              , ProvinceCityName TVarChar
              , PharmacyItem boolean
 
+
              , UserId Integer
              , UserName TVarChar
              , DateRun TDateTime
              , DateRunSun TDateTime
+
+             , Period TVarChar
+             , Period1 TVarChar
+             , Period2 TVarChar
+             , Period3 TVarChar
+             , Period4 TVarChar
+             , Period5 TVarChar
+             , Period6 TVarChar
+             , Period7 TVarChar
+
+             , PeriodSun1 TVarChar
+             , PeriodSun2 TVarChar
+             , PeriodSun3 TVarChar
+             , PeriodSun4 TVarChar
+             , PeriodSun5 TVarChar
+             , PeriodSun6 TVarChar
+             , PeriodSun7 TVarChar
+
              , Color_cal Integer
              , AllRetail boolean
              , UserRun TVarChar
@@ -49,6 +68,54 @@ BEGIN
            , Object_User.ValueData                            AS UnitName
            , ObjectDate_DateRun.ValueData                     AS DateRun
            , ObjectDate_DateRunSun.ValueData                  AS DateRunSun
+           
+           , (ObjectFloat_Period.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day.ValueData:: Integer::TVarChar)::TVarChar     AS Period
+
+           , (ObjectFloat_Period1.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day1.ValueData:: Integer::TVarChar)::TVarChar     AS Period1
+
+           , (ObjectFloat_Period2.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day2.ValueData:: Integer::TVarChar)::TVarChar     AS Period2
+
+           , (ObjectFloat_Period3.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day3.ValueData:: Integer::TVarChar)::TVarChar     AS Period3
+
+           , (ObjectFloat_Period4.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day4.ValueData:: Integer::TVarChar)::TVarChar     AS Period4
+
+           , (ObjectFloat_Period5.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day5.ValueData:: Integer::TVarChar)::TVarChar     AS Period5
+
+           , (ObjectFloat_Period6.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day6.ValueData:: Integer::TVarChar)::TVarChar     AS Period6
+
+           , (ObjectFloat_Period7.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_Day7.ValueData:: Integer::TVarChar)::TVarChar     AS Period7
+
+           , (ObjectFloat_PeriodSun1.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun1.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun1
+
+           , (ObjectFloat_PeriodSun2.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun2.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun2
+
+           , (ObjectFloat_PeriodSun3.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun3.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun3
+
+           , (ObjectFloat_PeriodSun4.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun4.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun4
+
+           , (ObjectFloat_PeriodSun5.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun5.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun5
+
+           , (ObjectFloat_PeriodSun6.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun6.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun6
+
+           , (ObjectFloat_PeriodSun7.ValueData::Integer::TVarChar||'/'||
+             ObjectFloat_DaySun7.ValueData:: Integer::TVarChar)::TVarChar  AS PeriodSun7
+
+           
+           
            , CASE WHEN COALESCE (ObjectBoolean_AllRetail.ValueData, FALSE) = TRUE
              THEN
                42495
@@ -149,6 +216,50 @@ BEGIN
            LEFT JOIN ObjectFloat AS ObjectFloat_Day7
                                  ON ObjectFloat_Day7.ObjectId = Object_Unit.Id
                                 AND ObjectFloat_Day7.DescId = zc_ObjectFloat_Unit_Day7()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun1
+                                 ON ObjectFloat_PeriodSun1.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun1.DescId = zc_ObjectFloat_Unit_PeriodSun1()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun2
+                                 ON ObjectFloat_PeriodSun2.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun2.DescId = zc_ObjectFloat_Unit_PeriodSun2()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun3
+                                 ON ObjectFloat_PeriodSun3.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun3.DescId = zc_ObjectFloat_Unit_PeriodSun3()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun4
+                                 ON ObjectFloat_PeriodSun4.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun4.DescId = zc_ObjectFloat_Unit_PeriodSun4()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun5
+                                 ON ObjectFloat_PeriodSun5.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun5.DescId = zc_ObjectFloat_Unit_PeriodSun5()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun6
+                                 ON ObjectFloat_PeriodSun6.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun6.DescId = zc_ObjectFloat_Unit_PeriodSun6()
+           LEFT JOIN ObjectFloat AS ObjectFloat_PeriodSun7
+                                 ON ObjectFloat_PeriodSun7.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_PeriodSun7.DescId = zc_ObjectFloat_Unit_PeriodSun7()
+
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun1
+                                 ON ObjectFloat_DaySun1.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun1.DescId = zc_ObjectFloat_Unit_DaySun1()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun2
+                                 ON ObjectFloat_DaySun2.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun2.DescId = zc_ObjectFloat_Unit_DaySun2()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun3
+                                 ON ObjectFloat_DaySun3.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun3.DescId = zc_ObjectFloat_Unit_DaySun3()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun4
+                                 ON ObjectFloat_DaySun4.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun4.DescId = zc_ObjectFloat_Unit_DaySun4()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun5
+                                 ON ObjectFloat_DaySun5.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun5.DescId = zc_ObjectFloat_Unit_DaySun5()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun6
+                                 ON ObjectFloat_DaySun6.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun6.DescId = zc_ObjectFloat_Unit_DaySun6()
+           LEFT JOIN ObjectFloat AS ObjectFloat_DaySun7
+                                 ON ObjectFloat_DaySun7.ObjectId = Object_Unit.Id
+                                AND ObjectFloat_DaySun7.DescId = zc_ObjectFloat_Unit_DaySun7()
 
            LEFT JOIN ObjectLink AS ObjectLink_User
                                  ON ObjectLink_User.ObjectId = Object_RecalcMCSSheduler.Id

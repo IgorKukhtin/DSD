@@ -65,6 +65,26 @@ type
     dxBarButton8: TdxBarButton;
     dxBarButton9: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
+    Period: TcxGridDBColumn;
+    Period1: TcxGridDBColumn;
+    Period2: TcxGridDBColumn;
+    Period3: TcxGridDBColumn;
+    Period4: TcxGridDBColumn;
+    Period5: TcxGridDBColumn;
+    Period6: TcxGridDBColumn;
+    Period7: TcxGridDBColumn;
+    PeriodSun1: TcxGridDBColumn;
+    PeriodSun2: TcxGridDBColumn;
+    PeriodSun3: TcxGridDBColumn;
+    PeriodSun4: TcxGridDBColumn;
+    PeriodSun5: TcxGridDBColumn;
+    PeriodSun6: TcxGridDBColumn;
+    PeriodSun7: TcxGridDBColumn;
+    actExecuteSunDialog: TExecuteDialog;
+    actUpdateactSun: TMultiAction;
+    actExecSPUpdateactSun: TdsdExecStoredProc;
+    spUpdateactSun: TdsdStoredProc;
+    dxBarButton10: TdxBarButton;
   private
     { Private declarations }
   public

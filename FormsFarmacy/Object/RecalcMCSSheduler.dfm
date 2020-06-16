@@ -165,6 +165,126 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
             HeaderAlignmentVert = vaCenter
             Width = 52
           end
+          object Period: TcxGridDBColumn
+            Caption = #1055#1088#1072#1079#1076#1085#1080#1082
+            DataBinding.FieldName = 'Period'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period1: TcxGridDBColumn
+            Caption = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082
+            DataBinding.FieldName = 'Period1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period2: TcxGridDBColumn
+            Caption = #1042#1090#1086#1088#1085#1080#1082
+            DataBinding.FieldName = 'Period2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period3: TcxGridDBColumn
+            Caption = #1057#1088#1077#1076#1072
+            DataBinding.FieldName = 'Period3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period4: TcxGridDBColumn
+            Caption = #1063#1077#1090#1074#1077#1088#1075
+            DataBinding.FieldName = 'Period4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period5: TcxGridDBColumn
+            Caption = #1055#1103#1090#1085#1080#1094#1072
+            DataBinding.FieldName = 'Period5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period6: TcxGridDBColumn
+            Caption = #1057#1091#1073#1073#1086#1090#1072
+            DataBinding.FieldName = 'Period6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object Period7: TcxGridDBColumn
+            Caption = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077
+            DataBinding.FieldName = 'Period7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun1: TcxGridDBColumn
+            Caption = #1055#1086#1085#1077#1076#1077#1083#1100#1085#1080#1082' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun1'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun2: TcxGridDBColumn
+            Caption = #1042#1090#1086#1088#1085#1080#1082' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun2'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun3: TcxGridDBColumn
+            Caption = #1057#1088#1077#1076#1072' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun3'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun4: TcxGridDBColumn
+            Caption = #1063#1077#1090#1074#1077#1088#1075' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun4'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun5: TcxGridDBColumn
+            Caption = #1055#1103#1090#1085#1080#1094#1072' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun5'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun6: TcxGridDBColumn
+            Caption = #1057#1091#1073#1073#1086#1090#1072' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun6'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object PeriodSun7: TcxGridDBColumn
+            Caption = #1042#1086#1089#1082#1088#1077#1089#1077#1085#1100#1077' '#1057#1059#1053
+            DataBinding.FieldName = 'PeriodSun7'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object isErased: TcxGridDBColumn
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -443,6 +563,155 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       ErasedFieldName = 'isErased'
       DataSource = MasterDS
     end
+    object actExecuteSunDialog: TExecuteDialog
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actExecuteSunDialog'
+      FormName = 'TRecalcMCSShedulerSunDialogForm'
+      FormNameParam.Value = 'TRecalcMCSShedulerSunDialogForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'UnitId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'UnitId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun1'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun2'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun3'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun4'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun5'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun6'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodSun7'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'PeriodSun7'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun1'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun1'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun2'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun2'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun3'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun3'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun4'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun4'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun5'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun5'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun6'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun6'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'DaySun7'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'DaySun7'
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
+    object actUpdateactSun: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      AfterAction = actRefresh
+      BeforeAction = actExecuteSunDialog
+      ActionList = <
+        item
+          Action = actExecSPUpdateactSun
+        end>
+      View = cxGridDBTableView
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
+      Hint = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074' '#1076#1083#1103' '#1087#1077#1088#1077#1097#1077#1090#1072' '#1087#1086' '#1057#1059#1053
+      ImageIndex = 42
+    end
+    object actExecSPUpdateactSun: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateactSun
+      StoredProcList = <
+        item
+          StoredProc = spUpdateactSun
+        end>
+      Caption = 'actExecSPUpdateactSun'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -522,6 +791,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton10'
         end>
     end
     inherited dxBarStatic: TdxBarStatic
@@ -611,6 +884,10 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
       Action = dsdSetErased
       Category = 0
     end
+    object dxBarButton10: TdxBarButton
+      Action = actUpdateactSun
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
@@ -643,6 +920,76 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
         Name = 'IdAdd'
         Value = '1'
         ParamType = ptInputOutput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun1'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun2'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun3'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun4'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun5'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun6'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'PeriodSun7'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun1'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun2'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun3'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun4'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun5'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun6'
+        Value = '0'
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'DaySun7'
+        Value = '0'
         MultiSelectSeparator = ','
       end>
     Left = 256
@@ -781,5 +1128,134 @@ inherited RecalcMCSShedulerForm: TRecalcMCSShedulerForm
     PackSize = 1
     Left = 176
     Top = 152
+  end
+  object spUpdateactSun: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_RecalcMCSSheduler_Sun'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inPeriodSun7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodSun7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun1'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun2'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun2'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun3'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun3'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun4'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun4'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun5'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun6'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun6'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inDaySun7'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'DaySun7'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 368
+    Top = 248
   end
 end

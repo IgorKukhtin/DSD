@@ -886,7 +886,8 @@ uses
   SendVIP_ToGenerateCheckDialog in '..\..\FormsFarmacy\Document\SendVIP_ToGenerateCheckDialog.pas' {SendVIP_ToGenerateCheckDialogForm: TParentForm},
   SendVIP_VIPDialog in '..\..\FormsFarmacy\Document\SendVIP_VIPDialog.pas' {SendVIP_VIPDialogForm: TParentForm},
   Report_RemainsOverGoods_N in '..\..\FormsFarmacy\Report\Report_RemainsOverGoods_N.pas' {Report_RemainsOverGoods_NForm: TParentForm},
-  IntegerDialog in '..\..\FormsFarmacy\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm};
+  IntegerDialog in '..\..\FormsFarmacy\Guides\IntegerDialog.pas' {IntegerDialogForm: TParentForm},
+  RecalcMCSShedulerSunDialog in '..\..\FormsFarmacy\Object\RecalcMCSShedulerSunDialog.pas' {RecalcMCSShedulerSunDialogForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

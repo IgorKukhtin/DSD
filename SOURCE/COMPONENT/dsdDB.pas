@@ -812,6 +812,7 @@ var
   i: Integer;
   IDs: String;
   Clmn: TcxGridDBColumn;
+  Bol : Boolean;
 begin
   if Assigned(FComponent) and (not Assigned(FComponent.Owner)
        or (Assigned(FComponent.Owner) and (not (csWriting in (FComponent.Owner).ComponentState)))) then begin
@@ -908,7 +909,10 @@ begin
       Result := 'NULL'
     else
     if not VarIsNull(FValue) AND (DataType = ftBoolean) then
-      Result := StrToBool(FValue)
+    begin
+      if TryStrToBool(FValue, Bol) then Result := Bol
+      else Result := False;
+    end
     else
       Result := FValue
   End;

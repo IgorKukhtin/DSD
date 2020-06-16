@@ -700,7 +700,7 @@
       end
       item
         Name = 'inIsClose'
-        Value = ''
+        Value = Null
         Component = cbIsClose
         DataType = ftBoolean
         ParamType = ptInput
@@ -972,7 +972,7 @@
       end
       item
         Name = 'IsErased'
-        Value = ''
+        Value = Null
         Component = cbIsClose
         DataType = ftBoolean
         MultiSelectSeparator = ','
