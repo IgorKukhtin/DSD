@@ -1,13 +1,15 @@
 --
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Report_Promo_Result (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
     IN inStartDate      TDateTime, --дата начала периода
     IN inEndDate        TDateTime, --дата окончания периода
     IN inIsPromo        Boolean,   --показать только Акции
     IN inIsTender       Boolean,   --показать только Тендеры
+    IN inisGoodsKind    Boolean,   -- группировать по Виду товара
     IN inUnitId         Integer,   --подразделение 
     IN inRetailId       Integer,   --подразделение 
     IN inMovementId     Integer,   --документ акции
@@ -24,12 +26,14 @@ RETURNS TABLE(
     ,DateStartPromo       TDateTime --Дата проведения акции
     ,DateFinalPromo       TDateTime --Дата проведения акции
     ,MonthPromo           TDateTime --Месяц акции
+    ,CheckDate            TDateTime --дата согласования
     ,RetailName           TBlob     --Сеть, в которой проходит акция
     ,AreaName             TBlob     --Регион
     ,GoodsName            TVarChar  --Позиция
     ,GoodsCode            Integer   --Код позиции
     ,MeasureName          TVarChar  --единица измерения
     ,TradeMarkName        TVarChar  --Торговая марка
+    ,GoodsGroupNameFull   TVarChar -- группа товара
     ,GoodsKindName          TVarChar --Наименование обьекта <Вид товара>
     ,GoodsKindCompleteName  TVarChar --Наименование обьекта <Вид товара(примечание)>
     
@@ -47,9 +51,7 @@ RETURNS TABLE(
     ,AmountInWeight       TFloat    --Кол-во возврат (факт) Вес
     ,AmountSale           TFloat    --продажи за весь период отгрузки по акционной цене за минусом возврата
     ,AmountSaleWeight     TFloat    --продажи за весь период отгрузки по акционной цене за минусом возврата, в кг
-    
     ,PersentResult        TFloat    --Результат, % ((продажи в акц.период/продажи в доакц пер.-1)*100)
-
     ,Discount             TBlob     --Скидка, %
     ,MainDiscount         TFloat    --Общая скидка для покупателя, %  (вносится вручную)
     ,PriceWithVAT         TFloat    --Отгрузочная акционная цена с учетом НДС, грн
@@ -63,6 +65,7 @@ RETURNS TABLE(
     ,ContractCondition    TFloat    -- Бонус сети, %
     ,Profit               TFloat    --
     ,Comment              TVarChar  --примечание
+    ,CommentMain          TVarChar  --
     )
 AS
 $BODY$
@@ -107,11 +110,46 @@ BEGIN
                           OR (inIsPromo = FALSE AND inIsTender = FALSE)
                           )
                     )
-  , tmpMI AS (SELECT MI_PromoGoods.*
-                   , (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))             :: TFloat  AS AmountSale       -- продажа - возврат 
-                   , (COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
-                   , (COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
+  , tmpMI AS (SELECT 
+                     MI_PromoGoods.MovementId          --ИД документа <Акция>
+                   , MI_PromoGoods.GoodsCode           --код объекта  <товар>
+                   , MI_PromoGoods.GoodsName           --наименование объекта <товар>
+                   , MI_PromoGoods.Measure             --Единица измерения
+                   , MI_PromoGoods.MeasureId             --Единица измерения
+                   , MI_PromoGoods.TradeMark           --Торговая марка
+
+                   , MI_PromoGoods.Price               --Цена в прайсе
+                   , MI_PromoGoods.PriceWithVAT        --Цена отгрузки с учетом НДС, с учетом скидки, грн
+                   , MI_PromoGoods.PriceSale           --Цена на полке
+
+                   , MI_PromoGoods.GoodsWeight -- Вес
+
+                   , STRING_AGG (MI_PromoGoods.GoodsKindName, '; ')         ::TVarChar AS GoodsKindName       --Наименование обьекта <Вид товара>
+                   , STRING_AGG (MI_PromoGoods.GoodsKindCompleteName, '; ') ::TVarChar AS GoodsKindCompleteName   
+
+                   , SUM (MI_PromoGoods.Amount) AS Amount              --% скидки на товар             
+                   , SUM (MI_PromoGoods.AmountReal) AS AmountReal          --Объем продаж в аналогичный период, кг
+                   , SUM (MI_PromoGoods.AmountRealWeight) AS AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+             
+                   , MIN (MI_PromoGoods.AmountPlanMin)       AS AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
+                   , MIN (MI_PromoGoods.AmountPlanMinWeight) AS AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
+                   , MAX (MI_PromoGoods.AmountPlanMax)       AS AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
+                   , MAX (MI_PromoGoods.AmountPlanMaxWeight) AS AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+             
+                   , SUM (MI_PromoGoods.AmountOut)        AS AmountOut         --Кол-во реализация (факт)
+                   , SUM (MI_PromoGoods.AmountOutWeight)  AS AmountOutWeight   --Кол-во реализация (факт) Вес
+                   , SUM (MI_PromoGoods.AmountIn)         AS AmountIn          --Кол-во возврат (факт)
+                   , SUM (MI_PromoGoods.AmountInWeight)   AS AmountInWeight    --Кол-во возврат (факт) Вес
+             
+
+     
+      
+      
+                   , SUM (COALESCE (MI_PromoGoods.AmountOut, 0) - COALESCE (MI_PromoGoods.AmountIn, 0))             :: TFloat  AS AmountSale       -- продажа - возврат 
+                   , SUM(COALESCE (MI_PromoGoods.AmountOutWeight, 0) - COALESCE (MI_PromoGoods.AmountInWeight, 0)) :: TFloat  AS AmountSaleWeight -- продажа - возврат 
+                   , SUM(COALESCE (MI_PromoGoods.Price, 0) - COALESCE (MI_PromoGoods.PriceWithVAT,0))              :: TFloat  AS Price_Diff
                    , MIFloat_PriceIn1.ValueData                                                                 :: TFloat  AS PriceIn1               --себестоимость факт,  за кг
+                   , ObjectString_Goods_GoodsGroupFull.ValueData                                                           AS GoodsGroupNameFull
               FROM tmpMovement AS Movement_Promo
                    LEFT JOIN MovementItem_PromoGoods_View AS MI_PromoGoods
                                                           ON MI_PromoGoods.MovementId = Movement_Promo.Id
@@ -119,6 +157,24 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_PriceIn1
                                                ON MIFloat_PriceIn1.MovementItemId = MI_PromoGoods.Id
                                               AND MIFloat_PriceIn1.DescId = zc_MIFloat_PriceIn1()
+
+                   LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                          ON ObjectString_Goods_GoodsGroupFull.ObjectId = MI_PromoGoods.GoodsId
+                                         AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+              GROUP BY MI_PromoGoods.MovementId
+                   , MI_PromoGoods.GoodsCode
+                   , MI_PromoGoods.GoodsName
+                   , MI_PromoGoods.Measure
+                   , MI_PromoGoods.MeasureId
+                   , MI_PromoGoods.TradeMark
+                   , MI_PromoGoods.Price
+                   , MI_PromoGoods.PriceWithVAT
+                   , MI_PromoGoods.PriceSale
+                   , MI_PromoGoods.GoodsWeight
+                   , CASE WHEN inisGoodsKind = TRUE THEN MI_PromoGoods.GoodsKindName ELSE '' END
+                   , CASE WHEN inisGoodsKind = TRUE THEN MI_PromoGoods.GoodsKindCompleteName ELSE '' END 
+                   , MIFloat_PriceIn1.ValueData
+                   , ObjectString_Goods_GoodsGroupFull.ValueData
               )
                     
         SELECT
@@ -132,6 +188,7 @@ BEGIN
           , Movement_Promo.StartPromo         --*Дата начала акции
           , Movement_Promo.EndPromo           --*Дата окончания акции
           , Movement_Promo.MonthPromo         --* месяц акции
+          , Movement_Promo.CheckDate          -- дата согласования
 
           , COALESCE ((SELECT STRING_AGG (DISTINCT COALESCE (MovementString_Retail.ValueData, Object_Retail.ValueData),'; ')
                        FROM Movement AS Movement_PromoPartner
@@ -189,25 +246,26 @@ BEGIN
           , MI_PromoGoods.GoodsCode
           , MI_PromoGoods.Measure
           , MI_PromoGoods.TradeMark
+          , MI_PromoGoods.GoodsGroupNameFull
           , MI_PromoGoods.GoodsKindName
           , MI_PromoGoods.GoodsKindCompleteName
           
           , CASE WHEN MI_PromoGoods.MeasureId = zc_Measure_Sh() THEN MI_PromoGoods.GoodsWeight ELSE NULL END :: TFloat AS GoodsWeight
           
-          , MI_PromoGoods.AmountPlanMin       --Минимум планируемого объема продаж на акционный период (в кг)
-          , MI_PromoGoods.AmountPlanMinWeight --Минимум планируемого объема продаж на акционный период (в кг) Вес
-          , MI_PromoGoods.AmountPlanMax       --Максимум планируемого объема продаж на акционный период (в кг)
-          , MI_PromoGoods.AmountPlanMaxWeight --Максимум планируемого объема продаж на акционный период (в кг) Вес
+          , MI_PromoGoods.AmountPlanMin       :: TFloat --Минимум планируемого объема продаж на акционный период (в кг)
+          , MI_PromoGoods.AmountPlanMinWeight  :: TFloat--Минимум планируемого объема продаж на акционный период (в кг) Вес
+          , MI_PromoGoods.AmountPlanMax        :: TFloat--Максимум планируемого объема продаж на акционный период (в кг)
+          , MI_PromoGoods.AmountPlanMaxWeight  :: TFloat--Максимум планируемого объема продаж на акционный период (в кг) Вес
           
-          , MI_PromoGoods.AmountReal          --Объем продаж в аналогичный период, кг
-          , MI_PromoGoods.AmountRealWeight    --Объем продаж в аналогичный период, кг Вес
+          , MI_PromoGoods.AmountReal          :: TFloat --Объем продаж в аналогичный период, кг
+          , MI_PromoGoods.AmountRealWeight    :: TFloat --Объем продаж в аналогичный период, кг Вес
 
-          , MI_PromoGoods.AmountOut           --Кол-во реализация (факт)
-          , MI_PromoGoods.AmountOutWeight     --Кол-во реализация (факт) Вес
-          , MI_PromoGoods.AmountIn            --Кол-во возврат (факт)
-          , MI_PromoGoods.AmountInWeight      --Кол-во возврат (факт) Вес
-          , MI_PromoGoods.AmountSale          -- продажа - возврат 
-          , MI_PromoGoods.AmountSaleWeight    -- продажа - возврат 
+          , MI_PromoGoods.AmountOut            :: TFloat--Кол-во реализация (факт)
+          , MI_PromoGoods.AmountOutWeight      :: TFloat--Кол-во реализация (факт) Вес
+          , MI_PromoGoods.AmountIn             :: TFloat--Кол-во возврат (факт)
+          , MI_PromoGoods.AmountInWeight       :: TFloat--Кол-во возврат (факт) Вес
+          , MI_PromoGoods.AmountSale          :: TFloat -- продажа - возврат 
+          , MI_PromoGoods.AmountSaleWeight    :: TFloat -- продажа - возврат 
           
           , CAST (CASE WHEN COALESCE (MI_PromoGoods.AmountRealWeight, 0) = 0 AND MI_PromoGoods.AmountSaleWeight > 0
                             THEN 100
@@ -252,6 +310,7 @@ BEGIN
                  ELSE 0
             END                               :: TFloat    AS Profit
           , ''                                :: TVarChar  AS Comment                -- Примечание
+          , ''                                :: TVarChar  AS CommentMain            -- Примечание
         FROM tmpMovement AS Movement_Promo
              LEFT JOIN tmpMI AS MI_PromoGoods ON MI_PromoGoods.MovementId = Movement_Promo.Id
         ;
@@ -268,3 +327,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inSession:= zfCalc_UserAdmin());
+
+-- SELECT * FROM gpSelect_Report_Promo_Result (inStartDate:= '21.09.2017', inEndDate:= '21.09.2017', inIsPromo:= TRUE, inIsTender:= FALSE, inisGoodsKind:= true, inUnitId:= 0, inRetailId:= 0, inMovementId:= 0, inSession:= zfCalc_UserAdmin());
+

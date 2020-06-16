@@ -962,15 +962,15 @@ inherited PromoJournalForm: TPromoJournalForm
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 136
+    Left = 536
+    Top = 152
   end
   object PrintHead: TClientDataSet
     Aggregates = <>
     FilterOptions = [foCaseInsensitive]
     Params = <>
-    Left = 456
-    Top = 136
+    Left = 904
+    Top = 184
   end
   object spUpdate_Movement_Promo_Data: TdsdStoredProc
     StoredProcName = 'gpUpdate_Movement_Promo_Data'

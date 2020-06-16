@@ -14,17 +14,17 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     Height = 351
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 935
+    ExplicitWidth = 1075
     ExplicitHeight = 351
     ClientRectBottom = 351
     ClientRectRight = 1075
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 935
+      ExplicitWidth = 1075
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
         Width = 1075
         Height = 351
-        ExplicitWidth = 935
+        ExplicitWidth = 1075
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -128,6 +128,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object GoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 136
+          end
           object MonthPromo: TcxGridDBColumn
             Caption = #1052#1077#1089#1103#1094' '#1072#1082#1094#1080#1080
             DataBinding.FieldName = 'MonthPromo'
@@ -160,6 +168,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 49
+          end
+          object CheckDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
+            DataBinding.FieldName = 'CheckDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object UnitName: TcxGridDBColumn
             Caption = #1057#1082#1083#1072#1076
@@ -534,8 +550,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
   inherited Panel: TPanel
     Width = 1075
     Height = 57
-    ExplicitTop = 5
-    ExplicitWidth = 1233
+    ExplicitWidth = 1075
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 116
@@ -589,6 +604,13 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       Top = 32
       Caption = #1087#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1058#1077#1085#1076#1077#1088#1099
       TabOrder = 7
+      Width = 161
+    end
+    object cbGoodsKind: TcxCheckBox
+      Left = 544
+      Top = 32
+      Caption = #1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+      TabOrder = 8
       Width = 161
     end
   end
@@ -778,6 +800,57 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end>
       isShowModal = False
     end
+    object actPrint_Mov: TdsdPrintAction
+      Category = 'DSDLib'
+      ActiveControl = cbPromo
+      MoveParams = <>
+      StoredProc = spSelect_Movement_Promo_Print
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Movement_Promo_Print
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHead
+          UserName = 'frxHead'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentMain'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1094#1080#1103
+      ReportNameParam.Value = #1040#1082#1094#1080#1103
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 144
@@ -816,6 +889,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         Name = 'inIsTender'
         Value = Null
         Component = cbTender
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inisGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -877,6 +958,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Mov'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -895,6 +984,10 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     end
     object dxBarButton3: TdxBarButton
       Action = actOpenPromo
+      Category = 0
+    end
+    object bbPrint_Mov: TdxBarButton
+      Action = actPrint_Mov
       Category = 0
     end
   end
@@ -1051,7 +1144,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 604
+    Left = 748
   end
   object GuidesMovementPromo: TdsdGuides
     KeyField = 'Id'
@@ -1082,5 +1175,32 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       end>
     Left = 980
     Top = 8
+  end
+  object PrintHead: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 728
+    Top = 240
+  end
+  object spSelect_Movement_Promo_Print: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Promo_Print'
+    DataSet = PrintHead
+    DataSets = <
+      item
+        DataSet = PrintHead
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 832
+    Top = 248
   end
 end

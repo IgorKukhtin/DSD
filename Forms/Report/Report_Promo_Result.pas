@@ -81,6 +81,11 @@ type
     cxLabel4: TcxLabel;
     edMovementPromo: TcxButtonEdit;
     GuidesMovementPromo: TdsdGuides;
+    PrintHead: TClientDataSet;
+    spSelect_Movement_Promo_Print: TdsdStoredProc;
+    actPrint_Mov: TdsdPrintAction;
+    bbPrint_Mov: TdxBarButton;
+    cbGoodsKind: TcxCheckBox;
   private
     { Private declarations }
   public
