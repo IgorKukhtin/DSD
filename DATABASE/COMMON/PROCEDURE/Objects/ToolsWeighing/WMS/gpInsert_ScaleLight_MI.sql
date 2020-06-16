@@ -364,11 +364,11 @@ BEGIN
                              THEN TRUE
     
                              -- взвешено >= вложенность по Весу - !средняя!
-                             WHEN vbWeightOnBox >= CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1
+                             WHEN vbWeightOnBox >= CASE WHEN vbGoodsTypeKindId = inGoodsTypeKindId_1 AND inCountOnBox_1 = 0
                                                         THEN inWeightOnBox_1 -- вложенность - 1
-                                                        WHEN vbGoodsTypeKindId = inGoodsTypeKindId_2
+                                                        WHEN vbGoodsTypeKindId = inGoodsTypeKindId_2 AND inCountOnBox_2 = 0
                                                         THEN inWeightOnBox_2 -- вложенность - 2
-                                                        WHEN vbGoodsTypeKindId = inGoodsTypeKindId_3
+                                                        WHEN vbGoodsTypeKindId = inGoodsTypeKindId_3 AND inCountOnBox_3 = 0
                                                         THEN inWeightOnBox_3 -- вложенность - 3
                                                    END
                              -- закрыли

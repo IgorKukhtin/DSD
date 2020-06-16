@@ -80,11 +80,12 @@ begin
     end;
     //
     //
-    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) and (Connection = '') then
+    if (fAlan_colocall = TRUE) and (fFirst_srv = TRUE) and (Connection = '')  and (gc_ProgramName <> 'Boutique.exe') then
+
        // 1.1. надо переключиться на colocall
        UpdateConnect('alan')
     else
-    if (fAlan_colocall = FALSE) and (fFirst_colocall = TRUE) and (Connection = '') then
+    if (fAlan_colocall = FALSE) and (fFirst_colocall = TRUE) and (Connection = '')  and (gc_ProgramName <> 'Boutique.exe') then
        // 1.2. надо переключиться на integer-srv
        UpdateConnect('colocall')
     else

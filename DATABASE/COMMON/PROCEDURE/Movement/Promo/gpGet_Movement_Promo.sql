@@ -54,6 +54,14 @@ $BODY$
 BEGIN
     -- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Promo());
+
+
+    IF COALESCE (inMovementId, 0) < 0
+    THEN
+        RAISE EXCEPTION 'Ошибка. Невозможно открыть пустой документ.';
+    END IF;
+
+
     IF COALESCE (inMovementId, 0) = 0
     THEN
         -- данные из Модели для данного документа

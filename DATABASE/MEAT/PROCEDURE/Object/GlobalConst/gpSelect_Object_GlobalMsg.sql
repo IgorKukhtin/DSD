@@ -14,6 +14,7 @@ $BODY$
    DECLARE vbIsMsg_PromoStateKind Boolean;
    DECLARE vbIsUserSigning1       Boolean;
    DECLARE vbIsUserSigning2       Boolean;
+   DECLARE vbIsMsgColor           Boolean;
    DECLARE vbMovementId_1_Head    Integer;
    DECLARE vbCount_1_Head         Integer;
    DECLARE vbMovementId_2_Head    Integer;
@@ -28,13 +29,15 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
      
 
-     -- zc_Enum_Role_Admin + Отдел Маркетинг + 
-     vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016 ) AND UserRole_View.UserId = vbUserId);
+     -- zc_Enum_Role_Admin + Отдел Маркетинг
+     vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016) AND UserRole_View.UserId = vbUserId);
      
      -- Signing
-     vbIsUserSigning1:= vbUserId IN (280164);  -- Старецкая М.В.
+     vbIsUserSigning1:= vbUserId IN (280164, 133035);  -- Старецкая М.В.
      vbIsUserSigning2:= vbUserId IN (9463, 5); -- Махота Д.П.
 
+     -- Отдел Маркетинг
+     vbIsMsgColor:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (876016) AND UserRole_View.UserId = vbUserId);
 
      -- Отдел Маркетинг
      IF 1=1 AND vbIsMsg_PromoStateKind = TRUE
@@ -149,26 +152,26 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
-                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Yelow()
-                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+                   WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Yelow()
                    ELSE -1
               END AS Color_Text
@@ -195,22 +198,22 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Pink()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Head > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Pink()
                    ELSE -1
               END AS Color_Text
@@ -239,26 +242,26 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
-                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Lime()
-                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+                   WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_1_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Lime()
                    ELSE -1
               END AS Color_Text
@@ -285,22 +288,22 @@ BEGIN
               ) :: TVarChar AS ValueText
 
               -- 1.1.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Black()
                    ELSE -1
               END AS ColorText_Addr
               -- 1.2.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN -1 -- zc_Color_Aqua()
                    ELSE -1
               END AS Color_Addr
               -- 2.1.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Black()
                    ELSE -1
               END AS ColorText_Text
               -- 2.2.
-            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE)
+            , CASE WHEN vbCount_2_Main > 0 AND (vbIsUserSigning1 = TRUE OR vbIsUserSigning2 = TRUE OR vbIsMsgColor = TRUE)
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Text

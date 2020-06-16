@@ -3044,7 +3044,7 @@ begin
                                  if tmpWeight_test_zero < 0.020 then tmpWeight_test:= tmpWeight_test_zero;
                                  //*****
                                  //
-                                 //tmpWeight_test:= 0.250;
+                                 tmpWeight_test:= 0.550;
                                  //
                                  ParamsMI.ParamByName('RealWeight').AsFloat:=tmpWeight_test;
                                  SetParams_OperCount;
