@@ -1,31 +1,36 @@
 inherited PromoJournalForm: TPromoJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1040#1082#1094#1080#1080'>'
-  ClientHeight = 430
+  ClientHeight = 407
   ClientWidth = 1084
   AddOnFormData.RefreshAction = actRefreshStart
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
-  ExplicitLeft = -294
   ExplicitWidth = 1100
-  ExplicitHeight = 465
+  ExplicitHeight = 445
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1084
-    Height = 373
+    Height = 350
     TabOrder = 3
     ExplicitWidth = 1084
-    ExplicitHeight = 373
-    ClientRectBottom = 373
+    ExplicitHeight = 350
+    ClientRectBottom = 350
     ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1084
-      ExplicitHeight = 373
+      ExplicitHeight = 350
       inherited cxGrid: TcxGrid
         Width = 1084
-        Height = 373
+        Height = 350
         ExplicitWidth = 1084
-        ExplicitHeight = 373
+        ExplicitHeight = 350
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = #1057#1090#1088#1086#1082': ,0'
+              Kind = skCount
+              Column = PromoKindName
+            end>
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
@@ -218,6 +223,13 @@ inherited PromoJournalForm: TPromoJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 95
+          end
+          object RetailName: TcxGridDBColumn
+            Caption = #1057#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 97
           end
           object PartnerName: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1085#1077#1088
@@ -668,6 +680,25 @@ inherited PromoJournalForm: TPromoJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1101#1083#1077#1082#1090#1088#1086#1085#1085#1091#1102' '#1087#1086#1076#1087#1080#1089#1100' '#1042#1089#1077#1084' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       ImageIndex = 52
     end
+    object actAllPartner: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1053#1077' '#1088#1072#1079#1074#1086#1088#1072#1095#1080#1074#1072#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      Hint = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1053#1077' '#1088#1072#1079#1074#1086#1088#1072#1095#1080#1074#1072#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      HintFalse = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      CaptionTrue = #1056#1072#1079#1074#1077#1088#1085#1091#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      CaptionFalse = #1053#1077' '#1088#1072#1079#1074#1086#1088#1072#1095#1080#1074#1072#1090#1100' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 40
@@ -708,6 +739,14 @@ inherited PromoJournalForm: TPromoJournalForm
         Name = 'inPeriodForOperDate'
         Value = Null
         Component = chbPeriodForOperDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsAllPartner'
+        Value = Null
+        Component = actAllPartner
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
@@ -765,6 +804,14 @@ inherited PromoJournalForm: TPromoJournalForm
         item
           Visible = True
           ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAllPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -836,6 +883,10 @@ inherited PromoJournalForm: TPromoJournalForm
     end
     object bbInsertUpdateMISignNoList: TdxBarButton
       Action = mactInsertUpdateMISignNoList
+      Category = 0
+    end
+    object bbAllPartner: TdxBarButton
+      Action = actAllPartner
       Category = 0
     end
   end

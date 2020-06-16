@@ -2,13 +2,15 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Promo (TDateTime, TDateTime, Boolean, Boolean, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Promo(
     IN inStartDate         TDateTime , --
     IN inEndDate           TDateTime , --
     IN inIsErased          Boolean ,
     IN inPeriodForOperDate Boolean ,
+    IN inIsAllPartner      Boolean ,   -- Развернуть по контрагентам
     IN inJuridicalBasisId  Integer ,
     IN inSession           TVarChar    -- сессия пользователя
 )
@@ -48,6 +50,7 @@ RETURNS TABLE (Id               Integer     --Идентификатор
              , PartnerDescName  TVarChar     --тип Партнера
              , ContractName     TVarChar     --№ договора
              , ContractTagName  TVarChar     --признак договора
+             , RetailName       TVarChar     -- "сеть" - STRING_AGG, если сети нет, тогда юр лица
              , DayCount         Integer     --
              , isFirst          Boolean      --Первый документ в группе (для автопересчета данных)
              , ChangePercentName TVarChar    -- Скидка по договору
@@ -99,11 +102,12 @@ BEGIN
                                                , Movement_PromoPartner.StatusId
                                                , Object_Status.ObjectCode               AS StatusCode
                                                , Object_Status.ValueData                AS StatusName
-                                               , Movement_PromoPartner.ParentId                                           --Ссылка на основной документ <Акции> (zc_Movement_Promo)
+                                               , Movement_PromoPartner.ParentId                                    --Ссылка на основной документ <Акции> (zc_Movement_Promo)
                                                , Object_Partner.ValueData               AS PartnerName             --Покупатель для акции
                                                , ObjectDesc_Partner.ItemName            AS PartnerDescName         --Тип Покупатель для акции
                                                , Object_Contract.ValueData              AS ContractName            --наименование контракта
                                                , Object_ContractTag.ValueData           AS ContractTagName         --признак контракта
+                                               , COALESCE (Object_Retail.ValueData, Object_Juridical.ValueData)   AS RetailName      --Наименование объекта <Торговая сеть> или юр.лицо
 
                                           FROM tmpMovement
                                                LEFT JOIN Movement AS Movement_PromoPartner ON Movement_PromoPartner.ParentId = tmpMovement.Id
@@ -117,6 +121,17 @@ BEGIN
                                                LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
                                                LEFT OUTER JOIN ObjectDesc AS ObjectDesc_Partner ON ObjectDesc_Partner.Id = Object_Partner.DescId
 
+                                               LEFT OUTER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                                          ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id
+                                                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                                                         AND Object_Partner.DescId = zc_Object_Partner()
+                                               LEFT OUTER JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id)
+                                       
+                                               LEFT OUTER JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                                                          ON ObjectLink_Juridical_Retail.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_Partner.Id)
+                                                                         AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+                                               LEFT OUTER JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
                                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                             ON MovementLinkObject_Contract.MovementId = Movement_PromoPartner.Id
                                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -126,7 +141,12 @@ BEGIN
                                                                     ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
                                                                    AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
                                                LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
-                                          )
+                                         )
+           , tmpStrRetail AS (SELECT tmpMovement_PromoPartner.ParentId
+                                   , STRING_AGG (DISTINCT tmpMovement_PromoPartner.RetailName, ', ') ::TVarChar AS RetailName
+                              FROM tmpMovement_PromoPartner
+                              GROUP BY tmpMovement_PromoPartner.ParentId
+                              )
 
            , tmpMI_Child AS (SELECT MI_Child.MovementId
                                   , Object_ChangePercent.ValueData  AS ChangePercentName
@@ -183,6 +203,7 @@ BEGIN
              , Movement_PromoPartner.PartnerDescName --Тип партнера
              , Movement_PromoPartner.ContractName    --Название контракта
              , Movement_PromoPartner.ContractTagName --признак договора
+             , COALESCE (Movement_PromoPartner.RetailName, tmpStrRetail.RetailName) :: TVarChar AS RetailName      -- сеть/юр.лицо
 
              , (1 + EXTRACT (DAY FROM (Movement_Promo.EndSale - Movement_Promo.StartSale))) :: Integer AS DayCount
 
@@ -321,7 +342,11 @@ BEGIN
              LEFT JOIN Object AS Object_PromoStateKind ON Object_PromoStateKind.Id = MovementLinkObject_PromoStateKind.ObjectId
 
              LEFT JOIN tmpMovement_PromoPartner AS Movement_PromoPartner
-                                                  ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+                                                ON Movement_PromoPartner.ParentId = Movement_Promo.Id
+                                               AND inIsAllPartner = TRUE
+
+             LEFT JOIN tmpStrRetail ON tmpStrRetail.ParentId = Movement_Promo.Id
+                                                
 
              LEFT JOIN tmpMI_Child AS MI_Child ON MI_Child.MovementId = Movement_Promo.Id
 
@@ -347,4 +372,4 @@ $BODY$
  13.10.15                                                                        *
 */
 
--- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Promo (inStartDate:= '01.11.2016', inEndDate:= '30.11.2016', inIsErased:= FALSE, inPeriodForOperDate:=TRUE, inIsAllPartner:= False, inJuridicalBasisId:= 0, inSession:= zfCalc_UserAdmin())

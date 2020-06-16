@@ -3,9 +3,8 @@
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1040#1082#1094#1080#1103'>'
   ClientHeight = 684
   ClientWidth = 1366
-  ExplicitLeft = -593
   ExplicitWidth = 1382
-  ExplicitHeight = 719
+  ExplicitHeight = 722
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -2605,13 +2604,15 @@
     Width = 178
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 83
     Top = 312
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Top = 312
   end
   inherited ActionList: TActionList
-    Top = 311
+    Left = 127
+    Top = 319
     object actUpdate_Movement_isTaxPromo: TdsdExecStoredProc [0]
       Category = 'DSDLib'
       MoveParams = <>
@@ -4506,6 +4507,7 @@
         Value = Null
         MultiSelectSeparator = ','
       end>
+    Left = 168
     Top = 312
   end
   inherited StatusGuides: TdsdGuides
@@ -5429,8 +5431,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 504
-    Top = 328
+    Left = 352
+    Top = 384
   end
   object PartnerCDS: TClientDataSet
     Aggregates = <>
@@ -6431,8 +6433,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 704
-    Top = 384
+    Left = 728
+    Top = 376
   end
   object spUpdate_Plan: TdsdStoredProc
     StoredProcName = 'gpUpdate_MI_PromoGoods_Plan'
@@ -6550,8 +6552,8 @@
         MultiSelectSeparator = ','
       end>
     PackSize = 1
-    Left = 1020
-    Top = 440
+    Left = 988
+    Top = 464
   end
   object dsdDBViewAddOnPlan: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

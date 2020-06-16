@@ -88,6 +88,8 @@ type
     isTaxPromo: TcxGridDBColumn;
     isTaxPromo_Condition: TcxGridDBColumn;
     SignInternalName: TcxGridDBColumn;
+    actAllPartner: TBooleanStoredProcAction;
+    bbAllPartner: TdxBarButton;
   private
     { Private declarations }
   public
