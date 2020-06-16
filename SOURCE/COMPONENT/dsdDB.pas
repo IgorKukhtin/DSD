@@ -907,6 +907,9 @@ begin
     if VarIsNull(FValue) AND (DataType = ftDateTime) then
       Result := 'NULL'
     else
+    if not VarIsNull(FValue) AND (DataType = ftBoolean) then
+      Result := StrToBool(FValue)
+    else
       Result := FValue
   End;
 end;

@@ -88,7 +88,7 @@ BEGIN
    ;
 
     -- обновление элемента - zc_MI_Master
-    PERFORM gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := 0
+    PERFORM gpInsertUpdate_MovementItem_WeighingProduction (ioId                  := MovementItem.Id
                                                           , inMovementId          := vbMovementId
                                                           , inGoodsId             := MovementItem.ObjectId
                                                           , inAmount              := CASE WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()

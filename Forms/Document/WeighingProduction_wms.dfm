@@ -756,6 +756,14 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenWeighingProductionForm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintNoGroup'
         end
         item
@@ -843,6 +851,10 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     end
     object bbPrintNoGroup: TdxBarButton
       Action = actPrintNoGroup
+      Category = 0
+    end
+    object bbOpenWeighingProductionForm: TdxBarButton
+      Action = actOpenWeighingProductionForm
       Category = 0
     end
   end
@@ -1200,6 +1212,32 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actOpenWeighingProductionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      ImageIndex = 28
+      FormName = 'TWeighingProductionForm'
+      FormNameParam.Value = 'TWeighingProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId_parent'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'false'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1295,6 +1333,7 @@ object WeighingProduction_wmsForm: TWeighingProduction_wmsForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end

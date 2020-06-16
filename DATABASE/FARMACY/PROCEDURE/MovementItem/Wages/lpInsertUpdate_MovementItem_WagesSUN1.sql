@@ -1,9 +1,9 @@
 -- Function: lpInsertUpdate_MovementItem_WagesSUN1 ()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesSUN1 (TDateTime, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_WagesSUN1 (TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_WagesSUN1(
-    IN inOparDate            TDateTime , -- Дата расчета
+    IN inSummaSUN1           TFloat  ,   -- Сумма штрафа
     IN inUnitID              Integer ,   -- Дата расчета
     IN inUserId              Integer     -- пользователь
  )
@@ -12,37 +12,26 @@ $BODY$
    DECLARE vbId         Integer;
    DECLARE vbMovementId Integer;
    DECLARE vbIsInsert   Boolean;
-   DECLARE vbSummaSUN1  TFloat;
-   DECLARE vbSumma      TFloat;
    DECLARE vbWeek       Integer;
+   DECLARE vbSummaSUN1  TFloat;
 BEGIN
 
-    IF date_part('DOW', inOparDate)::Integer = 4
+    IF COALESCE(inSummaSUN1, 0) = 0
     THEN
-      vbSummaSUN1 := - 200;
-    ELSEIF  date_part('DOW', inOparDate)::Integer = 5
-    THEN
-      vbSummaSUN1 := - 400;
-      inOparDate := inOparDate - INTERVAL '1 day';
-    ELSEIF  date_part('DOW', inOparDate)::Integer = 1
-    THEN
-      vbSummaSUN1 := - 750;
-      inOparDate := inOparDate - INTERVAL '4 day';
-    ELSE
       RETURN;
     END IF;
 
-    IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = date_trunc('month', inOparDate) AND Movement.DescId = zc_Movement_Wages())
+    IF EXISTS(SELECT 1 FROM Movement WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE) AND Movement.DescId = zc_Movement_Wages())
     THEN
         SELECT Movement.ID
         INTO vbMovementId
         FROM Movement
-        WHERE Movement.OperDate = date_trunc('month', inOparDate)
+        WHERE Movement.OperDate = date_trunc('month', CURRENT_DATE)
           AND Movement.DescId = zc_Movement_Wages();
     ELSE
         vbMovementId := lpInsertUpdate_Movement_Wages (ioId          := 0
                                                      , inInvNumber       := CAST (NEXTVAL ('Movement_Wages_seq')  AS TVarChar)
-                                                     , inOperDate        := date_trunc('month', inOparDate)
+                                                     , inOperDate        := date_trunc('month', CURRENT_DATE)
                                                      , inUserId          := vbUserId
                                                        );
 
@@ -62,7 +51,7 @@ BEGIN
         vbId := 0;
     END IF;
 
-    vbWeek := date_part('DAY', inOparDate)::Integer / 7 + 1;
+    vbWeek := date_part('DAY', CURRENT_DATE)::Integer / 7 + 1;
 
     -- определяется признак Создание/Корректировка
     vbIsInsert:= COALESCE (vbId, 0) = 0;
@@ -70,25 +59,40 @@ BEGIN
     IF vbIsInsert = TRUE
     THEN
          -- сохранили <Элемент документа>
-        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, COALESCE (vbSummaSUN1, 0)::TFloat, 0);
+        vbId := lpInsertUpdate_MovementItem (vbId, zc_MI_Sign(), inUnitId, vbMovementId, COALESCE (inSummaSUN1, 0)::TFloat, 0);
     END IF;
 
      -- сохранили свойство <По неделям>
     IF vbWeek = 1
     THEN
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek1(), vbId, vbSummaSUN1);
+      inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                             WHERE MovementItemFloat.MovementItemID = vbId
+                                               AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek1()), 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek1(), vbId, inSummaSUN1);
     ELSEIF vbWeek = 2
     THEN
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek2(), vbId, vbSummaSUN1);
+      inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                             WHERE MovementItemFloat.MovementItemID = vbId
+                                               AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek2()), 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek2(), vbId, inSummaSUN1);
     ELSEIF vbWeek = 3
     THEN
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek3(), vbId, vbSummaSUN1);
+      inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                             WHERE MovementItemFloat.MovementItemID = vbId
+                                               AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek3()), 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek3(), vbId, inSummaSUN1);
     ELSEIF vbWeek = 4
     THEN
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek4(), vbId, vbSummaSUN1);
+      inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                             WHERE MovementItemFloat.MovementItemID = vbId
+                                               AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek4()), 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek4(), vbId, inSummaSUN1);
     ELSEIF vbWeek = 5
     THEN
-      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek5(), vbId, vbSummaSUN1);
+      inSummaSUN1 := inSummaSUN1 + COALESCE((SELECT MovementItemFloat.ValueData FROM MovementItemFloat
+                                             WHERE MovementItemFloat.MovementItemID = vbId
+                                               AND MovementItemFloat.DescId = zc_MIFloat_SummaWeek5()), 0);
+      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_SummaWeek5(), vbId, inSummaSUN1);
     ELSE
       RAISE EXCEPTION 'Ошибка.Определения номера дня %', vbWeek;
     END IF;
@@ -112,8 +116,9 @@ BEGIN
     -- сохранили протокол
     PERFORM lpInsert_MovementItemProtocol (vbId, inUserId, vbIsInsert);
 
+    -- raise notice 'Прошло. % % %', inSummaSUN1, inUnitID, (SELECT Object.ValueData FROM Object WHERE object.Id = inUnitID);
 
---    RAISE EXCEPTION 'Прошло. % % % % % %', inOparDate, vbMovementId, vbId, vbSummaSUN1, vbSumma, vbWeek;
+    -- RAISE EXCEPTION 'Прошло. % % % % % %', CURRENT_DATE, vbMovementId, vbId, inSummaSUN1, vbSummaSUN1, vbWeek;
 
  END;
 $BODY$
@@ -127,4 +132,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementItem_WagesSUN1 (inOparDate := '13.02.2020', inUnitID := 183292 , inUserId := 3)
+-- SELECT * FROM lpInsertUpdate_MovementItem_WagesSUN1 (inSummaSUN1 := 1, inUnitID := 183292 , inUserId := 3)

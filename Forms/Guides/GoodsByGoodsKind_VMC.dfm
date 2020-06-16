@@ -1,30 +1,29 @@
 inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1058#1086#1074#1072#1088' '#1080' '#1042#1080#1076' '#1090#1086#1074#1072#1088#1072'> ('#1042#1052#1057')'
-  ClientHeight = 420
+  ClientHeight = 598
   ClientWidth = 1039
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.ExecuteDialogAction = ExecuteDialog
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -266
   ExplicitWidth = 1055
-  ExplicitHeight = 455
+  ExplicitHeight = 636
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 56
     Width = 1039
-    Height = 364
+    Height = 542
     ExplicitTop = 56
     ExplicitWidth = 1039
     ExplicitHeight = 364
-    ClientRectBottom = 364
+    ClientRectBottom = 542
     ClientRectRight = 1039
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1039
       ExplicitHeight = 364
       inherited cxGrid: TcxGrid
         Width = 1039
-        Height = 364
+        Height = 542
         ExplicitWidth = 1039
         ExplicitHeight = 364
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -1719,6 +1718,66 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1074#1103#1079#1100'>'
       ImageIndex = 0
     end
+    object ProtocolGoodsPropertyBoxId_2: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1071#1097#1080#1082' ('#1043#1086#1092#1088#1086')'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPropertyBoxId_2'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName_2'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object ProtocolGoodsPropertyBoxId: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1071#1097#1080#1082' (E2/E3)'
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' '#1071#1097#1080#1082' (E2/E3)'
+      ImageIndex = 34
+      FormName = 'TProtocolForm'
+      FormNameParam.Value = 'TProtocolForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsPropertyBoxId'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'BoxName'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object ProtocolOpenForm: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -2765,6 +2824,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocolGoodsPropertyBoxId'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocolGoodsPropertyBoxId_2'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -2835,6 +2902,14 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
       Action = ExecuteDialog
       Category = 0
       ImageIndex = 35
+    end
+    object bbProtocolGoodsPropertyBoxId: TdxBarButton
+      Action = ProtocolGoodsPropertyBoxId
+      Category = 0
+    end
+    object bbProtocolGoodsPropertyBoxId_2: TdxBarButton
+      Action = ProtocolGoodsPropertyBoxId_2
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -4060,7 +4135,7 @@ inherited GoodsByGoodsKind_VMCForm: TGoodsByGoodsKind_VMCForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 773
+    Left = 917
     Top = 3
   end
   object GuidesRetail6: TdsdGuides

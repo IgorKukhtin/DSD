@@ -5,11 +5,13 @@ interface
 uses
   System.SysUtils,
   System.Classes,
+  System.Generics.Collections,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
   Xml.XMLIntf,
   Xml.XMLDoc,
-  UDefinitions;
+  UDefinitions,
+  UQryThread;
 
 type
   TPacketKind = (pknOrderStatusChanged, pknReceivingResult);
@@ -37,23 +39,17 @@ type
 
   TPacketValuesArray = array of TPacketValues;
 
-  TDataObjects = record
-    HeaderQry, DetailQry, InsertQry, ErrorQry, SelectQry, DoneQry, ExecQry: TFDQuery;
-    WMSTrans: TFDTransaction;
-  end;
-
   TImportWMS = class
   strict private
     FStream: TMemoryStream;
     FValues: TPacketValuesArray;
     FData: TDataObjects;
+//    FErrQueue: TThreadedQueue<TErrData>;
+//    FImpErrProcessor: TImportErrProcessor;
+    FMsgProc: TNotifyMsgProc;
   strict private
     procedure IncArray; // Inc size of array FValues
     function Last: Integer; // Return High(FValues)
-    function getStr(const AttrValue: OleVariant): string; overload;
-    function getStr(const AttrValue: OleVariant; const ADefValue: string): string; overload;
-    function getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
-    function getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
     procedure CheckError(const Attr: string; const AttrValue: Integer; AMsgProc: TNotifyMsgProc); overload;
     procedure CheckError(const Attr: string; const AttrValue: Extended; AMsgProc: TNotifyMsgProc); overload;
     procedure CheckError(const Attr, AttrValue: string; AMsgProc: TNotifyMsgProc); overload;
@@ -67,14 +63,16 @@ type
     procedure ProcessReceivingResult(AMsgProc: TNotifyMsgProc);
   strict private
     function FetchPacket(APacket: TPacketKind): TMemoryStream;
-    procedure ExecuteAlanProc(const ASQL: string);
+    procedure FillWmsToHostMessage(AMsgProc: TNotifyMsgProc);
+    procedure ExecuteAlanProc(const AHeaderId: Integer; const APacketName, ASQL: string);
     procedure ProcessPacket(const AHeaderId: Integer; const APacketName, ASQL: string; AMsgProc: TNotifyMsgProc);
     procedure ProcessImportError(const AHeaderId: Integer; const APacketName, AErrMsg: string; AMsgProc: TNotifyMsgProc);
-    procedure UpdateWMSStatus(const AHeaderId, AErrCode: Integer; const AStatus, AErrMsg: string);
+    procedure ProcessWrongTypeError(AMsgProc: TNotifyMsgProc);
+    procedure UpdateWMSStatus(const AHeaderId, AErrCode: Integer; const AStatus, AErrMsg: string; AMsgProc: TNotifyMsgProc);
   public
-    constructor Create(AData: TDataObjects);
+    constructor Create(AData: TDataObjects; AMsgProc: TNotifyMsgProc);
     destructor Destroy; override;
-    function ImportPacket(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc): Boolean;
+    function ImportPacket(const APacket: TPacketKind): Boolean;
   end;
 
   EImportWMS = class(Exception);
@@ -89,7 +87,9 @@ implementation
 uses
   System.DateUtils,
   System.Variants,
-  UConstants;
+  Winapi.Windows,
+  UConstants,
+  UCommon;
 
 const
   cWmsMessageType = '<message_type type="%s"/>';
@@ -210,20 +210,30 @@ begin
   end;
 end;
 
-constructor TImportWMS.Create(AData: TDataObjects);
+constructor TImportWMS.Create(AData: TDataObjects; AMsgProc: TNotifyMsgProc);
 begin
   inherited Create;
-  FData := AData;
+  FData    := AData;
+  FMsgProc := AMsgProc;
+
   FStream := TMemoryStream.Create;
+//  FErrQueue := TThreadedQueue<TErrData>.Create(200, c1Sec * 5, 500);
+//  FImpErrProcessor := TImportErrProcessor.Create(FErrQueue, FData, FMsgProc);
 end;
 
 destructor TImportWMS.Destroy;
 begin
   FreeAndNil(FStream);
+//  FImpErrProcessor.Terminate;
+//  FImpErrProcessor.WaitFor;
+//  FreeAndNil(FImpErrProcessor);
+//  FreeAndNil(FErrQueue);  {TODO: экземпляр TImportWMS уничтожается раньше, чем отработают все потоки. См. TProcessPacketThread.Execute repeat..until}
   inherited;
 end;
 
-procedure TImportWMS.ExecuteAlanProc(const ASQL: string);
+procedure TImportWMS.ExecuteAlanProc(const AHeaderId: Integer; const APacketName, ASQL: string);
+var
+  thrPacket: TProcessPacketThread;
 begin
   // выполнение хр.процедуры в ALAN
   with FData.ExecQry do
@@ -233,6 +243,8 @@ begin
     SQL.Add(ASQL);
     Open;
   end;
+//  thrPacket := TProcessPacketThread.Create(FData.ExecQry, saOpen, nil, AHeaderId, APacketName, FErrQueue);
+//  thrPacket.Start;
 end;
 
 procedure TImportWMS.ProcessOrderStatusChanged(AMsgProc: TNotifyMsgProc);
@@ -268,7 +280,7 @@ begin
 
       // обработка пакета
       ProcessPacket(iHeader_Id, cpnOrderStatusChanged, sSQL, AMsgProc);
-
+      Sleep(100);
       FData.SelectQry.Next;
     end;
 
@@ -283,10 +295,10 @@ procedure TImportWMS.ProcessPacket(const AHeaderId: Integer; const APacketName, 
 begin
   try
     // выполнение хр.процедуры в ALAN
-    ExecuteAlanProc(ASQL);
+    ExecuteAlanProc(AHeaderId, APacketName, ASQL);
 
     // обновление поля to_host_header_message.Status = "Done" в WMS
-    UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, '');
+    UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, '', AMsgProc);
   except
     on E: Exception do
     begin
@@ -332,7 +344,7 @@ begin
 
       // обработка пакета
       ProcessPacket(iHeader_Id, cpnReceivingResult, sSQL, AMsgProc);
-
+      Sleep(100);
       FData.SelectQry.Next;
     end;
 
@@ -340,6 +352,35 @@ begin
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+  end;
+end;
+
+procedure TImportWMS.ProcessWrongTypeError(AMsgProc: TNotifyMsgProc);
+var
+  I: Integer;
+  thrQry: TQryThread;
+begin
+  // записываем статус 'error' и коды ошибок в WMS to_host_header_message
+  if Length(FValues) > 0 then
+  begin
+    try
+      for I := Low(FValues) to High(FValues) do
+        if FValues[I].Err_Code <> 0 then
+        begin 
+          with FData.ErrorQry do
+          begin
+            ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
+            ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
+            ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
+          end;
+          thrQry := TQryThread.Create(FData.ErrorQry, saExec, AMsgProc);
+          thrQry.Start;
+          Sleep(50);
+        end;
+    except
+      on E: Exception do
+        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+    end;
   end;
 end;
 
@@ -586,51 +627,108 @@ begin
   end;
 end;
 
-function TImportWMS.getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
+procedure TImportWMS.FillWmsToHostMessage(AMsgProc: TNotifyMsgProc);
 var
-  tmpSettings: TFormatSettings;
-  sValue: string;
+  I: Integer;
+  iDoneCount: Integer;
+  crdStart: Cardinal;
+  threadList: TObjectList<TQryThread>;
+  thrQry, tmpItem: TQryThread;
+const
+  cWait = c1Sec;  
+  cTotWait = 3 * c1Sec;
 begin
-  if VarIsNull(AttrValue) then
-    Exit(cErrXmlAttributeNotExists);
+  threadList := TObjectList<TQryThread>.Create(False);
+  try
+    // записываем данные в таб. Alan wms_to_host_message
+    for I := Low(FValues) to High(FValues) do
+    begin
+      if FValues[I].Err_Code <> 0 then Continue;
 
-  tmpSettings := TFormatSettings.Create;
-  sValue := AttrValue;
+      with FData.InsertQry do
+      begin
+        ParamByName('type').AsString := FValues[I].Message_Type;
+        ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
+        ParamByName('Detail_Id').AsInteger := FValues[I].Detail_Id;
+        ParamByName('MovementId').AsString := FValues[I].MovementId;
+        ParamByName('SKU_Id').AsString := FValues[I].SKU_Id;
+        ParamByName('Name').AsString := FValues[I].Name;
+        ParamByName('Qty').AsString := FValues[I].Qty;
+        ParamByName('Weight').AsString := FValues[I].Weight;
+        ParamByName('Weight_Biz').AsString := FValues[I].Weight_Biz;
+        ParamByName('OperDate').AsDateTime := FValues[I].OperDate;
+        ParamByName('Production_Date').AsString := FValues[I].Production_Date;
 
-  if Pos('.', sValue) = 1 then // .044
-   sValue := '0' + sValue;
+        thrQry := TQryThread.Create(FData.InsertQry, saExec, AMsgProc, tknDriven);
+        threadList.Add(thrQry);
+        thrQry.Start;
+      end;
+    end;
 
-  if tmpSettings.DecimalSeparator = ',' then
-    sValue := StringReplace(sValue, '.', ',', []);
+    // нужно подождать пока потоки заполнят таб. wms_to_host_message
+    iDoneCount := 0;
 
-  Result := StrToFloatDef(sValue, ADefValue);
+    while iDoneCount < threadList.Count do
+      for tmpItem in threadList do
+        if tmpItem.Done or tmpItem.Failed then Inc(iDoneCount);
+
+    for tmpItem in threadList do
+    begin
+      tmpItem.Terminate;
+      tmpItem.WaitFor;
+      tmpItem.Free;
+    end;
+
+  finally
+    FreeAndNil(threadList);
+  end;
 end;
 
-function TImportWMS.getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
-begin
-  if VarIsNull(AttrValue) then
-    Exit(cErrXmlAttributeNotExists);
+//function TImportWMS.getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
+//var
+//  tmpSettings: TFormatSettings;
+//  sValue: string;
+//begin
+//  if VarIsNull(AttrValue) then
+//    Exit(cErrXmlAttributeNotExists);
+//
+//  tmpSettings := TFormatSettings.Create;
+//  sValue := AttrValue;
+//
+//  if Pos('.', sValue) = 1 then // .044
+//   sValue := '0' + sValue;
+//
+//  if tmpSettings.DecimalSeparator = ',' then
+//    sValue := StringReplace(sValue, '.', ',', []);
+//
+//  Result := StrToFloatDef(sValue, ADefValue);
+//end;
+//
+//function TImportWMS.getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
+//begin
+//  if VarIsNull(AttrValue) then
+//    Exit(cErrXmlAttributeNotExists);
+//
+//  Result := StrToIntDef(AttrValue, ADefValue);
+//end;
+//
+//function TImportWMS.getStr(const AttrValue: OleVariant; const ADefValue: string): string;
+//begin
+//  if not VarIsNull(AttrValue) then
+//    Result := AttrValue
+//  else
+//    Result := ADefValue;
+//end;
+//
+//function TImportWMS.getStr(const AttrValue: OleVariant): string;
+//begin
+//  if not VarIsNull(AttrValue) then
+//    Result := AttrValue
+//  else
+//    Result := cErrStrXmlAttributeNotExists;
+//end;
 
-  Result := StrToIntDef(AttrValue, ADefValue);
-end;
-
-function TImportWMS.getStr(const AttrValue: OleVariant; const ADefValue: string): string;
-begin
-  if not VarIsNull(AttrValue) then
-    Result := AttrValue
-  else
-    Result := ADefValue;
-end;
-
-function TImportWMS.getStr(const AttrValue: OleVariant): string;
-begin
-  if not VarIsNull(AttrValue) then
-    Result := AttrValue
-  else
-    Result := cErrStrXmlAttributeNotExists;
-end;
-
-function TImportWMS.ImportPacket(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc): Boolean;
+function TImportWMS.ImportPacket(const APacket: TPacketKind): Boolean;
 var
   I, J: Integer;
   xmlDocument: IXMLDocument;
@@ -644,7 +742,8 @@ begin
 
   if tmpStream = nil then
   begin
-    AMsgProc(Format(cNoData, [GetImpTypeCaption(APacket)]));
+    if Assigned(FMsgProc) then
+      FMsgProc(Format(cNoData, [GetImpTypeCaption(APacket)]));
     Exit(True);
   end
   else
@@ -658,40 +757,20 @@ begin
   rootNode := xmlDocument.DocumentElement;
 
   case APacket of
-    pknOrderStatusChanged: FillArrOrderStatusChanged(rootNode, AMsgProc);
-    pknReceivingResult:    FillArrReceivingResult(rootNode, AMsgProc);
+    pknOrderStatusChanged: FillArrOrderStatusChanged(rootNode, FMsgProc);
+    pknReceivingResult:    FillArrReceivingResult(rootNode, FMsgProc);
   end;
 
-  // записываем статус 'error' и коды ошибок в WMS to_host_header_message
+  { записываем статус 'error' и коды ошибок в WMS to_host_header_message для записей,
+    которые содержат значения, не соответствующие ожидаемым типам данных }
   if Length(FValues) > 0 then
-  begin
-    FData.WMSTrans.StartTransaction;
-    try
-      for I := Low(FValues) to High(FValues) do
-        if FValues[I].Err_Code <> 0 then
-          with FData.ErrorQry do
-          begin
-            ParamByName('Err_Code').AsInteger  := FValues[I].Err_Code;
-            ParamByName('Err_Descr').AsString  := FValues[I].Err_Descr;
-            ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
-            ExecSQL;
-          end;
-
-      FData.WMSTrans.Commit;
-      Result := True;
-    except
-      on E: Exception do
-      begin
-        if FData.WMSTrans.Active then FData.WMSTrans.Rollback;
-        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
-      end;
-    end;
-  end;
+    ProcessWrongTypeError(FMsgProc);
 
   if Length(FValues) > 0 then
   begin
     try
-      // записываем данные в таб. alan.wms_to_host_message
+      // записываем данные в таб. Alan wms_to_host_message
+//      FillWmsToHostMessage(FMsgProc);
       for J := Low(FValues) to High(FValues) do
       begin
         if FValues[J].Err_Code <> 0 then Continue;
@@ -715,14 +794,14 @@ begin
 
       // обработка пакетов
       case APacket of
-        pknOrderStatusChanged: ProcessOrderStatusChanged(AMsgProc);
-        pknReceivingResult:    ProcessReceivingResult(AMsgProc);
+        pknOrderStatusChanged: ProcessOrderStatusChanged(FMsgProc);
+        pknReceivingResult:    ProcessReceivingResult(FMsgProc);
       end;
 
       Result := True;
     except
       on E: Exception do
-        if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
+        if Assigned(FMsgProc) then FMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
     end;
   end;
 end;
@@ -744,6 +823,7 @@ var
   xmlDocument: IXMLDocument;
   rootNode, dataNode: IXMLNode;
   sXml, sSite, sDescr, sInsert, sUpdateErr: string;
+  thrErr, thrMsg: TQryThread;
 const
   cInsert    = 'INSERT INTO wms_to_host_error(Header_Id, Site, Type, Description) VALUES(%d, %s, %s, %s)';
   cUpdateErr = 'UPDATE wms_to_host_message SET Error = TRUE WHERE Header_Id = %d';
@@ -785,8 +865,10 @@ begin
       Close;
       SQL.Clear;
       SQL.Add(sInsert);
-      ExecSQL;
+//      ExecSQL;
     end;
+    thrErr := TQryThread.Create(FData.ExecQry, saExec, AMsgProc);
+    thrErr.Start;
 
     // обновляем поле Error = TRUE в wms_to_host_message
     sUpdateErr := Format(cUpdateErr, [AHeaderId]);
@@ -795,25 +877,29 @@ begin
       Close;
       SQL.Clear;
       SQL.Add(sUpdateErr);
-      ExecSQL;
+//      ExecSQL;
     end;
+    thrMsg := TQryThread.Create(FData.ExecQry, saExec, AMsgProc);
+    thrMsg.Start;
 
     // обновление полей to_host_header_message.Status и Err_Descr в WMS
     if sSite = 'W' then
-      UpdateWMSStatus(AHeaderId, cImpErrWrongPacketData, cStatusError, sDescr)
+      UpdateWMSStatus(AHeaderId, cImpErrWrongPacketData, cStatusError, sDescr, AMsgProc)
     else
-      UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, ''); // если ошибка на нашей стороне, тогда пишем 'done' в WMS
+      UpdateWMSStatus(AHeaderId, cImpErrZero, cStatusDone, '', AMsgProc); // если ошибка на нашей стороне, тогда пишем 'done' в WMS
   except
     on E: Exception do
       if Assigned(AMsgProc) then AMsgProc(Format(cExceptionMsg, [E.ClassName, E.Message]));
   end;
 end;
 
-procedure TImportWMS.UpdateWMSStatus(const AHeaderId, AErrCode: Integer; const AStatus, AErrMsg: string); // AHeaderId - wms_to_host_message.Header_Id
+procedure TImportWMS.UpdateWMSStatus(const AHeaderId, AErrCode: Integer; // AHeaderId - wms_to_host_message.Header_Id
+  const AStatus, AErrMsg: string; AMsgProc: TNotifyMsgProc);
 const
   cWMSUpdate = 'UPDATE to_host_header_message SET Status= %s, Err_Code= %d, Err_Descr= %s  WHERE Id = %d';
 var
   sWMSUpdate: string;
+  thrQry: TQryThread;
 begin
   // обновление полей to_host_header_message.Status и Err_Descr в WMS
   sWMSUpdate := Format(cWMSUpdate, [QuotedStr(AStatus), AErrCode, QuotedStr(AErrMsg), AHeaderId]);
@@ -822,8 +908,10 @@ begin
     Close;
     SQL.Clear;
     SQL.Add(sWMSUpdate);
-    ExecSQL;
+//    ExecSQL;
   end;
+  thrQry := TQryThread.Create(FData.DoneQry, saExec, AMsgProc);
+  thrQry.Start;
 end;
 
 { TPacketValues }

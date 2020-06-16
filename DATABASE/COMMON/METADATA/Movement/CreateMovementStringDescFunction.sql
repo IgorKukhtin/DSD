@@ -187,9 +187,15 @@ CREATE OR REPLACE FUNCTION zc_MovementString_Title() RETURNS Integer AS $BODY$BE
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_Title', 'Название' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_Title');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_BookingId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_BookingId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_BookingId', 'Номер заказа' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_BookingId');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Шаблий О.В.
+ 16.06.20                                                                      * zc_MovementString_BookingId
  17.05.20                                                                      * zc_MovementString_Form
  12.05.20                                                                      * zc_MovementString_Title
  19.02.20                                                                      * zc_MovementString_Function

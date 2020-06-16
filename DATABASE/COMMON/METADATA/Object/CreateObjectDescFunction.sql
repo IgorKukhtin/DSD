@@ -1250,6 +1250,11 @@ CREATE OR REPLACE FUNCTION zc_Object_Hardware() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Hardware', 'Аппаратная часть' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Hardware');
    
+   
+CREATE OR REPLACE FUNCTION zc_Object_CheckSourceKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CheckSourceKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_CheckSourceKind', 'Источник чека' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CheckSourceKind');
+   
 
 
 --------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1268,6 +1273,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А. А.   Шаблий О.В.
+ 15.06.20                                                                                        * zc_Object_CheckSourceKind
  12.04.20                                                                                        * zc_Object_Hardware
  06.04.20         * zc_Object_SunExclusion
  05.04.20                                                                                        * zc_Object_SeasonalityCoefficient

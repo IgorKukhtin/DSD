@@ -112,6 +112,8 @@ type
     sku_id: TcxGridDBColumn;
     sku_code: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
+    actOpenWeighingProductionForm: TdsdOpenForm;
+    bbOpenWeighingProduction: TdxBarButton;
   private
   public
   end;

@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer
              , MovementDescName TVarChar
              , PlaceNumber Integer
 
+             , MovementId_parent Integer
              , OperDate_parent TDateTime
              , InvNumber_parent TVarChar
              , WeighingNumber_parent TFloat
@@ -128,6 +129,7 @@ BEGIN
              , MovementDesc.ItemName                AS MovementDescName
              , Movement.PlaceNumber                 AS PlaceNumber
 
+             , Movement_Parent.Id                   AS MovementId_parent
              , Movement_Parent.OperDate             AS OperDate_parent
              , CASE WHEN Movement_Parent.StatusId = zc_Enum_Status_Complete()
                          THEN Movement_Parent.InvNumber

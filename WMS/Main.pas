@@ -51,6 +51,14 @@ type
     grdAlan: TDBGrid;
     btnUpdateWMS: TButton;
     btnUpdateAlan: TButton;
+    lbDateStart: TLabel;
+    lbEndDate: TLabel;
+    dtpStartDateWMS: TDateTimePicker;
+    dtpEndDateWMS: TDateTimePicker;
+    lbStartDateAlan: TLabel;
+    lbEndDateAlan: TLabel;
+    dtpStartDateAlan: TDateTimePicker;
+    dtpEndDateAlan: TDateTimePicker;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -75,6 +83,10 @@ type
     procedure pgcMainChange(Sender: TObject);
     procedure btnUpdateWMSClick(Sender: TObject);
     procedure btnUpdateAlanClick(Sender: TObject);
+    procedure dtpStartDateWMSChange(Sender: TObject);
+    procedure dtpEndDateWMSChange(Sender: TObject);
+    procedure dtpStartDateAlanChange(Sender: TObject);
+    procedure dtpEndDateAlanChange(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
@@ -85,6 +97,8 @@ type
     procedure myShowMsg(const AMsg: string);
     procedure MyDelay(mySec: Integer);
     procedure AdjustColumnWidth(AGrid: TDBGrid);
+    procedure UpdateWMSGrid;
+    procedure UpdateAlanGrid;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -98,7 +112,14 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Math, System.Variants, FireDAC.Comp.DataSet, Winapi.Windows, UData, USettings;
+  System.Math,
+  System.Variants,
+  Winapi.Windows,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client,
+  FireDAC.Stan.Param,
+  UData,
+  USettings;
 
 procedure TMainForm.MyDelay(mySec: Integer);
 var
@@ -174,46 +195,49 @@ type
   TIntArray = array of Integer;
 var
   I, iCount, iLetterW: Integer;
-  tmpDS: TDataSet;
   colWidths: TIntArray;
   sValue: string;
+  mtbTemp: TFDMemTable;
 const
   cTestCount = 20;
 begin
   Assert(AGrid.DataSource.DataSet <> nil, 'Expected DataSet <> nil');
 
-  dmData.mtbTemp.CloneCursor(AGrid.DataSource.DataSet as TFDDataSet);
-  tmpDS := dmData.mtbTemp;
-
-  if tmpDS.RecordCount > 0 then
-    tmpDS.First
-  else
-    Exit;
-
-  iCount  := 0;
-  SetLength(colWidths, tmpDS.FieldCount);
-
-  while not tmpDS.Eof and (iCount < cTestCount)  do
-  begin
-    for I := 0 to Pred(tmpDS.FieldCount) do
-    begin
-      sValue := VarToStr(Coalesce(tmpDS.Fields[I].Value, 0));
-      colWidths[I] := Max(colWidths[I], Length(sValue));
-      colWidths[I] := Max(colWidths[I], Length(tmpDS.Fields[I].FieldName));
-    end;
-    Inc(iCount);
-    tmpDS.Next;
-  end;
-  dmData.mtbTemp.Close;// обязательно разорвать связь с датасетом-источником
-
-  iLetterW := Canvas.TextWidth('m');
-
-  AGrid.Columns.BeginUpdate;
+  mtbTemp := TFDMemTable.Create(nil);
   try
-    for I := 0 to Pred(AGrid.Columns.Count) do
-      AGrid.Columns[I].Width := colWidths[I] * iLetterW;
+    mtbTemp.CloneCursor(AGrid.DataSource.DataSet as TFDDataSet);
+
+    if mtbTemp.RecordCount > 0 then
+      mtbTemp.First
+    else
+      Exit;
+
+    iCount  := 0;
+    SetLength(colWidths, mtbTemp.FieldCount);
+
+    while not mtbTemp.Eof and (iCount < cTestCount)  do
+    begin
+      for I := 0 to Pred(mtbTemp.FieldCount) do
+      begin
+        sValue := VarToStr(Coalesce(mtbTemp.Fields[I].Value, 0));
+        colWidths[I] := Max(colWidths[I], Length(sValue));
+        colWidths[I] := Max(colWidths[I], Length(mtbTemp.Fields[I].FieldName));
+      end;
+      Inc(iCount);
+      mtbTemp.Next;
+    end;
+
+    iLetterW := Canvas.TextWidth('m');
+
+    AGrid.Columns.BeginUpdate;
+    try
+      for I := 0 to Pred(AGrid.Columns.Count) do
+        AGrid.Columns[I].Width := colWidths[I] * iLetterW;
+    finally
+      AGrid.Columns.EndUpdate;
+    end;
   finally
-    AGrid.Columns.EndUpdate;
+    FreeAndNil(mtbTemp)
   end;
 end;
 
@@ -224,13 +248,21 @@ begin
   if pgcMain.ActivePage = tsErrors then
   begin
     if not dmData.qryWMSGrid.Active then
+    begin
+      dmData.qryWMSGrid.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
+      dmData.qryWMSGrid.ParamByName('EndDate').AsDateTime := dtpEndDateWMS.DateTime;
       dmData.qryWMSGrid.Open;
+    end;
 
     grdWMS.Columns.RebuildColumns;
     AdjustColumnWidth(grdWMS);
 
     if not dmData.qryAlanGrid.Active then
+    begin
+      dmData.qryAlanGrid.ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
+      dmData.qryAlanGrid.ParamByName('EndDate').AsDateTime := dtpEndDateAlan.DateTime;
       dmData.qryAlanGrid.Open;
+    end;
 
     grdAlan.Columns.RebuildColumns;
     AdjustColumnWidth(grdAlan);
@@ -417,20 +449,12 @@ end;
 
 procedure TMainForm.btnUpdateAlanClick(Sender: TObject);
 begin
-  with dmData.qryAlanGrid do
-  begin
-    Close;
-    Open;
-  end;
+  UpdateAlanGrid;
 end;
 
 procedure TMainForm.btnUpdateWMSClick(Sender: TObject);
 begin
-  with dmData.qryWMSGrid do
-  begin
-    Close;
-    Open;
-  end;
+  UpdateWMSGrid;
 end;
 
 constructor TMainForm.Create(AOwner: TComponent);
@@ -444,12 +468,38 @@ begin
   pgcMain.ActivePage := tsLog;
   mmoMessage.Font.Size := seFontSize.Value;
   LogMemo.Font.Size := seFontSize.Value;
+
+  dtpStartDateWMS.DateTime := Date;
+  dtpEndDateWMS.DateTime   := Now;
+
+  dtpStartDateAlan.DateTime := Date;
+  dtpEndDateAlan.DateTime   := Now;
 end;
 
 destructor TMainForm.Destroy;
 begin
   FreeAndNil(FLog);
   inherited;
+end;
+
+procedure TMainForm.dtpEndDateAlanChange(Sender: TObject);
+begin
+  UpdateAlanGrid;
+end;
+
+procedure TMainForm.dtpEndDateWMSChange(Sender: TObject);
+begin
+  UpdateWMSGrid;
+end;
+
+procedure TMainForm.dtpStartDateAlanChange(Sender: TObject);
+begin
+  UpdateAlanGrid;
+end;
+
+procedure TMainForm.dtpStartDateWMSChange(Sender: TObject);
+begin
+  UpdateWMSGrid;
 end;
 
 procedure TMainForm.edtAlanServerExit(Sender: TObject);
@@ -469,17 +519,8 @@ begin
     if dmData.ImportWMS(myShowMsg) then
       myShowMsg('Success import data from WMS');
 
-    with dmData.qryWMSGrid do
-    begin
-      Close;
-      Open;
-    end;
-
-    with dmData.qryAlanGrid do
-    begin
-      Close;
-      Open;
-    end;
+    UpdateWMSGrid;
+    UpdateAlanGrid;
   end;
 end;
 
@@ -556,6 +597,30 @@ begin
     AddToLog_Timer(Folder_Name, '');
   finally
     Timer.Enabled := not FStopTimer;
+  end;
+end;
+
+procedure TMainForm.UpdateAlanGrid;
+begin
+  with dmData.qryAlanGrid do
+  begin
+    Close;
+    dmData.qryAlanGrid.ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
+    dmData.qryAlanGrid.ParamByName('EndDate').AsDateTime := dtpEndDateAlan.DateTime;
+    Open;
+    AdjustColumnWidth(grdAlan);
+  end;
+end;
+
+procedure TMainForm.UpdateWMSGrid;
+begin
+  with dmData.qryWMSGrid do
+  begin
+    Close;
+    dmData.qryWMSGrid.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
+    dmData.qryWMSGrid.ParamByName('EndDate').AsDateTime := dtpEndDateWMS.DateTime;
+    Open;
+    AdjustColumnWidth(grdWMS);
   end;
 end;
 

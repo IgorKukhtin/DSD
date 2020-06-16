@@ -125,6 +125,10 @@ type
     actGoods_shOpenChoice: TOpenChoiceForm;
     actGoodsKind_shOpenForm: TOpenChoiceForm;
     actGoodsTypeKindChoice: TOpenChoiceForm;
+    ProtocolGoodsPropertyBoxId: TdsdOpenForm;
+    ProtocolGoodsPropertyBoxId_2: TdsdOpenForm;
+    bbProtocolGoodsPropertyBoxId: TdxBarButton;
+    bbProtocolGoodsPropertyBoxId_2: TdxBarButton;
   private
     { Private declarations }
   public

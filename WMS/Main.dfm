@@ -22,7 +22,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1207
     Height = 590
-    ActivePage = tsErrors
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -261,15 +261,29 @@ object MainForm: TMainForm
           Left = 1
           Top = 1
           Width = 1197
-          Height = 24
+          Height = 26
           Align = alTop
+          Alignment = taLeftJustify
           BevelOuter = bvLowered
-          Caption = #1054#1096#1080#1073#1082#1080' WMS'
+          Caption = '  '#1054#1096#1080#1073#1082#1080' WMS'
           TabOrder = 0
-          ExplicitTop = -5
           DesignSize = (
             1197
-            24)
+            26)
+          object lbDateStart: TLabel
+            Left = 170
+            Top = 6
+            Width = 64
+            Height = 13
+            Caption = 'Start_Date '#1089' '
+          end
+          object lbEndDate: TLabel
+            Left = 438
+            Top = 6
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
           object btnUpdateWMS: TButton
             Left = 1056
             Top = 2
@@ -281,12 +295,32 @@ object MainForm: TMainForm
             TabStop = False
             OnClick = btnUpdateWMSClick
           end
+          object dtpStartDateWMS: TDateTimePicker
+            Left = 237
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpStartDateWMSChange
+          end
+          object dtpEndDateWMS: TDateTimePicker
+            Left = 467
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpEndDateWMSChange
+          end
         end
         object grdWMS: TDBGrid
           Left = 1
-          Top = 25
+          Top = 27
           Width = 1197
-          Height = 239
+          Height = 237
           Align = alClient
           DataSource = dmData.dsWMS
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -306,24 +340,33 @@ object MainForm: TMainForm
         Height = 292
         Align = alClient
         TabOrder = 1
-        ExplicitLeft = 152
-        ExplicitTop = 344
-        ExplicitWidth = 185
-        ExplicitHeight = 41
         object pnlAlanTop: TPanel
           Left = 1
           Top = 1
           Width = 1197
-          Height = 24
+          Height = 26
           Align = alTop
+          Alignment = taLeftJustify
           BevelOuter = bvLowered
-          Caption = #1054#1096#1080#1073#1082#1080' Alan'
+          Caption = '  '#1054#1096#1080#1073#1082#1080' Alan'
           TabOrder = 0
-          ExplicitLeft = 2
-          ExplicitTop = 9
           DesignSize = (
             1197
-            24)
+            26)
+          object lbStartDateAlan: TLabel
+            Left = 176
+            Top = 7
+            Width = 58
+            Height = 13
+            Caption = 'OperDate '#1089' '
+          end
+          object lbEndDateAlan: TLabel
+            Left = 438
+            Top = 7
+            Width = 12
+            Height = 13
+            Caption = #1087#1086
+          end
           object btnUpdateAlan: TButton
             Left = 1055
             Top = 2
@@ -335,12 +378,32 @@ object MainForm: TMainForm
             TabStop = False
             OnClick = btnUpdateAlanClick
           end
+          object dtpStartDateAlan: TDateTimePicker
+            Left = 237
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 1
+            OnChange = dtpStartDateAlanChange
+          end
+          object dtpEndDateAlan: TDateTimePicker
+            Left = 467
+            Top = 3
+            Width = 186
+            Height = 21
+            Date = 43997.546522673610000000
+            Time = 43997.546522673610000000
+            TabOrder = 2
+            OnChange = dtpEndDateAlanChange
+          end
         end
         object grdAlan: TDBGrid
           Left = 1
-          Top = 25
+          Top = 27
           Width = 1197
-          Height = 266
+          Height = 264
           Align = alClient
           DataSource = dmData.dsAlan
           Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]

@@ -552,6 +552,14 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenWeighingProduction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -610,6 +618,10 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
     end
     object bbProtocol: TdxBarButton
       Action = actMovementProtocol
+      Category = 0
+    end
+    object bbOpenWeighingProduction: TdxBarButton
+      Action = actOpenWeighingProductionForm
       Category = 0
     end
   end
@@ -829,6 +841,32 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
         end>
       isShowModal = False
     end
+    object actOpenWeighingProductionForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
+      ImageIndex = 28
+      FormName = 'TWeighingProductionForm'
+      FormNameParam.Value = 'TWeighingProductionForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = ClientDataSet
+          ComponentItem = 'MovementId_parent'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'false'
+          DataType = ftBoolean
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
   end
   object spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_wms_Movement_WeighingProduction'
@@ -961,6 +999,7 @@ object WeighingProduction_wmsJournalForm: TWeighingProduction_wmsJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 248
     Top = 216
   end

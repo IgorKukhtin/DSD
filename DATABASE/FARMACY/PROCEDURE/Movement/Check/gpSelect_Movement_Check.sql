@@ -45,6 +45,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , JackdawsChecksName TVarChar
              , PartionDateKindName TVarChar
              , Delay Boolean, DateDelay TDateTime
+             , CheckSourceKindName TVarChar
               )
 AS
 $BODY$
@@ -139,6 +140,7 @@ BEGIN
            , Object_PartionDateKind.ValueData                :: TVarChar  AS PartionDateKindName
            , COALESCE (MovementBoolean_Delay.ValueData, False)::Boolean   AS Delay
            , MovementDate_Delay.ValueData                                 AS DateDelay
+           , Object_CheckSourceKind.ValueData                             AS CheckSourceKindName
 
         FROM (SELECT Movement.*
                    , MovementLinkObject_Unit.ObjectId                    AS UnitId
@@ -348,6 +350,11 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_Delay
                                    ON MovementDate_Delay.MovementId = Movement_Check.Id
                                   AND MovementDate_Delay.DescId = zc_MovementDate_Delay()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CheckSourceKind
+                                         ON MovementLinkObject_CheckSourceKind.MovementId =  Movement_Check.Id
+                                        AND MovementLinkObject_CheckSourceKind.DescId = zc_MovementLinkObject_CheckSourceKind()
+            LEFT JOIN Object AS Object_CheckSourceKind ON Object_CheckSourceKind.Id = MovementLinkObject_CheckSourceKind.ObjectId
       ;
 
 END;

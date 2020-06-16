@@ -84,6 +84,7 @@ type
     BuyerName: TcxGridDBColumn;
     LoyaltySMDiscount: TcxGridDBColumn;
     LoyaltySMSumma: TcxGridDBColumn;
+    CheckSourceKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
