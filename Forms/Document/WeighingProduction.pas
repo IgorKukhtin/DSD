@@ -163,6 +163,11 @@ type
     cxLabel17: TcxLabel;
     edInvNumberOrder: TcxButtonEdit;
     OrderChoiceGuides: TdsdGuides;
+    getMovementForm: TdsdStoredProc;
+    actGetForm: TdsdExecStoredProc;
+    actOpenForm: TdsdOpenForm;
+    macOpenDocument: TMultiAction;
+    bbOpenDocumentMain: TdxBarButton;
   private
   public
   end;

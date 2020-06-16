@@ -1407,7 +1407,7 @@ object WeighingProductionJournalForm: TWeighingProductionJournalForm
     Top = 168
   end
   object getMovementForm: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Form'
+    StoredProcName = 'gpGet_Movement_Form_Process'
     DataSets = <>
     OutputType = otResult
     Params = <

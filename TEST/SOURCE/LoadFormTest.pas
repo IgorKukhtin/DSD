@@ -3477,10 +3477,10 @@ end;
 
  procedure TLoadFormTest.LoadWeighingProductionFormTest;
  begin
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
   {

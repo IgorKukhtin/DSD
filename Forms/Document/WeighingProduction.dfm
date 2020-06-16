@@ -831,6 +831,14 @@ object WeighingProductionForm: TWeighingProductionForm
         end
         item
           Visible = True
+          ItemName = 'bbOpenDocumentMain'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -931,6 +939,10 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object bbPrintBarCode: TdxBarButton
       Action = actPrintBarCode
+      Category = 0
+    end
+    object bbOpenDocumentMain: TdxBarButton
+      Action = macOpenDocument
       Category = 0
     end
   end
@@ -1360,6 +1372,60 @@ object WeighingProductionForm: TWeighingProductionForm
       PrinterNameParam.DataType = ftString
       PrinterNameParam.MultiSelectSeparator = ','
     end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'TWeighingProductionEditForm'
+      FormNameParam.Value = 'TWeighingProductionEditForm'
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MovementId_parent'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'inOperDate'
+          Value = 'NULL'
+          ComponentItem = 'OperDate_parent'
+          DataType = ftDateTime
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
+    object macOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083'. '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1075#1083#1072#1074#1085#1086#1075#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 28
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1455,6 +1521,7 @@ object WeighingProductionForm: TWeighingProductionForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
+    PropertiesCellList = <>
     Left = 347
     Top = 337
   end
@@ -1717,6 +1784,13 @@ object WeighingProductionForm: TWeighingProductionForm
         Component = GuidesBarCodeBox
         ComponentItem = 'TextValue'
         DataType = ftString
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'MovementId_Parent'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_Parent'
         MultiSelectSeparator = ','
       end>
     PackSize = 1
@@ -2187,5 +2261,30 @@ object WeighingProductionForm: TWeighingProductionForm
       end>
     Left = 36
     Top = 24
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form_Process'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MovementId_parent'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 624
+    Top = 360
   end
 end

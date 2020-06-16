@@ -65,15 +65,15 @@ BEGIN
 
     IF inNum = 2
     THEN
-        -- сохраняем Себ-ть - 1 прод, грн/кг
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), inId, inPriceIn);
+        -- сохраняем Себ-ть - 2 прод, грн/кг
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), inId, inPriceIn);
         -- сохраняем Кол-во отгрузка
         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountSale(), inId, inAmountSale);        
     END IF;
     IF inNum = 4
     THEN
-        -- сохраняем Себ-ть - 2 прод, грн/кг
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn2(), inId, inPriceIn);
+        -- сохраняем Себ-ть - 1 прод, грн/кг
+        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_PriceIn1(), inId, inPriceIn);
     END IF;
     
     
