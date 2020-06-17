@@ -231,6 +231,12 @@ type
     actUpdate_isWMS: TdsdExecStoredProc;
     bbUpdate_isWMS: TdxBarButton;
     clPercentRetBonus: TcxGridDBColumn;
+    spUpdateStateKind_Closed: TdsdStoredProc;
+    actUpdateStateKind_Closed: TdsdExecStoredProc;
+    macUpdateStateKind_Closed_list: TMultiAction;
+    macUpdateStateKind_Closed: TMultiAction;
+    bbUpdateStateKind_Closed: TdxBarButton;
+    actRefreshContract: TdsdDataSetRefresh;
 
   private
     { Private declarations }

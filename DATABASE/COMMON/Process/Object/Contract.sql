@@ -3,6 +3,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Contract() RETURNS Inte
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_isErased_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_isErased_Contract' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Contract_isVAT() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Contract_isVAT' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Contract_isWMS() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Contract_isWMS' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Object_Contract_StateKind_Closed() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Object_Contract_StateKind_Closed' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_Contract' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 -- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_Contract' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
@@ -39,6 +41,12 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Contrac
                                   , inCode:= 5
                                   , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Contract())||'> -  изменение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Object_Contract_isWMS');
+
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Object_Contract_StateKind_Closed()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 6
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Contract())||'> -  изменение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Object_Contract_StateKind_Closed');
 
 
 

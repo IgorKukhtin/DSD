@@ -654,6 +654,24 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     TabOrder = 9
     Width = 205
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = cbGoodsKind
+        Properties.Strings = (
+          'Checked')
+      end>
+  end
   inherited ActionList: TActionList
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -763,6 +781,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           Name = 'isTender'
           Value = Null
           Component = cbTender
+          DataType = ftBoolean
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'isGoodsKind'
+          Value = Null
+          Component = cbGoodsKind
           DataType = ftBoolean
           ParamType = ptInput
           MultiSelectSeparator = ','
@@ -1020,7 +1046,8 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       item
         Component = GuidesRetail
       end>
-    Top = 184
+    Left = 224
+    Top = 264
   end
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'

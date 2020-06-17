@@ -1368,6 +1368,14 @@
         end
         item
           Visible = True
+          ItemName = 'bbUpdateStateKind_Closed'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -1610,11 +1618,28 @@
       Action = actUpdate_isWMS
       Category = 0
     end
+    object bbUpdateStateKind_Closed: TdxBarButton
+      Action = macUpdateStateKind_Closed
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 248
     Top = 136
+    object actRefreshContract: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      RefreshOnTabSetChanges = False
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -1637,6 +1662,22 @@
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object macUpdateStateKind_Closed: TMultiAction
+      Category = 'Close'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = macUpdateStateKind_Closed_list
+        end
+        item
+          Action = actRefreshContract
+        end>
+      QuestionBeforeExecute = #1047#1072#1082#1088#1099#1090#1100' '#1042#1057#1045' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072'?'
+      InfoAfterExecute = #1047#1072#1082#1088#1099#1090#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1086#1074' '#1074#1099#1087#1086#1083#1085#1077#1085#1086
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 13
     end
     object PaidKindChoiceFormСС: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2686,6 +2727,19 @@
       Hint = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1054#1090#1087#1088#1072#1074#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1042#1052#1057' '#1044#1072'/'#1053#1077#1090
       ImageIndex = 52
     end
+    object actUpdateStateKind_Closed: TdsdExecStoredProc
+      Category = 'Close'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      StoredProc = spUpdateStateKind_Closed
+      StoredProcList = <
+        item
+          StoredProc = spUpdateStateKind_Closed
+        end>
+      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1047#1072#1082#1088#1099#1090#1100' '#1074#1099#1073#1088#1072#1085#1085#1099#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 13
+    end
     object actUpdateVat: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -2717,6 +2771,17 @@
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102' ('#1076#1083#1103' '#1080#1089#1093'. '#1087#1083#1072#1090#1077#1078#1077#1081') '#1044#1072'/'#1053#1077#1090'"'
       ImageIndex = 76
+    end
+    object macUpdateStateKind_Closed_list: TMultiAction
+      Category = 'Close'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actUpdateStateKind_Closed
+        end>
+      View = cxGridDBTableView
+      Caption = 'macUpdateStateKind_Closed_list'
+      ImageIndex = 13
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -3398,5 +3463,48 @@
     PackSize = 1
     Left = 680
     Top = 184
+  end
+  object spUpdateStateKind_Closed: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Contract_StateKind_Closed'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId '
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inContractStateKindId'
+        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inEndDate_Term'
+        Value = 'NULL'
+        Component = ClientDataSet
+        ComponentItem = 'EndDate_Term'
+        DataType = ftDateTime
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 320
+    Top = 283
   end
 end

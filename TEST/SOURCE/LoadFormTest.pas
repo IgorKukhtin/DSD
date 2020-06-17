@@ -375,10 +375,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-  {
+
   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
@@ -2541,11 +2541,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
   //
