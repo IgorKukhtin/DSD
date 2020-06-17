@@ -1182,7 +1182,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inIsFarm'
-          Value = 'True'
+          Value = True
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -1200,7 +1200,7 @@ inherited MainForm: TMainForm
       GuiParams = <
         item
           Name = 'inIsFarm'
-          Value = 'False'
+          Value = False
           DataType = ftBoolean
           MultiSelectSeparator = ','
         end>
@@ -3675,6 +3675,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Sun_Supplement: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1057#1059#1053')'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1074' '#1057#1059#1053' v.1'
+      Hint = #1054#1090#1095#1077#1090' '#1044#1086#1087#1086#1083#1085#1077#1085#1080#1103' '#1074' '#1057#1059#1053' v.1'
+      FormName = 'TReport_Movement_Send_RemainsSun_SupplementForm'
+      FormNameParam.Value = 'TReport_Movement_Send_RemainsSun_SupplementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 496
@@ -4330,6 +4342,9 @@ inherited MainForm: TMainForm
       end
       object N217: TMenuItem
         Action = actReport_SendSUNDelay
+      end
+      object v11: TMenuItem
+        Action = actReport_Sun_Supplement
       end
       object N202: TMenuItem
         Caption = '-'
