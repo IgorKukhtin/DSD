@@ -1888,6 +1888,9 @@ end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQuality_RawForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQuality_RawForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityEditForm'));

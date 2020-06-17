@@ -1130,6 +1130,8 @@ type
     ColorText_Addr: TcxGridDBColumn;
     ColorText_Text: TcxGridDBColumn;
     actUpdate: TdsdInsertUpdateAction;
+    actGoodsQuality_Raw: TdsdOpenForm;
+    miGoodsQuality_Raw: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

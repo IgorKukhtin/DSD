@@ -1037,6 +1037,8 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         Action = actOpenPromo
         ShortCut = 13
       end>
+    Left = 512
+    Top = 224
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 176
@@ -1151,8 +1153,8 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
-    Left = 344
-    Top = 208
+    Left = 336
+    Top = 224
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
