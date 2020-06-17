@@ -265,6 +265,13 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentVert = vaCenter
             Width = 59
           end
+          object Discount_Condition: TcxGridDBColumn
+            Caption = #1050#1086#1084#1087#1077#1085#1089#1072#1094#1080#1103', %'
+            DataBinding.FieldName = 'Discount_Condition'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 59
+          end
           object MainDiscount: TcxGridDBColumn
             Caption = #1054#1073#1097#1072#1103' '#1089#1082#1080#1076#1082#1072' '#1076#1083#1103' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103', %'
             DataBinding.FieldName = 'MainDiscount'
