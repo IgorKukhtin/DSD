@@ -82,6 +82,10 @@ type
     actPrint2: TdsdPrintAction;
     bbPrint1: TdxBarButton;
     bbPrint2: TdxBarButton;
+    PrintHead: TClientDataSet;
+    spSelect_Movement_Promo_Print: TdsdStoredProc;
+    actPrint_Mov: TdsdPrintAction;
+    bbPrint_Mov: TdxBarButton;
   private
     { Private declarations }
   public

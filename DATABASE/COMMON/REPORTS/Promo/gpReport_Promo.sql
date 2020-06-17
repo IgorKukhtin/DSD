@@ -76,6 +76,7 @@ RETURNS TABLE(
     ,OperDate             TDateTime -- * Статус внесения в базу
     ,PriceSale            TFloat    -- * Цена на полке/скидка для покупателя
     ,Comment              TVarChar  --Комментарии
+    , CommentMain         TVarChar  --Примечание (общее)
     ,ShowAll              Boolean   --Показывать все данные
     ,isPromo              Boolean   --Акция (да/нет)
     ,Checked              Boolean   --Согласовано (да/нет)
@@ -163,6 +164,7 @@ BEGIN
                               , MovementDate_CheckDate.ValueData            AS CheckDate          --Дата согласования
                               , MovementFloat_CostPromo.ValueData           AS CostPromo          --Стоимость участия в акции
                               , MovementString_Comment.ValueData            AS Comment            --Примечание
+                              , MovementString_CommentMain.ValueData        AS CommentMain        --Примечание (общее)
                               , COALESCE (Movement_Promo.isPromo, FALSE)   :: Boolean AS isPromo  -- акция (да/нет)
                               , COALESCE (MovementBoolean_Checked.ValueData, FALSE) :: Boolean AS Checked  -- согласовано (да/нет)
       
@@ -194,7 +196,10 @@ BEGIN
                              LEFT JOIN MovementString AS MovementString_Comment
                                                       ON MovementString_Comment.MovementId = Movement_Promo.Id
                                                      AND MovementString_Comment.DescId = zc_MovementString_Comment()
-                     
+                             LEFT JOIN MovementString AS MovementString_CommentMain
+                                                      ON MovementString_CommentMain.MovementId = Movement_Promo.Id
+                                                     AND MovementString_CommentMain.DescId = zc_MovementString_CommentMain()
+
                              LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                                        ON MovementBoolean_Checked.MovementId = Movement_Promo.Id
                                                       AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
@@ -526,6 +531,7 @@ BEGIN
           , CASE WHEN vbShowAll THEN Movement_Promo.OperDate END     :: TDateTime AS OperDate
           , CASE WHEN vbShowAll THEN MI_PromoGoods.PriceSale END     :: TFloat    AS PriceSale
           , Movement_Promo.Comment                                                AS Comment
+          , Movement_Promo.CommentMain      :: TVarChar                           AS CommentMain
           , vbShowAll                                                             AS ShowAll
           , Movement_Promo.isPromo                                                AS isPromo
           , Movement_Promo.Checked                                                AS Checked

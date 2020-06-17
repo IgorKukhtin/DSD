@@ -807,7 +807,6 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     end
     object actPrint_Mov: TdsdPrintAction
       Category = 'DSDLib'
-      ActiveControl = cbPromo
       MoveParams = <>
       StoredProc = spSelect_Movement_Promo_Print
       StoredProcList = <
@@ -817,7 +816,6 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
       Hint = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
       ImageIndex = 3
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintHead
@@ -844,7 +842,7 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
           Name = 'CommentMain'
           Value = Null
           Component = MasterCDS
-          ComponentItem = 'Comment'
+          ComponentItem = 'CommentMain'
           DataType = ftString
           MultiSelectSeparator = ','
         end>

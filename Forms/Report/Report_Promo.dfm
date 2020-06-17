@@ -577,6 +577,7 @@ inherited Report_PromoForm: TReport_PromoForm
       MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1090#1086#1088#1075#1086#1074#1086#1075#1086' '#1086#1090#1076#1077#1083#1072
       ImageIndex = 17
       DataSets = <
         item
@@ -611,6 +612,7 @@ inherited Report_PromoForm: TReport_PromoForm
       MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1089#1083#1091#1078#1073
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1093' '#1089#1083#1091#1078#1073
       ImageIndex = 16
       DataSets = <
         item
@@ -644,7 +646,8 @@ inherited Report_PromoForm: TReport_PromoForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1054#1090#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -781,6 +784,55 @@ inherited Report_PromoForm: TReport_PromoForm
         end>
       isShowModal = False
     end
+    object actPrint_Mov: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect_Movement_Promo_Print
+      StoredProcList = <
+        item
+          StoredProc = spSelect_Movement_Promo_Print
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
+      Hint = #1055#1077#1095#1072#1090#1100' '#1089#1083#1091#1078'. '#1079#1072#1087#1080#1089#1082#1080
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = PrintHead
+          UserName = 'frxHead'
+        end>
+      Params = <
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Comment'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'Comment'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CommentMain'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CommentMain'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      ReportName = #1040#1082#1094#1080#1103
+      ReportNameParam.Value = #1040#1082#1094#1080#1103
+      ReportNameParam.DataType = ftString
+      ReportNameParam.MultiSelectSeparator = ','
+      PrinterNameParam.Value = ''
+      PrinterNameParam.DataType = ftString
+      PrinterNameParam.MultiSelectSeparator = ','
+    end
   end
   inherited MasterDS: TDataSource
     Top = 208
@@ -906,6 +958,14 @@ inherited Report_PromoForm: TReport_PromoForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Mov'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -931,6 +991,10 @@ inherited Report_PromoForm: TReport_PromoForm
     end
     object bbPrint2: TdxBarButton
       Action = actPrint2
+      Category = 0
+    end
+    object bbPrint_Mov: TdxBarButton
+      Action = actPrint_Mov
       Category = 0
     end
   end
@@ -988,5 +1052,32 @@ inherited Report_PromoForm: TReport_PromoForm
       end>
     Left = 740
     Top = 8
+  end
+  object PrintHead: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    Params = <>
+    Left = 640
+    Top = 232
+  end
+  object spSelect_Movement_Promo_Print: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Promo_Print'
+    DataSet = PrintHead
+    DataSets = <
+      item
+        DataSet = PrintHead
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end>
+    PackSize = 1
+    Left = 744
+    Top = 240
   end
 end
