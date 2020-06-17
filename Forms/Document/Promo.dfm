@@ -2968,7 +2968,7 @@
       DataSets = <
         item
           UserName = 'frxHead'
-          IndexFieldNames = 'GroupNum;GoodsName;Num'
+          IndexFieldNames = 'GoodsName;Num'
           GridView = cxGridDBTableViewCalc
         end>
       Params = <
@@ -3029,7 +3029,7 @@
       DataSets = <
         item
           UserName = 'frxHead'
-          IndexFieldNames = 'GroupNum;GoodsName;Num'
+          IndexFieldNames = 'GoodsName;Num'
           GridView = cxGridDBTableViewCalc2
         end>
       Params = <
