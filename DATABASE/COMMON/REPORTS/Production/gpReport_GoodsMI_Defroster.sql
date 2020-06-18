@@ -46,7 +46,7 @@ BEGIN
          -- 
     WITH tmpMI_1 AS  (SELECT MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
-                           , MIContainer.ObjectIntId_Analyzer        AS GoodsKindId
+                           , COALESCE (MIContainer.ObjectIntId_Analyzer,8335)   AS GoodsKindId
 
                              -- документ для расчета приход кол-во для Separate расход с inUnitId
                            , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
@@ -151,7 +151,7 @@ BEGIN
                         AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate(), zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_Loss() , zc_Movement_ProductionUnion())
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
-                             , MIContainer.ObjectIntId_Analyzer
+                             , COALESCE (MIContainer.ObjectIntId_Analyzer,8335)
                              , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
                                      AND MIContainer.DescId = zc_MIContainer_Count()
                                      AND MIContainer.IsActive = FALSE
