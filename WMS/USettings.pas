@@ -85,19 +85,27 @@ begin
     Result := LStr;
 end;
 
+function GetAppName: string;
+begin
+  Result := ExtractFileName(ParamStr(0));
+  Result := ChangeFileExt(Result, '');
+end;
+
 function GetAppDataFolder: string;
 begin
-  Result := IncludeTrailingPathDelimiter(GetPublicDocuments) + cAppDataFolder;
+  if IsService then
+    Result := IncludeTrailingPathDelimiter(GetPublicDocuments) + GetAppName
+  else
+    {$IFDEF DEBUG}
+    Result := ExtractFilePath(ParamStr(0));
+    {$ELSE}
+    Result := IncludeTrailingPathDelimiter(TPath.GetDocumentsPath) + GetAppName;
+    {$ENDIF}
 end;
 
 function GetINIFolder: string;
 begin
   Result := GetAppDataFolder;
-
-//  if IsService then
-//    Result := IncludeTrailingPathDelimiter(GetPublicDocuments) + sAppName
-//  else
-//    Result := IncludeTrailingPathDelimiter(TPath.GetDocumentsPath) + sAppName;
 end;
 
 { TSettings }

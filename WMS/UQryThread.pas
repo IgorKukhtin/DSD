@@ -5,8 +5,12 @@ interface
 uses
   System.Classes,
   System.Generics.Collections,
+  System.SyncObjs,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
+  {$IFDEF LOG}
+  ULog,
+  {$ENDIF}
   UDefinitions;
 
 type
@@ -17,6 +21,11 @@ type
     HeaderId: Integer;
     PacketName: string;
     EMessage: string;
+  end;
+
+  TQryData = record
+    SQLText: string;
+    Params: TFDParams;
   end;
 
   TBaseQryThread = class(TThread)
@@ -77,15 +86,44 @@ type
     destructor Destroy; override;
   end;
 
+  // Управляемый поток. Выполняет запросы, которые добавляются во внутреннюю очередь во время жизни потока.
+  TQryQueuedThread = class(TThread)
+  strict private
+    FQry: TFDQuery;
+    FConn: TFDConnection;
+    FSqlQueue: TThreadedQueue<TQryData>;
+    FMsgProc: TNotifyMsgProc;
+    FTaskCount: Cardinal;
+    FName: string;
+    {$IFDEF LOG}
+    FLog: TLog;
+    {$ENDIF}
+  strict private
+    function GetAction(const ASQL: string): TSQLAction;
+    function GetAllTasksDone: Boolean;
+    procedure ProcessQry(AData: TQryData);
+    procedure WriteLog(const AMsg: string);
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(AConnection: TFDCustomConnection; AMsgProc: TNotifyMsgProc);
+    destructor Destroy; override;
+    property AllTasksDone: Boolean read GetAllTasksDone;
+    procedure AddData(AData: TQryData);
+  end;
+
+
 implementation
 
 uses
   System.SysUtils,
-  System.SyncObjs,
   ActiveX,
   Xml.XMLIntf,
   Xml.XMLDoc,
   UConstants,
+  {$IFDEF LOG}
+  System.StrUtils,
+  {$ENDIF}
   UCommon;
 
 { TBaseQryThread }
@@ -101,13 +139,25 @@ begin
   FAction := Action;
   FMsgProc := AMsgProc;
 
-  if AQry.Connection <> nil then
-    FConn.Assign(AQry.Connection);
+  TMonitor.Enter(AQry);
+  try
+    if AQry.Connection <> nil then
+    begin
+      TMonitor.Enter(AQry.Connection);
+      try
+        FConn.Assign(AQry.Connection);
+      finally
+        TMonitor.Exit(AQry.Connection);
+      end;
+    end;
 
-  FQry.SQL.Assign(AQry.SQL);
+    FQry.SQL.Assign(AQry.SQL);
 
-  for I := 0 to Pred(FQry.ParamCount) do
-    FQry.Params[I].Assign(AQry.Params[I]);
+    for I := 0 to Pred(FQry.ParamCount) do
+      FQry.Params[I].Assign(AQry.Params[I]);
+  finally
+    TMonitor.Exit(AQry);
+  end;
 
   FQry.Connection := FConn;
 
@@ -232,23 +282,47 @@ begin
   FAlanConn := TFDConnection.Create(nil);
   FWMSConn  := TFDConnection.Create(nil);
 
-  if AData.ExecQry.Connection <> nil then
-    FAlanConn.Assign(AData.ExecQry.Connection);
+  TMonitor.Enter(AData.ExecQry);
+  try
+    if AData.ExecQry.Connection <> nil then
+    begin
+      TMonitor.Enter(AData.ExecQry.Connection);
+      try
+        FAlanConn.Assign(AData.ExecQry.Connection);
+      finally
+        TMonitor.Exit(AData.ExecQry.Connection);
+      end;
+    end;
 
-  FExecQry.SQL.Assign(AData.ExecQry.SQL);
+    FExecQry.SQL.Assign(AData.ExecQry.SQL);
 
-  for I := 0 to Pred(FExecQry.ParamCount) do
-    FExecQry.Params[I].Assign(AData.ExecQry.Params[I]);
+    for I := 0 to Pred(FExecQry.ParamCount) do
+      FExecQry.Params[I].Assign(AData.ExecQry.Params[I]);
+  finally
+    TMonitor.Exit(AData.ExecQry);
+  end;
 
   FExecQry.Connection := FAlanConn;
 
-  if AData.DoneQry.Connection <> nil then
-    FWMSConn.Assign(AData.DoneQry.Connection);
+  TMonitor.Enter(AData.DoneQry);
+  try
+    if AData.DoneQry.Connection <> nil then
+    begin
+      TMonitor.Enter(AData.DoneQry.Connection);
+      try
+        FWMSConn.Assign(AData.DoneQry.Connection);
+      finally
+        TMonitor.Exit(AData.DoneQry.Connection);
+      end;
+    end;
 
-  FDoneQry.SQL.Assign(AData.DoneQry.SQL);
+    FDoneQry.SQL.Assign(AData.DoneQry.SQL);
 
-  for I := 0 to Pred(FDoneQry.ParamCount) do
-    FDoneQry.Params[I].Assign(AData.DoneQry.Params[I]);
+    for I := 0 to Pred(FDoneQry.ParamCount) do
+      FDoneQry.Params[I].Assign(AData.DoneQry.Params[I]);
+  finally
+    TMonitor.Exit(AData.DoneQry);
+  end;
 
   FDoneQry.Connection := FWMSConn;
 
@@ -388,6 +462,164 @@ begin
   end;
   thrQry := TQryThread.Create(FDoneQry, saExec, AMsgProc);
   thrQry.Start;
+end;
+
+{ TQryQueuedThread }
+
+procedure TQryQueuedThread.AddData(AData: TQryData);
+var
+  waitResult: TWaitResult;
+begin
+  repeat
+    Assert(FSqlQueue <> nil, 'Expected FSqlQueue <> nil');
+    waitResult := FSqlQueue.PushItem(AData);
+    WriteLog('AddData ParamCount= ' + IntToStr(AData.Params.Count));
+    TThread.Sleep(10);
+  until (waitResult <> wrTimeout);
+
+  Inc(FTaskCount);
+end;
+
+constructor TQryQueuedThread.Create(AConnection: TFDCustomConnection; AMsgProc: TNotifyMsgProc);
+const
+  cQueueSize   = 100;
+  cPushTimeOut = c1Sec * 2;
+  cPopTimeOut  = 50;
+begin
+  FName := 'QryQueuedThread_' + IntToStr(TThread.GetTickCount);
+  FSqlQueue := TThreadedQueue<TQryData>.Create(cQueueSize, cPushTimeOut, cPopTimeOut);
+  FMsgProc  := AMsgProc;
+
+  FQry  := TFDQuery.Create(nil);
+  FConn := TFDConnection.Create(nil);
+
+  TMonitor.Enter(AConnection);
+  try
+    if AConnection <> nil then
+      FConn.Assign(AConnection);
+  finally
+    TMonitor.Exit(AConnection);
+  end;
+
+  FQry.Connection := FConn;
+
+  {$IFDEF LOG}
+  FLog := TLog.Create;
+  {$ENDIF}
+
+  WriteLog('Create thread');
+  inherited Create(False);
+end;
+
+destructor TQryQueuedThread.Destroy;
+var
+  tmpData: TQryData;
+begin
+  {$IFDEF LOG}
+  WriteLog('Destroy thread' + #13#10 + DupeString('-', 80));
+  {$ENDIF}
+  FreeAndNil(FQry);
+  FreeAndNil(FConn);
+
+  while FSqlQueue.PopItem(tmpData) = wrSignaled do
+    FreeAndNil(tmpData.Params);
+
+  FreeAndNil(FSqlQueue);
+  {$IFDEF LOG}
+  FreeAndNil(FLog);
+  {$ENDIF}
+  inherited;
+end;
+
+procedure TQryQueuedThread.Execute;
+var
+  tmpData: TQryData;
+begin
+  inherited;
+
+  while not Terminated do
+  begin
+    if FSqlQueue.PopItem(tmpData) = wrSignaled then
+      ProcessQry(tmpData);
+
+    TThread.Sleep(10);
+  end;
+end;
+
+function TQryQueuedThread.GetAction(const ASQL: string): TSQLAction;
+begin
+  Result := saExec;
+  if Pos('select', LowerCase(Trim(ASQL))) = 1 then
+    Result := saOpen;
+end;
+
+function TQryQueuedThread.GetAllTasksDone: Boolean;
+begin
+  WriteLog('GetAllTasksDone: TotalItemsPopped= ' + IntToStr(FSqlQueue.TotalItemsPopped) +
+           ' TaskCount= ' + IntToStr(FTaskCount));
+  Result := FSqlQueue.TotalItemsPopped >= FTaskCount;
+end;
+
+procedure TQryQueuedThread.ProcessQry(AData: TQryData);
+begin
+  WriteLog('ProcessQry start');
+  if Length(Trim(AData.SQLText)) = 0 then
+  begin
+    WriteLog('ProcessQry empty AData.SQLText');
+    Exit;
+  end;
+
+  FQry.Close;
+  FQry.SQL.Clear;
+  FQry.SQL.Add(AData.SQLText);
+  FQry.Params.Clear;
+  FQry.Params.Assign(AData.Params);
+
+  try
+    case GetAction(AData.SQLText) of
+     saOpen:
+       begin
+         try
+           FQry.Open;
+         except
+           on E: Exception do
+             if Assigned(FMsgProc) then
+               TThread.Queue(nil,
+                 procedure
+                 begin
+                   FMsgProc(E.Message);
+                 end
+               );
+         end;
+       end;
+
+     saExec:
+       begin
+         try
+           FQry.ExecSQL;
+         except
+           on E: Exception do
+             if Assigned(FMsgProc) then
+               TThread.Queue(nil,
+                 procedure
+                 begin
+                   FMsgProc(E.Message);
+                 end
+               );
+         end;
+       end;
+    end;
+  finally
+    WriteLog('ProcessQry end');
+    FreeAndNil(AData.Params);
+  end;
+end;
+
+procedure TQryQueuedThread.WriteLog(const AMsg: string);
+begin
+  {$IFDEF LOG}
+  FLog.Write(FName + '.txt', AMsg);
+  {$ENDIF}
 end;
 
 end.
