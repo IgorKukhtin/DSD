@@ -86,6 +86,8 @@ type
     actPrint_Mov: TdsdPrintAction;
     bbPrint_Mov: TdxBarButton;
     cbGoodsKind: TcxCheckBox;
+    OpenReport_SaleReturn_byPromo: TdsdOpenForm;
+    bbReport_SaleReturn_byPromo: TdxBarButton;
   private
     { Private declarations }
   public

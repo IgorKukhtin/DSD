@@ -1162,7 +1162,8 @@ uses
   WorkTimeKindSummDialog in '..\..\Forms\Guides\WorkTimeKindSummDialog.pas' {WorkTimeKindSummDialogForm: TParentForm},
   TransportServiceSummReestrDialog in '..\..\Forms\Document\TransportServiceSummReestrDialog.pas' {TransportServiceSummReestrDialogForm: TParentForm},
   Report_Insert_RemainsOLAPTable in '..\..\Forms\Report\Report_Insert_RemainsOLAPTable.pas' {Report_Insert_RemainsOLAPTableForm: TParentForm},
-  GoodsQuality_Raw in '..\..\Forms\Guides\GoodsQuality_Raw.pas' {GoodsQuality_RawForm: TParentForm};
+  GoodsQuality_Raw in '..\..\Forms\Guides\GoodsQuality_Raw.pas' {GoodsQuality_RawForm: TParentForm},
+  Report_SaleReturn_byPromo in '..\..\Forms\Report\Report_SaleReturn_byPromo.pas' {Report_SaleReturn_byPromoForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

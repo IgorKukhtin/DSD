@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Report_Promo_Result (
 RETURNS TABLE(
      MovementId           Integer   --ИД документа акции
     ,InvNumber            Integer   --№ документа акции
+    ,OperDate             TDateTime --
     ,UnitName             TVarChar  --Склад
     ,PersonalTradeName    TVarChar  --Ответственный представитель коммерческого отдела
     ,PersonalName         TVarChar  --Ответственный представитель маркетингового отдела	
@@ -181,6 +182,7 @@ BEGIN
         SELECT
             Movement_Promo.Id                --ИД документа акции
           , Movement_Promo.InvNumber          -- * № документа акции
+          , Movement_Promo.OperDate
           , Movement_Promo.UnitName           --Склад
           , Movement_Promo.PersonalTradeName  --Ответственный представитель коммерческого отдела
           , Movement_Promo.PersonalName       --* Ответственный представитель маркетингового отдела	

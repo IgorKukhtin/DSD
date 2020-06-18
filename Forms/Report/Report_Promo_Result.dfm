@@ -174,6 +174,15 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
             HeaderAlignmentVert = vaCenter
             Width = 49
           end
+          object OperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object CheckDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1103
             DataBinding.FieldName = 'CheckDate'
@@ -804,6 +813,42 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
       RefreshDispatcher = RefreshDispatcher
       OpenBeforeShow = True
     end
+    object OpenReport_SaleReturn_byPromo: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1086#1076#1072#1078#1072'/'#1042#1086#1079#1074#1088#1072#1090
+      Hint = #1044#1077#1090#1072#1083#1100#1085#1086' '#1055#1088#1086#1076#1072#1078#1072'/'#1042#1086#1079#1074#1088#1072#1090
+      ImageIndex = 26
+      FormName = 'TReport_SaleReturn_byPromoForm'
+      FormNameParam.Value = 'TReport_SaleReturn_byPromoForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'inMovementId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'OperDate'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = 'False'
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = False
+    end
     object actOpenPromo: TdsdOpenForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -994,6 +1039,14 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_SaleReturn_byPromo'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Mov'
         end
         item
@@ -1024,6 +1077,10 @@ inherited Report_Promo_ResultForm: TReport_Promo_ResultForm
     end
     object bbPrint_Mov: TdxBarButton
       Action = actPrint_Mov
+      Category = 0
+    end
+    object bbReport_SaleReturn_byPromo: TdxBarButton
+      Action = OpenReport_SaleReturn_byPromo
       Category = 0
     end
   end
