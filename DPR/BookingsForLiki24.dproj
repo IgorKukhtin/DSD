@@ -1,11 +1,11 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{A55784B3-0B8C-47D7-9499-BF8D9E287BE3}</ProjectGuid>
+        <ProjectGuid>{9EC2C8E1-2EE6-4CB0-948F-F29762EE48D8}</ProjectGuid>
         <ProjectVersion>19.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>FarmacyCash.dpr</MainSource>
+        <MainSource>BookingsForLiki24.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -48,36 +48,31 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-        <DCC_UsePackage>IndySystem;JvCrypt;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DataSnapClient;DataSnapProviderClient;DbxCommonDriver;dbxcds;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;IndyCore;inetdbxpress;rtl;dbrtl;DbxClientDriver;inetdb;xmlrtl;ibxpress;DBXMySQLDriver;IndyProtocols;soaprtl;kbmMemRunDXE2Pro;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>ibdacfmx160;DBXInterBaseDriver;DataSnapServer;DataSnapCommon;DbxCommonDriver;dbxcds;CustomIPTransport;dsnap;IndyCore;IPIndyImpl;bindcompfmx;dbrtl;bindcomp;inetdb;xmlrtl;ibxpress;soaprtl;bindengine;DBXInformixDriver;DBXFirebirdDriver;inet;DBXSybaseASADriver;dbexpress;fmx;IndySystem;DataSnapClient;dacfmx160;DataSnapProviderClient;dac160;DBXOracleDriver;fmxase;inetdbxpress;rtl;DbxClientDriver;ibdac160;IndyProtocols;DBXMySQLDriver;fmxobj;fmxdae;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
-        <SanitizedProjectName>FarmacyCash</SanitizedProjectName>
+        <SanitizedProjectName>BookingsForLiki24</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_Build>8</VerInfo_Build>
-        <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Release>6</VerInfo_Release>
-        <DCC_UsePackage>dxTileControlRS16;dxdborRS16;fsADO16;dxPScxVGridLnkRS16;cxLibraryRS16;dxLayoutControlRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;ipstudiowindataset;RtmRxBDE160;cxExportRS16;ZComponent;QExport4RT_D16;dxBarRS16;cxSpreadSheetRS16;QRDBASE_D2007;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;ProjectComponent;frxTee16;inetdbbde;frxBDE16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;fsIBX16;officeXPrt;vclimg;QR5RunDXE2;cxTreeListRS16;RtmRxCtl160;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;frxADO16;frxe16;vtable160;navXE2;vcl;RaudusD160;RtmRxDB160;DBXMSSQLDriver;CodeSiteExpressPkg;cxDataRS16;cxBarEditItemRS16;dxDockingRS16;cxPageControldxBarPopupMenuRS16;fsTee16;Intraweb_15_DXE2;cxSchedulerGridRS16;ADDONS_XE2;webdsnap;dxBarExtItemsRS16;dxtrmdRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;ExcelExportXE2;dclCrossTalk_XE2;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;ProjectDesignComponent;frxDBX16;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;ZDbc;frx16;ZPlain;Tee;JSONDataSet;DBXOdbcDriver;dxdbtrRS16;kassa;dxSkinsCoreRS16;svnui;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;frxDB16;fsBDE16;cxGridRS16;fs16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxPScxSchedulerLnkRS16;dxServerModeRS16;ipstudiowin;frxcs16;Jcl;vclie;QImport3RT_D16;inernetpackage;cxSchedulerRS16;F1Book;ZCore;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;cefcomponent;fsDB16;DataSnapConnectors;dclfrxTee16;dsdLib;dsnapcon;dxPSdxFCLnkRS16;dd;dxThemeRS16;JclVcl;dcldxSkinsCoreRS16;ZParseSql;vclx;svn;dxFlowChartRS16;bdertl;frxIBX16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <Debugger_RunParams>manual</Debugger_RunParams>
+        <DCC_UsePackage>dxTileControlRS16;fsADO16;JvGlobus;JvMM;cxLibraryRS16;JvManagedThreads;NxAddonsRun_xe2;lmdrtdialog;lmdrttoolsdb;ProjectComponent;JvCrypt;dxPsPrVwAdvRS16;frxBDE16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;JvNet;cxPageControlRS16;NxSheetRun_xe2;JvDotNetCtrls;adsdxe2studio;fsIBX16;lmdrtinspector;vclimg;fmi;dxComnRS16;JvXPCtrls;vcldb;dxADOServerModeRS16;lmdrtweb;lmdrtprint;dxBarExtDBItemsRS16;lmdrtchartdb;lmdrtrtfdb;SynEdit_RXE5;CloudService;FmxTeeUI;cxDataRS16;cxBarEditItemRS16;lmdrtrtf;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;JvDB;JvRuntimeDesign;lmdrtide;dxPSLnksRS16;dxBarExtItemsRS16;lmdrtrtlx;JclDeveloperTools;ibdacvcl160;dxPSTeeChartRS16;dxPSdxLCLnkRS16;cxVerticalGridRS16;lmdrtshell;dxorgcRS16;ProjectDesignComponent;dxPScxExtCommonRS16;vcldbx;dxNavBarRS16;lmdrtstorage;lmdrtgrid;JvPluginSystem;DBXOdbcDriver;dxdbtrRS16;JvCmp;JvTimeFramework;dxPScxSSLnkRS16;fsBDE16;frxDB16;intrawebdb_120_160;NxCollectionRun_xe2;dxSkinscxPCPainterRS16;dxPSdxDBTVLnkRS16;vclactnband;FMXTee;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;fs16;frxcs16;Jcl;vclie;NxCommonRun_xe2;dacvcl160;dclfrxTee16;dsnapcon;dcldxSkinsCoreRS16;JvPascalInterpreter;vclx;dxFlowChartRS16;NxCollectionDsgn_xe2;frxIBX16;lmdrtsearchdb;dxGDIPlusRS16;JvBDE;dxdborRS16;HTML;dxPScxVGridLnkRS16;lmdrttools;dxLayoutControlRS16;NxGridRun_xe2;dxPScxPivotGridLnkRS16;dxCoreRS16;ZLibExGZ;cxExportRS16;lmdrtscript;ZComponent;lmdrttxtdb;dxBarRS16;dxSkinsdxNavBarPainterRS16;lmdrtchart;XLSRWII5_DXE2;AbbreviaVCL;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;lmdrttxt;JvDlgs;DHTMLEDLib;frxTee16;Rave100VCL;vclib;inetdbbde;MSXML;dxRibbonRS16;DBXSybaseASEDriver;NxCommonDsgn_xe2;cxTreeListRS16;ZLibEx;dxSkinsdxRibbonPainterRS16;vcldsnap;lmdrtsys;lmdrteldb;DBXDb2Driver;Intraweb_120_160;JvCore;frxADO16;frxe16;dxSkinscxSchedulerPainterRS16;vcl;lmdrtelpro;DBXMSSQLDriver;CodeSiteExpressPkg;fsTee16;JvAppFrm;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;dxSkinsdxDLPainterRS16;lmdrtdocking;JvDocking;adortl;JvWizards;lmdrtcore;JvHMI;frxDBX16;lmdrtthemes;JvBands;ZDbc;frx16;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;ZPlain;lmdrtbar;crcontrols160;Tee;JclContainers;dxSkinsCoreRS16;JvSystem;svnui;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;dxPSPrVwRibbonRS16;cxGridRS16;lmdrtsearch;lmdrtdesign;cxEditorsRS16;TeeUI;cxPivotGridRS16;JvControls;JvJans;JvPrintPreview;JvPageComps;NxGridDsgn_xe2;JvStdCtrls;JvCustom;cxSchedulerRS16;NxInspectorDsgn_xe2;ZCore;vcltouch;lmdrtelcore;websnap;VclSmp;DIRegEx_DXE2;dxTabbedMDIRS16;fsDB16;DataSnapConnectors;lmdrtplugin;NxInspectorRun_xe2;dxPSdxOCLnkRS16;dxPSdxFCLnkRS16;dxThemeRS16;clinetsuitedXE2;dxPScxPCProdRS16;JclVcl;ZParseSql;lmdrtsyntax;lmdrtfx;svn;bdertl;lmdrtl;lmdrtscriptimp;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.6.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-        <DCC_DcuOutput>..\DCU\$(Config)\$(ProductVersion)\$(Platform)</DCC_DcuOutput>
-        <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>dxTileControlRS16;dxdborRS16;cxLibraryRS16;office2K;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;dxBarRS16;cxSpreadSheetRS16;TeeDB;dxDBXServerModeRS16;cxTreeListdxBarPopupMenuRS16;dxPSCoreRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vclib;cxPageControlRS16;dxRibbonRS16;DBXSybaseASEDriver;officeXPrt;vclimg;cxTreeListRS16;dxComnRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;dxDockingRS16;cxPageControldxBarPopupMenuRS16;cxSchedulerGridRS16;webdsnap;dxBarExtItemsRS16;EhLib160;dxPSLnksRS16;EhLibDataDrivers160;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;Tee;DBXOdbcDriver;dxSkinsCoreRS16;dxPScxSSLnkRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;vclactnband;TeeUI;cxEditorsRS16;cxPivotGridRS16;dxServerModeRS16;ipstudiowin;Jcl;vclie;cxSchedulerRS16;vcltouch;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;vclx;dxFlowChartRS16;dxBarDBNavRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>dxTileControlRS16;cxLibraryRS16;lmdrtdialog;lmdrttoolsdb;dxPsPrVwAdvRS16;dxPSCoreRS16;cxPivotGridOLAPRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;cxPageControlRS16;adsdxe2studio;lmdrtinspector;vclimg;dxComnRS16;vcldb;dxADOServerModeRS16;lmdrtweb;lmdrtprint;dxBarExtDBItemsRS16;lmdrtchartdb;lmdrtrtfdb;SynEdit_RXE5;cxDataRS16;cxBarEditItemRS16;lmdrtrtf;dxDockingRS16;cxPageControldxBarPopupMenuRS16;dxPSDBTeeChartRS16;lmdrtide;dxPSLnksRS16;dxBarExtItemsRS16;lmdrtrtlx;ibdacvcl160;dxPSTeeChartRS16;dxPSdxLCLnkRS16;cxVerticalGridRS16;lmdrtshell;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;lmdrtstorage;lmdrtgrid;DBXOdbcDriver;dxdbtrRS16;dxPScxSSLnkRS16;NxCollectionRun_xe2;dxSkinscxPCPainterRS16;dxPSdxDBTVLnkRS16;vclactnband;dxPScxSchedulerLnkRS16;dxServerModeRS16;bindcompvcl;vclie;NxCommonRun_xe2;dacvcl160;dsnapcon;dcldxSkinsCoreRS16;vclx;dxFlowChartRS16;lmdrtsearchdb;dxGDIPlusRS16;dxdborRS16;dxPScxVGridLnkRS16;lmdrttools;dxLayoutControlRS16;NxGridRun_xe2;dxPScxPivotGridLnkRS16;dxCoreRS16;cxExportRS16;lmdrtscript;lmdrttxtdb;dxBarRS16;dxSkinsdxNavBarPainterRS16;lmdrtchart;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;TeeDB;dxDBXServerModeRS16;lmdrttxt;vclib;dxRibbonRS16;DBXSybaseASEDriver;cxTreeListRS16;dxSkinsdxRibbonPainterRS16;vcldsnap;lmdrtsys;lmdrteldb;DBXDb2Driver;dxSkinscxSchedulerPainterRS16;vcl;lmdrtelpro;DBXMSSQLDriver;cxSchedulerGridRS16;webdsnap;dxtrmdRS16;dxSkinsdxDLPainterRS16;lmdrtdocking;adortl;lmdrtcore;lmdrtthemes;dxPSdxDBOCLnkRS16;dxSkinsdxBarPainterRS16;lmdrtbar;crcontrols160;Tee;dxSkinsCoreRS16;cxPivotGridChartRS16;dxPScxCommonRS16;dxmdsRS16;dxSpellCheckerRS16;dxPSPrVwRibbonRS16;cxGridRS16;lmdrtsearch;lmdrtdesign;cxEditorsRS16;TeeUI;cxPivotGridRS16;cxSchedulerRS16;vcltouch;lmdrtelcore;websnap;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;lmdrtplugin;NxInspectorRun_xe2;dxPSdxOCLnkRS16;dxPSdxFCLnkRS16;dxThemeRS16;dxPScxPCProdRS16;lmdrtsyntax;lmdrtfx;lmdrtl;lmdrtscriptimp;dxBarDBNavRS16;$(DCC_UsePackage)</DCC_UsePackage>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
-        <Manifest_File>None</Manifest_File>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0</VerInfo_Keys>
-        <VerInfo_Locale>1049</VerInfo_Locale>
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
@@ -85,264 +80,34 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.48;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Release>12</VerInfo_Release>
-        <VerInfo_Build>48</VerInfo_Build>
-        <VerInfo_MinorVer>1</VerInfo_MinorVer>
+        <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
-        <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
-        <Manifest_File>None</Manifest_File>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0</VerInfo_Keys>
-        <VerInfo_Locale>1049</VerInfo_Locale>
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.1.12.144;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>144</VerInfo_Build>
+        <DCC_ExeOutput>..\BIN</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Release>12</VerInfo_Release>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_DcuOutput>..\DCU</DCC_DcuOutput>
         <BT_BuildType>Debug</BT_BuildType>
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\SOURCE\UtilConst.pas"/>
-        <DCCReference Include="..\SOURCE\dsdException.pas"/>
-        <DCCReference Include="..\SOURCE\Log.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
-        <DCCReference Include="..\SOURCE\Storage.pas"/>
-        <DCCReference Include="..\SOURCE\MessagesUnit.pas">
-            <Form>MessagesForm</Form>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\BookingsForLiki24\MainUnit.pas">
+            <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="..\SOURCE\SimpleGauge.pas">
-            <Form>SimpleGaugeForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\CommonData.pas"/>
-        <DCCReference Include="..\SOURCE\Authentication.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
-        <DCCReference Include="..\SOURCE\ParentForm.pas">
-            <Form>ParentForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetDataLink.pas"/>
-        <DCCReference Include="..\SOURCE\FormStorage.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\ChoicePeriod.pas">
-            <Form>PeriodChoiceForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\UnilWin.pas"/>
-        <DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\FastReportAddOn.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFCDX.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFCollate.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFCrypt.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFDataSet.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFIndex.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFMemMgr.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFPrx.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFSorters.pas"/>
-        <DCCReference Include="..\SOURCE\DBF\VKDBFUtil.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\InvoiceXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrdrspXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\StatusXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\OrderSpFozzXML.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\DesadvFozzXML.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdInternetAction.pas"/>
-        <DCCReference Include="..\SOURCE\LoginForm.pas">
-            <Form>LoginForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\DataModul.pas">
-            <Form>dmMain</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\COMPONENT\Updater.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\MainCash.pas">
-            <Form>MainCashForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\Forms\Ancestor\AncestorBase.pas">
-            <Form>AncestorBaseForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\UtilConvert.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\CashInterface.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\CashFactory.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Cash_FP3530T_NEW.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\IniUtils.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\FP3141_TLB.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\CashCloseDialog.pas">
-            <Form>CashCloseDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\CashWork.pas">
-            <Form>CashWorkForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\Forms\Ancestor\AncestorDialog.pas">
-            <Form>AncestorDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\dsdApplication.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
-        <DCCReference Include="..\SOURCE\EDI\RecadvXML.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Cash_FP320.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\OposFiscalPrinter_1_11_Lib_TLB.pas"/>
-        <DCCReference Include="..\SOURCE\LocalWorkUnit.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Splash.pas">
-            <Form>frmSplash</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\SPDialog.pas">
-            <Form>SPDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\VIPDialog.pas">
-            <Form>VIPDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\DiscountService\DiscountService.pas">
-            <Form>DiscountServiceForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\DiscountService\uCardService.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\MainCash2.pas">
-            <Form>MainCashForm2</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\LoginFormInh.pas">
-            <Form>LoginForm1</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\DiscountDialog.pas">
-            <Form>DiscountDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\DiscountService\MediCard.Intf.pas"/>
-        <DCCReference Include="..\FormsFarmacy\DiscountService\MediCard.Dsgn.pas"/>
-        <DCCReference Include="..\FormsFarmacy\DiscountService\MediCard.Classes.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\LocalStorage.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201009.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\IFIN_J1201209.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\PromoCodeDialog.pas">
-            <Form>PromoCodeDialogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdPivotGrid.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\ListDiff.pas">
-            <Form>ListDiffForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\ListGoods.pas">
-            <Form>ListGoodsForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\ListDiffAddGoods.pas">
-            <Form>ListDiffAddGoodsForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201010.pas"/>
-        <DCCReference Include="..\SOURCE\MeDOC\Medoc_J1201210.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\PayPosTermProcess.pas">
-            <Form>PayPosTermProcessForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\Pos_ECRCommX_BPOS1Lib.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\PosFactory.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\PosInterface.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\EmployeeWorkLog.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXLSAction.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Cash_IKC_E810T.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\NeoFiscalPrinterDriver_TLB.pas"/>
-        <DCCReference Include="..\SOURCE\COMPONENT\dsdExportToXMLAction.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\ChoiceBankPOSTerminal.pas">
-            <Form>ChoiceBankPOSTerminalForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\GoodsToExpirationDate.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\ChoiceGoodsAnalog.pas">
-            <Form>ChoiceGoodsAnalogForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\Helsi.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\Cash_IKC_C651T.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\ChoiceHelsiUserName.pas">
-            <Form>ChoiceHelsiUserNameForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\EnterRecipeNumber.pas">
-            <Form>EnterRecipeNumberForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\CheckHelsiSign.pas">
-            <Form>CheckHelsiSignForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\CheckHelsiSignAllUnit.pas">
-            <Form>CheckHelsiSignAllUnitForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\COMPONENT\PUSHMessage.pas">
-            <Form>PUSHMessageForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\PUSHMessageCash.pas">
-            <Form>PUSHMessageCashForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\EmployeeScheduleCash.pas">
-            <Form>EmployeeScheduleCashForm</Form>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltyNumber.pas">
-            <Form>EnterLoyaltyNumberForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\Report_ImplementationPlanEmployeeCash.pas">
-            <Form>Report_ImplementationPlanEmployeeCashForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\EDI\IftminFozzXML.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySaveMoney.pas">
-            <Form>EnterLoyaltySaveMoneyForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\LoyaltySMList.pas">
-            <Form>LoyaltySMListForm</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TParentForm</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\BuyerList.pas">
-            <Form>BuyerListForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\FormsFarmacy\Cash\EnterLoyaltySMDiscount.pas">
-            <Form>EnterLoyaltySMDiscountForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\SOURCE\GetSystemInfo.pas"/>
-        <DCCReference Include="..\FormsFarmacy\Cash\ListSelection.pas">
-            <Form>ListSelectionForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
+        <DCCReference Include="..\FormsFarmacy\MainUnitService\BookingsForLiki24\UnitLiki24.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -387,24 +152,21 @@
                     <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
                 <Source>
-                    <Source Name="MainSource">FarmacyCash.dpr</Source>
+                    <Source Name="MainSource">BookingsForLiki24.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\BIN\FarmacyCash.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\BookingsForLiki24.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>FarmacyCash.exe</RemoteName>
+                        <RemoteName>BookingsForLiki24.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\BIN\FarmacyCash.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\BIN\BookingsForLiki24.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>FarmacyCash.exe</RemoteName>
+                        <RemoteName>BookingsForLiki24.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -810,17 +572,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPad_Launch1024x768">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPad_Launch1536">
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
@@ -832,95 +583,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPad_Launch1536x2048">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch1668">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch1668x2388">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPad_Launch2048">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2048x1536">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2048x2732">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2224">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2388x1668">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2732x2048">
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
@@ -952,17 +615,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPad_Launch768x1024">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPad_LaunchDark2x">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
@@ -970,105 +622,6 @@
                     </Platform>
                     <Platform Name="iOSSimulator">
                         <RemoteDir>..\$(PROJECTNAME).launchscreen\Assets\LaunchScreenImage.imageset</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1125">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1136x640">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1242">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1242x2688">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1334">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch1792">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch2208">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch2436">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch2688x1242">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -1115,28 +668,6 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="iPhone_Launch640x1136">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch750">
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch828">
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
@@ -1349,7 +880,6 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
-            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

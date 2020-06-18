@@ -939,6 +939,7 @@ end;
 
 procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
+    Bol : Boolean;
 begin
   if DataSet.Active then begin
     if not (DataSet.State in [dsEdit, dsInsert]) then
@@ -959,6 +960,17 @@ begin
                 Field.Value := null
               else
                 Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
+           end
+           // в случае логического и если строка, то надо конвертить
+           else
+           if (Field.DataType in [ftBoolean]) and (VarType(FValue) in [vtString, vtClass]) then begin
+              if FValue = '' then
+                Field.Value := null
+              else
+                if TryStrToBool(FValue, Bol) then
+                  Field.Value := Bol
+                else
+                  Field.Value := False;
            end
            else
               Field.Value := FValue;

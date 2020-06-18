@@ -85,7 +85,7 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <BT_BuildType>Debug</BT_BuildType>
-        <Icon_MainIcon>6.ico</Icon_MainIcon>
+        <Icon_MainIcon>mainicon.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
