@@ -376,6 +376,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_SendAsset() RETURNS Integer AS $BODY$BEGI
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SendAsset', 'Перемещение (ОС)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendAsset');
 
+CREATE OR REPLACE FUNCTION zc_Movement_LossAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_LossAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_LossAsset', 'Списание ОС' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_LossAsset');
+
+CREATE OR REPLACE FUNCTION zc_Movement_SaleAsset() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SaleAsset'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_SaleAsset', 'Продажа ОС' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SaleAsset');
+
 
 CREATE OR REPLACE FUNCTION zc_Movement_ProjectsImprovements() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProjectsImprovements'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
@@ -384,6 +392,8 @@ INSERT INTO MovementDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.   Воробкало А.А.  Шаблий О.В.
+ 18.06.20         * zc_Movement_LossAsset
+                    zc_Movement_SaleAsset
  12.05.20                                                                                     * zc_Movement_ProjectsImprovements
  16.03.20         * zc_Movement_SendAsset
  14.02.20                                                                                     * zc_Movement_TechnicalRediscount
