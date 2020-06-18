@@ -89,6 +89,7 @@ type
     procedure LoadJuridicalOrderFinanceFormTest;
     procedure LoadLabFormTest;
     procedure LoadLossFormTest;
+    procedure LoadLossAssetFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossPersonalFormTest;
     procedure LoadMeasureFormTest;
@@ -1392,6 +1393,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
 end;
+procedure TLoadFormTest.LoadLossAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossAssetJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossAssetJournalForm');
+end;
+
 procedure TLoadFormTest.LoadLossDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));

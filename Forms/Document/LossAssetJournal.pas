@@ -51,9 +51,6 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
-    InvNumber_IncomeFull: TcxGridDBColumn;
-    TotalCountSh: TcxGridDBColumn;
-    TotalCountKg: TcxGridDBColumn;
   private
     { Private declarations }
   public

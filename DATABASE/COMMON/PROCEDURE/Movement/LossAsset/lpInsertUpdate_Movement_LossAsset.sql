@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_LossAsset(
     IN inOperDate            TDateTime , -- Дата документа
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN ininArticleLossId     Integer   , -- Статьи списания
+    IN inArticleLossId       Integer   , -- Статьи списания
     IN inComment             TVarChar  , -- Примечание
     IN inUserId              Integer     -- пользователь
 )

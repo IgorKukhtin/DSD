@@ -23,11 +23,6 @@ type
     cxLabel4: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    GoodsCode: TcxGridDBColumn;
-    GoodsName: TcxGridDBColumn;
-    GoodsKindName: TcxGridDBColumn;
-    PartionGoods: TcxGridDBColumn;
-    Amount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint_Loss: TdsdStoredProc;
     N2: TMenuItem;
@@ -37,34 +32,27 @@ type
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     PrintItemsSverkaCDS: TClientDataSet;
-    Count: TcxGridDBColumn;
-    HeadCount: TcxGridDBColumn;
-    AssetName: TcxGridDBColumn;
-    PartionGoodsDate: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edArticleLoss: TcxButtonEdit;
     GuidesArticleLoss: TdsdGuides;
-    MeasureName: TcxGridDBColumn;
     GoodsGroupNameFull: TcxGridDBColumn;
     actGoodsChoiceForm: TOpenChoiceForm;
     spSelectPrint_Sale: TdsdStoredProc;
     actPrint_Sale: TdsdPrintAction;
     bbPrint_Sale: TdxBarButton;
-    actAssetChoiceForm: TOpenChoiceForm;
-    edIsChecked: TcxCheckBox;
+    actAssetChoiceForm1: TOpenChoiceForm;
     cxLabel22: TcxLabel;
     ceComment: TcxTextEdit;
-    actChecked: TdsdExecStoredProc;
     bbChecked: TdxBarButton;
     actGoodsKindCompleteChoice: TOpenChoiceForm;
-    cxLabel27: TcxLabel;
-    edInvNumberIncome: TcxButtonEdit;
-    GuidesIncomeDoc: TdsdGuides;
     spInsertMIMaster_byIncome: TdsdStoredProc;
     actOpenIncomeJournalChoice: TOpenChoiceForm;
     actInsertMIMaster_byIncome: TdsdExecStoredProc;
     macInsertMI_byIncome: TMultiAction;
-    bb: TdxBarButton;
+    bbInsertMI_byIncome: TdxBarButton;
+    bbInsertRecordGoods: TdxBarButton;
+    actAssetChoiceForm: TOpenChoiceForm;
+    InsertRecordGoods: TInsertRecord;
   private
     { Private declarations }
   public

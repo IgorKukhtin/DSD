@@ -28,23 +28,19 @@ inherited LossAssetForm: TLossAssetForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = HeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = Amount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = HeadCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -58,12 +54,12 @@ inherited LossAssetForm: TLossAssetForm
           Styles.Footer = nil
           Styles.Header = nil
           object GoodsGroupNameFull: TcxGridDBColumn [0]
-            Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+            Caption = #1043#1088#1091#1087#1087#1072' ('#1054#1057')'
             DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 136
+            Width = 193
           end
           object GoodsCode: TcxGridDBColumn [1]
             Caption = #1050#1086#1076
@@ -71,123 +67,11 @@ inherited LossAssetForm: TLossAssetForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 50
           end
           object GoodsName: TcxGridDBColumn [2]
-            Caption = #1058#1086#1074#1072#1088
+            Caption = ' '#1054#1057
             DataBinding.FieldName = 'GoodsName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 200
-          end
-          object GoodsKindName: TcxGridDBColumn [3]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
-          object GoodsKindName_Complete: TcxGridDBColumn [4]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1043#1055
-            DataBinding.FieldName = 'GoodsKindName_Complete'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actGoodsKindCompleteChoice
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object PartionGoods: TcxGridDBColumn [5]
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object PartionGoodsDate: TcxGridDBColumn [6]
-            Caption = #1055#1072#1088#1090#1080#1103' ('#1076#1072#1090#1072')'
-            DataBinding.FieldName = 'PartionGoodsDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object MeasureName: TcxGridDBColumn [7]
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
-          end
-          object AmountRemains: TcxGridDBColumn [8]
-            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
-            DataBinding.FieldName = 'AmountRemains'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 76
-          end
-          object Amount: TcxGridDBColumn [9]
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object Count: TcxGridDBColumn [10]
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091#1087#1072#1082'.'
-            DataBinding.FieldName = 'Count'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object HeadCount: TcxGridDBColumn [11]
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object AssetName: TcxGridDBColumn [12]
-            Caption = #1054#1057'/'#1052#1053#1052#1040
-            DataBinding.FieldName = 'AssetName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -198,61 +82,106 @@ inherited LossAssetForm: TLossAssetForm
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 114
+            Width = 235
           end
-          object InfoMoneyCode: TcxGridDBColumn [13]
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
+          object AmountRemains: TcxGridDBColumn [3]
+            Caption = #1054#1089#1090'. '#1082#1086#1083'-'#1074#1086' '
+            DataBinding.FieldName = 'AmountRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 82
           end
-          object InfoMoneyGroupName: TcxGridDBColumn [14]
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
+          object Amount: TcxGridDBColumn [4]
+            Caption = #1050#1086#1083'-'#1074#1086
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
+          object InvNumber: TcxGridDBColumn
+            Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 142
+          end
+          object SerialNumber: TcxGridDBColumn
+            Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088
+            DataBinding.FieldName = 'SerialNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 68
           end
-          object InfoMoneyDestinationName: TcxGridDBColumn [15]
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
+          object PassportNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'PassportNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 66
           end
-          object InfoMoneyName: TcxGridDBColumn [16]
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
+          object Release: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1099#1087#1091#1089#1082#1072
+            DataBinding.FieldName = 'Release'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 155
+            Width = 66
           end
-          object InDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088'. '#1086#1090' '#1087#1086#1089#1090'. '
-            DataBinding.FieldName = 'InDate'
+          object MakerName: TcxGridDBColumn
+            Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+            DataBinding.FieldName = 'MakerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+            Options.Editing = False
+            Width = 111
+          end
+          object CarName: TcxGridDBColumn
+            Caption = #1043#1086#1089'. '#1085#1086#1084#1077#1088' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object CarModelName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+            DataBinding.FieldName = 'CarModelName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object PartnerInName: TcxGridDBColumn
-            Caption = #1055#1086#1089#1090#1072#1074#1097#1080#1082
-            DataBinding.FieldName = 'PartnerInName'
+          object PeriodUse: TcxGridDBColumn
+            Caption = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087'. ('#1083#1077#1090')'
+            DataBinding.FieldName = 'PeriodUse'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1089#1090#1072#1074#1097#1080#1082' '#1087#1086#1089#1083#1077#1076#1085#1077#1075#1086' '#1087#1088#1080#1093#1086#1076#1072
+            HeaderHint = #1055#1077#1088#1080#1086#1076' '#1101#1082#1089#1087#1083#1091#1072#1090#1072#1094#1080#1080' ('#1083#1077#1090')'
             Options.Editing = False
-            Width = 80
+            Width = 100
+          end
+          object ContainerId: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103' '#1054#1057
+            DataBinding.FieldName = 'ContainerId'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            VisibleForCustomization = False
+            Width = 105
           end
         end
       end
@@ -348,44 +277,16 @@ inherited LossAssetForm: TLossAssetForm
       TabOrder = 11
       Width = 226
     end
-    object edIsChecked: TcxCheckBox
-      Left = 290
-      Top = 61
-      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-      Properties.ReadOnly = True
-      TabOrder = 12
-      Width = 118
-    end
     object cxLabel22: TcxLabel
-      Left = 647
+      Left = 418
       Top = 45
       Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
     end
     object ceComment: TcxTextEdit
-      Left = 647
-      Top = 61
-      TabOrder = 14
-      Width = 226
-    end
-    object cxLabel27: TcxLabel
-      Left = 418
-      Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
-    end
-    object edInvNumberIncome: TcxButtonEdit
       Left = 418
       Top = 61
-      Properties.Buttons = <
-        item
-          Default = True
-          Enabled = False
-          Kind = bkEllipsis
-        end>
-      Properties.ClickKey = 0
-      Properties.HideSelection = False
-      Properties.ReadOnly = True
-      TabOrder = 16
-      Width = 220
+      TabOrder = 13
+      Width = 455
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -402,7 +303,7 @@ inherited LossAssetForm: TLossAssetForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object actAssetChoiceForm: TOpenChoiceForm [1]
+    object actAssetChoiceForm1: TOpenChoiceForm [1]
       Category = 'DSDLib'
       MoveParams = <>
       PostDataSetBeforeExecute = False
@@ -588,17 +489,6 @@ inherited LossAssetForm: TLossAssetForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actChecked: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      PostDataSetBeforeExecute = False
-      StoredProcList = <
-        item
-        end>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
-      ImageIndex = 58
-    end
     object actGoodsKindCompleteChoice: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -655,15 +545,11 @@ inherited LossAssetForm: TLossAssetForm
         item
           Name = 'Key'
           Value = Null
-          Component = GuidesIncomeDoc
-          ComponentItem = 'Key'
           MultiSelectSeparator = ','
         end
         item
           Name = 'TextValue'
           Value = Null
-          Component = GuidesIncomeDoc
-          ComponentItem = 'TextValue'
           DataType = ftString
           MultiSelectSeparator = ','
         end>
@@ -696,6 +582,149 @@ inherited LossAssetForm: TLossAssetForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1090#1088#1086#1082#1080' '#1080#1079' '#1055#1088#1080#1093#1086#1076#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
+    object actAssetChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      Caption = 'AssetForm'
+      FormName = 'TAsset_ObjectForm'
+      FormNameParam.Value = 'TAsset_ObjectForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.MultiSelectSeparator = ','
+      GuiParams = <
+        item
+          Name = 'Key'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'TextValue'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Code'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'AmountRemains'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'AmountRemains'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitId'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'Key'
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MasterUnitName'
+          Value = ''
+          Component = GuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'ContainerId'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'ContainerId'
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'InvNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'InvNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'SerialNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'SerialNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PassportNumber'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PassportNumber'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'Release'
+          Value = 'NULL'
+          Component = MasterCDS
+          ComponentItem = 'Release'
+          DataType = ftDateTime
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'MakerName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'MakerName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'CarModelName'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'CarModelName'
+          DataType = ftString
+          MultiSelectSeparator = ','
+        end
+        item
+          Name = 'PeriodUse'
+          Value = Null
+          Component = MasterCDS
+          ComponentItem = 'PeriodUse'
+          DataType = ftFloat
+          MultiSelectSeparator = ','
+        end>
+      isShowModal = True
+    end
+    object InsertRecordGoods: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      PostDataSetBeforeExecute = False
+      PostDataSetAfterExecute = True
+      View = cxGridDBTableView
+      Action = actAssetChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1054#1057'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -706,7 +735,7 @@ inherited LossAssetForm: TLossAssetForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Loss'
+    StoredProcName = 'gpSelect_MovementItem_LossAsset'
     Params = <
       item
         Name = 'inMovementId'
@@ -717,31 +746,11 @@ inherited LossAssetForm: TLossAssetForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inIsErased'
         Value = False
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
-        MultiSelectSeparator = ','
-      end
-      item
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptUnknown
         MultiSelectSeparator = ','
       end>
     Left = 160
@@ -766,10 +775,6 @@ inherited LossAssetForm: TLossAssetForm
           ItemName = 'bbShowErased'
         end
         item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -781,6 +786,10 @@ inherited LossAssetForm: TLossAssetForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertRecordGoods'
         end
         item
           Visible = True
@@ -820,14 +829,6 @@ inherited LossAssetForm: TLossAssetForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Sale'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbMovementItemProtocol'
         end
         item
@@ -848,13 +849,20 @@ inherited LossAssetForm: TLossAssetForm
       Category = 0
     end
     object bbChecked: TdxBarButton
-      Action = actChecked
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
       Category = 0
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' "'#1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090'"'
+      Visible = ivAlways
+      ImageIndex = 58
     end
-    object bb: TdxBarButton
+    object bbInsertMI_byIncome: TdxBarButton
       Action = macInsertMI_byIncome
       Category = 0
       ImageIndex = 27
+    end
+    object bbInsertRecordGoods: TdxBarButton
+      Action = InsertRecordGoods
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1040,14 +1048,12 @@ inherited LossAssetForm: TLossAssetForm
       item
         Name = 'Checked'
         Value = 0.000000000000000000
-        Component = edIsChecked
         DataType = ftBoolean
         MultiSelectSeparator = ','
       end
       item
         Name = 'InvNumber_IncomeFull'
         Value = Null
-        Component = edInvNumberIncome
         DataType = ftString
         MultiSelectSeparator = ','
       end>
@@ -1205,68 +1211,10 @@ inherited LossAssetForm: TLossAssetForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCount'
+        Name = 'inContainerId'
         Value = Null
         Component = MasterCDS
-        ComponentItem = 'Count'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeadCount'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsDate'
-        Value = 'null'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoods'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindCompleteId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId_Complete'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsId'
-        Value = 0
+        ComponentItem = 'ContainerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1306,64 +1254,10 @@ inherited LossAssetForm: TLossAssetForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inCount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inHeadCount'
-        Value = '0'
-        DataType = ftFloat
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsDate'
-        Value = 'NULL'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoodsDate'
-        DataType = ftDateTime
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoods'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inGoodsKindCompleteId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId_Complete'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inAssetId'
-        Value = Null
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'inPartionGoodsId'
+        Name = 'inContainerId'
         Value = 0
+        Component = MasterCDS
+        ComponentItem = 'ContainerId'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>
@@ -1539,33 +1433,6 @@ inherited LossAssetForm: TLossAssetForm
     Left = 319
     Top = 152
   end
-  object GuidesIncomeDoc: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edInvNumberIncome
-    FormNameParam.Value = 'TIncomeJournalChoiceForm'
-    FormNameParam.DataType = ftString
-    FormNameParam.MultiSelectSeparator = ','
-    FormName = 'TIncomeJournalChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesIncomeDoc
-        ComponentItem = 'Key'
-        MultiSelectSeparator = ','
-      end
-      item
-        Name = 'InvNumber_Full'
-        Value = ''
-        Component = GuidesIncomeDoc
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        MultiSelectSeparator = ','
-      end>
-    Left = 524
-    Top = 56
-  end
   object spInsertMIMaster_byIncome: TdsdStoredProc
     StoredProcName = 'gpInsert_MovementItem_Loss_byIncome'
     DataSets = <>
@@ -1582,8 +1449,6 @@ inherited LossAssetForm: TLossAssetForm
       item
         Name = 'inMovementId_Income'
         Value = Null
-        Component = GuidesIncomeDoc
-        ComponentItem = 'Key'
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

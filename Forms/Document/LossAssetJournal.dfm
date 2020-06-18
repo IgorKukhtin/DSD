@@ -38,12 +38,10 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -54,12 +52,10 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountSh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = TotalCountKg
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -126,63 +122,12 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object TotalCountSh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'.'
-            DataBinding.FieldName = 'TotalCountSh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object TotalCountKg: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089
-            DataBinding.FieldName = 'TotalCountKg'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object ArticleLossName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1089#1087#1080#1089#1072#1085#1080#1103
             DataBinding.FieldName = 'ArticleLossName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 150
-          end
-          object Checked: TcxGridDBColumn
-            Caption = #1055#1088#1086#1074#1077#1088#1077#1085
-            DataBinding.FieldName = 'Checked'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 46
-          end
-          object CheckedDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1088#1077#1085')'
-            DataBinding.FieldName = 'CheckedDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' ('#1087#1088#1086#1074#1077#1088#1077#1085' '#1076#1072'/ '#1085#1077#1090')'
-            Width = 90
-          end
-          object CheckedName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079'. ('#1087#1088#1086#1074#1077#1088#1077#1085')'
-            DataBinding.FieldName = 'CheckedName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderHint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100' ('#1087#1088#1086#1074#1077#1088#1077#1085' '#1076#1072'/'#1085#1077#1090')'
-            Width = 130
-          end
-          object InvNumber_IncomeFull: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'. '#1086#1089#1085#1086#1074#1072#1085#1080#1077' ('#1087#1088#1080#1093#1086#1076')'
-            DataBinding.FieldName = 'InvNumber_IncomeFull'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 128
           end
           object Comment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -440,18 +385,18 @@ inherited LossAssetJournalForm: TLossAssetJournalForm
         MultiSelectSeparator = ','
       end
       item
-        Name = 'inIsErased'
-        Value = False
-        Component = actShowErased
-        DataType = ftBoolean
-        ParamType = ptInput
-        MultiSelectSeparator = ','
-      end
-      item
         Name = 'inJuridicalBasisId'
         Value = 'False'
         Component = JuridicalBasisGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+        MultiSelectSeparator = ','
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
       end>

@@ -7933,6 +7933,12 @@
       object miSendAssetJournal: TMenuItem
         Action = actSendAssetJournal
       end
+      object miLossAssetJournal: TMenuItem
+        Action = actLossAssetJournal
+      end
+      object miSaleAssetJournal: TMenuItem
+        Action = actSaleAssetJournal
+      end
       object N131: TMenuItem
         Caption = '-'
       end

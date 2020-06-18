@@ -1134,6 +1134,8 @@ type
     miGoodsQuality_Raw: TMenuItem;
     actLossAssetJournal: TdsdOpenForm;
     actSaleAssetJournal: TdsdOpenForm;
+    miLossAssetJournal: TMenuItem;
+    miSaleAssetJournal: TMenuItem;
     procedure actReport_OLAPSoldExecute(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
