@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_Defroster(
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupNameFull TVarChar, GoodsGroupName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindName TVarChar, MeasureName TVarChar
              , PartionGoodsName TVarChar
              , PartnerCode Integer
              , PartnerName TVarChar
@@ -45,6 +46,7 @@ BEGIN
          -- 
     WITH tmpMI_1 AS  (SELECT MIContainer.ContainerId                 AS ContainerId
                            , MIContainer.ObjectId_Analyzer           AS GoodsId
+                           , MIContainer.ObjectIntId_Analyzer        AS GoodsKindId
 
                              -- документ для расчета приход кол-во для Separate расход с inUnitId
                            , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
@@ -149,17 +151,19 @@ BEGIN
                         AND MIContainer.MovementDescId IN (zc_Movement_ProductionSeparate(), zc_Movement_Send(), zc_Movement_SendAsset(), zc_Movement_Loss() , zc_Movement_ProductionUnion())
                       GROUP BY MIContainer.ContainerId
                              , MIContainer.ObjectId_Analyzer
-                           , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
-                                   AND MIContainer.DescId = zc_MIContainer_Count()
-                                   AND MIContainer.IsActive = FALSE
-                                   AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
-                                      THEN MIContainer.MovementId
-                                  ELSE 0
-                             END
+                             , MIContainer.ObjectIntId_Analyzer
+                             , CASE WHEN MIContainer.MovementDescId = zc_Movement_ProductionSeparate()
+                                     AND MIContainer.DescId = zc_MIContainer_Count()
+                                     AND MIContainer.IsActive = FALSE
+                                     AND MIContainer.OperDate BETWEEN (inStartDate + INTERVAL '1 DAY') AND (inEndDate + INTERVAL '1 DAY')
+                                        THEN MIContainer.MovementId
+                                    ELSE 0
+                               END
                       )
        
                 , tmpSeparate AS (SELECT tmpMI_1.ContainerId
                                        , tmpMI_1.GoodsId
+                                       , tmpMI_1.GoodsKindId
                                        , SUM (CASE WHEN MIContainer.DescId = zc_MIContainer_Count()
                                                     AND MIContainer.IsActive = TRUE
                                                         THEN MIContainer.Amount
@@ -173,26 +177,30 @@ BEGIN
                                   WHERE tmpMI_1.MovementId <> 0
                                   GROUP BY tmpMI_1.ContainerId
                                          , tmpMI_1.GoodsId
+                                         , tmpMI_1.GoodsKindId
                                  )
-       , tmpMI_All AS (SELECT tmpMI_1.GoodsId, COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                              , SUM (tmpMI_1.Amount_Send_in)        AS Amount_Send_in
-                              , SUM (tmpMI_1.Summ_Send_in)          AS Summ_Send_in
-                              , SUM (tmpMI_1.Amount_Separate_in)    AS Amount_Separate_in
-                              , SUM (tmpMI_1.Summ_Separate_in)      AS Summ_Separate_in
-                              , SUM (tmpMI_1.Amount_Send_out)       AS Amount_Send_out
-                              , SUM (tmpMI_1.Summ_Send_out)         AS Summ_Send_out
-                              , SUM (tmpMI_1.Amount_Separate_out)   AS Amount_Separate_out
-                              , SUM (tmpMI_1.Summ_Separate_out)     AS Summ_Separate_out
-                              , SUM (tmpMI_1.Amount_Loss)           AS Amount_Loss
-                              , SUM (tmpMI_1.Amount_Loss_diff)      AS Amount_Loss_diff
-                              , SUM (tmpMI_1.Amount_Production_out) AS Amount_Production_out
-                              , SUM (tmpMI_1.Summ_Production_out)   AS Summ_Production_out
+       , tmpMI_All AS (SELECT tmpMI_1.GoodsId
+                            , tmpMI_1.GoodsKindId
+                            , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                            , SUM (tmpMI_1.Amount_Send_in)        AS Amount_Send_in
+                            , SUM (tmpMI_1.Summ_Send_in)          AS Summ_Send_in
+                            , SUM (tmpMI_1.Amount_Separate_in)    AS Amount_Separate_in
+                            , SUM (tmpMI_1.Summ_Separate_in)      AS Summ_Separate_in
+                            , SUM (tmpMI_1.Amount_Send_out)       AS Amount_Send_out
+                            , SUM (tmpMI_1.Summ_Send_out)         AS Summ_Send_out
+                            , SUM (tmpMI_1.Amount_Separate_out)   AS Amount_Separate_out
+                            , SUM (tmpMI_1.Summ_Separate_out)     AS Summ_Separate_out
+                            , SUM (tmpMI_1.Amount_Loss)           AS Amount_Loss
+                            , SUM (tmpMI_1.Amount_Loss_diff)      AS Amount_Loss_diff
+                            , SUM (tmpMI_1.Amount_Production_out) AS Amount_Production_out
+                            , SUM (tmpMI_1.Summ_Production_out)   AS Summ_Production_out
 
                          FROM tmpMI_1
                               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                             ON CLO_PartionGoods.ContainerId = tmpMI_1.ContainerId
                                                            AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                          GROUP BY tmpMI_1.GoodsId, CLO_PartionGoods.ObjectId
+                                , tmpMI_1.GoodsKindId
                          HAVING SUM (tmpMI_1.Amount_Send_in)      <> 0
                              OR SUM (tmpMI_1.Amount_Separate_in)  <> 0
                              OR SUM (tmpMI_1.Amount_Send_out)     <> 0
@@ -200,19 +208,24 @@ BEGIN
                              OR SUM (tmpMI_1.Amount_Loss)         <> 0
                              OR SUM (tmpMI_1.Amount_Loss_diff)   <> 0
                         )
-   , tmpMI_Separate AS (SELECT tmpSeparate.GoodsId, COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
-                              , SUM (tmpSeparate.CountIn)   AS CountIn
+   , tmpMI_Separate AS (SELECT tmpSeparate.GoodsId
+                             , tmpSeparate.GoodsKindId
+                             , COALESCE (CLO_PartionGoods.ObjectId, 0) AS PartionGoodsId
+                             , SUM (tmpSeparate.CountIn)               AS CountIn
                          FROM tmpSeparate
                               LEFT JOIN ContainerLinkObject AS CLO_PartionGoods
                                                             ON CLO_PartionGoods.ContainerId = tmpSeparate.ContainerId
                                                            AND CLO_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                          GROUP BY tmpSeparate.GoodsId, COALESCE (CLO_PartionGoods.ObjectId, 0)
+                                , tmpSeparate.GoodsKindId
                         )
        
     SELECT ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
          , Object_GoodsGroup.ValueData                AS GoodsGroupName
          , Object_Goods.ObjectCode                    AS GoodsCode
          , Object_Goods.ValueData                     AS GoodsName
+         
+         , Object_GoodsKind.ValueData                 AS GoodsKindName
        
          , Object_Measure.ValueData                   AS MeasureName
          , Object_PartionGoods.ValueData              AS PartionGoodsName
@@ -255,7 +268,8 @@ BEGIN
                                   AND tmpMI_Separate.PartionGoodsId = tmpMI_All.PartionGoodsId
 
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = tmpMI_All.PartionGoodsId
-          LEFT JOIN Object AS Object_Goods on Object_Goods.Id = tmpMI_All.GoodsId
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI_All.GoodsId
+          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI_All.GoodsKindId
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
