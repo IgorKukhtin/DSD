@@ -1,4 +1,5 @@
- DO $$
+/*
+DO $$
 
 BEGIN
    
@@ -13,5 +14,4 @@ BEGIN
       WHERE pg_stat_activity.datname = 'farmacy';
 
 END $$;
-
-
+*/

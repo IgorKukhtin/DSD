@@ -1,4 +1,5 @@
-CREATE DATABASE farmacy
+/*
+ CREATE DATABASE farmacy
   WITH OWNER = postgres
        TEMPLATE = template0
        ENCODING = 'WIN1251'
@@ -6,3 +7,4 @@ CREATE DATABASE farmacy
        LC_COLLATE = 'Russian_Russia.1251'
        LC_CTYPE = 'Russian_Russia.1251'
        CONNECTION LIMIT = -1;
+*/
