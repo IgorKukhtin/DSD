@@ -53,6 +53,7 @@ RETURNS TABLE(
     ,AmountSaleWeight     TFloat    --продажи за весь период отгрузки по акционной цене за минусом возврата, в кг
     ,PersentResult        TFloat    --Результат, % ((продажи в акц.период/продажи в доакц пер.-1)*100)
     ,Discount             TBlob     --Скидка, %
+    ,Discount_Condition   TBlob     --Компенсация, %
     ,MainDiscount         TFloat    --Общая скидка для покупателя, %  (вносится вручную)
     ,PriceWithVAT         TFloat    --Отгрузочная акционная цена с учетом НДС, грн
     ,Price                TFloat    -- * Цена спецификации с НДС, грн
@@ -276,7 +277,7 @@ BEGIN
                        ELSE 0
                   END AS NUMERIC (16, 0))     :: TFloat AS PersentResult
           
-          , (CASE WHEN MI_PromoGoods.Amount <> 0
+         /* , (CASE WHEN MI_PromoGoods.Amount <> 0
                        THEN zfConvert_FloatToString (MI_PromoGoods.Amount)
                   ELSE (SELECT STRING_AGG (zfConvert_FloatToString (MovementItem_PromoCondition.Amount)
                                  ||' - ' || MovementItem_PromoCondition.ConditionPromoName
@@ -287,6 +288,21 @@ BEGIN
                          AND MovementItem_PromoCondition.Amount     <> 0
                        )
              END) :: TBlob   AS Discount
+             */
+           -- скидка
+          , (CASE WHEN MI_PromoGoods.Amount <> 0
+                       THEN zfConvert_FloatToString (MI_PromoGoods.Amount)
+             END) :: TBlob   AS Discount
+
+          -- компенсация
+          , (SELECT STRING_AGG (zfConvert_FloatToString (MovementItem_PromoCondition.Amount)
+                                 ||' - ' || MovementItem_PromoCondition.ConditionPromoName
+                                        , '; ' ) 
+             FROM MovementItem_PromoCondition_View AS MovementItem_PromoCondition
+             WHERE MovementItem_PromoCondition.MovementId = Movement_Promo.Id
+               AND MovementItem_PromoCondition.IsErased   = FALSE
+               AND MovementItem_PromoCondition.Amount     <> 0
+              ) :: TBlob   AS Discount_Condition
                  
           , 0                                 :: TFloat AS MainDiscount
                  

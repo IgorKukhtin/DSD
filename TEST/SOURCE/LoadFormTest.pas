@@ -375,10 +375,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerOrderForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerOrderForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
-  {
+
   // Состояние договора
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
@@ -1888,6 +1888,9 @@ end;
 
 procedure TLoadFormTest.LoadQualityFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsQuality_RawForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsQuality_RawForm');
+  exit;
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityForm'));
   TdsdFormStorageFactory.GetStorage.Load('TQualityForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TQualityEditForm'));
@@ -2541,11 +2544,11 @@ begin
   }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_ResultDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_ResultDialogForm');
   //
-
+   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_PromoPlanForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_PromoPlanForm');
   //
@@ -2782,10 +2785,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoJournalForm');
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoForm');
-
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPromoPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPromoPartnerForm');
   }

@@ -37,6 +37,7 @@ type
     GuidesRetail: TdsdGuides;
     cbPromo: TcxCheckBox;
     cbTender: TcxCheckBox;
+    cbGoodsKind: TcxCheckBox;
   private
     { Private declarations }
   public

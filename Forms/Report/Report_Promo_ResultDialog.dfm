@@ -1,22 +1,22 @@
 inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1086#1090#1095#1077#1090#1072
-  ClientHeight = 187
-  ClientWidth = 418
-  ExplicitWidth = 424
-  ExplicitHeight = 212
+  ClientHeight = 239
+  ClientWidth = 432
+  ExplicitWidth = 438
+  ExplicitHeight = 267
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 114
-    Top = 149
+    Top = 188
     ExplicitLeft = 114
-    ExplicitTop = 149
+    ExplicitTop = 188
   end
   inherited bbCancel: TcxButton
     Left = 258
-    Top = 149
+    Top = 188
     ExplicitLeft = 258
-    ExplicitTop = 149
+    ExplicitTop = 188
   end
   object cxLabel1: TcxLabel [2]
     Left = 26
@@ -46,12 +46,12 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   end
   object cxLabel17: TcxLabel [6]
     Left = 23
-    Top = 71
+    Top = 110
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object edUnit: TcxButtonEdit [7]
     Left = 111
-    Top = 70
+    Top = 109
     Properties.Buttons = <
       item
         Default = True
@@ -63,12 +63,12 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
   end
   object cxLabel3: TcxLabel [8]
     Left = 26
-    Top = 112
+    Top = 151
     Caption = #1058#1086#1088#1075'. '#1089#1077#1090#1100':'
   end
   object ceRetail: TcxButtonEdit [9]
     Left = 111
-    Top = 111
+    Top = 150
     Properties.Buttons = <
       item
         Default = True
@@ -92,17 +92,24 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
     TabOrder = 11
     Width = 161
   end
+  object cbGoodsKind: TcxCheckBox [12]
+    Left = 26
+    Top = 62
+    Caption = #1075#1088#1091#1087#1087#1080#1088#1086#1074#1072#1090#1100' '#1042#1080#1076#1072#1084' '#1090#1086#1074#1072#1088#1072
+    TabOrder = 12
+    Width = 179
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 128
-    Top = 153
+    Top = 192
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 101
-    Top = 153
+    Top = 192
   end
   inherited ActionList: TActionList
     Left = 156
-    Top = 152
+    Top = 191
   end
   inherited FormParams: TdsdFormParams
     Params = <
@@ -171,9 +178,17 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
         DataType = ftBoolean
         ParamType = ptInput
         MultiSelectSeparator = ','
+      end
+      item
+        Name = 'isGoodsKind'
+        Value = Null
+        Component = cbGoodsKind
+        DataType = ftBoolean
+        ParamType = ptInput
+        MultiSelectSeparator = ','
       end>
     Left = 37
-    Top = 145
+    Top = 184
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -209,7 +224,7 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 232
-    Top = 65
+    Top = 104
   end
   object GuidesRetail: TdsdGuides
     KeyField = 'Id'
@@ -239,6 +254,6 @@ inherited Report_Promo_ResultDialogForm: TReport_Promo_ResultDialogForm
         MultiSelectSeparator = ','
       end>
     Left = 196
-    Top = 97
+    Top = 136
   end
 end
