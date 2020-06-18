@@ -12,6 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 
    DECLARE vbIsMsg_PromoStateKind Boolean;
+   DECLARE vbIsMsg_Contract       Boolean;
    DECLARE vbIsUserSigning1       Boolean;
    DECLARE vbIsUserSigning2       Boolean;
    DECLARE vbIsMsgColor           Boolean;
@@ -23,26 +24,106 @@ $BODY$
    DECLARE vbCount_1_Main         Integer;
    DECLARE vbMovementId_2_Main    Integer;
    DECLARE vbCount_2_Main         Integer;
+
+   DECLARE vbCount_Contract       Integer;
+   DECLARE vbOperDate_Contract    TDateTime;
+   DECLARE vbOperDate_Contract_start TDateTime;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
      vbUserId:= lpGetUserBySession (inSession);
-     
+
 
      -- zc_Enum_Role_Admin + Отдел Маркетинг
      vbIsMsg_PromoStateKind:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (zc_Enum_Role_Admin(), 876016) AND UserRole_View.UserId = vbUserId);
-     
+     -- Договора-ввод справочников
+     vbIsMsg_Contract:= vbUserId = zfCalc_UserAdmin() :: Integer OR EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (78432) AND UserRole_View.UserId = vbUserId);
+     IF vbIsMsg_Contract = TRUE
+     THEN
+         -- Юридический отдел
+         vbIsMsg_Contract:= vbUserId = zfCalc_UserAdmin() :: Integer
+                         OR EXISTS (SELECT 1
+                                    FROM ObjectLink AS ObjectLink_User_Member
+                                         LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                              ON ObjectLink_Personal_Member.ChildObjectId = ObjectLink_User_Member.ChildObjectId
+                                                             AND ObjectLink_Personal_Member.DescId        = zc_ObjectLink_Personal_Unit()
+                                         INNER JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                                               ON ObjectLink_Personal_Unit.ObjectId      = ObjectLink_Personal_Member.ObjectId
+                                                              AND ObjectLink_Personal_Unit.DescId        = zc_ObjectLink_Personal_Unit()
+                                                              AND ObjectLink_Personal_Unit.ChildObjectId = 8387
+                                    WHERE ObjectLink_User_Member.ObjectId = vbUserId
+                                      AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+                                   );
+         -- если надо найти договора
+         IF vbIsMsg_Contract = TRUE
+         THEN
+             -- дата
+             vbOperDate_Contract:= DATE_TRUNC ('MONTH', CURRENT_DATE + INTERVAL '25 DAY') + INTERVAL '1 MONTH' - INTERVAL '1 DAY';
+             vbOperDate_Contract_start:= DATE_TRUNC ('MONTH', vbOperDate_Contract) - INTERVAL '1 MONTH';
+             -- кол-во
+             vbCount_Contract:= COALESCE (
+                                (SELECT COUNT (*)
+                                 FROM ObjectDate AS ObjectDate_End
+                                      INNER JOIN Object AS Object_Contract ON Object_Contract.Id        = ObjectDate_End.ObjectId
+                                                                          AND Object_Contract.ValueData <> '-'
+                                                                          AND Object_Contract.isErased  = FALSE
+                                      INNER JOIN ObjectLink AS ObjectLink_ContractStateKind
+                                                            ON ObjectLink_ContractStateKind.ObjectId      = Object_Contract.Id
+                                                           AND ObjectLink_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                                                           AND ObjectLink_ContractStateKind.ChildObjectId <> zc_Enum_ContractStateKind_Close()
+                                      -- Типы пролонгаций договоров
+                                      LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTermKind
+                                                           ON ObjectLink_Contract_ContractTermKind.ObjectId = Object_Contract.Id
+                                                          AND ObjectLink_Contract_ContractTermKind.DescId   = zc_ObjectLink_Contract_ContractTermKind()
+                                      LEFT JOIN ObjectFloat AS ObjectFloat_Term
+                                                            ON ObjectFloat_Term.ObjectId  = Object_Contract.Id
+                                                           AND ObjectFloat_Term.DescId    = zc_ObjectFloat_Contract_Term()
+                                                           AND ObjectFloat_Term.ValueData > 0
+                                 WHERE ObjectDate_End.ValueData BETWEEN vbOperDate_Contract_start AND vbOperDate_Contract
+                                   AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
+                                   AND (ObjectLink_Contract_ContractTermKind.ChildObjectId IS NULL
+                                     OR (ObjectFloat_Term.ObjectId IS NULL
+                                     AND ObjectLink_Contract_ContractTermKind.ChildObjectId <> zc_Enum_ContractTermKind_Long()
+                                        )
+                                       )
+                                ), 0)
+
+                              + COALESCE (
+                                (SELECT COUNT (*)
+                                 FROM -- Типы пролонгаций договоров
+                                      ObjectLink AS ObjectLink_Contract_ContractTermKind
+                                      INNER JOIN Object AS Object_Contract ON Object_Contract.Id        = ObjectLink_Contract_ContractTermKind.ObjectId
+                                                                          AND Object_Contract.ValueData <> '-'
+                                                                          AND Object_Contract.isErased  = FALSE
+                                      INNER JOIN ObjectFloat AS ObjectFloat_Term
+                                                             ON ObjectFloat_Term.ObjectId  = Object_Contract.Id
+                                                            AND ObjectFloat_Term.DescId    = zc_ObjectFloat_Contract_Term()
+                                                            AND ObjectFloat_Term.ValueData > 0
+                                      INNER JOIN ObjectLink AS ObjectLink_ContractStateKind
+                                                            ON ObjectLink_ContractStateKind.ObjectId      = Object_Contract.Id
+                                                           AND ObjectLink_ContractStateKind.DescId        = zc_ObjectLink_Contract_ContractStateKind()
+                                                           AND ObjectLink_ContractStateKind.ChildObjectId <> zc_Enum_ContractStateKind_Close()
+                                      INNER JOIN ObjectDate AS ObjectDate_End
+                                                            ON ObjectDate_End.ObjectId = Object_Contract.Id
+                                                           AND ObjectDate_End.DescId   = zc_ObjectDate_Contract_End()
+                                                           AND ObjectDate_End.ValueData + ((ObjectFloat_Term.ValueData :: Integer) :: TVarChar || ' MONTH') :: INTERVAL BETWEEN vbOperDate_Contract_start AND vbOperDate_Contract
+                                 WHERE ObjectLink_Contract_ContractTermKind.ChildObjectId = zc_Enum_ContractTermKind_Month()
+                                   AND ObjectLink_Contract_ContractTermKind.DescId        = zc_ObjectLink_Contract_ContractTermKind()
+                                ), 0);
+         END IF;
+     END IF;
+
      -- Signing
-     vbIsUserSigning1:= vbUserId IN (280164, 133035);  -- Старецкая М.В.
-     vbIsUserSigning2:= vbUserId IN (9463, 5); -- Махота Д.П.
+     vbIsUserSigning1:= vbUserId IN (280164, 5, 133035);  -- Старецкая М.В.
+     vbIsUserSigning2:= vbUserId IN (9463); -- Махота Д.П.
 
      -- Отдел Маркетинг
      vbIsMsgColor:= EXISTS (SELECT 1 FROM ObjectLink_UserRole_View AS UserRole_View WHERE UserRole_View.RoleId IN (876016) AND UserRole_View.UserId = vbUserId);
 
      -- Отдел Маркетинг
-     IF 1=1 AND vbIsMsg_PromoStateKind = TRUE
+     IF 1=1 AND (vbIsMsg_PromoStateKind = TRUE OR vbIsMsg_Contract = TRUE)
      THEN
-          SELECT 
+          SELECT
                  -- 1.1.1. MovementId - Срочно - Директор по маркетингу
                  MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_Head()
                             AND MovementFloat_PromoStateKind.ValueData     = 1
@@ -81,7 +162,7 @@ BEGIN
                                 THEN 1
                                 ELSE 0
                       END) AS Count_1_Main
-                      
+
                  -- 2.2.1. MovementId - НЕ Срочно - Исполнительный Директор
                , MIN (CASE WHEN MovementLinkObject_PromoStateKind.ObjectId = zc_Enum_PromoStateKind_Main()
                             AND COALESCE (MovementFloat_PromoStateKind.ValueData, 0) <> 1
@@ -138,7 +219,7 @@ BEGIN
 
             , CASE WHEN vbIsUserSigning2 = TRUE THEN 3 ELSE 1 END :: Integer AS NPP
             , 'Директору по Маркетингу : ' :: TVarChar AS MsgAddr
-            
+
             , (CASE WHEN vbCount_1_Head > 0
                         THEN 'Приоритетных документов для подписания '
                           || ' : '    || vbCount_1_Head :: TVarChar || ' шт.'
@@ -307,7 +388,39 @@ BEGIN
                         THEN zc_Color_Aqua()
                    ELSE -1
               END AS Color_Text
-      
+
+      UNION ALL
+       -- 3.
+       SELECT -1 :: Integer AS MovementId
+
+            , 11 AS NPP
+            , 'Юридический отдел :' :: TVarChar AS MsgAddr
+            , ('кол-во договоров = '    || vbCount_Contract :: TVarChar || ' шт.'
+            || '  заканчивается срок действия с <' || zfConvert_DateToString (vbOperDate_Contract_start) || '> по <' || zfConvert_DateToString (vbOperDate_Contract) || '>'
+              ) :: TVarChar AS ValueText
+
+              -- 1.1.
+            , CASE WHEN vbCount_Contract > 0
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Addr
+              -- 1.2.
+            , CASE WHEN vbCount_Contract > 0
+                        THEN zc_Color_Aqua()
+                   ELSE -1
+              END AS Color_Addr
+              -- 2.1.
+            , CASE WHEN vbCount_Contract > 0
+                        THEN zc_Color_Black()
+                   ELSE -1
+              END AS ColorText_Text
+              -- 2.2.
+            , CASE WHEN vbCount_Contract > 0
+                        THEN zc_Color_Aqua()
+                   ELSE -1
+              END AS Color_Text
+       WHERE vbIsMsg_Contract = TRUE
+
        ORDER BY 2
       ;
 

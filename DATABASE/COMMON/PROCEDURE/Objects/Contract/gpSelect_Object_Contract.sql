@@ -448,6 +448,12 @@ BEGIN
            OR tmpListBranch_Constraint.JuridicalId > 0
            OR vbIsConstraint = FALSE)
 
+      AND ((Object_Contract_View.isErased = FALSE
+        AND Object_Contract_View.ContractStateKindId > 0
+        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close())
+        OR (inIsPeriod  = FALSE
+        AND inIsEndDate = FALSE)
+          )
    ;
   
 END;
