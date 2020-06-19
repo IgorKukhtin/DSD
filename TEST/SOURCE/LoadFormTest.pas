@@ -89,6 +89,7 @@ type
     procedure LoadJuridicalOrderFinanceFormTest;
     procedure LoadLabFormTest;
     procedure LoadLossFormTest;
+    procedure LoadLossAssetFormTest;
     procedure LoadLossDebtFormTest;
     procedure LoadLossPersonalFormTest;
     procedure LoadMeasureFormTest;
@@ -1392,6 +1393,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
 end;
+procedure TLoadFormTest.LoadLossAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossAssetJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossAssetJournalForm');
+end;
+
 procedure TLoadFormTest.LoadLossDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));
@@ -1925,7 +1934,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProductionUnionTech_OrderDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProductionUnionTech_OrderDialogForm');
   //exit;
-   }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_RemainsOLAPTableForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_RemainsOLAPTableDialogForm'));
@@ -1934,7 +1943,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Insert_RemainsOLAPTableForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Insert_RemainsOLAPTableForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
   exit;
@@ -2209,7 +2218,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
   exit;
-  }
+
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusTestForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusTestForm');
@@ -2219,7 +2228,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusDialogForm');
   exit;
-  {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
 
@@ -2298,24 +2307,25 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CashUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CashUserForm');
-  }
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BankAccountDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_BankAccountDialogForm');
   exit;
-   {
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FoundersDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_FoundersDialogForm');
   exit;
-
+  }
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_DefrosterForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_DefrosterForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_DefrosterDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_DefrosterDialogForm');
-
+  exit;
+  {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_PackageForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_PackageDialogForm'));
@@ -2538,6 +2548,9 @@ end;
 
 procedure TLoadFormTest.LoadReportPromoFormTest;
 begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleReturn_byPromoForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleReturn_byPromoForm');
   {
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Promo_TradeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_Promo_TradeForm');

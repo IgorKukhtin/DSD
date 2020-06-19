@@ -401,7 +401,9 @@ type
     bbPrint_Calc2: TdxBarButton;
     spUpdate_Movement_isTaxPromo: TdsdStoredProc;
     actUpdate_Movement_isTaxPromo: TdsdExecStoredProc;
-    bb: TdxBarButton;
+    bbUpdate_Movement_isTaxPromo: TdxBarButton;
+    bbOpenReport_SaleReturn_byPromo: TdxBarButton;
+    actOpenReport_SaleReturn_byPromo: TdsdOpenForm;
   private
     { Private declarations }
   public

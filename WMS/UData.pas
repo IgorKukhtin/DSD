@@ -8,7 +8,7 @@ uses
   FireDAC.Phys, FireDAC.Phys.PG, FireDAC.Phys.PGDef, FireDAC.VCLUI.Wait, FireDAC.Phys.Oracle,
   FireDAC.Phys.OracleDef, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
   Vcl.ExtCtrls, FireDAC.Comp.Client, Data.DB, FireDAC.Comp.DataSet,
-  UDefinitions;
+  UDefinitions, FireDAC.Moni.Base, FireDAC.Moni.Custom, FireDAC.Moni.RemoteClient;
 
 type
   TdmData = class(TDataModule)
@@ -29,8 +29,11 @@ type
     alan_exec_qry: TFDQuery;
     dsWMS: TDataSource;
     dsAlan: TDataSource;
-    qryWMSGrid: TFDQuery;
+    qryWMSGridErr: TFDQuery;
     qryAlanGrid: TFDQuery;
+    qryWMSGridAll: TFDQuery;
+    qryWmsToHostMessage: TFDQuery;
+    dsWmsToHostMessage: TDataSource;
   public
     // вызов spName - делает Insert в табл. Postresql.wms_Message - для GUID
     function gpInsert_wms_Message(spName, GUID: string): Integer;
@@ -82,7 +85,7 @@ type
     // открываются данные из табл. Postresql.Movement и переносятся в oracle
     function fInsert_Movement_to_wms(const pgProcName, GUID: string; const ACheckRecCount, ADebug: Boolean;
       const AThresholdRecCount: Integer; AMyLogSql, AMyShowSql: TNotifyProc; AMsgProc: TNotifyMsgProc): Integer;
-    function ImportWMS(AMsgProc: TNotifyMsgProc): Boolean;
+    function ImportWMS(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc): Boolean;
   public
     function ConnectWMS(const ADatabase: string; AMsgProc: TNotifyMsgProc): Boolean;
     function ConnectAlan(const AServer: string; AMsgProc: TNotifyMsgProc): Boolean;
@@ -874,11 +877,11 @@ begin
   end;
 end;
 
-function TdmData.ImportWMS(AMsgProc: TNotifyMsgProc): Boolean;
+function TdmData.ImportWMS(const APacket: TPacketKind; AMsgProc: TNotifyMsgProc): Boolean;
 var
   dataObjects: TDataObjects;
   wmsImport: TImportWMS;
-  bOrderStatusChanged, bReceivingResult: Boolean;
+//  bOrderStatusChanged, bReceivingResult}: Boolean;
 const
   cStartImport = 'Start import "%s" from WMS'  + #13#10;
   cSuccessImport = 'Data "%s" successfull imported from WMS' + #13#10;
@@ -897,23 +900,12 @@ begin
   wmsImport := TImportWMS.Create(dataObjects, AMsgProc);
   try
     try
-      // пакет <order_status_changed>
       if Assigned(AMsgProc) then
-        AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
+        AMsgProc(Format(cStartImport, [GetImpTypeCaption(APacket)]));
 
-      bOrderStatusChanged := wmsImport.ImportPacket(pknOrderStatusChanged);
-      if bOrderStatusChanged and Assigned(AMsgProc) then
-        AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknOrderStatusChanged)]));
-
-      // пакет <receiving_result>
-      if Assigned(AMsgProc) then
-        AMsgProc(Format(cStartImport, [GetImpTypeCaption(pknReceivingResult)]));
-
-      bReceivingResult := wmsImport.ImportPacket(pknReceivingResult);
-      if bReceivingResult and Assigned(AMsgProc) then
-        AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(pknReceivingResult)]));
-
-      Result := bOrderStatusChanged and bReceivingResult;
+      Result := wmsImport.ImportPacket(APacket);
+      if Result and Assigned(AMsgProc) then
+        AMsgProc(Format(cSuccessImport, [GetImpTypeCaption(APacket)]));
     except
       on E: Exception do
       begin

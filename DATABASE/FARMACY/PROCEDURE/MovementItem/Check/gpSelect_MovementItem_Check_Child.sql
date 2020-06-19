@@ -40,9 +40,10 @@ BEGIN
                                   AND MovementItemFloat.DescId = zc_MIFloat_ContainerId()
                                 )
     --
-   , tmpContainer AS (SELECT tmp.ContainerId
-                           , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
-                           , COALESCE (MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
+   , tmpContainerAll AS (SELECT tmp.ContainerId
+                              , COALESCE (MI_Income_find.MovementId,MI_Income.MovementId) AS MovementId_Income
+                              , COALESCE (MI_Income_find.Id,MI_Income.Id)                 AS MIId_Income
+                              , ContainerLinkObject.ObjectId                              AS PartionGoodsId
                       FROM tmpMIFloat_ContainerId AS tmp
                            LEFT JOIN ContainerlinkObject AS ContainerLinkObject_MovementItem
                                                          ON ContainerLinkObject_MovementItem.Containerid = tmp.ContainerId
@@ -57,9 +58,26 @@ BEGIN
                            -- элемента прихода от поставщика (если это партия, которая была создана инвентаризацией)
                            LEFT JOIN MovementItem AS MI_Income_find ON MI_Income_find.Id = (MIFloat_MovementItem.ValueData :: Integer)
                                       
+                           LEFT JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = tmp.ContainerId
+                                                        AND ContainerLinkObject.DescId = zc_ContainerLinkObject_PartionGoods()
+
+
+                     )
+    --
+   , tmpContainer AS (SELECT tmp.ContainerId
+                           , tmp.MovementId_Income                                                                          AS MovementId_Income
+                           , COALESCE (ObjectDate_ExpirationDate.ValueData, MIDate_ExpirationDate.ValueData, zc_DateEnd())  AS ExpirationDate
+                      FROM tmpContainerAll AS tmp
+                                      
                            LEFT OUTER JOIN MovementItemDate  AS MIDate_ExpirationDate
-                                                             ON MIDate_ExpirationDate.MovementItemId = COALESCE (MI_Income_find.Id,MI_Income.Id)  --Object_PartionMovementItem.ObjectCode
+                                                             ON MIDate_ExpirationDate.MovementItemId = tmp.MIId_Income
                                                             AND MIDate_ExpirationDate.DescId = zc_MIDate_PartionGoods()
+                                                            
+                           LEFT JOIN ObjectDate AS ObjectDate_ExpirationDate
+                                                ON ObjectDate_ExpirationDate.ObjectId = tmp.PartionGoodsId
+                                               AND ObjectDate_ExpirationDate.DescId = zc_ObjectDate_PartionGoods_Value()
+
+
                      )
     --
    , tmpPartion AS (SELECT Movement.Id
@@ -118,4 +136,4 @@ $BODY$
 */
 
 -- тест
--- select * from gpSelect_MovementItem_Check_Child(inMovementId := 3959328 ,  inSession := '3');
+-- select * from gpSelect_MovementItem_Check_Child(inMovementId := 3959328 ,  inSession := '3'

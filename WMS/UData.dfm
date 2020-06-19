@@ -10,6 +10,7 @@ object dmData: TdmData
       'User_Name=admin'
       'Server=project-vds.vds.colocall.com'
       'Database=project')
+    Connected = True
     Left = 64
     Top = 24
   end
@@ -22,7 +23,8 @@ object dmData: TdmData
         'RT=1521))(CONNECT_DATA=(SERVICE_NAME=wmsdb)))'
       'Password=oracle'
       'User_Name=wms'
-      'POOL_MaximumItems=50000')
+      'POOL_MaximumItems=50000'
+      'CharacterSet=UTF8')
     Left = 264
     Top = 27
   end
@@ -190,8 +192,8 @@ object dmData: TdmData
   end
   object FDT_wms: TFDTransaction
     Connection = FDC_wms
-    Left = 264
-    Top = 88
+    Left = 344
+    Top = 32
   end
   object update_wms_to_host_header_message_error: TFDQuery
     Connection = FDC_wms
@@ -247,16 +249,16 @@ object dmData: TdmData
     Top = 352
   end
   object dsWMS: TDataSource
-    DataSet = qryWMSGrid
+    DataSet = qryWMSGridErr
     Left = 64
     Top = 128
   end
   object dsAlan: TDataSource
     DataSet = qryAlanGrid
-    Left = 136
+    Left = 219
     Top = 128
   end
-  object qryWMSGrid: TFDQuery
+  object qryWMSGridErr: TFDQuery
     Connection = FDC_wms
     SQL.Strings = (
       
@@ -266,7 +268,7 @@ object dmData: TdmData
       
         'where ((type='#39'order_status_changed'#39') or (type='#39'receiving_result'#39 +
         ')) '
-      '  and (status= '#39'error'#39')'
+      '  and (status = '#39'error'#39')'
       '  and (start_date between :startdate and :enddate)   '
       'order by id desc')
     Left = 56
@@ -289,27 +291,83 @@ object dmData: TdmData
     Connection = FDC_alan
     SQL.Strings = (
       
-        'select err.header_id, err.site, err.type, msg.name, msg.qty, msg' +
-        '.weight, msg.operdate, msg.done, msg.error, err.description'
-      'from wms_to_host_error err '
-      
-        '  inner join wms_to_host_message msg on err.header_id = msg.head' +
-        'er_id '
-      'where (msg.done = false) '
-      '  and (msg.error = true) '
-      '  and (site= '#39'A'#39') '
-      '  and (operdate between :startDate and :endDate)'
-      'order by err.header_id desc')
-    Left = 136
+        'select * from gpSelect_wms_to_host_error(inStartDate:= :startDat' +
+        'e, inEndDate:= :endDate)')
+    Left = 219
     Top = 184
     ParamData = <
       item
         Name = 'STARTDATE'
+        DataType = ftDateTime
         ParamType = ptInput
+        Value = Null
       end
       item
         Name = 'ENDDATE'
+        DataType = ftDateTime
         ParamType = ptInput
+        Value = Null
       end>
+  end
+  object qryWMSGridAll: TFDQuery
+    Connection = FDC_wms
+    SQL.Strings = (
+      
+        'select id, type, status, start_date, err_code, err_descr, messag' +
+        'e '
+      'from to_host_header_message '
+      
+        'where ((type='#39'order_status_changed'#39') or (type='#39'receiving_result'#39 +
+        ')) '
+      '  and (start_date between :startdate and :enddate)   '
+      'order by id desc')
+    Left = 136
+    Top = 185
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object qryWmsToHostMessage: TFDQuery
+    Connection = FDC_alan
+    SQL.Strings = (
+      
+        'select * from gpSelect_wms_to_host_message(inStartDate:= :startD' +
+        'ate, inEndDate:= :endDate, inErrorOnly:= :errorOnly)')
+    Left = 328
+    Top = 184
+    ParamData = <
+      item
+        Name = 'STARTDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ENDDATE'
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ERRORONLY'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
+  object dsWmsToHostMessage: TDataSource
+    DataSet = qryWmsToHostMessage
+    Left = 333
+    Top = 128
   end
 end

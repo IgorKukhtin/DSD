@@ -14,31 +14,6 @@ uses
   UQryThread;
 
 type
-  TPacketKind = (pknOrderStatusChanged, pknReceivingResult);
-
-  TPacketValues = record
-    Message_Type: string;
-    Header_Id: Integer;
-    Detail_Id: Integer;
-    MovementId: string;
-    SKU_Id: string;
-    Name: string;
-    Qty: string;
-    Weight: string;
-    Weight_Biz: string;
-    OperDate: TDateTime;
-    Production_Date: string;
-    Err_Code: Integer;
-  private
-    Ferr_descr: string;
-    procedure SetErrDescr(AValue: string);
-    function GetErrDescr: string;
-  public
-    property Err_Descr: string read GetErrDescr write SetErrDescr;
-  end;
-
-  TPacketValuesArray = array of TPacketValues;
-
   TImportWMS = class
   strict private
     FStream: TMemoryStream;
@@ -87,13 +62,15 @@ implementation
 uses
   System.DateUtils,
   System.Variants,
+  System.Math,
   Winapi.Windows,
   UConstants,
   UCommon;
 
 const
   cWmsMessageType = '<message_type type="%s"/>';
-  // Packet name
+
+  // имена пакетов
   cpnOrderStatusChanged = 'order_status_changed';
   cpnReceivingResult = 'receiving_result';
 
@@ -232,8 +209,8 @@ begin
 end;
 
 procedure TImportWMS.ExecuteAlanProc(const AHeaderId: Integer; const APacketName, ASQL: string);
-var
-  thrPacket: TProcessPacketThread;
+//var
+//  thrPacket: TProcessPacketThread;
 begin
   // выполнение хр.процедуры в ALAN
   with FData.ExecQry do
@@ -630,15 +607,19 @@ end;
 procedure TImportWMS.FillWmsToHostMessage(AMsgProc: TNotifyMsgProc);
 var
   I: Integer;
-  iDoneCount: Integer;
-  crdStart: Cardinal;
-  threadList: TObjectList<TQryThread>;
-  thrQry, tmpItem: TQryThread;
+  tmpQryData: TQryData;
+  iIndex, iTotCount: Integer;
+  arrThreads: array of TQryQueuedThread;
 const
-  cWait = c1Sec;  
-  cTotWait = 3 * c1Sec;
+  cMaxThreadCount = 10;
 begin
-  threadList := TObjectList<TQryThread>.Create(False);
+  SetLength(arrThreads, Min(Length(FValues), cMaxThreadCount));
+  iIndex := Low(arrThreads);
+  iTotCount := 0;
+
+  for I := Low(arrThreads) to High(arrThreads) do
+    arrThreads[I] := TQryQueuedThread.Create(FData.InsertQry.Connection, AMsgProc);
+
   try
     // записываем данные в таб. Alan wms_to_host_message
     for I := Low(FValues) to High(FValues) do
@@ -658,87 +639,54 @@ begin
         ParamByName('Weight_Biz').AsString := FValues[I].Weight_Biz;
         ParamByName('OperDate').AsDateTime := FValues[I].OperDate;
         ParamByName('Production_Date').AsString := FValues[I].Production_Date;
-
-        thrQry := TQryThread.Create(FData.InsertQry, saExec, AMsgProc, tknDriven);
-        threadList.Add(thrQry);
-        thrQry.Start;
       end;
+
+      tmpQryData.SQLText := FData.InsertQry.SQL.Text;
+      tmpQryData.Params  := TFDParams.Create;
+      tmpQryData.Params.Assign(FData.InsertQry.Params);
+
+      arrThreads[iIndex].AddData(tmpQryData);
+
+      Inc(iTotCount);
+      Inc(iIndex);
+      if iIndex > High(arrThreads) then
+        iIndex := Low(arrThreads);
     end;
 
-    // нужно подождать пока потоки заполнят таб. wms_to_host_message
-    iDoneCount := 0;
+//    if Assigned(AMsgProc) then
+//      AMsgProc('Befor terminate TQryQueuedThread threads');
 
-    while iDoneCount < threadList.Count do
-      for tmpItem in threadList do
-        if tmpItem.Done or tmpItem.Failed then Inc(iDoneCount);
+    for I := Low(arrThreads) to High(arrThreads) do
+      WaitFor(3000, not arrThreads[I].AllTasksDone);
 
-    for tmpItem in threadList do
-    begin
-      tmpItem.Terminate;
-      tmpItem.WaitFor;
-      tmpItem.Free;
-    end;
+    for I := Low(arrThreads) to High(arrThreads) do
+      arrThreads[I].Terminate;
+
+    for I := Low(arrThreads) to High(arrThreads) do
+      arrThreads[I].WaitFor;
 
   finally
-    FreeAndNil(threadList);
+    if Assigned(AMsgProc) then
+      AMsgProc('Total record count = ' + IntToStr(iTotCount));
+
+    for I := Low(arrThreads) to High(arrThreads) do
+      arrThreads[I].Free;
   end;
 end;
 
-//function TImportWMS.getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
-//var
-//  tmpSettings: TFormatSettings;
-//  sValue: string;
-//begin
-//  if VarIsNull(AttrValue) then
-//    Exit(cErrXmlAttributeNotExists);
-//
-//  tmpSettings := TFormatSettings.Create;
-//  sValue := AttrValue;
-//
-//  if Pos('.', sValue) = 1 then // .044
-//   sValue := '0' + sValue;
-//
-//  if tmpSettings.DecimalSeparator = ',' then
-//    sValue := StringReplace(sValue, '.', ',', []);
-//
-//  Result := StrToFloatDef(sValue, ADefValue);
-//end;
-//
-//function TImportWMS.getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
-//begin
-//  if VarIsNull(AttrValue) then
-//    Exit(cErrXmlAttributeNotExists);
-//
-//  Result := StrToIntDef(AttrValue, ADefValue);
-//end;
-//
-//function TImportWMS.getStr(const AttrValue: OleVariant; const ADefValue: string): string;
-//begin
-//  if not VarIsNull(AttrValue) then
-//    Result := AttrValue
-//  else
-//    Result := ADefValue;
-//end;
-//
-//function TImportWMS.getStr(const AttrValue: OleVariant): string;
-//begin
-//  if not VarIsNull(AttrValue) then
-//    Result := AttrValue
-//  else
-//    Result := cErrStrXmlAttributeNotExists;
-//end;
-
 function TImportWMS.ImportPacket(const APacket: TPacketKind): Boolean;
 var
-  I, J: Integer;
+  I, iTotCount: Integer;
+  dtmStart, dtmDiff: TDateTime;
   xmlDocument: IXMLDocument;
-  rootNode, headerNode, detailNode: IXMLNode;
+  rootNode: IXMLNode;
   tmpStream: TMemoryStream;
-  sMessageType, sUpdateDone: string;
 const
   cNoData = 'No data <%s> to import from WMS';
+  cRecCountSwitch = 500;
 begin
   tmpStream := FetchPacket(APacket);
+  iTotCount := 0;
 
   if tmpStream = nil then
   begin
@@ -770,27 +718,47 @@ begin
   begin
     try
       // записываем данные в таб. Alan wms_to_host_message
-//      FillWmsToHostMessage(FMsgProc);
-      for J := Low(FValues) to High(FValues) do
-      begin
-        if FValues[J].Err_Code <> 0 then Continue;
+      if Assigned(FMsgProc) then
+        FMsgProc('Start write data into wms_to_host_message');
 
-        with FData.InsertQry do
+      dtmStart := Now;
+
+      if Length(FValues) > cRecCountSwitch then
+        FillWmsToHostMessage(FMsgProc) // при малом количестве записей проигрывает коду ниже, в котором выполняется последовательное выполнение запросов в цикле в гл.потоке
+      else
+      begin
+        for I := Low(FValues) to High(FValues) do
         begin
-          ParamByName('type').AsString := FValues[J].Message_Type;
-          ParamByName('Header_Id').AsInteger := FValues[J].Header_Id;
-          ParamByName('Detail_Id').AsInteger := FValues[J].Detail_Id;
-          ParamByName('MovementId').AsString := FValues[J].MovementId;
-          ParamByName('SKU_Id').AsString := FValues[J].SKU_Id;
-          ParamByName('Name').AsString := FValues[J].Name;
-          ParamByName('Qty').AsString := FValues[J].Qty;
-          ParamByName('Weight').AsString := FValues[J].Weight;
-          ParamByName('Weight_Biz').AsString := FValues[J].Weight_Biz;
-          ParamByName('OperDate').AsDateTime := FValues[J].OperDate;
-          ParamByName('Production_Date').AsString := FValues[J].Production_Date;
-          ExecSQL;
+          if FValues[I].Err_Code <> 0 then Continue;
+
+          with FData.InsertQry do
+          begin
+            ParamByName('type').AsString := FValues[I].Message_Type;
+            ParamByName('Header_Id').AsInteger := FValues[I].Header_Id;
+            ParamByName('Detail_Id').AsInteger := FValues[I].Detail_Id;
+            ParamByName('MovementId').AsString := FValues[I].MovementId;
+            ParamByName('SKU_Id').AsString := FValues[I].SKU_Id;
+            ParamByName('Name').AsString := FValues[I].Name;
+            ParamByName('Qty').AsString := FValues[I].Qty;
+            ParamByName('Weight').AsString := FValues[I].Weight;
+            ParamByName('Weight_Biz').AsString := FValues[I].Weight_Biz;
+            ParamByName('OperDate').AsDateTime := FValues[I].OperDate;
+            ParamByName('Production_Date').AsString := FValues[I].Production_Date;
+            ExecSQL;
+          end;
+          Inc(iTotCount);
         end;
+
+        if Assigned(FMsgProc) then
+          FMsgProc('Total record count = ' + IntToStr(iTotCount));
       end;
+
+      dtmDiff := Now - dtmStart;
+      if Assigned(FMsgProc) then
+        FMsgProc('Elapsed time: ' + FormatDateTime('hh:nn:ss_zzz', dtmDiff));
+
+      if Assigned(FMsgProc) then
+        FMsgProc('Finish write data into wms_to_host_message');
 
       // обработка пакетов
       case APacket of
@@ -912,18 +880,6 @@ begin
   end;
   thrQry := TQryThread.Create(FData.DoneQry, saExec, AMsgProc);
   thrQry.Start;
-end;
-
-{ TPacketValues }
-
-function TPacketValues.GetErrDescr: string;
-begin
-  Result := Ferr_descr;
-end;
-
-procedure TPacketValues.SetErrDescr(AValue: string);
-begin
-  Ferr_descr := Ferr_descr + AValue + ' ';
 end;
 
 end.

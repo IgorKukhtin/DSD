@@ -1,11 +1,18 @@
 unit UCommon;
 
 interface
+
+uses
+  Vcl.Forms, Winapi.Windows;
+
   // ф-ии чтения атрибутов из XML
   function getStr(const AttrValue: OleVariant): string; overload;
   function getStr(const AttrValue: OleVariant; const ADefValue: string): string; overload;
   function getInt(const AttrValue: OleVariant; const ADefValue: Integer): Integer;
   function getFloat(const AttrValue: OleVariant; const ADefValue: Extended): Extended;
+
+  procedure WaitFor(const AInterval: Cardinal; const aWaitCondition: Boolean = True);
+  function IsService: Boolean;
 
 
 implementation
@@ -57,6 +64,27 @@ begin
     Result := AttrValue
   else
     Result := cErrStrXmlAttributeNotExists;
+end;
+
+procedure WaitFor(const AInterval: Cardinal; const aWaitCondition: Boolean);
+var
+  crdStart: Cardinal;
+begin
+  crdStart := GetTickCount;
+
+  while ((GetTickCount - crdStart) < AInterval) and aWaitCondition do
+    Application.ProcessMessages;
+end;
+
+function IsService: Boolean;
+var
+  C: Cardinal;
+  Data: USEROBJECTFLAGS;
+begin
+  GetUserObjectInformation(GetProcessWindowStation, UOI_FLAGS, @Data, SizeOf(Data), C);
+  Result := (Data.dwFlags and WSF_VISIBLE <> WSF_VISIBLE)
+  or FindCmdLineSwitch('INSTALL', ['-', '/'], True)
+  or FindCmdLineSwitch('UNINSTALL', ['-', '/'], True);
 end;
 
 end.

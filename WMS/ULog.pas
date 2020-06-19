@@ -33,7 +33,11 @@ type
 implementation
 
 uses
+  UConstants,
   USettings;
+
+const
+  cLogMsg = '%s  %s';
 
 { TLogItem }
 
@@ -62,10 +66,13 @@ begin
 end;
 
 procedure TLogItem.Write(const AMsg: string);
+var
+  sMsg: string;
 begin
   FCS.Enter;
   try
-    WriteLn(FLogFile, AMsg);
+    sMsg := Format(cLogMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
+    WriteLn(FLogFile, sMsg);
     Flush(FLogFile);
   finally
     FCS.Leave;

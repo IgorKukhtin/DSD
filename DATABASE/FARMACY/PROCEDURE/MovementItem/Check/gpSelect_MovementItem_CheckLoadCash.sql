@@ -168,7 +168,10 @@ BEGIN
            , Object_PartionDateKind.ValueData                                    AS PartionDateKindName
            , MIFloat_MovementItem.ValueData                                      AS PricePartionDate
            , Null::TFloat                                                        AS PartionDateDiscount
-           , COALESCE (ObjectFloat_Month.ValueData, 0) :: TFLoat                 AS AmountMonth
+           , CASE Object_PartionDateKind.Id 
+             WHEN zc_Enum_PartionDateKind_Good() THEN 200 / 30.0 + 1.0
+             WHEN zc_Enum_PartionDateKind_Cat_5() THEN 200 / 30.0 - 1.0
+             ELSE COALESCE (ObjectFloatDay.ValueData / 30, 0) END::TFloat        AS AmountMonth
            , 0::Integer                                                          AS TypeDiscount
            , COALESCE(MIFloat_MovementItem.ValueData, MovementItem.PriceSale)    AS PriceDiscount
            , MovementItem.NDSKindId                                              AS NDSKindId
@@ -197,9 +200,9 @@ BEGIN
                                              ON MI_PartionDateKind.MovementItemId = MovementItem.Id
                                             AND MI_PartionDateKind.DescId = zc_MILinkObject_PartionDateKind()
             LEFT JOIN Object AS Object_PartionDateKind ON Object_PartionDateKind.Id = MI_PartionDateKind.ObjectId
-            LEFT JOIN ObjectFloat AS ObjectFloat_Month
-                                  ON ObjectFloat_Month.ObjectId = Object_PartionDateKind.Id
-                                 AND ObjectFloat_Month.DescId = zc_ObjectFloat_PartionDateKind_Month()
+            LEFT JOIN ObjectFloat AS ObjectFloatDay
+                                  ON ObjectFloatDay.ObjectId = Object_PartionDateKind.Id
+                                 AND ObjectFloatDay.DescId = zc_ObjectFloat_PartionDateKind_Day()
        ;
 END;
 $BODY$
@@ -215,3 +218,4 @@ ALTER FUNCTION gpSelect_MovementItem_CheckLoadCash (Integer, TVarChar) OWNER TO 
 -- тест
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18769698 ,  inSession := '3');
 -- select * from gpSelect_MovementItem_CheckLoadCash(inMovementId := 18805062    ,  inSession := '3');
+

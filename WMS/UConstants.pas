@@ -2,6 +2,9 @@ unit UConstants;
 
 interface
 
+uses
+  Winapi.Messages;
+
 const
   cINIFolder = 'SendDataWMS';
 
@@ -11,6 +14,8 @@ const
   // шаблоны сообщений
   cExceptionMsg       = '[%s] %s';
   cThreadExceptionMsg = '[%s] in thread %s - %s';
+  cDateTimeShortStr   = 'yyyy-mm-dd hh:nn:ss';
+  cDateTimeStr        = 'yyyy-mm-dd hh:nn:ss_zzz';
 
   // Error Xml Attribute not exists
   cErrXmlAttributeNotExists = Low(Integer);
@@ -36,6 +41,9 @@ const
   cImpErrDescr_NotNumeric   = '"%s" contain not Numeric value; ';
   cImpErrDescr_InvalidDate  = '"%s" contain invalid DateTime string. Expected date string in format "dd-mm-yyyy hh:mm"; ';
   cImpErrDecr_AttrNotExists = 'Attribute "%s" not exist in message';
+
+  // сообщения Windows
+  WM_NEED_UPDATE_GRIDS = WM_USER + 1;
 
 implementation
 

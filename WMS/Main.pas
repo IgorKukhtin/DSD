@@ -3,8 +3,21 @@ unit Main;
 interface
 
 uses
-  System.SysUtils, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms,
-  Vcl.StdCtrls, Vcl.ExtCtrls, ULog, Vcl.ComCtrls, Vcl.Samples.Spin, Data.DB, Vcl.Grids, Vcl.DBGrids;
+  System.SysUtils,
+  System.Classes,
+  Data.DB,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.StdCtrls,
+  Vcl.ExtCtrls,
+  Vcl.ComCtrls,
+  Vcl.Samples.Spin,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  Winapi.Messages,
+  UConstants,
+  ULog;
 
 type
   TMainForm = class(TForm)
@@ -23,7 +36,6 @@ type
     btnMovement_INCOMING_to_wms: TButton;
     btnMovement_ASN_LOAD_to_wms: TButton;
     btnMovement_ORDER_to_wms: TButton;
-    btnAll_from_wms: TButton;
     btnStartTimer: TButton;
     btnEndTimer: TButton;
     btnFDC_alan: TButton;
@@ -59,6 +71,21 @@ type
     lbEndDateAlan: TLabel;
     dtpStartDateAlan: TDateTimePicker;
     dtpEndDateAlan: TDateTimePicker;
+    btnImpOrderStatusChanged: TButton;
+    btnImpReceivingResult: TButton;
+    lbWMSShowMode: TLabel;
+    cbbWMSShowMode: TComboBox;
+    tsWmsMessage: TTabSheet;
+    pnlWmsMessage: TPanel;
+    pnlWmstMessageTop: TPanel;
+    lbWmsMsgStart: TLabel;
+    lbWmsMsgEnd: TLabel;
+    Label3: TLabel;
+    btnUpdateWmsMessage: TButton;
+    dtpWmsMsgStart: TDateTimePicker;
+    dtpWmsMsgEnd: TDateTimePicker;
+    cbbWmsMessageMode: TComboBox;
+    grdWmsMessage: TDBGrid;
     procedure btnFDC_wmsClick(Sender: TObject);
     procedure btnFDC_alanClick(Sender: TObject);
     procedure btnObject_SKU_to_wmsClick(Sender: TObject);
@@ -79,7 +106,6 @@ type
     procedure btnApplyDefSettingsClick(Sender: TObject);
     procedure seFontSizeChange(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure btnAll_from_wmsClick(Sender: TObject);
     procedure pgcMainChange(Sender: TObject);
     procedure btnUpdateWMSClick(Sender: TObject);
     procedure btnUpdateAlanClick(Sender: TObject);
@@ -87,6 +113,13 @@ type
     procedure dtpEndDateWMSChange(Sender: TObject);
     procedure dtpStartDateAlanChange(Sender: TObject);
     procedure dtpEndDateAlanChange(Sender: TObject);
+    procedure btnImpOrderStatusChangedClick(Sender: TObject);
+    procedure btnImpReceivingResultClick(Sender: TObject);
+    procedure cbbWMSShowModeChange(Sender: TObject);
+    procedure btnUpdateWmsMessageClick(Sender: TObject);
+    procedure cbbWmsMessageModeChange(Sender: TObject);
+    procedure dtpWmsMsgStartChange(Sender: TObject);
+    procedure dtpWmsMsgEndChange(Sender: TObject);
   private
     FLog: TLog;
     FStopTimer: Boolean;
@@ -97,8 +130,10 @@ type
     procedure myShowMsg(const AMsg: string);
     procedure MyDelay(mySec: Integer);
     procedure AdjustColumnWidth(AGrid: TDBGrid);
-    procedure UpdateWMSGrid;
-    procedure UpdateAlanGrid;
+    procedure UpdateWMSGrid(const ANeedRebuildColumns: Boolean = False);
+    procedure UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
+    procedure UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean = False);
+    procedure WMNeedUpdateGrids(var AMessage: TMessage); message WM_NEED_UPDATE_GRIDS;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -118,8 +153,12 @@ uses
   FireDAC.Comp.DataSet,
   FireDAC.Comp.Client,
   FireDAC.Stan.Param,
+  UDefinitions,
   UData,
   USettings;
+
+const
+  cLogFileName = 'Messages.log';
 
 procedure TMainForm.MyDelay(mySec: Integer);
 var
@@ -157,11 +196,11 @@ var
 begin
   Application.ProcessMessages;
 
-  LogStr := FormatDateTime('yyyy-mm-dd hh:mm:ss', Now) + ' ' + S;
+  LogStr := FormatDateTime(cDateTimeStr, Now) + ' ' + S;
   LogMemo.Lines.Add(LogStr);
 
   LogFileName := LogType + '\' + FormatDateTime('yyyy-mm-dd', Date) + '.log';
-  FLog.Write(LogFileName, DateTimeToStr(Now) + ' : ');
+//  FLog.Write(LogFileName, DateTimeToStr(Now) + ' : ');  //<-- дата вставляется внутри FLog.Write
   FLog.Write(LogFileName, S);
   FLog.Write(LogFileName, EmptyStr);
 
@@ -247,26 +286,16 @@ begin
 
   if pgcMain.ActivePage = tsErrors then
   begin
-    if not dmData.qryWMSGrid.Active then
-    begin
-      dmData.qryWMSGrid.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
-      dmData.qryWMSGrid.ParamByName('EndDate').AsDateTime := dtpEndDateWMS.DateTime;
-      dmData.qryWMSGrid.Open;
-    end;
-
-    grdWMS.Columns.RebuildColumns;
-    AdjustColumnWidth(grdWMS);
+    if not dmData.qryWMSGridErr.Active then
+      UpdateWMSGrid(True);
 
     if not dmData.qryAlanGrid.Active then
-    begin
-      dmData.qryAlanGrid.ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
-      dmData.qryAlanGrid.ParamByName('EndDate').AsDateTime := dtpEndDateAlan.DateTime;
-      dmData.qryAlanGrid.Open;
-    end;
-
-    grdAlan.Columns.RebuildColumns;
-    AdjustColumnWidth(grdAlan);
+      UpdateAlanGrid(True);
   end;
+
+  if pgcMain.ActivePage = tsWmsMessage then
+    if not dmData.qryWmsToHostMessage.Active then
+      UpdateWmsMsgGrid(True);
 end;
 
 procedure TMainForm.seFontSizeChange(Sender: TObject);
@@ -287,8 +316,10 @@ const
 var
   sMsg: string;
 begin
-  sMsg := Format(cMsg, [FormatDateTime('yyyy-mm-dd hh:mm:ss', Now), AMsg]);
+  sMsg := Format(cMsg, [FormatDateTime(cDateTimeStr, Now), AMsg]);
   mmoMessage.Lines.Add(sMsg);
+
+  FLog.Write(cLogFileName, AMsg);
 end;
 
 procedure TMainForm.myLogSql;
@@ -296,7 +327,7 @@ var
   LogFileName: string;
   i: Integer;
 begin
-  LogFileName := FormatDateTime('yyyy-mm-dd hh-mm-ss', Now) + '.log';
+  LogFileName := 'LogSql_' + FormatDateTime('yyyy-mm-dd hh-nn-ss', Now) + '.log';
 
   with dmData.to_wms_Packets_query do
   begin
@@ -309,6 +340,28 @@ procedure TMainForm.btnFDC_wmsClick(Sender: TObject);
 begin
   if dmData.ConnectWMS(TSettings.WMSDatabase, myShowMsg) then
     myShowMsg('WMS Connected = OK');
+end;
+
+procedure TMainForm.btnImpOrderStatusChangedClick(Sender: TObject);
+begin
+  if dmData.IsConnectedBoth(myShowMsg) then
+  begin
+    if dmData.ImportWMS(pknOrderStatusChanged, myShowMsg) then
+      myShowMsg('Success import data from WMS');
+
+    PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+  end;
+end;
+
+procedure TMainForm.btnImpReceivingResultClick(Sender: TObject);
+begin
+  if dmData.IsConnectedBoth(myShowMsg) then
+  begin
+    if dmData.ImportWMS(pknReceivingResult, myShowMsg) then
+      myShowMsg('Success import data from WMS');
+
+    PostMessage(Handle, WM_NEED_UPDATE_GRIDS, 0, 0);
+  end;
 end;
 
 procedure TMainForm.btnFDC_alanClick(Sender: TObject);
@@ -457,6 +510,21 @@ begin
   UpdateWMSGrid;
 end;
 
+procedure TMainForm.btnUpdateWmsMessageClick(Sender: TObject);
+begin
+  UpdateWmsMsgGrid;
+end;
+
+procedure TMainForm.cbbWmsMessageModeChange(Sender: TObject);
+begin
+  UpdateWmsMsgGrid;
+end;
+
+procedure TMainForm.cbbWMSShowModeChange(Sender: TObject);
+begin
+  UpdateWMSGrid;
+end;
+
 constructor TMainForm.Create(AOwner: TComponent);
 begin
   inherited;
@@ -474,6 +542,9 @@ begin
 
   dtpStartDateAlan.DateTime := Date;
   dtpEndDateAlan.DateTime   := Now;
+
+  dtpWmsMsgStart.DateTime := Date;
+  dtpWmsMsgEnd.DateTime   := Now;
 end;
 
 destructor TMainForm.Destroy;
@@ -502,6 +573,16 @@ begin
   UpdateWMSGrid;
 end;
 
+procedure TMainForm.dtpWmsMsgEndChange(Sender: TObject);
+begin
+  UpdateWmsMsgGrid;
+end;
+
+procedure TMainForm.dtpWmsMsgStartChange(Sender: TObject);
+begin
+  UpdateWmsMsgGrid;
+end;
+
 procedure TMainForm.edtAlanServerExit(Sender: TObject);
 begin
   TSettings.AlanServer := edtAlanServer.Text;
@@ -510,18 +591,6 @@ end;
 procedure TMainForm.edtWMSDatabaseExit(Sender: TObject);
 begin
   TSettings.WMSDatabase := edtWMSDatabase.Text;
-end;
-
-procedure TMainForm.btnAll_from_wmsClick(Sender: TObject);
-begin
-  if dmData.IsConnectedBoth(myShowMsg) then
-  begin
-    if dmData.ImportWMS(myShowMsg) then
-      myShowMsg('Success import data from WMS');
-
-    UpdateWMSGrid;
-    UpdateAlanGrid;
-  end;
 end;
 
 procedure TMainForm.btnApplyDefSettingsClick(Sender: TObject);
@@ -600,28 +669,68 @@ begin
   end;
 end;
 
-procedure TMainForm.UpdateAlanGrid;
+procedure TMainForm.UpdateAlanGrid(const ANeedRebuildColumns: Boolean = False);
 begin
   with dmData.qryAlanGrid do
   begin
     Close;
-    dmData.qryAlanGrid.ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
-    dmData.qryAlanGrid.ParamByName('EndDate').AsDateTime := dtpEndDateAlan.DateTime;
+    ParamByName('StartDate').AsDateTime := dtpStartDateAlan.DateTime;
+    ParamByName('EndDate').AsDateTime   := dtpEndDateAlan.DateTime;
     Open;
-    AdjustColumnWidth(grdAlan);
   end;
+
+  if ANeedRebuildColumns then
+    grdAlan.Columns.RebuildColumns;
+
+  AdjustColumnWidth(grdAlan);
 end;
 
-procedure TMainForm.UpdateWMSGrid;
+procedure TMainForm.UpdateWMSGrid(const ANeedRebuildColumns: Boolean);
+var
+  qryWMS: TFDQuery;
 begin
-  with dmData.qryWMSGrid do
+  qryWMS := nil;
+
+  case cbbWMSShowMode.ItemIndex of
+    0: qryWMS := dmData.qryWMSGridAll;
+    1: qryWMS := dmData.qryWMSGridErr;
+  end;
+
+  dmData.dsWMS.DataSet := qryWMS;
+
+  qryWMS.Close;
+  qryWMS.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
+  qryWMS.ParamByName('EndDate').AsDateTime   := dtpEndDateWMS.DateTime;
+  qryWMS.Open;
+
+  if ANeedRebuildColumns then
+    grdWMS.Columns.RebuildColumns;
+
+  AdjustColumnWidth(grdWMS);
+end;
+
+procedure TMainForm.UpdateWmsMsgGrid(const ANeedRebuildColumns: Boolean);
+begin
+  with dmData.qryWmsToHostMessage do
   begin
     Close;
-    dmData.qryWMSGrid.ParamByName('StartDate').AsDateTime := dtpStartDateWMS.DateTime;
-    dmData.qryWMSGrid.ParamByName('EndDate').AsDateTime := dtpEndDateWMS.DateTime;
+    ParamByName('StartDate').AsDateTime := dtpWmsMsgStart.DateTime;
+    ParamByName('EndDate').AsDateTime   := dtpWmsMsgEnd.DateTime;
+    ParamByName('ErrorOnly').AsBoolean  := (cbbWmsMessageMode.ItemIndex = 1);
     Open;
-    AdjustColumnWidth(grdWMS);
   end;
+
+  if ANeedRebuildColumns then
+    grdWmsMessage.Columns.RebuildColumns;
+
+  AdjustColumnWidth(grdWmsMessage);
+end;
+
+procedure TMainForm.WMNeedUpdateGrids(var AMessage: TMessage);
+begin
+  UpdateWMSGrid;
+  UpdateAlanGrid;
+  UpdateWmsMsgGrid;
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);

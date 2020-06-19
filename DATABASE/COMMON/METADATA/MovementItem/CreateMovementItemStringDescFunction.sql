@@ -149,9 +149,15 @@ CREATE OR REPLACE FUNCTION zc_MIString_Result() RETURNS Integer AS $BODY$BEGIN R
 INSERT INTO MovementItemStringDesc (Code, ItemName)
   SELECT 'zc_MIString_Result', 'Результат' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_Result');
 
+CREATE OR REPLACE FUNCTION zc_MIString_ItemId() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ItemId'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemStringDesc (Code, ItemName)
+  SELECT 'zc_MIString_ItemId', 'Id строки товара в заказе' WHERE NOT EXISTS (SELECT * FROM MovementItemStringDesc WHERE Code = 'zc_MIString_ItemId');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Воробкало А.А.  Ярошенко Р.Ф.   Шаблий О.В.
+ 18.03.20                                                                                      * zc_MIString_ItemId
  05.03.20                                                                                      * zc_MIString_Result
  27.02.20                                                                                      * zc_MIString_Explanation
  31.07.19         * zc_MIString_ProgramIdSP
