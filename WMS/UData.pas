@@ -92,6 +92,7 @@ type
     function IsConnectedWMS(AMsgProc: TNotifyMsgProc): Boolean;
     function IsConnectedAlan(AMsgProc: TNotifyMsgProc): Boolean;
     function IsConnectedBoth(AMsgProc: TNotifyMsgProc): Boolean;
+    procedure CloseConnections;
   end;
 
   EData = class(Exception);
@@ -113,6 +114,12 @@ uses
   UImportWMS;
 
 { TdmData }
+
+procedure TdmData.CloseConnections;
+begin
+  FDC_alan.Close;
+  FDC_wms.Close;
+end;
 
 function TdmData.ConnectAlan(const AServer: string; AMsgProc: TNotifyMsgProc): Boolean;
 begin
@@ -946,7 +953,7 @@ var
   lGUID: string;
 begin
   lpack_id := 0;
-  try
+//  try
     if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
@@ -963,10 +970,10 @@ begin
     lpack_id := fInsert_wms_Message_to_wms(
       spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
-  finally
-    FDC_wms.Connected := false;
-    FDC_alan.Connected := false;
-  end;
+//  finally
+//    FDC_wms.Connected := false;
+//    FDC_alan.Connected := false;
+//  end;
 end;
 
 procedure TdmData.pInsert_to_wms_Movement_INCOMING_all(var lRecCount, lpack_id: Integer;
@@ -977,7 +984,7 @@ var
   lGUID: string;
 begin
   lpack_id := 0;
-  try
+//  try
     if not dmData.IsConnectedBoth(AMsgProc) then Exit;
 
      //
@@ -995,10 +1002,10 @@ begin
     lpack_id := fInsert_Movement_to_wms(
       spName, lGUID, ACheckRecCount, ADebug, AThresholdRecCount, AMyLogSql, AMyShowSql, AMsgProc);
      //
-  finally
-    FDC_wms.Connected := false;
-    FDC_alan.Connected := false;
-  end;
+//  finally
+//    FDC_wms.Connected := false;
+//    FDC_alan.Connected := false;
+//  end;
 end;
 
 procedure TdmData.pInsert_to_wms_Movement_ORDER_all(var lRecCount, lpack_id: Integer;

@@ -22,7 +22,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 1384
     Height = 642
-    ActivePage = tsWmsMessage
+    ActivePage = tsLog
     Align = alClient
     TabOrder = 0
     OnChange = pgcMainChange
@@ -352,7 +352,6 @@ object MainForm: TMainForm
           Height = 237
           Align = alClient
           DataSource = dmData.dsWMS
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           ReadOnly = True
           TabOrder = 1
           TitleFont.Charset = DEFAULT_CHARSET
@@ -431,7 +430,6 @@ object MainForm: TMainForm
           Height = 316
           Align = alClient
           DataSource = dmData.dsAlan
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           ReadOnly = True
           TabOrder = 1
           TitleFont.Charset = DEFAULT_CHARSET
@@ -536,7 +534,6 @@ object MainForm: TMainForm
           Height = 586
           Align = alClient
           DataSource = dmData.dsWmsToHostMessage
-          Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
           ReadOnly = True
           TabOrder = 1
           TitleFont.Charset = DEFAULT_CHARSET
@@ -586,6 +583,7 @@ object MainForm: TMainForm
         Top = 40
         Width = 1079
         Height = 21
+        TabStop = False
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnExit = edtWMSDatabaseExit
@@ -595,6 +593,7 @@ object MainForm: TMainForm
         Top = 85
         Width = 1079
         Height = 21
+        TabStop = False
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
         OnExit = edtAlanServerExit
@@ -604,7 +603,7 @@ object MainForm: TMainForm
         Top = 120
         Width = 70
         Height = 22
-        MaxValue = 100
+        MaxValue = 10000
         MinValue = 1
         TabOrder = 2
         Value = 1
@@ -617,6 +616,7 @@ object MainForm: TMainForm
         Height = 25
         Caption = 'Apply default settings'
         TabOrder = 3
+        TabStop = False
         OnClick = btnApplyDefSettingsClick
       end
     end

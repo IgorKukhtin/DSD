@@ -10,7 +10,6 @@ object dmData: TdmData
       'User_Name=admin'
       'Server=project-vds.vds.colocall.com'
       'Database=project')
-    Connected = True
     Left = 64
     Top = 24
   end

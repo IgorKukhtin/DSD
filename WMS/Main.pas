@@ -526,6 +526,8 @@ begin
 end;
 
 constructor TMainForm.Create(AOwner: TComponent);
+var
+  I: Integer;
 begin
   inherited;
   FLog := TLog.Create;
@@ -545,6 +547,14 @@ begin
 
   dtpWmsMsgStart.DateTime := Date;
   dtpWmsMsgEnd.DateTime   := Now;
+
+  for I := 0 to Pred(ComponentCount) do
+    if Components[I] is TDBGrid then
+      with Components[I] as TDBGrid do
+      begin
+        Options := Options - [dgRowSelect] + [dgEditing, dgAlwaysShowSelection];
+        ReadOnly := True;
+      end;
 end;
 
 destructor TMainForm.Destroy;
@@ -585,17 +595,21 @@ end;
 
 procedure TMainForm.edtAlanServerExit(Sender: TObject);
 begin
+  dmData.CloseConnections;
   TSettings.AlanServer := edtAlanServer.Text;
 end;
 
 procedure TMainForm.edtWMSDatabaseExit(Sender: TObject);
 begin
+  dmData.CloseConnections;
   TSettings.WMSDatabase := edtWMSDatabase.Text;
 end;
 
 procedure TMainForm.btnApplyDefSettingsClick(Sender: TObject);
 begin
+  dmData.CloseConnections;
   TSettings.ApplyDefault;
+
   edtWMSDatabase.Text   := TSettings.WMSDatabase;
   edtAlanServer.Text    := TSettings.AlanServer;
   seTimerInterval.Value := TSettings.TimerInterval div 1000;
