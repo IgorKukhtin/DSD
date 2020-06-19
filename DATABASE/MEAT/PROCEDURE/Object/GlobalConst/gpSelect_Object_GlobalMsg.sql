@@ -200,7 +200,8 @@ BEGIN
                                       ON MovementDate_StartSale.MovementId = Movement_Promo.Id
                                      AND MovementDate_StartSale.DescId     = zc_MovementDate_StartSale()
           WHERE Movement_Promo.DescId   = zc_Movement_Promo()
-            AND Movement_Promo.StatusId = zc_Enum_Status_UnComplete()
+          --AND Movement_Promo.StatusId = zc_Enum_Status_UnComplete()
+            AND Movement_Promo.StatusId <> zc_Enum_Status_Erased()
             AND Movement_Promo.OperDate BETWEEN CURRENT_DATE - INTERVAL '5 MONTH' AND CURRENT_DATE + INTERVAL '25 MONTH'
             AND MovementDate_StartSale.ValueData >= CURRENT_DATE - INTERVAL '7 DAY'
          ;

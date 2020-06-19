@@ -36,7 +36,10 @@ BEGIN
            -- проверка
            IF inPaymentDate IS NULL
            THEN 
-               RAISE EXCEPTION 'Ошибка.Партия накладной № <%> от <%> не найдена.', DATE ((SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId), (SELECT MovementDate.ValueData FROM MovementDate WHERE  MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()));
+               RAISE EXCEPTION 'Ошибка.Партия накладной № <%> от <%> не найдена.'
+                              , (SELECT Movement.InvNumber FROM Movement WHERE Movement.Id = inMovementId)
+                              , zfConvert_DateToString ((SELECT MovementDate.ValueData FROM MovementDate WHERE  MovementDate.MovementId = inMovementId AND MovementDate.DescId = zc_MovementDate_OperDatePartner()))
+                               ;
            END IF;
 
        END IF;
